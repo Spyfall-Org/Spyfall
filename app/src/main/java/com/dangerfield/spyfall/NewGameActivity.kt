@@ -5,16 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 
-class MainActivity : AppCompatActivity() {
+class NewGameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_new_game)
     }
 
 
-    fun onClickNewGame(view: View){
-        val intent = Intent(this,NewGameActivity::class.java)
+    fun onCreateClick(view : View){
+        val intent = Intent(this,WaitingGame::class.java)
         startActivity(intent)
     }
 }
