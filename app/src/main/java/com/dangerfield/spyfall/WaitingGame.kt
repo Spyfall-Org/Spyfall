@@ -1,7 +1,9 @@
 package com.dangerfield.spyfall
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_waiting_game.*
 import com.google.firebase.FirebaseApp
@@ -13,13 +15,14 @@ class WaitingGame : AppCompatActivity() {
 
     var playerList = ArrayList<String>()
     val ACCESS_CODE = generateAccessCode()
+    private var timeLimit: Int = 0  //THIS IS NOT BEST PRACTICE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseApp.initializeApp(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_waiting_game)
 
-        val timeLimit = intent.getIntExtra("TIME_LIMIT",0)
+        timeLimit = intent.getIntExtra("TIME_LIMIT",0)
         val playerName = intent.getStringExtra("PLAYER_NAME")
 
             //pull data and add players
@@ -37,6 +40,11 @@ class WaitingGame : AppCompatActivity() {
         createFireBaseGame(timeLimit)
 
 
+    }
+
+    fun onStartClick(view: View){
+        val intent = Intent(this,GameActivity::class.java)
+        startActivity(intent)
     }
 
 
