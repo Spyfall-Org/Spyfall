@@ -4,7 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_waiting_game.*
-import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
 
@@ -14,6 +15,7 @@ class WaitingGame : AppCompatActivity() {
     val ACCESS_CODE = generateAccessCode()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        FirebaseApp.initializeApp(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_waiting_game)
 
@@ -26,11 +28,13 @@ class WaitingGame : AppCompatActivity() {
         playerList.add("George")
         playerList.add("Bri")
 
-        val adapter = PlayerAdapter(playerList, this)
+        val adapter = PlayerAdapter(playerName,playerList, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
         tv_acess_code.text = ACCESS_CODE
+
+        createFireBaseGame(timeLimit)
 
 
     }
@@ -42,9 +46,14 @@ class WaitingGame : AppCompatActivity() {
 
     }
 
-    fun createFireBaseGame(){
+    fun createFireBaseGame(timeLimit: Int){
         //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
-        //var ref = firebase.database
+        val ref = FirebaseDatabase.getInstance().getReference("/$ACCESS_CODE").push()
+        ref.setValue("CREATED")
+        ref.child("Players").push().setValue(playerList)
+        ref.child("Time").push().setValue(timeLimit)
+
+
     }
 
 

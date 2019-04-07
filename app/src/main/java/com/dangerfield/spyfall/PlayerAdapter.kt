@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.player_card.view.*
 
-class PlayerAdapter(val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
+class PlayerAdapter(val playerName: String, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,7 +23,7 @@ class PlayerAdapter(val playerList: ArrayList<String>, val context: Context) : R
 
         holder.number?.text = (position + 1).toString()
         holder.name?.text = playerList[position]
-        if(holder.name.text == "Elijah") holder.pencil.visibility = View.VISIBLE
+        if(holder.name.text == playerName) holder.pencil.visibility = View.VISIBLE
 
 
     }
