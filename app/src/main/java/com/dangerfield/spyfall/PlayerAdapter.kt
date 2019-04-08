@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.player_card.view.*
 
-class PlayerAdapter(val playerName: String, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
+class PlayerAdapter(val playerName: String, val playerList: ArrayList<Player>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,7 +22,7 @@ class PlayerAdapter(val playerName: String, val playerList: ArrayList<String>, v
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.number?.text = (position + 1).toString()
-        holder.name?.text = playerList[position]
+        holder.name?.text = playerList[position].username
         if(holder.name.text == playerName) holder.pencil.visibility = View.VISIBLE
 
 
@@ -30,7 +30,7 @@ class PlayerAdapter(val playerName: String, val playerList: ArrayList<String>, v
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val number = view.tv_player_number
-        val name = view.tv_player_name
+        val name = view.tv_in_game_player_name
         val pencil = view.iv_pencil
 
 

@@ -31,6 +31,13 @@
 
 
     </TableLayout>
+    <TextView
+            android:text="Locations:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7" app:layout_constraintStart_toStartOf="@+id/tbl_players"
+            app:layout_constraintTop_toBottomOf="@+id/tbl_players" android:layout_marginTop="32dp"
+            android:textSize="18sp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

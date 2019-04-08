@@ -23,12 +23,12 @@ class NewGameActivity : AppCompatActivity() {
             Toast.makeText(this, "please enter a time limit",Toast.LENGTH_LONG).show()
             return
         }
-        if(tv_player_name.text.isEmpty()){
+        if(tv_in_game_player_name.text.isEmpty()){
             Toast.makeText(this, "please enter a name",Toast.LENGTH_LONG).show()
             return
         }
         val timeLimit = tv_time.text.toString().toInt()
-        val playerName = tv_player_name.text.toString()
+        val playerName = tv_in_game_player_name.text.toString()
 
         val intent = Intent(this,WaitingGame::class.java)
         intent.putExtra("TIME_LIMIT", timeLimit)

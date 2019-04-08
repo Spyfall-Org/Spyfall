@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import com.google.firebase.database.*
@@ -12,14 +11,11 @@ import kotlinx.android.synthetic.main.activity_game.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import android.util.TypedValue
-import android.view.Gravity
+
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.RelativeLayout
-import androidx.core.view.setPadding
-import java.security.AccessController.getContext
+
+import androidx.constraintlayout.widget.ConstraintLayout
+
 
 
 class GameActivity : AppCompatActivity() {
@@ -48,7 +44,6 @@ class GameActivity : AppCompatActivity() {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 game = dataSnapshot.getValue(Game::class.java)
-
 
                 loadPlayers(game?.playerList!!)
                 startTimer(game?.timeLimit!!)
@@ -85,49 +80,28 @@ class GameActivity : AppCompatActivity() {
         }.start()
     }
 
-    fun loadPlayers(playerList: ArrayList<String>){
+    fun loadPlayers(playerList: ArrayList<Player>){
 
-        //for every 2 players, create a row
+        var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT)
+        params.setMargins(10,10,10,10)
 
-        for( i in playerList.indices) {
+        for( i in 0 until playerList.size step 2) {
+            val row = TableRow(this).apply {
+                layoutParams = params
+            }
+                for(j in 0..1) {
+                    val player_tv = LayoutInflater.from(this)
+                        .inflate(R.layout.game_player, row, false) as ConstraintLayout
+                    var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
+                    if(i+j < playerList.size){
+                        tv.text = playerList[i + j].username
+                        row.addView(player_tv)
+                    }
 
-
-
-                //for every indice create a cell
-                val player_tv = TextView(this)
-                player_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-                player_tv.apply {
-                    text = playerList[i]
-                    background = resources.getDrawable(R.drawable.background_text)
-                    height = densityPixels(50)
-                    width = densityPixels(100)
-                    setPadding(densityPixels(10))
-                    gravity = Gravity.CENTER
-                                             }
-
-
-                val row = TableRow(this).apply {
-                    layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT)
                 }
-
-
-                    row.addView(player_tv)
-
-
-                 tbl_players.addView(row)
-
-
-
-
+                  tbl_players.addView(row)
         }
-
-
-
-    }
-
-    fun densityPixels(dps: Int): Int {
-        val scale = resources.getDisplayMetrics().density
-        return (dps * scale + 0.5f).toInt()
 
     }
 

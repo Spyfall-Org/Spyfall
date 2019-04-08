@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
 
 class WaitingGame : AppCompatActivity() {
 
-    var playerList = ArrayList<String>()
+    var playerList = ArrayList<Player>()
     val ACCESS_CODE = generateAccessCode()
     private var timeLimit: Int = 0  //THIS IS NOT BEST PRACTICE
 
@@ -26,11 +26,18 @@ class WaitingGame : AppCompatActivity() {
         timeLimit = intent.getIntExtra("TIME_LIMIT",0)
         val playerName = intent.getStringExtra("PLAYER_NAME")
 
+
             //pull data and add players
-        playerList.add("Elijah")
-        playerList.add("Josiah")
-        playerList.add("George")
-        playerList.add("Bri")
+        playerList.add(Player("none","Elijah",0))
+        playerList.add(Player("none","Bri",0))
+        playerList.add(Player("none","Josiah",0))
+        playerList.add(Player("none","Nibraas",0))
+        playerList.add(Player("none","George",0))
+
+
+
+
+
 
         val adapter = PlayerAdapter(playerName,playerList, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
