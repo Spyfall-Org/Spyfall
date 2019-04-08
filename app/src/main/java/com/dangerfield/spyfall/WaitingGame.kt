@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_waiting_game.*
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class WaitingGame : AppCompatActivity() {
@@ -44,6 +45,7 @@ class WaitingGame : AppCompatActivity() {
 
     fun onStartClick(view: View){
         val intent = Intent(this,GameActivity::class.java)
+        intent.putExtra("ACCESS_CODE",ACCESS_CODE)
         startActivity(intent)
     }
 
@@ -56,13 +58,16 @@ class WaitingGame : AppCompatActivity() {
 
     fun createFireBaseGame(timeLimit: Int){
         //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
-        val ref = FirebaseDatabase.getInstance().getReference("/$ACCESS_CODE").push()
-        ref.setValue("CREATED")
-        ref.child("Players").push().setValue(playerList)
-        ref.child("Time").push().setValue(timeLimit)
+       val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
+
+        var game: Game = Game(timeLimit, playerList)
+        ref.setValue(game)
 
 
     }
 
 
 }
+
+
+
