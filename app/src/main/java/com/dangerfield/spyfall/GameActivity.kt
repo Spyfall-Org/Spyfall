@@ -89,29 +89,32 @@ class GameActivity : AppCompatActivity() {
 
         //for every 2 players, create a row
 
-        for( i in 0..playerList.size/2) {
+        for( i in playerList.indices) {
 
 
-            for(j in )
-            //for every indice create a cell
-            val player_tv = TextView(this)
-            player_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-            player_tv.apply {
-                text = playerList[i]
-                background = resources.getDrawable(R.drawable.background_text)
-                height = densityPixels(50)
-                width = densityPixels(100)
-                setPadding(densityPixels(10))
-                gravity = Gravity.CENTER
-            }
 
-            val row = TableRow(this).apply {
-                    layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT)}
-
-            row.addView(player_tv)
+                //for every indice create a cell
+                val player_tv = TextView(this)
+                player_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+                player_tv.apply {
+                    text = playerList[i]
+                    background = resources.getDrawable(R.drawable.background_text)
+                    height = densityPixels(50)
+                    width = densityPixels(100)
+                    setPadding(densityPixels(10))
+                    gravity = Gravity.CENTER
+                                             }
 
 
-            tbl_players.addView(row)
+                val row = TableRow(this).apply {
+                    layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT)
+                }
+
+
+                    row.addView(player_tv)
+
+
+                 tbl_players.addView(row)
 
 
 
