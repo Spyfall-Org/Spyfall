@@ -15,10 +15,11 @@ import kotlin.collections.ArrayList
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
-import android.R
 import android.view.View
+import android.view.ViewGroup
+import android.widget.RelativeLayout
+import androidx.core.view.setPadding
+import java.security.AccessController.getContext
 
 
 class GameActivity : AppCompatActivity() {
@@ -88,32 +89,42 @@ class GameActivity : AppCompatActivity() {
 
         //for every 2 players, create a row
 
-        var row1 = TableRow(this)
-        row1.apply {
-            layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT)
+        for( i in 0..playerList.size/2) {
+
+
+            for(j in )
+            //for every indice create a cell
+            val player_tv = TextView(this)
+            player_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            player_tv.apply {
+                text = playerList[i]
+                background = resources.getDrawable(R.drawable.background_text)
+                height = densityPixels(50)
+                width = densityPixels(100)
+                setPadding(densityPixels(10))
+                gravity = Gravity.CENTER
+            }
+
+            val row = TableRow(this).apply {
+                    layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT)}
+
+            row.addView(player_tv)
+
+
+            tbl_players.addView(row)
+
+
+
+
         }
 
-        var player_tv = TextView(this)
-
-       // var inflate = View.inflate(this, R.layout.player_card, null) as TableRow
-        //set tag for each TableRow
-        //inflate.setTag(0)
-        //player_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,18f)
-//        player_tv.apply {
-//            text = playerList[0]
-//            background = resources.getDrawable(R.drawable.background_text)
-//            height = 75
-//            width = 200
-//            gravity = Gravity.CENTER
-//        }
 
 
+    }
 
-        row1.addView(player_tv)
-
-
-        tbl_players.addView(row1)
-
+    fun densityPixels(dps: Int): Int {
+        val scale = resources.getDisplayMetrics().density
+        return (dps * scale + 0.5f).toInt()
 
     }
 
