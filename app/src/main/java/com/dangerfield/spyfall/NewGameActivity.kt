@@ -19,8 +19,8 @@ class NewGameActivity : AppCompatActivity() {
 
     fun onCreateClick(view : View){
 
-        if(tv_time.text.isEmpty()){
-            Toast.makeText(this, "please enter a time limit",Toast.LENGTH_LONG).show()
+        if(tv_time.text.isEmpty() || tv_time.text.toString().toInt() > 10){
+            Toast.makeText(this, "please enter a time limit less than 10 minutes",Toast.LENGTH_LONG).show()
             return
         }
         if(tv_in_game_player_name.text.isEmpty()){

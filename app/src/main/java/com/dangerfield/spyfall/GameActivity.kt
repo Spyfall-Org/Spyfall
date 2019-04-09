@@ -15,10 +15,15 @@ import kotlin.collections.ArrayList
 import android.view.LayoutInflater
 
 import androidx.constraintlayout.widget.ConstraintLayout
+import kotlin.collections.HashMap
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 
 
 class GameActivity : AppCompatActivity() {
+
+    var db = FirebaseFirestore.getInstance()
 
     lateinit var ACCESS_CODE: String
     val TAG = "Game Activity"
@@ -31,6 +36,7 @@ class GameActivity : AppCompatActivity() {
 
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
         getGameFromFireBase()
+        getLocationsFromFireBase()
 
 
     }
@@ -102,6 +108,24 @@ class GameActivity : AppCompatActivity() {
                 }
                   tbl_players.addView(row)
         }
+
+    }
+
+
+    fun getLocationsFromFireBase(){
+        val docRef = db.collection("locations").document("Court House")
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+
 
     }
 
