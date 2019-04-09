@@ -28,6 +28,7 @@ class GameActivity : AppCompatActivity() {
     lateinit var ACCESS_CODE: String
     val TAG = "Game Activity"
     var game: Game? = null
+    var locations = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +37,7 @@ class GameActivity : AppCompatActivity() {
 
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
         getGameFromFireBase()
-        getLocationsFromFireBase()
+       // getLocationsFromFireBase()
 
 
     }
@@ -53,6 +54,7 @@ class GameActivity : AppCompatActivity() {
 
                 loadPlayers(game?.playerList!!)
                 startTimer(game?.timeLimit!!)
+                getLocationsFromFireBase()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -112,19 +114,48 @@ class GameActivity : AppCompatActivity() {
     }
 
 
+
+
     fun getLocationsFromFireBase(){
-        val docRef = db.collection("locations").document("Court House")
-        docRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                } else {
-                    Log.d(TAG, "No such document")
-                }
+        //this method should load in all of the locations that the user chose
+        //option: game has a node of chosen packs and chosen location
+
+       Log.d(TAG,"trying to get pack: ${game?.locationPacks?.get(0)}")
+
+        val collectionRef = db.collection("${game?.locationPacks?.get(0)}")
+        collectionRef.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                Log.d("including location", document.id)
+                locations.add(document.id)
             }
+        }
             .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
+                Log.w(TAG, "Error getting documents: ", exception)
             }
+
+
+        var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT)
+        params.setMargins(10,10,10,10)
+
+        for( i in 0 until locations.size step 2) {
+            val row = TableRow(this).apply {
+                layoutParams = params
+            }
+            for(j in 0..1) {
+                val player_tv = LayoutInflater.from(this)
+                    .inflate(R.layout.game_player, row, false) as ConstraintLayout
+                var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
+                if(i+j < locations.size){
+                    tv.text = locations[i + j]
+                    row.addView(player_tv)
+                }
+
+            }
+            tbl_locations.addView(row)
+        }
+
+
 
 
     }

@@ -3,6 +3,7 @@ package com.dangerfield.spyfall
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_waiting_game.*
@@ -17,6 +18,8 @@ class WaitingGame : AppCompatActivity() {
     var playerList = ArrayList<Player>()
     val ACCESS_CODE = generateAccessCode()
     private var timeLimit: Int = 0  //THIS IS NOT BEST PRACTICE
+    private var checkedBoxes = mutableListOf<String>()
+    private var TAG = "Waiting Game"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseApp.initializeApp(this)
@@ -24,6 +27,8 @@ class WaitingGame : AppCompatActivity() {
         setContentView(R.layout.activity_waiting_game)
 
         timeLimit = intent.getIntExtra("TIME_LIMIT",0)
+        checkedBoxes = intent.getStringArrayListExtra("CHECKED_BOXES").toMutableList()
+        Log.d(TAG,"Checked boxes are: $checkedBoxes")
         val playerName = intent.getStringExtra("PLAYER_NAME")
 
 
@@ -67,7 +72,7 @@ class WaitingGame : AppCompatActivity() {
         //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
 
-        var game: Game = Game(timeLimit, playerList)
+        var game: Game = Game(checkedBoxes, timeLimit, playerList)
         ref.setValue(game)
 
 
