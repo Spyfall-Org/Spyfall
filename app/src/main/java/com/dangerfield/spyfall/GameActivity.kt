@@ -33,9 +33,9 @@ class GameActivity : AppCompatActivity() {
     var locations = ArrayList<String>()
     var roles = ArrayList<String>()
     //so if we dont want duplicate roles then after we assign one we would want to make it such
-    //that we cant assign that same one again. We need to find a way to set very players "role" field
-    //we need code somehwere that like pulls in all the roles and assigns the players roles on firebase
-    //randomly and deletes that indicy once done and then in the game people will just pull their role
+    //that we cant assign that same one again.
+
+    //IDEA: create a list of the roles and shuffle them and assign them in orger to the players
 
 
 
