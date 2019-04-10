@@ -108,8 +108,7 @@ class GameActivity : AppCompatActivity() {
 
     fun getLocationsAndRolesFromFireBase(){
         //TODO find out why this takes so long, may have something to do with async
-        //this method should load in all of the locations that the user chose
-        //option: game has a node of chosen packs and chosen location
+        //TODO think about putting this in the waiting activity and only passing the locations array
 
        Log.d(TAG,"trying to get pack: ${game?.locationPacks?.get(0)}")
 
@@ -131,6 +130,7 @@ class GameActivity : AppCompatActivity() {
 
             //okay so now you can assign the game chosen location as well as each players roles.
             //just shuffle the roles and assign in order
+
 
 
 
