@@ -47,5 +47,5 @@
             app:layout_constraintTop_toTopOf="@+id/btn_new_game"
             app:layout_constraintBottom_toBottomOf="@+id/btn_new_game" app:layout_constraintEnd_toEndOf="@+id/lineView"
             app:layout_constraintVertical_bias="0.0"
-            android:background="@drawable/background_action_button"/>
+            android:background="@drawable/background_action_button" android:onClick="onClickJoinGame"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
