@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall
+package com.dangerfield.spyfall.data
 
 class Location( val roles: ArrayList<String>) {
 

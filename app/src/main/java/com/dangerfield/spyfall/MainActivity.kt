@@ -17,4 +17,9 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this,NewGameActivity::class.java)
         startActivity(intent)
     }
+
+    fun onClickJoinGame(view: View){
+        val intent = Intent(this,JoinGameActivity::class.java)
+        startActivity(intent)
+    }
 }

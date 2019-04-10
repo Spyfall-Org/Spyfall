@@ -1,10 +1,12 @@
-package com.dangerfield.spyfall
+package com.dangerfield.spyfall.WaitingActivity
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.player_card.view.*
 
 class PlayerAdapter(val playerName: String, val playerList: ArrayList<Player>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
@@ -12,7 +14,13 @@ class PlayerAdapter(val playerName: String, val playerList: ArrayList<Player>, v
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.player_card,parent,false))
+        return ViewHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.player_card,
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {

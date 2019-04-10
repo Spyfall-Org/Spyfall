@@ -17,7 +17,8 @@ import android.view.LayoutInflater
 import android.view.View
 
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlin.collections.HashMap
+import com.dangerfield.spyfall.data.Game
+import com.dangerfield.spyfall.data.Player
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -30,12 +31,7 @@ class GameActivity : AppCompatActivity() {
     lateinit var ACCESS_CODE: String
     val TAG = "Game Activity"
     var game: Game? = null
-    //so if we dont want duplicate roles then after we assign one we would want to make it such
-    //that we cant assign that same one again.
-
-    //IDEA: create a list of the roles and shuffle them and assign them in orger to the players
-
-
+    lateinit var  currentUser: Player
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +41,8 @@ class GameActivity : AppCompatActivity() {
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
         getGameFromFireBase()
         loadLocationView(locations)
-       // getLocationsFromFireBase()
-
+        currentUser = intent.getParcelableExtra<Player>("CURRENT_PLAYER")
+        tv_role.text = "You are ${currentUser.role}"
 
     }
 
@@ -65,6 +61,12 @@ class GameActivity : AppCompatActivity() {
                    // THIS IS WHERE WE COULD DO SOME ASYNC
                 loadPlayers(game?.playerList!!)
                 startTimer(game?.timeLimit!!)
+                    if(currentUser.role != "the spy!"){
+                        tv_chosen_location.text = "Location: ${game?.chosenLocation}"
+                    }else{
+                        tv_chosen_location.text = "Figure out the location!"
+
+                    }
                 }
             }
 
@@ -100,11 +102,6 @@ class GameActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
     fun loadPlayers(playerList: ArrayList<Player>){
 
         //TODO right now the two main views load one after the other, can we do this asynchonously?
@@ -133,6 +130,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun loadLocationView(locations: ArrayList<String>){
+        //TODO considering we will have 20 or 30 every time we can probably avoid this
         var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
             TableRow.LayoutParams.WRAP_CONTENT)
         params.setMargins(10,10,10,10)
@@ -166,9 +164,6 @@ class GameActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
 
-
     }
-
-
 
 }

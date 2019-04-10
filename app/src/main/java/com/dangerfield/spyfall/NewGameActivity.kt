@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.dangerfield.spyfall.WaitingActivity.WaitingGame
 import kotlinx.android.synthetic.main.activity_new_game.*
 
 class NewGameActivity : AppCompatActivity() {
@@ -14,9 +15,7 @@ class NewGameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_game)
 
-
     }
-
 
     fun onCreateClick(view : View){
 
@@ -28,7 +27,7 @@ class NewGameActivity : AppCompatActivity() {
             Toast.makeText(this, "please enter a name",Toast.LENGTH_LONG).show()
             return
         }
-        val intent = Intent(this,WaitingGame::class.java)
+        val intent = Intent(this, WaitingGame::class.java)
         val timeLimit = tv_time.text.toString().toInt()
         val playerName = tv_in_game_player_name.text.toString()
 
