@@ -30,8 +30,6 @@ class GameActivity : AppCompatActivity() {
     lateinit var ACCESS_CODE: String
     val TAG = "Game Activity"
     var game: Game? = null
-    var locations = ArrayList<String>()
-    var roles = ArrayList<String>()
     //so if we dont want duplicate roles then after we assign one we would want to make it such
     //that we cant assign that same one again.
 
@@ -43,9 +41,10 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-
+        var locations = intent.getStringArrayListExtra("LOCATIONS")
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
         getGameFromFireBase()
+        loadLocationView(locations)
        // getLocationsFromFireBase()
 
 
@@ -66,7 +65,6 @@ class GameActivity : AppCompatActivity() {
                    // THIS IS WHERE WE COULD DO SOME ASYNC
                 loadPlayers(game?.playerList!!)
                 startTimer(game?.timeLimit!!)
-                getLocationsAndRolesFromFireBase()
                 }
             }
 
@@ -106,43 +104,6 @@ class GameActivity : AppCompatActivity() {
 
 
 
-    fun getLocationsAndRolesFromFireBase(){
-        //TODO find out why this takes so long, may have something to do with async
-        //TODO think about putting this in the waiting activity and only passing the locations array
-
-       Log.d(TAG,"trying to get pack: ${game?.locationPacks?.get(0)}")
-
-
-        val collectionRef = db.collection("${game?.locationPacks?.get(0)}")
-        collectionRef.get().addOnSuccessListener { documents ->
-
-            //pick a random locatoin and then store all of that locations roles in an array
-            //note: there is also a "shaffled() function
-
-            //grab all locations in  pack
-            documents.onEach { locations.add(it.id) }
-
-            //from this you can grab the string and all the roles
-            var locationSnapshot = documents.toList().get(Random().nextInt(documents.size()))
-            var gameLocation = locationSnapshot.id
-            var roles = locationSnapshot.data["roles"]
-            Log.d(TAG,"roles for location ${gameLocation} is ${roles}")
-
-            //okay so now you can assign the game chosen location as well as each players roles.
-            //just shuffle the roles and assign in order
-
-
-
-
-            //tv_role.text = set this
-            loadLocationView()
-        }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
-            }
-
-
-    }
 
     fun loadPlayers(playerList: ArrayList<Player>){
 
@@ -171,7 +132,7 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    fun loadLocationView(){
+    fun loadLocationView(locations: ArrayList<String>){
         var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
             TableRow.LayoutParams.WRAP_CONTENT)
         params.setMargins(10,10,10,10)

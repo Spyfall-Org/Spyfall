@@ -40,6 +40,10 @@ class NewGameActivity : AppCompatActivity() {
         if(cb_pack2.isChecked) checkedBoxes.add("pack 2")
         if(cb_pack3.isChecked) checkedBoxes.add("pack 3")
 
+        if(checkedBoxes.isEmpty()) {
+            Toast.makeText(this,"Please select a pack",Toast.LENGTH_LONG).show()
+        return}
+
         Log.d("NEWGAME","Checked Boxes in new game are: $checkedBoxes")
 
         intent.putExtra("CHECKED_BOXES",checkedBoxes)
