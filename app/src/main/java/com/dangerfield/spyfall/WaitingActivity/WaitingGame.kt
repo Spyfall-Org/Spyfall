@@ -113,6 +113,9 @@ class WaitingGame : AppCompatActivity() {
         //assigning roles may need to go into the game activity where theres code like this that loads in
         //the completed list
 
+        //i think play list will start off as a string array and then that string array will get pulled in
+        //and the node will be updated using the following code
+
         roles.shuffle()
         //pull data and add players
         Log.d(TAG,"grabbed roles[${playerList.size}]")
