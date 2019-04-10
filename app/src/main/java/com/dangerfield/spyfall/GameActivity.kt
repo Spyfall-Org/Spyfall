@@ -62,9 +62,12 @@ class GameActivity : AppCompatActivity() {
                 game = dataSnapshot.getValue(Game::class.java)
 
                 if(game!= null){
+
+                   // THIS IS WHERE WE COULD DO SOME ASYNC
                 loadPlayers(game?.playerList!!)
                 startTimer(game?.timeLimit!!)
-                getLocationsAndRolesFromFireBase()}
+                getLocationsAndRolesFromFireBase()
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -113,21 +116,25 @@ class GameActivity : AppCompatActivity() {
 
         val collectionRef = db.collection("${game?.locationPacks?.get(0)}")
         collectionRef.get().addOnSuccessListener { documents ->
-            for (document in documents) {
-                Log.d("including location", document.id)
-                locations.add(document.id)
-                Log.d(TAG, "${document["roles"]}")
-                var instanceRoles = document["roles"] as ArrayList<String>
-                roles.addAll(instanceRoles)
-            }
-            Log.d("LOCATIONS","Locations = : $locations")
-            Log.d(TAG,"all roles: $roles")
-            tv_role.text = "You are a ${roles.get(Random().nextInt(roles.size))}"
-            //right now this makes a huge list of all locations but really we just need to pic a random
-            //location and THEN make a list of just those roles
+
+            //pick a random locatoin and then store all of that locations roles in an array
+            //note: there is also a "shaffled() function
+
+            //grab all locations in  pack
+            documents.onEach { locations.add(it.id) }
+
+            //from this you can grab the string and all the roles
+            var locationSnapshot = documents.toList().get(Random().nextInt(documents.size()))
+            var gameLocation = locationSnapshot.id
+            var roles = locationSnapshot.data["roles"]
+            Log.d(TAG,"roles for location ${gameLocation} is ${roles}")
+
+            //okay so now you can assign the game chosen location as well as each players roles.
+            //just shuffle the roles and assign in order
 
 
-            //so this area is what gets called AFTER the data is loaded
+
+            //tv_role.text = set this
             loadLocationView()
         }
             .addOnFailureListener { exception ->
