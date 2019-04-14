@@ -8,12 +8,26 @@ import android.view.View
 import android.widget.Toast
 import com.dangerfield.spyfall.WaitingActivity.WaitingGame
 import kotlinx.android.synthetic.main.activity_new_game.*
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
+
 
 class NewGameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_game)
+
+        val keyboardHider =  View.OnFocusChangeListener {view,b ->
+            if(!b){
+                hideKeyboard(view)
+            }
+        }
+
+        tv_in_game_player_name.onFocusChangeListener = keyboardHider
+        tv_time.onFocusChangeListener = keyboardHider
+
+
 
     }
 
@@ -49,6 +63,11 @@ class NewGameActivity : AppCompatActivity() {
 
 
         startActivity(intent)
+    }
+
+    fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 
