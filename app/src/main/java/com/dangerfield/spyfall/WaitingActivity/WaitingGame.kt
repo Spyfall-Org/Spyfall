@@ -43,7 +43,6 @@ class WaitingGame : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        FirebaseApp.initializeApp(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_waiting_game)
 
@@ -91,8 +90,8 @@ class WaitingGame : AppCompatActivity() {
             //grab all locations in  pack, this will be passed into intent
             documents.onEach { locations.add(it.id) }
             Log.d(TAG,"locations = ${locations}")
-
-            var randomLocation = documents.toList().get(Random().nextInt(documents.size()))
+            var index = Random().nextInt(documents.toList().size)
+            var randomLocation = documents.toList()[index]
             gameLocation = randomLocation.id
             roles = randomLocation.data["roles"] as ArrayList<String>
             Log.d(TAG,"roles for location ${gameLocation} is ${roles}")
