@@ -13,6 +13,7 @@ import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.activity_waiting_game.*
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Logger
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,6 +47,8 @@ class WaitingGame : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_waiting_game)
 
+
+
         timeLimit = intent.getIntExtra("TIME_LIMIT",0)
         checkedBoxes = intent.getStringArrayListExtra("CHECKED_BOXES").toMutableList()
         Log.d(TAG,"Checked boxes are: $checkedBoxes")
@@ -68,12 +71,12 @@ class WaitingGame : AppCompatActivity() {
 
     fun createFireBaseGame(timeLimit: Int){
         //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
-       val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
+        FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG)
+        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
 
         var game: Game =
             Game(gameLocation, checkedBoxes, timeLimit, playerList)
         ref.setValue(game)
-
 
     }
 
