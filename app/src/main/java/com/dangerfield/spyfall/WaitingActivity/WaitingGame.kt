@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.GameActivity
+import com.dangerfield.spyfall.MainActivity
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.data.Game
 import com.dangerfield.spyfall.data.Player
@@ -15,6 +16,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,6 +46,8 @@ class WaitingGame : AppCompatActivity() {
 
         tv_acess_code.text = ACCESS_CODE
 
+
+
         adapter = PlayerAdapter(playerName, playerList, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -58,6 +62,31 @@ class WaitingGame : AppCompatActivity() {
        // startActivity(intent)
     }
 
+    fun onLeaveClick(view:View){
+        //called when user clicks leave game
+        val gameRef = db.collection("games").document("$ACCESS_CODE")
+
+        //remove player
+        gameRef.update("playerList", FieldValue.arrayRemove("$playerName"))
+
+        //if all players left, delete the document
+        gameRef.get()
+            .addOnSuccessListener { game ->
+                if((game["playerList"] as ArrayList<String>).isEmpty()){
+                    gameRef.delete()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+
+        val intent = Intent(this, MainActivity::class.java)
+
+
+        startActivity(intent)
+
+    }
+
     fun displayUsers(){
         val gameRef = db.collection("games").document("$ACCESS_CODE")
             gameRef.addSnapshotListener(EventListener<DocumentSnapshot>{ Game ,e ->
@@ -68,7 +97,9 @@ class WaitingGame : AppCompatActivity() {
 
                 if (Game != null && Game.exists()) {
                     Log.d(TAG, "Current game data: ${Game.data}")
-                    playerList.add((Game["playerList"] as ArrayList<String>).last())
+                    playerList.clear()
+                    playerList.addAll(Game["playerList"] as ArrayList<String>)
+
                     adapter.notifyDataSetChanged()
                 } else {
                     Log.d(TAG, "Current data: null")

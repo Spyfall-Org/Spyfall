@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+        tools:context=".WaitingActivity.WaitingGame"
         android:layout_height="match_parent"
+        android:layout_width="match_parent"
+>
+<androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".WaitingActivity.WaitingGame">
 
 
@@ -45,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/lineView5" android:layout_marginTop="24dp"
             android:background="@drawable/background_action_button" android:onClick="onStartClick"
             app:layout_constraintStart_toStartOf="@+id/lineView5"
-    />
+            android:layout_marginBottom="24dp" app:layout_constraintBottom_toBottomOf="parent"/>
     <Button
             android:text="Leave Game"
             android:layout_width="150dp"
@@ -53,13 +59,14 @@
             android:id="@+id/btn_leave_game" app:layout_constraintStart_toEndOf="@+id/btn_start_game"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_start_game" app:layout_constraintEnd_toEndOf="@+id/lineView5"
-            android:background="@drawable/background_action_button"/>
+            app:layout_constraintBottom_toBottomOf="@+id/btn_start_game"
+            app:layout_constraintEnd_toEndOf="@+id/lineView5"
+            android:background="@drawable/background_action_button" android:onClick="onLeaveClick"/>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/recyclerView" app:layout_constraintTop_toBottomOf="@+id/lineView6"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="@+id/lineView6"
             app:layout_constraintStart_toStartOf="@+id/lineView6" app:layout_constraintHorizontal_bias="0.0"/>
     <TextView
@@ -81,3 +88,5 @@
             app:layout_constraintStart_toEndOf="@+id/textView6"
             app:layout_constraintHorizontal_bias="0.08"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
