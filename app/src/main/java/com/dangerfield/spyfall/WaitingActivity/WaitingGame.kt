@@ -14,17 +14,17 @@ import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.activity_waiting_game.*
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class WaitingGame : AppCompatActivity() {
 
     var playerList = ArrayList<String>()
+    var playerObjectList = ArrayList<Player>()
     var db = FirebaseFirestore.getInstance()
     private lateinit var database: DatabaseReference
     private lateinit var ACCESS_CODE: String
@@ -33,8 +33,7 @@ class WaitingGame : AppCompatActivity() {
     lateinit var playerName : String
     lateinit var currentPlayer : Player
     lateinit var adapter: PlayerAdapter
-
-
+    lateinit var roles: ArrayList<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,18 +45,18 @@ class WaitingGame : AppCompatActivity() {
 
         tv_acess_code.text = ACCESS_CODE
 
-
-
         adapter = PlayerAdapter(playerName, playerList, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         displayUsers()
-
-
+        getLocationsAndRolesFromFireBase()
 
     }
 
     fun onStartClick(view: View){
+        if(roles.isEmpty()){return} //this means that the get locations and roles hasnt finished yet
+
+        loadPlayerObjects()
        // val intent = Intent(this, GameActivity::class.java)
        // startActivity(intent)
     }
@@ -72,17 +71,13 @@ class WaitingGame : AppCompatActivity() {
         //if all players left, delete the document
         gameRef.get()
             .addOnSuccessListener { game ->
-                if((game["playerList"] as ArrayList<String>).isEmpty()){
-                    gameRef.delete()
-                }
+                if((game["playerList"] as ArrayList<String>).isEmpty()){ gameRef.delete() }
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
             }
 
         val intent = Intent(this, MainActivity::class.java)
-
-
         startActivity(intent)
 
     }
@@ -98,6 +93,7 @@ class WaitingGame : AppCompatActivity() {
                 if (Game != null && Game.exists()) {
                     Log.d(TAG, "Current game data: ${Game.data}")
                     playerList.clear()
+                    Log.d(TAG,"Game[playerList] = ${Game["playerList"]}")
                     playerList.addAll(Game["playerList"] as ArrayList<String>)
 
                     adapter.notifyDataSetChanged()
@@ -108,31 +104,34 @@ class WaitingGame : AppCompatActivity() {
 
     }
 
+    fun getLocationsAndRolesFromFireBase() {
+
+        val gameRef = db.collection("games").document("$ACCESS_CODE")
+
+        gameRef.get().addOnSuccessListener {
+            var chosenPacks = it.get("chosenPacks") as ArrayList<String>
 
 
+            //TODO get all location packs and select a random 30 unless the size is 1, then just 20
+            val collectionRef = db.collection(chosenPacks[0])
+            collectionRef.get().addOnSuccessListener { documents ->
 
-    fun getLocationsAndRolesFromFireBase(checkedBoxes: ArrayList<String>) {
+                //grab all locations in  pack, this will be passed into intent
+                var index = Random().nextInt(documents.toList().size)
+                var randomLocation = documents.toList()[index]
 
-        Log.d(TAG,"trying to get pack: ${checkedBoxes.get(0)}")
+                var location = HashMap<String,String>()
+                location["chosenLocation"] = randomLocation.id
+                gameRef.set(location, SetOptions.merge())
 
-        var db = FirebaseFirestore.getInstance()
-        //TODO get all location packs and select a random 30 unless the size is 1, then just 20
-        val collectionRef = db.collection(checkedBoxes.get(0))
-        collectionRef.get().addOnSuccessListener { documents ->
-
-            //grab all locations in  pack, this will be passed into intent
-            var index = Random().nextInt(documents.toList().size)
-            var randomLocation = documents.toList()[index]
-            var gameLocation = randomLocation.id
-            var roles = randomLocation.data["roles"] as ArrayList<String>
-            Log.d(TAG,"roles for location ${gameLocation} is ${roles}")
+                roles = randomLocation.data["roles"] as ArrayList<String>
 
 
-
-        }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
             }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents: ", exception)
+                }
+        }
 
     }
 
@@ -140,35 +139,31 @@ class WaitingGame : AppCompatActivity() {
 
 
 
-//    fun loadPlayers(){
-//
-//        //I dont think we can assign roles upon creating. We wont know how many people there are
-//        //assigning roles may need to go into the game activity where theres code like this that loads in
-//        //the completed list
-//
-//        //i think play list will start off as a string array and then that string array will get pulled in
-//        //and the node will be updated using the following code
-//
-//        roles.shuffle()
-//        //pull data and add players
-//        Log.d(TAG,"grabbed roles[${playerList.size}]")
-//        currentPlayer = Player(roles.get(playerList.size), playerName, 0)
-//        playerList.add(currentPlayer)
-//        Log.d(TAG,"grabbed roles[${playerList.size}]")
-//        playerList.add(Player(roles.get(playerList.size), "Bri", 0))
-//        Log.d(TAG,"grabbed roles[${playerList.size}]")
-//        playerList.add(Player(roles.get(playerList.size), "Blythe", 0))
-//
-//        //pick a random player and make their role "the spy"
-//
-//        playerList[Random().nextInt(playerList.size)].role = "the spy!"
-//
-//        val adapter = PlayerAdapter(playerName, playerList, this)
-//        recyclerView.layoutManager = LinearLayoutManager(this)
-//        recyclerView.adapter = adapter
-//
-//
-//    }
+    fun loadPlayerObjects(){
+        val gameRef = db.collection("games").document("$ACCESS_CODE")
+
+        //get playerlist, create an object for each playerlist and assign a random role
+
+        roles.shuffle()
+        playerList.shuffle()
+
+        for(i in playerList.indices){
+            if(i<roles.size) {
+                playerObjectList.add(Player(roles[i], playerList[i], 0))
+            }
+            else{
+                playerObjectList.add(Player("The Spy!", playerList[i], 0))
+            }
+        }
+
+        //now push to database
+        var playerObjects = HashMap<String,ArrayList<Player>>()
+        playerObjects["playerObjectList"] = playerObjectList
+        gameRef.set(playerObjects, SetOptions.merge())
+
+        gameRef.set(playerObjectList, SetOptions.merge())
+
+    }
 
 
 }

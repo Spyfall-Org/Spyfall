@@ -93,6 +93,8 @@ class NewGameActivity : AppCompatActivity() {
 
 
 
+
+
     //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
 
         db.collection("games").document("$ACCESS_CODE")
