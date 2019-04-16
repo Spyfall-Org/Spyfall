@@ -10,25 +10,17 @@ import com.dangerfield.spyfall.WaitingActivity.WaitingGame
 import kotlinx.android.synthetic.main.activity_new_game.*
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
-import com.dangerfield.spyfall.data.Game
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Logger
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
-
-/* collect user entered data: Current user name, included packs, time limit
------When “create” is clicked------
--generate access code and create node on firebase with:
-	Player list(String) with current user name
-	isStarted (bool)
-	Time limit
-	Included packs
--pass access code and current user name to the waiting screen
-*/
-
+import kotlin.collections.ArrayList
 
 
 class NewGameActivity : AppCompatActivity() {
 
+    var db = FirebaseFirestore.getInstance()
+
+    val TAG = "New Game"
     val ACCESS_CODE = generateAccessCode()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +35,6 @@ class NewGameActivity : AppCompatActivity() {
 
         tv_in_game_player_name.onFocusChangeListener = keyboardHider
         tv_time.onFocusChangeListener = keyboardHider
-
-
 
     }
 
@@ -72,8 +62,10 @@ class NewGameActivity : AppCompatActivity() {
         Log.d("NEWGAME","Checked Boxes in new game are: $checkedBoxes")
         val timeLimit = tv_time.text.toString().toInt()
         val playerName = tv_in_game_player_name.text.toString()
+        val playerList = mutableListOf<String>(playerName)
 
         //push timeLimit, player name as an array, isStarted as false, and included packs
+        createFireBaseGame(timeLimit, playerList as ArrayList<String>,false,checkedBoxes)
 
         val intent = Intent(this, WaitingGame::class.java)
         intent.putExtra("PLAYER_NAME", playerName)
@@ -88,17 +80,27 @@ class NewGameActivity : AppCompatActivity() {
 
     fun generateAccessCode() = UUID.randomUUID().toString().substringBefore("-").toUpperCase()
 
-    fun createFireBaseGame(timeLimit: Int){
-        //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
-        FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG)
-        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
 
-        ref.child("timeLimit").setValue(timeLimit)
-        ref.child("timeLimit").setValue(timeLimit)
+//TODO: we coudl possibly get the chosenLocation and roles here and never have to store the chosenPacks on firebase
+    fun createFireBaseGame(timeLimit: Int,playerList: ArrayList<String>,isStarted: Boolean, chosenPacks: ArrayList<String>){
+
+    val game = HashMap<String, Any>()
+        game["timeLimit"] = timeLimit
+        game["playerList"] = playerList
+        game["isStarted"] = isStarted
+        game["chosenPacks"] = chosenPacks
+
+
+
+
+    //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
+
+        db.collection("games").document("$ACCESS_CODE")
+            .set(game)
+        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
 
 
     }
-
-
 
 }

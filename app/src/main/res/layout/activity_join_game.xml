@@ -13,10 +13,9 @@
             android:layout_height="46dp"
             android:id="@+id/btn_create2"
             android:background="@drawable/background_action_button"
-            android:onClick="onJoinGameClick"
             app:layout_constraintTop_toBottomOf="@+id/lineView2"
             app:layout_constraintStart_toStartOf="@+id/lineView2" app:layout_constraintEnd_toEndOf="@+id/lineView2"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" android:onClick="joinGameClick"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,14 +37,14 @@
             android:id="@+id/lineView2"
             app:layout_constraintStart_toStartOf="@+id/lineView"
             app:layout_constraintEnd_toEndOf="@+id/lineView" android:background="@android:color/darker_gray"
-            app:layout_constraintTop_toBottomOf="@+id/editText2"
+            app:layout_constraintTop_toBottomOf="@+id/tv_username"
             android:layout_marginTop="24dp"/>
     <EditText
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/editText" android:layout_marginTop="24dp"
+            android:id="@+id/tv_access_code" android:layout_marginTop="24dp"
             app:layout_constraintTop_toTopOf="@+id/lineView"
             app:layout_constraintStart_toStartOf="@+id/lineView" app:layout_constraintEnd_toEndOf="@+id/lineView"
             android:hint="Enter an access code" android:background="@drawable/background_action_button"
@@ -55,9 +54,9 @@
             android:layout_height="50dp"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/editText2" android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/editText" app:layout_constraintStart_toStartOf="@+id/editText"
-            app:layout_constraintEnd_toEndOf="@+id/editText" android:hint="Enter a username"
+            android:id="@+id/tv_username" android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_access_code" app:layout_constraintStart_toStartOf="@+id/tv_access_code"
+            app:layout_constraintEnd_toEndOf="@+id/tv_access_code" android:hint="Enter a username"
             android:background="@drawable/background_action_button" app:layout_constraintHorizontal_bias="0.0"
             android:paddingLeft="8dp"/>
 

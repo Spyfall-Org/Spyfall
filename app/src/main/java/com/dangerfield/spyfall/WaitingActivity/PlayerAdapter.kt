@@ -9,7 +9,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.player_card.view.*
 
-class PlayerAdapter(val playerName: String, val playerList: ArrayList<Player>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
+class PlayerAdapter(val playerName: String, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,7 +30,7 @@ class PlayerAdapter(val playerName: String, val playerList: ArrayList<Player>, v
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.number?.text = (position + 1).toString()
-        holder.name?.text = playerList[position].username
+        holder.name?.text = playerList[position]
         if(holder.name.text == playerName) holder.pencil.visibility = View.VISIBLE
 
 
