@@ -22,7 +22,6 @@ import kotlin.collections.ArrayList
 class WaitingGame : AppCompatActivity() {
 
     var playerList = ArrayList<Player>()
-    val ACCESS_CODE = generateAccessCode()
     var db = FirebaseFirestore.getInstance()
     var locations = ArrayList<String>()
     lateinit var gameLocation: String
@@ -33,12 +32,6 @@ class WaitingGame : AppCompatActivity() {
     lateinit var playerName : String
     lateinit var currentPlayer : Player
 
-    //TODO consider these changes
-    //I hate this code. there are way too many things going on here.
-    //1. all funcitons are dependant on others finishing, making the ui load slowly
-    // theres a ton of global variables and i feel ike these are data variables that can
-    // be in a class or companion object
-    //everything is handles by the activity, maybe it could be handled by a viewmodel
 
 
 
@@ -48,36 +41,19 @@ class WaitingGame : AppCompatActivity() {
 
 
 
-        timeLimit = intent.getIntExtra("TIME_LIMIT",0)
-        checkedBoxes = intent.getStringArrayListExtra("CHECKED_BOXES").toMutableList()
-        Log.d(TAG,"Checked boxes are: $checkedBoxes")
-        playerName = intent.getStringExtra("PLAYER_NAME")
-        tv_acess_code.text = ACCESS_CODE
+
 
         getLocationsAndRolesFromFireBase()
 
     }
 
     fun onStartClick(view: View){
-        val intent = Intent(this, GameActivity::class.java)
-        intent.putExtra("ACCESS_CODE",ACCESS_CODE)
-        intent.putExtra("LOCATIONS",locations)
-        intent.putExtra("CURRENT_PLAYER",currentPlayer)
-        startActivity(intent)
+       // val intent = Intent(this, GameActivity::class.java)
+       // startActivity(intent)
     }
 
-    fun generateAccessCode() = UUID.randomUUID().toString().substringBefore("-").toUpperCase()
 
-    fun createFireBaseGame(timeLimit: Int){
-        //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
-        FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG)
-        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
 
-        var game: Game =
-            Game(gameLocation, checkedBoxes, timeLimit, playerList)
-        ref.setValue(game)
-
-    }
 
     fun getLocationsAndRolesFromFireBase() {
 
@@ -98,7 +74,6 @@ class WaitingGame : AppCompatActivity() {
 
             //this code gets called after all location and players info is loaded
             loadPlayers()
-            createFireBaseGame(timeLimit)
 
 
         }

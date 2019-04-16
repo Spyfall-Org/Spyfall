@@ -116,7 +116,7 @@ class GameActivity : AppCompatActivity() {
             }
             for(j in 0..1) {
                 val player_tv = LayoutInflater.from(this)
-                    .inflate(R.layout.game_player, row, false) as ConstraintLayout
+                    .inflate(R.layout.simple_card, row, false) as ConstraintLayout
                 var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
                 if(i+j < playerList.size){
                     tv.text = playerList[i + j].username
@@ -141,7 +141,7 @@ class GameActivity : AppCompatActivity() {
             }
             for(j in 0..1) {
                 val player_tv = LayoutInflater.from(this)
-                    .inflate(R.layout.game_player, row, false) as ConstraintLayout
+                    .inflate(R.layout.simple_card, row, false) as ConstraintLayout
                 var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
                 if(i+j < locations.size){
                     tv.text = locations[i + j]
