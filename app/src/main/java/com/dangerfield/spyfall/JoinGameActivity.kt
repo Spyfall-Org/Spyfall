@@ -21,6 +21,9 @@ class JoinGameActivity : AppCompatActivity() {
 
     val TAG = "JoinGame"
     lateinit var ACCESS_CODE: String
+     var gameFound = false
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +31,8 @@ class JoinGameActivity : AppCompatActivity() {
 
     }
 
-
     fun joinGameClick(view: View) {
-        //take access code and ask if that node exists
-        //if it does add that player to the player list and take to waiting screen  passing "PLAYER_NAME
-        //from there everything should be normal
-        //if it doesnt make a toast
+
         if (tv_access_code.text.isEmpty()) {
             Toast.makeText(this, "Please type in an access code", Toast.LENGTH_LONG).show()
             return
@@ -44,18 +43,32 @@ class JoinGameActivity : AppCompatActivity() {
         }
         ACCESS_CODE = tv_access_code.text.toString()
 
-        db.collection("games").document("$ACCESS_CODE")
-            .update("playerList", FieldValue.arrayUnion("${tv_username.text}"))
-
-
-            val intent = Intent(this, WaitingGame::class.java)
-            val playerName = tv_username.text.toString()
-            intent.putExtra("ACCESS_CODE",ACCESS_CODE)
-            intent.putExtra("PLAYER_NAME", playerName)
-            startActivity(intent)
-        }
-
+        joinIfGameExists(ACCESS_CODE)
 
     }
+
+
+    fun joinIfGameExists(access_code: String){
+        db.collection("games").document(access_code).get().addOnSuccessListener { game ->
+            if(game.exists()){
+                joinGame()
+            }else{
+                Toast.makeText(this, "Sorry, no game was found with that access code", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    fun joinGame() {
+        db.collection("games").document(ACCESS_CODE)
+            .update("playerList", FieldValue.arrayUnion("${tv_username.text}"))
+
+        val intent = Intent(this, WaitingGame::class.java)
+        val playerName = tv_username.text.toString()
+        intent.putExtra("FROM_ACTIVITY", "JOIN_GAME_ACTIVITY")
+        intent.putExtra("ACCESS_CODE", ACCESS_CODE)
+        intent.putExtra("PLAYER_NAME", playerName)
+        startActivity(intent)
+    }
+}
 
 

@@ -37,12 +37,10 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        var locations = intent.getStringArrayListExtra("LOCATIONS")
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
-        getGameFromFireBase()
-        loadLocationView(locations)
-        currentUser = intent.getParcelableExtra<Player>("CURRENT_PLAYER")
-        tv_role.text = "You are ${currentUser.role}"
+        //getGameFromFireBase()
+      //  currentUser = intent.getParcelableExtra<Player>("CURRENT_PLAYER")
+        //tv_role.text = "You are ${currentUser.role}"
 
     }
 

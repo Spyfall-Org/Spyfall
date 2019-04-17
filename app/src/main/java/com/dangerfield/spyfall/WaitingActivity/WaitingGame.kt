@@ -9,10 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.GameActivity
 import com.dangerfield.spyfall.MainActivity
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.data.Game
 import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.activity_waiting_game.*
-import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -42,6 +40,8 @@ class WaitingGame : AppCompatActivity() {
 
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
         playerName = intent.getStringExtra("PLAYER_NAME")
+        var fromActivity = intent.getStringExtra("FROM_ACTIVITY")
+
 
         tv_acess_code.text = ACCESS_CODE
 
@@ -49,7 +49,10 @@ class WaitingGame : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         displayUsers()
+        if(fromActivity == "NEW_GAME_ACTIVITY")
+        {
         getLocationsAndRolesFromFireBase()
+        }
 
     }
 
@@ -57,8 +60,11 @@ class WaitingGame : AppCompatActivity() {
         if(roles.isEmpty()){return} //this means that the get locations and roles hasnt finished yet
 
         loadPlayerObjects()
-       // val intent = Intent(this, GameActivity::class.java)
-       // startActivity(intent)
+
+        val gameRef = db.collection("games").document("$ACCESS_CODE")
+        gameRef.update("isStarted", true)
+        //the above line should trigger the intent put in the displayUsers() listener
+
     }
 
     fun onLeaveClick(view:View){
@@ -91,6 +97,12 @@ class WaitingGame : AppCompatActivity() {
                 }
 
                 if (Game != null && Game.exists()) {
+                    if(Game["isStarted"]== true){
+                        val intent = Intent(this, GameActivity::class.java)
+                        intent.putExtra("ACCESS_CODE",ACCESS_CODE)
+                        intent.putExtra("PLAYER_NAME", playerName)
+                        startActivity(intent)
+                    }
                     Log.d(TAG, "Current game data: ${Game.data}")
                     playerList.clear()
                     Log.d(TAG,"Game[playerList] = ${Game["playerList"]}")
@@ -157,11 +169,11 @@ class WaitingGame : AppCompatActivity() {
         }
 
         //now push to database
-        var playerObjects = HashMap<String,ArrayList<Player>>()
+        var playerObjects = HashMap<String,Any?>()
         playerObjects["playerObjectList"] = playerObjectList
         gameRef.set(playerObjects, SetOptions.merge())
 
-        gameRef.set(playerObjectList, SetOptions.merge())
+        gameRef.set(playerObjects, SetOptions.merge())
 
     }
 

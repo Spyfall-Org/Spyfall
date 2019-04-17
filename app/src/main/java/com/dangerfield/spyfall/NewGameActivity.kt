@@ -69,6 +69,7 @@ class NewGameActivity : AppCompatActivity() {
 
         val intent = Intent(this, WaitingGame::class.java)
         intent.putExtra("PLAYER_NAME", playerName)
+        intent.putExtra("FROM_ACTIVITY","NEW_GAME_ACTIVITY")
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         startActivity(intent)
     }
@@ -89,11 +90,6 @@ class NewGameActivity : AppCompatActivity() {
         game["playerList"] = playerList
         game["isStarted"] = isStarted
         game["chosenPacks"] = chosenPacks
-
-
-
-
-
 
     //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
 
