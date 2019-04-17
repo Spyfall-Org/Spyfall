@@ -80,7 +80,7 @@ class NewGameActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun generateAccessCode() = UUID.randomUUID().toString().substring(0,4).toUpperCase()
+    fun generateAccessCode() = UUID.randomUUID().toString().substring(0,6).toUpperCase()
 
 
 //TODO: we coudl possibly get the chosenLocation and roles here and never have to store the chosenPacks on firebase
