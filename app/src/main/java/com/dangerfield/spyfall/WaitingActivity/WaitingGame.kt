@@ -27,10 +27,8 @@ class WaitingGame : AppCompatActivity() {
     var db = FirebaseFirestore.getInstance()
     private lateinit var database: DatabaseReference
     private lateinit var ACCESS_CODE: String
-    lateinit var players: ArrayList<String>
     private var TAG = "Waiting Game"
     lateinit var playerName : String
-    lateinit var currentPlayer : Player
     lateinit var adapter: PlayerAdapter
     var roles = ArrayList<String>()
 
@@ -58,13 +56,7 @@ class WaitingGame : AppCompatActivity() {
 
 
     fun onStartClick(view: View){
-        loadPlayerObjects() // load uses roles so we cant just do that because only the creator  has roles
-
-        val gameRef = db.collection("games").document("$ACCESS_CODE")
-        gameRef.update("isStarted", true)
-
-        //the above line should trigger the intent put in the displayUsers() listener
-
+        loadPlayerObjects()
     }
 
     fun onLeaveClick(view:View){
@@ -100,6 +92,7 @@ class WaitingGame : AppCompatActivity() {
                     if(Game["isStarted"]== true){
                         val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName)
                         startActivity(intent)
+                        finish()
                     }
                     Log.d(TAG, "Current game data: ${Game.data}")
                     playerList.clear()
@@ -144,6 +137,11 @@ class WaitingGame : AppCompatActivity() {
 
 
     fun loadPlayerObjects(){
+
+        //creates player objects with a name a role from the chosen location
+        //pushes those object to the game node and flips the isStarted Boolean, triggering an intent
+        //in the displayUsers() function to the game screen
+
         val gameRef = db.collection("games").document(ACCESS_CODE)
 
         gameRef.get().addOnSuccessListener {
@@ -180,6 +178,8 @@ class WaitingGame : AppCompatActivity() {
                     var playerObjects = HashMap<String,Any?>()
                     playerObjects["playerObjectList"] = playerObjectList
                     gameRef.set(playerObjects, SetOptions.merge())
+                    //this line starts the game by triggering the intent in displayUsers()
+                    gameRef.update("isStarted", true)
 
                 }
 

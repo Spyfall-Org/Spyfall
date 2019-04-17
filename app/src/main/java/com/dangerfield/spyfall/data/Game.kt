@@ -1,6 +1,6 @@
 package com.dangerfield.spyfall.data
 
-class Game(val chosenLocation: String,val locationPacks: MutableList<String>,val timeLimit:Int, val playerList: ArrayList<Player>){
-    constructor() : this("",mutableListOf(),timeLimit = 69 , playerList = ArrayList<Player>())
+class Game(val chosenLocation: String,val chosenPacks: ArrayList<String>, val isStarted: Boolean,val playerList: ArrayList<String>, val playerObjectList: ArrayList<Player>,val timeLimit: Double){
+    constructor() : this("", ArrayList<String>(),false,ArrayList<String>(),ArrayList<Player>(),0.0)
 
 }

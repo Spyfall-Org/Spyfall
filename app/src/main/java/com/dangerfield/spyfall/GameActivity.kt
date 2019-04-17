@@ -51,15 +51,28 @@ class GameActivity : AppCompatActivity() {
 
         db.collection("games").document(ACCESS_CODE).get().addOnSuccessListener { game ->
 
-            var timeLimit = game["timeLimit"] as Long
-            var playerList = game["playerList"] as ArrayList<String>
-            var chosenPacks =  game["chosenPacks"] as ArrayList<String>
-            loadLocationView(chosenPacks)
-           /// var currentPlayer = (game["playerObjectList"] as ArrayList<Player>)[0]
-           /// Log.d(TAG,"Current player: $currentPlayer")
-            loadViews(playerList,tbl_players)
-            startTimer(timeLimit)
+            var gameObject =game.toObject(Game::class.java)
 
+            if(gameObject != null) {
+                var timeLimit = gameObject.timeLimit
+                var playerList = gameObject.playerList
+                var chosenPacks = gameObject.chosenPacks
+                loadLocationView(chosenPacks)
+                var currentPlayer = gameObject.playerObjectList.filter { it.username == playerName }
+                if(currentPlayer.size ==1){
+                    tv_role.text = currentPlayer[0].role
+                    if(currentPlayer[0].role != "The Spy!"){
+                        tv_chosen_location.text = "Location: ${gameObject?.chosenLocation}"
+                    }else{
+                        tv_chosen_location.text = "Figure out the location!"
+
+                    }
+
+                }
+
+                loadViews(playerList, tbl_players)
+                startTimer(timeLimit.toLong())
+            }
         }
 
     }
