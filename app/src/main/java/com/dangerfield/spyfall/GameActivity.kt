@@ -20,8 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.dangerfield.spyfall.data.Game
 import com.dangerfield.spyfall.data.Player
 import com.google.firebase.firestore.FirebaseFirestore
-
-
+import kotlin.collections.HashMap
 
 
 class GameActivity : AppCompatActivity() {
@@ -53,12 +52,7 @@ class GameActivity : AppCompatActivity() {
             var timeLimit = game["timeLimit"] as Long
             startTimer(timeLimit)
 
-                (game["playerObjectList"] as ArrayList<Player>).forEach {
-                if(it.username == playerName){
-                    var currentPlayer = it
-                    tv_role.text = currentPlayer.role
-                }
-            }
+
         }
 
     }
