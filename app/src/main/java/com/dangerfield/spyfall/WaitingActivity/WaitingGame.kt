@@ -32,7 +32,7 @@ class WaitingGame : AppCompatActivity() {
     lateinit var playerName : String
     lateinit var currentPlayer : Player
     lateinit var adapter: PlayerAdapter
-    lateinit var roles: ArrayList<String>
+    var roles = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class WaitingGame : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         displayUsers()
-        if(fromActivity == "NEW_GAME_ACTIVITY")
+        if(fromActivity.equals("NEW_GAME_ACTIVITY"))
         {
         getLocationsAndRolesFromFireBase()
         }
@@ -90,7 +90,7 @@ class WaitingGame : AppCompatActivity() {
     }
 
     fun displayUsers(){
-        val gameRef = db.collection("games").document("$ACCESS_CODE")
+        val gameRef = db.collection("games").document(ACCESS_CODE)
             gameRef.addSnapshotListener(EventListener<DocumentSnapshot>{ Game ,e ->
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e)
@@ -99,7 +99,7 @@ class WaitingGame : AppCompatActivity() {
 
                 if (Game != null && Game.exists()) {
                     if(Game["isStarted"]== true){
-                        val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName)
+                        val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName,currentPlayer)
                         startActivity(intent)
                     }
                     Log.d(TAG, "Current game data: ${Game.data}")
@@ -135,6 +135,7 @@ class WaitingGame : AppCompatActivity() {
                 location["chosenLocation"] = randomLocation.id
                 gameRef.set(location, SetOptions.merge())
 
+                roles.clear()
                 roles = randomLocation.data["roles"] as ArrayList<String>
 
 
@@ -147,37 +148,42 @@ class WaitingGame : AppCompatActivity() {
     }
 
 
-
-
-
     fun loadPlayerObjects(){
-        val gameRef = db.collection("games").document("$ACCESS_CODE")
+        val gameRef = db.collection("games").document(ACCESS_CODE)
 
         //get playerlist, create an object for each playerlist and assign a random role
 
         roles.shuffle()
         playerList.shuffle()
 
-        for(i in playerList.indices-1){
-            if(i<roles.size ) {
+        for(i in 0 until playerList.size-1){
+            //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
+            //i is between 0-6
 
-                if(playerList[i]==playerName){
+                if(playerList[i]==playerName)
+                {
+                    //if it is the current player then save it in an object so that we can
+                    //pass it to the game activity
                     currentPlayer = Player(roles[i], playerList[i], 0)
                     playerObjectList.add(currentPlayer)
+
                 }else {
                     playerObjectList.add(Player(roles[i], playerList[i], 0))
                 }
-            }
-            else{
-                playerObjectList.add(Player("The Spy!", playerList[i], 0))
-            }
         }
+        //so we shuffled players and roles and assigned everyone except one a role in order
+        //now we assign the lst one as the spy
+        if(playerList.last() == playerName){
+            currentPlayer = Player("The Spy!", playerList.last(), 0)
+            playerObjectList.add(currentPlayer)
+        }else {
+            playerObjectList.add(Player("The Spy!", playerList.last(), 0))
+        }
+
 
         //now push to database
         var playerObjects = HashMap<String,Any?>()
         playerObjects["playerObjectList"] = playerObjectList
-        gameRef.set(playerObjects, SetOptions.merge())
-
         gameRef.set(playerObjects, SetOptions.merge())
 
     }
@@ -185,10 +191,11 @@ class WaitingGame : AppCompatActivity() {
 
     companion object {
 
-        fun newIntent(context: Context,ACCESS_CODE: String, playerName: String): Intent {
+        fun newIntent(context: Context,ACCESS_CODE: String, playerName: String, currentPlayer: Player): Intent {
         val intent = Intent(context, GameActivity::class.java)
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         intent.putExtra("PLAYER_NAME", playerName)
+            intent.putExtra("CURRENT_PLAYER",currentPlayer)
             return intent
         }
 

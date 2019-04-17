@@ -63,18 +63,13 @@ class JoinGameActivity : AppCompatActivity() {
         db.collection("games").document(access_code).get().addOnSuccessListener { game ->
             if(game.exists()){
                 var list = (game["playerList"] as ArrayList<String>)
-               if(list.size < 8) {
 
-                   if(list.contains(tv_username.text.toString().trim())){
-                       Toast.makeText(this, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
-                        return@addOnSuccessListener
-                   }else {
-
-                       joinGame()
+                   when {
+                       list.size >= 8 ->  Toast.makeText(this, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
+                       game["isStarted"]==true -> Toast.makeText(this, "Sorry, this game has been started", Toast.LENGTH_LONG).show()
+                       list.contains(tv_username.text.toString().trim()) -> Toast.makeText(this, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
+                       else -> joinGame()
                    }
-               }else{
-                   Toast.makeText(this, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
-               }
 
             }else{
                 Toast.makeText(this, "Sorry, no game was found with that access code", Toast.LENGTH_LONG).show()

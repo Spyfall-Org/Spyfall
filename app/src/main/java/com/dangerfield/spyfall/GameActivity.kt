@@ -39,8 +39,8 @@ class GameActivity : AppCompatActivity() {
 
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
         //getGameFromFireBase()
-      //  currentUser = intent.getParcelableExtra<Player>("CURRENT_PLAYER")
-        //tv_role.text = "You are ${currentUser.role}"
+        currentUser = intent.getParcelableExtra<Player>("CURRENT_PLAYER")
+        tv_role.text = "You are ${currentUser.role}"
 
     }
 
