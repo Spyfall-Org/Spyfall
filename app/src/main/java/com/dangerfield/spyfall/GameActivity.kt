@@ -31,6 +31,8 @@ class GameActivity : AppCompatActivity() {
     val TAG = "Game Activity"
     var game: Game? = null
     lateinit var playerName: String
+    lateinit var chosenLocation: String
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,17 +43,21 @@ class GameActivity : AppCompatActivity() {
         //getGameFromFireBase()
         playerName = intent.getStringExtra("PLAYER_NAME")
 
-        getCurrentPlayer()
+        getGameData()
 
     }
 
-    fun getCurrentPlayer(){
+    fun getGameData(){
 
         db.collection("games").document(ACCESS_CODE).get().addOnSuccessListener { game ->
 
             var timeLimit = game["timeLimit"] as Long
+            var playerList = game["playerList"] as ArrayList<String>
+            loadLocationView(game["chosenPacks"] as ArrayList<String>)
+            var currentPlayer = (game["playerObjectList"] as ArrayList<Player>)[0]
+            Log.d(TAG,"Current player: $currentPlayer")
+            loadPlayers(playerList)
             startTimer(timeLimit)
-
 
         }
 
@@ -112,7 +118,7 @@ class GameActivity : AppCompatActivity() {
     }
 
 
-    fun loadPlayers(playerList: ArrayList<Player>){
+    fun loadPlayers(playerList: ArrayList<String>){
 
         //TODO right now the two main views load one after the other, can we do this asynchonously?
 
@@ -129,7 +135,7 @@ class GameActivity : AppCompatActivity() {
                     .inflate(R.layout.simple_card, row, false) as ConstraintLayout
                 var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
                 if(i+j < playerList.size){
-                    tv.text = playerList[i + j].username
+                    tv.text = playerList[i + j]
                     row.addView(player_tv)
                 }
 
@@ -139,28 +145,37 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    fun loadLocationView(locations: ArrayList<String>){
-        //TODO considering we will have 20 or 30 every time we can probably avoid this
-        var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
-        params.setMargins(10,10,10,10)
+    fun loadLocationView(chosenPacks: ArrayList<String>){
 
-        for( i in 0 until locations.size step 2) {
-            val row = TableRow(this).apply {
-                layoutParams = params
-            }
-            for(j in 0..1) {
-                val player_tv = LayoutInflater.from(this)
-                    .inflate(R.layout.simple_card, row, false) as ConstraintLayout
-                var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
-                if(i+j < locations.size){
-                    tv.text = locations[i + j]
-                    row.addView(player_tv)
+        var locations = ArrayList<String>()
+
+        db.collection(chosenPacks[0]).get().addOnSuccessListener {location ->
+            location.documents.forEach { locations.add(it.id)}
+
+            //TODO considering we will have 20 or 30 every time we can probably avoid this
+            var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+            params.setMargins(10,10,10,10)
+
+            for( i in 0 until locations.size step 2) {
+                val row = TableRow(this).apply {
+                    layoutParams = params
                 }
+                for(j in 0..1) {
+                    val player_tv = LayoutInflater.from(this)
+                        .inflate(R.layout.simple_card, row, false) as ConstraintLayout
+                    var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
+                    if(i+j < locations.size){
+                        tv.text = locations[i + j]
+                        row.addView(player_tv)
+                    }
 
+                }
+                tbl_locations.addView(row)
             }
-            tbl_locations.addView(row)
         }
+
+
 
     }
 

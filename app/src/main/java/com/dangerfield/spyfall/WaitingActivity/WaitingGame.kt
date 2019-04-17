@@ -51,19 +51,18 @@ class WaitingGame : AppCompatActivity() {
         displayUsers()
         if(fromActivity.equals("NEW_GAME_ACTIVITY"))
         {
-        getLocationsAndRolesFromFireBase()
+        getLocation()
         }
 
     }
 
 
     fun onStartClick(view: View){
-        if(roles.isEmpty()){return} //this means that the get locations and roles hasnt finished yet
-
-        loadPlayerObjects()
+        loadPlayerObjects() // load uses roles so we cant just do that because only the creator  has roles
 
         val gameRef = db.collection("games").document("$ACCESS_CODE")
         gameRef.update("isStarted", true)
+
         //the above line should trigger the intent put in the displayUsers() listener
 
     }
@@ -115,7 +114,7 @@ class WaitingGame : AppCompatActivity() {
 
     }
 
-    fun getLocationsAndRolesFromFireBase() {
+    fun getLocation() {
 
         val gameRef = db.collection("games").document("$ACCESS_CODE")
 
@@ -135,10 +134,6 @@ class WaitingGame : AppCompatActivity() {
                 location["chosenLocation"] = randomLocation.id
                 gameRef.set(location, SetOptions.merge())
 
-                roles.clear()
-                roles = randomLocation.data["roles"] as ArrayList<String>
-
-
             }
                 .addOnFailureListener { exception ->
                     Log.w(TAG, "Error getting documents: ", exception)
@@ -151,29 +146,47 @@ class WaitingGame : AppCompatActivity() {
     fun loadPlayerObjects(){
         val gameRef = db.collection("games").document(ACCESS_CODE)
 
-        //get playerlist, create an object for each playerlist and assign a random role
+        gameRef.get().addOnSuccessListener {
+            var chosenPacks = it.get("chosenPacks") as ArrayList<String>
+            var chosenLocation = it.get("chosenLocation") as String
 
-        roles.shuffle()
-        playerList.shuffle()
+            //TODO get all location packs and select a random 30 unless the size is 1, then just 20
+            val rolesRef = db.collection(chosenPacks[0])
+                .document(chosenLocation).get().addOnSuccessListener {locationInfo->
+                    roles.clear()
+                    roles = locationInfo.data?.get("roles") as ArrayList<String>
 
-        for(i in 0 until playerList.size-1){
-            //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
-            //i is between 0-6
+                    //so now we have all the roles
+                    //get playerlist, create an object for each playerlist and assign a random role
 
-            playerObjectList.add(Player(roles[i], playerList[i], 0))
+                    roles.shuffle()
+                    playerList.shuffle()
 
+                    for(i in 0 until playerList.size-1){
+                        //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
+                        //i is between 0-6
+
+                        playerObjectList.add(Player(roles[i], playerList[i], 0))
+
+                    }
+                    //so we shuffled players and roles and assigned everyone except one a role in order
+                    //now we assign the lst one as the spy
+
+                    playerObjectList.add(Player("The Spy!", playerList.last(), 0))
+
+
+
+                    //now push to database
+                    var playerObjects = HashMap<String,Any?>()
+                    playerObjects["playerObjectList"] = playerObjectList
+                    gameRef.set(playerObjects, SetOptions.merge())
+
+                }
+
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting roles: ", exception)
+                }
         }
-        //so we shuffled players and roles and assigned everyone except one a role in order
-        //now we assign the lst one as the spy
-
-            playerObjectList.add(Player("The Spy!", playerList.last(), 0))
-
-
-
-        //now push to database
-        var playerObjects = HashMap<String,Any?>()
-        playerObjects["playerObjectList"] = playerObjectList
-        gameRef.set(playerObjects, SetOptions.merge())
 
     }
 
