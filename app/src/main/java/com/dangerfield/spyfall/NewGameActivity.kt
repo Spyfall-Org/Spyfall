@@ -61,7 +61,7 @@ class NewGameActivity : AppCompatActivity() {
 
         Log.d("NEWGAME","Checked Boxes in new game are: $checkedBoxes")
         val timeLimit = tv_time.text.toString().toInt()
-        val playerName = tv_in_game_player_name.text.toString()
+        val playerName = tv_in_game_player_name.text.toString().trim()
         val playerList = mutableListOf<String>(playerName)
 
         //push timeLimit, player name as an array, isStarted as false, and included packs

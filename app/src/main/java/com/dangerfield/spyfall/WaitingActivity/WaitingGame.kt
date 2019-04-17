@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.WaitingActivity
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -33,7 +34,6 @@ class WaitingGame : AppCompatActivity() {
     lateinit var adapter: PlayerAdapter
     lateinit var roles: ArrayList<String>
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_waiting_game)
@@ -55,6 +55,7 @@ class WaitingGame : AppCompatActivity() {
         }
 
     }
+
 
     fun onStartClick(view: View){
         if(roles.isEmpty()){return} //this means that the get locations and roles hasnt finished yet
@@ -98,9 +99,7 @@ class WaitingGame : AppCompatActivity() {
 
                 if (Game != null && Game.exists()) {
                     if(Game["isStarted"]== true){
-                        val intent = Intent(this, GameActivity::class.java)
-                        intent.putExtra("ACCESS_CODE",ACCESS_CODE)
-                        intent.putExtra("PLAYER_NAME", playerName)
+                        val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName)
                         startActivity(intent)
                     }
                     Log.d(TAG, "Current game data: ${Game.data}")
@@ -159,9 +158,15 @@ class WaitingGame : AppCompatActivity() {
         roles.shuffle()
         playerList.shuffle()
 
-        for(i in playerList.indices){
-            if(i<roles.size) {
-                playerObjectList.add(Player(roles[i], playerList[i], 0))
+        for(i in playerList.indices-1){
+            if(i<roles.size ) {
+
+                if(playerList[i]==playerName){
+                    currentPlayer = Player(roles[i], playerList[i], 0)
+                    playerObjectList.add(currentPlayer)
+                }else {
+                    playerObjectList.add(Player(roles[i], playerList[i], 0))
+                }
             }
             else{
                 playerObjectList.add(Player("The Spy!", playerList[i], 0))
@@ -174,6 +179,18 @@ class WaitingGame : AppCompatActivity() {
         gameRef.set(playerObjects, SetOptions.merge())
 
         gameRef.set(playerObjects, SetOptions.merge())
+
+    }
+
+
+    companion object {
+
+        fun newIntent(context: Context,ACCESS_CODE: String, playerName: String): Intent {
+        val intent = Intent(context, GameActivity::class.java)
+        intent.putExtra("ACCESS_CODE", ACCESS_CODE)
+        intent.putExtra("PLAYER_NAME", playerName)
+            return intent
+        }
 
     }
 

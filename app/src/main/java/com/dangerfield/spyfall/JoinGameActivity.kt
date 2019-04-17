@@ -41,7 +41,7 @@ class JoinGameActivity : AppCompatActivity() {
             Toast.makeText(this, "Please type in a username", Toast.LENGTH_LONG).show()
             return
         }
-        ACCESS_CODE = tv_access_code.text.toString()
+        ACCESS_CODE = tv_access_code.text.toString().trim()
 
         joinIfGameExists(ACCESS_CODE)
 
@@ -51,7 +51,20 @@ class JoinGameActivity : AppCompatActivity() {
     fun joinIfGameExists(access_code: String){
         db.collection("games").document(access_code).get().addOnSuccessListener { game ->
             if(game.exists()){
-                joinGame()
+                var list = (game["playerList"] as ArrayList<String>)
+               if(list.size < 8) {
+
+                   if(list.contains(tv_username.text.toString().trim())){
+                       Toast.makeText(this, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
+                        return@addOnSuccessListener
+                   }else {
+
+                       joinGame()
+                   }
+               }else{
+                   Toast.makeText(this, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
+               }
+
             }else{
                 Toast.makeText(this, "Sorry, no game was found with that access code", Toast.LENGTH_LONG).show()
             }
@@ -63,7 +76,7 @@ class JoinGameActivity : AppCompatActivity() {
             .update("playerList", FieldValue.arrayUnion("${tv_username.text}"))
 
         val intent = Intent(this, WaitingGame::class.java)
-        val playerName = tv_username.text.toString()
+        val playerName = tv_username.text.toString().trim()
         intent.putExtra("FROM_ACTIVITY", "JOIN_GAME_ACTIVITY")
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         intent.putExtra("PLAYER_NAME", playerName)
