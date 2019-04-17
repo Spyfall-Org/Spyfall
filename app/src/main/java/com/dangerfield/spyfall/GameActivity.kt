@@ -174,6 +174,10 @@ class GameActivity : AppCompatActivity() {
     fun endGame(view: View){
         //called when end button game is clicked
         //deleted node on firebase
+        db.collection("games").document(ACCESS_CODE)
+            .delete()
+            .addOnSuccessListener { Log.d(TAG, "Game successfully deleted!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error deleting game", e) }
 
         val intent = Intent(this,MainActivity::class.java)
         startActivity(intent)
