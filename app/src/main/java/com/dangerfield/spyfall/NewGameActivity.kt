@@ -72,6 +72,7 @@ class NewGameActivity : AppCompatActivity() {
         intent.putExtra("FROM_ACTIVITY","NEW_GAME_ACTIVITY")
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         startActivity(intent)
+
     }
 
     fun hideKeyboard(view: View) {
@@ -97,8 +98,6 @@ class NewGameActivity : AppCompatActivity() {
             .set(game)
         .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
         .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-
-
     }
 
 }
