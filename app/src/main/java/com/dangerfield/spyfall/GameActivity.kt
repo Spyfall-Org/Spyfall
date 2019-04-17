@@ -15,12 +15,12 @@ import kotlin.collections.ArrayList
 
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TableLayout
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.dangerfield.spyfall.data.Game
 import com.dangerfield.spyfall.data.Player
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.collections.HashMap
 
 
 class GameActivity : AppCompatActivity() {
@@ -53,10 +53,11 @@ class GameActivity : AppCompatActivity() {
 
             var timeLimit = game["timeLimit"] as Long
             var playerList = game["playerList"] as ArrayList<String>
-            loadLocationView(game["chosenPacks"] as ArrayList<String>)
-            var currentPlayer = (game["playerObjectList"] as ArrayList<Player>)[0]
-            Log.d(TAG,"Current player: $currentPlayer")
-            loadPlayers(playerList)
+            var chosenPacks =  game["chosenPacks"] as ArrayList<String>
+            loadLocationView(chosenPacks)
+           /// var currentPlayer = (game["playerObjectList"] as ArrayList<Player>)[0]
+           /// Log.d(TAG,"Current player: $currentPlayer")
+            loadViews(playerList,tbl_players)
             startTimer(timeLimit)
 
         }
@@ -118,32 +119,6 @@ class GameActivity : AppCompatActivity() {
     }
 
 
-    fun loadPlayers(playerList: ArrayList<String>){
-
-        //TODO right now the two main views load one after the other, can we do this asynchonously?
-
-        var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
-        params.setMargins(10,10,10,10)
-
-        for( i in 0 until playerList.size step 2) {
-            val row = TableRow(this).apply {
-                layoutParams = params
-            }
-            for(j in 0..1) {
-                val player_tv = LayoutInflater.from(this)
-                    .inflate(R.layout.simple_card, row, false) as ConstraintLayout
-                var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
-                if(i+j < playerList.size){
-                    tv.text = playerList[i + j]
-                    row.addView(player_tv)
-                }
-
-            }
-            tbl_players.addView(row)
-        }
-
-    }
 
     fun loadLocationView(chosenPacks: ArrayList<String>){
 
@@ -152,39 +127,41 @@ class GameActivity : AppCompatActivity() {
         db.collection(chosenPacks[0]).get().addOnSuccessListener {location ->
             location.documents.forEach { locations.add(it.id)}
 
-            //TODO considering we will have 20 or 30 every time we can probably avoid this
-            var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
-                TableRow.LayoutParams.WRAP_CONTENT)
-            params.setMargins(10,10,10,10)
-
-            for( i in 0 until locations.size step 2) {
-                val row = TableRow(this).apply {
-                    layoutParams = params
-                }
-                for(j in 0..1) {
-                    val player_tv = LayoutInflater.from(this)
-                        .inflate(R.layout.simple_card, row, false) as ConstraintLayout
-                    var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
-                    if(i+j < locations.size){
-                        tv.text = locations[i + j]
-                        row.addView(player_tv)
-                    }
-
-                }
-                tbl_locations.addView(row)
-            }
+            loadViews(locations,tbl_locations)
         }
-
-
 
     }
 
+    fun loadViews(list: ArrayList<String>, table: TableLayout){
+
+        //TODO considering we will have 20 or 30 every time we can probably avoid this
+        var params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT)
+        params.setMargins(10,10,10,10)
+
+
+        for( i in 0 until list.size step 2) {
+            val row = TableRow(this).apply {
+                layoutParams = params
+            }
+            for(j in 0..1) {
+                val player_tv = LayoutInflater.from(this)
+                    .inflate(R.layout.simple_card, row, false) as ConstraintLayout
+                var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
+                if(i+j < list.size){
+                    tv.text = list[i + j]
+                    row.addView(player_tv)
+                }
+
+            }
+            table.addView(row)
+        }
+
+    }
     fun endGame(view: View){
         //called when end button game is clicked
         //deleted node on firebase
 
-        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
-        ref.removeValue()
         val intent = Intent(this,MainActivity::class.java)
         startActivity(intent)
         finish()

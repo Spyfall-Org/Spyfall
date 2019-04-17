@@ -190,7 +190,6 @@ class WaitingGame : AppCompatActivity() {
 
     }
 
-
     companion object {
 
         fun newIntent(context: Context,ACCESS_CODE: String, playerName: String): Intent {
