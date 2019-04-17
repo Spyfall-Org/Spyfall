@@ -99,7 +99,7 @@ class WaitingGame : AppCompatActivity() {
 
                 if (Game != null && Game.exists()) {
                     if(Game["isStarted"]== true){
-                        val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName,currentPlayer)
+                        val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName)
                         startActivity(intent)
                     }
                     Log.d(TAG, "Current game data: ${Game.data}")
@@ -160,25 +160,14 @@ class WaitingGame : AppCompatActivity() {
             //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
             //i is between 0-6
 
-                if(playerList[i]==playerName)
-                {
-                    //if it is the current player then save it in an object so that we can
-                    //pass it to the game activity
-                    currentPlayer = Player(roles[i], playerList[i], 0)
-                    playerObjectList.add(currentPlayer)
+            playerObjectList.add(Player(roles[i], playerList[i], 0))
 
-                }else {
-                    playerObjectList.add(Player(roles[i], playerList[i], 0))
-                }
         }
         //so we shuffled players and roles and assigned everyone except one a role in order
         //now we assign the lst one as the spy
-        if(playerList.last() == playerName){
-            currentPlayer = Player("The Spy!", playerList.last(), 0)
-            playerObjectList.add(currentPlayer)
-        }else {
+
             playerObjectList.add(Player("The Spy!", playerList.last(), 0))
-        }
+
 
 
         //now push to database
@@ -191,11 +180,10 @@ class WaitingGame : AppCompatActivity() {
 
     companion object {
 
-        fun newIntent(context: Context,ACCESS_CODE: String, playerName: String, currentPlayer: Player): Intent {
+        fun newIntent(context: Context,ACCESS_CODE: String, playerName: String): Intent {
         val intent = Intent(context, GameActivity::class.java)
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         intent.putExtra("PLAYER_NAME", playerName)
-            intent.putExtra("CURRENT_PLAYER",currentPlayer)
             return intent
         }
 

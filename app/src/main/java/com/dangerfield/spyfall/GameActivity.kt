@@ -31,7 +31,8 @@ class GameActivity : AppCompatActivity() {
     lateinit var ACCESS_CODE: String
     val TAG = "Game Activity"
     var game: Game? = null
-    lateinit var  currentUser: Player
+    lateinit var playerName: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,49 +40,66 @@ class GameActivity : AppCompatActivity() {
 
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
         //getGameFromFireBase()
-        currentUser = intent.getParcelableExtra<Player>("CURRENT_PLAYER")
-        tv_role.text = "You are ${currentUser.role}"
+        playerName = intent.getStringExtra("PLAYER_NAME")
+
+        getCurrentPlayer()
 
     }
 
-    fun getGameFromFireBase(){
-        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
+    fun getCurrentPlayer(){
 
-        //this is called initially and then every time the data is changed
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                game = dataSnapshot.getValue(Game::class.java)
+        db.collection("games").document(ACCESS_CODE).get().addOnSuccessListener { game ->
 
-                if(game!= null){
+            var timeLimit = game["timeLimit"] as Long
+            startTimer(timeLimit)
 
-                   // THIS IS WHERE WE COULD DO SOME ASYNC
-                loadPlayers(game?.playerList!!)
-                startTimer(game?.timeLimit!!)
-                    if(currentUser.role != "the spy!"){
-                        tv_chosen_location.text = "Location: ${game?.chosenLocation}"
-                    }else{
-                        tv_chosen_location.text = "Figure out the location!"
-
-                    }
+                (game["playerObjectList"] as ArrayList<Player>).forEach {
+                if(it.username == playerName){
+                    var currentPlayer = it
+                    tv_role.text = currentPlayer.role
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException())
-            }
-
-        })
-
+        }
 
     }
 
-    fun startTimer(timeLimit : Int){
-        Log.d(TAG, "Game timer is: ${game?.timeLimit}")
+//    fun getGameFromFireBase(){
+//        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
+//
+//        //this is called initially and then every time the data is changed
+//        ref.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                game = dataSnapshot.getValue(Game::class.java)
+//
+//                if(game!= null){
+//
+//                   // THIS IS WHERE WE COULD DO SOME ASYNC
+//                loadPlayers(game?.playerList!!)
+//                startTimer(game?.timeLimit!!)
+////                    if(currentUser.role != "the spy!"){
+////                        tv_chosen_location.text = "Location: ${game?.chosenLocation}"
+////                    }else{
+////                        tv_chosen_location.text = "Figure out the location!"
+//
+//                    }
+//                }
+//            }
 
-        object : CountDownTimer((60000*timeLimit).toLong(), 1000) {
+//            override fun onCancelled(error: DatabaseError) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException())
+//            }
+//
+//        })
+//
+//
+//    }
+
+    fun startTimer(timeLimit : Long){
+
+        object : CountDownTimer((60000*timeLimit), 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 val text = String.format(
