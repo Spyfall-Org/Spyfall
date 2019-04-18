@@ -7,7 +7,8 @@
                                                    android:layout_height="50dp" android:id="@+id/game_player"
                                                    android:background="@drawable/background_text"
                                                    android:layout_marginBottom="0dp" android:layout_marginLeft="0dp"
-                                                   android:layout_marginRight="8dp" android:layout_marginTop="5dp">
+                                                   android:layout_marginRight="8dp" android:layout_marginTop="5dp"
+                                                   android:onClick="onClickDissapear">
 
     <TextView
             android:text="TextView"

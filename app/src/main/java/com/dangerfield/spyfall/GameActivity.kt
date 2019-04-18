@@ -131,24 +131,23 @@ class GameActivity : AppCompatActivity() {
 
             Log.d(TAG,"chosenPack: ${chosenPacks[i]}")
 
-
             db.collection(chosenPacks[i]).get().addOnSuccessListener { location ->
                 location.documents.forEach { locations.add(it.id) }
                 Log.d(TAG,"ALL LOCAITONS: ${locations}")
-
-                if(chosenPacks.size > 1) {
-                    //TODO once every pack has 20 you can uncommment this code, right now it loads all documents
-                    //grab the first 30, and shuffle them
-                    //loadViews(locations.subList(0, 29).shuffle() as ArrayList<String>, tbl_locations)
-                    locations.shuffle()
-                    loadViews(locations, tbl_locations)
-
-                }else{
-                    //we only grabbed one pack so just load those
-                    loadViews(locations, tbl_locations)
-                }
-
             }
+        }
+
+        if(chosenPacks.size > 1) {
+            //TODO once every pack has 20 you can uncommment this code, right now it loads all documents
+            //grab the first 30, and shuffle them
+            //loadViews(locations.subList(0, 29).shuffle() as ArrayList<String>, tbl_locations)
+            //WHEN GRABBING SUBLIST MAKE SURE IT INCLUDES THE CHOSEN LOCATION
+            locations.shuffle()
+            loadViews(locations, tbl_locations)
+
+        }else{
+            //we only grabbed one pack so just load those
+            loadViews(locations, tbl_locations)
         }
 
 
@@ -198,5 +197,10 @@ class GameActivity : AppCompatActivity() {
                 gameRef.delete()
             }
         }
+    }
+
+    fun onClickDissapear(view: View){
+        //TODO change this to cross through
+        view.visibility = View.INVISIBLE
     }
 }
