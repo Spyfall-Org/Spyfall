@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.player_card.view.*
 
 class PlayerAdapter(val playerName: String, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
@@ -38,7 +37,7 @@ class PlayerAdapter(val playerName: String, val playerList: ArrayList<String>, v
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val number = view.tv_player_number
-        val name = view.tv_in_game_player_name
+        val name = view.tv_simple_card
         val pencil = view.iv_pencil
 
 

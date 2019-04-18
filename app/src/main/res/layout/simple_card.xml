@@ -8,13 +8,13 @@
                                                    android:background="@drawable/background_text"
                                                    android:layout_marginBottom="0dp" android:layout_marginLeft="0dp"
                                                    android:layout_marginRight="8dp" android:layout_marginTop="5dp"
-                                                   android:onClick="onClickDissapear">
+                                                   android:onClick="onClickStrikeThrough">
 
     <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_in_game_player_name" app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/tv_simple_card" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" android:layout_marginBottom="8dp"

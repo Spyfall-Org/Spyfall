@@ -32,7 +32,7 @@ class NewGameActivity : AppCompatActivity() {
             }
         }
 
-        tv_in_game_player_name.onFocusChangeListener = keyboardHider
+        tv_simple_card.onFocusChangeListener = keyboardHider
         tv_time.onFocusChangeListener = keyboardHider
 
     }
@@ -52,7 +52,7 @@ class NewGameActivity : AppCompatActivity() {
             Toast.makeText(this, "please enter a time limit less than 10 minutes",Toast.LENGTH_LONG).show()
             return
         }
-        if(tv_in_game_player_name.text.isEmpty()){
+        if(tv_simple_card.text.isEmpty()){
             Toast.makeText(this, "please enter a name",Toast.LENGTH_LONG).show()
             return
         }
@@ -60,7 +60,7 @@ class NewGameActivity : AppCompatActivity() {
 
         Log.d("NEWGAME","Checked Boxes in new game are: $checkedBoxes")
         val timeLimit = tv_time.text.toString().toInt()
-        val playerName = tv_in_game_player_name.text.toString().trim()
+        val playerName = tv_simple_card.text.toString().trim()
         val playerList = mutableListOf<String>(playerName)
 
         //push timeLimit, player name as an array, isStarted as false, and included packs

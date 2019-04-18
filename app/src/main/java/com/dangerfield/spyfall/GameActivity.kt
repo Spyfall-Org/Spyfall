@@ -1,13 +1,13 @@
 package com.dangerfield.spyfall
 
 import android.content.Intent
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.widget.TableRow
 import android.widget.TextView
-import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_game.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -16,16 +16,13 @@ import kotlin.collections.ArrayList
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TableLayout
-import android.widget.Toast
 
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.dangerfield.spyfall.WaitingActivity.WaitingGame
 import com.dangerfield.spyfall.data.Game
-import com.dangerfield.spyfall.data.Player
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_join_game.*
+import kotlinx.android.synthetic.main.simple_card.*
 
 
 class GameActivity : AppCompatActivity() {
@@ -174,7 +171,7 @@ class GameActivity : AppCompatActivity() {
             for(j in 0..1) {
                 val player_tv = LayoutInflater.from(this)
                     .inflate(R.layout.simple_card, row, false) as ConstraintLayout
-                var tv = player_tv.getViewById(R.id.tv_in_game_player_name) as TextView
+                var tv = player_tv.getViewById(R.id.tv_simple_card) as TextView
                 if(i+j < list.size){
                     tv.text = list[i + j]
                     row.addView(player_tv)
@@ -204,8 +201,13 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun onClickDissapear(view: View){
+    fun onClickStrikeThrough(view: View){
         //TODO change this to cross through
-        view.visibility = View.INVISIBLE
+        if(tv_simple_card.paintFlags != Paint.STRIKE_THRU_TEXT_FLAG){
+            tv_simple_card.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+
+        }else{
+            tv_simple_card.paintFlags = 0
+        }
     }
 }
