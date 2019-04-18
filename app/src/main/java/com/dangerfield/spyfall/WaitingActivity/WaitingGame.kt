@@ -31,6 +31,7 @@ class WaitingGame : AppCompatActivity() {
     lateinit var playerName : String
     lateinit var adapter: PlayerAdapter
     var roles = ArrayList<String>()
+    private lateinit var randomPack: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +117,8 @@ class WaitingGame : AppCompatActivity() {
 
 
             //selects one of the packs at random
-            val collectionRef = db.collection(chosenPacks[Random().nextInt(chosenPacks.size)])
+            randomPack = chosenPacks[Random().nextInt(chosenPacks.size)]
+            val collectionRef = db.collection(randomPack)
             collectionRef.get().addOnSuccessListener { documents ->
 
                 //get a random location and add it to the game node
@@ -149,40 +151,52 @@ class WaitingGame : AppCompatActivity() {
             var chosenLocation = it.get("chosenLocation") as String
 
             //TODO get all location packs and select a random 30 unless the size is 1, then just 20
-            val rolesRef = db.collection(chosenPacks[0])
-                .document(chosenLocation).get().addOnSuccessListener {locationInfo->
-                    roles.clear()
-                    roles = locationInfo.data?.get("roles") as ArrayList<String>
 
-                    //so now we have all the roles
-                    //get playerlist, create an object for each playerlist and assign a random role
+            for( i in 0 until chosenPacks.size){
+                db.collection(chosenPacks[i]).whereEqualTo("location",chosenLocation)
+                   .get().addOnSuccessListener {locationInfo->
 
-                    roles.shuffle()
-                    playerList.shuffle()
 
-                    for(i in 0 until playerList.size-1){
-                        //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
-                        //i is between 0-6
+                        if(locationInfo.documents.size == 1) {
+                            //only one document should be found matching the location
+                            roles.clear()
+                            roles = locationInfo.documents[0]["roles"] as ArrayList<String>
 
-                        playerObjectList.add(Player(roles[i], playerList[i], 0))
-
+                            //so now we have all the roles
+                            //get playerlist, create an object for each playerlist and assign a random role
+                            shuffleAndAssign(gameRef)
+                        }
                     }
-                    //so we shuffled players and roles and assigned everyone except one a role in order
-                    //now we assign the lst one as the spy
-                    playerObjectList.add(Player("The Spy!", playerList.last(), 0))
+                    .addOnFailureListener { exception ->
+                        Log.w(TAG, "Error getting roles: ", exception)
+                    }
+            }
 
-                    //now push to database
-                    var playerObjects = HashMap<String,Any?>()
-                    playerObjects["playerObjectList"] = playerObjectList
-                    gameRef.set(playerObjects, SetOptions.merge())
-                    //this line starts the game by triggering the intent in displayUsers()
-                    gameRef.update("isStarted", true)
-                }
-                .addOnFailureListener { exception ->
-                    Log.w(TAG, "Error getting roles: ", exception)
-                }
         }
 
+    }
+
+    private fun shuffleAndAssign(gameRef: DocumentReference) {
+        roles.shuffle()
+        playerList.shuffle()
+
+        for (i in 0 until playerList.size - 1) {
+            //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
+            //i is between 0-6
+
+            playerObjectList.add(Player(roles[i], playerList[i], 0))
+
+        }
+        //so we shuffled players and roles and assigned everyone except one a role in order
+        //now we assign the lst one as the spy
+        playerObjectList.add(Player("The Spy!", playerList.last(), 0))
+
+        //now push to database
+        var playerObjects = HashMap<String, Any?>()
+        playerObjects["playerObjectList"] = playerObjectList
+        gameRef.set(playerObjects, SetOptions.merge())
+        //this line starts the game by triggering the intent in displayUsers()
+        gameRef.update("isStarted", true)
     }
 
     companion object {
