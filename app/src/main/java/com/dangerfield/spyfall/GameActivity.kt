@@ -16,11 +16,16 @@ import kotlin.collections.ArrayList
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TableLayout
+import android.widget.Toast
 
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.dangerfield.spyfall.WaitingActivity.WaitingGame
 import com.dangerfield.spyfall.data.Game
 import com.dangerfield.spyfall.data.Player
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_join_game.*
 
 
 class GameActivity : AppCompatActivity() {
@@ -44,9 +49,30 @@ class GameActivity : AppCompatActivity() {
         playerName = intent.getStringExtra("PLAYER_NAME")
 
         getGameData()
-
+        listenForEnd()
     }
 
+    fun listenForEnd(){
+        var gameRef = db.collection("games").document(ACCESS_CODE)
+        gameRef.addSnapshotListener(EventListener<DocumentSnapshot> { game, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@EventListener
+            }
+
+
+            if (game != null && game.exists()) {
+               if(game["isStarted"] == false){
+                   //Start Intent
+                   val intent = Intent(this,MainActivity::class.java)
+                   startActivity(intent)
+                   finish()
+               }
+            } else {
+                Log.d(TAG, "Current data: null")
+            }
+        })
+    }
     fun getGameData(){
 
         db.collection("games").document(ACCESS_CODE).get().addOnSuccessListener { game ->
@@ -57,7 +83,6 @@ class GameActivity : AppCompatActivity() {
                 var timeLimit = gameObject.timeLimit
                 var playerList = gameObject.playerList
                 var chosenPacks = gameObject.chosenPacks
-                loadLocationView(chosenPacks)
                 var currentPlayer = gameObject.playerObjectList.filter { it.username == playerName }
                 if(currentPlayer.size ==1){
                     tv_role.text = currentPlayer[0].role
@@ -65,51 +90,16 @@ class GameActivity : AppCompatActivity() {
                         tv_chosen_location.text = "Location: ${gameObject?.chosenLocation}"
                     }else{
                         tv_chosen_location.text = "Figure out the location!"
-
                     }
-
                 }
-
+                //we might be able to load these last views on different threads
+                loadLocationView(chosenPacks)
                 loadViews(playerList, tbl_players)
                 startTimer(timeLimit.toLong())
             }
         }
 
     }
-
-//    fun getGameFromFireBase(){
-//        val ref = FirebaseDatabase.getInstance().getReference("/games/$ACCESS_CODE")
-//
-//        //this is called initially and then every time the data is changed
-//        ref.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                game = dataSnapshot.getValue(Game::class.java)
-//
-//                if(game!= null){
-//
-//                   // THIS IS WHERE WE COULD DO SOME ASYNC
-//                loadPlayers(game?.playerList!!)
-//                startTimer(game?.timeLimit!!)
-////                    if(currentUser.role != "the spy!"){
-////                        tv_chosen_location.text = "Location: ${game?.chosenLocation}"
-////                    }else{
-////                        tv_chosen_location.text = "Figure out the location!"
-//
-//                    }
-//                }
-//            }
-
-//            override fun onCancelled(error: DatabaseError) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException())
-//            }
-//
-//        })
-//
-//
-//    }
 
     fun startTimer(timeLimit : Long){
 
@@ -130,8 +120,6 @@ class GameActivity : AppCompatActivity() {
 
         }.start()
     }
-
-
 
     fun loadLocationView(chosenPacks: ArrayList<String>){
 
@@ -173,16 +161,20 @@ class GameActivity : AppCompatActivity() {
     }
     fun endGame(view: View){
         //called when end button game is clicked
-        //deleted node on firebase
-        db.collection("games").document(ACCESS_CODE)
-            .delete()
-            .addOnSuccessListener { Log.d(TAG, "Game successfully deleted!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error deleting game", e) }
-
-        val intent = Intent(this,MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        //a listener is set checking for isStarted = false and if it does it goes back to the home screen
+        //and calls finish()
+        var gameRef = db.collection("games").document(ACCESS_CODE)
+        gameRef.update("isStarted", false)
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val gameRef = db.collection("games").document(ACCESS_CODE)
+        gameRef.get().addOnSuccessListener { game ->
+            if(game.exists()){
+                gameRef.delete()
+            }
+        }
+    }
 }

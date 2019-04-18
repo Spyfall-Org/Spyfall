@@ -82,22 +82,22 @@ class WaitingGame : AppCompatActivity() {
 
     fun displayUsers(){
         val gameRef = db.collection("games").document(ACCESS_CODE)
-            gameRef.addSnapshotListener(EventListener<DocumentSnapshot>{ Game ,e ->
+            gameRef.addSnapshotListener(EventListener<DocumentSnapshot>{ game ,e ->
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e)
                     return@EventListener
                 }
 
-                if (Game != null && Game.exists()) {
-                    if(Game["isStarted"]== true){
+                if (game != null && game.exists()) {
+                    if(game["isStarted"]== true){
                         val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName)
                         startActivity(intent)
                         finish()
                     }
-                    Log.d(TAG, "Current game data: ${Game.data}")
+                    Log.d(TAG, "Current game data: ${game.data}")
                     playerList.clear()
-                    Log.d(TAG,"Game[playerList] = ${Game["playerList"]}")
-                    playerList.addAll(Game["playerList"] as ArrayList<String>)
+                    Log.d(TAG,"Game[playerList] = ${game["playerList"]}")
+                    playerList.addAll(game["playerList"] as ArrayList<String>)
 
                     adapter.notifyDataSetChanged()
                 } else {
