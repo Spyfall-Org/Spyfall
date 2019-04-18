@@ -125,11 +125,33 @@ class GameActivity : AppCompatActivity() {
 
         var locations = ArrayList<String>()
 
-        db.collection(chosenPacks[0]).get().addOnSuccessListener {location ->
-            location.documents.forEach { locations.add(it.id)}
+        //if more than one pack was chosen, load all locations, shuffle, pick first 30
 
-            loadViews(locations,tbl_locations)
+        for(i in 0 until chosenPacks.size) {
+
+            Log.d(TAG,"chosenPack: ${chosenPacks[i]}")
+
+
+            db.collection(chosenPacks[i]).get().addOnSuccessListener { location ->
+                location.documents.forEach { locations.add(it.id) }
+                Log.d(TAG,"ALL LOCAITONS: ${locations}")
+
+                if(chosenPacks.size > 1) {
+                    //TODO once every pack has 20 you can uncommment this code, right now it loads all documents
+                    //grab the first 30, and shuffle them
+                    //loadViews(locations.subList(0, 29).shuffle() as ArrayList<String>, tbl_locations)
+                    locations.shuffle()
+                    loadViews(locations, tbl_locations)
+
+                }else{
+                    //we only grabbed one pack so just load those
+                    loadViews(locations, tbl_locations)
+                }
+
+            }
         }
+
+
 
     }
 

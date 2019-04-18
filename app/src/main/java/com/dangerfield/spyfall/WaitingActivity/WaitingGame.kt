@@ -115,11 +115,11 @@ class WaitingGame : AppCompatActivity() {
             var chosenPacks = it.get("chosenPacks") as ArrayList<String>
 
 
-            //TODO get all location packs and select a random 30 unless the size is 1, then just 20
-            val collectionRef = db.collection(chosenPacks[0])
+            //selects one of the packs at random
+            val collectionRef = db.collection(chosenPacks[Random().nextInt(chosenPacks.size)])
             collectionRef.get().addOnSuccessListener { documents ->
 
-                //grab all locations in  pack, this will be passed into intent
+                //get a random location and add it to the game node
                 var index = Random().nextInt(documents.toList().size)
                 var randomLocation = documents.toList()[index]
 
@@ -169,10 +169,7 @@ class WaitingGame : AppCompatActivity() {
                     }
                     //so we shuffled players and roles and assigned everyone except one a role in order
                     //now we assign the lst one as the spy
-
                     playerObjectList.add(Player("The Spy!", playerList.last(), 0))
-
-
 
                     //now push to database
                     var playerObjects = HashMap<String,Any?>()
@@ -180,9 +177,7 @@ class WaitingGame : AppCompatActivity() {
                     gameRef.set(playerObjects, SetOptions.merge())
                     //this line starts the game by triggering the intent in displayUsers()
                     gameRef.update("isStarted", true)
-
                 }
-
                 .addOnFailureListener { exception ->
                     Log.w(TAG, "Error getting roles: ", exception)
                 }
@@ -200,7 +195,6 @@ class WaitingGame : AppCompatActivity() {
         }
 
     }
-
 
 }
 

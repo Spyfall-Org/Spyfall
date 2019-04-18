@@ -10,7 +10,6 @@ import com.dangerfield.spyfall.WaitingActivity.WaitingGame
 import kotlinx.android.synthetic.main.activity_new_game.*
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
@@ -43,7 +42,7 @@ class NewGameActivity : AppCompatActivity() {
         val checkedBoxes = ArrayList<String>()
         if(cb_pack1.isChecked) checkedBoxes.add("pack 1")
         if(cb_pack2.isChecked) checkedBoxes.add("pack 2")
-        if(cb_pack3.isChecked) checkedBoxes.add("pack 3")
+        if(cb_special_pack.isChecked) checkedBoxes.add("special pack")
 
         if(checkedBoxes.isEmpty()) {
             Toast.makeText(this,"Please select a pack",Toast.LENGTH_LONG).show()
