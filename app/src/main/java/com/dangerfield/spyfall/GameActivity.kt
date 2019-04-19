@@ -171,6 +171,9 @@ class GameActivity : AppCompatActivity() {
             for(j in 0..1) {
                 val player_tv = LayoutInflater.from(this)
                     .inflate(R.layout.simple_card, row, false) as ConstraintLayout
+                player_tv.setOnClickListener {
+                    onClickStrikeThrough(it as ConstraintLayout)
+                }
                 var tv = player_tv.getViewById(R.id.tv_simple_card) as TextView
                 if(i+j < list.size){
                     tv.text = list[i + j]
@@ -201,13 +204,16 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun onClickStrikeThrough(view: View){
+    fun onClickStrikeThrough(layout: ConstraintLayout){
         //TODO change this to cross through
-        if(tv_simple_card.paintFlags != Paint.STRIKE_THRU_TEXT_FLAG){
-            tv_simple_card.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        var view = layout.getViewById(R.id.tv_simple_card) as TextView
+        if(view.paintFlags != Paint.STRIKE_THRU_TEXT_FLAG){
+            view.setTextColor(resources.getColor(R.color.colorLightGrey))
+            view.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
         }else{
-            tv_simple_card.paintFlags = 0
+            view.setTextColor(resources.getColor(R.color.colorPrimary))
+            view.paintFlags = 0
         }
     }
 }
