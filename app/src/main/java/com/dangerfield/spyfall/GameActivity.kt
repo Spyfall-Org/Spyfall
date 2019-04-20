@@ -121,18 +121,23 @@ class GameActivity : AppCompatActivity() {
     fun loadLocationView(chosenPacks: ArrayList<String>){
 
         var locations = ArrayList<String>()
-
+        var completedTasks = 0
         //if more than one pack was chosen, load all locations, shuffle, pick first 30
 
         for(i in 0 until chosenPacks.size) {
 
             Log.d(TAG,"chosenPack: ${chosenPacks[i]}")
 
-            db.collection(chosenPacks[i]).get().addOnSuccessListener { location ->
+            var gameRef = db.collection(chosenPacks[i]).get().addOnSuccessListener { location ->
                 location.documents.forEach { locations.add(it.id) }
                 Log.d(TAG,"ALL LOCAITONS: ${locations}")
                 //this makes sure all of the code has completed
-                if(i == chosenPacks.size-1){
+
+
+            }.addOnCompleteListener {
+                    completedTasks+=1
+                Log.d(TAG,"completed tasks: ${completedTasks}")
+                if(completedTasks == chosenPacks.size){
                     if(chosenPacks.size > 1) {
                         //TODO once every pack has 20 you can uncommment this code, right now it loads all documents
                         //grab the first 30, and shuffle them
@@ -146,6 +151,7 @@ class GameActivity : AppCompatActivity() {
                         loadViews(locations, tbl_locations)
                     }
                 }
+
 
             }
         }

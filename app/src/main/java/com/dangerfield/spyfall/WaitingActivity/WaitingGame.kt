@@ -148,7 +148,7 @@ class WaitingGame : AppCompatActivity() {
 
         gameRef.get().addOnSuccessListener {
             var chosenPacks = it.get("chosenPacks") as ArrayList<String>
-            var chosenLocation = it.get("chosenLocation") as String
+            var chosenLocation = it.get("chosenLocation") as String?
 
             //TODO get all location packs and select a random 30 unless the size is 1, then just 20
 
