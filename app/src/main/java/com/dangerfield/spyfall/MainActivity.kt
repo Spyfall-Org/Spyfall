@@ -16,10 +16,12 @@ class MainActivity : AppCompatActivity() {
     fun onClickNewGame(view: View){
         val intent = Intent(this,NewGameActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     fun onClickJoinGame(view: View){
         val intent = Intent(this,JoinGameActivity::class.java)
         startActivity(intent)
+        finish()
     }
 }

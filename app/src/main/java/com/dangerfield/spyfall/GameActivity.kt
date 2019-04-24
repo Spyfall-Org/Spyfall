@@ -60,9 +60,16 @@ class GameActivity : AppCompatActivity() {
 
             if (game != null && game.exists()) {
                if(game["isStarted"] == false){
+
                    //Start Intent
                    val intent = Intent(this,MainActivity::class.java)
                    startActivity(intent)
+                   val gameRef = db.collection("games").document(ACCESS_CODE)
+                   gameRef.get().addOnSuccessListener { game ->
+                       if(game.exists()){
+                           gameRef.delete()
+                       }
+                   }
                    finish()
                }
             } else {
@@ -196,20 +203,12 @@ class GameActivity : AppCompatActivity() {
         //a listener is set checking for isStarted = false and if it does it goes back to the home screen
         //and calls finish()
         var gameRef = db.collection("games").document(ACCESS_CODE)
-        gameRef.update("isStarted", false)
+
+
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG,"onStop Called")
-        val gameRef = db.collection("games").document(ACCESS_CODE)
-        gameRef.get().addOnSuccessListener { game ->
-            if(game.exists()){
-                gameRef.delete()
-            }
-        }
-    }
+
 
     fun onClickStrikeThrough(layout: ConstraintLayout){
         //TODO change this to cross through

@@ -72,6 +72,7 @@ class NewGameActivity : AppCompatActivity() {
         intent.putExtra("FROM_ACTIVITY","NEW_GAME_ACTIVITY")
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         startActivity(intent)
+        finish()
 
     }
 

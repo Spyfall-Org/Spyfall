@@ -87,6 +87,7 @@ class JoinGameActivity : AppCompatActivity() {
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         intent.putExtra("PLAYER_NAME", playerName)
         startActivity(intent)
+        finish()
     }
 
     fun hideKeyboard(view: View) {
