@@ -20,7 +20,13 @@ class NewGameActivity : AppCompatActivity() {
     var db = FirebaseFirestore.getInstance()
 
     val TAG = "New Game"
-    val ACCESS_CODE = generateAccessCode()
+
+    companion object{
+        val ACCESS_CODE = generateAccessCode()
+
+        fun generateAccessCode() = UUID.randomUUID().toString().substring(0,6).toLowerCase()
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +85,6 @@ class NewGameActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun generateAccessCode() = UUID.randomUUID().toString().substring(0,6).toLowerCase()
 
 
 //TODO: we coudl possibly get the chosenLocation and roles here and never have to store the chosenPacks on firebase

@@ -33,12 +33,13 @@ class WaitingGame : AppCompatActivity() {
     var roles = ArrayList<String>()
     private lateinit var randomPack: String
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_waiting_game)
 
         ACCESS_CODE = intent.getStringExtra("ACCESS_CODE")
-        playerName = intent.getStringExtra("PLAYER_NAME")
+        playerName = (intent.getStringExtra("PLAYER_NAME"))
         var fromActivity = intent.getStringExtra("FROM_ACTIVITY")
 
 
@@ -200,6 +201,9 @@ class WaitingGame : AppCompatActivity() {
     }
 
     companion object {
+
+        var playerName: String? = null
+            get() = playerName
 
         fun newIntent(context: Context,ACCESS_CODE: String, playerName: String): Intent {
         val intent = Intent(context, GameActivity::class.java)
