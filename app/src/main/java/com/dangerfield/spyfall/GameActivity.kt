@@ -200,8 +200,9 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG,"onStop Called")
         val gameRef = db.collection("games").document(ACCESS_CODE)
         gameRef.get().addOnSuccessListener { game ->
             if(game.exists()){
