@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.change_name.*
 import kotlinx.android.synthetic.main.change_name.view.*
 import kotlinx.android.synthetic.main.player_card.view.*
 
-class PlayerAdapter(var playerName: String, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
+class PlayerAdapter(var playerName: String?, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,7 +49,7 @@ class PlayerAdapter(var playerName: String, val playerList: ArrayList<String>, v
                         var newName = tv_name_change.text.toString()
                         var oldName = holder.name.text.toString()
                         if(!newName.isEmpty()){
-                            changeName(newName,oldName)
+                            WaitingGame.changeName(newName,oldName,playerList)
                             dialog.dismiss()
                         }
                     }
@@ -69,18 +69,9 @@ class PlayerAdapter(var playerName: String, val playerList: ArrayList<String>, v
         val name = view.tv_simple_card
         val pencil = view.iv_pencil
 
-
-
     }
 
-    fun changeName(newName: String,oldName: String){
-        WaitingGame.playerName = newName
-        playerList[playerList.indexOf(oldName)] = newName
-        var db = FirebaseFirestore.getInstance()
-        var gameRef = db.collection("games").document(NewGameActivity.ACCESS_CODE)
-        gameRef.update("playerList", playerList)
 
-    }
 
 }
 

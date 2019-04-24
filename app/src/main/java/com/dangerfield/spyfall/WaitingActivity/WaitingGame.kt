@@ -9,6 +9,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.GameActivity
 import com.dangerfield.spyfall.MainActivity
+import com.dangerfield.spyfall.NewGameActivity
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.activity_waiting_game.*
@@ -25,10 +26,7 @@ class WaitingGame : AppCompatActivity() {
     var playerList = ArrayList<String>()
     var playerObjectList = ArrayList<Player>()
     var db = FirebaseFirestore.getInstance()
-    private lateinit var database: DatabaseReference
-    private lateinit var ACCESS_CODE: String
     private var TAG = "Waiting Game"
-    lateinit var playerName : String
     lateinit var adapter: PlayerAdapter
     var roles = ArrayList<String>()
     private lateinit var randomPack: String
@@ -92,7 +90,7 @@ class WaitingGame : AppCompatActivity() {
 
                 if (game != null && game.exists()) {
                     if(game["isStarted"]== true){
-                        val intent = WaitingGame.newIntent(this,ACCESS_CODE,playerName)
+                        val intent = newIntent(this,ACCESS_CODE,WaitingGame.playerName ?: "player")
                         startActivity(intent)
                         finish()
                     }
@@ -202,10 +200,20 @@ class WaitingGame : AppCompatActivity() {
 
     companion object {
 
-        var playerName: String? = null
-            get() = playerName
 
-        fun newIntent(context: Context,ACCESS_CODE: String, playerName: String): Intent {
+        private lateinit var playerName: String
+        private lateinit var ACCESS_CODE: String
+
+        fun changeName(newName: String,oldName: String,playerList: ArrayList<String>){
+            playerName = newName
+            playerList[playerList.indexOf(oldName)] = newName
+            var db = FirebaseFirestore.getInstance()
+            var gameRef = db.collection("games").document(ACCESS_CODE)
+            gameRef.update("playerList", playerList)
+
+        }
+
+        fun newIntent(context: Context,ACCESS_CODE: String, playerName: String?): Intent {
         val intent = Intent(context, GameActivity::class.java)
         intent.putExtra("ACCESS_CODE", ACCESS_CODE)
         intent.putExtra("PLAYER_NAME", playerName)
