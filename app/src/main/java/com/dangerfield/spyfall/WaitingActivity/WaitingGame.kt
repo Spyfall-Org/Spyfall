@@ -77,6 +77,7 @@ class WaitingGame : AppCompatActivity() {
 
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
 
     }
 
@@ -90,7 +91,7 @@ class WaitingGame : AppCompatActivity() {
 
                 if (game != null && game.exists()) {
                     if(game["isStarted"]== true){
-                        val intent = newIntent(this,ACCESS_CODE,WaitingGame.playerName ?: "player")
+                        val intent = newIntent(this,ACCESS_CODE,playerName)
                         startActivity(intent)
                         finish()
                     }

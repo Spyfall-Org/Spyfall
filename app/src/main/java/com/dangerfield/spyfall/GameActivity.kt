@@ -22,7 +22,6 @@ import com.dangerfield.spyfall.data.Game
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.simple_card.*
 
 
 class GameActivity : AppCompatActivity() {
@@ -57,19 +56,12 @@ class GameActivity : AppCompatActivity() {
                 return@EventListener
             }
 
-
             if (game != null && game.exists()) {
                if(game["isStarted"] == false){
-
-                   //Start Intent
+                   //delete game and Start Intent
+                   gameRef.delete()
                    val intent = Intent(this,MainActivity::class.java)
                    startActivity(intent)
-                   val gameRef = db.collection("games").document(ACCESS_CODE)
-                   gameRef.get().addOnSuccessListener { game ->
-                       if(game.exists()){
-                           gameRef.delete()
-                       }
-                   }
                    finish()
                }
             } else {
@@ -163,10 +155,6 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-
-
-
-
     }
 
     fun loadViews(list: ArrayList<String>, table: TableLayout){
@@ -185,7 +173,7 @@ class GameActivity : AppCompatActivity() {
                 val player_tv = LayoutInflater.from(this)
                     .inflate(R.layout.simple_card, row, false) as ConstraintLayout
                 player_tv.setOnClickListener {
-                    onClickStrikeThrough(it as ConstraintLayout)
+                    onClickView(it as ConstraintLayout)
                 }
                 var tv = player_tv.getViewById(R.id.tv_simple_card) as TextView
                 if(i+j < list.size){
@@ -201,22 +189,26 @@ class GameActivity : AppCompatActivity() {
     fun endGame(view: View){
         //called when end button game is clicked
         //a listener is set checking for isStarted = false and if it does it goes back to the home screen
-        //and calls finish()
         var gameRef = db.collection("games").document(ACCESS_CODE)
-
-
+        gameRef.update("isStarted", false).addOnFailureListener {
+            Log.d(TAG,"endGame error: ${it.message}")
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG,"onStop Called")
+    }
 
-
-    fun onClickStrikeThrough(layout: ConstraintLayout){
-        //TODO change this to cross through
+    fun onClickView(layout: ConstraintLayout){
         var view = layout.getViewById(R.id.tv_simple_card) as TextView
         if(view.paintFlags != Paint.STRIKE_THRU_TEXT_FLAG){
             view.setTextColor(resources.getColor(R.color.colorLightGrey))
             view.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-
         }else{
             view.setTextColor(resources.getColor(R.color.colorPrimary))
             view.paintFlags = 0
