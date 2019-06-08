@@ -1,9 +1,8 @@
 package com.dangerfield.spyfall
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.navigation.Navigation.findNavController
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,16 +11,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-
-    fun onClickNewGame(view: View){
-        val intent = Intent(this,NewGameActivity::class.java)
-        startActivity(intent)
-        finish()
+    override fun onSupportNavigateUp(): Boolean {
+        return findNavController(this, R.id.nav_host_fragment).navigateUp()
     }
 
-    fun onClickJoinGame(view: View){
-        val intent = Intent(this,JoinGameActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
+
 }
