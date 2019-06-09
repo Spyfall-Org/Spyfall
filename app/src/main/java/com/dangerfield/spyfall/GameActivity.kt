@@ -175,7 +175,7 @@ class GameActivity : AppCompatActivity() {
                 player_tv.setOnClickListener {
                     onClickView(it as ConstraintLayout)
                 }
-                var tv = player_tv.getViewById(R.id.tv_simple_card) as TextView
+                var tv = player_tv.getViewById(R.id.tv_new_game_name) as TextView
                 if(i+j < list.size){
                     tv.text = list[i + j]
                     row.addView(player_tv)
@@ -205,7 +205,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun onClickView(layout: ConstraintLayout){
-        var view = layout.getViewById(R.id.tv_simple_card) as TextView
+        var view = layout.getViewById(R.id.tv_new_game_name) as TextView
         if(view.paintFlags != Paint.STRIKE_THRU_TEXT_FLAG){
             view.setTextColor(resources.getColor(R.color.colorLightGrey))
             view.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG

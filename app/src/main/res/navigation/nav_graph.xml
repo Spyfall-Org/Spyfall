@@ -3,6 +3,21 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_graph" app:startDestination="@id/startFragment">
 
-    <fragment android:id="@+id/startFragment" android:name="com.dangerfield.spyfall.StartFragment"
-              android:label="StartFragment"/>
+    <fragment android:id="@+id/startFragment" android:name="com.dangerfield.spyfall.start.StartFragment"
+              android:label="StartFragment">
+        <action android:id="@+id/action_startFragment_to_joinGameFragment" app:destination="@id/joinGameFragment"/>
+        <action android:id="@+id/action_startFragment_to_newGameFragment" app:destination="@id/newGameFragment"/>
+    </fragment>
+    <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.newGame.NewGameFragment"
+              android:label="NewGameFragment">
+        <action android:id="@+id/action_newGameFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+    </fragment>
+    <fragment android:id="@+id/joinGameFragment" android:name="com.dangerfield.spyfall.joinGame.JoinGameFragment"
+              android:label="JoinGameFragment"/>
+    <fragment android:id="@+id/waitingFragment" android:name="com.dangerfield.spyfall.waiting.WaitingFragment"
+              android:label="WaitingFragment">
+        <action android:id="@+id/action_waitingFragment_to_gameFragment" app:destination="@id/gameFragment"/>
+    </fragment>
+    <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.game.GameFragment"
+              android:label="GameFragment"/>
 </navigation>

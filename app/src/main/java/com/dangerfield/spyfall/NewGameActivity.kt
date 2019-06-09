@@ -33,8 +33,8 @@ class NewGameActivity : AppCompatActivity() {
             }
         }
 
-        tv_simple_card.onFocusChangeListener = keyboardHider
-        tv_time.onFocusChangeListener = keyboardHider
+        tv_new_game_name.onFocusChangeListener = keyboardHider
+        tv_new_game_time.onFocusChangeListener = keyboardHider
 
     }
 
@@ -49,19 +49,19 @@ class NewGameActivity : AppCompatActivity() {
             Toast.makeText(this,"Please select a pack",Toast.LENGTH_LONG).show()
             return}
 
-        if(tv_time.text.isEmpty() || tv_time.text.toString().toInt() > 10){
+        if(tv_new_game_time.text.isEmpty() || tv_new_game_time.text.toString().toInt() > 10){
             Toast.makeText(this, "please enter a time limit less than 10 minutes",Toast.LENGTH_LONG).show()
             return
         }
-        if(tv_simple_card.text.isEmpty()){
+        if(tv_new_game_name.text.isEmpty()){
             Toast.makeText(this, "please enter a name",Toast.LENGTH_LONG).show()
             return
         }
 
 
         Log.d("NEWGAME","Checked Boxes in new game are: $checkedBoxes")
-        val timeLimit = tv_time.text.toString().toInt()
-        val playerName = tv_simple_card.text.toString().trim()
+        val timeLimit = tv_new_game_time.text.toString().toInt()
+        val playerName = tv_new_game_name.text.toString().trim()
         val playerList = mutableListOf<String>(playerName)
 
         //push timeLimit, player name as an array, isStarted as false, and included packs

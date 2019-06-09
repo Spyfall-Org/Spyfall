@@ -5,17 +5,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.dangerfield.spyfall.MainActivity
-import com.dangerfield.spyfall.NewGameActivity
 import com.dangerfield.spyfall.R
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.change_name.*
-import kotlinx.android.synthetic.main.change_name.view.*
 import kotlinx.android.synthetic.main.player_card.view.*
 
 class PlayerAdapter(var playerName: String?, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
@@ -66,7 +58,7 @@ class PlayerAdapter(var playerName: String?, val playerList: ArrayList<String>, 
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val number = view.tv_player_number
-        val name = view.tv_simple_card
+        val name = view.tv_new_game_name
         val pencil = view.iv_pencil
 
     }

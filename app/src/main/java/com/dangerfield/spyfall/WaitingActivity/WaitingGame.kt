@@ -9,11 +9,9 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.GameActivity
 import com.dangerfield.spyfall.MainActivity
-import com.dangerfield.spyfall.NewGameActivity
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.data.Player
 import kotlinx.android.synthetic.main.activity_waiting_game.*
-import com.google.firebase.database.*
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import java.util.*
@@ -44,8 +42,8 @@ class WaitingGame : AppCompatActivity() {
         tv_acess_code.text = ACCESS_CODE
 
         adapter = PlayerAdapter(playerName, playerList, this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        rv_player_list_waiting.layoutManager = LinearLayoutManager(this)
+        rv_player_list_waiting.adapter = adapter
         displayUsers()
         if(fromActivity.equals("NEW_GAME_ACTIVITY"))
         {
