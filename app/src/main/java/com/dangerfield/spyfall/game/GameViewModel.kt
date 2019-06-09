@@ -1,13 +1,9 @@
-package com.dangerfield.spyfall.joinGame
+package com.dangerfield.spyfall.game
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
-import com.dangerfield.spyfall.WaitingActivity.WaitingGame
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
@@ -22,26 +18,19 @@ class GameViewModel : ViewModel() {
     //so I want playerNames to be listening to firebases playerlist
     fun getPlayerNames(): LiveData<ArrayList<String>>  {
         val gameRef = db.collection("games").document(ACCESS_CODE)
-        gameRef.addSnapshotListener { game, e ->
-            if (e != null) {
-                Log.w("View Model", "Listen failed.", e)
+        gameRef.addSnapshotListener { game, error ->
+            if (error != null) {
+                Log.w("View Model", "Listen failed.", error)
                 return@addSnapshotListener
             }
-
             if (game != null && game.exists()) {
-                if (game["isStarted"] == true) {
-                    gameHasStarted.value = true
-                }
-                Log.d("View Model", "Current game data: ${game.data}")
+                if (game["isStarted"] == true) { gameHasStarted.value = true }
                 playerNames.value = game["playerList"] as ArrayList<String>
-                Log.d("View Model", "Game[playerList] = ${game["playerList"]}")
-            } else {
+            }else {
                 Log.d("View Model", "Current data: null")
             }
         }
         return playerNames
     }
-
-
 
 }

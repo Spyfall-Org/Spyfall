@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.data
+package com.dangerfield.spyfall.models
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

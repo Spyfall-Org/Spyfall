@@ -18,7 +18,7 @@ import android.view.View
 import android.widget.TableLayout
 
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.dangerfield.spyfall.data.Game
+import com.dangerfield.spyfall.models.Game
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore

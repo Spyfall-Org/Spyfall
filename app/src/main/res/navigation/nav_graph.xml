@@ -13,7 +13,9 @@
         <action android:id="@+id/action_newGameFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
     </fragment>
     <fragment android:id="@+id/joinGameFragment" android:name="com.dangerfield.spyfall.joinGame.JoinGameFragment"
-              android:label="JoinGameFragment"/>
+              android:label="JoinGameFragment">
+        <action android:id="@+id/action_joinGameFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+    </fragment>
     <fragment android:id="@+id/waitingFragment" android:name="com.dangerfield.spyfall.waiting.WaitingFragment"
               android:label="WaitingFragment">
         <action android:id="@+id/action_waitingFragment_to_gameFragment" app:destination="@id/gameFragment"/>

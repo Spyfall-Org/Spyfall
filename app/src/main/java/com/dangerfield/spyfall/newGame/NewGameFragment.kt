@@ -13,8 +13,7 @@ import androidx.navigation.Navigation
 import com.dangerfield.spyfall.CustomClasses.UIHelper
 
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.joinGame.GameViewModel
-import com.google.firebase.firestore.FirebaseFirestore
+import com.dangerfield.spyfall.game.GameViewModel
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
 import kotlin.collections.ArrayList

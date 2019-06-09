@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.GameActivity
 import com.dangerfield.spyfall.MainActivity
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.data.Player
+import com.dangerfield.spyfall.models.Player
 import kotlinx.android.synthetic.main.activity_waiting_game.*
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
