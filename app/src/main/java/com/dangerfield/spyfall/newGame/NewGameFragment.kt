@@ -88,13 +88,14 @@ class NewGameFragment : Fragment() {
         val db = viewModel.db
         val ACCESS_CODE = viewModel.ACCESS_CODE
 
-        val game = HashMap<String, Any>()
-        game["timeLimit"] = timeLimit
-        game["chosenLocation"] = ""
-        game["playerObjectList"] = playerObjectList
-        game["playerList"] = playerList
-        game["isStarted"] = isStarted
-        game["chosenPacks"] = chosenPacks
+        val game = hashMapOf(
+        "timeLimit" to timeLimit,
+        "chosenLocation" to "",
+        "playerObjectList" to playerObjectList,
+        "playerList" to playerList,
+        "isStarted" to isStarted,
+        "chosenPacks" to chosenPacks
+        )
 
         //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
 

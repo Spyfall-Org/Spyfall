@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
+import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
@@ -15,12 +16,14 @@ import kotlin.collections.ArrayList
 class GameViewModel : ViewModel() {
     // I might just end up having this be like one game object
     private var playerNames: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    var playerObjectList: ArrayList<Player> = ArrayList<Player>()
+    var playerObjectList= ArrayList<Player>()
     var gameHasStarted: MutableLiveData<Boolean> = MutableLiveData()
     var location: MutableLiveData<String> = MutableLiveData()
     var roles= ArrayList<String>()
     var timeLimit: Long = 0
     var chosenPacks = ArrayList<String>()
+
+    var gameObject: MutableLiveData<Game> = MutableLiveData()
 
     var db = FirebaseFirestore.getInstance()
     //start off with a uuid but if its changed, so is the reference
@@ -47,12 +50,16 @@ class GameViewModel : ViewModel() {
                 return@addSnapshotListener
             }
 
+
             if (game != null && game.exists()) {
-                timeLimit = game["timeLimit"] as Long
-                playerObjectList = game["playerObjectList"] as ArrayList<Player>
-                location.value = game["chosenLocation"] as String
-                gameHasStarted.value = game["isStarted"] as Boolean
-                playerNames.value = game["playerList"] as ArrayList<String>
+                gameObject.value = game?.toObject(Game::class.java)
+
+//                timeLimit = game["timeLimit"] as Long
+//                chosenPacks = game["chosenPacks"] as ArrayList<String>
+//                playerObjectList = game["playerObjectList"] as ArrayList<Player>
+//                location.value = game["chosenLocation"] as String
+//                gameHasStarted.value = game["isStarted"] as Boolean
+//                playerNames.value = game["playerList"] as ArrayList<String>
             }else {
                 Log.d("View Model", "Current data: null")
             }
@@ -95,7 +102,6 @@ class GameViewModel : ViewModel() {
     }
 
 
-
     fun startGame() {
         //assignes all roles
         if(roles.isNullOrEmpty() or playerNames.value.isNullOrEmpty()){ return }
@@ -113,9 +119,7 @@ class GameViewModel : ViewModel() {
         playerObjectList.add(Player("The Spy!", playerNames.value!!.last(), 0))
 
         //now push to database
-        var playerObjects = HashMap<String, Any?>()
-        playerObjects["playerObjectList"] = playerObjectList
-        gameRef.set(playerObjects, SetOptions.merge())
+        gameRef.update("playerObjectList", playerObjectList)
         gameRef.update("isStarted", true)
 
     }
@@ -156,5 +160,28 @@ class GameViewModel : ViewModel() {
         gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
 
     }
+
+    fun assignRolesAndStartGame() {
+
+        for (i in 0 until chosenPacks.size) {
+            db.collection(chosenPacks[i]).whereEqualTo("location", location.value)
+                .get().addOnSuccessListener { locationInfo ->
+
+                    if (locationInfo.documents.size == 1) {
+                        //only one document should be found matching the location
+                        roles.addAll(locationInfo.documents[0]["roles"] as ArrayList<String>)
+
+                        //so now we have all the roles
+                        //get playerlist, create an object for each playerlist and assign a random role
+                        startGame()
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("events", "Error getting roles: ", exception)
+                }
+        }
+
+    }
+
 
 }

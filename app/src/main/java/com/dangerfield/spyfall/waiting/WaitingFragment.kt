@@ -37,10 +37,19 @@ class WaitingFragment : Fragment() {
         configureLayoutManagerAndRecyclerView()
 
         btn_start_game.setOnClickListener {
-            viewModel.startGame()
+            //the game creator will already have the roles but anyone else
+            // who wants to start the game would have to fetch them
+            if(viewModel.roles.isEmpty()){
+                viewModel.assignRolesAndStartGame()
+            }else{
+                viewModel.startGame()
+            }
+
         }
 
-        btn_leave_game.setOnClickListener { viewModel.removePlayer() }
+        btn_leave_game.setOnClickListener { viewModel.removePlayer()
+            Navigation.findNavController(view).navigate(R.id.action_waitingFragment_to_startFragment)
+        }
 
         //gets called every time our view models player list value changes
         viewModel.getGameUpdates().observe(activity!!, Observer { updatedPlayers ->

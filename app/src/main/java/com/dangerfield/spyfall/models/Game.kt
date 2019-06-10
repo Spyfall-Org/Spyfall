@@ -1,6 +1,13 @@
 package com.dangerfield.spyfall.models
 
-class Game(val chosenLocation: String,val chosenPacks: ArrayList<String>, val isStarted: Boolean,val playerList: ArrayList<String>, val playerObjectList: ArrayList<Player>,val timeLimit: Double){
-    constructor() : this("", ArrayList<String>(),false,ArrayList<String>(),ArrayList<Player>(),0.0)
+data class Game(var chosenLocation: String,
+                var chosenPacks: ArrayList<String>,
+                var isStarted: Boolean,
+                var playerList: ArrayList<String>,
+                var playerObjectList: ArrayList<Player>,
+                var timeLimit: Long){
+
+
+    constructor() : this("", ArrayList<String>(),false,ArrayList<String>(),ArrayList<Player>(),0.0.toLong())
 
 }

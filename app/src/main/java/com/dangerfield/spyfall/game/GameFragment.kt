@@ -38,7 +38,7 @@ class GameFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
         //we can garuntee there will be no two users with the same super name
-        currentPlayer = viewModel.playerObjectList.filter { it.username == viewModel.currentUser }[0]
+        currentPlayer = (viewModel.playerObjectList).filter { it.username == viewModel.currentUser }[0]
 
         var timer = startTimer(viewModel.timeLimit)
         tv_game_location.text = viewModel.location.value
