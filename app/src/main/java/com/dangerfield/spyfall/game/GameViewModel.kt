@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
 import com.dangerfield.spyfall.models.Player
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -22,14 +23,22 @@ class GameViewModel : ViewModel() {
     var chosenPacks = ArrayList<String>()
 
     var db = FirebaseFirestore.getInstance()
-    var ACCESS_CODE =   UUID.randomUUID().toString().substring(0,6).toLowerCase()
+    //start off with a uuid but if its changed, so is the reference
+    var ACCESS_CODE: String = UUID.randomUUID().toString().substring(0,6).toLowerCase()
+        set(value){
+            field = value
+            gameRef = db.collection("games").document(value)
+        }
+    var gameRef = db.collection("games").document(ACCESS_CODE)
+
+
     var allLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
     lateinit var currentUser: String
 
 
+
     //so I want playerNames to be listening to firebases playerlist
     fun getGameUpdates(): LiveData<ArrayList<String>>  {
-        val gameRef = db.collection("games").document(ACCESS_CODE)
 
         gameRef.addSnapshotListener { game, error ->
 
@@ -40,6 +49,7 @@ class GameViewModel : ViewModel() {
 
             if (game != null && game.exists()) {
                 timeLimit = game["timeLimit"] as Long
+                playerObjectList = game["playerObjectList"] as ArrayList<Player>
                 location.value = game["chosenLocation"] as String
                 gameHasStarted.value = game["isStarted"] as Boolean
                 playerNames.value = game["playerList"] as ArrayList<String>
@@ -52,24 +62,21 @@ class GameViewModel : ViewModel() {
 
     //okay so now I just want to have getting the locations and assigning players and such here for the actual game screen
 
-    fun setRandomLocation(): LiveData<String> {
+    fun getRandomLocation(): LiveData<String> {
 
         if(location.value.isNullOrEmpty()){
-            val gameRef = db.collection("games").document(ACCESS_CODE)
 
             gameRef.get().addOnSuccessListener {
                 chosenPacks = it.get("chosenPacks") as ArrayList<String>
 
                 //selects one of the packs at random
-                var randomPack = chosenPacks[Random().nextInt(chosenPacks.size)]
+                val randomPack = chosenPacks[Random().nextInt(chosenPacks.size)]
 
                 val collectionRef = db.collection(randomPack)
                 collectionRef.get().addOnSuccessListener { documents ->
-
                     //get a random location and add it to the game node
                     val index = Random().nextInt(documents.toList().size)
                     val randomLocation = documents.toList()[index]
-
                     //collects all of the roels for a random location
                     (randomLocation["roles"] as ArrayList<String>).forEach { roles.add(it) }
 
@@ -78,21 +85,19 @@ class GameViewModel : ViewModel() {
                     val location = HashMap<String,String>()
                     location["chosenLocation"] = randomLocation.id
                     gameRef.set(location, SetOptions.merge())
-
                 }
                     .addOnFailureListener { exception ->
                         Log.w("Game view model", "Error getting documents: ", exception)
                     }
             }
-
         }
-
         return location
     }
 
-    fun startGame() {
-        val gameRef = db.collection("games").document(ACCESS_CODE)
 
+
+    fun startGame() {
+        //assignes all roles
         if(roles.isNullOrEmpty() or playerNames.value.isNullOrEmpty()){ return }
 
         playerNames.value!!.shuffle()
@@ -111,8 +116,8 @@ class GameViewModel : ViewModel() {
         var playerObjects = HashMap<String, Any?>()
         playerObjects["playerObjectList"] = playerObjectList
         gameRef.set(playerObjects, SetOptions.merge())
-        //observers will be navigated to the next page
         gameRef.update("isStarted", true)
+
     }
 
     fun getAllLocations():  LiveData<ArrayList<String>> {

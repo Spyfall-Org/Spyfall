@@ -19,6 +19,7 @@ class WaitingFragment : Fragment() {
 
     private var adapter: WaitingPlayersAdapter? = null
     lateinit var viewModel: GameViewModel
+    private var isGameCreator: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -30,6 +31,8 @@ class WaitingFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
+        isGameCreator = arguments?.get("FromFragment") == "NewGameFragment"
+
         tv_acess_code.text = viewModel.ACCESS_CODE
         configureLayoutManagerAndRecyclerView()
 
@@ -37,10 +40,7 @@ class WaitingFragment : Fragment() {
             viewModel.startGame()
         }
 
-        btn_leave_game.setOnClickListener {
-            viewModel.removePlayer()
-
-        }
+        btn_leave_game.setOnClickListener { viewModel.removePlayer() }
 
         //gets called every time our view models player list value changes
         viewModel.getGameUpdates().observe(activity!!, Observer { updatedPlayers ->
@@ -53,14 +53,14 @@ class WaitingFragment : Fragment() {
         })
 
         viewModel.gameHasStarted.observe(activity!!, Observer { gameHasStarted ->
-            if(gameHasStarted ){
+            if(gameHasStarted){
                 Navigation.findNavController(this.view!!).navigate(R.id.action_waitingFragment_to_gameFragment)
             }
         })
 
         //you only want to be the one picking a location iff you started the game
-        if(arguments?.get("FromFragment") == "NewGameFragment"){
-            viewModel.setRandomLocation().observe(activity!!, Observer {
+        if(isGameCreator){
+            viewModel.getRandomLocation().observe(activity!!, Observer {
                 Log.d("Random Location:", it)
             })
         }

@@ -43,6 +43,7 @@ class GameFragment : Fragment() {
         var timer = startTimer(viewModel.timeLimit)
         tv_game_location.text = viewModel.location.value
         tv_game_role.text = currentPlayer.role
+
         btn_end_game.setOnClickListener {
             viewModel.endGame()
             timer.cancel()

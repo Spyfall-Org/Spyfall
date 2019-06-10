@@ -15,6 +15,7 @@ import com.dangerfield.spyfall.CustomClasses.UIHelper
 
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.models.Player
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -67,7 +68,8 @@ class NewGameFragment : Fragment() {
         }
 
         //push timeLimit, player name as an array, isStarted as false, and included packs
-        createFireBaseGame(timeLimit.toInt(),  mutableListOf<String>(playerName) as ArrayList<String>,false,chosenPacks)
+        createFireBaseGame(timeLimit.toInt(),  mutableListOf<String>(playerName) as ArrayList<String>
+            ,false,chosenPacks, ArrayList<Player>())
 
         //set the current user
         viewModel.currentUser = playerName
@@ -78,15 +80,18 @@ class NewGameFragment : Fragment() {
     }
 
     //Start the game
-    fun createFireBaseGame(timeLimit: Int,playerList: ArrayList<String>,isStarted: Boolean, chosenPacks: ArrayList<String>){
+    fun createFireBaseGame(timeLimit: Int,playerList: ArrayList<String>,isStarted: Boolean,
+                           chosenPacks: ArrayList<String>, playerObjectList:  ArrayList<Player>){
 
 
+        //you might try to find a way here to just push a big object
         val db = viewModel.db
         val ACCESS_CODE = viewModel.ACCESS_CODE
 
         val game = HashMap<String, Any>()
         game["timeLimit"] = timeLimit
         game["chosenLocation"] = ""
+        game["playerObjectList"] = playerObjectList
         game["playerList"] = playerList
         game["isStarted"] = isStarted
         game["chosenPacks"] = chosenPacks
