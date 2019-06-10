@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.dangerfield.spyfall.R
@@ -39,9 +40,14 @@ class GameFragment : Fragment() {
         //we can garuntee there will be no two users with the same super name
         currentPlayer = viewModel.playerObjectList.filter { it.username == viewModel.currentUser }[0]
 
-        startTimer(viewModel.timeLimit)
+        var timer = startTimer(viewModel.timeLimit)
         tv_game_location.text = viewModel.location.value
         tv_game_role.text = currentPlayer.role
+        btn_end_game.setOnClickListener {
+            viewModel.endGame()
+            timer.cancel()
+            Navigation.findNavController(view).navigate(R.id.action_gameFragment_to_startFragment)
+        }
 
         configurePlayersAdapter()
         configureLocationsAdapter()
@@ -53,28 +59,28 @@ class GameFragment : Fragment() {
     }
 
 
-    fun startTimer(timeLimit : Long){
+    fun startTimer(timeLimit : Long): CountDownTimer {
 
-        object : CountDownTimer((60000*timeLimit), 1000) {
-
+        val timer = object : CountDownTimer((60000*timeLimit), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val text = String.format(
                     Locale.getDefault(), "%02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
                     TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
                 )
-               tv_game_timer.text = text
+                tv_game_timer.text = text
             }
 
             override fun onFinish() {
                 tv_game_timer.text = "done!"
             }
-
         }.start()
+
+        return timer
+
     }
 
     fun configureLocationsAdapter(){
-
         locationsAdapter = GameViewsAdapter(context!!, ArrayList())
         rv_locations.apply{
             adapter = locationsAdapter

@@ -19,7 +19,10 @@
     <fragment android:id="@+id/waitingFragment" android:name="com.dangerfield.spyfall.waiting.WaitingFragment"
               android:label="WaitingFragment">
         <action android:id="@+id/action_waitingFragment_to_gameFragment" app:destination="@id/gameFragment"/>
+        <action android:id="@+id/action_waitingFragment_to_startFragment" app:destination="@id/startFragment"/>
     </fragment>
     <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.game.GameFragment"
-              android:label="GameFragment"/>
+              android:label="GameFragment">
+        <action android:id="@+id/action_gameFragment_to_startFragment" app:destination="@id/startFragment"/>
+    </fragment>
 </navigation>

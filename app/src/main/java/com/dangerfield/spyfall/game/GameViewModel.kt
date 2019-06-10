@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
-import com.dangerfield.spyfall.WaitingActivity.WaitingGame
-import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
-import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import kotlinx.android.synthetic.main.activity_game.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -141,6 +138,18 @@ class GameViewModel : ViewModel() {
             }
         }
         return this.allLocations
+    }
+
+    fun endGame(){
+        val gameRef = db.collection("games").document(ACCESS_CODE)
+        gameRef.delete()
+    }
+
+    fun removePlayer(){
+        val gameRef = db.collection("games").document(ACCESS_CODE)
+        //remove player
+        gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
+
     }
 
 }

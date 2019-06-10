@@ -13,16 +13,6 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".JoinGameActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".WaitingActivity.WaitingGame"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".NewGameActivity"
-                  android:screenOrientation="portrait"
-        >
-        </activity>
         <activity android:name=".MainActivity"
                   android:screenOrientation="portrait">
             <intent-filter>

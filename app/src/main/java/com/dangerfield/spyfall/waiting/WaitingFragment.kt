@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import kotlinx.android.synthetic.main.fragment_waiting.*
@@ -38,8 +37,18 @@ class WaitingFragment : Fragment() {
             viewModel.startGame()
         }
 
+        btn_leave_game.setOnClickListener {
+            viewModel.removePlayer()
+
+        }
+
         //gets called every time our view models player list value changes
         viewModel.getGameUpdates().observe(activity!!, Observer { updatedPlayers ->
+            if(updatedPlayers.size == 0){
+                Log.d("END","END")
+                viewModel.endGame()
+                Navigation.findNavController(view).navigate(R.id.action_waitingFragment_to_startFragment)
+            }
             adapter?.players = updatedPlayers
         })
 
