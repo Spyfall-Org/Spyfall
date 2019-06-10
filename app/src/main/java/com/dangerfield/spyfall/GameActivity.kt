@@ -81,11 +81,11 @@ class GameActivity : AppCompatActivity() {
                 var chosenPacks = gameObject.chosenPacks
                 var currentPlayer = gameObject.playerObjectList.filter { it.username == playerName }
                 if(currentPlayer.size ==1){
-                    tv_role.text = currentPlayer[0].role
+                    tv_game_role.text = currentPlayer[0].role
                     if(currentPlayer[0].role != "The Spy!"){
-                        tv_chosen_location.text = "Location: ${gameObject?.chosenLocation}"
+                        tv_game_location.text = "Location: ${gameObject?.chosenLocation}"
                     }else{
-                        tv_chosen_location.text = "Figure out the location!"
+                        tv_game_location.text = "Figure out the location!"
                     }
                 }
                 //we might be able to load these last views on different threads
@@ -107,11 +107,11 @@ class GameActivity : AppCompatActivity() {
                     TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
                     TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
                 )
-                tv_timer.text = text
+                tv_game_timer.text = text
             }
 
             override fun onFinish() {
-                tv_timer.text = "done!"
+                tv_game_timer.text = "done!"
             }
 
         }.start()
@@ -120,40 +120,7 @@ class GameActivity : AppCompatActivity() {
     fun loadLocationView(chosenPacks: ArrayList<String>){
 
         var locations = ArrayList<String>()
-        var completedTasks = 0
-        //if more than one pack was chosen, load all locations, shuffle, pick first 30
 
-        for(i in 0 until chosenPacks.size) {
-
-            Log.d(TAG,"chosenPack: ${chosenPacks[i]}")
-
-            var gameRef = db.collection(chosenPacks[i]).get().addOnSuccessListener { location ->
-                location.documents.forEach { locations.add(it.id) }
-                Log.d(TAG,"ALL LOCAITONS: ${locations}")
-                //this makes sure all of the code has completed
-
-
-            }.addOnCompleteListener {
-                    completedTasks+=1
-                Log.d(TAG,"completed tasks: ${completedTasks}")
-                if(completedTasks == chosenPacks.size){
-                    if(chosenPacks.size > 1) {
-                        //TODO once every pack has 20 you can uncommment this code, right now it loads all documents
-                        //grab the first 30, and shuffle them
-                        //loadViews(locations.subList(0, 29).shuffle() as ArrayList<String>, tbl_locations)
-                        //WHEN GRABBING SUBLIST MAKE SURE IT INCLUDES THE CHOSEN LOCATION
-                        locations.shuffle()
-                        loadViews(locations, tbl_locations)
-
-                    }else{
-                        //we only grabbed one pack so just load those
-                        loadViews(locations, tbl_locations)
-                    }
-                }
-
-
-            }
-        }
 
     }
 
@@ -171,7 +138,7 @@ class GameActivity : AppCompatActivity() {
             }
             for(j in 0..1) {
                 val player_tv = LayoutInflater.from(this)
-                    .inflate(R.layout.simple_card, row, false) as ConstraintLayout
+                    .inflate(R.layout.item_simple_card, row, false) as ConstraintLayout
                 player_tv.setOnClickListener {
                     onClickView(it as ConstraintLayout)
                 }

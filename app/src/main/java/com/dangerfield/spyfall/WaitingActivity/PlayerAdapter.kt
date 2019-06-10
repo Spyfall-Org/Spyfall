@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.change_name.*
-import kotlinx.android.synthetic.main.player_card.view.*
+import kotlinx.android.synthetic.main.item_player_card.view.*
 
 class PlayerAdapter(var playerName: String?, val playerList: ArrayList<String>, val context: Context) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
 
@@ -17,7 +17,7 @@ class PlayerAdapter(var playerName: String?, val playerList: ArrayList<String>, 
 
         return ViewHolder(
             LayoutInflater.from(context).inflate(
-                R.layout.player_card,
+                R.layout.item_player_card,
                 parent,
                 false
             )

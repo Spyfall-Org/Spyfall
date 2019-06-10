@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="0dp"
+        android:layout_margin="8dp"
+        android:layout_height="50dp"
+        app:cardBackgroundColor="@color/colorTextBackground"
+        android:id="@+id/cv_simple">
+
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_simple_card_text"
+            android:layout_gravity="center"
+            tools:text="Name"/>
+
+
+</androidx.cardview.widget.CardView>
+

@@ -14,7 +14,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_timer" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:id="@+id/tv_game_timer" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp" android:layout_marginTop="84dp"
@@ -23,9 +23,9 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_role" android:layout_marginTop="12dp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_timer" app:layout_constraintStart_toStartOf="@+id/tv_timer"
-                app:layout_constraintEnd_toEndOf="@+id/tv_timer" app:layout_constraintHorizontal_bias="0.511"
+                android:id="@+id/tv_game_role" android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_game_timer" app:layout_constraintStart_toStartOf="@+id/tv_game_timer"
+                app:layout_constraintEnd_toEndOf="@+id/tv_game_timer" app:layout_constraintHorizontal_bias="0.511"
                 tools:text="You are the Spy!" android:textStyle="bold" android:textSize="24sp"/>
         <TextView
                 android:text="Players:"
@@ -38,57 +38,48 @@
                 android:layout_marginRight="8dp"
                 app:layout_constraintHorizontal_bias="0.114"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_chosen_location"/>
-        <TableLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tv_players"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="32dp" android:id="@+id/tbl_players"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="8dp" android:layout_marginStart="8dp">
-
-
-        </TableLayout>
+                app:layout_constraintTop_toBottomOf="@+id/tv_game_location"/>
         <TextView
                 android:text="Locations:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView7"
-                app:layout_constraintTop_toBottomOf="@+id/tbl_players" android:layout_marginTop="48dp"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/tv_players"/>
+                app:layout_constraintStart_toStartOf="@+id/tv_players" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/rv_players"/>
 
-        <TableLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/tbl_locations"
-                android:layout_marginTop="36dp" app:layout_constraintTop_toBottomOf="@+id/textView7"
-                android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" android:layout_marginRight="8dp">
-
-
-        </TableLayout>
         <Button
                 android:text="End Game"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:id="@+id/btn_end_game"
-                app:layout_constraintTop_toBottomOf="@+id/tbl_locations" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginTop="40dp"
-                app:layout_constraintHorizontal_bias="0.498" android:background="@drawable/background_action_button"
-        />
+                android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+                app:layout_constraintHorizontal_bias="0.497" android:background="@drawable/background_action_button"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/rv_locations"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_chosen_location" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_role" app:layout_constraintStart_toStartOf="@+id/tv_role"
-                app:layout_constraintEnd_toEndOf="@+id/tv_role" tools:text="at the office"/>
+                android:id="@+id/tv_game_location" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_game_role" app:layout_constraintStart_toStartOf="@+id/tv_game_role"
+                app:layout_constraintEnd_toEndOf="@+id/tv_game_role" tools:text="at the office"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="395dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_players"
+                android:id="@+id/rv_players"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="395dp"
+                android:layout_height="wrap_content" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView7" android:id="@+id/rv_locations"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

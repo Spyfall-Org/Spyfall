@@ -51,7 +51,7 @@ class JoinGameFragment : Fragment() {
         }
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
             if(game.exists()){
-                var list = (game["playerList"] as ArrayList<String>)
+                val list = (game["playerList"] as ArrayList<String>)
 
                 when {
                     list.size >= 8 ->  Toast.makeText(context, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
@@ -70,6 +70,7 @@ class JoinGameFragment : Fragment() {
             .update("playerList", FieldValue.arrayUnion(asPlayer))
 
         viewModel.ACCESS_CODE = withAccessCode
+        viewModel.currentUser = asPlayer
 
         Navigation.findNavController(view!!).navigate(R.id.action_joinGameFragment_to_waitingFragment)
     }

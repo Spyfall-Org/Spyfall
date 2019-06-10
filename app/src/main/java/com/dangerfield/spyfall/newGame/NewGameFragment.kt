@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.dangerfield.spyfall.CustomClasses.UIHelper
@@ -65,11 +66,14 @@ class NewGameFragment : Fragment() {
             }
         }
 
-        val playerList = mutableListOf<String>(playerName)
         //push timeLimit, player name as an array, isStarted as false, and included packs
-        createFireBaseGame(timeLimit.toInt(), playerList as ArrayList<String>,false,chosenPacks)
+        createFireBaseGame(timeLimit.toInt(),  mutableListOf<String>(playerName) as ArrayList<String>,false,chosenPacks)
 
-        Navigation.findNavController(sender).navigate(R.id.action_newGameFragment_to_waitingFragment)
+        //set the current user
+        viewModel.currentUser = playerName
+        //pass which fragment I came from
+        var bundle = bundleOf("FromFragment" to "NewGameFragment")
+        Navigation.findNavController(sender).navigate(R.id.action_newGameFragment_to_waitingFragment,bundle)
 
     }
 
@@ -82,6 +86,7 @@ class NewGameFragment : Fragment() {
 
         val game = HashMap<String, Any>()
         game["timeLimit"] = timeLimit
+        game["chosenLocation"] = ""
         game["playerList"] = playerList
         game["isStarted"] = isStarted
         game["chosenPacks"] = chosenPacks
