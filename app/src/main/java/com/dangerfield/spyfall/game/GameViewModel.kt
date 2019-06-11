@@ -6,36 +6,30 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import java.util.*
 import kotlin.collections.ArrayList
 
 class GameViewModel : ViewModel() {
     // I might just end up having this be like one game object
 
-    var roles= ArrayList<String>()
-    var gameObject: MutableLiveData<Game> = MutableLiveData()
-    var db = FirebaseFirestore.getInstance()
     //start off with a uuid but if its changed, so is the reference
     var ACCESS_CODE: String = UUID.randomUUID().toString().substring(0,6).toLowerCase()
         set(value){
             field = value
             gameRef = db.collection("games").document(value)
-        }
-    var gameRef = db.collection("games").document(ACCESS_CODE)
 
+        }
+
+    var roles= ArrayList<String>()
+    var gameObject: MutableLiveData<Game> = MutableLiveData()
+    var db = FirebaseFirestore.getInstance()
+    var gameRef = db.collection("games").document(ACCESS_CODE)
     var allLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
     lateinit var currentUser: String
 
-    init {
-        gameObject.value = Game()
-    }
-
-    //so I want playerNames to be listening to firebases playerlist
-    fun getGameUpdates(): LiveData<Game>  {
+    fun getGameUpdates(): MutableLiveData<Game> {
 
         gameRef.addSnapshotListener { game, error ->
 
@@ -44,27 +38,20 @@ class GameViewModel : ViewModel() {
                 return@addSnapshotListener
             }
 
-
             if (game != null && game.exists()) {
-
                 gameObject.value = game.toObject(Game::class.java)
-//                timeLimit = game["timeLimit"] as Long
-//                chosenPacks = game["chosenPacks"] as ArrayList<String>
-//                playerObjectList = game["playerObjectList"] as ArrayList<Player>
-//                location.value = game["chosenLocation"] as String
-//                gameHasStarted.value = game["isStarted"] as Boolean
-//                playerNames.value = game["playerList"] as ArrayList<String>
-            }else {
-                Log.d("View Model", "Current data: null")
-            }
+
+            }else { Log.d("View Model", "Current data: null") }
         }
+
         return gameObject
     }
 
-    //okay so now I just want to have getting the locations and assigning players and such here for the actual game screen
+
 
     fun getRandomLocation() {
 
+        var debug = gameObject.value
         gameObject.value?.let{ game ->
             if(game.chosenLocation.isNullOrEmpty()){
 

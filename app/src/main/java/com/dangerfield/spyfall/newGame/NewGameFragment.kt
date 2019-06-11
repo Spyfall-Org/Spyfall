@@ -15,6 +15,7 @@ import com.dangerfield.spyfall.CustomClasses.UIHelper
 
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
@@ -67,42 +68,17 @@ class NewGameFragment : Fragment() {
             }
         }
 
-        //push timeLimit, player name as an array, isStarted as false, and included packs
-        createFireBaseGame(timeLimit.toInt(),  mutableListOf<String>(playerName) as ArrayList<String>
-            ,false,chosenPacks, ArrayList<Player>())
-
-        //set the current user
         viewModel.currentUser = playerName
-        //pass which fragment I came from
-        var bundle = bundleOf("FromFragment" to "NewGameFragment")
-        Navigation.findNavController(sender).navigate(R.id.action_newGameFragment_to_waitingFragment,bundle)
-
+        createGame(Game("",chosenPacks,false,
+            mutableListOf(playerName) as ArrayList, ArrayList(),timeLimit.toLong()))
     }
 
-    //Start the game
-    fun createFireBaseGame(timeLimit: Int,playerList: ArrayList<String>,isStarted: Boolean,
-                           chosenPacks: ArrayList<String>, playerObjectList:  ArrayList<Player>){
-
-
-        //you might try to find a way here to just push a big object
-        val db = viewModel.db
-        val ACCESS_CODE = viewModel.ACCESS_CODE
-
-        val game = hashMapOf(
-            "chosenLocation" to "",
-            "chosenPacks" to chosenPacks,
-            "isStarted" to isStarted,
-            "playerList" to playerList,
-            "playerObjectList" to playerObjectList,
-            "timeLimit" to timeLimit
-            )
-
-        //create a node on firebase with the ACCESS_CODE variable with children of timelimit and player list
-
-        db.collection("games").document("$ACCESS_CODE")
-            .set(game)
-            .addOnSuccessListener { Log.d("New Game", "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w("New Game", "Error writing document", e) }
+    fun createGame(game: Game){
+        viewModel.gameRef.set(game)
+            .addOnCompleteListener {
+                val bundle = bundleOf("FromFragment" to "NewGameFragment")
+                Navigation.findNavController(view!!).navigate(R.id.action_newGameFragment_to_waitingFragment,bundle)
+            }
     }
 
 
