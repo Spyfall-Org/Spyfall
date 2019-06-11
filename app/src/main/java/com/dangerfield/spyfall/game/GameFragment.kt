@@ -38,10 +38,10 @@ class GameFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
         //we can garuntee there will be no two users with the same super name
-        currentPlayer = (viewModel.playerObjectList).filter { it.username == viewModel.currentUser }[0]
+        currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
 
-        var timer = startTimer(viewModel.timeLimit)
-        tv_game_location.text = viewModel.location.value
+        var timer = startTimer(viewModel.gameObject.value!!.timeLimit)
+        tv_game_location.text = viewModel.gameObject.value!!.chosenLocation
         tv_game_role.text = currentPlayer.role
 
         btn_end_game.setOnClickListener {
@@ -91,7 +91,7 @@ class GameFragment : Fragment() {
     fun configurePlayersAdapter(){
         rv_players.apply{
             layoutManager = GridLayoutManager(context, 2)
-            adapter = GameViewsAdapter(context,(viewModel.playerObjectList.map { it.username }) as ArrayList<String>)
+            adapter = GameViewsAdapter(context,(viewModel.gameObject.value!!.playerObjectList.map { it.username }) as ArrayList<String>)
             setHasFixedSize(true)
         }
     }

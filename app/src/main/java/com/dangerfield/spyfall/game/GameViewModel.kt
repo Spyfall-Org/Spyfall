@@ -15,16 +15,9 @@ import kotlin.collections.ArrayList
 
 class GameViewModel : ViewModel() {
     // I might just end up having this be like one game object
-    private var playerNames: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    var playerObjectList= ArrayList<Player>()
-    var gameHasStarted: MutableLiveData<Boolean> = MutableLiveData()
-    var location: MutableLiveData<String> = MutableLiveData()
+
     var roles= ArrayList<String>()
-    var timeLimit: Long = 0
-    var chosenPacks = ArrayList<String>()
-
     var gameObject: MutableLiveData<Game> = MutableLiveData()
-
     var db = FirebaseFirestore.getInstance()
     //start off with a uuid but if its changed, so is the reference
     var ACCESS_CODE: String = UUID.randomUUID().toString().substring(0,6).toLowerCase()
@@ -34,14 +27,15 @@ class GameViewModel : ViewModel() {
         }
     var gameRef = db.collection("games").document(ACCESS_CODE)
 
-
     var allLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
     lateinit var currentUser: String
 
-
+    init {
+        gameObject.value = Game()
+    }
 
     //so I want playerNames to be listening to firebases playerlist
-    fun getGameUpdates(): LiveData<ArrayList<String>>  {
+    fun getGameUpdates(): LiveData<Game>  {
 
         gameRef.addSnapshotListener { game, error ->
 
@@ -52,8 +46,8 @@ class GameViewModel : ViewModel() {
 
 
             if (game != null && game.exists()) {
-                gameObject.value = game?.toObject(Game::class.java)
 
+                gameObject.value = game.toObject(Game::class.java)
 //                timeLimit = game["timeLimit"] as Long
 //                chosenPacks = game["chosenPacks"] as ArrayList<String>
 //                playerObjectList = game["playerObjectList"] as ArrayList<Player>
@@ -64,63 +58,62 @@ class GameViewModel : ViewModel() {
                 Log.d("View Model", "Current data: null")
             }
         }
-        return playerNames
+        return gameObject
     }
 
     //okay so now I just want to have getting the locations and assigning players and such here for the actual game screen
 
-    fun getRandomLocation(): LiveData<String> {
+    fun getRandomLocation() {
 
-        if(location.value.isNullOrEmpty()){
+        gameObject.value?.let{ game ->
+            if(game.chosenLocation.isNullOrEmpty()){
 
-            gameRef.get().addOnSuccessListener {
-                chosenPacks = it.get("chosenPacks") as ArrayList<String>
+                gameRef.get().addOnSuccessListener {
 
-                //selects one of the packs at random
-                val randomPack = chosenPacks[Random().nextInt(chosenPacks.size)]
+                    //selects one of the packs at random
+                    val randomPack = game.chosenPacks.random()
 
-                val collectionRef = db.collection(randomPack)
-                collectionRef.get().addOnSuccessListener { documents ->
-                    //get a random location and add it to the game node
-                    val index = Random().nextInt(documents.toList().size)
-                    val randomLocation = documents.toList()[index]
-                    //collects all of the roels for a random location
-                    (randomLocation["roles"] as ArrayList<String>).forEach { roles.add(it) }
+                    val collectionRef = db.collection(randomPack)
+                    collectionRef.get().addOnSuccessListener { documents ->
+                        //get a random location and add it to the game node
+                        val index = Random().nextInt(documents.toList().size)
+                        val randomLocation = documents.toList()[index]
+                        //collects all of the roels for a random location
+                        (randomLocation["roles"] as ArrayList<String>).forEach { roles.add(it) }
 
-                    location.value = randomLocation.id
-
-                    val location = HashMap<String,String>()
-                    location["chosenLocation"] = randomLocation.id
-                    gameRef.set(location, SetOptions.merge())
-                }
-                    .addOnFailureListener { exception ->
-                        Log.w("Game view model", "Error getting documents: ", exception)
+                        gameRef.update("chosenLocation", randomLocation.id)
                     }
+                        .addOnFailureListener { exception ->
+                            Log.w("Game view model", "Error getting documents: ", exception)
+                        }
+                }
             }
         }
-        return location
     }
 
 
     fun startGame() {
         //assignes all roles
-        if(roles.isNullOrEmpty() or playerNames.value.isNullOrEmpty()){ return }
+        if(roles.isNullOrEmpty() or gameObject.value?.playerList.isNullOrEmpty()){ return }
 
-        playerNames.value!!.shuffle()
-        roles.shuffle()
+            val playerNames = gameObject.value?.playerList?.shuffled()
+            var playerObjectList = ArrayList<Player>()
+            roles.shuffle()
 
-        for (i in 0 until playerNames.value!!.size - 1) {
-            //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
-            //i is between 0-6
-            playerObjectList.add(Player(roles[i], playerNames.value!![i], 0))
-        }
-        //so we shuffled players and roles and assigned everyone except one a role in order
-        //now we assign the last one as the spy
-        playerObjectList.add(Player("The Spy!", playerNames.value!!.last(), 0))
+            for (i in 0 until playerNames!!.size - 1) {
+                //we can guarentee that i will never be out of index for roles as an 8 player max is enforced
+                //i is between 0-6
+                playerObjectList.add(Player(roles[i], playerNames[i], 0))
+            }
+            //so we shuffled players and roles and assigned everyone except one a role in order
+            //now we assign the last one as the spy
+            playerObjectList.add(Player("The Spy!", playerNames.last(), 0))
 
-        //now push to database
-        gameRef.update("playerObjectList", playerObjectList)
-        gameRef.update("isStarted", true)
+            //now push to database
+            gameRef.update("playerObjectList", playerObjectList)
+            gameRef.update("isStarted", true)
+
+
 
     }
 
@@ -129,48 +122,48 @@ class GameViewModel : ViewModel() {
         var tempLocations = ArrayList<String>()
         //if more than one pack was chosen, load all locations, shuffle, pick first 30
 
-        for (i in 0 until chosenPacks.size) {
+        gameObject.value.let{game ->
 
-            Log.d("Game View Model", "chosenPack: ${chosenPacks[i]}")
+            for (i in 0 until game!!.chosenPacks.size) {
 
-            db.collection(chosenPacks[i]).get().addOnSuccessListener { location ->
-                location.documents.forEach { tempLocations.add(it.id) }
-                Log.d("Game View Model", "ALL LOCAITONS: ${allLocations}")
+                db.collection(game.chosenPacks[i]).get().addOnSuccessListener { location ->
+                    location.documents.forEach { tempLocations.add(it.id) }
+                    Log.d("Game View Model", "ALL LOCAITONS: ${allLocations}")
 
-            }.addOnCompleteListener {
-                completedTasks += 1
-                if(completedTasks == chosenPacks.size){
+                }.addOnCompleteListener {
+                    completedTasks += 1
+                    if(completedTasks == game.chosenPacks.size){
 
-                    allLocations.value = tempLocations
+                        allLocations.value = tempLocations
+                    }
+
                 }
-
             }
+
         }
+
         return this.allLocations
     }
 
     fun endGame(){
-        val gameRef = db.collection("games").document(ACCESS_CODE)
         gameRef.delete()
     }
 
     fun removePlayer(){
-        val gameRef = db.collection("games").document(ACCESS_CODE)
-        //remove player
         gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
-
     }
 
     fun assignRolesAndStartGame() {
 
+        val chosenPacks = gameObject.value!!.chosenPacks
+        val location = gameObject.value!!.chosenLocation
         for (i in 0 until chosenPacks.size) {
-            db.collection(chosenPacks[i]).whereEqualTo("location", location.value)
+            db.collection(chosenPacks[i]).whereEqualTo("location", location)
                 .get().addOnSuccessListener { locationInfo ->
 
                     if (locationInfo.documents.size == 1) {
                         //only one document should be found matching the location
                         roles.addAll(locationInfo.documents[0]["roles"] as ArrayList<String>)
-
                         //so now we have all the roles
                         //get playerlist, create an object for each playerlist and assign a random role
                         startGame()
