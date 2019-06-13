@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 
 data class Game(var chosenLocation: String,
                 var chosenPacks: ArrayList<String>,
-                var isStarted: Boolean,
+                var started: Boolean,
                 var playerList: ArrayList<String>,
                 var playerObjectList: ArrayList<Player>,
                 var timeLimit: Long){

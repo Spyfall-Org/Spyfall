@@ -75,6 +75,7 @@ class GameViewModel : ViewModel() {
 
 
         }
+    }
 
 
     fun startGame() {
@@ -96,10 +97,7 @@ class GameViewModel : ViewModel() {
 
             //now push to database
             gameRef.update("playerObjectList", playerObjectList)
-            gameRef.update("isStarted", true)
-
-
-
+            gameRef.update("started", true)
     }
 
     fun getAllLocations():  LiveData<ArrayList<String>> {

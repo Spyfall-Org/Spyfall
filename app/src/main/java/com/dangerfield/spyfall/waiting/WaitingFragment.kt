@@ -42,7 +42,7 @@ class WaitingFragment : Fragment() {
             }
             adapter?.players = updatedGame.playerList
 
-            if(updatedGame.isStarted){
+            if(updatedGame.started){
                 Navigation.findNavController(this.view!!).navigate(R.id.action_waitingFragment_to_gameFragment)
             }
         })
