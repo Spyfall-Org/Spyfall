@@ -57,7 +57,6 @@ class WaitingFragment : Fragment() {
 
         btn_leave_game.setOnClickListener {leaveGame()}
 
-        //you only want to be the one picking a location iff you started the game
         if(isGameCreator){ viewModel.getRandomLocation() }
 
     }

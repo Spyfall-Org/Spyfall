@@ -48,35 +48,33 @@ class GameViewModel : ViewModel() {
     }
 
 
-
     fun getRandomLocation() {
 
-        var debug = gameObject.value
-        gameObject.value?.let{ game ->
-            if(game.chosenLocation.isNullOrEmpty()){
+        if (gameObject.value?.chosenLocation.isNullOrEmpty()) {
 
-                gameRef.get().addOnSuccessListener {
+            gameRef.get().addOnSuccessListener {
 
-                    //selects one of the packs at random
-                    val randomPack = game.chosenPacks.random()
+                //selects one of the packs at random
+                //we can garuntee that chosen packs will be here as it is sent over in the creation screen
+                val randomPack = gameObject.value!!.chosenPacks.random()
 
-                    val collectionRef = db.collection(randomPack)
-                    collectionRef.get().addOnSuccessListener { documents ->
-                        //get a random location and add it to the game node
-                        val index = Random().nextInt(documents.toList().size)
-                        val randomLocation = documents.toList()[index]
-                        //collects all of the roels for a random location
-                        (randomLocation["roles"] as ArrayList<String>).forEach { roles.add(it) }
+                val collectionRef = db.collection(randomPack)
+                collectionRef.get().addOnSuccessListener { documents ->
+                    //get a random location and add it to the game node
+                    val index = Random().nextInt(documents.toList().size)
+                    val randomLocation = documents.toList()[index]
+                    //collects all of the roels for a random location
+                    (randomLocation["roles"] as ArrayList<String>).forEach { roles.add(it) }
 
-                        gameRef.update("chosenLocation", randomLocation.id)
-                    }
-                        .addOnFailureListener { exception ->
-                            Log.w("Game view model", "Error getting documents: ", exception)
-                        }
+                    gameRef.update("chosenLocation", randomLocation.id)
                 }
+                    .addOnFailureListener { exception ->
+                        Log.w("Game view model", "Error getting documents: ", exception)
+                    }
             }
+
+
         }
-    }
 
 
     fun startGame() {

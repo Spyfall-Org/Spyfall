@@ -1,5 +1,7 @@
 package com.dangerfield.spyfall.models
 
+import androidx.lifecycle.MutableLiveData
+
 data class Game(var chosenLocation: String,
                 var chosenPacks: ArrayList<String>,
                 var isStarted: Boolean,

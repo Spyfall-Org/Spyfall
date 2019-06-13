@@ -74,6 +74,8 @@ class NewGameFragment : Fragment() {
     }
 
     fun createGame(game: Game){
+        //this is just for default data,in the future changes will be pulled from firebase
+        viewModel.gameObject.value = game
         viewModel.gameRef.set(game)
             .addOnCompleteListener {
                 val bundle = bundleOf("FromFragment" to "NewGameFragment")
