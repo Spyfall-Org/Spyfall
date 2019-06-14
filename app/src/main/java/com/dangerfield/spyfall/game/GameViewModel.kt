@@ -149,6 +149,10 @@ class GameViewModel : ViewModel() {
 
     fun removePlayer(){
         gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
+        //when a player leaves a game, you dont want them to hold onto the gmae data
+        gameObject = MutableLiveData()
+        roles.clear()
+
     }
 
     fun assignRolesAndStartGame() {

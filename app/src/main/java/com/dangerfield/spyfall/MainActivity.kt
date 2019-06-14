@@ -11,29 +11,17 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val navController = findNavController(this, R.id.nav_host_fragment)
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(this, R.id.nav_host_fragment).navigateUp()
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d("Main","on pause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("Main","on stop")
-
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         Log.d("Main","on destory")
+
+        //TODO: you might want to delete the game if the activity is destroyed, just know it will delete the game for everyone
 
     }
 

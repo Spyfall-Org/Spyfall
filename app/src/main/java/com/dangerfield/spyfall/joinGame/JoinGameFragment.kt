@@ -71,7 +71,6 @@ class JoinGameFragment : Fragment() {
 
         viewModel.ACCESS_CODE = withAccessCode
         viewModel.currentUser = asPlayer
-
         Navigation.findNavController(view!!).navigate(R.id.action_joinGameFragment_to_waitingFragment)
     }
 }

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.dangerfield.spyfall.R
-import kotlinx.android.synthetic.main.start_fragment.*
+import kotlinx.android.synthetic.main.fragment_start.*
 
 
 class StartFragment : Fragment() {
@@ -16,7 +16,7 @@ class StartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.start_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_start, container, false)
     }
 
 
@@ -24,7 +24,6 @@ class StartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btn_new_game.setOnClickListener {
-            var debug = fragmentManager
             Navigation.findNavController(it).navigate(R.id.action_startFragment_to_newGameFragment)
         }
 

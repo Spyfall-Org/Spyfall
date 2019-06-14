@@ -3,7 +3,6 @@ package com.dangerfield.spyfall.game
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +10,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-
-import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.models.Player
 import kotlinx.android.synthetic.main.fragment_game.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.dangerfield.spyfall.R
 
 
 class GameFragment : Fragment() {
@@ -42,15 +42,20 @@ class GameFragment : Fragment() {
         currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
 
         var timer = startTimer(viewModel.gameObject.value!!.timeLimit)
-        tv_game_location.text = viewModel.gameObject.value!!.chosenLocation
-        tv_game_role.text = currentPlayer.role
+        tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
+            "Figure out the location!"
+        } else {
+            "Location: ${viewModel!!.gameObject.value?.chosenLocation}"
+        }
+        tv_game_role.text = "Role: ${currentPlayer.role}"
+
 
         btn_end_game.setOnClickListener {
             viewModel.endGame()
             timer.cancel()
-            var debug = fragmentManager
             Navigation.findNavController(view).popBackStack(R.id.startFragment, false)
         }
+        
 
         configurePlayersAdapter()
         configureLocationsAdapter()
@@ -76,6 +81,7 @@ class GameFragment : Fragment() {
 
             override fun onFinish() {
                 tv_game_timer.text = "done!"
+                showPlayAgain()
             }
         }.start()
 
@@ -99,8 +105,13 @@ class GameFragment : Fragment() {
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("Game", "OnDestory")
+    fun showPlayAgain(){
+        val set = ConstraintSet()
+        val layout = game_layout as ConstraintLayout
+        set.clone(layout)
+        // The following breaks the connection.
+        set.clear(R.id.btn_end_game, ConstraintSet.END)
+        set.applyTo(layout)
+        btn_play_again.visibility = View.VISIBLE
     }
 }

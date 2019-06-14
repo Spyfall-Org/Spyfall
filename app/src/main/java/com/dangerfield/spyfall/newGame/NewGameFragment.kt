@@ -79,7 +79,6 @@ class NewGameFragment : Fragment() {
         viewModel.gameRef.set(game)
             .addOnCompleteListener {
                 val bundle = bundleOf("FromFragment" to "NewGameFragment")
-                var debug = fragmentManager
                 Navigation.findNavController(view!!).navigate(R.id.action_newGameFragment_to_waitingFragment,bundle)
             }
     }
