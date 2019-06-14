@@ -2,7 +2,6 @@ package com.dangerfield.spyfall.newGame
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +10,11 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import com.dangerfield.spyfall.CustomClasses.UIHelper
+import com.dangerfield.spyfall.customClasses.UIHelper
 
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
-import com.dangerfield.spyfall.models.Player
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,6 +30,7 @@ class NewGameFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_game, container, false)
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,12 +75,17 @@ class NewGameFragment : Fragment() {
     fun createGame(game: Game){
         //this is just for default data,in the future changes will be pulled from firebase
         viewModel.gameObject.value = game
+        viewModel.ACCESS_CODE = UUID.randomUUID().toString().substring(0,6).toLowerCase()
         viewModel.gameRef.set(game)
             .addOnCompleteListener {
                 val bundle = bundleOf("FromFragment" to "NewGameFragment")
+                var debug = fragmentManager
                 Navigation.findNavController(view!!).navigate(R.id.action_newGameFragment_to_waitingFragment,bundle)
             }
     }
+
+
+
 
 
 }

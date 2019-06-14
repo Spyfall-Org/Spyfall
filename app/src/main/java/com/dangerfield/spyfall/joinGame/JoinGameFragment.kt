@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
-import com.dangerfield.spyfall.CustomClasses.UIHelper
+import com.dangerfield.spyfall.customClasses.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.google.firebase.firestore.FieldValue

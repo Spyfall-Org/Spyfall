@@ -24,6 +24,7 @@ class StartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btn_new_game.setOnClickListener {
+            var debug = fragmentManager
             Navigation.findNavController(it).navigate(R.id.action_startFragment_to_newGameFragment)
         }
 

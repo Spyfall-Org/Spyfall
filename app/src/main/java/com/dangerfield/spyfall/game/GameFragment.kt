@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.game
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +48,8 @@ class GameFragment : Fragment() {
         btn_end_game.setOnClickListener {
             viewModel.endGame()
             timer.cancel()
-            Navigation.findNavController(view).navigate(R.id.action_gameFragment_to_startFragment)
+            var debug = fragmentManager
+            Navigation.findNavController(view).popBackStack(R.id.startFragment, false)
         }
 
         configurePlayersAdapter()
@@ -94,5 +96,11 @@ class GameFragment : Fragment() {
             adapter = GameViewsAdapter(context,(viewModel.gameObject.value!!.playerObjectList.map { it.username }) as ArrayList<String>)
             setHasFixedSize(true)
         }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Game", "OnDestory")
     }
 }

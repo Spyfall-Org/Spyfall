@@ -8,21 +8,24 @@
         <action android:id="@+id/action_startFragment_to_joinGameFragment" app:destination="@id/joinGameFragment"/>
         <action android:id="@+id/action_startFragment_to_newGameFragment" app:destination="@id/newGameFragment"/>
     </fragment>
+
     <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.newGame.NewGameFragment"
               android:label="NewGameFragment">
         <action android:id="@+id/action_newGameFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
     </fragment>
+
     <fragment android:id="@+id/joinGameFragment" android:name="com.dangerfield.spyfall.joinGame.JoinGameFragment"
               android:label="JoinGameFragment">
         <action android:id="@+id/action_joinGameFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
     </fragment>
+
     <fragment android:id="@+id/waitingFragment" android:name="com.dangerfield.spyfall.waiting.WaitingFragment"
               android:label="WaitingFragment">
         <action android:id="@+id/action_waitingFragment_to_gameFragment" app:destination="@id/gameFragment"/>
-        <action android:id="@+id/action_waitingFragment_to_startFragment" app:destination="@id/startFragment"/>
     </fragment>
+
     <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.game.GameFragment"
-              android:label="GameFragment">
-        <action android:id="@+id/action_gameFragment_to_startFragment" app:destination="@id/startFragment"/>
-    </fragment>
+              android:label="GameFragment"/>
+
+    <action android:id="@+id/action_global_startFragment" app:destination="@id/startFragment"/>
 </navigation>

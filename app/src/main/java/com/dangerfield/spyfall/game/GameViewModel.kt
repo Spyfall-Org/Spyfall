@@ -129,8 +129,23 @@ class GameViewModel : ViewModel() {
     }
 
     fun endGame(){
+        roles.clear()
+        // delete the game on the server
         gameRef.delete()
     }
+
+    fun resetGame(){
+        // resets variables on firebase, which will update viewmodel
+        roles.clear()
+
+        val newGame = Game("",gameObject.value!!.chosenPacks,false,
+           gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
+
+        gameRef.set(newGame)
+
+    }
+
+
 
     fun removePlayer(){
         gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
