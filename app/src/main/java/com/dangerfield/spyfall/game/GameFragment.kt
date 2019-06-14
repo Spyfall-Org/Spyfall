@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import android.util.TypedValue
 import com.dangerfield.spyfall.R
 
 
@@ -55,7 +56,7 @@ class GameFragment : Fragment() {
             timer.cancel()
             Navigation.findNavController(view).popBackStack(R.id.startFragment, false)
         }
-        
+
 
         configurePlayersAdapter()
         configureLocationsAdapter()
@@ -106,11 +107,19 @@ class GameFragment : Fragment() {
 
 
     fun showPlayAgain(){
+
+        val padding = Math.round(
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 16f, resources.getDisplayMetrics()
+            )
+        )
         val set = ConstraintSet()
         val layout = game_layout as ConstraintLayout
         set.clone(layout)
         // The following breaks the connection.
         set.clear(R.id.btn_end_game, ConstraintSet.END)
+        set.clear(R.id.btn_end_game, ConstraintSet.START)
+        set.connect(R.id.btn_end_game,ConstraintSet.END,R.id.view_center,ConstraintSet.START,padding)
         set.applyTo(layout)
         btn_play_again.visibility = View.VISIBLE
     }
