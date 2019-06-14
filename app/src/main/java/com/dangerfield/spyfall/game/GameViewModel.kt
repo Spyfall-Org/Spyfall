@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
@@ -134,14 +135,14 @@ class GameViewModel : ViewModel() {
         gameRef.delete()
     }
 
-    fun resetGame(){
+    fun resetGame(): Task<Void> {
         // resets variables on firebase, which will update viewmodel
         roles.clear()
 
         val newGame = Game("",gameObject.value!!.chosenPacks,false,
            gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
 
-        gameRef.set(newGame)
+        return gameRef.set(newGame)
 
     }
 

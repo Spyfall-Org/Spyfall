@@ -57,6 +57,11 @@ class GameFragment : Fragment() {
             Navigation.findNavController(view).popBackStack(R.id.startFragment, false)
         }
 
+        btn_play_again.setOnClickListener{
+            viewModel.resetGame().addOnCompleteListener{
+                Navigation.findNavController(view).popBackStack(R.id.waitingFragment, false)
+            }
+        }
 
         configurePlayersAdapter()
         configureLocationsAdapter()
@@ -110,7 +115,7 @@ class GameFragment : Fragment() {
 
         val padding = Math.round(
             TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 16f, resources.getDisplayMetrics()
+                TypedValue.COMPLEX_UNIT_DIP, 8f, resources.getDisplayMetrics()
             )
         )
         val set = ConstraintSet()
