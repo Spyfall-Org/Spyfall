@@ -21,8 +21,6 @@ import java.util.ArrayList
 
 class WaitingFragment : Fragment() {
 
-    //TODO: handle back press deleting node and clearning view model and such
-
     private var adapter: WaitingPlayersAdapter? = null
     lateinit var viewModel: GameViewModel
     private var isGameCreator: Boolean = false
@@ -39,7 +37,7 @@ class WaitingFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         navigateBack = {
-             UIHelper.simpleAlert(context!!,"Leaving","Are you sure you want to leave?",
+             UIHelper.simpleAlert(context!!,"Leaving Game","Are you sure you want to leave?",
                 "Leave", {leaveGame()},"Stay",{}).show()
         }
 
@@ -56,14 +54,11 @@ class WaitingFragment : Fragment() {
 
         navController =  Navigation.findNavController(parentFragment!!.view!!)
 
-
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-        viewModel.getGameUpdates().observe(activity!!, Observer { updatedGame ->
-            if(updatedGame.playerList.size == 0){
-                Log.d("END","END")
-                viewModel.endGame()
-            }
+        //made the owner this such that when the fragment dies, the observer goes with it
+        viewModel.getGameUpdates().observe(this, Observer { updatedGame ->
+
             adapter?.players = updatedGame.playerList
 
             if(updatedGame.started && navController.currentDestination?.id == R.id.waitingFragment){
@@ -86,12 +81,15 @@ class WaitingFragment : Fragment() {
     }
 
     private fun leaveGame(){
-        viewModel.removePlayer()
-        //pop the back stack all the way back to the start screen
-        navController.popBackStack(R.id.startFragment,false)
+        viewModel.removePlayer().addOnCompleteListener {
+            //once the database is updated check to see if game should be over
+            if(viewModel.gameObject.value?.playerList?.size == 0){
+                viewModel.endGame()
+            }
+            //pop the back stack all the way back to the start screen
+            navController.popBackStack(R.id.startFragment,false)
+        }
     }
-
-
 
     private fun configureLayoutManagerAndRecyclerView() {
             rv_player_list_waiting.layoutManager = LinearLayoutManager(context)

@@ -7,10 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.customClasses.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.models.Game
 import com.google.firebase.firestore.FieldValue
 import kotlinx.android.synthetic.main.fragment_join_game.btn_join_game_action
 import kotlinx.android.synthetic.main.fragment_join_game.tv_access_code
@@ -19,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_join_game.tv_username
 class JoinGameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,10 +41,12 @@ class JoinGameFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        //scope the view model to the activity so that data can be shared in fragments
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
+        navController = NavHostFragment.findNavController(this)
     }
 
-    fun joinGameClick(){
+    private fun joinGameClick(){
 
         val accessCode = tv_access_code.text.toString().trim()
         val userName = tv_username.text.toString().trim()
@@ -49,6 +55,7 @@ class JoinGameFragment : Fragment() {
             Toast.makeText(context, "Please fill out both access code and user name", Toast.LENGTH_LONG).show()
             return
         }
+        //TODO: show loading icon
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
@@ -65,12 +72,11 @@ class JoinGameFragment : Fragment() {
         }
     }
 
-    fun joinGame(withAccessCode: String, asPlayer: String){
-        viewModel.db.collection("games").document(withAccessCode)
-            .update("playerList", FieldValue.arrayUnion(asPlayer))
-
+    private fun joinGame(withAccessCode: String, asPlayer: String){
         viewModel.ACCESS_CODE = withAccessCode
         viewModel.currentUser = asPlayer
-        Navigation.findNavController(view!!).navigate(R.id.action_joinGameFragment_to_waitingFragment)
+        viewModel.addPlayer(asPlayer).addOnCompleteListener {
+            navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
+        }
     }
 }

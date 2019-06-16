@@ -23,6 +23,7 @@ class GameViewModel : ViewModel() {
 
         }
 
+    var gameExists: MutableLiveData<Boolean> = MutableLiveData()
     var roles= ArrayList<String>()
     var gameObject: MutableLiveData<Game> = MutableLiveData()
     var db = FirebaseFirestore.getInstance()
@@ -41,8 +42,12 @@ class GameViewModel : ViewModel() {
 
             if (game != null && game.exists()) {
                 gameObject.value = game.toObject(Game::class.java)
+                gameExists.value = true
 
-            }else { Log.d("View Model", "Current data: null") }
+            }else { Log.d("View Model", "game =  null")
+
+                gameExists.value = false
+            }
         }
 
         return gameObject
@@ -129,10 +134,10 @@ class GameViewModel : ViewModel() {
         return this.allLocations
     }
 
-    fun endGame(){
+    fun endGame(): Task<Void> {
         roles.clear()
         // delete the game on the server
-        gameRef.delete()
+       return gameRef.delete()
     }
 
     fun resetGame(): Task<Void> {
@@ -148,12 +153,16 @@ class GameViewModel : ViewModel() {
 
 
 
-    fun removePlayer(){
-        gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
-        //when a player leaves a game, you dont want them to hold onto the gmae data
-        gameObject = MutableLiveData()
-        roles.clear()
+    fun removePlayer(): Task<Void> {
+//        //when a player leaves a game, you dont want them to hold onto the game data
+//        gameObject = MutableLiveData()
+//        roles.clear()
+        return gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
 
+    }
+
+    fun addPlayer(player: String): Task<Void> {
+        return gameRef.update("playerList", FieldValue.arrayUnion(player))
     }
 
     fun assignRolesAndStartGame() {
