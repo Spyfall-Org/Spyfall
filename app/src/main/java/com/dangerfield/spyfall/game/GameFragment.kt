@@ -86,6 +86,10 @@ class GameFragment : Fragment() {
                 navController.popBackStack(R.id.waitingFragment, false)
             }
         }
+
+        tv_hide.setOnClickListener{
+            hide()
+        }
     }
 
     override fun onResume() {
@@ -105,24 +109,25 @@ class GameFragment : Fragment() {
 
             tv_game_role.text = "Role: ${currentPlayer.role}"
 
-            val firstPlayer = assignFirst()
+            val firstPlayer = viewModel.gameObject.value!!.playerObjectList[0].username
 
             configurePlayersAdapter(firstPlayer)
             configureLocationsAdapter()
         }
     }
 
-    private fun assignFirst(): String {
-
-        //there are a few non network ways to assign first
-       //chose a specific indecy in the player objects list or the player names
-        // chose a specific indecy of the player names, and hash the value to get an random indecy
-        // (everyone hashes the same and should get the same first displayed)
-
-        //player object list is shuffled before the push so this is a random user
-        return viewModel.gameObject.value!!.playerObjectList[0].username
-
+    private fun hide(){
+        if(tv_game_role.visibility == View.VISIBLE){
+            tv_game_role.visibility = View.GONE
+            tv_game_location.visibility = View.GONE
+            tv_hide.text = "show"
+        }else{
+            tv_game_role.visibility = View.VISIBLE
+            tv_game_location.visibility = View.VISIBLE
+            tv_hide.text = "hide"
+        }
     }
+
 
     private fun startTimer(timeLimit : Long): CountDownTimer {
 
