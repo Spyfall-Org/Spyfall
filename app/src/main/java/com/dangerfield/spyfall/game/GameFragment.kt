@@ -105,9 +105,23 @@ class GameFragment : Fragment() {
 
             tv_game_role.text = "Role: ${currentPlayer.role}"
 
-            configurePlayersAdapter()
+            val firstPlayer = assignFirst()
+
+            configurePlayersAdapter(firstPlayer)
             configureLocationsAdapter()
         }
+    }
+
+    private fun assignFirst(): String {
+
+        //there are a few non network ways to assign first
+       //chose a specific indecy in the player objects list or the player names
+        // chose a specific indecy of the player names, and hash the value to get an random indecy
+        // (everyone hashes the same and should get the same first displayed)
+
+        //player object list is shuffled before the push so this is a random user
+        return viewModel.gameObject.value!!.playerObjectList[0].username
+
     }
 
     private fun startTimer(timeLimit : Long): CountDownTimer {
@@ -138,7 +152,7 @@ class GameFragment : Fragment() {
     }
 
     private fun configureLocationsAdapter(){
-        locationsAdapter = GameViewsAdapter(context!!, ArrayList())
+        locationsAdapter = GameViewsAdapter(context!!, ArrayList(), null)
         rv_locations.apply{
             adapter = locationsAdapter
             layoutManager = GridLayoutManager(context, 2) }
@@ -149,10 +163,10 @@ class GameFragment : Fragment() {
         })
     }
 
-    private fun configurePlayersAdapter(){
+    private fun configurePlayersAdapter(firstPlayer: String){
         rv_players.apply{
             layoutManager = GridLayoutManager(context, 2)
-            adapter = GameViewsAdapter(context,(viewModel.gameObject.value!!.playerObjectList.map { it.username }) as ArrayList<String>)
+            adapter = GameViewsAdapter(context,(viewModel.gameObject.value!!.playerList.shuffled()) as ArrayList<String>, firstPlayer)
             setHasFixedSize(true)
         }
     }

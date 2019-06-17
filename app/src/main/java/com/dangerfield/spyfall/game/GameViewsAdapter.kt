@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.item_simple_card.view.*
 
-class GameViewsAdapter(val context: Context, list: ArrayList<String>) : RecyclerView.Adapter<GameViewsAdapter.ViewHolder>() {
+class GameViewsAdapter(val context: Context, list: ArrayList<String>, val first: String?) : RecyclerView.Adapter<GameViewsAdapter.ViewHolder>() {
 
     var items = ArrayList<String>()
         set(value) {
@@ -31,10 +31,16 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>) : Recycler
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.text.text = items[position]
+
+        if(first != null && items[position].trim() == first.trim()){
+            //then we are dealing with players
+            holder.first_icon.visibility = View.VISIBLE
+        }
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val text = view.tv_simple_card_text
+        val first_icon = view.tv_first
 
         init {
             view.setOnClickListener {

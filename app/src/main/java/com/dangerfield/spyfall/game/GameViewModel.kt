@@ -108,7 +108,7 @@ class GameViewModel : ViewModel() {
             playerObjectList.add(Player("The Spy!", playerNames.last(), 0))
 
             //now push to database
-            gameRef.update("playerObjectList", playerObjectList)
+            gameRef.update("playerObjectList", playerObjectList.shuffled()) //shuffled so that the last is not always the spy
             gameRef.update("started", true)
     }
 
