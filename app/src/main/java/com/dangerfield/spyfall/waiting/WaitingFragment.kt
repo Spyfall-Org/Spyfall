@@ -36,12 +36,6 @@ class WaitingFragment : Fragment() {
         navController =  Navigation.findNavController(parentFragment!!.view!!)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-        viewModel.getGameUpdates().observe(this, Observer { updatedGame ->
-            adapter?.players = updatedGame.playerList
-            if(updatedGame.started && navController.currentDestination?.id == R.id.waitingFragment){
-                navController.navigate(R.id.action_waitingFragment_to_gameFragment)
-            }
-        })
 
         navigateBack = { UIHelper.simpleAlert(context!!,"Leaving Game","Are you sure you want to leave?",
             "Leave", {leaveGame()},"Stay",{}).show()}
@@ -52,6 +46,17 @@ class WaitingFragment : Fragment() {
                    navigateBack?.invoke()
                 }
             })
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel.getGameUpdates(viewModel.gameRef).observe(viewLifecycleOwner, Observer { updatedGame ->
+            adapter?.players = updatedGame.playerList
+            if(updatedGame.started && navController.currentDestination?.id == R.id.waitingFragment){
+                navController.navigate(R.id.action_waitingFragment_to_gameFragment)
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

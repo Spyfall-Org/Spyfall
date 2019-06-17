@@ -44,8 +44,23 @@ class GameFragment : Fragment() {
         navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true){
+                override fun handleOnBackPressed() {
+                    //show alert when user presses back
+                    UIHelper.simpleAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
+                        "Leave", {endGame()},"Stay",{}).show()
+                }
+            })
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        navController = NavHostFragment.findNavController(this)
         //the observers should not be called unless the fragment is in a started or resumed state
-        viewModel.getGameUpdates().observe(this, androidx.lifecycle.Observer {
+        viewModel.getGameUpdates(viewModel.gameRef).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             //someone has reset game
             if(!it.started && navController.currentDestination?.id == R.id.gameFragment){
                 viewModel.resetGame().addOnCompleteListener{
@@ -69,24 +84,19 @@ class GameFragment : Fragment() {
 
            //it is as if im navigating to the fragment.
 
+
+           options left:
+           1.) wait for stack overflow
+           2.) use android lifecycle aware components
+           3.) look at ways to keep the fragment alive when you pop
+
             */
 
-        //so this observer is not getting detached, maybe manually detach it and reattach it in on resume
-        viewModel.gameExists.observe(this, androidx.lifecycle.Observer { exists ->
+        viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
             //someone ended the game
-            var debug = navController
+            Log.d("Game", "gameRef before crash call =  ${viewModel.gameRef.path}")
             if(!exists && navController.currentDestination?.id == R.id.gameFragment){ endGame() }
         })
-
-
-        requireActivity().onBackPressedDispatcher.addCallback(this,
-            object : OnBackPressedCallback(true){
-                override fun handleOnBackPressed() {
-                    //show alert when user presses back
-                    UIHelper.simpleAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
-                        "Leave", {endGame()},"Stay",{}).show()
-                }
-            })
 
     }
 
@@ -152,6 +162,7 @@ class GameFragment : Fragment() {
     fun endGame(){
         viewModel.endGame()
         Log.d("Game", "current destination before crash: "+resources.getResourceEntryName(navController.currentDestination!!.id))
+        Log.d("Game", "gameRef before crash =  ${viewModel.gameRef.path}")
         timer.cancel()
         Log.d("Game", "current destination before poping: "+resources.getResourceEntryName(navController.currentDestination!!.id))
         navController.popBackStack(R.id.startFragment, false)
@@ -166,7 +177,7 @@ class GameFragment : Fragment() {
             layoutManager = GridLayoutManager(context, 2) }
 
         //attaches observer after the locations adapter is actually initialized
-        viewModel.getAllLocations().observe(this, androidx.lifecycle.Observer { locations ->
+        viewModel.getAllLocations().observe(viewLifecycleOwner, androidx.lifecycle.Observer { locations ->
             locationsAdapter.items = locations
         })
     }

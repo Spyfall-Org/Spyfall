@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
@@ -20,6 +21,8 @@ class GameViewModel : ViewModel() {
         set(value){
             field = value
             gameRef = db.collection("games").document(value)
+            //the idea here is that when we have a new access code, we change the get game upadtes gameRef
+            getGameUpdates(gameRef)
 
         }
 
@@ -31,9 +34,10 @@ class GameViewModel : ViewModel() {
     var allLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
     lateinit var currentUser: String
 
-    fun getGameUpdates(): MutableLiveData<Game> {
+    fun getGameUpdates(gameReference: DocumentReference): MutableLiveData<Game> {
 
-        gameRef.addSnapshotListener { game, error ->
+        // we need to make it such that when gameref changes, so does the game ref in this snap shot listener
+        gameReference.addSnapshotListener { game, error ->
 
             if (error != null) {
                 Log.w("View Model", "Listen failed.", error)
@@ -43,9 +47,11 @@ class GameViewModel : ViewModel() {
             if (game != null && game.exists()) {
                 gameObject.value = game.toObject(Game::class.java)
                 gameExists.value = true
+                Log.d("View Model", "game =  NOT null for gameRef ${gameReference.path}")
 
-            }else { Log.d("View Model", "game =  null")
+            }else {
 
+                Log.d("View Model", "game =  null for gameRef ${gameReference.path}")
                 gameExists.value = false
             }
         }

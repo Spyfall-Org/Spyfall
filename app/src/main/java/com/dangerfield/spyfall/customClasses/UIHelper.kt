@@ -16,7 +16,7 @@ class UIHelper {
             if(!b){ this.hideKeyboardFrom(view) }
         }
 
-        fun hideKeyboardFrom(view: View) {
+        private fun hideKeyboardFrom(view: View) {
             val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
