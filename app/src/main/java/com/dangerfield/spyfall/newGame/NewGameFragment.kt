@@ -1,6 +1,8 @@
 package com.dangerfield.spyfall.newGame
 
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -77,14 +79,19 @@ class NewGameFragment : Fragment() {
     }
 
     private fun createGame(game: Game){
-        //this is just for default data,in the future changes will be pulled from firebase
-        viewModel.gameObject.value = game
-        viewModel.ACCESS_CODE = UUID.randomUUID().toString().substring(0,6).toLowerCase()
-        viewModel.gameRef.set(game)
-            .addOnCompleteListener {
-                val bundle = bundleOf("FromFragment" to "NewGameFragment")
-                Navigation.findNavController(view!!).navigate(R.id.action_newGameFragment_to_waitingFragment,bundle)
-            }
-    }
 
+        if(viewModel.hasNetworkConnection) {
+            viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
+                .addOnCompleteListener {
+                    val bundle = bundleOf("FromFragment" to "NewGameFragment")
+                    Navigation.findNavController(view!!)
+                        .navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
+                }
+        }else{
+            UIHelper.simpleAlert(context!!, "Something went wrong",
+                "We are sorry. Please check your internet connection and try again",
+                "Okay",{},"",{}).show()
+        }
+
+    }
 }

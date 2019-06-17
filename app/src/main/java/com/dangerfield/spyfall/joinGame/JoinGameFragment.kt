@@ -49,6 +49,13 @@ class JoinGameFragment : Fragment() {
 
     private fun joinGameClick(){
 
+        if(!viewModel.hasNetworkConnection){
+            UIHelper.simpleAlert(context!!, "Something went wrong",
+                "We are sorry. Please check your internet connection and try again",
+                "Okay",{},"",{}).show()
+            return
+        }
+
         val accessCode = tv_access_code.text.toString().trim()
         val userName = tv_username.text.toString().trim()
 

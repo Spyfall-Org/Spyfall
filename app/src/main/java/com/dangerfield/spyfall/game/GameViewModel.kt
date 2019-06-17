@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
+import com.dangerfield.spyfall.customClasses.UIHelper
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
 import com.google.android.gms.common.api.TransformedResult
@@ -30,6 +31,7 @@ class GameViewModel : ViewModel() {
 
         }
 
+    var hasNetworkConnection: Boolean = false
     var gameExists: MutableLiveData<Boolean> = MutableLiveData()
     var roles= ArrayList<String>()
     var gameObject: MutableLiveData<Game> = MutableLiveData()
@@ -158,7 +160,11 @@ class GameViewModel : ViewModel() {
 
     }
 
-
+    fun createGame(game: Game, code: String): Task<Void> {
+            gameObject.value = game
+            ACCESS_CODE = code
+            return gameRef.set(game)
+    }
 
     fun removePlayer(): Task<Void> {
 //        //when a player leaves a game, you dont want them to hold onto the game data
@@ -199,8 +205,5 @@ class GameViewModel : ViewModel() {
                     Log.w("events", "Error getting roles: ", exception)
                 }
         }
-
     }
-
-
 }

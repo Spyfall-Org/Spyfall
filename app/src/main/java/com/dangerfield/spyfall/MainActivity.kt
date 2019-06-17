@@ -1,22 +1,25 @@
 package com.dangerfield.spyfall
 
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation.findNavController
+import com.dangerfield.spyfall.customClasses.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
 
 class MainActivity : AppCompatActivity(){
 
     lateinit var viewModel: GameViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
-
+        register()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -30,6 +33,13 @@ class MainActivity : AppCompatActivity(){
         //TODO: you might want to delete the game if the activity is destroyed, just know it will delete the game for everyone
 
         viewModel.endGame()
+    }
+
+    private fun register(){
+        val receiver = Receiver(viewModel)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+        registerReceiver(receiver,intentFilter)
     }
 
 
