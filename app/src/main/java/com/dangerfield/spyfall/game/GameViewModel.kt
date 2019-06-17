@@ -6,7 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
+import com.google.android.gms.common.api.TransformedResult
+import com.google.android.gms.common.api.internal.TaskUtil
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -168,6 +172,13 @@ class GameViewModel : ViewModel() {
         return gameRef.update("playerList", FieldValue.arrayUnion(player))
     }
 
+    fun changeName(newName: String): Task<Void> {
+        val index = gameObject.value!!.playerList.indexOf(currentUser)
+        gameObject.value!!.playerList[index] = newName
+        currentUser = newName
+        return gameRef.update("playerList", gameObject.value!!.playerList)
+
+    }
     fun assignRolesAndStartGame() {
 
         val chosenPacks = gameObject.value!!.chosenPacks

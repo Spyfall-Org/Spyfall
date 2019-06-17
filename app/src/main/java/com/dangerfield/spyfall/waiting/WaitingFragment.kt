@@ -97,7 +97,7 @@ class WaitingFragment : Fragment() {
 
     private fun configureLayoutManagerAndRecyclerView() {
             rv_player_list_waiting.layoutManager = LinearLayoutManager(context)
-            adapter = WaitingPlayersAdapter(context!!, ArrayList())
+            adapter = WaitingPlayersAdapter(context!!, ArrayList(),viewModel)
             rv_player_list_waiting.adapter = adapter
     }
 }

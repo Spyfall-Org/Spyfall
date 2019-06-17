@@ -23,7 +23,7 @@
             android:layout_height="wrap_content" android:id="@+id/tv_first" android:layout_gravity="top|end"
             android:textStyle="bold|italic" android:textColor="@color/colorAccent"
             android:layout_marginTop="8dp" android:layout_marginRight="8dp"
-            android:visibility="invisible" android:text="1st"/>
+            android:visibility="invisible" android:text="1st" android:textSize="10sp"/>
 
 
 </androidx.cardview.widget.CardView>
