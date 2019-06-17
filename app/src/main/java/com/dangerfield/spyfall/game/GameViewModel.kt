@@ -122,13 +122,10 @@ class GameViewModel : ViewModel() {
                 }.addOnCompleteListener {
                     completedTasks += 1
                     if(completedTasks == game.chosenPacks.size){
-
                         allLocations.value = tempLocations
                     }
-
                 }
             }
-
         }
 
         return this.allLocations

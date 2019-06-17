@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.joinGame
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -76,6 +77,7 @@ class JoinGameFragment : Fragment() {
         viewModel.ACCESS_CODE = withAccessCode
         viewModel.currentUser = asPlayer
         viewModel.addPlayer(asPlayer).addOnCompleteListener {
+            Log.d("Game", "current destination before joining: "+resources.getResourceEntryName(navController.currentDestination!!.id))
             navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
         }
     }

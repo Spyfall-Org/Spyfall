@@ -31,22 +31,26 @@ class NewGameFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_new_game, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //assigned in on create, as this does not need to be assigned again
+        viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
-
+        //reference views once the view has been created
         tv_new_game_name.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.onFocusChangeListener = UIHelper.keyboardHider
 
-        btn_create.setOnClickListener { createGame(it) }
+        btn_create.setOnClickListener { createGame() }
     }
 
-    fun createGame(sender: View){
+    private fun createGame(){
 
-        var timeLimit = tv_new_game_time.text.toString().trim()
-        var playerName = tv_new_game_name.text.toString().trim()
+        val timeLimit = tv_new_game_time.text.toString().trim()
+        val playerName = tv_new_game_name.text.toString().trim()
         val chosenPacks = ArrayList<String>()
 
         //these strings will be used for queries of the firestore database for which locations to include
@@ -72,7 +76,7 @@ class NewGameFragment : Fragment() {
             mutableListOf(playerName) as ArrayList, ArrayList(),timeLimit.toLong()))
     }
 
-    fun createGame(game: Game){
+    private fun createGame(game: Game){
         //this is just for default data,in the future changes will be pulled from firebase
         viewModel.gameObject.value = game
         viewModel.ACCESS_CODE = UUID.randomUUID().toString().substring(0,6).toLowerCase()
@@ -82,9 +86,5 @@ class NewGameFragment : Fragment() {
                 Navigation.findNavController(view!!).navigate(R.id.action_newGameFragment_to_waitingFragment,bundle)
             }
     }
-
-
-
-
 
 }
