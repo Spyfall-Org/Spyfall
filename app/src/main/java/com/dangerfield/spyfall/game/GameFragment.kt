@@ -52,15 +52,13 @@ class GameFragment : Fragment() {
                         "Leave", {endGame()},"Stay",{}).show()
                 }
             })
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        navController = NavHostFragment.findNavController(this)
         //the observers should not be called unless the fragment is in a started or resumed state
-        viewModel.getGameUpdates(viewModel.gameRef).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.getGameUpdates().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             //someone has reset game
             if(!it.started && navController.currentDestination?.id == R.id.gameFragment){
                 viewModel.resetGame().addOnCompleteListener{
@@ -68,29 +66,6 @@ class GameFragment : Fragment() {
                 }
             }
         })
-
-        /*
-           1.) this code should not even be called as this fragment should not be getting recreated (popBack stack shouldnt call on destory)
-           2.) the game should exist
-           3.) the current destination should not be game fragment
-
-           lets start by finding out why game fragment is at the top of this thing
-           1.) tried seeting inclusive to true on the fragment stuff (didnt work)
-           2.) make sure that everyone has the same nav controller and that when i pop the back stack that it changes the navcontroller (it does)
-
-           3.) okay if I accept that the fragment dies every time and just gets recreated for no reason then what I can do is
-           remove observers in on destroy (doesnt work because on resume gets called)
-           //so two things, the fragment shouldnt get destoryed, and it shouldnt get recreated
-
-           //it is as if im navigating to the fragment.
-
-
-           options left:
-           1.) wait for stack overflow
-           2.) use android lifecycle aware components
-           3.) look at ways to keep the fragment alive when you pop
-
-            */
 
         viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
             //someone ended the game
@@ -130,15 +105,12 @@ class GameFragment : Fragment() {
 
             tv_game_role.text = "Role: ${currentPlayer.role}"
 
-            //if this is working, this should always be false
-            var debug = viewModel.getAllLocations().hasActiveObservers()
-
             configurePlayersAdapter()
             configureLocationsAdapter()
         }
     }
 
-    fun startTimer(timeLimit : Long): CountDownTimer {
+    private fun startTimer(timeLimit : Long): CountDownTimer {
 
         timer = object : CountDownTimer((60000*timeLimit), 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -161,13 +133,8 @@ class GameFragment : Fragment() {
 
     fun endGame(){
         viewModel.endGame()
-        Log.d("Game", "current destination before crash: "+resources.getResourceEntryName(navController.currentDestination!!.id))
-        Log.d("Game", "gameRef before crash =  ${viewModel.gameRef.path}")
         timer.cancel()
-        Log.d("Game", "current destination before poping: "+resources.getResourceEntryName(navController.currentDestination!!.id))
         navController.popBackStack(R.id.startFragment, false)
-        Log.d("Game", "current destination after poping: "+resources.getResourceEntryName(navController.currentDestination!!.id))
-
     }
 
     private fun configureLocationsAdapter(){

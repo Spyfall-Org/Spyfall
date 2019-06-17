@@ -22,7 +22,7 @@ class GameViewModel : ViewModel() {
             field = value
             gameRef = db.collection("games").document(value)
             //the idea here is that when we have a new access code, we change the get game upadtes gameRef
-            getGameUpdates(gameRef)
+            getGameUpdates()
 
         }
 
@@ -34,10 +34,10 @@ class GameViewModel : ViewModel() {
     var allLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
     lateinit var currentUser: String
 
-    fun getGameUpdates(gameReference: DocumentReference): MutableLiveData<Game> {
+    fun getGameUpdates(): MutableLiveData<Game> {
 
         // we need to make it such that when gameref changes, so does the game ref in this snap shot listener
-        gameReference.addSnapshotListener { game, error ->
+        gameRef.addSnapshotListener { game, error ->
 
             if (error != null) {
                 Log.w("View Model", "Listen failed.", error)
@@ -47,11 +47,11 @@ class GameViewModel : ViewModel() {
             if (game != null && game.exists()) {
                 gameObject.value = game.toObject(Game::class.java)
                 gameExists.value = true
-                Log.d("View Model", "game =  NOT null for gameRef ${gameReference.path}")
+                Log.d("View Model", "game =  NOT null for gameRef ${gameRef.path}")
 
             }else {
 
-                Log.d("View Model", "game =  null for gameRef ${gameReference.path}")
+                Log.d("View Model", "game =  null for gameRef ${gameRef.path}")
                 gameExists.value = false
             }
         }

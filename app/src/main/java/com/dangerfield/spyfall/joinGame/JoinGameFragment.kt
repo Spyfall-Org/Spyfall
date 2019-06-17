@@ -77,7 +77,6 @@ class JoinGameFragment : Fragment() {
         viewModel.ACCESS_CODE = withAccessCode
         viewModel.currentUser = asPlayer
         viewModel.addPlayer(asPlayer).addOnCompleteListener {
-            Log.d("Game", "current destination before joining: "+resources.getResourceEntryName(navController.currentDestination!!.id))
             navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
         }
     }

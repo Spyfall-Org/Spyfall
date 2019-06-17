@@ -51,7 +51,7 @@ class WaitingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.getGameUpdates(viewModel.gameRef).observe(viewLifecycleOwner, Observer { updatedGame ->
+        viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
             adapter?.players = updatedGame.playerList
             if(updatedGame.started && navController.currentDestination?.id == R.id.waitingFragment){
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
