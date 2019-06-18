@@ -28,7 +28,7 @@ class UIHelper {
             val dialogBuilder = AlertDialog.Builder(context)
             // set message of alert dialog
             dialogBuilder.setMessage(message)
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton(positiveText) {_, _ -> positiveAction.invoke() }
                 .setNegativeButton(negativeText){ dialog,_ -> dialog.cancel() ; negativeAction.invoke() }
 

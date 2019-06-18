@@ -18,9 +18,7 @@ import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.google.firebase.firestore.FieldValue
 import com.squareup.okhttp.Dispatcher
-import kotlinx.android.synthetic.main.fragment_join_game.btn_join_game_action
-import kotlinx.android.synthetic.main.fragment_join_game.tv_access_code
-import kotlinx.android.synthetic.main.fragment_join_game.tv_username
+import kotlinx.android.synthetic.main.fragment_join_game.*
 import kotlinx.android.synthetic.main.fragment_start.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -55,6 +53,7 @@ class JoinGameFragment : Fragment() {
 
     private fun joinGameClick(){
 
+        pb_join_game.visibility = View.VISIBLE
         btn_join_game_action.isClickable = false
 
         if(!viewModel.hasNetworkConnection){
@@ -76,13 +75,17 @@ class JoinGameFragment : Fragment() {
 
         Handler().postDelayed({
             if(!completed){
+                GlobalScope.launch(Dispatchers.Default){
+                    Log.d("JOINH", "I am on thread ${Thread.currentThread()}")
+                    pb_join_game.visibility = View.INVISIBLE
+
+                }
+                
                 UIHelper.simpleAlert(context!!, "Something went wrong",
                     "We are sorry. Please check your internet connection and try again",
-                    "Okay",{},"",{}).show()
+                    "Okay",{ btn_join_game_action.isClickable = true
+                    },"",{}).show()
 
-                GlobalScope.launch(Dispatchers.Default){
-                    btn_join_game_action.isClickable = true
-                }
             }
         },5000)
         //TODO: show loading icon
