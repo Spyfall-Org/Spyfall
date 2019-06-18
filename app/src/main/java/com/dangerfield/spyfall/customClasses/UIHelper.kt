@@ -49,6 +49,7 @@ class UIHelper {
 
             val alert = dialogBuilder.create()
             alert.setTitle(title)
+            alert.setCanceledOnTouchOutside(true)
             return alert
         }
 
@@ -61,6 +62,7 @@ class UIHelper {
             val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
             dialogBuilder.setView(view)
             val dialog = dialogBuilder.create()
+            dialog.setCanceledOnTouchOutside(true)
 
             view.apply {
                 if(negativeText.isEmpty()){

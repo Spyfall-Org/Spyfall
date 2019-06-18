@@ -36,7 +36,7 @@ class StartFragment : Fragment() {
         }
 
         btn_rules.setOnClickListener{
-            UIHelper.customAlert(context!!,"Rules","These are the rules","Okay",{},"",{}).show()
+            UIHelper.customAlert(context!!,"Rules",resources.getString(R.string.string_rules),"Okay",{},"",{}).show()
         }
     }
 }
