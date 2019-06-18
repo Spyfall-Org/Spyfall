@@ -64,8 +64,21 @@ class JoinGameFragment : Fragment() {
             Toast.makeText(context, "Please fill out both access code and user name", Toast.LENGTH_LONG).show()
             return
         }
+
+        var completed = false
+
+        Handler().postDelayed({
+            if(!completed){
+                UIHelper.simpleAlert(context!!, "Something went wrong",
+                    "We are sorry. Please check your internet connection and try again",
+                    "Okay",{},"",{}).show()
+            }
+        },5000)
         //TODO: show loading icon
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
+
+            completed = true
+
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
 
