@@ -2,15 +2,9 @@
     <string name="app_name">Spyfall</string>
     <string name="string_welcome">Welcome to Spyfall</string>
     <string name="string_loactions">Locations</string>
-
-    <string name="string_load_more">
-        <u>Load more</u>
-    </string>
-    <string name="string_create_pack">
-        <u>Create your own</u>
-    </string>
+    <string name="string_hide">hide</string>
+    <string name="string_show">show</string>
     <string name="string_waiting">Waiting for players...</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

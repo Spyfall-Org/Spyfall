@@ -4,6 +4,7 @@ package com.dangerfield.spyfall.newGame
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -65,6 +66,9 @@ class NewGameFragment : Fragment() {
                 return}
 
             playerName.isEmpty() -> {Toast.makeText(context, "please enter a name", Toast.LENGTH_LONG).show()
+            return}
+
+            playerName.length > 25 -> {Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
                 return}
 
             timeLimit.isEmpty() || timeLimit.toInt() > 10 -> {
@@ -81,6 +85,7 @@ class NewGameFragment : Fragment() {
     private fun createGame(game: Game){
 
         if(viewModel.hasNetworkConnection) {
+
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
                     val bundle = bundleOf("FromFragment" to "NewGameFragment")

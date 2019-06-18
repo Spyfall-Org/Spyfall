@@ -47,7 +47,7 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
                     btn_okay.setOnClickListener{
                         var newName = tv_name_change.text.toString().trim()
                         //as long as they typed some name that doesnt already exist
-                        if(newName.isNotEmpty() && !viewModel.gameObject.value!!.playerList.contains(newName)){
+                        if(newName.isNotEmpty() && newName.length < 25 && !viewModel.gameObject.value!!.playerList.contains(newName)){
 
                             viewModel.changeName(newName)?.addOnCompleteListener {
                                 //once the name has changed, dismiss the dialog
@@ -56,7 +56,12 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
 
                             }
                         }else{
-                            Toast.makeText(context, "enter a name that is not in the game", Toast.LENGTH_LONG).show()
+                            if(newName.length>25){
+                                Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
+                            }
+                            else{
+                                Toast.makeText(context, "enter a name that is not in the game", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                     btn_cancel.setOnClickListener{

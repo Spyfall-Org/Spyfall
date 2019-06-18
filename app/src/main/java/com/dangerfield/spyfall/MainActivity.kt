@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity(){
         Log.d("Main","on destory")
 
         //TODO: you might want to delete the game if the activity is destroyed, just know it will delete the game for everyone
-
         viewModel.endGame()
     }
 

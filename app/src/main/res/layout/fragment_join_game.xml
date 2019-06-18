@@ -18,7 +18,8 @@
             android:background="@drawable/background_action_button"
             app:layout_constraintTop_toBottomOf="@+id/lineView2"
             app:layout_constraintStart_toStartOf="@+id/lineView2" app:layout_constraintEnd_toEndOf="@+id/lineView2"
-            android:layout_marginTop="16dp" android:onClick="joinGameClick"/>
+            android:layout_marginTop="16dp" android:onClick="joinGameClick"
+            android:textColor="@android:color/secondary_text_light"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

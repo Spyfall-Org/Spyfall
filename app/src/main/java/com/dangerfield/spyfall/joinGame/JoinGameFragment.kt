@@ -72,6 +72,7 @@ class JoinGameFragment : Fragment() {
                     list.size >= 8 ->  Toast.makeText(context, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
                     game["isStarted"]==true -> Toast.makeText(context, "Sorry, this game has been started", Toast.LENGTH_LONG).show()
                     list.contains(tv_username.text.toString().trim()) -> Toast.makeText(context, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
+                    userName.length > 25 -> Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
                     else -> joinGame(withAccessCode = accessCode, asPlayer = userName)
                 }
             }else{
