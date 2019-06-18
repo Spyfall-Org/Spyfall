@@ -37,7 +37,7 @@ class WaitingFragment : Fragment() {
         navController =  Navigation.findNavController(parentFragment!!.view!!)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-        navigateBack = { UIHelper.simpleAlert(context!!,"Leaving Game","Are you sure you want to leave?",
+        navigateBack = { UIHelper.customAlert(context!!,"Leaving Game","Are you sure you want to leave?",
             "Leave", {leaveGame()},"Stay",{}).show()}
 
         requireActivity().onBackPressedDispatcher.addCallback(this,

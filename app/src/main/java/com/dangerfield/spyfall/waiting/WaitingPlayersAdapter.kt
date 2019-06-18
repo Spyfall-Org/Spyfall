@@ -2,15 +2,18 @@ package com.dangerfield.spyfall.waiting
 
 import android.app.Dialog
 import android.content.Context
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
-import kotlinx.android.synthetic.main.change_name.*
+import kotlinx.android.synthetic.main.alert_change_name.*
+import kotlinx.android.synthetic.main.alert_change_name.view.*
 import kotlinx.android.synthetic.main.item_player_card.view.*
 
 class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>, var viewModel: GameViewModel) : RecyclerView.Adapter<WaitingPlayersAdapter.ViewHolder>() {
@@ -38,22 +41,23 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
         holder.name?.text = players[position]
 
         if(holder.name.text.trim() == viewModel.currentUser.trim()) {
-            val dialog = Dialog(context)
-            dialog.setContentView(R.layout.change_name)
+            val dialogBuilder = AlertDialog.Builder(context)
+            val view = LayoutInflater.from(context).inflate(R.layout.alert_change_name, null)
+            dialogBuilder.setView(view)
+            val dialog = dialogBuilder.create()
+
             holder.pencil.visibility = View.VISIBLE
 
-            holder.pencil.setOnClickListener {view ->
-                dialog.apply{
-                    btn_okay.setOnClickListener{
-                        var newName = tv_name_change.text.toString().trim()
+            holder.pencil.setOnClickListener {_ ->
+                view.apply{
+                    btn_change_name_alert_okay.setOnClickListener{
+                        var newName = tv_alert_change_name.text.toString().trim()
                         //as long as they typed some name that doesnt already exist
                         if(newName.isNotEmpty() && newName.length < 25 && !viewModel.gameObject.value!!.playerList.contains(newName)){
 
                             viewModel.changeName(newName)?.addOnCompleteListener {
                                 //once the name has changed, dismiss the dialog
                                 dialog.dismiss()
-                            }.addOnCanceledListener {
-
                             }
                         }else{
                             if(newName.length>25){
@@ -64,10 +68,11 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
                             }
                         }
                     }
-                    btn_cancel.setOnClickListener{
+                    btn_alert_change_name_canel.setOnClickListener{
                         dialog.dismiss()
                     }
-                }.show()
+                }
+                dialog.show()
 
             }
         }
@@ -76,9 +81,9 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val number = view.tv_player_number
-        val name = view.tv_new_game_name
-        val pencil = view.iv_pencil
+        val number: TextView = view.tv_player_number
+        val name: TextView = view.tv_new_game_name
+        val pencil: ImageView = view.iv_pencil
 
     }
 

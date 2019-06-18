@@ -51,7 +51,7 @@
             android:id="@+id/tv_access_code" android:layout_marginTop="24dp"
             app:layout_constraintTop_toTopOf="@+id/lineView"
             app:layout_constraintStart_toStartOf="@+id/lineView" app:layout_constraintEnd_toEndOf="@+id/lineView"
-            android:hint="Enter an access code" android:background="@drawable/back_ground_edit_text"
+            android:hint="@string/string_join_access_hint" android:background="@drawable/back_ground_edit_text"
             android:paddingLeft="8dp"/>
     <EditText
             android:layout_width="0dp"
@@ -61,7 +61,7 @@
             android:id="@+id/tv_username" android:layout_marginTop="24dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_access_code"
             app:layout_constraintStart_toStartOf="@+id/tv_access_code"
-            app:layout_constraintEnd_toEndOf="@+id/tv_access_code" android:hint="Enter a username"
+            app:layout_constraintEnd_toEndOf="@+id/tv_access_code" android:hint="@string/string_join_name_hint"
             android:background="@drawable/back_ground_edit_text" app:layout_constraintHorizontal_bias="0.0"
             android:paddingLeft="8dp"/>
     <ProgressBar

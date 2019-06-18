@@ -48,7 +48,7 @@ class GameFragment : Fragment() {
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
                     //show alert when user presses back
-                    UIHelper.simpleAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
+                    UIHelper.customAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
                         "Leave", {endGame()},"Stay",{}).show()
                 }
             })
