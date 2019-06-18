@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:background="@color/colorBackgroundLight"
->
+        android:id="@+id/custom_alert_view">
 
     <TextView
             android:layout_width="wrap_content"
@@ -23,10 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_custom_alert_negative"
-            app:layout_constraintTop_toTopOf="@+id/btn_custom_alert_positive"
             android:background="@drawable/background_ripple_button"
             android:textColor="@android:color/secondary_text_light"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/guideline"/>
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/alert_guidline"
+            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert_message"/>
     <Button
             android:text="Okay"
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:background="@drawable/background_ripple_button" app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="24dp" app:layout_constraintVertical_bias="0.0"
             android:textColor="@android:color/secondary_text_light"
-            app:layout_constraintStart_toStartOf="@+id/guideline" android:layout_marginStart="8dp"/>
+            app:layout_constraintStart_toStartOf="@+id/alert_guidline" android:layout_marginStart="8dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,6 +47,6 @@
             android:layout_marginEnd="8dp"
             android:textSize="24sp" android:text="Title"/>
     <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                                android:id="@+id/guideline"
+                                                android:id="@+id/alert_guidline"
                                                 android:orientation="vertical" app:layout_constraintGuide_percent=".5"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

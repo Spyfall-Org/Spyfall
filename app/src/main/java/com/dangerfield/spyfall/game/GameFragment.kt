@@ -78,7 +78,8 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //we set the listeners once the view has actually been inflated
-        btn_end_game.setOnClickListener {endGame()}
+        btn_end_game.setOnClickListener { UIHelper.customAlert(context!!,"Ending Game","Are you sure you want to end the game?",
+            "End", {endGame()},"Cancel",{}).show()}
 
         btn_play_again.setOnClickListener{
             viewModel.resetGame().addOnCompleteListener{

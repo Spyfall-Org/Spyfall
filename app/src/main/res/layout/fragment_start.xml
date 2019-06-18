@@ -52,4 +52,13 @@
             app:layout_constraintVertical_bias="0.0"
             android:background="@drawable/background_ripple_button"
             android:textColor="@android:color/secondary_text_light"/>
+    <Button
+            android:text="Rules"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:id="@+id/btn_rules" app:layout_constraintStart_toStartOf="@+id/lineView2"
+            app:layout_constraintEnd_toEndOf="@+id/lineView2" app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintTop_toBottomOf="@+id/lineView2" android:drawableLeft="@drawable/ic_rules"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,15 +3,20 @@ package com.dangerfield.spyfall.customClasses
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.alert_change_name.*
 import kotlinx.android.synthetic.main.alert_change_name.view.*
 import kotlinx.android.synthetic.main.alert_custom.view.*
+import kotlinx.android.synthetic.main.fragment_game.*
 
 
 class UIHelper {
@@ -58,6 +63,24 @@ class UIHelper {
             val dialog = dialogBuilder.create()
 
             view.apply {
+                if(negativeText.isEmpty()){
+                    //remove the negative button
+                    Log.d("Alert","Negative Text is Empty")
+                    btn_custom_alert_negative.visibility = View.GONE
+
+                    val set = ConstraintSet()
+                    val layout = custom_alert_view as ConstraintLayout
+                    set.clone(layout)
+                    // remove all connections.
+                    set.clear(R.id.btn_custom_alert_positive, ConstraintSet.END)
+                    set.clear(R.id.btn_custom_alert_positive, ConstraintSet.START)
+                    //center it
+                    set.connect(R.id.btn_custom_alert_positive,ConstraintSet.END,R.id.custom_alert_view,ConstraintSet.END)
+                    set.connect(R.id.btn_custom_alert_positive,ConstraintSet.START,R.id.custom_alert_view,ConstraintSet.START)
+
+                    set.applyTo(layout)
+                }
+
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
                 btn_custom_alert_positive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
                 btn_custom_alert_negative.text = negativeText
