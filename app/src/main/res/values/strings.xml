@@ -5,6 +5,7 @@
     <string name="string_hide">hide</string>
     <string name="string_show">show</string>
     <string name="string_waiting">Waiting for players...</string>
+    <string name="string_name_game_name_hint"><u>Enter Name</u></string>
 
 
 </resources>
