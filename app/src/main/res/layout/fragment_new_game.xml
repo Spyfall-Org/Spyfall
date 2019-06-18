@@ -101,7 +101,7 @@
                 android:layout_marginLeft="8dp"
                 app:layout_constraintTop_toTopOf="@+id/textView5"
                 app:layout_constraintBottom_toBottomOf="@+id/textView5"
-                android:paddingLeft="8dp"/>
+                android:paddingLeft="8dp" android:textColor="@android:color/secondary_text_light"/>
         <Button
                 android:text="Create"
                 android:layout_width="150dp"

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.customClasses.UIHelper
 
 import com.dangerfield.spyfall.R
@@ -84,13 +85,22 @@ class NewGameFragment : Fragment() {
 
     private fun createGame(game: Game){
 
+        val navController = NavHostFragment.findNavController(this)
+
+        Handler().postDelayed({
+            if(navController.currentDestination?.id == R.id.newGameFragment){
+                UIHelper.simpleAlert(context!!, "Something went wrong",
+                    "We are sorry. Please check your internet connection and try again",
+                    "Okay",{},"",{}).show()
+            }
+        },5000)
+
         if(viewModel.hasNetworkConnection) {
 
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
                     val bundle = bundleOf("FromFragment" to "NewGameFragment")
-                    Navigation.findNavController(view!!)
-                        .navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
+                    navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
                 }
         }else{
             UIHelper.simpleAlert(context!!, "Something went wrong",
