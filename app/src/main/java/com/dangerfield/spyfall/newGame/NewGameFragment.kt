@@ -87,14 +87,6 @@ class NewGameFragment : Fragment() {
 
         val navController = NavHostFragment.findNavController(this)
 
-        Handler().postDelayed({
-            if(navController.currentDestination?.id == R.id.newGameFragment){
-                UIHelper.simpleAlert(context!!, "Something went wrong",
-                    "We are sorry. Please check your internet connection and try again",
-                    "Okay",{},"",{}).show()
-            }
-        },5000)
-
         if(viewModel.hasNetworkConnection) {
 
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())

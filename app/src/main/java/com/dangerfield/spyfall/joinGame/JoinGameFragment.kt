@@ -71,27 +71,8 @@ class JoinGameFragment : Fragment() {
             return
         }
 
-        var completed = false
-
-        Handler().postDelayed({
-            if(!completed){
-                GlobalScope.launch(Dispatchers.Default){
-                    Log.d("JOINH", "I am on thread ${Thread.currentThread()}")
-                    pb_join_game.visibility = View.INVISIBLE
-
-                }
-                
-                UIHelper.simpleAlert(context!!, "Something went wrong",
-                    "We are sorry. Please check your internet connection and try again",
-                    "Okay",{ btn_join_game_action.isClickable = true
-                    },"",{}).show()
-
-            }
-        },5000)
         //TODO: show loading icon
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
-
-            completed = true
 
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
