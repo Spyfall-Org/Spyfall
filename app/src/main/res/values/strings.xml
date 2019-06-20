@@ -1,16 +1,31 @@
 <resources>
+
     <string name="app_name">Spyfall</string>
     <string name="string_welcome">Welcome to Spyfall</string>
-    <string name="string_loactions">Locations</string>
-
-    <string name="string_load_more">
-        <u>Load more</u>
-    </string>
-    <string name="string_create_pack">
-        <u>Create your own</u>
-    </string>
+    <string name="string_locations">Locations</string>
+    <string name="string_hide">hide</string>
+    <string name="string_show">show</string>
     <string name="string_waiting">Waiting for players...</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="string_name_game_name_hint"><u>Enter Name</u></string>
+    <string name="string_join_access_hint"><u>Enter an access code</u></string>
+    <string name="string_join_name_hint"><u>Enter a username</u></string>
+    <string name="string_change_name_hint"><u>Enter a username</u></string>
+
+    <string name="string_rules">Spyfall is a party game
+        unlike any other, one in which you get to be a spy and try to
+        understand what\'s going on around you. It\'s really simple! Spyfall is played over
+        several rounds, and at the start of each round all players receive cards showing the same
+        location — a casino, a traveling circus, a pirate ship, or even a space station — except that one
+        player receives a card that says "Spy" instead of the location. Players then start asking each other questions
+        — "Why are you dressed so strangely?" or "When was the last time we got a payday?" or anything else you can come
+        up with — trying to guess who among them is the spy. The spy doesn\'t know where he is, so he has to listen carefully.
+        When it\'s his time to answer, he\'d better create a good story!
+
+        After a few rounds of guessing, suspicion and bluffing, the game ends and whoever has scored
+        the most points is victorious! This party game makes neurotic suspicions fun!</string>
+
+
+
 </resources>

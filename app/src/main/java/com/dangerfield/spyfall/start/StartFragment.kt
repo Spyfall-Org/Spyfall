@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.customClasses.UIHelper
 import kotlinx.android.synthetic.main.fragment_start.*
 
 
@@ -32,6 +33,10 @@ class StartFragment : Fragment() {
 
         btn_join_game.setOnClickListener {
             navController.navigate(R.id.action_startFragment_to_joinGameFragment)
+        }
+
+        btn_rules.setOnClickListener{
+            UIHelper.customAlert(context!!,"Rules",resources.getString(R.string.string_rules),"Okay",{},"",{}).show()
         }
     }
 }

@@ -13,17 +13,27 @@ import com.dangerfield.spyfall.game.GameViewModel
 class MainActivity : AppCompatActivity(){
 
     lateinit var viewModel: GameViewModel
+    lateinit var receiver: Receiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
-        register()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(this, R.id.nav_host_fragment).navigateUp()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        register()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(receiver)
     }
 
     override fun onDestroy() {
@@ -31,16 +41,14 @@ class MainActivity : AppCompatActivity(){
         Log.d("Main","on destory")
 
         //TODO: you might want to delete the game if the activity is destroyed, just know it will delete the game for everyone
-
         viewModel.endGame()
     }
 
     private fun register(){
-        val receiver = Receiver(viewModel)
+        receiver = Receiver(viewModel)
         val intentFilter = IntentFilter()
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(receiver,intentFilter)
     }
-
 
 }

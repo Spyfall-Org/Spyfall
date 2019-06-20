@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.joinGame
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,9 +17,12 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.google.firebase.firestore.FieldValue
-import kotlinx.android.synthetic.main.fragment_join_game.btn_join_game_action
-import kotlinx.android.synthetic.main.fragment_join_game.tv_access_code
-import kotlinx.android.synthetic.main.fragment_join_game.tv_username
+import com.squareup.okhttp.Dispatcher
+import kotlinx.android.synthetic.main.fragment_join_game.*
+import kotlinx.android.synthetic.main.fragment_start.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class JoinGameFragment : Fragment() {
 
@@ -63,19 +67,38 @@ class JoinGameFragment : Fragment() {
             Toast.makeText(context, "Please fill out both access code and user name", Toast.LENGTH_LONG).show()
             return
         }
-        //TODO: show loading icon
+
+        //TODO: consider timeout function here
+        loadMode()
+
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
+
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
 
                 when {
-                    list.size >= 8 ->  Toast.makeText(context, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
-                    game["isStarted"]==true -> Toast.makeText(context, "Sorry, this game has been started", Toast.LENGTH_LONG).show()
-                    list.contains(tv_username.text.toString().trim()) -> Toast.makeText(context, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
+                    list.size >= 8 ->  {
+                        Toast.makeText(context, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
+                    game["isStarted"]==true -> {
+                        Toast.makeText(context, "Sorry, this game has been started", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
+                    list.contains(tv_username.text.toString().trim()) -> {
+                        Toast.makeText(context, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
+                    userName.length > 25 -> {
+                        Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
                     else -> joinGame(withAccessCode = accessCode, asPlayer = userName)
                 }
+
             }else{
                 Toast.makeText(context, "Sorry, no game was found with that access code", Toast.LENGTH_LONG).show()
+                enterMode()
             }
         }
     }
@@ -84,7 +107,17 @@ class JoinGameFragment : Fragment() {
         viewModel.ACCESS_CODE = withAccessCode
         viewModel.currentUser = asPlayer
         viewModel.addPlayer(asPlayer).addOnCompleteListener {
+            enterMode()
             navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
         }
+    }
+
+    fun loadMode(){
+        pb_join_game.visibility = View.VISIBLE
+        btn_join_game_action.isClickable = false
+    }
+    fun enterMode(){
+        pb_join_game.visibility = View.INVISIBLE
+        btn_join_game_action.isClickable = true
     }
 }

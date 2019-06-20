@@ -19,7 +19,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class GameViewModel : ViewModel() {
-    // I might just end up having this be like one game object
 
     //start off with a uuid but if its changed, so is the reference
     var ACCESS_CODE: String = UUID.randomUUID().toString().substring(0,6).toLowerCase()
@@ -95,6 +94,28 @@ class GameViewModel : ViewModel() {
         }
     }
 
+    fun assignRolesAndStartGame() {
+
+        val chosenPacks = gameObject.value!!.chosenPacks
+        val location = gameObject.value!!.chosenLocation
+        for (i in 0 until chosenPacks.size) {
+            db.collection(chosenPacks[i]).whereEqualTo("location", location)
+                .get().addOnSuccessListener { locationInfo ->
+
+                    if (locationInfo.documents.size == 1) {
+                        //only one document should be found matching the location
+                        roles.addAll(locationInfo.documents[0]["roles"] as ArrayList<String>)
+                        //so now we have all the roles
+                        //get playerlist, create an object for each playerlist and assign a random role
+                        startGame()
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("events", "Error getting roles: ", exception)
+                }
+        }
+    }
+
 
     fun startGame() {
         //assignes all roles
@@ -167,16 +188,15 @@ class GameViewModel : ViewModel() {
     }
 
     fun removePlayer(): Task<Void> {
-//        //when a player leaves a game, you dont want them to hold onto the game data
-//        gameObject = MutableLiveData()
-//        roles.clear()
+       //when a player leaves a game, you dont want them to hold onto the game data
+        gameObject = MutableLiveData()
+        roles.clear()
         return gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
 
     }
 
-    fun addPlayer(player: String): Task<Void> {
-        return gameRef.update("playerList", FieldValue.arrayUnion(player))
-    }
+    fun addPlayer(player: String) = gameRef.update("playerList", FieldValue.arrayUnion(player))
+
 
     fun changeName(newName: String): Task<Void> {
         val index = gameObject.value!!.playerList.indexOf(currentUser)
@@ -185,25 +205,5 @@ class GameViewModel : ViewModel() {
         return gameRef.update("playerList", gameObject.value!!.playerList)
 
     }
-    fun assignRolesAndStartGame() {
 
-        val chosenPacks = gameObject.value!!.chosenPacks
-        val location = gameObject.value!!.chosenLocation
-        for (i in 0 until chosenPacks.size) {
-            db.collection(chosenPacks[i]).whereEqualTo("location", location)
-                .get().addOnSuccessListener { locationInfo ->
-
-                    if (locationInfo.documents.size == 1) {
-                        //only one document should be found matching the location
-                        roles.addAll(locationInfo.documents[0]["roles"] as ArrayList<String>)
-                        //so now we have all the roles
-                        //get playerlist, create an object for each playerlist and assign a random role
-                        startGame()
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("events", "Error getting roles: ", exception)
-                }
-        }
-    }
 }

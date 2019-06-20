@@ -1,6 +1,7 @@
 package com.dangerfield.spyfall.waiting
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,8 +37,7 @@ class WaitingFragment : Fragment() {
         navController =  Navigation.findNavController(parentFragment!!.view!!)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-
-        navigateBack = { UIHelper.simpleAlert(context!!,"Leaving Game","Are you sure you want to leave?",
+        navigateBack = { UIHelper.customAlert(context!!,"Leaving Game","Are you sure you want to leave?",
             "Leave", {leaveGame()},"Stay",{}).show()}
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
@@ -69,6 +69,9 @@ class WaitingFragment : Fragment() {
         }
 
         btn_leave_game.setOnClickListener {navigateBack?.invoke() ?: leaveGame()}
+
+        configureLayoutManagerAndRecyclerView()
+
     }
 
     override fun onResume() {
@@ -77,12 +80,10 @@ class WaitingFragment : Fragment() {
         isGameCreator = arguments?.get("FromFragment") == "NewGameFragment"
 
         tv_acess_code.text = viewModel.ACCESS_CODE
-        configureLayoutManagerAndRecyclerView()
 
         if(isGameCreator){ viewModel.getRandomLocation() }
 
     }
-
 
     private fun leaveGame(){
         viewModel.removePlayer().addOnCompleteListener {

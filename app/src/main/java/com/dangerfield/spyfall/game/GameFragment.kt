@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.game
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -17,6 +18,7 @@ import kotlin.collections.ArrayList
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.TypedValue
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -29,17 +31,15 @@ class GameFragment : Fragment() {
     private lateinit var viewModel: GameViewModel
     private lateinit var currentPlayer: Player
     private lateinit var locationsAdapter: GameViewsAdapter
-    private lateinit var timer: CountDownTimer
+    private  var timer: CountDownTimer? = null
     private lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("Game","onCreateView")
         return inflater.inflate(R.layout.fragment_game, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Game","on Create")
         //this does not get called again, set all the variables you want to keep(not reassign)
         navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
@@ -48,7 +48,7 @@ class GameFragment : Fragment() {
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
                     //show alert when user presses back
-                    UIHelper.simpleAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
+                    UIHelper.customAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
                         "Leave", {endGame()},"Stay",{}).show()
                 }
             })
@@ -69,7 +69,6 @@ class GameFragment : Fragment() {
 
         viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
             //someone ended the game
-            Log.d("Game", "gameRef before crash call =  ${viewModel.gameRef.path}")
             if(!exists && navController.currentDestination?.id == R.id.gameFragment){ endGame() }
         })
 
@@ -79,7 +78,8 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //we set the listeners once the view has actually been inflated
-        btn_end_game.setOnClickListener {endGame()}
+        btn_end_game.setOnClickListener { UIHelper.customAlert(context!!,"Ending Game","Are you sure you want to end the game?",
+            "End", {endGame()},"Cancel",{}).show()}
 
         btn_play_again.setOnClickListener{
             viewModel.resetGame().addOnCompleteListener{
@@ -87,9 +87,8 @@ class GameFragment : Fragment() {
             }
         }
 
-        tv_hide.setOnClickListener{
-            hide()
-        }
+        tv_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        tv_hide.setOnClickListener{ hide()}
     }
 
     override fun onResume() {
@@ -100,7 +99,11 @@ class GameFragment : Fragment() {
             //we enforce that no two users have the same username
             currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
 
-            timer = startTimer(viewModel.gameObject.value!!.timeLimit)
+            if(timer == null){
+                startTimer(viewModel.gameObject.value!!.timeLimit)
+            }else{
+                Log.d("GAME", "timer was not null")
+            }
 
             //dont let the spy know the location
             tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
@@ -120,14 +123,13 @@ class GameFragment : Fragment() {
         if(tv_game_role.visibility == View.VISIBLE){
             tv_game_role.visibility = View.GONE
             tv_game_location.visibility = View.GONE
-            tv_hide.text = "show"
+            tv_hide.text = resources.getString(R.string.string_show)
         }else{
             tv_game_role.visibility = View.VISIBLE
             tv_game_location.visibility = View.VISIBLE
-            tv_hide.text = "hide"
+            tv_hide.text = resources.getString(R.string.string_hide)
         }
     }
-
 
     private fun startTimer(timeLimit : Long): CountDownTimer {
 
@@ -147,12 +149,13 @@ class GameFragment : Fragment() {
             }
         }.start()
 
-        return timer
+        return timer!!
     }
 
     fun endGame(){
         viewModel.endGame()
-        timer.cancel()
+        timer?.cancel()
+        timer = null
         navController.popBackStack(R.id.startFragment, false)
     }
 
@@ -176,7 +179,6 @@ class GameFragment : Fragment() {
         }
     }
 
-
     fun showPlayAgain(){
 
         val padding = Math.round(
@@ -195,9 +197,4 @@ class GameFragment : Fragment() {
         btn_play_again.visibility = View.VISIBLE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("GAME","ON DESTROY")
-        //TODO: consider destroynig game here
-    }
 }

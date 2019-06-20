@@ -8,17 +8,18 @@
         android:layout_height="match_parent"
         tools:context=".JoinGameActivity"
         android:clickable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true" android:background="@color/colorBackgroundLight">
 
     <Button
             android:text="Join"
             android:layout_width="150dp"
             android:layout_height="46dp"
             android:id="@+id/btn_join_game_action"
-            android:background="@drawable/background_action_button"
+            android:background="@drawable/background_ripple_button"
             app:layout_constraintTop_toBottomOf="@+id/lineView2"
             app:layout_constraintStart_toStartOf="@+id/lineView2" app:layout_constraintEnd_toEndOf="@+id/lineView2"
-            android:layout_marginTop="16dp" android:onClick="joinGameClick"/>
+            android:layout_marginTop="16dp" android:onClick="joinGameClick"
+            android:textColor="@android:color/secondary_text_light"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
             android:id="@+id/tv_access_code" android:layout_marginTop="24dp"
             app:layout_constraintTop_toTopOf="@+id/lineView"
             app:layout_constraintStart_toStartOf="@+id/lineView" app:layout_constraintEnd_toEndOf="@+id/lineView"
-            android:hint="Enter an access code" android:background="@drawable/background_action_button"
+            android:hint="@string/string_join_access_hint" android:background="@drawable/back_ground_edit_text"
             android:paddingLeft="8dp"/>
     <EditText
             android:layout_width="0dp"
@@ -58,10 +59,19 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/tv_username" android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_access_code" app:layout_constraintStart_toStartOf="@+id/tv_access_code"
-            app:layout_constraintEnd_toEndOf="@+id/tv_access_code" android:hint="Enter a username"
-            android:background="@drawable/background_action_button" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/tv_access_code"
+            app:layout_constraintStart_toStartOf="@+id/tv_access_code"
+            app:layout_constraintEnd_toEndOf="@+id/tv_access_code" android:hint="@string/string_join_name_hint"
+            android:background="@drawable/back_ground_edit_text" app:layout_constraintHorizontal_bias="0.0"
             android:paddingLeft="8dp"/>
+    <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pb_join_game" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/btn_join_game_action"
+            app:layout_constraintStart_toStartOf="@+id/btn_join_game_action"
+            app:layout_constraintEnd_toEndOf="@+id/btn_join_game_action" android:visibility="invisible"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
