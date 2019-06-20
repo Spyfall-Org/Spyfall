@@ -18,12 +18,11 @@ import kotlin.collections.ArrayList
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.TypedValue
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.customClasses.UIHelper
+import com.dangerfield.spyfall.util.UIHelper
 
 
 class GameFragment : Fragment() {

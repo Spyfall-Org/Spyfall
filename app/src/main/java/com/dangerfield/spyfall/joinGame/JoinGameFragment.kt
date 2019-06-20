@@ -2,27 +2,17 @@ package com.dangerfield.spyfall.joinGame
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
-import com.dangerfield.spyfall.customClasses.UIHelper
+import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
-import com.dangerfield.spyfall.models.Game
-import com.google.firebase.firestore.FieldValue
-import com.squareup.okhttp.Dispatcher
 import kotlinx.android.synthetic.main.fragment_join_game.*
-import kotlinx.android.synthetic.main.fragment_start.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class JoinGameFragment : Fragment() {
 

@@ -4,10 +4,9 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation.findNavController
-import com.dangerfield.spyfall.customClasses.Receiver
+import com.dangerfield.spyfall.util.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
 
 class MainActivity : AppCompatActivity(){

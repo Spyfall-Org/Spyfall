@@ -6,10 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.customClasses.UIHelper
+import com.dangerfield.spyfall.util.UIHelper
 import kotlinx.android.synthetic.main.fragment_start.*
 
 

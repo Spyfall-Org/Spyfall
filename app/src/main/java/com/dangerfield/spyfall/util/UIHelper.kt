@@ -1,22 +1,17 @@
-package com.dangerfield.spyfall.customClasses
+package com.dangerfield.spyfall.util
 
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.dangerfield.spyfall.R
-import kotlinx.android.synthetic.main.alert_change_name.*
-import kotlinx.android.synthetic.main.alert_change_name.view.*
 import kotlinx.android.synthetic.main.alert_custom.view.*
-import kotlinx.android.synthetic.main.fragment_game.*
 
 
 class UIHelper {

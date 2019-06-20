@@ -1,7 +1,6 @@
 package com.dangerfield.spyfall.waiting
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +12,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.customClasses.UIHelper
+import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.game.GameViewModel
-import kotlinx.android.synthetic.main.fragment_new_game.*
 
 import kotlinx.android.synthetic.main.fragment_waiting.*
 import java.util.ArrayList

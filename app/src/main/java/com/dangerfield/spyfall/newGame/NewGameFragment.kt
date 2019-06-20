@@ -1,10 +1,7 @@
 package com.dangerfield.spyfall.newGame
 
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
-import com.dangerfield.spyfall.customClasses.UIHelper
+import com.dangerfield.spyfall.util.UIHelper
 
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel

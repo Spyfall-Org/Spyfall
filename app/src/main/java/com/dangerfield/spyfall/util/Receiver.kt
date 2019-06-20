@@ -1,13 +1,10 @@
-package com.dangerfield.spyfall.customClasses
+package com.dangerfield.spyfall.util
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProviders
-import com.dangerfield.spyfall.MainActivity
 import com.dangerfield.spyfall.game.GameViewModel
 
 class Receiver(var viewModel: GameViewModel): BroadcastReceiver() {

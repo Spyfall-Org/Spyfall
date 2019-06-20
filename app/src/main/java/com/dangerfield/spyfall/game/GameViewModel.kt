@@ -4,15 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
-import com.dangerfield.spyfall.customClasses.UIHelper
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
-import com.google.android.gms.common.api.TransformedResult
-import com.google.android.gms.common.api.internal.TaskUtil
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
