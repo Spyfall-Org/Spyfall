@@ -31,6 +31,8 @@ class GameFragment : Fragment() {
     private lateinit var viewModel: GameViewModel
     private lateinit var currentPlayer: Player
     private lateinit var locationsAdapter: GameViewsAdapter
+    private lateinit var playersAdapter: GameViewsAdapter
+
     private  var timer: CountDownTimer? = null
     private lateinit var navController: NavController
 
@@ -65,6 +67,15 @@ class GameFragment : Fragment() {
                     navController.popBackStack(R.id.waitingFragment, false)
                 }
             }
+            //TODO: could add a check to say: if the player object list has changed sense i pulled it, cause right
+            //now this gets called anytime anything changes
+            if(it.started && navController.currentDestination?.id == R.id.gameFragment){
+                //but right now it says: if the game has started, and im still on this screen, and something has changed..
+                var newFirstPlayer =  configurePlayerViews()
+                playersAdapter.first = newFirstPlayer
+            }
+
+
         })
 
         viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
@@ -96,8 +107,6 @@ class GameFragment : Fragment() {
         super.onResume()
         //just to be super safe
         if(viewModel.gameExists.value!!){
-            //we enforce that no two users have the same username
-            currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
 
             if(timer == null){
                 startTimer(viewModel.gameObject.value!!.timeLimit)
@@ -105,18 +114,26 @@ class GameFragment : Fragment() {
                 Log.d("GAME", "timer was not null")
             }
 
-            //dont let the spy know the location
-            tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
-                "Figure out the location!"
-            } else { "Location: ${viewModel.gameObject.value?.chosenLocation}" }
-
-            tv_game_role.text = "Role: ${currentPlayer.role}"
-
-            val firstPlayer = viewModel.gameObject.value!!.playerObjectList[0].username
-
+            val firstPlayer = configurePlayerViews()
             configurePlayersAdapter(firstPlayer)
             configureLocationsAdapter()
         }
+    }
+
+    private fun configurePlayerViews(): String {
+        //configures all of the views dealing with players, and choses a player to go first, and returns that val.
+
+        //we enforce that no two users have the same username
+        currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
+
+        //dont let the spy know the location
+        tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
+            "Figure out the location!"
+        } else { "Location: ${viewModel.gameObject.value?.chosenLocation}" }
+
+        tv_game_role.text = "Role: ${currentPlayer.role}"
+
+        return viewModel.gameObject.value!!.playerObjectList[0].username
     }
 
     private fun hide(){
@@ -174,7 +191,8 @@ class GameFragment : Fragment() {
     private fun configurePlayersAdapter(firstPlayer: String){
         rv_players.apply{
             layoutManager = GridLayoutManager(context, 2)
-            adapter = GameViewsAdapter(context,(viewModel.gameObject.value!!.playerList.shuffled()) as ArrayList<String>, firstPlayer)
+            playersAdapter = GameViewsAdapter(context,(viewModel.gameObject.value!!.playerList.shuffled()) as ArrayList<String>, firstPlayer)
+            adapter = playersAdapter
             setHasFixedSize(true)
         }
     }

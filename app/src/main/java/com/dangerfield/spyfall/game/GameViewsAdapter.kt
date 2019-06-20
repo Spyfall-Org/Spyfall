@@ -9,13 +9,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.item_simple_card.view.*
 
-class GameViewsAdapter(val context: Context, list: ArrayList<String>, val first: String?) : RecyclerView.Adapter<GameViewsAdapter.ViewHolder>() {
+class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlayer: String?) : RecyclerView.Adapter<GameViewsAdapter.ViewHolder>() {
 
     var items = ArrayList<String>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
+    var first = firstPlayer
+    set(value){
+        field = value
+        //anytime the first player changes, aka player object list changes, grab a new first
+        notifyDataSetChanged()
+    }
+
 
     init {
         this.items = list
@@ -32,7 +40,7 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, val first:
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.text.text = items[position]
 
-        if(first != null && items[position].trim() == first.trim()){
+        if(first != null && items[position].trim() == first?.trim()){
             //then we are dealing with players
             holder.first_icon.visibility = View.VISIBLE
         }
