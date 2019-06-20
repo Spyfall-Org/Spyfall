@@ -69,6 +69,9 @@ class WaitingFragment : Fragment() {
         }
 
         btn_leave_game.setOnClickListener {navigateBack?.invoke() ?: leaveGame()}
+
+        configureLayoutManagerAndRecyclerView()
+
     }
 
     override fun onResume() {
@@ -77,7 +80,6 @@ class WaitingFragment : Fragment() {
         isGameCreator = arguments?.get("FromFragment") == "NewGameFragment"
 
         tv_acess_code.text = viewModel.ACCESS_CODE
-        configureLayoutManagerAndRecyclerView()
 
         if(isGameCreator){ viewModel.getRandomLocation() }
 

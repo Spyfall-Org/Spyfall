@@ -53,13 +53,13 @@ class JoinGameFragment : Fragment() {
 
     private fun joinGameClick(){
 
-        pb_join_game.visibility = View.VISIBLE
-        btn_join_game_action.isClickable = false
+        loadMode()
 
         if(!viewModel.hasNetworkConnection){
             UIHelper.simpleAlert(context!!, "Something went wrong",
                 "We are sorry. Please check your internet connection and try again",
                 "Okay",{},"",{}).show()
+            enterMode()
             return
         }
 
@@ -68,22 +68,35 @@ class JoinGameFragment : Fragment() {
 
         if(userName.isEmpty() || accessCode.isEmpty()){
             Toast.makeText(context, "Please fill out both access code and user name", Toast.LENGTH_LONG).show()
+            enterMode()
             return
         }
 
-        //TODO: show loading icon
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
 
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
 
                 when {
-                    list.size >= 8 ->  Toast.makeText(context, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
-                    game["isStarted"]==true -> Toast.makeText(context, "Sorry, this game has been started", Toast.LENGTH_LONG).show()
-                    list.contains(tv_username.text.toString().trim()) -> Toast.makeText(context, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
-                    userName.length > 25 -> Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
+                    list.size >= 8 ->  {
+                        Toast.makeText(context, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
+                    game["isStarted"]==true -> {
+                        Toast.makeText(context, "Sorry, this game has been started", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
+                    list.contains(tv_username.text.toString().trim()) -> {
+                        Toast.makeText(context, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
+                    userName.length > 25 -> {
+                        Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
+                        enterMode()
+                    }
                     else -> joinGame(withAccessCode = accessCode, asPlayer = userName)
                 }
+
             }else{
                 Toast.makeText(context, "Sorry, no game was found with that access code", Toast.LENGTH_LONG).show()
             }
@@ -94,7 +107,17 @@ class JoinGameFragment : Fragment() {
         viewModel.ACCESS_CODE = withAccessCode
         viewModel.currentUser = asPlayer
         viewModel.addPlayer(asPlayer).addOnCompleteListener {
+            enterMode()
             navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
         }
+    }
+
+    fun loadMode(){
+        pb_join_game.visibility = View.VISIBLE
+        btn_join_game_action.isClickable = false
+    }
+    fun enterMode(){
+        pb_join_game.visibility = View.INVISIBLE
+        btn_join_game_action.isClickable = true
     }
 }
