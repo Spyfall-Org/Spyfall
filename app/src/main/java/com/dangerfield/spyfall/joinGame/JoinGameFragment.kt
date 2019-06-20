@@ -58,7 +58,7 @@ class JoinGameFragment : Fragment() {
             return
         }
 
-        //TODO: consider timeout function here
+        //TODO: consider timeout function here with FIRDatabase.purgOutstandingWrites()
         loadMode()
 
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
@@ -102,11 +102,11 @@ class JoinGameFragment : Fragment() {
         }
     }
 
-    fun loadMode(){
+    private fun loadMode(){
         pb_join_game.visibility = View.VISIBLE
         btn_join_game_action.isClickable = false
     }
-    fun enterMode(){
+    private fun enterMode(){
         pb_join_game.visibility = View.INVISIBLE
         btn_join_game_action.isClickable = true
     }

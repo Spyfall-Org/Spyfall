@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
+import kotlin.math.roundToInt
 
 
 class GameFragment : Fragment() {
@@ -57,6 +58,10 @@ class GameFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        //set up views every time
+        val firstPlayer = configurePlayerViews()
+        configurePlayersAdapter(firstPlayer)
+        configureLocationsAdapter()
 
         //the observers should not be called unless the fragment is in a started or resumed state
         viewModel.getGameUpdates().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -113,27 +118,9 @@ class GameFragment : Fragment() {
                 Log.d("GAME", "timer was not null")
             }
 
-            val firstPlayer = configurePlayerViews()
-            configurePlayersAdapter(firstPlayer)
-            configureLocationsAdapter()
         }
     }
 
-    private fun configurePlayerViews(): String {
-        //configures all of the views dealing with players, and choses a player to go first, and returns that val.
-
-        //we enforce that no two users have the same username
-        currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
-
-        //dont let the spy know the location
-        tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
-            "Figure out the location!"
-        } else { "Location: ${viewModel.gameObject.value?.chosenLocation}" }
-
-        tv_game_role.text = "Role: ${currentPlayer.role}"
-
-        return viewModel.gameObject.value!!.playerObjectList[0].username
-    }
 
     private fun hide(){
         if(tv_game_role.visibility == View.VISIBLE){
@@ -196,13 +183,27 @@ class GameFragment : Fragment() {
         }
     }
 
+    private fun configurePlayerViews(): String {
+        //configures all of the views dealing with players, and choses a player to go first, and returns that val.
+
+        //we enforce that no two users have the same username
+        currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
+
+        //dont let the spy know the location
+        tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
+            "Figure out the location!"
+        } else { "Location: ${viewModel.gameObject.value?.chosenLocation}" }
+
+        tv_game_role.text = "Role: ${currentPlayer.role}"
+
+        return viewModel.gameObject.value!!.playerObjectList[0].username
+    }
+
     fun showPlayAgain(){
 
-        val padding = Math.round(
-            TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics
-            )
-        )
+        val padding = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics
+        ).roundToInt()
         val set = ConstraintSet()
         val layout = game_layout as ConstraintLayout
         set.clone(layout)
