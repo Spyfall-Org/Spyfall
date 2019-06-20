@@ -89,8 +89,12 @@ class NewGameFragment : Fragment() {
 
         if(viewModel.hasNetworkConnection) {
 
+            //TODO: consider timeout function here
+            loadMode()
+
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
+                    enterMode()
                     val bundle = bundleOf("FromFragment" to "NewGameFragment")
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
                 }
@@ -100,5 +104,14 @@ class NewGameFragment : Fragment() {
                 "Okay",{},"",{}).show()
         }
 
+    }
+
+    fun loadMode(){
+        pb_new_game.visibility = View.VISIBLE
+        btn_create.isClickable = false
+    }
+    fun enterMode(){
+        pb_new_game.visibility = View.INVISIBLE
+        btn_create.isClickable = true
     }
 }

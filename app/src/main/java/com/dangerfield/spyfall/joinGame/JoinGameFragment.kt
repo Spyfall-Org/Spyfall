@@ -53,13 +53,10 @@ class JoinGameFragment : Fragment() {
 
     private fun joinGameClick(){
 
-        loadMode()
-
         if(!viewModel.hasNetworkConnection){
             UIHelper.simpleAlert(context!!, "Something went wrong",
                 "We are sorry. Please check your internet connection and try again",
                 "Okay",{},"",{}).show()
-            enterMode()
             return
         }
 
@@ -68,9 +65,11 @@ class JoinGameFragment : Fragment() {
 
         if(userName.isEmpty() || accessCode.isEmpty()){
             Toast.makeText(context, "Please fill out both access code and user name", Toast.LENGTH_LONG).show()
-            enterMode()
             return
         }
+
+        //TODO: consider timeout function here
+        loadMode()
 
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
 
@@ -99,6 +98,7 @@ class JoinGameFragment : Fragment() {
 
             }else{
                 Toast.makeText(context, "Sorry, no game was found with that access code", Toast.LENGTH_LONG).show()
+                enterMode()
             }
         }
     }
