@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.customClasses.UIHelper
 import com.dangerfield.spyfall.game.GameViewModel
+import kotlinx.android.synthetic.main.fragment_new_game.*
 
 import kotlinx.android.synthetic.main.fragment_waiting.*
 import java.util.ArrayList
@@ -52,8 +53,14 @@ class WaitingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
+
+            //if the game has been started, you cant click create
+            btn_start_game.isClickable = !updatedGame.started
+
             adapter?.players = updatedGame.playerList
-            if(updatedGame.started && navController.currentDestination?.id == R.id.waitingFragment){
+
+            //we know everything is good to go when the player objects list is done
+            if(updatedGame.playerList.size == updatedGame.playerObjectList.size && navController.currentDestination?.id == R.id.waitingFragment){
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
             }
         })
@@ -64,6 +71,9 @@ class WaitingFragment : Fragment() {
         //only set the listeners once the view has been created
 
         btn_start_game.setOnClickListener {
+            //TODO: Consider case of a user coming back to this screen, will the button be clickable?
+            //immediately stop the same user from sending the request twice
+            btn_start_game.isClickable = false
             //only the game creator has the roles automatically
             if(viewModel.roles.isEmpty()){ viewModel.assignRolesAndStartGame() }else{ viewModel.startGame() }
         }

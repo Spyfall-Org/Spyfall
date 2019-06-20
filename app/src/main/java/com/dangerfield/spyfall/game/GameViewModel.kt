@@ -95,6 +95,8 @@ class GameViewModel : ViewModel() {
     }
 
     fun assignRolesAndStartGame() {
+        //keeps other users from creating the game
+        if(!gameObject.value!!.started) gameRef.update("started", true) else return
 
         val chosenPacks = gameObject.value!!.chosenPacks
         val location = gameObject.value!!.chosenLocation
@@ -118,6 +120,9 @@ class GameViewModel : ViewModel() {
 
 
     fun startGame() {
+        //if it hasnt been started then start it, this flag disbales the create button for everyone
+        if(!gameObject.value!!.started) gameRef.update("started", true) else return
+
         //assignes all roles
         if(roles.isNullOrEmpty() or gameObject.value?.playerList.isNullOrEmpty()){ return }
 
@@ -136,7 +141,6 @@ class GameViewModel : ViewModel() {
 
             //now push to database
             gameRef.update("playerObjectList", playerObjectList.shuffled()) //shuffled so that the last is not always the spy
-            gameRef.update("started", true)
     }
 
     fun getAllLocations():  LiveData<ArrayList<String>> {
