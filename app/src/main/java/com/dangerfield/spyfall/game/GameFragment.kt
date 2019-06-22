@@ -15,15 +15,11 @@ import kotlinx.android.synthetic.main.fragment_game.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.ConstraintLayout
-import android.util.TypedValue
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
-import kotlin.math.roundToInt
 
 
 class GameFragment : Fragment() {
@@ -102,8 +98,8 @@ class GameFragment : Fragment() {
             }
         }
 
-        tv_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        tv_hide.setOnClickListener{ hide()}
+        btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        btn_hide.setOnClickListener{ hide()}
     }
 
     override fun onResume() {
@@ -126,11 +122,13 @@ class GameFragment : Fragment() {
         if(tv_game_role.visibility == View.VISIBLE){
             tv_game_role.visibility = View.GONE
             tv_game_location.visibility = View.GONE
-            tv_hide.text = resources.getString(R.string.string_show)
+            view_role_card.visibility = View.GONE
+            btn_hide.text = resources.getString(R.string.string_show)
         }else{
             tv_game_role.visibility = View.VISIBLE
+            view_role_card.visibility = View.VISIBLE
             tv_game_location.visibility = View.VISIBLE
-            tv_hide.text = resources.getString(R.string.string_hide)
+            btn_hide.text = resources.getString(R.string.string_hide)
         }
     }
 

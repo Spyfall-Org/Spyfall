@@ -3,6 +3,8 @@ package com.dangerfield.spyfall.util
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +59,7 @@ class UIHelper {
             val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
             dialogBuilder.setView(view)
             val dialog = dialogBuilder.create()
+            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true)
 
             view.apply {
@@ -74,7 +77,6 @@ class UIHelper {
                     //center it
                     set.connect(R.id.btn_custom_alert_positive,ConstraintSet.END,R.id.custom_alert_view,ConstraintSet.END)
                     set.connect(R.id.btn_custom_alert_positive,ConstraintSet.START,R.id.custom_alert_view,ConstraintSet.START)
-
                     set.applyTo(layout)
                 }
 

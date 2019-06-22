@@ -2,6 +2,8 @@ package com.dangerfield.spyfall.waiting
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +47,8 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
             val view = LayoutInflater.from(context).inflate(R.layout.alert_change_name, null)
             dialogBuilder.setView(view)
             val dialog = dialogBuilder.create()
+            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+
 
             holder.pencil.visibility = View.VISIBLE
 
