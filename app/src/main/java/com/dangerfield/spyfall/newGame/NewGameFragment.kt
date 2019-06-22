@@ -149,8 +149,7 @@ class NewGameFragment : Fragment() {
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
-        btn_packs.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-        btn_packs.setTextColor(UIHelper.accentColor)
+        btn_packs.setImageDrawable(drawable)
 
         UIHelper.setCursorColor(tv_new_game_name,UIHelper.accentColor)
 
@@ -162,7 +161,7 @@ class NewGameFragment : Fragment() {
     fun showPacksDialog(){
 
         //we also might consider a different structure for the backend where the packs are kept in on collection
-        //TODO: you would want to pass in the entire list to the UI helper and have it dynamically create a recycler view for every indecy
+        //TODO: consider timeout funciton to just show dialog with hard coded data
         loadMode()
         val list = mutableListOf<List<String>>()
         viewModel.getPackNames().addOnSuccessListener {

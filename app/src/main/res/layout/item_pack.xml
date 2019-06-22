@@ -28,7 +28,8 @@
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
                 android:textStyle="bold" android:textSize="30sp"
-                android:textColor="#DDDDDD"/>
+                android:textColor="#ECECEC" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_pack_type"/>
         <TextView
                 android:text="Standard"
                 android:layout_width="wrap_content"
