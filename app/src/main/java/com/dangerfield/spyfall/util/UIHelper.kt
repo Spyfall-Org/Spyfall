@@ -57,7 +57,7 @@ class UIHelper {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-        fun packsDialog(context: Context, pack1: List<String>,pack2: List<String>,pack3: List<String>): AlertDialog {
+        fun packsDialog(context: Context, packsList: MutableList<List<String>>): AlertDialog {
 
             val dialogBuilder = AlertDialog.Builder(context)
             Log.d("Custom alerts", "Setting packs view")
@@ -69,17 +69,18 @@ class UIHelper {
 
             //TODO: make dynamic by pulling from firebase and adding recycler views as needed
             //function would need to accept an array of lists, and cycle through them
+            //TOD DO THIS WE MIGHT HAVE TO MAKE THE PARENT VIEW A LINEAR LAYOUT
 
             view.apply{
-                rv_dialog_pack1.adapter = SimpleAdapter(pack1, context)
+                rv_dialog_pack1.adapter = SimpleAdapter(packsList[2], context)
                 rv_dialog_pack1.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack1.setHasFixedSize(true)
 
-                rv_dialog_pack2.adapter = SimpleAdapter(pack2, context)
+                rv_dialog_pack2.adapter = SimpleAdapter(packsList[1], context)
                 rv_dialog_pack2.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack2.setHasFixedSize(true)
 
-                rv_dialog_pack3.adapter = SimpleAdapter(pack3, context)
+                rv_dialog_pack3.adapter = SimpleAdapter(packsList[0], context)
                 rv_dialog_pack3.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack3.setHasFixedSize(true)
 

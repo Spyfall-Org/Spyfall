@@ -52,7 +52,7 @@ class NewGameFragment : Fragment() {
         btn_create.setOnClickListener { createGame() }
 
         btn_packs.setOnClickListener{
-            getAllLocations()
+            showPacksDialog()
         }
 
         configurePacksAdapter()
@@ -134,10 +134,14 @@ class NewGameFragment : Fragment() {
     fun loadMode(){
         pb_new_game.visibility = View.VISIBLE
         btn_create.isClickable = false
+        btn_packs.isClickable = false
+
     }
     fun enterMode(){
         pb_new_game.visibility = View.INVISIBLE
         btn_create.isClickable = true
+        btn_packs.isClickable = true
+
     }
 
     private fun changeAccent(){
@@ -155,8 +159,9 @@ class NewGameFragment : Fragment() {
 
     }
 
-    fun getAllLocations(){
+    fun showPacksDialog(){
 
+        //we also might consider a different structure for the backend where the packs are kept in on collection
         //TODO: you would want to pass in the entire list to the UI helper and have it dynamically create a recycler view for every indecy
         loadMode()
         val list = mutableListOf<List<String>>()
@@ -173,7 +178,7 @@ class NewGameFragment : Fragment() {
                     if(completedTasks == packNames.size){
                         //then youre done
                         enterMode()
-                        UIHelper.packsDialog(context!!,list[2],list[1],list[0]).show()
+                        UIHelper.packsDialog(context!!,list).show()
 
                     }
                 }
