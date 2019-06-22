@@ -42,7 +42,7 @@
             app:layout_constraintEnd_toEndOf="@+id/btn_join_game"
             app:layout_constraintStart_toStartOf="@+id/btn_join_game"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_rules" android:textAllCaps="false"/>
+            app:layout_constraintBottom_toTopOf="@+id/btn_rules" android:textAllCaps="false" android:textSize="18sp"/>
     <Button
             android:text="Join Game"
             android:layout_width="0dp"
@@ -52,7 +52,8 @@
             android:textColor="@color/colorWhite"
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/btn_new_game"
             android:layout_marginStart="42dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="42dp" app:layout_constraintEnd_toEndOf="parent" android:textAllCaps="false"/>
+            android:layout_marginEnd="42dp" app:layout_constraintEnd_toEndOf="parent" android:textAllCaps="false"
+            android:textSize="18sp"/>
     <Button
             android:text="Rules"
             android:layout_width="wrap_content"

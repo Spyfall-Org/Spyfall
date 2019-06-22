@@ -8,10 +8,10 @@
         app:cardElevation="0dp"
         android:layout_margin="8dp"
         android:layout_height="50dp"
-        app:cardBackgroundColor="@color/colorTextBackground"
         android:id="@+id/cv_simple">
     <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-                                                       android:layout_height="match_parent">
+                                                       android:layout_height="match_parent"
+                                                       android:background="@color/colorTextBackground">
 
         <TextView
                 android:layout_width="0dp"
@@ -35,8 +35,6 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
 </androidx.cardview.widget.CardView>
