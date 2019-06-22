@@ -119,7 +119,7 @@ class NewGameFragment : Fragment() {
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
                 }
         }else{
-            UIHelper.simpleAlert(context!!, "Something went wrong",
+            UIHelper.customAlert(context!!, "Something went wrong",
                 "We are sorry. Please check your internet connection and try again",
                 "Okay",{},"",{}).show()
         }
