@@ -66,6 +66,8 @@ class WaitingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        changeAccent()
         //only set the listeners once the view has been created
 
         btn_start_game.setOnClickListener {
@@ -108,6 +110,11 @@ class WaitingFragment : Fragment() {
             rv_player_list_waiting.layoutManager = LinearLayoutManager(context)
             adapter = WaitingPlayersAdapter(context!!, ArrayList(),viewModel)
             rv_player_list_waiting.adapter = adapter
+    }
+
+    private fun changeAccent(){
+        btn_leave_game.background.setTint(UIHelper.accentColor)
+
     }
 }
 

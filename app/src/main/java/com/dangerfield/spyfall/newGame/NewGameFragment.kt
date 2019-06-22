@@ -1,8 +1,8 @@
 package com.dangerfield.spyfall.newGame
 
 
+import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,14 +13,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.util.UIHelper
-
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
-import com.dangerfield.spyfall.game.GameViewsAdapter
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
-import kotlinx.android.synthetic.main.fragment_game.*
-import kotlinx.android.synthetic.main.item_pack.view.*
+import kotlinx.android.synthetic.main.fragment_join_game.*
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,6 +43,8 @@ class NewGameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        changeAccent()
 
         //reference views once the view has been created
         tv_new_game_name.onFocusChangeListener = UIHelper.keyboardHider
@@ -134,5 +133,13 @@ class NewGameFragment : Fragment() {
     fun enterMode(){
         pb_new_game.visibility = View.INVISIBLE
         btn_create.isClickable = true
+    }
+
+    private fun changeAccent(){
+        btn_create.background.setTint(UIHelper.accentColor)
+
+        pb_new_game.indeterminateDrawable
+            .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
+
     }
 }

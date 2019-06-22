@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

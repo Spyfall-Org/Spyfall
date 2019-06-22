@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.util.UIHelper
 import kotlinx.android.synthetic.main.item_simple_card.view.*
 
 class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlayer: String?) : RecyclerView.Adapter<GameViewsAdapter.ViewHolder>() {
@@ -43,6 +44,8 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlaye
         if(first != null && items[position].trim() == first?.trim()){
             //then we are dealing with players
             holder.first_icon.visibility = View.VISIBLE
+            holder.first_icon.setTextColor(UIHelper.accentColor)
+
         }
     }
 

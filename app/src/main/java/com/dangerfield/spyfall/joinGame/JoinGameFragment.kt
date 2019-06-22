@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.joinGame
 
+import android.graphics.PorterDuff
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Handler
@@ -35,6 +36,8 @@ class JoinGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        changeAccent()
+
         btn_join_game_action.setOnClickListener { joinGameClick() }
 
         //listeners to hide keyboard when user clicks away
@@ -47,6 +50,14 @@ class JoinGameFragment : Fragment() {
         //scope the view model to the activity so that data can be shared in fragments
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
         navController = NavHostFragment.findNavController(this)
+    }
+
+    private fun changeAccent(){
+        btn_join_game_action.background.setTint(UIHelper.accentColor)
+
+        pb_join_game.indeterminateDrawable
+            .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
+
     }
 
     private fun joinGameClick(){

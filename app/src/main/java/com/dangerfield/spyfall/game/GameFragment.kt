@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
+import kotlinx.android.synthetic.main.item_simple_card.*
 
 
 class GameFragment : Fragment() {
@@ -87,6 +88,8 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        changeAccent()
 
         //we set the listeners once the view has actually been inflated
         btn_end_game.setOnClickListener { UIHelper.customAlert(context!!,"Ending Game","Are you sure you want to end the game?",
@@ -195,6 +198,11 @@ class GameFragment : Fragment() {
         tv_game_role.text = "Role: ${currentPlayer.role}"
 
         return viewModel.gameObject.value!!.playerObjectList[0].username
+    }
+
+    private fun changeAccent(){
+        btn_end_game.background.setTint(UIHelper.accentColor)
+        btn_hide.background.setTint(UIHelper.accentColor)
     }
 
 }

@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.graphics.toColor
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.alert_custom.view.*
 
@@ -20,10 +21,28 @@ class UIHelper {
 
     companion object {
 
+        var accentColor: Int = randomAccentColor()
+
+
         val keyboardHider = View.OnFocusChangeListener { view, b ->
             if (!b) {
                 this.hideKeyboardFrom(view)
             }
+        }
+
+        fun randomAccentColor(): Int {
+
+            var colors = mutableListOf<Int>()
+            colors.add(Color.parseColor("#C388B3"))
+            colors.add(Color.parseColor("#D65656"))
+            colors.add(Color.parseColor("#F56E16"))
+            colors.add(Color.parseColor("#39A80C"))
+            colors.add(Color.parseColor("#009BFF"))
+            colors.add(Color.parseColor("#BB5DBD"))
+            colors.add(Color.parseColor("#634FEC"))
+
+            return colors.random()
+
         }
 
         private fun hideKeyboardFrom(view: View) {
