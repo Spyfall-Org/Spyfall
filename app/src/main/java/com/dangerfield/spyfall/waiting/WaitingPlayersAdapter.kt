@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.util.UIHelper
 import kotlinx.android.synthetic.main.alert_change_name.*
 import kotlinx.android.synthetic.main.alert_change_name.view.*
 import kotlinx.android.synthetic.main.item_player_card.view.*
@@ -54,6 +55,8 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
 
             holder.pencil.setOnClickListener {_ ->
                 view.apply{
+                    btn_change_name_alert_okay.background.setTint(UIHelper.accentColor)
+                    UIHelper.setCursorColor(tv_alert_change_name,UIHelper.accentColor)
                     btn_change_name_alert_okay.setOnClickListener{
                         var newName = tv_alert_change_name.text.toString().trim()
                         //as long as they typed some name that doesnt already exist

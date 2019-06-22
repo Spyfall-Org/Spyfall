@@ -52,14 +52,6 @@ class JoinGameFragment : Fragment() {
         navController = NavHostFragment.findNavController(this)
     }
 
-    private fun changeAccent(){
-        btn_join_game_action.background.setTint(UIHelper.accentColor)
-
-        pb_join_game.indeterminateDrawable
-            .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
-
-    }
-
     private fun joinGameClick(){
 
         if(!viewModel.hasNetworkConnection){
@@ -119,6 +111,17 @@ class JoinGameFragment : Fragment() {
             enterMode()
             navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
         }
+    }
+
+    private fun changeAccent(){
+        btn_join_game_action.background.setTint(UIHelper.accentColor)
+
+        UIHelper.setCursorColor(tv_access_code,UIHelper.accentColor)
+        UIHelper.setCursorColor(tv_username,UIHelper.accentColor)
+
+        pb_join_game.indeterminateDrawable
+            .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
+
     }
 
     private fun loadMode(){

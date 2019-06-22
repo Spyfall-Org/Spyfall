@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
+import kotlinx.android.synthetic.main.fragment_new_game.*
 import kotlinx.android.synthetic.main.fragment_start.*
 
 

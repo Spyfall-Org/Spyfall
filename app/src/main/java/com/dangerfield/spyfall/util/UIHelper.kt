@@ -12,9 +12,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.graphics.toColor
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.alert_custom.view.*
+import android.graphics.PorterDuff
+import androidx.core.content.ContextCompat
+import android.widget.TextView
+import androidx.annotation.ColorInt
+import android.widget.EditText
+
+
 
 
 class UIHelper {
@@ -51,24 +57,6 @@ class UIHelper {
         }
 
 
-        fun simpleAlert(
-            context: Context, title: String, message: String, positiveText: String, positiveAction: (() -> Unit),
-            negativeText: String, negativeAction: (() -> Unit)
-        ): AlertDialog {
-
-            val dialogBuilder = AlertDialog.Builder(context)
-            // set message of alert dialog
-            dialogBuilder.setMessage(message)
-                .setCancelable(true)
-                .setPositiveButton(positiveText) { _, _ -> positiveAction.invoke() }
-                .setNegativeButton(negativeText) { dialog, _ -> negativeAction.invoke(); dialog.cancel() }
-
-            val alert = dialogBuilder.create()
-            alert.setTitle(title)
-            alert.setCanceledOnTouchOutside(true)
-            return alert
-        }
-
         fun customAlert(
             context: Context, title: String, message: String, positiveText: String, positiveAction: (() -> Unit),
             negativeText: String, negativeAction: (() -> Unit)
@@ -82,9 +70,9 @@ class UIHelper {
             dialog.setCanceledOnTouchOutside(true)
 
             view.apply {
-                if(negativeText.isEmpty()){
+                if (negativeText.isEmpty()) {
                     //remove the negative button
-                    Log.d("Alert","Negative Text is Empty")
+                    Log.d("Alert", "Negative Text is Empty")
                     btn_custom_alert_negative.visibility = View.GONE
 
                     val set = ConstraintSet()
@@ -94,8 +82,18 @@ class UIHelper {
                     set.clear(R.id.btn_custom_alert_positive, ConstraintSet.END)
                     set.clear(R.id.btn_custom_alert_positive, ConstraintSet.START)
                     //center it
-                    set.connect(R.id.btn_custom_alert_positive,ConstraintSet.END,R.id.custom_alert_view,ConstraintSet.END)
-                    set.connect(R.id.btn_custom_alert_positive,ConstraintSet.START,R.id.custom_alert_view,ConstraintSet.START)
+                    set.connect(
+                        R.id.btn_custom_alert_positive,
+                        ConstraintSet.END,
+                        R.id.custom_alert_view,
+                        ConstraintSet.END
+                    )
+                    set.connect(
+                        R.id.btn_custom_alert_positive,
+                        ConstraintSet.START,
+                        R.id.custom_alert_view,
+                        ConstraintSet.START
+                    )
                     set.applyTo(layout)
                 }
 
@@ -103,11 +101,39 @@ class UIHelper {
                 btn_custom_alert_positive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
                 btn_custom_alert_negative.text = negativeText
                 btn_custom_alert_positive.text = positiveText
+                btn_custom_alert_positive.background.setTint(accentColor)
                 tv_custom_alert_message.text = message
                 tv_custom_alert_title.text = title
             }
 
             return dialog
+        }
+
+
+        fun setCursorColor(view: EditText, @ColorInt color: Int) {
+            try {
+                // Get the cursor resource id
+                var field = TextView::class.java.getDeclaredField("mCursorDrawableRes")
+                field.isAccessible = true
+                val drawableResId = field.getInt(view)
+
+                // Get the editor
+                field = TextView::class.java.getDeclaredField("mEditor")
+                field.isAccessible = true
+                val editor = field.get(view)
+
+                // Get the drawable and set a color filter
+                val drawable = ContextCompat.getDrawable(view.context, drawableResId)
+                drawable!!.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+                val drawables = arrayOf(drawable, drawable)
+
+                // Set the drawables
+                field = editor.javaClass.getDeclaredField("mCursorDrawable")
+                field.isAccessible = true
+                field.set(editor, drawables)
+            } catch (ignored: Exception) {
+            }
+
         }
     }
 

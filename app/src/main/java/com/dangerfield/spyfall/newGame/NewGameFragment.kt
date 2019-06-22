@@ -137,6 +137,8 @@ class NewGameFragment : Fragment() {
     private fun changeAccent(){
         btn_create.background.setTint(UIHelper.accentColor)
 
+        UIHelper.setCursorColor(tv_new_game_name,UIHelper.accentColor)
+
         pb_new_game.indeterminateDrawable
             .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
 
