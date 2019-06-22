@@ -1,47 +1,35 @@
-package com.dangerfield.spyfall.newGame
+package com.dangerfield.spyfall.util
 
-import android.R
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.ArrayAdapter
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.dangerfield.spyfall.models.GamePack
-import com.dangerfield.spyfall.util.BoldText
-import kotlinx.android.synthetic.main.item_pack.view.*
-import java.util.ArrayList
+import com.dangerfield.spyfall.R
 
 
 /**
  * Created by ELIJAH DANGERFIELD on 05/7/2019.
  */
-class SimpleAdapter(var list: ArrayList<String>, private var context: Context?) : RecyclerView.Adapter<SimpleAdapter.ViewHolder>() {
+class SimpleAdapter(var list: List<String>, private var context: Context?) : RecyclerView.Adapter<SimpleAdapter.ViewHolder>() {
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var textView: TextView
+        var textView: TextView = view.findViewById(R.id.tv_simple_text)
 
         init {
-            textView = BoldText(context, null)
             context = view.context
         }
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val singleButton = LayoutInflater.from(parent.context)
-            .inflate(R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.simple_text, parent, false)
         return ViewHolder(singleButton)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        val item = list[position]
-        holder.textView.text = item
-
+        holder.textView.text = list[position]
     }
 
     override fun getItemCount(): Int {

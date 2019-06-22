@@ -65,6 +65,8 @@ class NewGameFragment : Fragment() {
 
         var packs = mutableListOf<GamePack>()
 
+        //TODO: make this dynamic by pulling pack names from firebase
+
         packs.add(GamePack(resources.getColor(R.color.colorPink),"Standard",1,"pack 1",false))
         packs.add(GamePack(resources.getColor(R.color.colorGreen),"Standard",2,"pack 2",false))
         packs.add(GamePack(resources.getColor(R.color.colorYellow),"Special",1,"special pack",false))
