@@ -9,6 +9,7 @@ import com.dangerfield.spyfall.models.Player
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -30,7 +31,8 @@ class GameViewModel : ViewModel() {
     var gameObject: MutableLiveData<Game> = MutableLiveData()
     var db = FirebaseFirestore.getInstance()
     var gameRef = db.collection("games").document(ACCESS_CODE)
-    var allLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
+    var gameLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
+
     lateinit var currentUser: String
 
     fun getGameUpdates(): MutableLiveData<Game> {
@@ -111,7 +113,6 @@ class GameViewModel : ViewModel() {
         }
     }
 
-
     fun startGame() {
         //if it hasnt been started then start it, this flag disbales the create button for everyone
         if(!gameObject.value!!.started) gameRef.update("started", true) else return
@@ -136,7 +137,7 @@ class GameViewModel : ViewModel() {
             gameRef.update("playerObjectList", playerObjectList.shuffled()) //shuffled so that the last is not always the spy
     }
 
-    fun getAllLocations():  LiveData<ArrayList<String>> {
+    fun getAllGameLocations():  LiveData<ArrayList<String>> {
         var completedTasks = 0
         var tempLocations = ArrayList<String>()
         //if more than one pack was chosen, load all locations, shuffle, pick first 30
@@ -147,19 +148,22 @@ class GameViewModel : ViewModel() {
 
                 db.collection(game.chosenPacks[i]).get().addOnSuccessListener { location ->
                     location.documents.forEach { tempLocations.add(it.id) }
-                    Log.d("Game View Model", "ALL LOCAITONS: ${allLocations}")
+                    Log.d("Game View Model", "ALL LOCAITONS: ${gameLocations}")
 
                 }.addOnCompleteListener {
                     completedTasks += 1
                     if(completedTasks == game.chosenPacks.size){
-                        allLocations.value = tempLocations
+                        gameLocations.value = tempLocations
                     }
                 }
             }
         }
 
-        return this.allLocations
+        return this.gameLocations
     }
+
+    
+    fun getPackNames(): Task<QuerySnapshot> =  db.collection("pack names").get()
 
     fun endGame(): Task<Void> {
         roles.clear()

@@ -25,7 +25,7 @@
         After a few rounds of guessing, suspicion and bluffing, the game ends and whoever has scored
         the most points is victorious! This party game makes neurotic suspicions fun!</string>
 
-    <string name="string_pack_description">Chose your packs of locations to be included in the game. One location will be chosen at random from the selected pack when the game starts.</string>
+    <string name="string_pack_description">Chose your packs to be included in the game. One location will be chosen at random from the selected packs when the game starts.</string>
 
 
 </resources>

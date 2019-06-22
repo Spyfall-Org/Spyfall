@@ -52,8 +52,7 @@ class NewGameFragment : Fragment() {
         btn_create.setOnClickListener { createGame() }
 
         btn_packs.setOnClickListener{
-            UIHelper.customAlert(context!!,"Packs",resources.getString(R.string.string_pack_description),"Okay",{},"",{}).show()
-
+            getAllLocations()
         }
 
         configurePacksAdapter()
@@ -125,7 +124,7 @@ class NewGameFragment : Fragment() {
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
                 }
         }else{
-            UIHelper.customAlert(context!!, "Something went wrong",
+            UIHelper.customSimpleAlert(context!!, "Something went wrong",
                 "We are sorry. Please check your internet connection and try again",
                 "Okay",{},"",{}).show()
         }
@@ -154,5 +153,33 @@ class NewGameFragment : Fragment() {
         pb_new_game.indeterminateDrawable
             .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
 
+    }
+
+    fun getAllLocations(){
+
+        //TODO: you would want to pass in the entire list to the UI helper and have it dynamically create a recycler view for every indecy
+        loadMode()
+        val list = mutableListOf<List<String>>()
+        viewModel.getPackNames().addOnSuccessListener {
+            val packNames=  it.documents.map {document -> document.id }
+            var completedTasks = 0
+            for (i in 0 until packNames.size) {
+
+                viewModel.db.collection(packNames[i]).get().addOnSuccessListener { pack ->
+                    list.add(pack.documents.map {location -> location.id } )
+
+                }.addOnCompleteListener {
+                    completedTasks += 1
+                    if(completedTasks == packNames.size){
+                        //then youre done
+                        enterMode()
+                        UIHelper.packsDialog(context!!,list[2],list[1],list[0]).show()
+
+                    }
+                }
+            }
+
+
+        }
     }
 }

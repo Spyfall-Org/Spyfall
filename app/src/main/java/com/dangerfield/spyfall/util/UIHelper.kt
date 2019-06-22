@@ -57,91 +57,90 @@ class UIHelper {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
+        fun packsDialog(context: Context, pack1: List<String>,pack2: List<String>,pack3: List<String>): AlertDialog {
 
-        fun customAlert(
+            val dialogBuilder = AlertDialog.Builder(context)
+            Log.d("Custom alerts", "Setting packs view")
+            var view = LayoutInflater.from(context).inflate(R.layout.dialog_packs, null)
+            dialogBuilder.setView(view)
+            var dialog = dialogBuilder.create()
+            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            dialog.setCanceledOnTouchOutside(true)
+
+            //TODO: make dynamic by pulling from firebase and adding recycler views as needed
+            //function would need to accept an array of lists, and cycle through them
+
+            view.apply{
+                rv_dialog_pack1.adapter = SimpleAdapter(pack1, context)
+                rv_dialog_pack1.layoutManager = GridLayoutManager(context,2)
+                rv_dialog_pack1.setHasFixedSize(true)
+
+                rv_dialog_pack2.adapter = SimpleAdapter(pack2, context)
+                rv_dialog_pack2.layoutManager = GridLayoutManager(context,2)
+                rv_dialog_pack2.setHasFixedSize(true)
+
+                rv_dialog_pack3.adapter = SimpleAdapter(pack3, context)
+                rv_dialog_pack3.layoutManager = GridLayoutManager(context,2)
+                rv_dialog_pack3.setHasFixedSize(true)
+
+                btn_dialog_packs_positive.background.setTint(accentColor)
+            }
+
+            view.btn_dialog_packs_positive.setOnClickListener{dialog.dismiss()}
+
+            return dialog
+        }
+
+        fun customSimpleAlert(
             context: Context, title: String, message: String, positiveText: String, positiveAction: (() -> Unit),
             negativeText: String, negativeAction: (() -> Unit)
         ): Dialog {
 
-            var view: View? = null
-            var dialog: AlertDialog? = null
             val dialogBuilder = AlertDialog.Builder(context)
+            var view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
+            dialogBuilder.setView(view)
+            var dialog = dialogBuilder.create()
+            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            dialog.setCanceledOnTouchOutside(true)
 
-            if (title == "Packs") {
-                Log.d("Custom alerts", "Setting packs view")
-                view = LayoutInflater.from(context).inflate(R.layout.dialog_packs, null)
-                dialogBuilder.setView(view)
-                dialog = dialogBuilder.create()
-                dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-                dialog.setCanceledOnTouchOutside(true)
+            view.apply {
+                if (negativeText.isEmpty()) {
+                    //remove the negative button
+                    Log.d("Alert", "Negative Text is Empty")
+                    btn_custom_alert_negative.visibility = View.GONE
 
-                //TODO: make dynamic by pulling from firebase and adding recycler views as needed
-                val list = listOf("Construction Site","Construction Site","Construction Site","Construction Site","Construction Site","Construction Site"
-                ,"Construction Site","Construction Site","Construction Site")
-
-                view.apply{
-                    rv_dialog_pack1.adapter = SimpleAdapter(list, context)
-                    rv_dialog_pack1.layoutManager = GridLayoutManager(context,2)
-                    rv_dialog_pack1.setHasFixedSize(true)
-
-                    rv_dialog_pack2.adapter = SimpleAdapter(list, context)
-                    rv_dialog_pack2.layoutManager = GridLayoutManager(context,2)
-                    rv_dialog_pack2.setHasFixedSize(true)
-
-                    rv_dialog_pack3.adapter = SimpleAdapter(list, context)
-                    rv_dialog_pack3.layoutManager = GridLayoutManager(context,2)
-                    rv_dialog_pack3.setHasFixedSize(true)
-
-                    btn_dialog_packs_positive.background.setTint(accentColor)
+                    val set = ConstraintSet()
+                    val layout = custom_alert_view as ConstraintLayout
+                    set.clone(layout)
+                    // remove all connections.
+                    set.clear(R.id.btn_custom_alert_positive, ConstraintSet.END)
+                    set.clear(R.id.btn_custom_alert_positive, ConstraintSet.START)
+                    //center it
+                    set.connect(
+                        R.id.btn_custom_alert_positive,
+                        ConstraintSet.END,
+                        R.id.custom_alert_view,
+                        ConstraintSet.END
+                    )
+                    set.connect(
+                        R.id.btn_custom_alert_positive,
+                        ConstraintSet.START,
+                        R.id.custom_alert_view,
+                        ConstraintSet.START
+                    )
+                    set.applyTo(layout)
                 }
 
-                view.btn_dialog_packs_positive.setOnClickListener{positiveAction.invoke(); dialog!!.dismiss()}
-
-            } else {
-                view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
-                dialogBuilder.setView(view)
-                dialog = dialogBuilder.create()
-                dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-                dialog.setCanceledOnTouchOutside(true)
-
-                view.apply {
-                    if (negativeText.isEmpty()) {
-                        //remove the negative button
-                        Log.d("Alert", "Negative Text is Empty")
-                        btn_custom_alert_negative.visibility = View.GONE
-
-                        val set = ConstraintSet()
-                        val layout = custom_alert_view as ConstraintLayout
-                        set.clone(layout)
-                        // remove all connections.
-                        set.clear(R.id.btn_custom_alert_positive, ConstraintSet.END)
-                        set.clear(R.id.btn_custom_alert_positive, ConstraintSet.START)
-                        //center it
-                        set.connect(
-                            R.id.btn_custom_alert_positive,
-                            ConstraintSet.END,
-                            R.id.custom_alert_view,
-                            ConstraintSet.END
-                        )
-                        set.connect(
-                            R.id.btn_custom_alert_positive,
-                            ConstraintSet.START,
-                            R.id.custom_alert_view,
-                            ConstraintSet.START
-                        )
-                        set.applyTo(layout)
-                    }
-
-                    btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
-                    btn_custom_alert_positive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
-                    btn_custom_alert_negative.text = negativeText
-                    btn_custom_alert_positive.text = positiveText
-                    //for theme changing
-                    btn_custom_alert_positive.background.setTint(accentColor)
-                    tv_custom_alert_message.text = message
-                    tv_custom_alert_title.text = title
-                }
+                btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
+                btn_custom_alert_positive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
+                btn_custom_alert_negative.text = negativeText
+                btn_custom_alert_positive.text = positiveText
+                //for theme changing
+                btn_custom_alert_positive.background.setTint(accentColor)
+                tv_custom_alert_message.text = message
+                tv_custom_alert_title.text = title
             }
+
 
             return dialog
         }

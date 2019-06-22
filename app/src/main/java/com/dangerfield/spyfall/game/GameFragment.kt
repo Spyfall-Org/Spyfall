@@ -20,7 +20,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
-import kotlinx.android.synthetic.main.item_simple_card.*
 
 
 class GameFragment : Fragment() {
@@ -47,7 +46,7 @@ class GameFragment : Fragment() {
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
                     //show alert when user presses back
-                    UIHelper.customAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
+                    UIHelper.customSimpleAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
                         "Leave", {endGame()},"Stay",{}).show()
                 }
             })
@@ -92,7 +91,7 @@ class GameFragment : Fragment() {
         changeAccent()
 
         //we set the listeners once the view has actually been inflated
-        btn_end_game.setOnClickListener { UIHelper.customAlert(context!!,"Ending Game","Are you sure you want to end the game?",
+        btn_end_game.setOnClickListener { UIHelper.customSimpleAlert(context!!,"Ending Game","Are you sure you want to end the game?",
             "End", {endGame()},"Cancel",{}).show()}
 
         btn_play_again.setOnClickListener{
@@ -170,7 +169,7 @@ class GameFragment : Fragment() {
             layoutManager = GridLayoutManager(context, 2) }
 
         //attaches observer after the locations adapter is actually initialized
-        viewModel.getAllLocations().observe(viewLifecycleOwner, androidx.lifecycle.Observer { locations ->
+        viewModel.getAllGameLocations().observe(viewLifecycleOwner, androidx.lifecycle.Observer { locations ->
             locationsAdapter.items = locations
         })
     }
