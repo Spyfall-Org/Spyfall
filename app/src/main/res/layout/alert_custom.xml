@@ -9,6 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:isScrollContainer="true"
             android:background="@color/colorBackgroundLight"
             android:id="@+id/custom_alert_view">
 
@@ -31,7 +32,7 @@
                 android:textColor="@android:color/secondary_text_light"
                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/alert_guidline"
                 android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert_message"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false" android:textSize="18sp"/>
         <Button
                 android:text="Okay"
                 android:layout_width="wrap_content"
@@ -42,7 +43,7 @@
                 android:layout_marginBottom="24dp" app:layout_constraintVertical_bias="0.0"
                 android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="@+id/alert_guidline" android:layout_marginStart="8dp"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false" android:textSize="18sp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

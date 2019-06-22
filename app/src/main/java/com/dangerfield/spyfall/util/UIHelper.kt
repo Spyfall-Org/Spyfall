@@ -15,12 +15,20 @@ import androidx.constraintlayout.widget.ConstraintSet
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.alert_custom.view.*
 import android.graphics.PorterDuff
+import android.text.Layout.JUSTIFICATION_MODE_INTER_WORD
+import android.util.TypedValue
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import android.widget.EditText
-
-
+import android.widget.ListView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.dangerfield.spyfall.newGame.SimpleAdapter
+import org.w3c.dom.Text
+import java.util.ArrayList
 
 
 class UIHelper {
@@ -97,6 +105,48 @@ class UIHelper {
                     set.applyTo(layout)
                 }
 
+
+                if(title == "Packs"){
+                    Log.d("Custom alerts","Setting packs view")
+                    val constraints = ConstraintSet()
+
+                    val tv_pack_1 = BoldText(context,"Standard pack 1:")
+                    val list = listOf("Construction Site","Construction Site","Construction Site","Construction Site"
+                    ,"Construction Site","Construction Site","Construction Site","Construction Site")
+
+                    val recyclerView = RecyclerView(context)
+                    recyclerView.id = View.generateViewId()
+                    recyclerView.layoutManager = GridLayoutManager(context,2)
+                    recyclerView.adapter = SimpleAdapter(list as ArrayList<String>, context)
+
+
+                    custom_alert_view.addView(tv_pack_1)
+                    custom_alert_view.addView(recyclerView)
+
+
+                    constraints.clone(custom_alert_view)
+
+
+                    constraints.connect(tv_pack_1.id,ConstraintSet.START,R.id.tv_custom_alert_message,ConstraintSet.START)
+                    constraints.connect(tv_pack_1.id,ConstraintSet.TOP,R.id.tv_custom_alert_message,ConstraintSet.BOTTOM,24f.dp(context))
+
+                    constraints.clear(R.id.btn_custom_alert_positive, ConstraintSet.TOP)
+
+                    constraints.connect(recyclerView.id,ConstraintSet.START,R.id.tv_custom_alert_message,ConstraintSet.START)
+                    constraints.connect(recyclerView.id,ConstraintSet.END,R.id.tv_custom_alert_message,ConstraintSet.END)
+                    constraints.connect(recyclerView.id,ConstraintSet.TOP,tv_pack_1.id,ConstraintSet.BOTTOM)
+
+                    constraints.constrainDefaultWidth(recyclerView.id, ConstraintSet.MATCH_CONSTRAINT)
+                    constraints.constrainDefaultHeight(recyclerView.id,  ConstraintSet.WRAP_CONTENT)
+
+
+                    constraints.connect(R.id.btn_custom_alert_positive,ConstraintSet.TOP,recyclerView.id,ConstraintSet.BOTTOM)
+
+
+                    constraints.applyTo(custom_alert_view)
+
+                }
+
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
                 btn_custom_alert_positive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
                 btn_custom_alert_negative.text = negativeText
@@ -135,6 +185,13 @@ class UIHelper {
             }
 
         }
+
+
+        fun Float.dp(context: Context) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            this, context.resources.displayMetrics).toInt()
+
+
+
     }
 
 }

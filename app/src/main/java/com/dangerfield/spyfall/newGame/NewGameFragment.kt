@@ -51,6 +51,11 @@ class NewGameFragment : Fragment() {
 
         btn_create.setOnClickListener { createGame() }
 
+        btn_packs.setOnClickListener{
+            UIHelper.customAlert(context!!,"Packs",resources.getString(R.string.string_pack_description),"Okay",{},"",{}).show()
+
+        }
+
         configurePacksAdapter()
 
 
@@ -136,6 +141,11 @@ class NewGameFragment : Fragment() {
 
     private fun changeAccent(){
         btn_create.background.setTint(UIHelper.accentColor)
+
+        val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
+        drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
+        btn_packs.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        btn_packs.setTextColor(UIHelper.accentColor)
 
         UIHelper.setCursorColor(tv_new_game_name,UIHelper.accentColor)
 
