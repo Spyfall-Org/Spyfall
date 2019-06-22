@@ -1,15 +1,14 @@
 <resources>
 
     <string name="app_name">Spyfall</string>
-    <string name="string_welcome">Welcome to Spyfall</string>
     <string name="string_locations">Locations</string>
     <string name="string_hide">hide</string>
     <string name="string_show">show</string>
     <string name="string_waiting">Waiting for players...</string>
 
 
-    <string name="string_name_game_name_hint"><u>Enter Name</u></string>
-    <string name="string_join_access_hint"><u>Enter an access code</u></string>
+    <string name="string_name_game_name_hint"><u>Username</u></string>
+    <string name="string_join_access_hint"><u>Access code</u></string>
     <string name="string_join_name_hint"><u>Enter a username</u></string>
     <string name="string_change_name_hint"><u>Enter a username</u></string>
 

@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.joinGame
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,14 @@ import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_join_game.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withTimeout
+import java.util.*
+import kotlin.collections.ArrayList
 
 class JoinGameFragment : Fragment() {
 
@@ -110,4 +118,5 @@ class JoinGameFragment : Fragment() {
         pb_join_game.visibility = View.INVISIBLE
         btn_join_game_action.isClickable = true
     }
+
 }

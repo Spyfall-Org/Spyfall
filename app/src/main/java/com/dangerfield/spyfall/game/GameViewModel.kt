@@ -89,8 +89,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun assignRolesAndStartGame() {
-        //keeps other users from creating the game
-        if(!gameObject.value!!.started) gameRef.update("started", true) else return
+        //TODO: findout how to flag started to disable creat clicks here
 
         val chosenPacks = gameObject.value!!.chosenPacks
         val location = gameObject.value!!.chosenLocation

@@ -147,8 +147,8 @@ class GameFragment : Fragment() {
             }
 
             override fun onFinish() {
-                tv_game_timer.text = "done!"
-                showPlayAgain()
+                tv_game_timer.text = "Spy: Reveal Yourself!"
+                btn_play_again.visibility = View.VISIBLE
             }
         }.start()
 
@@ -197,22 +197,6 @@ class GameFragment : Fragment() {
         tv_game_role.text = "Role: ${currentPlayer.role}"
 
         return viewModel.gameObject.value!!.playerObjectList[0].username
-    }
-
-    fun showPlayAgain(){
-
-        val padding = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics
-        ).roundToInt()
-        val set = ConstraintSet()
-        val layout = game_layout as ConstraintLayout
-        set.clone(layout)
-        // The following breaks the connection.
-        set.clear(R.id.btn_end_game, ConstraintSet.END)
-        set.clear(R.id.btn_end_game, ConstraintSet.START)
-        set.connect(R.id.btn_end_game,ConstraintSet.END,R.id.view_center,ConstraintSet.START,padding)
-        set.applyTo(layout)
-        btn_play_again.visibility = View.VISIBLE
     }
 
 }

@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.newGame
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,16 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.util.UIHelper
 
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.game.GameViewsAdapter
 import com.dangerfield.spyfall.models.Game
+import com.dangerfield.spyfall.models.GamePack
+import kotlinx.android.synthetic.main.fragment_game.*
+import kotlinx.android.synthetic.main.item_pack.view.*
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -22,6 +28,7 @@ import kotlin.collections.ArrayList
 class NewGameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
+    private lateinit var packsAdapter: PacksAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,18 +52,36 @@ class NewGameFragment : Fragment() {
         tv_new_game_time.onFocusChangeListener = UIHelper.keyboardHider
 
         btn_create.setOnClickListener { createGame() }
+
+        configurePacksAdapter()
+
+
+    }
+
+    private fun configurePacksAdapter(){
+
+        var packs = mutableListOf<GamePack>()
+
+        packs.add(GamePack(resources.getColor(R.color.colorPink),"Standard",1,"pack 1",false))
+        packs.add(GamePack(resources.getColor(R.color.colorGreen),"Standard",2,"pack 2",false))
+        packs.add(GamePack(resources.getColor(R.color.colorYellow),"Special",1,"special pack",false))
+
+        rv_packs.apply{
+            layoutManager = GridLayoutManager(context, 3)
+            packsAdapter = PacksAdapter(packs as ArrayList<GamePack>,context!!)
+            adapter = packsAdapter
+            setHasFixedSize(true)
+        }
     }
 
     private fun createGame(){
 
         val timeLimit = tv_new_game_time.text.toString().trim()
         val playerName = tv_new_game_name.text.toString().trim()
-        val chosenPacks = ArrayList<String>()
-
         //these strings will be used for queries of the firestore database for which locations to include
-        if(cb_pack1.isChecked) chosenPacks.add("pack 1")
-        if(cb_pack2.isChecked) chosenPacks.add("pack 2")
-        if(cb_special_pack.isChecked) chosenPacks.add("special pack")
+        var chosenPacks = packsAdapter.packs.filter {it.isSelected}.map { it.queryString } as ArrayList<String>
+
+
 
         when {
             chosenPacks.isEmpty() -> {Toast.makeText(context,"Please select a pack", Toast.LENGTH_LONG).show()

@@ -9,7 +9,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.dangerfield.spyfall"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -21,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility = '1.8'
+        sourceCompatibility = '1.8'
+    }
 
     androidExtensions {
         experimental = true
@@ -31,8 +35,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
-    implementation 'androidx.core:core-ktx:1.2.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
+    implementation 'androidx.core:core-ktx:1.2.0-alpha02'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     //firebase libraries
@@ -42,6 +46,10 @@ dependencies {
 
     //that sweet sweet kotlin coroutines library
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-M1'
+
+    //lottie for animations
+    implementation "com.airbnb.android:lottie:$lottie_version"
+
 
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
