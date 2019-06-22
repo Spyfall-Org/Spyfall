@@ -17,7 +17,6 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
-import kotlinx.android.synthetic.main.fragment_join_game.*
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
 import kotlin.collections.ArrayList

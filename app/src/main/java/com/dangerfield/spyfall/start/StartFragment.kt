@@ -30,8 +30,6 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        changeAccent()
-
         navController = NavHostFragment.findNavController(this)
 
         btn_new_game.setOnClickListener {
@@ -45,6 +43,13 @@ class StartFragment : Fragment() {
         btn_rules.setOnClickListener{
             UIHelper.customAlert(context!!,"Rules",resources.getString(R.string.string_rules),"Okay",{},"",{}).show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        UIHelper.accentColor = UIHelper.randomAccentColor()
+        changeAccent()
     }
 
 
