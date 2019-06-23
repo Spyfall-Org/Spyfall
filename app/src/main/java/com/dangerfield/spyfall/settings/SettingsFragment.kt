@@ -19,9 +19,7 @@ import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_message
 import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_title
 import kotlinx.android.synthetic.main.fragment_settings.*
 import android.content.Context.MODE_PRIVATE
-
-
-
+import android.widget.Toast
 
 
 class SettingsFragment : Fragment() {
@@ -70,11 +68,15 @@ class SettingsFragment : Fragment() {
             btn_custom_alert_negative.setOnClickListener { dialog.cancel() }
 
             btn_custom_alert_positive.setOnClickListener {
-                val chosenColor = colorChangeAdapter.colors[colorChangeAdapter.selectedPosition].color
-                UIHelper.accentColor = chosenColor
-                saveColor(chosenColor)
-                dialog.dismiss() }
-
+                if(colorChangeAdapter.selectedPosition != -1) {
+                    val chosenColor = colorChangeAdapter.colors[colorChangeAdapter.selectedPosition].color
+                    UIHelper.accentColor = chosenColor
+                    saveColor(chosenColor)
+                    dialog.dismiss()
+                }else{
+                    Toast.makeText(context!!,"No Color was selected",Toast.LENGTH_LONG).show()
+                }
+            }
             btn_custom_alert_negative.text = "Cancel"
             btn_custom_alert_positive.text = "Change"
             //for theme changing
