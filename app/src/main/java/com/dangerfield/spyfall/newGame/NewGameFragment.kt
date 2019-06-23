@@ -153,6 +153,8 @@ class NewGameFragment : Fragment() {
 
         UIHelper.setCursorColor(tv_new_game_name,UIHelper.accentColor)
 
+        UIHelper.setCursorColor(tv_new_game_time,UIHelper.accentColor)
+
         pb_new_game.indeterminateDrawable
             .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
 
