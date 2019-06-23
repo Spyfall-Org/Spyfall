@@ -20,23 +20,24 @@ import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_title
 import kotlinx.android.synthetic.main.fragment_settings.*
 import android.content.Context.MODE_PRIVATE
 import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import java.util.Collections.list
 
 
 class SettingsFragment : Fragment() {
 
     lateinit var colors: MutableList<ColorButton>
     lateinit var colorChangeAdapter: ColorChangeAdapter
+    lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         colors = mutableListOf()
-        colors.add(ColorButton(Color.parseColor("#C388B3"),false))
-        colors.add(ColorButton(Color.parseColor("#D65656"),false))
-        colors.add(ColorButton(Color.parseColor("#F56E16"),false))
-        colors.add(ColorButton(Color.parseColor("#39A80C"),false))
-        colors.add(ColorButton(Color.parseColor("#009BFF"),false))
-        colors.add(ColorButton(Color.parseColor("#634FEC"),false))
+        UIHelper.accentColors.forEach { colors.add(ColorButton(it,false)) }
+        //this is a flag for random colors
+        colors.add(ColorButton(Color.WHITE,false))
         colorChangeAdapter = ColorChangeAdapter(colors, context)
+
 
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
@@ -44,10 +45,13 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navController = Navigation.findNavController(parentFragment!!.view!!)
+
         btn_theme_change.setOnClickListener{
            showColorChangeDialog()
         }
     }
+
 
     fun showColorChangeDialog(){
         val dialogBuilder = AlertDialog.Builder(context!!)
@@ -70,7 +74,8 @@ class SettingsFragment : Fragment() {
             btn_custom_alert_positive.setOnClickListener {
                 if(colorChangeAdapter.selectedPosition != -1) {
                     val chosenColor = colorChangeAdapter.colors[colorChangeAdapter.selectedPosition].color
-                    UIHelper.accentColor = chosenColor
+                    //color white is the flag for random colors
+                    UIHelper.accentColor = if(chosenColor == Color.WHITE) UIHelper.accentColors.random() else chosenColor
                     saveColor(chosenColor)
                     dialog.dismiss()
                 }else{

@@ -32,6 +32,14 @@ class UIHelper {
 
         var accentColor: Int = Color.parseColor("#D65656")
 
+        var accentColors =
+            mutableListOf(Color.parseColor("#C388B3"),
+        Color.parseColor("#D65656"),
+        Color.parseColor("#F56E16"),
+        Color.parseColor("#39A80C"),
+        Color.parseColor("#009BFF"),
+        Color.parseColor("#634FEC"))
+
 
         val keyboardHider = View.OnFocusChangeListener { view, b ->
             if (!b) {

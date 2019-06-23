@@ -20,5 +20,10 @@
             android:id="@+id/color_change_check_animation"
             android:layout_gravity="center"
             app:lottie_fileName="check_animation.json"/>
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/tv_change_color_type" android:gravity="center"
+            android:layout_gravity="center" android:textSize="12sp"/>
 
 </androidx.cardview.widget.CardView>

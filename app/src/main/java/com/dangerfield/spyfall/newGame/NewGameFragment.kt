@@ -176,9 +176,8 @@ class NewGameFragment : Fragment() {
                     completedTasks += 1
                     if(completedTasks == packNames.size){
                         //then youre done
-                        enterMode()
                         UIHelper.packsDialog(context!!,list).show()
-
+                        enterMode()
                     }
                 }
             }
