@@ -22,13 +22,15 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
+import com.dangerfield.spyfall.settings.ColorButton
+import com.dangerfield.spyfall.settings.ColorChangeAdapter
 
 
 class UIHelper {
 
     companion object {
 
-        var accentColor: Int = randomAccentColor()
+        var accentColor: Int = Color.parseColor("#D65656")
 
 
         val keyboardHider = View.OnFocusChangeListener { view, b ->
@@ -37,20 +39,6 @@ class UIHelper {
             }
         }
 
-        fun randomAccentColor(): Int {
-
-            var colors = mutableListOf<Int>()
-            colors.add(Color.parseColor("#C388B3"))
-            colors.add(Color.parseColor("#D65656"))
-            colors.add(Color.parseColor("#F56E16"))
-            colors.add(Color.parseColor("#39A80C"))
-            colors.add(Color.parseColor("#009BFF"))
-            colors.add(Color.parseColor("#BB5DBD"))
-            colors.add(Color.parseColor("#634FEC"))
-
-            return colors.random()
-
-        }
 
         private fun hideKeyboardFrom(view: View) {
             val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -72,15 +60,15 @@ class UIHelper {
             //TOD DO THIS WE MIGHT HAVE TO MAKE THE PARENT VIEW A LINEAR LAYOUT
 
             view.apply{
-                rv_dialog_pack1.adapter = SimpleAdapter(packsList[2], context)
+                rv_dialog_pack1.adapter = SimpleTextAdapter(packsList[2], context)
                 rv_dialog_pack1.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack1.setHasFixedSize(true)
 
-                rv_dialog_pack2.adapter = SimpleAdapter(packsList[1], context)
+                rv_dialog_pack2.adapter = SimpleTextAdapter(packsList[1], context)
                 rv_dialog_pack2.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack2.setHasFixedSize(true)
 
-                rv_dialog_pack3.adapter = SimpleAdapter(packsList[0], context)
+                rv_dialog_pack3.adapter = SimpleTextAdapter(packsList[0], context)
                 rv_dialog_pack3.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack3.setHasFixedSize(true)
 

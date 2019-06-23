@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall
 
+import android.content.Context
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.util.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
+import android.content.SharedPreferences
+import com.dangerfield.spyfall.util.UIHelper
+
 
 class MainActivity : AppCompatActivity(){
 
@@ -28,6 +32,7 @@ class MainActivity : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
+        getSavedColor()
         register()
     }
 
@@ -49,6 +54,14 @@ class MainActivity : AppCompatActivity(){
         val intentFilter = IntentFilter()
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(receiver,intentFilter)
+    }
+
+    private fun getSavedColor(){
+        val prefs = getSharedPreferences(resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
+        val savedColor: Int = prefs.getInt(resources.getString(R.string.shared_preferences_color), 0)
+        if (savedColor != 0) {
+            UIHelper.accentColor = savedColor
+        }
     }
 
 }

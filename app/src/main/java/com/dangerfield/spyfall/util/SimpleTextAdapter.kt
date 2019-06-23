@@ -12,7 +12,7 @@ import com.dangerfield.spyfall.R
 /**
  * Created by ELIJAH DANGERFIELD on 05/7/2019.
  */
-class SimpleAdapter(var list: List<String>, private var context: Context?) : RecyclerView.Adapter<SimpleAdapter.ViewHolder>() {
+class SimpleTextAdapter(var list: List<String>, private var context: Context?) : RecyclerView.Adapter<SimpleTextAdapter.ViewHolder>() {
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

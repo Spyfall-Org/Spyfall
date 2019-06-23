@@ -43,12 +43,14 @@ class StartFragment : Fragment() {
         btn_rules.setOnClickListener{
             UIHelper.customSimpleAlert(context!!,"Rules",resources.getString(R.string.string_rules),"Okay",{},"",{}).show()
         }
+
+        btn_settings.setOnClickListener{
+            navController.navigate(R.id.action_startFragment_to_settingsFragment)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-
-        UIHelper.accentColor = UIHelper.randomAccentColor()
         changeAccent()
     }
 
