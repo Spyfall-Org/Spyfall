@@ -3,7 +3,6 @@ package com.dangerfield.spyfall.util
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
@@ -13,20 +12,22 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.alert_custom.view.*
 import kotlinx.android.synthetic.main.dialog_packs.view.*
 import android.graphics.PorterDuff
-import android.text.util.Linkify
 import android.util.TypedValue
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
-import com.dangerfield.spyfall.settings.ColorButton
-import com.dangerfield.spyfall.settings.ColorChangeAdapter
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings.Global.getString
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import com.dangerfield.spyfall.R
 
 
 class UIHelper {
@@ -141,8 +142,14 @@ class UIHelper {
                 }
 
                 if(title.trim() == "About"){
+
+                    btn_email.text = Html.fromHtml("<a href=\"mailto:"+"spyfallmobile@gmail.com"+"?subject="+"Comment from Android user"+"\" >"+"spyfallmobile@gmail.com"+"</a>");
+                    btn_email.movementMethod = (LinkMovementMethod.getInstance())
                     //adds text view to bottom of layout
-                    tv_email.visibility = View.VISIBLE
+                    btn_email.visibility = View.VISIBLE
+//                    btn_email.setOnClickListener{
+//                        takeToEmail(context)
+//                    }
                 }
 
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
@@ -186,7 +193,29 @@ class UIHelper {
 
         }
 
+        private fun takeToEmail(context: Context){
+
+            val subject = "Comment from Android User"
+            val bodyText = "Dear Spyfall mobile creators, "
+            val mailto = "mailto:spyfallmobile@gmail.com" +
+                    "&subject=" + Uri.encode(subject) +
+                    "&body=" + Uri.encode(bodyText)
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse(mailto)
+
+            try {
+                context.startActivity(emailIntent)
+            } catch (e: ActivityNotFoundException) {
+                customSimpleAlert(context,"Something went wrong",
+                    "We are sorry something went wrong while taking you to your email.",
+                    "Okay",{},"",{}).show()
+            }
+
+        }
+
     }
+
 
 }
 
