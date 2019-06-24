@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.util
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
@@ -47,6 +48,15 @@ class UIHelper {
             if (!b) {
                 this.hideKeyboardFrom(view)
             }
+        }
+
+        fun getSavedColor(context: Context){
+            val prefs = context.getSharedPreferences(context.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
+            val savedColor: Int = prefs.getInt(context.resources.getString(R.string.shared_preferences_color), 0)
+            if (savedColor != 0) {
+                accentColor = if(savedColor == Color.WHITE) accentColors.random() else savedColor
+            }
+
         }
 
 

@@ -10,8 +10,10 @@ import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.util.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.Color
 import com.dangerfield.spyfall.util.UIHelper
+import com.dangerfield.spyfall.util.UIHelper.Companion.getSavedColor
 
 
 class MainActivity : AppCompatActivity(){
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
-        getSavedColor()
+        //getSavedColor(applicationContext)
         register()
     }
 
@@ -57,13 +59,5 @@ class MainActivity : AppCompatActivity(){
         registerReceiver(receiver,intentFilter)
     }
 
-    private fun getSavedColor(){
-        val prefs = getSharedPreferences(resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
-        val savedColor: Int = prefs.getInt(resources.getString(R.string.shared_preferences_color), 0)
-        if (savedColor != 0) {
-            UIHelper.accentColor = if(savedColor == Color.WHITE) UIHelper.accentColors.random() else savedColor
-        }
-
-    }
 
 }

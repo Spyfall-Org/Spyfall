@@ -13,13 +13,9 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import kotlinx.android.synthetic.main.fragment_start.*
 
-
-
-
-
 class StartFragment : Fragment() {
 
-    lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -51,6 +47,7 @@ class StartFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        UIHelper.getSavedColor(context!!)
         changeAccent()
     }
 
