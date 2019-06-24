@@ -1,6 +1,7 @@
 package com.dangerfield.spyfall.game
 
 import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -20,6 +21,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
+import kotlinx.android.synthetic.main.fragment_new_game.*
+import kotlinx.android.synthetic.main.item_simple_card.*
 
 
 class GameFragment : Fragment() {
@@ -119,7 +122,6 @@ class GameFragment : Fragment() {
         }
     }
 
-
     private fun hide(){
         if(tv_game_role.visibility == View.VISIBLE){
             tv_game_role.visibility = View.GONE
@@ -202,6 +204,8 @@ class GameFragment : Fragment() {
     private fun changeAccent(){
         btn_end_game.background.setTint(UIHelper.accentColor)
         btn_hide.background.setTint(UIHelper.accentColor)
+
+
     }
 
 }

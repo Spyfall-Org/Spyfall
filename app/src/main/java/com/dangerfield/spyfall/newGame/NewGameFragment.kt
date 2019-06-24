@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.newGame
 
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -115,6 +116,11 @@ class NewGameFragment : Fragment() {
         if(viewModel.hasNetworkConnection) {
 
             //TODO: consider timeout function here
+            Handler().postDelayed({
+                if(navController.currentDestination?.id == R.id.newGameFragment){
+
+            }
+            }, 5000)
             loadMode()
 
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
