@@ -43,5 +43,10 @@
     <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
     <string name="shared_preferences">SHARED_PREFERNCES</string>
 
+    <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of
+        the board game is developed and maintained by Josiah Rininger(iOS) and Elijah Dangerfield(Android). Any questions or concerns may be sent here: </string>
+
+    <string name="remove_ads_message">To remove ads, please upgrade to the premium version of Spyfall</string>
+
 
 </resources>

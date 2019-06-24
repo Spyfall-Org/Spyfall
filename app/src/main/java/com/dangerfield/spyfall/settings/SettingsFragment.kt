@@ -17,12 +17,12 @@ import kotlinx.android.synthetic.main.alert_custom.view.btn_custom_alert_negativ
 import kotlinx.android.synthetic.main.alert_custom.view.btn_custom_alert_positive
 import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_message
 import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_title
-import kotlinx.android.synthetic.main.fragment_settings.*
 import android.content.Context.MODE_PRIVATE
+import android.graphics.PorterDuff
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import java.util.Collections.list
+import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 class SettingsFragment : Fragment() {
@@ -50,9 +50,22 @@ class SettingsFragment : Fragment() {
         btn_theme_change.setOnClickListener{
            showColorChangeDialog()
         }
+
+        val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
+        drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+        ic_about.setImageDrawable(drawable)
+
+        btn_about.setOnClickListener{
+            UIHelper.customSimpleAlert(context!!,"About",resources.getString(R.string.about_message),"Okay",{},"",{}).show()
+        }
+
+        btn_ads.setOnClickListener{
+            UIHelper.customSimpleAlert(context!!,"Remove ads?",resources.getString(R.string.remove_ads_message),"Upgrade",{},"Cancel",{}).show()
+        }
     }
 
 
+    //TODO: consider making a view model for this
     fun showColorChangeDialog(){
         val dialogBuilder = AlertDialog.Builder(context!!)
         var view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)

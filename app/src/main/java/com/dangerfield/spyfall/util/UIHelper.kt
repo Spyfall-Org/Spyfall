@@ -16,7 +16,9 @@ import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.alert_custom.view.*
 import kotlinx.android.synthetic.main.dialog_packs.view.*
 import android.graphics.PorterDuff
+import android.text.util.Linkify
 import android.util.TypedValue
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -126,6 +128,11 @@ class UIHelper {
                         ConstraintSet.START
                     )
                     set.applyTo(layout)
+                }
+
+                if(title.trim() == "About"){
+                    //adds text view to bottom of layout
+                    tv_email.visibility = View.VISIBLE
                 }
 
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
