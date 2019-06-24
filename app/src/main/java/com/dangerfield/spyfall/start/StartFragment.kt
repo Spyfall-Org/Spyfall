@@ -13,13 +13,9 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import kotlinx.android.synthetic.main.fragment_start.*
 
-
-
-
-
 class StartFragment : Fragment() {
 
-    lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -43,12 +39,15 @@ class StartFragment : Fragment() {
         btn_rules.setOnClickListener{
             UIHelper.customSimpleAlert(context!!,"Rules",resources.getString(R.string.string_rules),"Okay",{},"",{}).show()
         }
+
+        btn_settings.setOnClickListener{
+            navController.navigate(R.id.action_startFragment_to_settingsFragment)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-
-        UIHelper.accentColor = UIHelper.randomAccentColor()
+        UIHelper.getSavedColor(context!!)
         changeAccent()
     }
 

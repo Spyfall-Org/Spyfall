@@ -28,7 +28,7 @@ class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?
         init {
             number = view.findViewById(R.id.tv_pack_number)
             packType = view.findViewById(R.id.tv_pack_type)
-             background = view.findViewById(R.id.card_background)
+            background = view.findViewById(R.id.card_background)
 
             context = view.context
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/nav_graph" app:startDestination="@id/startFragment">
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph" app:startDestination="@id/startFragment">
 
     <fragment android:id="@+id/startFragment" android:name="com.dangerfield.spyfall.start.StartFragment"
               android:label="StartFragment">
         <action android:id="@+id/action_startFragment_to_joinGameFragment" app:destination="@id/joinGameFragment"/>
         <action android:id="@+id/action_startFragment_to_newGameFragment" app:destination="@id/newGameFragment"/>
+        <action android:id="@+id/action_startFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
     </fragment>
 
     <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.newGame.NewGameFragment"
@@ -27,5 +28,7 @@
 
     <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.game.GameFragment"
               android:label="GameFragment"/>
+    <fragment android:id="@+id/settingsFragment" android:name="com.dangerfield.spyfall.settings.SettingsFragment"
+              android:label="fragment_settings" tools:layout="@layout/fragment_settings"/>
 
 </navigation>

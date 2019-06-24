@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.alert_custom.view.*
 import kotlinx.android.synthetic.main.dialog_packs.view.*
 import android.graphics.PorterDuff
@@ -22,13 +21,28 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings.Global.getString
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import com.dangerfield.spyfall.R
 
 
 class UIHelper {
 
     companion object {
 
-        var accentColor: Int = randomAccentColor()
+        var accentColor: Int = Color.parseColor("#D65656")
+
+        var accentColors =
+            mutableListOf(Color.parseColor("#C388B3"),
+        Color.parseColor("#D65656"),
+        Color.parseColor("#F56E16"),
+        Color.parseColor("#39A80C"),
+        Color.parseColor("#009BFF"),
+        Color.parseColor("#634FEC"))
 
 
         val keyboardHider = View.OnFocusChangeListener { view, b ->
@@ -37,20 +51,15 @@ class UIHelper {
             }
         }
 
-        fun randomAccentColor(): Int {
-
-            var colors = mutableListOf<Int>()
-            colors.add(Color.parseColor("#C388B3"))
-            colors.add(Color.parseColor("#D65656"))
-            colors.add(Color.parseColor("#F56E16"))
-            colors.add(Color.parseColor("#39A80C"))
-            colors.add(Color.parseColor("#009BFF"))
-            colors.add(Color.parseColor("#BB5DBD"))
-            colors.add(Color.parseColor("#634FEC"))
-
-            return colors.random()
+        fun getSavedColor(context: Context){
+            val prefs = context.getSharedPreferences(context.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
+            val savedColor: Int = prefs.getInt(context.resources.getString(R.string.shared_preferences_color), 0)
+            if (savedColor != 0) {
+                accentColor = if(savedColor == Color.WHITE) accentColors.random() else savedColor
+            }
 
         }
+
 
         private fun hideKeyboardFrom(view: View) {
             val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -72,15 +81,15 @@ class UIHelper {
             //TOD DO THIS WE MIGHT HAVE TO MAKE THE PARENT VIEW A LINEAR LAYOUT
 
             view.apply{
-                rv_dialog_pack1.adapter = SimpleAdapter(packsList[2], context)
+                rv_dialog_pack1.adapter = SimpleTextAdapter(packsList[2], context)
                 rv_dialog_pack1.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack1.setHasFixedSize(true)
 
-                rv_dialog_pack2.adapter = SimpleAdapter(packsList[1], context)
+                rv_dialog_pack2.adapter = SimpleTextAdapter(packsList[1], context)
                 rv_dialog_pack2.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack2.setHasFixedSize(true)
 
-                rv_dialog_pack3.adapter = SimpleAdapter(packsList[0], context)
+                rv_dialog_pack3.adapter = SimpleTextAdapter(packsList[0], context)
                 rv_dialog_pack3.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack3.setHasFixedSize(true)
 
@@ -132,6 +141,17 @@ class UIHelper {
                     set.applyTo(layout)
                 }
 
+                if(title.trim() == "About"){
+
+                    btn_email.text = Html.fromHtml("<a href=\"mailto:"+"spyfallmobile@gmail.com"+"?subject="+"Comment from Android user"+"\" >"+"spyfallmobile@gmail.com"+"</a>");
+                    btn_email.movementMethod = (LinkMovementMethod.getInstance())
+                    //adds text view to bottom of layout
+                    btn_email.visibility = View.VISIBLE
+//                    btn_email.setOnClickListener{
+//                        takeToEmail(context)
+//                    }
+                }
+
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
                 btn_custom_alert_positive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
                 btn_custom_alert_negative.text = negativeText
@@ -173,7 +193,29 @@ class UIHelper {
 
         }
 
+        private fun takeToEmail(context: Context){
+
+            val subject = "Comment from Android User"
+            val bodyText = "Dear Spyfall mobile creators, "
+            val mailto = "mailto:spyfallmobile@gmail.com" +
+                    "&subject=" + Uri.encode(subject) +
+                    "&body=" + Uri.encode(bodyText)
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse(mailto)
+
+            try {
+                context.startActivity(emailIntent)
+            } catch (e: ActivityNotFoundException) {
+                customSimpleAlert(context,"Something went wrong",
+                    "We are sorry something went wrong while taking you to your email.",
+                    "Okay",{},"",{}).show()
+            }
+
+        }
+
     }
+
 
 }
 

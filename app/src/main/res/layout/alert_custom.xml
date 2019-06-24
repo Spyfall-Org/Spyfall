@@ -2,7 +2,7 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_dialog">
 
@@ -30,20 +30,21 @@
                 android:id="@+id/btn_custom_alert_negative"
                 android:background="@drawable/background_button_white"
                 android:textColor="@android:color/secondary_text_light"
-                android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/alert_guidline"
-                android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert_message"
-                android:textAllCaps="false" android:textSize="18sp"/>
+                android:layout_marginEnd="4dp" app:layout_constraintEnd_toStartOf="@+id/alert_guidline"
+                android:textAllCaps="false" android:textSize="18sp" android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/btn_email"/>
         <Button
                 android:text="Okay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_custom_alert_positive"
-                app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert_message" android:layout_marginTop="24dp"
                 android:background="@drawable/background_button_accent" app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="24dp" app:layout_constraintVertical_bias="0.0"
+                android:layout_marginBottom="16dp"
                 android:textColor="@android:color/white"
-                app:layout_constraintStart_toStartOf="@+id/alert_guidline" android:layout_marginStart="8dp"
-                android:textAllCaps="false" android:textSize="18sp"/>
+                app:layout_constraintStart_toStartOf="@+id/alert_guidline" android:layout_marginStart="12dp"
+                android:textAllCaps="false" android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@+id/btn_email"
+                app:layout_constraintVertical_bias="1.0" android:layout_marginTop="16dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,6 +58,24 @@
         <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
                                                     android:id="@+id/alert_guidline"
                                                     android:orientation="vertical" app:layout_constraintGuide_percent=".5"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/tv_custom_alert_message"
+                app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert_message"
+                app:layout_constraintEnd_toEndOf="@+id/tv_custom_alert_message" android:layout_marginEnd="8dp"
+                android:id="@+id/rv_color_change" android:layout_marginTop="16dp"
+                app:layout_constraintHorizontal_bias="0.511" android:visibility="gone"/>
+        <TextView
+                android:text="Spyfallmobile@gmail.com"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:id="@+id/btn_email" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/rv_color_change" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" android:textColor="@android:color/holo_blue_dark"
+                android:autoLink="email" android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

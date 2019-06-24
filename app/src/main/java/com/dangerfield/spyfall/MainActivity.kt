@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall
 
+import android.content.Context
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.util.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
+import android.content.SharedPreferences
+import android.content.res.Resources
+import android.graphics.Color
+import com.dangerfield.spyfall.util.UIHelper
+import com.dangerfield.spyfall.util.UIHelper.Companion.getSavedColor
+
 
 class MainActivity : AppCompatActivity(){
 
@@ -28,6 +35,7 @@ class MainActivity : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
+        //getSavedColor(applicationContext)
         register()
     }
 
@@ -50,5 +58,6 @@ class MainActivity : AppCompatActivity(){
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(receiver,intentFilter)
     }
+
 
 }

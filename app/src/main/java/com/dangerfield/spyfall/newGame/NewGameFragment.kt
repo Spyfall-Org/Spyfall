@@ -164,6 +164,10 @@ class NewGameFragment : Fragment() {
 
         //we also might consider a different structure for the backend where the packs are kept in on collection
         //TODO: consider timeout funciton to just show dialog with hard coded data
+        /*
+        What i want: I want a function that after 5 seconds will show an error toast and cancel the firebase que if
+        th request hasnt gone through yet
+         */
         loadMode()
         val list = mutableListOf<List<String>>()
         viewModel.getPackNames().addOnSuccessListener {
@@ -178,13 +182,11 @@ class NewGameFragment : Fragment() {
                     completedTasks += 1
                     if(completedTasks == packNames.size){
                         //then youre done
-                        enterMode()
                         UIHelper.packsDialog(context!!,list).show()
-
+                        enterMode()
                     }
                 }
             }
-
 
         }
     }

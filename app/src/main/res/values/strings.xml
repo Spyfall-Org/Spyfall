@@ -2,15 +2,27 @@
 
     <string name="app_name">Spyfall</string>
     <string name="string_locations">Locations</string>
-    <string name="string_hide">hide</string>
-    <string name="string_show">show</string>
+    <string name="string_hide"><u>hide</u></string>
+    <string name="string_show"><u>show</u></string>
     <string name="string_waiting">Waiting for players...</string>
 
+    <string name="email">spyfallmobile@gmail.com</string>
+    <string name="email_subject">Comment from Android User</string>
 
-    <string name="string_name_game_name_hint"><u>Username</u></string>
-    <string name="string_join_access_hint"><u>Access code</u></string>
-    <string name="string_join_name_hint"><u>Enter a username</u></string>
-    <string name="string_change_name_hint"><u>Enter a username</u></string>
+
+
+    <string name="string_name_game_name_hint">
+        <u>Username</u>
+    </string>
+    <string name="string_join_access_hint">
+        <u>Access code</u>
+    </string>
+    <string name="string_join_name_hint">
+        <u>Enter a username</u>
+    </string>
+    <string name="string_change_name_hint">
+        <u>Enter a username</u>
+    </string>
 
     <string name="string_rules">Spyfall is a party game
         unlike any other, one in which you get to be a spy and try to
@@ -19,13 +31,26 @@
         location — a casino, a traveling circus, a pirate ship, or even a space station — except that one
         player receives a card that says "Spy" instead of the location. Players then start asking each other questions
         — "Why are you dressed so strangely?" or "When was the last time we got a payday?" or anything else you can come
-        up with — trying to guess who among them is the spy. The spy doesn\'t know where he is, so he has to listen carefully.
+        up with — trying to guess who among them is the spy. The spy doesn\'t know where he is, so he has to listen
+        carefully.
         When it\'s his time to answer, he\'d better create a good story!
 
         After a few rounds of guessing, suspicion and bluffing, the game ends and whoever has scored
-        the most points is victorious! This party game makes neurotic suspicions fun!</string>
+        the most points is victorious! This party game makes neurotic suspicions fun!
+    </string>
 
-    <string name="string_pack_description">Chose your packs to be included in the game. One location will be chosen at random from the selected packs when the game starts.</string>
+    <string name="string_pack_description">Chose your packs to be included in the game. One location will be chosen at
+        random from the selected packs when the game starts.
+    </string>
+
+    <!--SHARED PREFERNCES-->
+    <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
+    <string name="shared_preferences">SHARED_PREFERNCES</string>
+
+    <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of
+        the board game is developed and maintained by Josiah Rininger(iOS) and Elijah Dangerfield(Android). Any questions or concerns may be sent here: </string>
+
+    <string name="remove_ads_message">To remove ads, please upgrade to the premium version of Spyfall</string>
 
 
 </resources>
