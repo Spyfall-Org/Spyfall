@@ -2,8 +2,8 @@
 
     <string name="app_name">Spyfall</string>
     <string name="string_locations">Locations</string>
-    <string name="string_hide">hide</string>
-    <string name="string_show">show</string>
+    <string name="string_hide"><u>hide</u></string>
+    <string name="string_show"><u>show</u></string>
     <string name="string_waiting">Waiting for players...</string>
 
 
