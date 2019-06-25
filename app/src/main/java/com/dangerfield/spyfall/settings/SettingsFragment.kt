@@ -38,7 +38,6 @@ class SettingsFragment : Fragment() {
         colors.add(ColorButton(Color.WHITE,false))
         colorChangeAdapter = ColorChangeAdapter(colors, context)
 
-
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
@@ -47,31 +46,35 @@ class SettingsFragment : Fragment() {
 
         navController = Navigation.findNavController(parentFragment!!.view!!)
 
-        btn_theme_change.setOnClickListener{
-           showColorChangeDialog()
-        }
+        btn_theme_change.setOnClickListener{ showColorChangeDialog() }
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
         drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
         ic_about.setImageDrawable(drawable)
 
         btn_about.setOnClickListener{
-            UIHelper.customSimpleAlert(context!!,"About",resources.getString(R.string.about_message),"Okay",{},"",{}).show()
+            UIHelper.customSimpleAlert(context!!,
+                resources.getString(R.string.about_title),
+                resources.getString(R.string.about_message),
+                resources.getString(R.string.positive_action_standard),{}, "",{}).show()
         }
 
         btn_ads.setOnClickListener{
-            UIHelper.customSimpleAlert(context!!,"Remove ads?",resources.getString(R.string.remove_ads_message),"Upgrade",{},"Cancel",{}).show()
+            UIHelper.customSimpleAlert(context!!,
+                resources.getString(R.string.ads_title),
+                resources.getString(R.string.remove_ads_message),
+                resources.getString(R.string.ads_positive_action),{},
+                resources.getString(R.string.negative_action_standard),{}).show()
         }
     }
 
-
     //TODO: consider making a view model for this
-    fun showColorChangeDialog(){
+    private fun showColorChangeDialog(){
         val dialogBuilder = AlertDialog.Builder(context!!)
-        var view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
+        val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
         dialogBuilder.setView(view)
-        var dialog = dialogBuilder.create()
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+        val dialog = dialogBuilder.create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true)
 
         view.apply {
@@ -92,27 +95,22 @@ class SettingsFragment : Fragment() {
                     saveColor(chosenColor)
                     dialog.dismiss()
                 }else{
-                    Toast.makeText(context!!,"No Color was selected",Toast.LENGTH_LONG).show()
+                    Toast.makeText(context!!,resources.getString(R.string.theme_change_error),Toast.LENGTH_LONG).show()
                 }
             }
-            btn_custom_alert_negative.text = "Cancel"
-            btn_custom_alert_positive.text = "Change"
+            btn_custom_alert_negative.text = resources.getString(R.string.negative_action_standard)
+            btn_custom_alert_positive.text = resources.getString(R.string.theme_change_positive)
             //for theme changing
             btn_custom_alert_positive.background.setTint(UIHelper.accentColor)
-            tv_custom_alert_message.text = "Choose your new theme"
-            tv_custom_alert_title.text = "Change Theme"
-
+            tv_custom_alert_message.text = resources.getString(R.string.theme_change_message)
+            tv_custom_alert_title.text = resources.getString(R.string.theme_change_title)
         }
-
         dialog.show()
-
     }
 
-    fun saveColor(chosenColor: Int){
+    private fun saveColor(chosenColor: Int){
         val editor = context!!.getSharedPreferences(resources.getString(R.string.shared_preferences), MODE_PRIVATE).edit()
         editor.putInt(resources.getString(R.string.shared_preferences_color), chosenColor)
         editor.apply()
     }
-
-
 }

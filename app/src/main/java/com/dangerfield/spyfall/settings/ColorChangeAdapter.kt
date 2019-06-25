@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.item_change_color.view.*
 
 class ColorChangeAdapter(var colors: List<ColorButton>  ,private var context: Context?) : RecyclerView.Adapter<ColorChangeAdapter.ViewHolder>() {
 
-
     var selectedPosition = -1
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -46,13 +45,11 @@ class ColorChangeAdapter(var colors: List<ColorButton>  ,private var context: Co
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if(colors[position].color == Color.WHITE){
             holder.hiddenText.visibility = View.VISIBLE
-            holder.hiddenText.text = "Random Colors"
-
+            holder.hiddenText.text = context!!.resources.getString(R.string.change_theme_random_colors)
         }else{
             holder.background.setBackgroundColor(colors[position].color)
             holder.hiddenText.visibility = View.INVISIBLE
         }
-
         if(colors[position].isSelected){
             select(holder.itemView)
         }else{

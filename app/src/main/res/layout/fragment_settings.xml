@@ -6,10 +6,10 @@
                                                    tools:context=".settings.SettingsFragment" android:id="@+id/frameLayout">
 
     <TextView
-            android:text="Settings"
+            android:text="@string/string_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView9"
+            android:id="@+id/tv_settings"
             android:textColor="@android:color/black"
             android:textStyle="bold" android:textSize="36sp"
             android:layout_marginStart="24dp" app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +25,10 @@
             app:layout_constraintTop_toTopOf="@+id/btn_theme_change"
             app:layout_constraintBottom_toBottomOf="@+id/btn_theme_change"/>
     <TextView
-            android:text="Theme"
+            android:text="@string/string_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView15"
+            android:id="@+id/tv_theme"
             app:layout_constraintBottom_toBottomOf="@+id/imageView" app:layout_constraintTop_toTopOf="@+id/imageView"
             app:layout_constraintStart_toEndOf="@+id/imageView" android:layout_marginStart="16dp"
             android:textStyle="bold" android:textColor="@color/colorBlack"/>
@@ -37,16 +37,16 @@
             android:layout_height="52dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:id="@+id/btn_theme_change"
-            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintStart_toStartOf="@+id/tv_settings"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_settings" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"/>
     <Button
             android:layout_width="0dp"
             android:layout_height="52dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:id="@+id/btn_about"
-            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintStart_toStartOf="@+id/tv_settings"
             app:layout_constraintTop_toBottomOf="@+id/btn_theme_change"
             app:layout_constraintEnd_toEndOf="@+id/btn_theme_change"/>
     <Button
@@ -54,7 +54,7 @@
             android:layout_height="52dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:id="@+id/btn_ads"
-            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintStart_toStartOf="@+id/tv_settings"
             android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/btn_about"
             app:layout_constraintEnd_toEndOf="@+id/btn_about"/>
     <ImageView
@@ -65,14 +65,14 @@
             app:layout_constraintTop_toTopOf="@+id/btn_about"
             app:layout_constraintBottom_toBottomOf="@+id/btn_about" android:backgroundTint="#3959D5"/>
     <TextView
-            android:text="About"
+            android:text="@string/about_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView16"
+            android:id="@+id/tv_about"
             app:layout_constraintTop_toTopOf="@+id/ic_about"
             app:layout_constraintBottom_toBottomOf="@+id/ic_about"
             android:textStyle="bold" android:textColor="@color/colorBlack"
-            app:layout_constraintStart_toStartOf="@+id/textView15"/>
+            app:layout_constraintStart_toStartOf="@+id/tv_theme"/>
     <ImageView
             android:src="@drawable/ic_ads_"
             android:layout_width="30dp"
@@ -81,13 +81,13 @@
             app:layout_constraintBottom_toBottomOf="@+id/btn_ads" app:layout_constraintTop_toTopOf="@+id/btn_ads"
             app:layout_constraintStart_toStartOf="@+id/btn_ads"/>
     <TextView
-            android:text="Ads"
+            android:text="@string/string_ads"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView17"
+            android:id="@+id/tv_ads"
             app:layout_constraintTop_toTopOf="@+id/imageView2"
             app:layout_constraintBottom_toBottomOf="@+id/imageView2" android:textColor="@color/colorBlack"
-            android:textStyle="bold" app:layout_constraintStart_toStartOf="@+id/textView16"/>
+            android:textStyle="bold" app:layout_constraintStart_toStartOf="@+id/tv_about"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
