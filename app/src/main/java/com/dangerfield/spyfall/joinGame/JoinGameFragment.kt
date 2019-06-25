@@ -22,6 +22,7 @@ class JoinGameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
     private lateinit var navController: NavController
+    private var hasNetworkConnection = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,20 +43,21 @@ class JoinGameFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        navController = NavHostFragment.findNavController(this)
         //scope the view model to the activity so that data can be shared in fragments
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
-        navController = NavHostFragment.findNavController(this)
+
+        viewModel.hasNetworkConnection.observe(viewLifecycleOwner,{
+            hasNetworkConnection = it
+        })
     }
 
     private fun joinGameClick(){
 
-        if(!viewModel.hasNetworkConnection){
-            UIHelper.customSimpleAlert(context!!, "Something went wrong",
-                "We are sorry. Please check your internet connection and try again",
-                "Okay",{},"",{}).show()
+        if(hasNetworkConnection){
+            UIHelper.errorDialog(context!!).show()
             return
         }
-
         val accessCode = tv_access_code.text.toString().trim()
         val userName = tv_username.text.toString().trim()
 
@@ -63,12 +65,12 @@ class JoinGameFragment : Fragment() {
             Toast.makeText(context, "Please fill out both access code and user name", Toast.LENGTH_LONG).show()
             return
         }
-        var connectionSuccess = false
+        var connected = false
         loadMode()
 
         Handler().postDelayed({
-            //if it takes more than 5 seconds to connect, retry
-            if(!connectionSuccess){
+            //if it takes more than 8 seconds, cancel
+            if(!connected){
                 UIHelper.errorDialog(context!!).show()
                 enterMode()
                 FirebaseDatabase.getInstance().purgeOutstandingWrites()
@@ -77,7 +79,7 @@ class JoinGameFragment : Fragment() {
 
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
 
-            connectionSuccess = true
+            connected = true
 
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
@@ -110,9 +112,10 @@ class JoinGameFragment : Fragment() {
     }
 
     private fun joinGame(withAccessCode: String, asPlayer: String){
+        var connected = false
         Handler().postDelayed({
             //if it takes more than 5 seconds to connect, retry
-            if(navController.currentDestination?.id == R.id.join_fragment){
+            if(!connected){
                 UIHelper.errorDialog(context!!).show()
                 enterMode()
                 FirebaseDatabase.getInstance().purgeOutstandingWrites()
@@ -122,6 +125,7 @@ class JoinGameFragment : Fragment() {
         viewModel.ACCESS_CODE = withAccessCode
         viewModel.currentUser = asPlayer
         viewModel.addPlayer(asPlayer).addOnCompleteListener {
+            connected = true
             enterMode()
             navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
         }
@@ -137,7 +141,6 @@ class JoinGameFragment : Fragment() {
             .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
 
     }
-
     private fun loadMode(){
         pb_join_game.visibility = View.VISIBLE
         btn_join_game_action.isClickable = false
@@ -146,5 +149,4 @@ class JoinGameFragment : Fragment() {
         pb_join_game.visibility = View.INVISIBLE
         btn_join_game_action.isClickable = true
     }
-
 }

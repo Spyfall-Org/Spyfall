@@ -1,6 +1,5 @@
 package com.dangerfield.spyfall.newGame
 
-
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.util.UIHelper
@@ -27,11 +27,11 @@ class NewGameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
     private lateinit var packsAdapter: PacksAdapter
+    private var hasNetworkConnection = false
+    lateinit var navController: NavController
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_game, container, false)
     }
@@ -45,6 +45,13 @@ class NewGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navController = NavHostFragment.findNavController(this)
+
+        //observer updates our value of internet connection
+        viewModel.hasNetworkConnection.observe(viewLifecycleOwner,{hasNetworkConnection->
+            this.hasNetworkConnection = hasNetworkConnection
+        })
+
         changeAccent()
 
         //reference views once the view has been created
@@ -53,13 +60,9 @@ class NewGameFragment : Fragment() {
 
         btn_create.setOnClickListener { createGame() }
 
-        btn_packs.setOnClickListener{
-            showPacksDialog()
-        }
+        btn_packs.setOnClickListener{ showPacksDialog() }
 
         configurePacksAdapter()
-
-
     }
 
     private fun configurePacksAdapter(){
@@ -85,9 +88,7 @@ class NewGameFragment : Fragment() {
         val timeLimit = tv_new_game_time.text.toString().trim()
         val playerName = tv_new_game_name.text.toString().trim()
         //these strings will be used for queries of the firestore database for which locations to include
-        var chosenPacks = packsAdapter.packs.filter {it.isSelected}.map { it.queryString } as ArrayList<String>
-
-
+        val chosenPacks = packsAdapter.packs.filter {it.isSelected}.map { it.queryString } as ArrayList<String>
 
         when {
             chosenPacks.isEmpty() -> {Toast.makeText(context,"Please select a pack", Toast.LENGTH_LONG).show()
@@ -111,49 +112,42 @@ class NewGameFragment : Fragment() {
     }
 
     private fun createGame(game: Game){
-
-       val errorDialog =  UIHelper.customSimpleAlert(context!!, resources.getString(R.string.error_title),
-           resources.getString(R.string.error_message),
-           resources.getString(R.string.positive_action),{},"",{})
-        val navController = NavHostFragment.findNavController(this)
-
-        if(viewModel.hasNetworkConnection) {
+        var connected = false
+        if(hasNetworkConnection) {
 
             Handler().postDelayed({
-                if(navController.currentDestination?.id == R.id.newGameFragment){
-                    //if we are still here in 6 seconds, the write didnt work, so delete the que and show message
-                    errorDialog.show()
+                if(!connected){
+                    //if we havent connected within 8 seconds, stop trying
+                    UIHelper.errorDialog(context!!).show()
                     enterMode()
                     FirebaseDatabase.getInstance().purgeOutstandingWrites()
                 }
             }, 8000)
-            loadMode()
 
+            loadMode()
 
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
+                    connected = true
                     enterMode()
                     val bundle = bundleOf("FromFragment" to "NewGameFragment")
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
                 }
         }else{
-            errorDialog.show()
+            UIHelper.errorDialog(context!!).show()
             enterMode()
         }
-
     }
 
     fun loadMode(){
         pb_new_game.visibility = View.VISIBLE
         btn_create.isClickable = false
         btn_packs.isClickable = false
-
     }
     fun enterMode(){
         pb_new_game.visibility = View.INVISIBLE
         btn_create.isClickable = true
         btn_packs.isClickable = true
-
     }
 
     private fun changeAccent(){
@@ -175,34 +169,40 @@ class NewGameFragment : Fragment() {
     fun showPacksDialog() {
 
         //we also might consider a different structure for the backend where the packs are kept in on collection
-        /*
-        What i want: I want a function that after 5 seconds will show an error toast and cancel the firebase que if
-        th request hasnt gone through yet
-         */
-        if (viewModel.hasNetworkConnection){
-            loadMode()
-            val list = mutableListOf<List<String>>()
-            viewModel.getPackNames().addOnSuccessListener {
-                val packNames = it.documents.map { document -> document.id }
-                var completedTasks = 0
-                for (i in 0 until packNames.size) {
 
-                    viewModel.db.collection(packNames[i]).get().addOnSuccessListener { pack ->
-                        list.add(pack.documents.map { location -> location.id })
 
-                    }.addOnCompleteListener {
-                        completedTasks += 1
-                        if (completedTasks == packNames.size) {
-                            //then youre done
-                            UIHelper.packsDialog(context!!, list).show()
-                            enterMode()
-                        }
+        var connected = false
+        Handler().postDelayed({
+            if(!connected){
+                //if we are not connected in 8 seconds, stop trying. Should still work with cache
+                UIHelper.errorDialog(context!!).show()
+                enterMode()
+                FirebaseDatabase.getInstance().purgeOutstandingWrites()
+            }
+        }, 8000)
+
+        loadMode()
+        val list = mutableListOf<List<String>>()
+        viewModel.getPackNames().addOnSuccessListener {
+            connected = true
+            val packNames = it.documents.map { document -> document.id }
+            var completedTasks = 0
+            for (i in 0 until packNames.size) {
+
+                viewModel.db.collection(packNames[i]).get().addOnSuccessListener { pack ->
+                    list.add(pack.documents.map { location -> location.id })
+
+                }.addOnCompleteListener {
+                    completedTasks += 1
+                    if (completedTasks == packNames.size) {
+                        //then youre done
+                        UIHelper.packsDialog(context!!, list).show()
+                        enterMode()
                     }
                 }
-
             }
-        }else{
-            UIHelper.errorDialog(context!!).show()
+
         }
     }
 }
+

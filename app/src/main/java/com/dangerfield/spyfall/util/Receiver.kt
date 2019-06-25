@@ -15,7 +15,7 @@ class Receiver(var viewModel: GameViewModel): BroadcastReceiver() {
 
         val networkInfo: NetworkInfo? = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo
 
-        viewModel.hasNetworkConnection = networkInfo != null && networkInfo.isConnected
+        viewModel.hasNetworkConnection.value = networkInfo != null && networkInfo.isConnected
 
     }
 

@@ -12,15 +12,13 @@ import com.dangerfield.spyfall.R
 /**
  * Created by ELIJAH DANGERFIELD on 05/7/2019.
  */
-class SimpleTextAdapter(var list: List<String>, private var context: Context?) : RecyclerView.Adapter<SimpleTextAdapter.ViewHolder>() {
-
+class SimpleTextAdapter(var list: List<String>, private var context: Context?)
+    : RecyclerView.Adapter<SimpleTextAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var textView: TextView = view.findViewById(R.id.tv_simple_text)
 
-        init {
-            context = view.context
-        }
+        init { context = view.context }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val singleButton = LayoutInflater.from(parent.context)
@@ -32,9 +30,7 @@ class SimpleTextAdapter(var list: List<String>, private var context: Context?) :
         holder.textView.text = list[position]
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount(): Int { return list.size }
 }
 
 

@@ -72,6 +72,7 @@ class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?
             pack.isSelected = true
             view.view_pack_filter.visibility = View.VISIBLE
             view.check_animation.visibility = View.VISIBLE
+            view.check_animation.speed = 2.0f
             view.check_animation.playAnimation()
         }
     }

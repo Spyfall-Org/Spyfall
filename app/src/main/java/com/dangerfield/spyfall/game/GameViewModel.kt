@@ -25,7 +25,7 @@ class GameViewModel : ViewModel() {
 
         }
 
-    var hasNetworkConnection: Boolean = false
+    var hasNetworkConnection: MutableLiveData<Boolean> = MutableLiveData()
     var gameExists: MutableLiveData<Boolean> = MutableLiveData()
     var roles= ArrayList<String>()
     var gameObject: MutableLiveData<Game> = MutableLiveData()

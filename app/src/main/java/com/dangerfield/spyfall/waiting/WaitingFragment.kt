@@ -116,5 +116,6 @@ class WaitingFragment : Fragment() {
         btn_leave_game.background.setTint(UIHelper.accentColor)
 
     }
+
 }
 
