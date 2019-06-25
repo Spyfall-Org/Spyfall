@@ -51,6 +51,12 @@ class UIHelper {
             }
         }
 
+        private fun hideKeyboardFrom(view: View) {
+            val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+
+
         fun getSavedColor(context: Context){
             val prefs = context.getSharedPreferences(context.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
             val savedColor: Int = prefs.getInt(context.resources.getString(R.string.shared_preferences_color), 0)
@@ -60,11 +66,9 @@ class UIHelper {
 
         }
 
+        fun errorDialog(context: Context) = UIHelper.customSimpleAlert(context!!,context.resources.getString(R.string.error_title),
+            context.resources.getString(R.string.error_message),context.resources.getString(R.string.positive_action),{},"",{})
 
-        private fun hideKeyboardFrom(view: View) {
-            val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
 
         fun packsDialog(context: Context, packsList: MutableList<List<String>>): AlertDialog {
 

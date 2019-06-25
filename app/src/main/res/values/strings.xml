@@ -53,4 +53,13 @@
     <string name="remove_ads_message">To remove ads, please upgrade to the premium version of Spyfall</string>
 
 
+
+    <string name="error_title">Something went wrong</string>
+    <string name="error_message">Please check your internet connection and try again</string>
+    <string name="positive_action">Okay</string>
+    <string name="negative_action_standard">Cancel</string>
+
+
+
+
 </resources>

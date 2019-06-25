@@ -18,6 +18,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -111,17 +112,23 @@ class NewGameFragment : Fragment() {
 
     private fun createGame(game: Game){
 
+       val errorDialog =  UIHelper.customSimpleAlert(context!!, resources.getString(R.string.error_title),
+           resources.getString(R.string.error_message),
+           resources.getString(R.string.positive_action),{},"",{})
         val navController = NavHostFragment.findNavController(this)
 
         if(viewModel.hasNetworkConnection) {
 
-            //TODO: consider timeout function here
             Handler().postDelayed({
                 if(navController.currentDestination?.id == R.id.newGameFragment){
-
-            }
-            }, 5000)
+                    //if we are still here in 6 seconds, the write didnt work, so delete the que and show message
+                    errorDialog.show()
+                    enterMode()
+                    FirebaseDatabase.getInstance().purgeOutstandingWrites()
+                }
+            }, 8000)
             loadMode()
+
 
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
@@ -130,9 +137,8 @@ class NewGameFragment : Fragment() {
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
                 }
         }else{
-            UIHelper.customSimpleAlert(context!!, "Something went wrong",
-                "We are sorry. Please check your internet connection and try again",
-                "Okay",{},"",{}).show()
+            errorDialog.show()
+            enterMode()
         }
 
     }
@@ -166,34 +172,37 @@ class NewGameFragment : Fragment() {
 
     }
 
-    fun showPacksDialog(){
+    fun showPacksDialog() {
 
         //we also might consider a different structure for the backend where the packs are kept in on collection
-        //TODO: consider timeout funciton to just show dialog with hard coded data
         /*
         What i want: I want a function that after 5 seconds will show an error toast and cancel the firebase que if
         th request hasnt gone through yet
          */
-        loadMode()
-        val list = mutableListOf<List<String>>()
-        viewModel.getPackNames().addOnSuccessListener {
-            val packNames=  it.documents.map {document -> document.id }
-            var completedTasks = 0
-            for (i in 0 until packNames.size) {
+        if (viewModel.hasNetworkConnection){
+            loadMode()
+            val list = mutableListOf<List<String>>()
+            viewModel.getPackNames().addOnSuccessListener {
+                val packNames = it.documents.map { document -> document.id }
+                var completedTasks = 0
+                for (i in 0 until packNames.size) {
 
-                viewModel.db.collection(packNames[i]).get().addOnSuccessListener { pack ->
-                    list.add(pack.documents.map {location -> location.id } )
+                    viewModel.db.collection(packNames[i]).get().addOnSuccessListener { pack ->
+                        list.add(pack.documents.map { location -> location.id })
 
-                }.addOnCompleteListener {
-                    completedTasks += 1
-                    if(completedTasks == packNames.size){
-                        //then youre done
-                        UIHelper.packsDialog(context!!,list).show()
-                        enterMode()
+                    }.addOnCompleteListener {
+                        completedTasks += 1
+                        if (completedTasks == packNames.size) {
+                            //then youre done
+                            UIHelper.packsDialog(context!!, list).show()
+                            enterMode()
+                        }
                     }
                 }
-            }
 
+            }
+        }else{
+            UIHelper.errorDialog(context!!).show()
         }
     }
 }
