@@ -1,7 +1,6 @@
 package com.dangerfield.spyfall.game
 
 import android.graphics.Paint
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -21,9 +20,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
-import kotlinx.android.synthetic.main.fragment_new_game.*
-import kotlinx.android.synthetic.main.item_simple_card.*
-
 
 class GameFragment : Fragment() {
 
@@ -31,7 +27,6 @@ class GameFragment : Fragment() {
     private lateinit var currentPlayer: Player
     private lateinit var locationsAdapter: GameViewsAdapter
     private lateinit var playersAdapter: GameViewsAdapter
-
     private  var timer: CountDownTimer? = null
     private lateinit var navController: NavController
 
@@ -49,7 +44,7 @@ class GameFragment : Fragment() {
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
                     //show alert when user presses back
-                    UIHelper.customSimpleAlert(context!!,"Can not leave game","If you chose to leave, the game will end",
+                    UIHelper.customSimpleAlert(context!!,"Leaving Game?","If you chose to leave, the game will end",
                         "Leave", {endGame()},"Stay",{}).show()
                 }
             })
@@ -70,7 +65,6 @@ class GameFragment : Fragment() {
                     navController.popBackStack(R.id.waitingFragment, false)
                 }
             }
-            //TODO: could add a check to say: if the player object list has changed sense i pulled it, cause right
             //now this gets called anytime anything changes
             if(it.started && navController.currentDestination?.id == R.id.gameFragment){
                 //but right now it says: if the game has started, and im still on this screen, and something has changed..
@@ -78,14 +72,12 @@ class GameFragment : Fragment() {
                 playersAdapter.first = newFirstPlayer
             }
 
-
         })
 
         viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
             //someone ended the game
             if(!exists && navController.currentDestination?.id == R.id.gameFragment){ endGame() }
         })
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -102,7 +94,6 @@ class GameFragment : Fragment() {
                 navController.popBackStack(R.id.waitingFragment, false)
             }
         }
-
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_hide.setOnClickListener{ hide()}
     }
@@ -112,13 +103,11 @@ class GameFragment : Fragment() {
         super.onResume()
         //just to be super safe
         if(viewModel.gameExists.value!!){
-
             if(timer == null){
                 startTimer(viewModel.gameObject.value!!.timeLimit)
             }else{
                 Log.d("GAME", "timer was not null")
             }
-
         }
     }
 
@@ -186,8 +175,6 @@ class GameFragment : Fragment() {
     }
 
     private fun configurePlayerViews(): String {
-        //configures all of the views dealing with players, and choses a player to go first, and returns that val.
-
         //we enforce that no two users have the same username
         currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
 
@@ -204,8 +191,5 @@ class GameFragment : Fragment() {
     private fun changeAccent(){
         btn_end_game.background.setTint(UIHelper.accentColor)
         btn_hide.background.setTint(UIHelper.accentColor)
-
-
     }
-
 }
