@@ -62,7 +62,7 @@ class JoinGameFragment : Fragment() {
         val userName = tv_username.text.toString().trim()
 
         if(userName.isEmpty() || accessCode.isEmpty()){
-            Toast.makeText(context, "Please fill out both access code and user name", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, getString(R.string.join_game_error_fields), Toast.LENGTH_LONG).show()
             return
         }
         var connected = false
@@ -86,26 +86,26 @@ class JoinGameFragment : Fragment() {
 
                 when {
                     list.size >= 8 ->  {
-                        Toast.makeText(context, "Sorry, the max for a game is currently 8 players", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, getString(R.string.join_game_error_max_players), Toast.LENGTH_LONG).show()
                         enterMode()
                     }
-                    game["isStarted"]==true -> {
-                        Toast.makeText(context, "Sorry, this game has been started", Toast.LENGTH_LONG).show()
+                    game["started"]==true -> {
+                        Toast.makeText(context, getString(R.string.join_game_error_started_game), Toast.LENGTH_LONG).show()
                         enterMode()
                     }
                     list.contains(tv_username.text.toString().trim()) -> {
-                        Toast.makeText(context, "Sorry, that name is taken by another player", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, getString(R.string.join_game_error_taken_name), Toast.LENGTH_LONG).show()
                         enterMode()
                     }
                     userName.length > 25 -> {
-                        Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
                         enterMode()
                     }
                     else -> joinGame(withAccessCode = accessCode, asPlayer = userName)
                 }
 
             }else{
-                Toast.makeText(context, "Sorry, no game was found with that access code", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.join_game_error_access_code), Toast.LENGTH_LONG).show()
                 enterMode()
             }
         }

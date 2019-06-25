@@ -44,8 +44,11 @@ class GameFragment : Fragment() {
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
                     //show alert when user presses back
-                    UIHelper.customSimpleAlert(context!!,"Leaving Game?","If you chose to leave, the game will end",
-                        "Leave", {endGame()},"Stay",{}).show()
+                    UIHelper.customSimpleAlert(context!!,
+                        getString(R.string.leave_game_title),
+                        getString(R.string.leave_in_game_message),
+                        getString(R.string.leave_action_positive),
+                        {endGame()},getString(R.string.leave_action_negative),{}).show()
                 }
             })
     }
@@ -86,8 +89,11 @@ class GameFragment : Fragment() {
         changeAccent()
 
         //we set the listeners once the view has actually been inflated
-        btn_end_game.setOnClickListener { UIHelper.customSimpleAlert(context!!,"Ending Game","Are you sure you want to end the game?",
-            "End", {endGame()},"Cancel",{}).show()}
+        btn_end_game.setOnClickListener { UIHelper.customSimpleAlert(context!!,
+            getString(R.string.end_game_title),
+            getString(R.string.end_game_message),
+            getString(R.string.end_game_positive_action), {endGame()},
+            getString(R.string.negative_action_standard),{}).show()}
 
         btn_play_again.setOnClickListener{
             viewModel.resetGame().addOnCompleteListener{
@@ -99,7 +105,6 @@ class GameFragment : Fragment() {
     }
 
     override fun onResume() {
-        Log.d("GAME","ON RESUME")
         super.onResume()
         //just to be super safe
         if(viewModel.gameExists.value!!){
@@ -138,11 +143,9 @@ class GameFragment : Fragment() {
             }
 
             override fun onFinish() {
-                tv_game_timer.text = "Spy: Reveal Yourself!"
                 btn_play_again.visibility = View.VISIBLE
             }
         }.start()
-
         return timer!!
     }
 

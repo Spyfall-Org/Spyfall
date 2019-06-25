@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_dialog">
@@ -19,9 +18,9 @@
             android:hint="@string/string_change_name_hint"
             app:layout_constraintHorizontal_bias="0.549"
             app:layout_constraintTop_toBottomOf="@+id/tv_alert_change_name_title"
-            android:background="@drawable/back_ground_edit_text" android:paddingLeft="8dp"/>
+            android:background="@drawable/back_ground_edit_text" android:paddingStart="8dp"/>
     <Button
-            android:text="@android:string/cancel"
+            android:text="@string/negative_action_standard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_alert_change_name_canel"
@@ -30,7 +29,7 @@
             android:background="@drawable/background_button_white"
             android:textColor="@android:color/black" android:textAllCaps="false" android:textSize="18sp"/>
     <Button
-            android:text="Okay"
+            android:text="@string/positive_action_standard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_change_name_alert_okay" app:layout_constraintEnd_toEndOf="@+id/tv_alert_change_name"
@@ -39,7 +38,7 @@
             android:layout_marginBottom="24dp" app:layout_constraintVertical_bias="1.0"
             android:textColor="@color/colorWhite" android:textAllCaps="false" android:textSize="18sp"/>
     <TextView
-            android:text="Change Name"
+            android:text="@string/change_name_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_alert_change_name_title"

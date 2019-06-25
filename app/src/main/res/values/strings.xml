@@ -64,14 +64,6 @@
 
 
 
-
-
-
-
-
-
-
-
     <!--SHARED PREFERNCES-->
     <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
     <string name="shared_preferences">SHARED_PREFERNCES</string>
@@ -79,7 +71,6 @@
     <string name="string_btn_leave_game">Leave Game</string>
     <string name="string_btn_start_game">Start Game</string>
     <string name="string_welcome">Welcome to</string>
-    <string name="string_btn_join_game">Join Game</string>
     <string name="string_btn_new_game">New Game</string>
     <string name="string_btn_rules">Rules</string>
     <string name="string_content_description_settings">Settings Button</string>
@@ -90,6 +81,30 @@
     <string name="new_game_error_select_pack">Please select a pack</string>
     <string name="new_game_string_error_name">please enter a name</string>
     <string name="new_game_error_time_limit">please enter a time limit less than 10 minutes</string>
+    <string name="join_game_error_fields">Please fill out both access code and username</string>
+    <string name="join_game_error_max_players">Sorry, the max for a game is currently 8 players</string>
+    <string name="join_game_error_started_game">Sorry, this game has been started</string>
+    <string name="join_game_error_taken_name">Sorry, that name is taken by another player</string>
+    <string name="join_game_error_access_code">Sorry, no game was found with that access code</string>
+    <string name="string_new_game">New Game</string>
+    <string name="string_pick_a_time_limit">Pick a time limit:</string>
+    <string name="string_choose_packs">Choose packs:</string>
+    <string name="string_time_limit">Time limit must be 10 minutes or less</string>
+    <string name="string_btn_create">Create</string>
+    <string name="string_join_game">Join Game</string>
+    <string name="string_enter_access_code">Enter an access code:</string>
+    <string name="string_enter_username">Enter a username:</string>
+    <string name="string_game_players">Players:</string>
+    <string name="string_game_locations">Locations:</string>
+    <string name="string_btn_end_game">End Game</string>
+    <string name="string_btn_play_again">Play Again</string>
+    <string name="string_packs">Packs</string>
+    <string name="change_name_title">Change Name</string>
+    <string name="leave_game_title">Leaving Game?</string>
+    <string name="leave_in_game_message">If you chose to leave, the game will end</string>
+    <string name="end_game_title">Ending Game</string>
+    <string name="end_game_message">Are you sure you want to end the game?</string>
+    <string name="end_game_positive_action">End</string>
 
 
 </resources>

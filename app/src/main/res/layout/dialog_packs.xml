@@ -12,7 +12,7 @@
 
 
         <TextView
-                android:text="Packs"
+                android:text="@string/string_packs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/tv_dialog_packs_title"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
@@ -75,7 +75,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/rv_dialog_pack2" android:layout_marginTop="8dp"
                 android:id="@+id/rv_dialog_pack3"/>
         <Button
-                android:text="Okay"
+                android:text="@string/positive_action_standard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_dialog_packs_positive" app:layout_constraintStart_toStartOf="@+id/rv_dialog_pack3"
