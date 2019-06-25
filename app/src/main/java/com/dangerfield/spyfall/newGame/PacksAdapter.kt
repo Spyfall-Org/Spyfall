@@ -19,7 +19,6 @@ import java.util.ArrayList
  */
 class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?) : RecyclerView.Adapter<PacksAdapter.PackHolder>() {
 
-
     inner class PackHolder(view: View) : RecyclerView.ViewHolder(view) {
         var number: TextView
         var packType: TextView
@@ -32,11 +31,7 @@ class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?
 
             context = view.context
 
-            view.setOnClickListener {
-                //TODO: play selection animaiton, and set set position's isSelected
-                select(view,packs[adapterPosition])
-            }
-
+            view.setOnClickListener { select(view,packs[adapterPosition]) }
         }
     }
 
@@ -52,11 +47,6 @@ class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?
         holder.number.text = item.number.toString()
         holder.packType.text = item.type
         holder.background.setBackgroundColor(item.color)
-
-    }
-
-    override fun getItemCount(): Int {
-        return packs.size
     }
 
     private fun select(view: View, pack: GamePack){
@@ -66,7 +56,6 @@ class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?
             view.view_pack_filter.visibility = View.INVISIBLE
             view.check_animation.visibility = View.INVISIBLE
         }
-
         else{
             //select
             pack.isSelected = true
@@ -76,4 +65,6 @@ class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?
             view.check_animation.playAnimation()
         }
     }
+
+    override fun getItemCount(): Int { return packs.size }
 }

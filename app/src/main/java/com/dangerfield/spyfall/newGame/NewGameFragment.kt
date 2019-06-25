@@ -91,17 +91,17 @@ class NewGameFragment : Fragment() {
         val chosenPacks = packsAdapter.packs.filter {it.isSelected}.map { it.queryString } as ArrayList<String>
 
         when {
-            chosenPacks.isEmpty() -> {Toast.makeText(context,"Please select a pack", Toast.LENGTH_LONG).show()
+            chosenPacks.isEmpty() -> {Toast.makeText(context,getString(R.string.new_game_error_select_pack), Toast.LENGTH_LONG).show()
                 return}
 
-            playerName.isEmpty() -> {Toast.makeText(context, "please enter a name", Toast.LENGTH_LONG).show()
+            playerName.isEmpty() -> {Toast.makeText(context, getString(R.string.new_game_string_error_name), Toast.LENGTH_LONG).show()
             return}
 
-            playerName.length > 25 -> {Toast.makeText(context, "please enter a name less than 25 characters", Toast.LENGTH_LONG).show()
+            playerName.length > 25 -> {Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
                 return}
 
             timeLimit.isEmpty() || timeLimit.toInt() > 10 -> {
-                Toast.makeText(context, "please enter a time limit less than 10 minutes", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.new_game_error_time_limit), Toast.LENGTH_LONG).show()
                 return
             }
         }
@@ -169,8 +169,6 @@ class NewGameFragment : Fragment() {
     fun showPacksDialog() {
 
         //we also might consider a different structure for the backend where the packs are kept in on collection
-
-
         var connected = false
         Handler().postDelayed({
             if(!connected){
