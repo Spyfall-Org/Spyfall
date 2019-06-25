@@ -43,11 +43,8 @@ class UIHelper {
         Color.parseColor("#009BFF"),
         Color.parseColor("#634FEC"))
 
-
         val keyboardHider = View.OnFocusChangeListener { view, b ->
-            if (!b) {
-                this.hideKeyboardFrom(view)
-            }
+            if (!b) { this.hideKeyboardFrom(view) }
         }
 
         private fun hideKeyboardFrom(view: View) {
@@ -55,28 +52,25 @@ class UIHelper {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-
         fun getSavedColor(context: Context){
             val prefs = context.getSharedPreferences(context.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
             val savedColor: Int = prefs.getInt(context.resources.getString(R.string.shared_preferences_color), 0)
             if (savedColor != 0) {
                 accentColor = if(savedColor == Color.WHITE) accentColors.random() else savedColor
             }
-
         }
 
-        fun errorDialog(context: Context) = UIHelper.customSimpleAlert(context!!,context.resources.getString(R.string.error_title),
+        fun errorDialog(context: Context) = UIHelper.customSimpleAlert(context,context.resources.getString(R.string.error_title),
             context.resources.getString(R.string.error_message),context.resources.getString(R.string.positive_action_standard),{},"",{})
-
 
         fun packsDialog(context: Context, packsList: MutableList<List<String>>): AlertDialog {
 
             val dialogBuilder = AlertDialog.Builder(context)
             Log.d("Custom alerts", "Setting packs view")
-            var view = LayoutInflater.from(context).inflate(R.layout.dialog_packs, null)
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_packs, null)
             dialogBuilder.setView(view)
-            var dialog = dialogBuilder.create()
-            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            val dialog = dialogBuilder.create()
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true)
 
             //TODO: make dynamic by pulling from firebase and adding recycler views as needed
@@ -110,16 +104,15 @@ class UIHelper {
         ): Dialog {
 
             val dialogBuilder = AlertDialog.Builder(context)
-            var view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
+            val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
             dialogBuilder.setView(view)
-            var dialog = dialogBuilder.create()
-            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            val dialog = dialogBuilder.create()
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true)
 
             view.apply {
                 if (negativeText.isEmpty()) {
                     //remove the negative button
-                    Log.d("Alert", "Negative Text is Empty")
                     btn_custom_alert_negative.visibility = View.GONE
 
                     val set = ConstraintSet()
@@ -144,15 +137,8 @@ class UIHelper {
                     set.applyTo(layout)
                 }
 
-                if(title.trim() == "About"){
-
-                    btn_email.text = Html.fromHtml("<a href=\"mailto:"+"spyfallmobile@gmail.com"+"?subject="+"Comment from Android user"+"\" >"+"spyfallmobile@gmail.com"+"</a>");
-                    btn_email.movementMethod = (LinkMovementMethod.getInstance())
-                    //adds text view to bottom of layout
+                if(title.trim() == context.resources.getString(R.string.about_title)) {
                     btn_email.visibility = View.VISIBLE
-//                    btn_email.setOnClickListener{
-//                        takeToEmail(context)
-//                    }
                 }
 
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
@@ -164,11 +150,8 @@ class UIHelper {
                 tv_custom_alert_message.text = message
                 tv_custom_alert_title.text = title
             }
-
-
             return dialog
         }
-
 
         fun setCursorColor(view: EditText, @ColorInt color: Int) {
             try {
@@ -193,33 +176,8 @@ class UIHelper {
                 field.set(editor, drawables)
             } catch (ignored: Exception) {
             }
-
         }
-
-        private fun takeToEmail(context: Context){
-
-            val subject = "Comment from Android User"
-            val bodyText = "Dear Spyfall mobile creators, "
-            val mailto = "mailto:spyfallmobile@gmail.com" +
-                    "&subject=" + Uri.encode(subject) +
-                    "&body=" + Uri.encode(bodyText)
-
-            val emailIntent = Intent(Intent.ACTION_SENDTO)
-            emailIntent.data = Uri.parse(mailto)
-
-            try {
-                context.startActivity(emailIntent)
-            } catch (e: ActivityNotFoundException) {
-                customSimpleAlert(context,"Something went wrong",
-                    "We are sorry something went wrong while taking you to your email.",
-                    "Okay",{},"",{}).show()
-            }
-
-        }
-
     }
-
-
 }
 
 fun Float.dp(context: Context) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,

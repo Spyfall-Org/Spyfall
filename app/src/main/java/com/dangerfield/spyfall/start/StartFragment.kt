@@ -1,6 +1,5 @@
 package com.dangerfield.spyfall.start
 
-
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,7 +21,6 @@ class StartFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_start, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -37,7 +35,11 @@ class StartFragment : Fragment() {
         }
 
         btn_rules.setOnClickListener{
-            UIHelper.customSimpleAlert(context!!,"Rules",resources.getString(R.string.string_rules),"Okay",{},"",{}).show()
+            UIHelper.customSimpleAlert(context!!,
+                resources.getString(R.string.rules_title),
+                resources.getString(R.string.rules_message),
+                resources.getString(R.string.positive_action_standard)
+                ,{}, "",{}).show()
         }
 
         btn_settings.setOnClickListener{
@@ -51,10 +53,7 @@ class StartFragment : Fragment() {
         changeAccent()
     }
 
-
     fun changeAccent(){
-
-        //this sets the background for all view that use the same background
         btn_join_game.background.setTint(UIHelper.accentColor)
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()

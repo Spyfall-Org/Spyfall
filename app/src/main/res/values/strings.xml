@@ -16,8 +16,6 @@
     <string name="string_join_name_hint"><u>Enter a username</u></string>
     <string name="string_change_name_hint"><u>Enter a username</u></string>
 
-    <string name="string_rules">*These are the rules*</string>
-
     <string name="string_pack_description">Chose your packs to be included in the game. One location will be chosen at
         random from the selected packs when the game starts.
     </string>
@@ -50,6 +48,12 @@
     <string name="waiting_leaving_title">Leaving Game</string>
     <string name="waiting_leaving_message">Are you sure you want to leave?</string>
 
+    <string name="about_title">About</string>
+
+    <string name="rules_title">Rules</string>
+    <string name="rules_message">*These are the rules*</string>
+
+
 
 
 
@@ -63,6 +67,11 @@
     <string name="string_access_code">Access code:</string>
     <string name="string_btn_leave_game">Leave Game</string>
     <string name="string_btn_start_game">Start Game</string>
+    <string name="string_welcome">Welcome to</string>
+    <string name="string_btn_join_game">Join Game</string>
+    <string name="string_btn_new_game">New Game</string>
+    <string name="string_btn_rules">Rules</string>
+    <string name="string_content_description_settings">Settings Button</string>
 
 
 </resources>
