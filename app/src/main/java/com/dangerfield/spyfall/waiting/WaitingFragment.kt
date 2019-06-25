@@ -36,8 +36,12 @@ class WaitingFragment : Fragment() {
         navController =  Navigation.findNavController(parentFragment!!.view!!)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-        navigateBack = { UIHelper.customSimpleAlert(context!!,"Leaving Game","Are you sure you want to leave?",
-            "Leave", {leaveGame()},"Stay",{}).show()}
+        navigateBack = { UIHelper.customSimpleAlert(context!!,
+            resources.getString(R.string.waiting_leaving_title),
+            resources.getString(R.string.waiting_leaving_message),
+            resources.getString(R.string.leave_action_positive), {leaveGame()},
+            resources.getString(R.string.leave_action_negative),{}).show()
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
@@ -69,7 +73,6 @@ class WaitingFragment : Fragment() {
 
         changeAccent()
         //only set the listeners once the view has been created
-
         btn_start_game.setOnClickListener {
             //TODO: Consider case of a user coming back to this screen, will the button be clickable?
             //immediately stop the same user from sending the request twice
@@ -81,7 +84,6 @@ class WaitingFragment : Fragment() {
         btn_leave_game.setOnClickListener {navigateBack?.invoke() ?: leaveGame()}
 
         configureLayoutManagerAndRecyclerView()
-
     }
 
     override fun onResume() {
@@ -92,15 +94,12 @@ class WaitingFragment : Fragment() {
         tv_acess_code.text = viewModel.ACCESS_CODE
 
         if(isGameCreator){ viewModel.getRandomLocation() }
-
     }
 
     private fun leaveGame(){
         viewModel.removePlayer().addOnCompleteListener {
             //once the database is updated check to see if game should be over
-            if(viewModel.gameObject.value?.playerList?.size == 0){
-                viewModel.endGame()
-            }
+            if(viewModel.gameObject.value?.playerList?.size == 0){ viewModel.endGame()}
             //pop the back stack all the way back to the start screen
             navController.popBackStack(R.id.startFragment,false)
         }
@@ -114,8 +113,6 @@ class WaitingFragment : Fragment() {
 
     private fun changeAccent(){
         btn_leave_game.background.setTint(UIHelper.accentColor)
-
     }
-
 }
 

@@ -4,48 +4,24 @@
     <string name="string_locations">Locations</string>
     <string name="string_hide"><u>hide</u></string>
     <string name="string_show"><u>show</u></string>
-    <string name="string_waiting">Waiting for players...</string>
+    <string name="string_waiting">Waiting for players…</string>
 
     <string name="email">spyfallmobile@gmail.com</string>
     <string name="email_subject">Comment from Android User</string>
 
 
 
-    <string name="string_name_game_name_hint">
-        <u>Username</u>
-    </string>
-    <string name="string_join_access_hint">
-        <u>Access code</u>
-    </string>
-    <string name="string_join_name_hint">
-        <u>Enter a username</u>
-    </string>
-    <string name="string_change_name_hint">
-        <u>Enter a username</u>
-    </string>
+    <string name="string_name_game_name_hint"><u>Username</u></string>
+    <string name="string_join_access_hint"><u>Access code</u></string>
+    <string name="string_join_name_hint"><u>Enter a username</u></string>
+    <string name="string_change_name_hint"><u>Enter a username</u></string>
 
-    <string name="string_rules">Spyfall is a party game
-        unlike any other, one in which you get to be a spy and try to
-        understand what\'s going on around you. It\'s really simple! Spyfall is played over
-        several rounds, and at the start of each round all players receive cards showing the same
-        location — a casino, a traveling circus, a pirate ship, or even a space station — except that one
-        player receives a card that says "Spy" instead of the location. Players then start asking each other questions
-        — "Why are you dressed so strangely?" or "When was the last time we got a payday?" or anything else you can come
-        up with — trying to guess who among them is the spy. The spy doesn\'t know where he is, so he has to listen
-        carefully.
-        When it\'s his time to answer, he\'d better create a good story!
-
-        After a few rounds of guessing, suspicion and bluffing, the game ends and whoever has scored
-        the most points is victorious! This party game makes neurotic suspicions fun!
-    </string>
+    <string name="string_rules">*These are the rules*</string>
 
     <string name="string_pack_description">Chose your packs to be included in the game. One location will be chosen at
         random from the selected packs when the game starts.
     </string>
 
-    <!--SHARED PREFERNCES-->
-    <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
-    <string name="shared_preferences">SHARED_PREFERNCES</string>
 
     <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of
         the board game is developed and maintained by Josiah Rininger(iOS) and Elijah Dangerfield(Android). Any questions or concerns may be sent here: </string>
@@ -53,13 +29,40 @@
     <string name="remove_ads_message">To remove ads, please upgrade to the premium version of Spyfall</string>
 
 
+    <string name="change_name_character_limit">please enter a name less than 25 characters</string>
+    <string name="change_name_different_name">please enter a name that is not in the game</string>
+
+
+
+
+
+    <!--Dialogs-->
+    <string name="positive_action_standard">Okay</string>
+    <string name="negative_action_standard">Cancel</string>
+
+    <string name="leave_action_positive">Leave</string>
+    <string name="leave_action_negative">Stay</string>
+
 
     <string name="error_title">Something went wrong</string>
     <string name="error_message">Please check your internet connection and try again</string>
-    <string name="positive_action">Okay</string>
-    <string name="negative_action_standard">Cancel</string>
+
+    <string name="waiting_leaving_title">Leaving Game</string>
+    <string name="waiting_leaving_message">Are you sure you want to leave?</string>
 
 
+
+
+
+
+
+
+    <!--SHARED PREFERNCES-->
+    <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
+    <string name="shared_preferences">SHARED_PREFERNCES</string>
+    <string name="string_access_code">Access code:</string>
+    <string name="string_btn_leave_game">Leave Game</string>
+    <string name="string_btn_start_game">Start Game</string>
 
 
 </resources>
