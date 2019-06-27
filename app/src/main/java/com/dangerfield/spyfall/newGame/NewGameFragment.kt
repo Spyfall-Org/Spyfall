@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
@@ -76,9 +77,9 @@ class NewGameFragment : Fragment() {
 
         //TODO: make this dynamic by pulling pack names from firebase
 
-        packs.add(GamePack(resources.getColor(R.color.colorPink),"Standard",1,"pack 1",false))
-        packs.add(GamePack(resources.getColor(R.color.colorGreen),"Standard",2,"pack 2",false))
-        packs.add(GamePack(resources.getColor(R.color.colorYellow),"Special",1,"special pack",false))
+        packs.add(GamePack(UIHelper.accentColors[0],"Standard",1,"pack 1",false))
+        packs.add(GamePack(UIHelper.accentColors[1],"Standard",2,"pack 2",false))
+        packs.add(GamePack(UIHelper.accentColors[2],"Special",1,"special pack",false))
 
         rv_packs.apply{
             layoutManager = GridLayoutManager(context, 3)
@@ -89,7 +90,7 @@ class NewGameFragment : Fragment() {
     }
 
     private fun createGame(){
-
+        
         val timeLimit = tv_new_game_time.text.toString().trim()
         val playerName = tv_new_game_name.text.toString().trim()
         //these strings will be used for queries of the firestore database for which locations to include
@@ -133,7 +134,6 @@ class NewGameFragment : Fragment() {
 
             loadMode()
 
-
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
                     connected = true
@@ -174,13 +174,12 @@ class NewGameFragment : Fragment() {
 
     }
 
-    fun showPacksDialog() {
+    private fun showPacksDialog() {
 
         //we also might consider a different structure for the backend where the packs are kept in on collection
         var connected = false
         Handler().postDelayed({
             if(!connected){
-                Log.d("WIATING","Got here")
                 //if we are not connected in 8 seconds, stop trying. Should still work with cache
                 UIHelper.errorDialog(context!!).show()
                 Handler(context!!.mainLooper).post {

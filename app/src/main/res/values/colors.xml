@@ -5,7 +5,7 @@
     <color name="colorBackgroundLight">#FCFCFC</color>
 
     <color name="colorPrimary">#747474</color>
-    <color name="colorPrimaryDark">#3C3C3C</color>
+    <color name="colorPrimaryDark">#FCFCFC</color>
     <color name="colorAccent">#D65656</color>
 
 
@@ -20,6 +20,7 @@
     <color name="colorGreen">#EE5DC074</color>
     <color name="colorYellow">#EED3AF38</color>
     <color name="colorPink">#C388B3</color>
+
 
 
 </resources>

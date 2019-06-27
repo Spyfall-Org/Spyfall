@@ -95,8 +95,8 @@
     <string name="string_game_players">Players:</string>
     <string name="string_game_locations">Locations:</string>
     <string name="string_locations">Locations</string>
-    <string name="string_hide"><u>hide</u></string>
-    <string name="string_show"><u>show</u></string>
+    <string name="string_hide"><u>Hide</u></string>
+    <string name="string_show"><u>Show</u></string>
 
     <!--SHARED PREFERNCES-->
     <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>

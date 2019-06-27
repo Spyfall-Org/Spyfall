@@ -39,34 +39,27 @@ class GameViewModel : ViewModel() {
 
         // we need to make it such that when gameref changes, so does the game ref in this snap shot listener
         gameRef.addSnapshotListener { game, error ->
-
             if (error != null) {
                 Log.w("View Model", "Listen failed.", error)
                 return@addSnapshotListener
             }
-
             if (game != null && game.exists()) {
                 gameObject.value = game.toObject(Game::class.java)
                 gameExists.value = true
                 Log.d("View Model", "game =  NOT null for gameRef ${gameRef.path}")
-
             }else {
 
                 Log.d("View Model", "game =  null for gameRef ${gameRef.path}")
                 gameExists.value = false
             }
         }
-
         return gameObject
     }
 
-
     fun getRandomLocation() {
-
         if (gameObject.value?.chosenLocation.isNullOrEmpty()) {
 
             gameRef.get().addOnSuccessListener {
-
                 //selects one of the packs at random
                 //we can garuntee that chosen packs will be here as it is sent over in the creation screen
                 val randomPack = gameObject.value!!.chosenPacks.random()
@@ -85,8 +78,6 @@ class GameViewModel : ViewModel() {
                         Log.w("Game view model", "Error getting documents: ", exception)
                     }
             }
-
-
         }
     }
 
@@ -158,11 +149,9 @@ class GameViewModel : ViewModel() {
                 }
             }
         }
-
         return this.gameLocations
     }
 
-    
     fun getPackNames(): Task<QuerySnapshot> =  db.collection("pack names").get()
 
     fun endGame(): Task<Void> {
@@ -179,7 +168,6 @@ class GameViewModel : ViewModel() {
            gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
 
         return gameRef.set(newGame)
-
     }
 
     fun createGame(game: Game, code: String): Task<Void> {
@@ -193,18 +181,14 @@ class GameViewModel : ViewModel() {
         gameObject = MutableLiveData()
         roles.clear()
         return gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
-
     }
 
     fun addPlayer(player: String) = gameRef.update("playerList", FieldValue.arrayUnion(player))
-
 
     fun changeName(newName: String): Task<Void> {
         val index = gameObject.value!!.playerList.indexOf(currentUser)
         gameObject.value!!.playerList[index] = newName
         currentUser = newName
         return gameRef.update("playerList", gameObject.value!!.playerList)
-
     }
-
 }

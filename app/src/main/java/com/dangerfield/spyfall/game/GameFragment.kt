@@ -87,7 +87,6 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         changeAccent()
-
         //we set the listeners once the view has actually been inflated
         btn_end_game.setOnClickListener { UIHelper.customSimpleAlert(context!!,
             getString(R.string.end_game_title),
@@ -102,6 +101,11 @@ class GameFragment : Fragment() {
         }
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_hide.setOnClickListener{ hide()}
+
+        tv_game_timer.text = String.format(
+            Locale.getDefault(), "%d:%02d",
+            viewModel.gameObject.value?.timeLimit, 0
+        )
     }
 
     override fun onResume() {
@@ -135,7 +139,7 @@ class GameFragment : Fragment() {
         timer = object : CountDownTimer((60000*timeLimit), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val text = String.format(
-                    Locale.getDefault(), "%02d:%02d",
+                    Locale.getDefault(), "%d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
                     TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
                 )
