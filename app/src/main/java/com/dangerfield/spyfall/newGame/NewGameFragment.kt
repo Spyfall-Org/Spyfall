@@ -90,7 +90,7 @@ class NewGameFragment : Fragment() {
     }
 
     private fun createGame(){
-        
+
         val timeLimit = tv_new_game_time.text.toString().trim()
         val playerName = tv_new_game_name.text.toString().trim()
         //these strings will be used for queries of the firestore database for which locations to include
@@ -187,7 +187,6 @@ class NewGameFragment : Fragment() {
                 }
                 FirebaseDatabase.getInstance().purgeOutstandingWrites()
             }
-
         }, 8000)
 
         loadMode()

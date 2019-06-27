@@ -1,6 +1,8 @@
 package com.dangerfield.spyfall.waiting
 
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.game.GameViewModel
+import com.google.firebase.database.FirebaseDatabase
 
 import kotlinx.android.synthetic.main.fragment_waiting.*
 import java.util.ArrayList
@@ -117,6 +120,29 @@ class WaitingFragment : Fragment() {
 
     private fun changeAccent(){
         btn_leave_game.background.setTint(UIHelper.accentColor)
+    }
+
+
+    //you would think that the waiting view would not get destoryed if the game started == false. maybe jsut remove players if that happens
+    override fun onPause() {
+        super.onPause()
+        Log.d("Waiting","onPause & started = ${viewModel.gameObject.value?.started}")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("Waiting","onStop & started = ${viewModel.gameObject.value?.started}")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("Waiting","onDestroyView & started = ${viewModel.gameObject.value?.started}")
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Waiting","onDestroy& started = ${viewModel.gameObject.value?.started}")
     }
 }
 
