@@ -40,7 +40,8 @@ class WaitingFragment : Fragment() {
             resources.getString(R.string.waiting_leaving_title),
             resources.getString(R.string.waiting_leaving_message),
             resources.getString(R.string.leave_action_positive), {leaveGame()},
-            resources.getString(R.string.leave_action_negative),{}).show()
+            resources.getString(R.string.leave_action_negative),{ btn_leave_game.isClickable = true
+            }).show()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
@@ -81,7 +82,10 @@ class WaitingFragment : Fragment() {
             if(viewModel.roles.isEmpty()){ viewModel.assignRolesAndStartGame() }else{ viewModel.startGame() }
         }
 
-        btn_leave_game.setOnClickListener {navigateBack?.invoke() ?: leaveGame()}
+        btn_leave_game.setOnClickListener {
+            btn_leave_game.isClickable = false
+            navigateBack?.invoke() ?: leaveGame()
+        }
 
         configureLayoutManagerAndRecyclerView()
     }

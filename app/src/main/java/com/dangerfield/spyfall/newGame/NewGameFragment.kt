@@ -3,12 +3,14 @@ package com.dangerfield.spyfall.newGame
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -20,6 +22,9 @@ import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_new_game.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -48,7 +53,7 @@ class NewGameFragment : Fragment() {
         navController = NavHostFragment.findNavController(this)
 
         //observer updates our value of internet connection
-        viewModel.hasNetworkConnection.observe(viewLifecycleOwner,{hasNetworkConnection->
+        viewModel.hasNetworkConnection.observe(viewLifecycleOwner,Observer{ hasNetworkConnection->
             this.hasNetworkConnection = hasNetworkConnection
         })
 
@@ -119,14 +124,18 @@ class NewGameFragment : Fragment() {
                 if(!connected){
                     //if we havent connected within 8 seconds, stop trying
                     UIHelper.errorDialog(context!!).show()
-                    enterMode()
+                    Handler(context!!.mainLooper).post {
+                        enterMode()
+                    }
                     FirebaseDatabase.getInstance().purgeOutstandingWrites()
                 }
             }, 8000)
 
             loadMode()
 
-            viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
+            val accessCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
+            Log.d("ACESS CODE: ","$accessCode")
+            viewModel.createGame(game, accessCode)
                 .addOnCompleteListener {
                     connected = true
                     enterMode()

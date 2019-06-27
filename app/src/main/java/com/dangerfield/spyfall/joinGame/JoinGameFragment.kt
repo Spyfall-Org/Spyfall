@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.util.UIHelper
@@ -47,15 +48,18 @@ class JoinGameFragment : Fragment() {
         //scope the view model to the activity so that data can be shared in fragments
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-        viewModel.hasNetworkConnection.observe(viewLifecycleOwner,{
+        viewModel.hasNetworkConnection.observe(viewLifecycleOwner, Observer{
             hasNetworkConnection = it
         })
     }
 
     private fun joinGameClick(){
 
+        btn_join_game_action.isClickable = false
+
         if(hasNetworkConnection){
             UIHelper.errorDialog(context!!).show()
+            enterMode()
             return
         }
         val accessCode = tv_access_code.text.toString().trim()
@@ -72,7 +76,9 @@ class JoinGameFragment : Fragment() {
             //if it takes more than 8 seconds, cancel
             if(!connected){
                 UIHelper.errorDialog(context!!).show()
-                enterMode()
+                Handler(context!!.mainLooper).post {
+                    enterMode()
+                }
                 FirebaseDatabase.getInstance().purgeOutstandingWrites()
             }
         },8000)

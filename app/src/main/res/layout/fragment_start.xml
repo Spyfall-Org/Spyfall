@@ -44,7 +44,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_rules" android:textAllCaps="false" android:textSize="18sp"/>
     <Button
-            android:text="@string/string_btn_join_game"
+            android:text="@string/string_join_game"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:id="@+id/btn_join_game"
