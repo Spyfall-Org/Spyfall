@@ -57,9 +57,11 @@ class JoinGameFragment : Fragment() {
 
         btn_join_game_action.isClickable = false
 
-        if(hasNetworkConnection){
+        if(!hasNetworkConnection){
             UIHelper.errorDialog(context!!).show()
-            enterMode()
+            Handler(context!!.mainLooper).post {
+                enterMode()
+            }
             return
         }
         val accessCode = tv_access_code.text.toString().trim()
@@ -85,9 +87,9 @@ class JoinGameFragment : Fragment() {
 
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
 
-            connected = true
+            connected = game.exists()
 
-            if(game.exists()){
+            if(connected){
                 val list = (game["playerList"] as ArrayList<String>)
 
                 when {

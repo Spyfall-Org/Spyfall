@@ -133,9 +133,8 @@ class NewGameFragment : Fragment() {
 
             loadMode()
 
-            val accessCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
-            Log.d("ACESS CODE: ","$accessCode")
-            viewModel.createGame(game, accessCode)
+
+            viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
                     connected = true
                     enterMode()
@@ -181,17 +180,22 @@ class NewGameFragment : Fragment() {
         var connected = false
         Handler().postDelayed({
             if(!connected){
+                Log.d("WIATING","Got here")
                 //if we are not connected in 8 seconds, stop trying. Should still work with cache
                 UIHelper.errorDialog(context!!).show()
-                enterMode()
+                Handler(context!!.mainLooper).post {
+                    enterMode()
+                }
                 FirebaseDatabase.getInstance().purgeOutstandingWrites()
             }
+
         }, 8000)
 
         loadMode()
         val list = mutableListOf<List<String>>()
         viewModel.getPackNames().addOnSuccessListener {
-            connected = true
+            connected = !it.isEmpty
+
             val packNames = it.documents.map { document -> document.id }
             var completedTasks = 0
             for (i in 0 until packNames.size) {
