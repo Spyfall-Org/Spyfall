@@ -82,7 +82,7 @@ class WaitingFragment : Fragment() {
             //immediately stop the same user from sending the request twice
             btn_start_game.isClickable = false
             //only the game creator has the roles automatically
-            if(viewModel.roles.isEmpty()){ viewModel.assignRolesAndStartGame() }else{ viewModel.startGame() }
+            if(viewModel.roles.isEmpty()){ viewModel.getRolesAndStartGame() }else{ viewModel.startGame() }
         }
 
         btn_leave_game.setOnClickListener {

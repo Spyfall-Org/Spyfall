@@ -78,15 +78,18 @@ class UIHelper {
             //TOD DO THIS WE MIGHT HAVE TO MAKE THE PARENT VIEW A LINEAR LAYOUT
 
             view.apply{
-                rv_dialog_pack1.adapter = SimpleTextAdapter(packsList[2], context)
+                tv_dialog_pack1_header.text = packsList[0][0]
+                rv_dialog_pack1.adapter = SimpleTextAdapter(packsList[0].subList(1,packsList[0].size-1), context)
                 rv_dialog_pack1.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack1.setHasFixedSize(true)
 
-                rv_dialog_pack2.adapter = SimpleTextAdapter(packsList[1], context)
+                tv_dialog_pack2_header.text = packsList[1][0]
+                rv_dialog_pack2.adapter = SimpleTextAdapter(packsList[1].subList(1,packsList[1].size-1), context)
                 rv_dialog_pack2.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack2.setHasFixedSize(true)
 
-                rv_dialog_pack3.adapter = SimpleTextAdapter(packsList[0], context)
+                tv_dialog_pack3_header.text = packsList[2][0]
+                rv_dialog_pack3.adapter = SimpleTextAdapter(packsList[2].subList(1,packsList[2].size-1), context)
                 rv_dialog_pack3.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack3.setHasFixedSize(true)
 

@@ -58,50 +58,30 @@ class GameViewModel : ViewModel() {
 
     fun getRandomLocation() {
         if (gameObject.value?.chosenLocation.isNullOrEmpty()) {
+            val randomPack = gameObject.value!!.chosenPacks.random()
+            db.collection("packs").document(randomPack)
+                .get().addOnSuccessListener {
+                    val (location,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
+                    roles.addAll(mRoles)
+                    gameRef.update("chosenLocation",location)
+                    //places the pack with the chosen location at index 0
+                    Collections.swap(gameObject.value!!.chosenPacks,
+                        0,gameObject.value!!.chosenPacks.indexOf(randomPack))
+                    gameRef.update("chosenPacks", gameObject.value!!.chosenPacks)
 
-            gameRef.get().addOnSuccessListener {
-                //selects one of the packs at random
-                //we can garuntee that chosen packs will be here as it is sent over in the creation screen
-                val randomPack = gameObject.value!!.chosenPacks.random()
-
-                val collectionRef = db.collection(randomPack)
-                collectionRef.get().addOnSuccessListener { documents ->
-                    //get a random location and add it to the game node
-                    val index = Random().nextInt(documents.toList().size)
-                    val randomLocation = documents.toList()[index]
-                    //collects all of the roels for a random location
-                    (randomLocation["roles"] as ArrayList<String>).forEach { roles.add(it) }
-
-                    gameRef.update("chosenLocation", randomLocation.id)
                 }
-                    .addOnFailureListener { exception ->
-                        Log.w("Game view model", "Error getting documents: ", exception)
-                    }
-            }
         }
     }
 
-    fun assignRolesAndStartGame() {
+    fun getRolesAndStartGame() {
         //TODO: findout how to flag started to disable creat clicks here
 
-        val chosenPacks = gameObject.value!!.chosenPacks
-        val location = gameObject.value!!.chosenLocation
-        for (i in 0 until chosenPacks.size) {
-            db.collection(chosenPacks[i]).whereEqualTo("location", location)
-                .get().addOnSuccessListener { locationInfo ->
-
-                    if (locationInfo.documents.size == 1) {
-                        //only one document should be found matching the location
-                        roles.addAll(locationInfo.documents[0]["roles"] as ArrayList<String>)
-                        //so now we have all the roles
-                        //get playerlist, create an object for each playerlist and assign a random role
-                        startGame()
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("events", "Error getting roles: ", exception)
-                }
-        }
+        db.collection("packs").document(gameObject.value!!.chosenPacks[0])
+            .get().addOnSuccessListener {
+                val (_,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
+                roles.addAll(mRoles)
+                startGame()
+            }
     }
 
     fun startGame() {
@@ -112,7 +92,7 @@ class GameViewModel : ViewModel() {
         if(roles.isNullOrEmpty() or gameObject.value?.playerList.isNullOrEmpty()){ return }
 
             val playerNames = gameObject.value?.playerList?.shuffled()
-            var playerObjectList = ArrayList<Player>()
+            val playerObjectList = ArrayList<Player>()
             roles.shuffle()
 
             for (i in 0 until playerNames!!.size - 1) {
@@ -129,31 +109,19 @@ class GameViewModel : ViewModel() {
     }
 
     fun getAllGameLocations():  LiveData<ArrayList<String>> {
-        var completedTasks = 0
-        var tempLocations = ArrayList<String>()
-        //if more than one pack was chosen, load all locations, shuffle, pick first 30
-
-        gameObject.value.let{game ->
-
-            for (i in 0 until game!!.chosenPacks.size) {
-
-                db.collection(game.chosenPacks[i]).get().addOnSuccessListener { location ->
-                    location.documents.forEach { tempLocations.add(it.id) }
-                    Log.d("Game View Model", "ALL LOCAITONS: ${gameLocations}")
-
-                }.addOnCompleteListener {
-                    completedTasks += 1
-                    if(completedTasks == game.chosenPacks.size){
-                        gameLocations.value = tempLocations
-                    }
-                }
+        val tempLocations = ArrayList<String>()
+        gameObject.value?.let {game ->
+            db.collection("packs").get().addOnSuccessListener { collection ->
+                collection.documents.forEach { document ->
+                    if (game.chosenPacks.contains(document.id)) tempLocations.addAll(document.data!!.keys.toList())
+            }
+            }.addOnCompleteListener {
+                gameLocations.value = tempLocations
             }
         }
-        return this.gameLocations
+        return gameLocations
     }
-
-    fun getPackNames(): Task<QuerySnapshot> =  db.collection("pack names").get()
-
+    
     fun endGame(): Task<Void> {
         roles.clear()
         // delete the game on the server

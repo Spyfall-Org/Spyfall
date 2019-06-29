@@ -77,9 +77,9 @@ class NewGameFragment : Fragment() {
 
         //TODO: make this dynamic by pulling pack names from firebase
 
-        packs.add(GamePack(UIHelper.accentColors[0],"Standard",1,"pack 1",false))
-        packs.add(GamePack(UIHelper.accentColors[1],"Standard",2,"pack 2",false))
-        packs.add(GamePack(UIHelper.accentColors[2],"Special",1,"special pack",false))
+        packs.add(GamePack(UIHelper.accentColors[0],"Standard",1,"Standard Pack 1",false))
+        packs.add(GamePack(UIHelper.accentColors[1],"Standard",2,"Standard Pack 2",false))
+        packs.add(GamePack(UIHelper.accentColors[2],"Special",1,"Special Pack 1",false))
 
         rv_packs.apply{
             layoutManager = GridLayoutManager(context, 3)
@@ -190,27 +190,20 @@ class NewGameFragment : Fragment() {
         }, 8000)
 
         loadMode()
+
         val list = mutableListOf<List<String>>()
-        viewModel.getPackNames().addOnSuccessListener {
-            connected = !it.isEmpty
 
-            val packNames = it.documents.map { document -> document.id }
-            var completedTasks = 0
-            for (i in 0 until packNames.size) {
-
-                viewModel.db.collection(packNames[i]).get().addOnSuccessListener { pack ->
-                    list.add(pack.documents.map { location -> location.id })
-
-                }.addOnCompleteListener {
-                    completedTasks += 1
-                    if (completedTasks == packNames.size) {
-                        //then youre done
-                        UIHelper.packsDialog(context!!, list).show()
-                        enterMode()
-                    }
-                }
+        viewModel.db.collection("packs").get().addOnSuccessListener { collection ->
+            collection.documents.forEach { document ->
+                //add to the list
+                connected = !collection.isEmpty
+                val pack = listOf(document.id) + document.data!!.keys.toList()
+                list.add(pack)
             }
+        }.addOnCompleteListener {
 
+            UIHelper.packsDialog(context!!, list).show()
+            enterMode()
         }
     }
 }
