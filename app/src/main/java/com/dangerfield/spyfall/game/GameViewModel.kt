@@ -144,11 +144,13 @@ class GameViewModel : ViewModel() {
             return gameRef.set(game)
     }
 
-    fun removePlayer(): Task<Void> {
+    fun removePlayer(): Task<Void>{
        //when a player leaves a game, you dont want them to hold onto the game data
         gameObject = MutableLiveData()
         roles.clear()
-        return gameRef.update("playerList", FieldValue.arrayRemove(currentUser))
+        return gameRef.update("playerList", FieldValue.arrayRemove(currentUser)).addOnSuccessListener {
+            if(gameObject.value?.playerList?.size == 0){ endGame()}
+        }
     }
 
     fun addPlayer(player: String) = gameRef.update("playerList", FieldValue.arrayUnion(player))

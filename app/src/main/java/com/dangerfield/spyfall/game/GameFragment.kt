@@ -223,5 +223,7 @@ class GameFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("GAME","onDestroy& started = ${viewModel.gameObject.value?.started}")
+        timer?.cancel()
+        timer = null
     }
 }

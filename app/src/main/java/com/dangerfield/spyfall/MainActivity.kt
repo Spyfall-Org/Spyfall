@@ -10,6 +10,9 @@ import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.util.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
 import com.google.android.gms.ads.MobileAds
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity(){
 
@@ -54,5 +57,17 @@ class MainActivity : AppCompatActivity(){
         val intentFilter = IntentFilter()
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(receiver,intentFilter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+//        runBlocking {
+//            //after 10 seconds, delete the game
+//            killGame = async{
+//                delay(10000)
+//                viewModel.removePlayer()
+//            }
+//        }
     }
 }
