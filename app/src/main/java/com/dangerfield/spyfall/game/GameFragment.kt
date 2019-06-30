@@ -204,25 +204,8 @@ class GameFragment : Fragment() {
         btn_hide.background.setTint(UIHelper.accentColor)
     }
 
-    //you would think that the waiting view would not get destoryed if the game started == false. maybe jsut remove players if that happens
-    override fun onPause() {
-        super.onPause()
-        Log.d("GAME","onPause & started = ${viewModel.gameObject.value?.started}")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("GAME","onStop & started = ${viewModel.gameObject.value?.started}")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("GAME","onDestroyView & started = ${viewModel.gameObject.value?.started}")
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("GAME","onDestroy& started = ${viewModel.gameObject.value?.started}")
         timer?.cancel()
         timer = null
     }

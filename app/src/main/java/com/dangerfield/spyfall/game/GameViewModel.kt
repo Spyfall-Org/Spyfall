@@ -126,6 +126,10 @@ class GameViewModel : ViewModel() {
     
     fun endGame(): Task<Void> {
         roles.clear()
+        gameListener.remove()
+        //sets to false such that listener in game fragment can be triggered
+        gameExists.value = false
+
         // delete the game on the server
        return gameRef.delete()
     }
