@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
+import com.google.android.gms.ads.AdRequest
 
 class GameFragment : Fragment() {
 
@@ -55,6 +56,9 @@ class GameFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        adView2.loadAd(AdRequest.Builder().build())
+
         //set up views every time
         val firstPlayer = configurePlayerViews()
         configurePlayersAdapter(firstPlayer)

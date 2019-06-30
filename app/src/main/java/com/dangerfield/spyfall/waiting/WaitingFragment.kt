@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.game.GameViewModel
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import com.google.firebase.database.FirebaseDatabase
 
 import kotlinx.android.synthetic.main.fragment_waiting.*
@@ -57,6 +59,8 @@ class WaitingFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        adView.loadAd(AdRequest.Builder().build())
 
         viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
 

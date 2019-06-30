@@ -190,9 +190,7 @@ class NewGameFragment : Fragment() {
         }, 8000)
 
         loadMode()
-
         val list = mutableListOf<List<String>>()
-
         viewModel.db.collection("packs").get().addOnSuccessListener { collection ->
             collection.documents.forEach { document ->
                 //add to the list
