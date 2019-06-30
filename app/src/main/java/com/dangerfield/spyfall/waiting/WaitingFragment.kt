@@ -127,7 +127,7 @@ class WaitingFragment : Fragment() {
     }
 
     private fun changeAccent(){
-        btn_leave_game.background.setTint(UIHelper.accentColor)
+        btn_start_game.background.setTint(UIHelper.accentColor)
         pb_waiting.indeterminateDrawable
             .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
     }
