@@ -80,9 +80,17 @@
                 ads:adUnitId="@string/test_banner_ad_unit_id"
                 android:id="@+id/adView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/btn_start_game"
-                android:layout_marginTop="16dp" android:layout_marginBottom="8dp"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/pb_waiting"
+                android:layout_marginTop="8dp" android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+        <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pb_waiting" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/btn_start_game"
+                app:layout_constraintStart_toStartOf="@+id/btn_start_game"
+                app:layout_constraintEnd_toEndOf="@+id/btn_start_game" android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

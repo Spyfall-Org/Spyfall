@@ -76,6 +76,7 @@ class WaitingFragment : Fragment() {
 
             //we know everything is good to go when the player objects list is done
             if(updatedGame.playerList.size == updatedGame.playerObjectList.size && navController.currentDestination?.id == R.id.waitingFragment){
+                enterMode()
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
             }
         })
@@ -87,10 +88,9 @@ class WaitingFragment : Fragment() {
         changeAccent()
         //only set the listeners once the view has been created
         btn_start_game.setOnClickListener {
-            //TODO: Consider case of a user coming back to this screen, will the button be clickable?
-            //immediately stop the same user from sending the request twice
-            btn_start_game.isClickable = false
+            loadMode()
             //only the game creator has the roles automatically
+            //TODO: is you wanted a timeout function, this woud be the place
             if(viewModel.roles.isEmpty()){ viewModel.getRolesAndStartGame() }else{ viewModel.startGame() }
         }
 
@@ -126,6 +126,17 @@ class WaitingFragment : Fragment() {
 
     private fun changeAccent(){
         btn_leave_game.background.setTint(UIHelper.accentColor)
+    }
+
+    fun loadMode(){
+        pb_waiting.visibility = View.VISIBLE
+        btn_leave_game.isClickable = false
+        btn_start_game.isClickable = false
+    }
+    fun enterMode(){
+        pb_waiting.visibility = View.GONE
+        btn_leave_game.isClickable = true
+        btn_start_game.isClickable = true
     }
 
 
