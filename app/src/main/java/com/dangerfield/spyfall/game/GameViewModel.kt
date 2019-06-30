@@ -9,6 +9,7 @@ import com.dangerfield.spyfall.models.Player
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,13 +33,14 @@ class GameViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
     var gameRef = db.collection("games").document(ACCESS_CODE)
     var gameLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
+    private lateinit var gameListener: ListenerRegistration
 
     lateinit var currentUser: String
 
     fun getGameUpdates(): MutableLiveData<Game> {
 
         // we need to make it such that when gameref changes, so does the game ref in this snap shot listener
-        gameRef.addSnapshotListener { game, error ->
+        gameListener = gameRef.addSnapshotListener { game, error ->
             if (error != null) {
                 Log.w("View Model", "Listen failed.", error)
                 return@addSnapshotListener
@@ -147,6 +149,9 @@ class GameViewModel : ViewModel() {
        //when a player leaves a game, you dont want them to hold onto the game data
         gameObject = MutableLiveData()
         roles.clear()
+        gameListener.remove()
+        //set to false such that when a user is not timeout removed to a game they already left
+        gameExists.value = false
         return gameRef.update("playerList", FieldValue.arrayRemove(currentUser)).addOnSuccessListener {
             if(gameObject.value?.playerList?.size == 0){ endGame()}
         }

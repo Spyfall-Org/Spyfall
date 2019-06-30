@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
 
                 //if the user closes the app after starting a game, wait 15 mins and remove the player
                 killGame = GlobalScope.launch{
-                    delay(900000)
+                    delay(900000 )
                     killed = true
                     Log.d("Main","timeout finished, removing user")
                     viewModel.removePlayer()
