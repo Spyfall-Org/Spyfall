@@ -21,6 +21,9 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +38,8 @@ class NewGameFragment : Fragment() {
     private lateinit var packsAdapter: PacksAdapter
     private var hasNetworkConnection = false
     lateinit var navController: NavController
+    private lateinit var mInterstitialAd: InterstitialAd
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,6 +55,10 @@ class NewGameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        mInterstitialAd = InterstitialAd(context!!)
+        mInterstitialAd.adUnitId = getString(R.string.test_interstitial)
+        mInterstitialAd.loadAd(AdRequest.Builder().build())
 
         navController = NavHostFragment.findNavController(this)
 
@@ -111,6 +120,8 @@ class NewGameFragment : Fragment() {
                 return
             }
         }
+
+        if (mInterstitialAd.isLoaded) mInterstitialAd.show()
 
         viewModel.currentUser = playerName
         createGame(Game("",chosenPacks,false,
