@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.newGame
 
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
@@ -148,9 +149,9 @@ class NewGameFragment : Fragment() {
             viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
                 .addOnCompleteListener {
                     connected = true
-                    enterMode()
                     val bundle = bundleOf("FromFragment" to "NewGameFragment")
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
+                    enterMode()
                 }
         }else{
             UIHelper.errorDialog(context!!).show()
@@ -160,11 +161,13 @@ class NewGameFragment : Fragment() {
 
     fun loadMode(){
         pb_new_game.visibility = View.VISIBLE
+        btn_create.text = ""
         btn_create.isClickable = false
         btn_packs.isClickable = false
     }
     fun enterMode(){
         pb_new_game.visibility = View.INVISIBLE
+        btn_create.text = getString(R.string.string_btn_create)
         btn_create.isClickable = true
         btn_packs.isClickable = true
     }
@@ -181,7 +184,7 @@ class NewGameFragment : Fragment() {
         UIHelper.setCursorColor(tv_new_game_time,UIHelper.accentColor)
 
         pb_new_game.indeterminateDrawable
-            .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
+            .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
 
     }
 

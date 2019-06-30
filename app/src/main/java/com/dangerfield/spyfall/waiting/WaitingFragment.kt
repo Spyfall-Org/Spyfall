@@ -1,5 +1,7 @@
 package com.dangerfield.spyfall.waiting
 
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -76,8 +78,8 @@ class WaitingFragment : Fragment() {
 
             //we know everything is good to go when the player objects list is done
             if(updatedGame.playerList.size == updatedGame.playerObjectList.size && navController.currentDestination?.id == R.id.waitingFragment){
-                enterMode()
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
+                enterMode()
             }
         })
     }
@@ -126,14 +128,18 @@ class WaitingFragment : Fragment() {
 
     private fun changeAccent(){
         btn_leave_game.background.setTint(UIHelper.accentColor)
+        pb_waiting.indeterminateDrawable
+            .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
     }
 
     fun loadMode(){
+        btn_start_game.text = ""
         pb_waiting.visibility = View.VISIBLE
         btn_leave_game.isClickable = false
         btn_start_game.isClickable = false
     }
     fun enterMode(){
+        btn_start_game.text = getString(R.string.string_btn_start_game)
         pb_waiting.visibility = View.GONE
         btn_leave_game.isClickable = true
         btn_start_game.isClickable = true

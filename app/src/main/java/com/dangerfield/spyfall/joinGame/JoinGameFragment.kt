@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.joinGame
 
+import android.graphics.Color
 import android.graphics.PorterDuff
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -134,8 +135,8 @@ class JoinGameFragment : Fragment() {
         viewModel.currentUser = asPlayer
         viewModel.addPlayer(asPlayer).addOnCompleteListener {
             connected = true
-            enterMode()
             navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
+            enterMode()
         }
     }
 
@@ -146,14 +147,16 @@ class JoinGameFragment : Fragment() {
         UIHelper.setCursorColor(tv_username,UIHelper.accentColor)
 
         pb_join_game.indeterminateDrawable
-            .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
+            .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
 
     }
     private fun loadMode(){
+        btn_join_game_action.text = ""
         pb_join_game.visibility = View.VISIBLE
         btn_join_game_action.isClickable = false
     }
     private fun enterMode(){
+        btn_join_game_action.text = getString(R.string.string_join_game)
         pb_join_game.visibility = View.INVISIBLE
         btn_join_game_action.isClickable = true
     }
