@@ -6,28 +6,37 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.util.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
 import com.google.android.gms.ads.MobileAds
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), CoroutineScope{
 
     lateinit var viewModel: GameViewModel
     lateinit var receiver: Receiver
+    private  lateinit var killGame: Job
+    private lateinit var navController: NavController
+    private var killed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        killGame = Job()
 
         MobileAds.initialize(this, getString(R.string.ads_mod_app_id))
 
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
+
+        navController = findNavController(this,R.id.nav_host_fragment)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -39,6 +48,27 @@ class MainActivity : AppCompatActivity(){
         register()
     }
 
+    override val coroutineContext: CoroutineContext
+        get() = killGame + Dispatchers.Main
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Main","main activities on start was called")
+        if(killGame.isActive){
+            try{
+                //if the user comes back before the 15 min timeout, cancel the job
+                killGame.cancel()
+            }catch (e: CancellationException){
+                Log.d("Main","Killing of the game was cancelled")
+            }
+        }
+
+        if(killed){
+            navController.popBackStack(R.id.startFragment,false)
+            killed = false
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         unregisterReceiver(receiver)
@@ -46,10 +76,11 @@ class MainActivity : AppCompatActivity(){
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("Main","on destory")
+        Log.d("Main","onDestroy Called, removing user")
 
-        //TODO: you might want to delete the game if the activity is destroyed, just know it will delete the game for everyone
-        viewModel.endGame()
+        if(viewModel.gameExists.value != null && viewModel.gameExists.value!!){
+            viewModel.removePlayer()
+        }
     }
 
     private fun register(){
@@ -61,13 +92,15 @@ class MainActivity : AppCompatActivity(){
 
     override fun onStop() {
         super.onStop()
+          if(viewModel.gameExists.value != null && viewModel.gameExists.value!!){
 
-//        runBlocking {
-//            //after 10 seconds, delete the game
-//            killGame = async{
-//                delay(10000)
-//                viewModel.removePlayer()
-//            }
-//        }
+                //if the user closes the app after starting a game, wait 15 mins and remove the player
+                killGame = GlobalScope.launch{
+                    delay(900000)
+                    killed = true
+                    Log.d("Main","timeout finished, removing user")
+                    viewModel.removePlayer()
+                }
+        }
     }
 }

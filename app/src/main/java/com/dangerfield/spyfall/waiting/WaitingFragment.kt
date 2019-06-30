@@ -35,23 +35,8 @@ class WaitingFragment : Fragment() {
     private var isGameCreator: Boolean = false
     private var navigateBack: (() -> Unit)? = null
     private lateinit var navController: NavController
-    private  var killGame: Deferred<Task<Void>>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        if(killGame?.isActive == true){
-            try{
-                killGame!!.cancel()
-
-            }catch (e: CancellationException){
-                Log.d("Waiting","Killing of the game was cancelled")
-            }
-        }
-
-        if(killGame?.isCompleted == true){
-            navController.popBackStack(R.id.startFragment,false)
-        }
-
         return inflater.inflate(R.layout.fragment_waiting, container, false)
     }
 
@@ -81,8 +66,6 @@ class WaitingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         adView.loadAd(AdRequest.Builder().build())
-
-
 
         viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
 
@@ -156,13 +139,6 @@ class WaitingFragment : Fragment() {
         super.onStop()
         Log.d("Waiting","onStop & started = ${viewModel.gameObject.value?.started}")
 
-        runBlocking {
-            //after 10 seconds, delete the game
-           killGame = async{
-               delay(10000)
-               viewModel.removePlayer()
-            }
-        }
     }
 
     override fun onDestroyView() {
