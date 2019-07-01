@@ -155,7 +155,7 @@ class GameViewModel : ViewModel() {
         roles.clear()
         gameListener.remove()
         //set to false such that when a user is not timeout removed to a game they already left
-        gameExists.value = false
+        gameExists.postValue(false)
         return gameRef.update("playerList", FieldValue.arrayRemove(currentUser)).addOnSuccessListener {
             if(gameObject.value?.playerList?.size == 0){ endGame()}
         }

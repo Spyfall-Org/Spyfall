@@ -39,7 +39,7 @@ class NewGameFragment : Fragment() {
     private lateinit var packsAdapter: PacksAdapter
     private var hasNetworkConnection = false
     lateinit var navController: NavController
-    private lateinit var mInterstitialAd: InterstitialAd
+    //private lateinit var mInterstitialAd: InterstitialAd
 
 
     override fun onCreateView(
@@ -57,9 +57,9 @@ class NewGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mInterstitialAd = InterstitialAd(context!!)
-        mInterstitialAd.adUnitId = getString(R.string.test_interstitial)
-        mInterstitialAd.loadAd(AdRequest.Builder().build())
+        //mInterstitialAd = InterstitialAd(context!!)
+        //mInterstitialAd.adUnitId = getString(R.string.test_interstitial)
+        //mInterstitialAd.loadAd(AdRequest.Builder().build())
 
         navController = NavHostFragment.findNavController(this)
 
@@ -122,7 +122,7 @@ class NewGameFragment : Fragment() {
             }
         }
 
-        if (mInterstitialAd.isLoaded) mInterstitialAd.show()
+        //if (mInterstitialAd.isLoaded) mInterstitialAd.show()
 
         viewModel.currentUser = playerName
         createGame(Game("",chosenPacks,false,
@@ -183,6 +183,9 @@ class NewGameFragment : Fragment() {
 
         UIHelper.setCursorColor(tv_new_game_time,UIHelper.accentColor)
 
+        pb_packs.indeterminateDrawable
+            .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN )
+
         pb_new_game.indeterminateDrawable
             .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
 
@@ -190,6 +193,9 @@ class NewGameFragment : Fragment() {
 
     private fun showPacksDialog() {
 
+        pb_packs.visibility = View.VISIBLE
+        btn_packs.visibility = View.INVISIBLE
+        btn_packs.isClickable = false
         //we also might consider a different structure for the backend where the packs are kept in on collection
         var connected = false
         Handler().postDelayed({
@@ -197,14 +203,15 @@ class NewGameFragment : Fragment() {
                 //if we are not connected in 8 seconds, stop trying. Should still work with cache
                 UIHelper.errorDialog(context!!).show()
                 Handler(context!!.mainLooper).post {
-                    enterMode()
+                    pb_packs.visibility = View.INVISIBLE
+                    btn_packs.visibility = View.VISIBLE
+                    btn_packs.isClickable = true
                 }
-                FirebaseDatabase.getInstance().purgeOutstandingWrites()
             }
         }, 8000)
 
-        loadMode()
         val list = mutableListOf<List<String>>()
+        //TODO: consider changing to valueeventlistener so it is cancelable if it takes too long
         viewModel.db.collection("packs").get().addOnSuccessListener { collection ->
             collection.documents.forEach { document ->
                 //add to the list
@@ -215,7 +222,9 @@ class NewGameFragment : Fragment() {
         }.addOnCompleteListener {
 
             UIHelper.packsDialog(context!!, list).show()
-            enterMode()
+            pb_packs.visibility = View.INVISIBLE
+            btn_packs.visibility = View.VISIBLE
+            btn_packs.isClickable = true
         }
     }
 }

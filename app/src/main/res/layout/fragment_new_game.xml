@@ -2,7 +2,7 @@
 <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:background="@color/colorBackgroundLight"
 
@@ -121,14 +121,24 @@
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="24dp"
                 android:orientation="horizontal" app:layout_constraintHorizontal_bias="0.0"/>
         <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:id="@+id/btn_packs"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 app:layout_constraintTop_toTopOf="@+id/textView11"
                 app:layout_constraintBottom_toBottomOf="@+id/textView11"
                 app:layout_constraintEnd_toEndOf="@+id/rv_packs"
                 android:src="@drawable/ic_rules" android:contentDescription="Information button for game packs"/>
+        <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/pb_packs" app:layout_constraintStart_toStartOf="@+id/btn_packs"
+                app:layout_constraintEnd_toEndOf="@+id/btn_packs"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_packs"
+                app:layout_constraintTop_toTopOf="@+id/btn_packs" android:visibility="invisible"
+                android:layout_marginTop="8dp" android:layout_marginBottom="8dp" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
