@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -76,6 +77,8 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
                     btn_alert_change_name_canel.setOnClickListener{ dialog.dismiss() }
                 }
                 dialog.show()
+                view.tv_alert_change_name.requestFocus()
+                dialog.window?.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE);
             }
         }
     }

@@ -192,7 +192,6 @@ class NewGameFragment : Fragment() {
     }
 
     private fun showPacksDialog() {
-
         pb_packs.visibility = View.VISIBLE
         btn_packs.visibility = View.INVISIBLE
         btn_packs.isClickable = false
@@ -212,7 +211,8 @@ class NewGameFragment : Fragment() {
 
         val list = mutableListOf<List<String>>()
         //TODO: consider changing to valueeventlistener so it is cancelable if it takes too long
-        viewModel.db.collection("packs").get().addOnSuccessListener { collection ->
+        viewModel.db.collection("packs").get()
+            .addOnSuccessListener { collection ->
             collection.documents.forEach { document ->
                 //add to the list
                 connected = !collection.isEmpty
