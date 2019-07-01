@@ -80,6 +80,7 @@ class WaitingFragment : Fragment() {
             if(updatedGame.playerList.size == updatedGame.playerObjectList.size && navController.currentDestination?.id == R.id.waitingFragment){
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
                 enterMode()
+                viewModel.incrementGamesPlayed()
             }
         })
     }
@@ -145,27 +146,5 @@ class WaitingFragment : Fragment() {
         btn_start_game.isClickable = true
     }
 
-
-    //you would think that the waiting view would not get destoryed if the game started == false. maybe jsut remove players if that happens
-    override fun onPause() {
-        super.onPause()
-        Log.d("Waiting","onPause & started = ${viewModel.gameObject.value?.started}")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("Waiting","onStop & started = ${viewModel.gameObject.value?.started}")
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("Waiting","onDestroyView & started = ${viewModel.gameObject.value?.started}")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("Waiting","onDestroy& started = ${viewModel.gameObject.value?.started}")
-    }
 }
 
