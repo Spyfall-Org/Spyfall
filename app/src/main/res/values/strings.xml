@@ -109,6 +109,10 @@
     <!--SHARED PREFERNCES-->
     <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
     <string name="shared_preferences">SHARED_PREFERNCES</string>
+    <string name="shared_preferences_games">SHARED_PREFERENCES_GAMES</string>
+    <string name="shared_preferences_hasReviewed">SHARED_PREFERENCES_HAS_REVIEWED</string>
+
+
 
 
 
