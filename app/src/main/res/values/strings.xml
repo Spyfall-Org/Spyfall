@@ -119,6 +119,9 @@
 
     <string name="string_btn_leave_game">Leave Game</string>
     <string name="string_btn_start_game">Start Game</string>
+    <string name="dialog_rate_title">Like the game?</string>
+    <string name="dialog_rate_message">Pretty please let us know by giving us a review :)</string>
+    <string name="dialog_rate_negative">No</string>
 
 
 </resources>

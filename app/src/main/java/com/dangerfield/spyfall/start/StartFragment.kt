@@ -12,6 +12,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import kotlinx.android.synthetic.main.fragment_start.*
+import android.content.Intent
+import android.content.ActivityNotFoundException
+import android.net.Uri
+
 
 class StartFragment : Fragment() {
 
@@ -56,11 +60,13 @@ class StartFragment : Fragment() {
         //increment number of games played, if it is a multiple of 5 and the user hasnt revied, ask for a review
         if(incrementGamePlay() % 5 == 0 && !userHasReviewed()){
             //show request for review
-            UIHelper.customSimpleAlert(context!!,"Like the game?","Pretty please let us know by giving us a review :)",
-                "Okay",{
-                    //TODO: bring user to app store
+            UIHelper.customSimpleAlert(context!!,
+                getString(R.string.dialog_rate_title),
+                getString(R.string.dialog_rate_message),
+                getString(R.string.positive_action_standard),{
+                    openStoreForReview()
                     setUserReview()
-                },"NO!",{}).show()
+                },getString(R.string.dialog_rate_negative),{}).show()
         }
     }
 
@@ -101,5 +107,26 @@ class StartFragment : Fragment() {
     fun userHasReviewed(): Boolean {
         val prefs = context!!.getSharedPreferences(context!!.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
         return prefs.getBoolean(context!!.resources.getString(R.string.shared_preferences_hasReviewed), false)
+    }
+
+    fun openStoreForReview(){
+        val uri = Uri.parse("market://details?id=" + context?.packageName)
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        // To count with Play market backstack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(
+            Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+        )
+        try
+        {
+            startActivity(goToMarket)
+        }
+        catch (e:ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)))
+        }
+
     }
 }
