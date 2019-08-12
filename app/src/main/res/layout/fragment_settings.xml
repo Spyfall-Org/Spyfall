@@ -77,7 +77,7 @@
             android:src="@drawable/ic_ads_"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/imageView2"
+            android:id="@+id/ic_ads"
             app:layout_constraintBottom_toBottomOf="@+id/btn_ads" app:layout_constraintTop_toTopOf="@+id/btn_ads"
             app:layout_constraintStart_toStartOf="@+id/btn_ads"/>
     <TextView
@@ -85,8 +85,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_ads"
-            app:layout_constraintTop_toTopOf="@+id/imageView2"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView2" android:textColor="@color/colorBlack"
+            app:layout_constraintTop_toTopOf="@+id/ic_ads"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_ads" android:textColor="@color/colorBlack"
             android:textStyle="bold" app:layout_constraintStart_toStartOf="@+id/tv_about"/>
 
 

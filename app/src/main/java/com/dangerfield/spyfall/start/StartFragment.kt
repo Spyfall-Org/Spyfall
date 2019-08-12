@@ -57,7 +57,7 @@ class StartFragment : Fragment() {
         UIHelper.getSavedColor(context!!)
         changeAccent()
 
-        //increment number of games played, if it is a multiple of 5 and the user hasnt revied, ask for a review
+        //increment number of games played, if it is a multiple of 5 and the user hasnt reviewed yet, ask for a review
         if(incrementGamePlay() % 5 == 0 && !userHasReviewed()){
             //show request for review
             UIHelper.customSimpleAlert(context!!,

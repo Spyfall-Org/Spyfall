@@ -18,6 +18,7 @@ import kotlin.collections.ArrayList
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import com.google.android.gms.ads.AdRequest
@@ -57,7 +58,7 @@ class GameFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adView2.loadAd(AdRequest.Builder().build())
+        if(BuildConfig.FLAVOR == "free") adView2.loadAd(AdRequest.Builder().build()) else adView2.visibility = View.GONE
 
         //set up views every time
         val firstPlayer = configurePlayerViews()

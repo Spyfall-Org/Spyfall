@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.game.GameViewModel
@@ -67,7 +68,7 @@ class WaitingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adView.loadAd(AdRequest.Builder().build())
+        if(BuildConfig.FLAVOR == "free") adView.loadAd(AdRequest.Builder().build())
 
         viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
 

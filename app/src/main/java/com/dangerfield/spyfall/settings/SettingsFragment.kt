@@ -1,6 +1,7 @@
 package com.dangerfield.spyfall.settings
 
 
+import android.content.ActivityNotFoundException
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -18,10 +19,13 @@ import kotlinx.android.synthetic.main.alert_custom.view.btn_custom_alert_positiv
 import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_message
 import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_title
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.dangerfield.spyfall.BuildConfig
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -58,16 +62,45 @@ class SettingsFragment : Fragment() {
                 resources.getString(R.string.about_message),
                 resources.getString(R.string.positive_action_standard),{}, "",{}).show()
         }
-
-        btn_ads.setOnClickListener{
-            UIHelper.customSimpleAlert(context!!,
-                resources.getString(R.string.ads_title),
-                resources.getString(R.string.remove_ads_message),
-                resources.getString(R.string.ads_positive_action),{},
-                resources.getString(R.string.negative_action_standard),{}).show()
+        if(BuildConfig.FLAVOR == "free"){
+            btn_ads.setOnClickListener{
+                UIHelper.customSimpleAlert(context!!,
+                    resources.getString(R.string.ads_title),
+                    resources.getString(R.string.remove_ads_message),
+                    resources.getString(R.string.ads_positive_action),{sendUserToPaidVersion()},
+                    resources.getString(R.string.negative_action_standard),{}).show()
+            }
+        }else{
+            //if the user is using the paid version lets just make sure they cant see this
+            btn_ads.visibility = View.GONE
+            tv_ads.visibility = View.GONE
+            ic_ads.visibility = View.GONE
         }
+
     }
 
+    private fun sendUserToPaidVersion(){
+        val uri = Uri.parse("market://details?id=" + context?.packageName)
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        // To count with Play market backstack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(
+            Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+        )
+        try
+        {
+            startActivity(goToMarket)
+        }
+        catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + "com.dangerfield.spyfall.paid"))
+            )
+        }
+    }
     //TODO: consider making a view model for this
     private fun showColorChangeDialog(){
         val dialogBuilder = AlertDialog.Builder(context!!)
