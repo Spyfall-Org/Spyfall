@@ -25,7 +25,6 @@
                 android:layout_height="85dp"
                 android:id="@+id/view_role_card"
                 app:layout_constraintStart_toStartOf="parent"
-
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp" android:background="@drawable/background_dialog"
@@ -42,14 +41,18 @@
                 android:textColor="@android:color/black" android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@+id/adView2"/>
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:autoSizeMaxTextSize="26sp"
+                android:autoSizeTextType="uniform"
                 android:id="@+id/tv_game_role"
                 app:layout_constraintStart_toStartOf="@+id/view_role_card"
                 app:layout_constraintEnd_toEndOf="@+id/view_role_card"
-                tools:text="You are the Spy!" android:textStyle="bold" android:textSize="24sp"
+                tools:text="Role: The Spy!" android:textStyle="bold" android:textSize="24sp"
                 android:textColor="@android:color/black"
-                android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="@+id/view_role_card"/>
+                app:layout_constraintTop_toTopOf="@+id/view_role_card"
+                android:gravity="center" android:paddingEnd="8dp" android:paddingStart="8dp"
+                android:layout_marginTop="8dp"/>
         <TextView
                 android:text="@string/string_game_players"
                 android:layout_width="wrap_content"
@@ -100,7 +103,8 @@
                 android:id="@+id/tv_game_location" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_game_role"
                 app:layout_constraintStart_toStartOf="@+id/tv_game_role"
-                app:layout_constraintEnd_toEndOf="@+id/tv_game_role" tools:text="at the office"/>
+                app:layout_constraintEnd_toEndOf="@+id/tv_game_role" tools:text="at the office"
+                android:layout_marginBottom="26dp" app:layout_constraintBottom_toBottomOf="@+id/view_role_card"/>
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
