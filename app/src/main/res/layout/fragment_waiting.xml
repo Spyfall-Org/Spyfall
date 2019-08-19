@@ -23,13 +23,17 @@
                 app:layout_constraintTop_toTopOf="@+id/btn_start_game"
                 app:layout_constraintBottom_toBottomOf="@+id/btn_start_game" android:elevation="10dp"
                 android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
-        <TextView
+
+        <com.dangerfield.spyfall.util.AutoResizeTextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/textView2"
                 android:layout_marginTop="42dp" app:layout_constraintTop_toTopOf="parent"
                 android:textSize="36sp"
                 app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="100sp"
+                app:autoSizeStepGranularity="2sp"
                 android:text="@string/string_waiting"
                 app:layout_constraintStart_toStartOf="parent"
                 android:textStyle="bold" android:textColor="@android:color/black" android:layout_marginStart="24dp"

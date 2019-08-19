@@ -23,7 +23,6 @@ import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.role_card.*
 
 class GameFragment : Fragment() {
 
@@ -135,11 +134,11 @@ class GameFragment : Fragment() {
         if(tv_game_role.visibility == View.VISIBLE){
             tv_game_role.visibility = View.GONE
             tv_game_location.visibility = View.GONE
-            included_role_card.visibility = View.GONE
+            view_role_card.visibility = View.GONE
             btn_hide.text = resources.getString(R.string.string_show)
         }else{
             tv_game_role.visibility = View.VISIBLE
-            included_role_card.visibility = View.VISIBLE
+            view_role_card.visibility = View.VISIBLE
             tv_game_location.visibility = View.VISIBLE
             btn_hide.text = resources.getString(R.string.string_hide)
         }
