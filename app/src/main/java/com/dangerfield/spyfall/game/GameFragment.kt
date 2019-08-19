@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.models.Player
@@ -22,6 +23,7 @@ import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
 import com.google.android.gms.ads.AdRequest
+import kotlinx.android.synthetic.main.role_card.*
 
 class GameFragment : Fragment() {
 
@@ -42,6 +44,7 @@ class GameFragment : Fragment() {
         navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
+
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
@@ -57,6 +60,7 @@ class GameFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
 
         if(BuildConfig.FLAVOR == "free") adView2.loadAd(AdRequest.Builder().build()) else adView2.visibility = View.GONE
 
@@ -115,6 +119,8 @@ class GameFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+
         //just to be super safe
         if(viewModel.gameExists.value!!){
             if(timer == null){
@@ -129,11 +135,11 @@ class GameFragment : Fragment() {
         if(tv_game_role.visibility == View.VISIBLE){
             tv_game_role.visibility = View.GONE
             tv_game_location.visibility = View.GONE
-            view_role_card.visibility = View.GONE
+            included_role_card.visibility = View.GONE
             btn_hide.text = resources.getString(R.string.string_show)
         }else{
             tv_game_role.visibility = View.VISIBLE
-            view_role_card.visibility = View.VISIBLE
+            included_role_card.visibility = View.VISIBLE
             tv_game_location.visibility = View.VISIBLE
             btn_hide.text = resources.getString(R.string.string_hide)
         }
@@ -152,6 +158,7 @@ class GameFragment : Fragment() {
             }
 
             override fun onFinish() {
+                tv_game_timer.text = "0:00"
                 btn_play_again.visibility = View.VISIBLE
             }
         }.start()
