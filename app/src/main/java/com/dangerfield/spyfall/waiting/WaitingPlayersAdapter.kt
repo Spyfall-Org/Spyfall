@@ -58,13 +58,20 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
                     btn_change_name_alert_okay.setOnClickListener{
                         var newName = tv_alert_change_name.text.toString().trim()
                         //as long as they typed some name that doesnt already exist
-                        if(newName.isNotEmpty() && newName.length < 25 && !viewModel.gameObject.value!!.playerList.contains(newName)){
+                        if(newName.isNotEmpty() && newName.length < 25 && !viewModel.gameObject.value!!.playerList.contains(newName) &&
+                            viewModel.gameObject.value?.playerObjectList?.size ?: 0 == 0){
 
                             viewModel.changeName(newName).addOnCompleteListener { dialog.dismiss() }
 
                         }else{
 
-                            if(newName.length>25){
+                            if(viewModel.gameObject.value?.playerObjectList?.size ?: 0 > 0){
+                                //the user tried to change their name after somone else clicked start (not allowed)
+                                dialog.dismiss()
+                                Toast.makeText(context,"Cannot change name after game starts", Toast.LENGTH_SHORT).show()
+                            }
+
+                            else if(newName.length>25){
                                 Toast.makeText(context, resources.getString(R.string.change_name_character_limit),
                                     Toast.LENGTH_LONG).show()
                             }
