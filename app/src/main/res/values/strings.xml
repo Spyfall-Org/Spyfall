@@ -21,7 +21,6 @@
     <string name="error_message">Please check your internet connection and try again</string>
 
     <string name="waiting_leaving_title">Leaving Game</string>
-    <string name="waiting_leaving_message">Are you sure you want to leave?</string>
 
     <string name="about_title">About</string>
     <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of the board game is developed and maintained by Josiah Rininger (iOS) and Elijah Dangerfield (Android). Any questions or concerns may be sent here: </string>
@@ -110,7 +109,6 @@
     <string name="dialog_rate_message">Pretty please let us know by giving us a review :)</string>
     <string name="dialog_rate_negative">No</string>
     <string name="waiting_leaving_message">Are you sure you want to leave?</string>
-    <string name="theme_change_error">No color was selected</string>
     <string name="email_subject" translatable="false">a comment from me</string>
 
 </resources>

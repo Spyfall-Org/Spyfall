@@ -41,7 +41,8 @@
     <string name="string_access_code">"Código de acceso: "</string>
     <string name="string_ads">"Anuncios "</string>
     <string name="string_btn_create">"Crear "</string>
-    <string name="string_btn_end_game">"Fin del juego "</string>
+    <string name="string_btn_end_game">"termina el juego
+        "</string>
     <string name="string_btn_leave_game">"Dejó el juego "</string>
     <string name="string_btn_new_game">"Nuevo juego "</string>
     <string name="string_btn_play_again">"Juega de nuevo "</string>
@@ -80,7 +81,8 @@
     <string name="string_hide">
         <u>esconder</u>
     </string>
-    <string name="string_game_players">el jugador:</string>
+    <string name="string_game_players">los jugadores
+        :</string>
     <string name="string_game_locations">Localizaciones :</string>
     <string name="string_enter_username">"Introduzca un nombre de usuario: "</string>
     <string name="rules_message">"* Estas son las reglas * "</string>
