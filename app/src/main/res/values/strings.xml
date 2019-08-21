@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Spyfall</string>
     <string name="test_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
@@ -100,15 +100,15 @@
     <!--SHARED PREFERNCES-->
     <string name="shared_preferences_color" translatable="false">SHARED_PREFERENCES_COLOR</string>
     <string name="shared_preferences" translatable="false">SHARED_PREFERNCES</string>
-    <string name="shared_preferences_games">SHARED_PREFERENCES_GAMES</string>
-    <string name="shared_preferences_hasReviewed">SHARED_PREFERENCES_HAS_REVIEWED</string>
+    <string name="shared_preferences_games" translatable="false">>SHARED_PREFERENCES_GAMES</string>
+    <string name="shared_preferences_hasReviewed" translatable="false">>SHARED_PREFERENCES_HAS_REVIEWED</string>
 
     <string name="string_btn_leave_game">Leave Game</string>
     <string name="string_btn_start_game">Start Game</string>
     <string name="dialog_rate_title">Like the game?</string>
     <string name="dialog_rate_message">Pretty please let us know by giving us a review :)</string>
     <string name="dialog_rate_negative">No</string>
-    <string name="waiting_leaving_message">Are you sure you want to leave?</string>
+    <string name="waiting_leaving_message" tools:ignore="ExtraTranslation">Are you sure you want to leave?</string>
     <string name="email_subject" translatable="false">a comment from me</string>
 
 </resources>
