@@ -69,6 +69,7 @@ class ColorChangeAdapter(var colors: List<ColorButton>  ,private var context: Co
     private fun select(view: View){
         //select
         view.color_change_filter.visibility = View.VISIBLE
+        view.color_change_check_animation.speed = 2.0f
         view.color_change_check_animation.visibility = View.VISIBLE
         view.color_change_check_animation.playAnimation()
     }

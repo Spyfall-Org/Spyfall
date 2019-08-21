@@ -1,14 +1,13 @@
 <resources>
 
     <string name="app_name">Spyfall</string>
-    <string name="test_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_unit_id">ca-app-pub-7008637445039253/7155259736</string>
-    <string name="ads_mod_app_id">ca-app-pub-7008637445039253~6033749759</string>
-    <string name="test_interstitial">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="test_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7008637445039253/7155259736</string>
+    <string name="ads_mod_app_id" translatable="false">ca-app-pub-7008637445039253~6033749759</string>
+    <string name="test_interstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
     <string name="string_welcome">Welcome to</string>
-    <string name="email">spyfallmobile@gmail.com</string>
-    <string name="email_subject">Comment from Android User</string>
+    <string name="email" translatable="false">spyfallmobile@gmail.com</string>
     <string name="string_btn_rules">Rules</string>
 
     <!--Dialogs-->
@@ -100,8 +99,8 @@
     <string name="string_show"><u>Show</u></string>
 
     <!--SHARED PREFERNCES-->
-    <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
-    <string name="shared_preferences">SHARED_PREFERNCES</string>
+    <string name="shared_preferences_color" translatable="false">SHARED_PREFERENCES_COLOR</string>
+    <string name="shared_preferences" translatable="false">SHARED_PREFERNCES</string>
     <string name="shared_preferences_games">SHARED_PREFERENCES_GAMES</string>
     <string name="shared_preferences_hasReviewed">SHARED_PREFERENCES_HAS_REVIEWED</string>
 
@@ -110,5 +109,8 @@
     <string name="dialog_rate_title">Like the game?</string>
     <string name="dialog_rate_message">Pretty please let us know by giving us a review :)</string>
     <string name="dialog_rate_negative">No</string>
+    <string name="waiting_leaving_message">Are you sure you want to leave?</string>
+    <string name="theme_change_error">No color was selected</string>
+    <string name="email_subject" translatable="false">a comment from me</string>
 
 </resources>

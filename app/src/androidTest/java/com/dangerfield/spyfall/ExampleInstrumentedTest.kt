@@ -15,10 +15,23 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+
+    /*
+
+    Similar to unit tests. They test android funcationality. These need to be run on an emulator ussually.
+     libraries are the same for unit tests.
+
+
+     */
     @Test
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("com.dangerfield.spyfall", appContext.packageName)
     }
+
+
+    /*
+    UI Tests: tests user interation. expresso is the popular library here
+     */
 }
