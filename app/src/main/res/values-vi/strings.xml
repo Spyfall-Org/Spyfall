@@ -37,7 +37,7 @@
 	<string name="new_game_string_error_name">vui lòng nhập tên</string>
 	<string name="new_game_error_time_limit">vui lòng nhập giới hạn thời gian dưới 10 phút</string>
 	<string name="string_pack_description">Chọn gói của bạn để được bao gồm trong trò chơi. </string>
-	<string name="string_name_game_name_hint"><u> Tên người dùng </ u></string>
+	<string name="string_name_game_name_hint"><u> Tên người dùng </u></string>
 	<string name="string_join_game">Tham gia trò chơi</string>
 	<string name="string_enter_access_code">Nhập mã truy cập:</string>
 	<string name="string_enter_username">Nhập tên người sử dụng:</string>
@@ -46,12 +46,12 @@
 	<string name="join_game_error_started_game">Xin lỗi, trò chơi này đã được bắt đầu</string>
 	<string name="join_game_error_taken_name">Xin lỗi, tên đó được lấy bởi người chơi khác</string>
 	<string name="join_game_error_access_code">Xin lỗi, không có trò chơi nào được tìm thấy với mã truy cập đó</string>
-	<string name="string_join_access_hint"><u> Mã truy cập </ u></string>
-	<string name="string_join_name_hint"><u> Nhập tên người dùng </ u></string>
+	<string name="string_join_access_hint"><u> Mã truy cập </u></string>
+	<string name="string_join_name_hint"><u> Nhập tên người dùng </u></string>
 	<string name="change_name_title">Đổi tên</string>
 	<string name="change_name_character_limit">vui lòng nhập tên dưới 25 ký tự</string>
 	<string name="change_name_different_name">vui lòng nhập tên không có trong trò chơi</string>
-	<string name="string_change_name_hint"><u> Nhập tên người dùng </ u></string>
+	<string name="string_change_name_hint"><u> Nhập tên người dùng </u></string>
 	<string name="string_waiting">Đang chờ người chơi</string>
 	<string name="string_access_code">Mã truy cập:</string>
 	<string name="end_game_title">Trò chơi kết thúc</string>
@@ -64,8 +64,8 @@
 	<string name="string_game_players">Người chơi:</string>
 	<string name="string_game_locations">Địa điểm:</string>
 	<string name="string_locations">Địa điểm</string>
-	<string name="string_hide"><U> Hiển thị </ u></string>
-	<string name="string_show"><u> Hiển thị </ u></string>
+	<string name="string_hide"><u> Hiển thị </u></string>
+	<string name="string_show"><u> Hiển thị </u></string>
 	<string name="string_btn_leave_game">Rời khỏi trò chơi</string>
 	<string name="string_btn_start_game">Bắt đầu trò chơi</string>
 	<string name="dialog_rate_title">Giống như trò chơi?</string>

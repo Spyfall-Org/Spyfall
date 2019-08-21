@@ -37,7 +37,9 @@
 	<string name="new_game_string_error_name">이름을 입력 해주세요</string>
 	<string name="new_game_error_time_limit">10 분 미만의 시간 제한을 입력하십시오</string>
 	<string name="string_pack_description">게임에 포함 할 팩을 선택하십시오. </string>
-	<string name="string_name_game_name_hint"><u> 사용자 이름 </ u></string>
+	<string name="string_name_game_name_hint">
+		<u>사용자 이름</u>
+	</string>
 	<string name="string_join_game">게임 참여</string>
 	<string name="string_enter_access_code">액세스 코드를 입력하십시오 :</string>
 	<string name="string_enter_username">사용자 이름을 입력하십시오 :</string>
@@ -46,12 +48,16 @@
 	<string name="join_game_error_started_game">죄송합니다.이 게임은 시작되었습니다</string>
 	<string name="join_game_error_taken_name">죄송합니다. 그 이름은 다른 플레이어가 사용합니다</string>
 	<string name="join_game_error_access_code">해당 액세스 코드를 가진 게임을 찾을 수 없습니다</string>
-	<string name="string_join_access_hint"><u> 액세스 코드 </ u></string>
-	<string name="string_join_name_hint"><u> 사용자 이름을 입력하십시오 </ u></string>
+	<string name="string_join_access_hint">
+		<u>액세스 코드</u>
+	</string>
+	<string name="string_join_name_hint">
+		<u>사용자 이름을 입력하십시오</u>
+	</string>
 	<string name="change_name_title">이름을 바꿔라</string>
 	<string name="change_name_character_limit">25 자 미만의 이름을 입력하십시오</string>
 	<string name="change_name_different_name">게임에없는 이름을 입력하십시오</string>
-	<string name="string_change_name_hint"><u> 사용자 이름을 입력하십시오 </ u></string>
+	<string name="string_change_name_hint"><u> 사용자 이름을 입력하십시오 </u></string>
 	<string name="string_waiting">플레이어를 기다리는 중…</string>
 	<string name="string_access_code">액세스 코드:</string>
 	<string name="end_game_title">결말 게임</string>
@@ -64,8 +70,10 @@
 	<string name="string_game_players">선수 :</string>
 	<string name="string_game_locations">위치 :</string>
 	<string name="string_locations">위치</string>
-	<string name="string_hide"><U>보기 </ U></string>
-	<string name="string_show"><u> 표시 </ u></string>
+	<string name="string_hide"><u>보기 </u></string>
+	<string name="string_show">
+		<u>표시</u>
+	</string>
 	<string name="string_btn_leave_game">게임을 떠나</string>
 	<string name="string_btn_start_game">게임을 시작하다</string>
 	<string name="dialog_rate_title">게임처럼?</string>

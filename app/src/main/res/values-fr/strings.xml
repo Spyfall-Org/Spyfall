@@ -37,7 +37,9 @@
 	<string name="new_game_string_error_name">veuillez entrer un nom</string>
 	<string name="new_game_error_time_limit">veuillez entrer une limite de temps inférieure à 10 minutes</string>
 	<string name="string_pack_description">Choisissez vos packs à inclure dans le jeu. </string>
-	<string name="string_name_game_name_hint"><u> Nom d'utilisateur </ u></string>
+	<string name="string_name_game_name_hint">
+		<u>Nom d\'utilisateur</u>
+	</string>
 	<string name="string_join_game">Rejoins une partie</string>
 	<string name="string_enter_access_code">Entrez un code d\'accès:</string>
 	<string name="string_enter_username">Entrez un nom d\'utilisateur:</string>
@@ -46,12 +48,18 @@
 	<string name="join_game_error_started_game">Désolé, ce jeu a été lancé</string>
 	<string name="join_game_error_taken_name">Désolé, ce nom est pris par un autre joueur</string>
 	<string name="join_game_error_access_code">Désolé, aucun jeu n\'a été trouvé avec ce code d'accès</string>
-	<string name="string_join_access_hint"><u> Code d'accès </ u></string>
-	<string name="string_join_name_hint"><u> Entrez un nom d'utilisateur </ u></string>
+	<string name="string_join_access_hint">
+		<u>Code d\'accès</u>
+	</string>
+	<string name="string_join_name_hint">
+		<u>Entrez un nom d\'utilisateur</u>
+	</string>
 	<string name="change_name_title">Changer de nom</string>
 	<string name="change_name_character_limit">veuillez entrer un nom de moins de 25 caractères</string>
 	<string name="change_name_different_name">veuillez entrer un nom qui n\'est pas dans le jeu</string>
-	<string name="string_change_name_hint"><u> Entrez un nom d'utilisateur </ u></string>
+	<string name="string_change_name_hint">
+		<u>Entrez un nom d\'utilisateur</u>
+	</string>
 	<string name="string_waiting">En attente de joueurs…</string>
 	<string name="string_access_code">Code d\'accès:</string>
 	<string name="end_game_title">Fin du jeu</string>
@@ -64,8 +72,12 @@
 	<string name="string_game_players">Joueurs:</string>
 	<string name="string_game_locations">Emplacements:</string>
 	<string name="string_locations">Emplacements</string>
-	<string name="string_hide"><U> Afficher </ u></string>
-	<string name="string_show"><u> Afficher </ u></string>
+	<string name="string_hide">
+		<u>Afficher</u>
+	</string>
+	<string name="string_show">
+		<u>Afficher</u>
+	</string>
 	<string name="string_btn_leave_game">Quitter jeu</string>
 	<string name="string_btn_start_game">Démarrer jeu</string>
 	<string name="dialog_rate_title">Vous aimez le jeu?</string>

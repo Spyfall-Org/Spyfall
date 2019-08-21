@@ -37,7 +37,7 @@
 	<string name="new_game_string_error_name">пожалуйста, введите имя</string>
 	<string name="new_game_error_time_limit">пожалуйста, введите срок менее 10 минут</string>
 	<string name="string_pack_description">Выберите свои пакеты для включения в игру. </string>
-	<string name="string_name_game_name_hint"><И> Имя пользователя </ u></string>
+	<string name="string_name_game_name_hint"><u> Имя пользователя </u></string>
 	<string name="string_join_game">Присоединяйся к игре</string>
 	<string name="string_enter_access_code">Введите код доступа:</string>
 	<string name="string_enter_username">Введите имя пользователя:</string>
@@ -46,12 +46,12 @@
 	<string name="join_game_error_started_game">Извините, эта игра была запущена</string>
 	<string name="join_game_error_taken_name">Извините, это имя занято другим игроком</string>
 	<string name="join_game_error_access_code">Извините, с этим кодом доступа не найдено ни одной игры</string>
-	<string name="string_join_access_hint"><u> Код доступа </ u></string>
-	<string name="string_join_name_hint"><u> Введите имя пользователя </ u></string>
+	<string name="string_join_access_hint"><u> Код доступа </u></string>
+	<string name="string_join_name_hint"><u> Введите имя пользователя </u></string>
 	<string name="change_name_title">Сменить имя</string>
 	<string name="change_name_character_limit">пожалуйста, введите имя менее 25 символов</string>
 	<string name="change_name_different_name">пожалуйста, введите имя, которого нет в игре</string>
-	<string name="string_change_name_hint"><u> Введите имя пользователя </ u></string>
+	<string name="string_change_name_hint"><u> Введите имя пользователя </u></string>
 	<string name="string_waiting">В ожидании игроков ...</string>
 	<string name="string_access_code">Код доступа:</string>
 	<string name="end_game_title">Конечная игра</string>
@@ -64,8 +64,8 @@
 	<string name="string_game_players">Игроки:</string>
 	<string name="string_game_locations">Место проживания:</string>
 	<string name="string_locations">Места</string>
-	<string name="string_hide"><U> Show </ u></string>
-	<string name="string_show"><И> Показать </ u></string>
+	<string name="string_hide"><u> Show </u></string>
+	<string name="string_show"><u> Показать </u></string>
 	<string name="string_btn_leave_game">Выйти из игры</string>
 	<string name="string_btn_start_game">Начать игру</string>
 	<string name="dialog_rate_title">Понравилась игра?</string>

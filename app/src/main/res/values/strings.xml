@@ -23,7 +23,6 @@
     <string name="waiting_leaving_title">Leaving Game</string>
 
     <string name="about_title">About</string>
-    <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of the board game is developed and maintained by Josiah Rininger (iOS) and Elijah Dangerfield (Android). Any questions or concerns may be sent here: </string>
 
     <string name="rules_title">Rules</string>
     <string name="rules_message">*These are the rules*</string>
@@ -76,15 +75,12 @@
     <string name="string_join_name_hint"><u>Enter a username</u></string>
 
     <!--Waiting -->
-    <string name="change_name_title">Change Name</string>
     <string name="change_name_character_limit">please enter a name less than 25 characters</string>
-    <string name="change_name_different_name">please enter a name that is not in the game</string>
     <string name="string_change_name_hint"><u>Enter a username</u></string>
     <string name="string_waiting">Waiting for players…</string>
     <string name="string_access_code">Access code:</string>
 
     <!--Game-->
-    <string name="end_game_title">Ending Game</string>
     <string name="end_game_message">Are you sure you want to end the game?</string>
     <string name="end_game_positive_action">End</string>
     <string name="leave_game_title">Leaving Game?</string>
@@ -110,5 +106,12 @@
     <string name="dialog_rate_negative">No</string>
     <string name="waiting_leaving_message" tools:ignore="ExtraTranslation">Are you sure you want to leave?</string>
     <string name="email_subject" translatable="false">a comment from me</string>
+    <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of
+        the board game is developed and maintained by Josiah Rininger (iOS) and Elijah Dangerfield (Android). Any
+        questions or concerns may be sent here:
+    </string>
+    <string name="change_name_different_name">please enter a name that is not in the game</string>
+    <string name="change_name_title">Change Name</string>
+    <string name="end_game_title">you are ending the game</string>
 
 </resources>
