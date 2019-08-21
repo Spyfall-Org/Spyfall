@@ -3,7 +3,7 @@
 	<string name="app_name">Spyfall</string>
 	<string name="string_welcome">Bienvenue à</string>
 	<string name="string_btn_rules">Règles</string>
-	<string name="positive_action_standard">d'accord</string>
+	<string name="positive_action_standard">d\'accord</string>
 	<string name="negative_action_standard">Annuler</string>
 	<string name="leave_action_positive">Laisser</string>
 	<string name="leave_action_negative">Rester</string>
