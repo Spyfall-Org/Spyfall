@@ -79,6 +79,7 @@ class StartFragment : Fragment() {
         btn_rules.setTextColor(UIHelper.accentColor)
     }
 
+    //TODO; make a prefrences object that deal with all of this
     private fun incrementGamePlay(): Int{
         val editor = context!!.getSharedPreferences(resources.getString(R.string.shared_preferences),
             Context.MODE_PRIVATE

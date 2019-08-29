@@ -5,25 +5,48 @@
 
     <fragment android:id="@+id/startFragment" android:name="com.dangerfield.spyfall.start.StartFragment"
               android:label="StartFragment">
-        <action android:id="@+id/action_startFragment_to_joinGameFragment" app:destination="@id/joinGameFragment"/>
-        <action android:id="@+id/action_startFragment_to_newGameFragment" app:destination="@id/newGameFragment"/>
-        <action android:id="@+id/action_startFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
+        <action
+                android:id="@+id/action_startFragment_to_joinGameFragment"
+                app:destination="@id/joinGameFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_startFragment_to_newGameFragment"
+                app:destination="@id/newGameFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_startFragment_to_settingsFragment"
+                app:destination="@id/settingsFragment"
+                app:enterAnim="@anim/slide_up_from_bottom"
+                app:popExitAnim="@anim/slide_down_from_top" />
     </fragment>
 
     <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.newGame.NewGameFragment"
               android:label="NewGameFragment">
-        <action android:id="@+id/action_newGameFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+        <action
+                android:id="@+id/action_newGameFragment_to_waitingFragment"
+                app:destination="@id/waitingFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment android:id="@+id/joinGameFragment" android:name="com.dangerfield.spyfall.joinGame.JoinGameFragment"
               android:label="JoinGameFragment">
-        <action android:id="@+id/action_joinGameFragment_to_waitingFragment" app:destination="@id/waitingFragment"/>
+        <action
+                android:id="@+id/action_joinGameFragment_to_waitingFragment"
+                app:destination="@id/waitingFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment android:id="@+id/waitingFragment" android:name="com.dangerfield.spyfall.waiting.WaitingFragment"
               android:label="WaitingFragment">
-        <action android:id="@+id/action_waitingFragment_to_gameFragment" app:destination="@id/gameFragment"
-        />
+        <action
+                android:id="@+id/action_waitingFragment_to_gameFragment"
+                app:destination="@id/gameFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.game.GameFragment"

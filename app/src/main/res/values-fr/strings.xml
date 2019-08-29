@@ -43,11 +43,11 @@
 	<string name="string_join_game">Rejoins une partie</string>
 	<string name="string_enter_access_code">Entrez un code d\'accès:</string>
 	<string name="string_enter_username">Entrez un nom d\'utilisateur:</string>
-	<string name="join_game_error_fields">S\'il vous plaît remplir les deux code d\'accès et nom d'utilisateur</string>
+	<string name="join_game_error_fields">S\'il vous plaît remplir les deux code d\'accès et nom d\'utilisateur</string>
 	<string name="join_game_error_max_players">Désolé, le maximum pour un jeu est actuellement de 8 joueurs.</string>
 	<string name="join_game_error_started_game">Désolé, ce jeu a été lancé</string>
 	<string name="join_game_error_taken_name">Désolé, ce nom est pris par un autre joueur</string>
-	<string name="join_game_error_access_code">Désolé, aucun jeu n\'a été trouvé avec ce code d'accès</string>
+	<string name="join_game_error_access_code">Désolé, aucun jeu n\'a été trouvé avec ce code d\'accès</string>
 	<string name="string_join_access_hint">
 		<u>Code d\'accès</u>
 	</string>
@@ -73,10 +73,10 @@
 	<string name="string_game_locations">Emplacements:</string>
 	<string name="string_locations">Emplacements</string>
 	<string name="string_hide">
-		<u>Afficher</u>
+		<u>cacher</u>
 	</string>
 	<string name="string_show">
-		<u>Afficher</u>
+		<u>démontrer</u>
 	</string>
 	<string name="string_btn_leave_game">Quitter jeu</string>
 	<string name="string_btn_start_game">Démarrer jeu</string>
