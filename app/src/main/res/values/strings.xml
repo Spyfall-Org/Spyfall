@@ -25,15 +25,15 @@
     <string name="about_title">About</string>
 
     <string name="rules_title">Rules</string>
-    <string name="rules_message">Spyfall is a game best played with 3 or more players. Once the game starts a
-        location such as “pirate ship” or “library is chosen”. Everyone is made aware of the location and assigned
-        a role at the location. Everyone except for the player randomly assigned to be the spy that is. Starting with
+    <string name="rules_message"> • Spyfall is a game best played with 3 or more players. \n • Once the game starts a
+        location such as “pirate ship” or “library is chosen”. \n • Everyone is made aware of the location and assigned
+        a role at the location. Everyone except for the player randomly assigned to be the spy that is. \n • Starting with
         the player assigned to be first, each player takes turns asking each other questions that only someone who is
-        not the spy would know such as “ Is this a place you would bring your family? “ The players goals are to find
-        out who the spy is, and also make sure the spy does not find out what the location is. The spy’s goal is to not
-        get found out as the spy, and to find out what the location is. When the timer is up, everyone votes on who
-        they think the spy is. The spy then reveals themselves, and votes on what they think the location is. If the
-        spy gets the location right, the spy wins. Otherwise, everyone who guesses the spy correctly wins. Have fun! </string>
+        not the spy would know such as “ Is this a place you would bring your family? “ \n • The players goals are to find
+        out who the spy is, and also make sure the spy does not find out what the location is. \n • The spy’s goal is to not
+        get found out as the spy, and to find out what the location is. \n • When the timer is up, everyone votes on who
+        they think the spy is. \n • The spy then reveals themselves, and votes on what they think the location is.\n •  If the
+        spy gets the location right, the spy wins. Otherwise, everyone who guesses the spy correctly wins.  \n • Have fun! </string>
 
     <string name="ads_title">Remove Ads?</string>
     <string name="remove_ads_message">To remove ads, please upgrade to the premium version of Spyfall</string>
