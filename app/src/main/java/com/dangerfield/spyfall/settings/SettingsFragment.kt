@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
-import kotlinx.android.synthetic.main.alert_custom.*
+import kotlinx.android.synthetic.main.alert_custom.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 

@@ -71,7 +71,7 @@ class StartFragment : Fragment() {
     }
 
     fun changeAccent(){
-        btn_new_game.background.setTint(UIHelper.accentColor)
+        btn_join_game.background.setTint(UIHelper.accentColor)
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
