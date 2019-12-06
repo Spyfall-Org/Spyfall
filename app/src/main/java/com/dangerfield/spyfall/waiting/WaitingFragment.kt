@@ -82,6 +82,7 @@ class WaitingFragment : Fragment() {
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
                 enterMode()
                 viewModel.incrementGamesPlayed()
+                viewModel.incrementAndroidPlayers()
             }
         })
     }

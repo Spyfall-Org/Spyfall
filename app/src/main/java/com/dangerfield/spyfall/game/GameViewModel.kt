@@ -171,7 +171,13 @@ class GameViewModel : ViewModel() {
 
     fun incrementGamesPlayed(){
         //this function is used to keep stats about how many Android games have been played
-         db.collection("stats")
+        db.collection("stats")
             .document("game").update("num_games_played",FieldValue.increment(1))
+    }
+
+    fun incrementAndroidPlayers(){
+        //this function is used to keep stats about how many Android games have been played
+        db.collection("stats")
+            .document("game").update("android_num_of_players",FieldValue.increment(1))
     }
 }
