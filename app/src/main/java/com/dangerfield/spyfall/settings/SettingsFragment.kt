@@ -1,31 +1,27 @@
 package com.dangerfield.spyfall.settings
 
-
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.GridLayoutManager
-import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.util.UIHelper
-import kotlinx.android.synthetic.main.alert_custom.view.*
-import kotlinx.android.synthetic.main.alert_custom.view.btn_custom_alert_negative
-import kotlinx.android.synthetic.main.alert_custom.view.btn_custom_alert_positive
-import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_message
-import kotlinx.android.synthetic.main.alert_custom.view.tv_custom_alert_title
-import android.content.Context.MODE_PRIVATE
-import android.content.Intent
-import android.graphics.PorterDuff
-import android.net.Uri
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.BuildConfig
+import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.util.UIHelper
+import kotlinx.android.synthetic.main.alert_custom.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -80,25 +76,14 @@ class SettingsFragment : Fragment() {
     }
 
     private fun sendUserToPaidVersion(){
-        val uri = Uri.parse("market://details?id=" + context?.packageName)
-        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-        // To count with Play market backstack, After pressing back button,
-        // to taken back to our application, we need to add following flags to intent.
-        goToMarket.addFlags(
-            Intent.FLAG_ACTIVITY_NO_HISTORY or
-                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-        )
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse("market://details?id=com.dangerfield.spyfall.paid")
         try
         {
-            startActivity(goToMarket)
+            startActivity(intent)
         }
         catch (e: ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + "com.dangerfield.spyfall.paid"))
-            )
+            Log.d("Tag", "Error launching to paid version")
         }
     }
     //TODO: consider making a view model for this
@@ -142,7 +127,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun saveColor(chosenColor: Int){
-        val editor = context!!.getSharedPreferences(resources.getString(R.string.shared_preferences), MODE_PRIVATE).edit()
+        val editor = context!!.getSharedPreferences(resources.getString(com.dangerfield.spyfall.R.string.shared_preferences), MODE_PRIVATE).edit()
         editor.putInt(resources.getString(R.string.shared_preferences_color), chosenColor)
         editor.apply()
     }
