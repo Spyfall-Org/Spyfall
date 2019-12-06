@@ -64,7 +64,7 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlaye
                     text.setTextColor(view.context.resources.getColor(R.color.colorLightGrey))
                     text.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 }else{
-                    text.setTextColor(view.context.resources.getColor(R.color.colorPrimary))
+                    text.setTextColor(view.context.resources.getColor(android.R.color.secondary_text_light))
                     text.paintFlags = 0
                 }
             }

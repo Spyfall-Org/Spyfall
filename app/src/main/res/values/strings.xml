@@ -1,19 +1,14 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Spyfall</string>
-    <string name="test_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_unit_id">ca-app-pub-7008637445039253/7155259736</string>
-    <string name="ads_mod_app_id">ca-app-pub-7008637445039253~6033749759</string>
-    <string name="test_interstitial">ca-app-pub-3940256099942544/1033173712</string>
-
-
-
+    <string name="test_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7008637445039253/7155259736</string>
+    <string name="ads_mod_app_id" translatable="false">ca-app-pub-7008637445039253~6033749759</string>
+    <string name="test_interstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
     <string name="string_welcome">Welcome to</string>
-    <string name="email">spyfallmobile@gmail.com</string>
-    <string name="email_subject">Comment from Android User</string>
+    <string name="email" translatable="false">spyfallmobile@gmail.com</string>
     <string name="string_btn_rules">Rules</string>
-
 
     <!--Dialogs-->
     <string name="positive_action_standard">Okay</string>
@@ -22,18 +17,23 @@
     <string name="leave_action_positive">Leave</string>
     <string name="leave_action_negative">Stay</string>
 
-
     <string name="error_title">Something went wrong</string>
     <string name="error_message">Please check your internet connection and try again</string>
 
     <string name="waiting_leaving_title">Leaving Game</string>
-    <string name="waiting_leaving_message">Are you sure you want to leave?</string>
 
     <string name="about_title">About</string>
-    <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of the board game is developed and maintained by Josiah Rininger (iOS) and Elijah Dangerfield (Android). Any questions or concerns may be sent here: </string>
 
     <string name="rules_title">Rules</string>
-    <string name="rules_message">*These are the rules*</string>
+    <string name="rules_message"> • Spyfall is a game best played with 3 or more players. \n • Once the game starts a
+        location such as “pirate ship” or “library is chosen”. \n • Everyone is made aware of the location and assigned
+        a role at the location. Everyone except for the player randomly assigned to be the spy that is. \n • Starting with
+        the player assigned to be first, each player takes turns asking each other questions that only someone who is
+        not the spy would know such as “ Is this a place you would bring your family? “ \n • The players goals are to find
+        out who the spy is, and also make sure the spy does not find out what the location is. \n • The spy’s goal is to not
+        get found out as the spy, and to find out what the location is. \n • When the timer is up, everyone votes on who
+        they think the spy is. \n • The spy then reveals themselves, and votes on what they think the location is.\n •  If the
+        spy gets the location right, the spy wins. Otherwise, everyone who guesses the spy correctly wins.  \n • Have fun! </string>
 
     <string name="ads_title">Remove Ads?</string>
     <string name="remove_ads_message">To remove ads, please upgrade to the premium version of Spyfall</string>
@@ -83,17 +83,12 @@
     <string name="string_join_name_hint"><u>Enter a username</u></string>
 
     <!--Waiting -->
-    <string name="change_name_title">Change Name</string>
     <string name="change_name_character_limit">please enter a name less than 25 characters</string>
-    <string name="change_name_different_name">please enter a name that is not in the game</string>
     <string name="string_change_name_hint"><u>Enter a username</u></string>
     <string name="string_waiting">Waiting for players…</string>
     <string name="string_access_code">Access code:</string>
 
-
-
     <!--Game-->
-    <string name="end_game_title">Ending Game</string>
     <string name="end_game_message">Are you sure you want to end the game?</string>
     <string name="end_game_positive_action">End</string>
     <string name="leave_game_title">Leaving Game?</string>
@@ -107,21 +102,24 @@
     <string name="string_show"><u>Show</u></string>
 
     <!--SHARED PREFERNCES-->
-    <string name="shared_preferences_color">SHARED_PREFERENCES_COLOR</string>
-    <string name="shared_preferences">SHARED_PREFERNCES</string>
-    <string name="shared_preferences_games">SHARED_PREFERENCES_GAMES</string>
-    <string name="shared_preferences_hasReviewed">SHARED_PREFERENCES_HAS_REVIEWED</string>
-
-
-
-
-
+    <string name="shared_preferences_color" translatable="false">SHARED_PREFERENCES_COLOR</string>
+    <string name="shared_preferences" translatable="false">SHARED_PREFERNCES</string>
+    <string name="shared_preferences_games" translatable="false">>SHARED_PREFERENCES_GAMES</string>
+    <string name="shared_preferences_hasReviewed" translatable="false">>SHARED_PREFERENCES_HAS_REVIEWED</string>
 
     <string name="string_btn_leave_game">Leave Game</string>
     <string name="string_btn_start_game">Start Game</string>
     <string name="dialog_rate_title">Like the game?</string>
     <string name="dialog_rate_message">Pretty please let us know by giving us a review :)</string>
     <string name="dialog_rate_negative">No</string>
-
+    <string name="waiting_leaving_message" tools:ignore="ExtraTranslation">Are you sure you want to leave?</string>
+    <string name="email_subject" translatable="false">a comment from me</string>
+    <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of
+        the board game is developed and maintained by Josiah Rininger (iOS) and Elijah Dangerfield (Android). Any
+        questions or concerns may be sent here:
+    </string>
+    <string name="change_name_different_name">please enter a name that is not in the game</string>
+    <string name="change_name_title">Change Name</string>
+    <string name="end_game_title">Ending the game</string>
 
 </resources>

@@ -22,6 +22,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
+import com.dangerfield.spyfall.util.addCharacterMax
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -73,6 +74,7 @@ class NewGameFragment : Fragment() {
         //reference views once the view has been created
         tv_new_game_name.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.onFocusChangeListener = UIHelper.keyboardHider
+        tv_new_game_time.addCharacterMax(2)
 
         btn_create.setOnClickListener { createGame() }
 

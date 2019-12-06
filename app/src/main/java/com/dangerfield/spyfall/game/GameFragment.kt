@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.models.Player
@@ -43,7 +42,6 @@ class GameFragment : Fragment() {
         navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
@@ -60,6 +58,8 @@ class GameFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+
+        tv_game_role.maxTextSize = 96.0f
 
         if(BuildConfig.FLAVOR == "free") adView2.loadAd(AdRequest.Builder().build()) else adView2.visibility = View.GONE
 

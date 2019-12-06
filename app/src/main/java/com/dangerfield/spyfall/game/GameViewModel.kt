@@ -23,7 +23,6 @@ class GameViewModel : ViewModel() {
             gameRef = db.collection("games").document(value)
             //the idea here is that when we have a new access code, we change the get game upadtes gameRef
             getGameUpdates()
-
         }
 
     var hasNetworkConnection: MutableLiveData<Boolean> = MutableLiveData()
