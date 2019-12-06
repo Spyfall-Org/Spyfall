@@ -124,7 +124,7 @@ class StartFragment : Fragment() {
         {
             startActivity(goToMarket)
         }
-        catch (e:ActivityNotFoundException) {
+        catch (e: ActivityNotFoundException) {
             startActivity(Intent(Intent.ACTION_VIEW,
                 Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)))
         }
