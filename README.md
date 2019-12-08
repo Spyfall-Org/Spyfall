@@ -1,7 +1,6 @@
 # Spyfall
 
-## Note:
-under refactor  while learning every day about better Android practices. Such as not putting everything in one view model. My bad.
+#### Note: under refactor  while learning every day about better Android practices. Such as not putting everything in one view model. My bad.
 
 This is a currently under construciton android application named Spyfall (after the classic game). It is a multiplayer game in which one person is assigned to be a spy while 
 all other players are assigned a role at a location. The spy's objective is to figure out the location through a series of well worded questions while not giving
