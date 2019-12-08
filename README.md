@@ -15,4 +15,4 @@ This project will not run properly as I have not included the back end connectio
 Kotlin, Firebase, Jetpack : Navigation, ViewModel, LiveData
 
 ## Project Managment
-This project is multi-platform. iOS developer Josiah Rininger is currently developing the iOS application. Our progress is tracked in this [trello board](https://trello.com/b/HqUDTDkq/spyfall-v1)
+This project is multi-platform. iOS developer [Josiah Rininger](https://github.com/JosiahRininger) is currently developing the iOS application. Our progress is tracked in this [trello board](https://trello.com/b/HqUDTDkq/spyfall-v1)
