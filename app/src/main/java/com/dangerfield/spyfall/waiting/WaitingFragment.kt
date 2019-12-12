@@ -53,8 +53,7 @@ class WaitingFragment : Fragment() {
             resources.getString(R.string.waiting_leaving_title),
             resources.getString(R.string.waiting_leaving_message),
             resources.getString(R.string.leave_action_positive), {leaveGame()},
-            resources.getString(R.string.leave_action_negative),{ btn_leave_game.isClickable = true
-            }).show()
+            resources.getString(R.string.leave_action_negative),{}).show()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
@@ -78,11 +77,9 @@ class WaitingFragment : Fragment() {
             adapter?.players = updatedGame.playerList
 
             //we know everything is good to go when the player objects list is done
-            if(updatedGame.playerList.size == updatedGame.playerObjectList.size && navController.currentDestination?.id == R.id.waitingFragment){
+            if(updatedGame.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment){
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
                 enterMode()
-                viewModel.incrementGamesPlayed()
-                viewModel.incrementAndroidPlayers()
             }
         })
     }
@@ -94,14 +91,14 @@ class WaitingFragment : Fragment() {
         //only set the listeners once the view has been created
         btn_start_game.setOnClickListener {
             loadMode()
-            //only the game creator has the roles automatically
-            //TODO: is you wanted a timeout function, this woud be the place
-            if(viewModel.roles.isEmpty()){ viewModel.getRolesAndStartGame() }else{ viewModel.startGame() }
+
+            viewModel.getRolesAndStartGame()
         }
 
         btn_leave_game.setOnClickListener {
-            btn_leave_game.isClickable = false
-            navigateBack?.invoke() ?: leaveGame()
+            if(viewModel.gameObject.value?.started == false){
+                navigateBack?.invoke() ?: leaveGame()
+            }
         }
 
         configureLayoutManagerAndRecyclerView()
@@ -110,12 +107,8 @@ class WaitingFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        // we need to check if the user is the game creator every time they come to this screen
-        isGameCreator = arguments?.get("FromFragment") == "NewGameFragment"
-
         tv_acess_code.text = viewModel.ACCESS_CODE
 
-        if(isGameCreator){ viewModel.getRandomLocation() }
     }
 
     private fun leaveGame() {

@@ -57,25 +57,23 @@ class GameViewModel : ViewModel() {
         return gameObject
     }
 
-    fun getRandomLocation() {
-        if (gameObject.value?.chosenLocation.isNullOrEmpty()) {
-            val randomPack = gameObject.value!!.chosenPacks.random()
-            db.collection("packs").document(randomPack)
-                .get().addOnSuccessListener {
-                    val (location,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
-                    roles.addAll(mRoles)
-                    gameRef.update("chosenLocation",location)
-                    //places the pack with the chosen location at index 0
-                    Collections.swap(gameObject.value!!.chosenPacks,
-                        0,gameObject.value!!.chosenPacks.indexOf(randomPack))
-                    gameRef.update("chosenPacks", gameObject.value!!.chosenPacks)
-
-                }
-        }
+    fun getRandomLocation(chosenPacks: ArrayList<String>, onComplete: ((location: String, chosenPacks: ArrayList<String>) -> Unit)? = null) {
+        val randomPack = chosenPacks.random()
+        db.collection("packs").document(randomPack)
+            .get().addOnSuccessListener {
+                val (location,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
+                roles.addAll(mRoles)
+                //places the pack with the chosen location at index 0
+                Collections.swap(chosenPacks,
+                    0, chosenPacks.indexOf(randomPack))
+                onComplete?.invoke(location, chosenPacks)
+            }
     }
 
     fun getRolesAndStartGame() {
-        //TODO: findout how to flag started to disable creat clicks here
+        if(gameObject.value?.started == true) return
+
+        gameRef.update("started", true)
 
         db.collection("packs").document(gameObject.value!!.chosenPacks[0])
             .get().addOnSuccessListener {
@@ -86,8 +84,6 @@ class GameViewModel : ViewModel() {
     }
 
     fun startGame() {
-        //if it hasnt been started then start it, this flag disbales the create button for everyone
-        if(!gameObject.value!!.started) gameRef.update("started", true) else return
 
         //assignes all roles
         if(roles.isNullOrEmpty() or gameObject.value?.playerList.isNullOrEmpty()){ return }
@@ -107,6 +103,9 @@ class GameViewModel : ViewModel() {
 
             //now push to database
             gameRef.update("playerObjectList", playerObjectList.shuffled()) //shuffled so that the last is not always the spy
+
+        incrementGamesPlayed()
+        incrementAndroidPlayers()
     }
 
     fun getAllGameLocations():  LiveData<ArrayList<String>> {
@@ -133,19 +132,38 @@ class GameViewModel : ViewModel() {
        return gameRef.delete()
     }
 
-    fun resetGame(): Task<Void> {
-        // resets variables on firebase, which will update viewmodel
-        roles.clear()
-        val newGame = Game("",gameObject.value!!.chosenPacks,false,
-           gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
-
-        return gameRef.set(newGame)
+    fun getNewAccessCode(onComplete: ((code: String) -> Unit)?) {
+        var newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
+        db.collection("games").document(newCode).get().addOnCompleteListener {
+            if(it.result?.exists() == true) {
+                getNewAccessCode(onComplete)
+            }else{
+                onComplete?.invoke(newCode)
+            }
+        }
     }
 
-    fun createGame(game: Game, code: String): Task<Void> {
+
+    fun resetGame()  {
+        // resets variables on firebase, which will update viewmodel
+        getRandomLocation(gameObject.value?.chosenPacks ?: return) { location, packs ->
+            roles.clear()
+            val newGame = Game(location,packs,false,
+                gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
+            gameRef.set(newGame)
+        }
+    }
+
+    fun createGame(game: Game, code: String, onComplete: (() -> Unit)? = null) {
+        getRandomLocation(game.chosenPacks) { location , packs ->
+            game.chosenLocation = location
+            game.chosenPacks = packs
             gameObject.value = game
             ACCESS_CODE = code
-            return gameRef.set(game)
+            gameRef.set(game).addOnCompleteListener {
+                onComplete?.invoke()
+            }
+        }
     }
 
     fun removePlayer(): Task<Void>{
