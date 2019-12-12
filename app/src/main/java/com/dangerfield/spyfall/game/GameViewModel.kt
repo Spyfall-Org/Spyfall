@@ -71,7 +71,9 @@ class GameViewModel : ViewModel() {
     }
 
     fun getRolesAndStartGame() {
-        //TODO: findout how to flag started to disable creat clicks here
+        if(gameObject.value?.started == true) return
+
+        gameRef.update("started", true)
 
         db.collection("packs").document(gameObject.value!!.chosenPacks[0])
             .get().addOnSuccessListener {
@@ -82,8 +84,6 @@ class GameViewModel : ViewModel() {
     }
 
     fun startGame() {
-        //if it hasnt been started then start it, this flag disbales the create button for everyone
-        if(!gameObject.value!!.started) gameRef.update("started", true) else return
 
         //assignes all roles
         if(roles.isNullOrEmpty() or gameObject.value?.playerList.isNullOrEmpty()){ return }
@@ -103,6 +103,9 @@ class GameViewModel : ViewModel() {
 
             //now push to database
             gameRef.update("playerObjectList", playerObjectList.shuffled()) //shuffled so that the last is not always the spy
+
+        incrementGamesPlayed()
+        incrementAndroidPlayers()
     }
 
     fun getAllGameLocations():  LiveData<ArrayList<String>> {
