@@ -77,7 +77,7 @@ class WaitingFragment : Fragment() {
             adapter?.players = updatedGame.playerList
 
             //we know everything is good to go when the player objects list is done
-            if(updatedGame.playerList.size == updatedGame.playerObjectList.size && navController.currentDestination?.id == R.id.waitingFragment){
+            if(updatedGame.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment){
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
                 enterMode()
             }

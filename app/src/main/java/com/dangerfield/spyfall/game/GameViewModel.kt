@@ -144,13 +144,14 @@ class GameViewModel : ViewModel() {
     }
 
 
-    fun resetGame(): Task<Void> {
+    fun resetGame()  {
         // resets variables on firebase, which will update viewmodel
-        roles.clear()
-        val newGame = Game("",gameObject.value!!.chosenPacks,false,
-           gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
-
-        return gameRef.set(newGame)
+        getRandomLocation(gameObject.value?.chosenPacks ?: return) { location, packs ->
+            roles.clear()
+            val newGame = Game(location,packs,false,
+                gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
+            gameRef.set(newGame)
+        }
     }
 
     fun createGame(game: Game, code: String, onComplete: (() -> Unit)? = null) {

@@ -72,9 +72,7 @@ class GameFragment : Fragment() {
         viewModel.getGameUpdates().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             //someone has reset game
             if(!it.started && navController.currentDestination?.id == R.id.gameFragment){
-                viewModel.resetGame().addOnCompleteListener{
-                    navController.popBackStack(R.id.waitingFragment, false)
-                }
+                navController.popBackStack(R.id.waitingFragment, false)
             }
             //now this gets called anytime anything changes
             if(it.started && navController.currentDestination?.id == R.id.gameFragment){
@@ -96,16 +94,19 @@ class GameFragment : Fragment() {
 
         changeAccent()
         //we set the listeners once the view has actually been inflated
-        btn_end_game.setOnClickListener { UIHelper.customSimpleAlert(context!!,
-            getString(R.string.end_game_title),
-            getString(R.string.end_game_message),
-            getString(R.string.end_game_positive_action), {endGame()},
-            getString(R.string.negative_action_standard),{}).show()}
+        btn_end_game.setOnClickListener {
+            if(tv_game_timer.text.toString() == "0:00") endGame()
+            else{
+                UIHelper.customSimpleAlert(context!!,
+                    getString(R.string.end_game_title),
+                    getString(R.string.end_game_message),
+                    getString(R.string.end_game_positive_action), {endGame()},
+                    getString(R.string.negative_action_standard),{}).show()
+            }
+        }
 
         btn_play_again.setOnClickListener{
-            viewModel.resetGame().addOnCompleteListener{
-                navController.popBackStack(R.id.waitingFragment, false)
-            }
+            viewModel.resetGame()
         }
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_hide.setOnClickListener{ hide()}
