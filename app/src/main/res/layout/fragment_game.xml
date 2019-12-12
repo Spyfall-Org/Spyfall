@@ -149,6 +149,7 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_players"
                     android:layout_width="0dp"
+                    android:overScrollMode="never"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
@@ -160,6 +161,7 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_locations"
                     android:layout_width="0dp"
+                    android:overScrollMode="never"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"

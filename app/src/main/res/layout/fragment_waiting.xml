@@ -93,6 +93,7 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_player_list_waiting"
                     android:layout_width="0dp"
+                    android:overScrollMode="never"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
