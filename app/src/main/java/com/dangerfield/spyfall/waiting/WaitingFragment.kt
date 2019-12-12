@@ -110,12 +110,8 @@ class WaitingFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        // we need to check if the user is the game creator every time they come to this screen
-        isGameCreator = arguments?.get("FromFragment") == "NewGameFragment"
-
         tv_acess_code.text = viewModel.ACCESS_CODE
 
-        if(isGameCreator){ viewModel.getRandomLocation() }
     }
 
     private fun leaveGame() {

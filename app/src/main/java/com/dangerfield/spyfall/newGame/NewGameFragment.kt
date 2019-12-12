@@ -152,8 +152,8 @@ class NewGameFragment : Fragment() {
             viewModel.getNewAccessCode {
                 viewModel.createGame(game, it) {
                     connected = true
-                    val bundle = bundleOf("FromFragment" to "NewGameFragment")
-                    navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
+                    Log.d("Elijah", "Called on complete")
+                    navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
                     enterMode()
                 }
             }

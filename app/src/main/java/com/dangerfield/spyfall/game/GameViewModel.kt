@@ -57,17 +57,16 @@ class GameViewModel : ViewModel() {
         return gameObject
     }
 
-    fun getRandomLocation(onComplete: ((location: String) -> Unit)? = null) {
-        val randomPack = gameObject.value!!.chosenPacks.random()
+    fun getRandomLocation(chosenPacks: ArrayList<String>, onComplete: ((location: String, chosenPacks: ArrayList<String>) -> Unit)? = null) {
+        val randomPack = chosenPacks.random()
         db.collection("packs").document(randomPack)
             .get().addOnSuccessListener {
                 val (location,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
                 roles.addAll(mRoles)
                 //places the pack with the chosen location at index 0
-                Collections.swap(gameObject.value!!.chosenPacks,
-                    0,gameObject.value!!.chosenPacks.indexOf(randomPack))
-                gameRef.update("chosenPacks", gameObject.value!!.chosenPacks)
-                onComplete?.invoke(location)
+                Collections.swap(chosenPacks,
+                    0, chosenPacks.indexOf(randomPack))
+                onComplete?.invoke(location, chosenPacks)
             }
     }
 
@@ -152,11 +151,12 @@ class GameViewModel : ViewModel() {
     }
 
     fun createGame(game: Game, code: String, onComplete: (() -> Unit)? = null) {
-        getRandomLocation {
-            game.chosenLocation = it
+        getRandomLocation(game.chosenPacks) { location , packs ->
+            game.chosenLocation = location
+            game.chosenPacks = packs
             gameObject.value = game
             ACCESS_CODE = code
-            gameRef.set(game).addOnCanceledListener {
+            gameRef.set(game).addOnCompleteListener {
                 onComplete?.invoke()
             }
         }
