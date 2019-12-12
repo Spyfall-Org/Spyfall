@@ -75,6 +75,7 @@ class NewGameFragment : Fragment() {
         tv_new_game_name.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.addCharacterMax(2)
+        tv_new_game_name.addCharacterMax(25)
 
         btn_create.setOnClickListener { createGame() }
 
@@ -118,7 +119,7 @@ class NewGameFragment : Fragment() {
             playerName.length > 25 -> {Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
                 return}
 
-            timeLimit.isEmpty() || timeLimit.toInt() > 10 -> {
+            timeLimit.isEmpty() || timeLimit.toInt() > 10 || timeLimit.toInt() == 0 -> {
                 Toast.makeText(context, getString(R.string.new_game_error_time_limit), Toast.LENGTH_LONG).show()
                 return
             }
@@ -148,13 +149,15 @@ class NewGameFragment : Fragment() {
 
             loadMode()
 
-            viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
-                .addOnCompleteListener {
+            viewModel.getNewAccessCode {
+                viewModel.createGame(game, it) {
                     connected = true
                     val bundle = bundleOf("FromFragment" to "NewGameFragment")
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
                     enterMode()
                 }
+            }
+
         }else{
             UIHelper.errorDialog(context!!).show()
             enterMode()

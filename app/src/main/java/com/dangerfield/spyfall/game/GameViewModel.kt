@@ -57,21 +57,18 @@ class GameViewModel : ViewModel() {
         return gameObject
     }
 
-    fun getRandomLocation() {
-        if (gameObject.value?.chosenLocation.isNullOrEmpty()) {
-            val randomPack = gameObject.value!!.chosenPacks.random()
-            db.collection("packs").document(randomPack)
-                .get().addOnSuccessListener {
-                    val (location,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
-                    roles.addAll(mRoles)
-                    gameRef.update("chosenLocation",location)
-                    //places the pack with the chosen location at index 0
-                    Collections.swap(gameObject.value!!.chosenPacks,
-                        0,gameObject.value!!.chosenPacks.indexOf(randomPack))
-                    gameRef.update("chosenPacks", gameObject.value!!.chosenPacks)
-
-                }
-        }
+    fun getRandomLocation(onComplete: ((location: String) -> Unit)? = null) {
+        val randomPack = gameObject.value!!.chosenPacks.random()
+        db.collection("packs").document(randomPack)
+            .get().addOnSuccessListener {
+                val (location,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
+                roles.addAll(mRoles)
+                //places the pack with the chosen location at index 0
+                Collections.swap(gameObject.value!!.chosenPacks,
+                    0,gameObject.value!!.chosenPacks.indexOf(randomPack))
+                gameRef.update("chosenPacks", gameObject.value!!.chosenPacks)
+                onComplete?.invoke(location)
+            }
     }
 
     fun getRolesAndStartGame() {
@@ -133,6 +130,18 @@ class GameViewModel : ViewModel() {
        return gameRef.delete()
     }
 
+    fun getNewAccessCode(onComplete: ((code: String) -> Unit)?) {
+        var newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
+        db.collection("games").document(newCode).get().addOnCompleteListener {
+            if(it.result?.exists() == true) {
+                getNewAccessCode(onComplete)
+            }else{
+                onComplete?.invoke(newCode)
+            }
+        }
+    }
+
+
     fun resetGame(): Task<Void> {
         // resets variables on firebase, which will update viewmodel
         roles.clear()
@@ -142,10 +151,15 @@ class GameViewModel : ViewModel() {
         return gameRef.set(newGame)
     }
 
-    fun createGame(game: Game, code: String): Task<Void> {
+    fun createGame(game: Game, code: String, onComplete: (() -> Unit)? = null) {
+        getRandomLocation {
+            game.chosenLocation = it
             gameObject.value = game
             ACCESS_CODE = code
-            return gameRef.set(game)
+            gameRef.set(game).addOnCanceledListener {
+                onComplete?.invoke()
+            }
+        }
     }
 
     fun removePlayer(): Task<Void>{
