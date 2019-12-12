@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.util.addCharacterMax
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_join_game.*
 import kotlin.collections.ArrayList
@@ -41,6 +42,8 @@ class JoinGameFragment : Fragment() {
         //listeners to hide keyboard when user clicks away
         tv_access_code.onFocusChangeListener = UIHelper.keyboardHider
         tv_username.onFocusChangeListener = UIHelper.keyboardHider
+        tv_access_code.addCharacterMax(8)
+        tv_username.addCharacterMax(25)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
