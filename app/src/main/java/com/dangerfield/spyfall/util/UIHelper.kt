@@ -142,6 +142,7 @@ class UIHelper {
 
                 if(title.trim() == context.resources.getString(R.string.about_title)) {
                     btn_email.visibility = View.VISIBLE
+                    btn_email.setLinkTextColor(accentColor)
                 }
 
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
@@ -151,6 +152,7 @@ class UIHelper {
                 //for theme changing
                 btn_custom_alert_positive.background.setTint(accentColor)
                 tv_custom_alert_message.text = message
+
                 tv_custom_alert_title.text = title
             }
             return dialog

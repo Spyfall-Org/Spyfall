@@ -1,20 +1,14 @@
 package com.dangerfield.spyfall.settings
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.item_change_color.view.*
 
-class ColorChangeAdapter(var colors: List<ColorButton>  ,private var context: Context?) : RecyclerView.Adapter<ColorChangeAdapter.ViewHolder>() {
+class ColorChangeAdapter(var colors: List<ColorButton>, private var context: Context?, val mCallback: ColorChanger) : RecyclerView.Adapter<ColorChangeAdapter.ViewHolder>() {
 
     var selectedPosition = -1
 
@@ -31,7 +25,9 @@ class ColorChangeAdapter(var colors: List<ColorButton>  ,private var context: Co
                 //now select this one
                 colors[adapterPosition].isSelected = true
                 selectedPosition = adapterPosition
-
+                if(colors[adapterPosition].color != Color.WHITE){
+                    mCallback.onColorChange((colors[adapterPosition]))
+                }
                 notifyDataSetChanged()
             }
         }
@@ -73,4 +69,6 @@ class ColorChangeAdapter(var colors: List<ColorButton>  ,private var context: Co
         view.color_change_check_animation.visibility = View.VISIBLE
         view.color_change_check_animation.playAnimation()
     }
+
+    interface ColorChanger { fun onColorChange(colorButton: ColorButton) }
 }

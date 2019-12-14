@@ -21,11 +21,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
+import kotlinx.android.synthetic.main.alert_custom.*
 import kotlinx.android.synthetic.main.alert_custom.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
+    override fun onColorChange(colorButton: ColorButton) {
+        colorChanger.btn_custom_alert_positive.background.setTint(colorButton.color)
+    }
+
+    val colorChanger : AlertDialog by lazy { getColorChangeDialog()}
 
     lateinit var colors: MutableList<ColorButton>
     lateinit var colorChangeAdapter: ColorChangeAdapter
@@ -36,7 +42,7 @@ class SettingsFragment : Fragment() {
         UIHelper.accentColors.forEach { colors.add(ColorButton(it,false)) }
         //this is a flag for random colors
         colors.add(ColorButton(Color.WHITE,false))
-        colorChangeAdapter = ColorChangeAdapter(colors, context)
+        colorChangeAdapter = ColorChangeAdapter(colors, context, this)
 
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
@@ -46,7 +52,7 @@ class SettingsFragment : Fragment() {
 
         navController = Navigation.findNavController(parentFragment!!.view!!)
 
-        btn_theme_change.setOnClickListener{ showColorChangeDialog() }
+        btn_theme_change.setOnClickListener{ colorChanger.show() }
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
         drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
@@ -87,7 +93,7 @@ class SettingsFragment : Fragment() {
         }
     }
     //TODO: consider making a view model for this
-    private fun showColorChangeDialog(){
+    private fun getColorChangeDialog(): AlertDialog {
         val dialogBuilder = AlertDialog.Builder(context!!)
         val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
         dialogBuilder.setView(view)
@@ -123,7 +129,7 @@ class SettingsFragment : Fragment() {
             tv_custom_alert_message.text = resources.getString(R.string.theme_change_message)
             tv_custom_alert_title.text = resources.getString(R.string.theme_change_title)
         }
-        dialog.show()
+        return dialog
     }
 
     private fun saveColor(chosenColor: Int){
