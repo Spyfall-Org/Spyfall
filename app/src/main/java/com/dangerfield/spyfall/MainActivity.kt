@@ -16,7 +16,6 @@ import kotlin.coroutines.CoroutineContext
 class MainActivity : AppCompatActivity(), CoroutineScope{
 
     lateinit var viewModel: GameViewModel
-    lateinit var receiver: Receiver
     private  lateinit var killGame: Job
     private lateinit var navController: NavController
     private var killed = false
@@ -61,11 +60,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
             navController.popBackStack(R.id.startFragment,false)
             killed = false
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(receiver)
     }
 
     override fun onDestroy() {
