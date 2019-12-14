@@ -1,18 +1,15 @@
 package com.dangerfield.spyfall
 
-import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.util.Receiver
 import com.dangerfield.spyfall.game.GameViewModel
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -43,10 +40,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
         return findNavController(this, R.id.nav_host_fragment).navigateUp()
     }
 
-    override fun onResume() {
-        super.onResume()
-        register()
-    }
 
     override val coroutineContext: CoroutineContext
         get() = killGame + Dispatchers.Main
@@ -63,6 +56,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
             }
         }
 
+        //if the user has come back after they have been removed, make sure they go back to the start
         if(killed){
             navController.popBackStack(R.id.startFragment,false)
             killed = false
@@ -81,13 +75,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
         if(viewModel.gameExists.value != null && viewModel.gameExists.value!!){
             viewModel.removePlayer()
         }
-    }
-
-    private fun register(){
-        receiver = Receiver(viewModel)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        registerReceiver(receiver,intentFilter)
     }
 
     override fun onStop() {

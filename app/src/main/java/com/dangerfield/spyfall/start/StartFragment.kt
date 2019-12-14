@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.start
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -15,6 +16,9 @@ import kotlinx.android.synthetic.main.fragment_start.*
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.net.Uri
+import android.view.animation.AnimationUtils
+import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
 
 
 class StartFragment : Fragment() {
@@ -28,6 +32,8 @@ class StartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        welcome_message.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
 
         navController = NavHostFragment.findNavController(this)
 
