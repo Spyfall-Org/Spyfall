@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.util.Connectivity
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_join_game.*
@@ -61,11 +62,9 @@ class JoinGameFragment : Fragment() {
 
         btn_join_game_action.isClickable = false
 
-        if(!hasNetworkConnection){
+        if(!Connectivity.isOnline){
             UIHelper.errorDialog(context!!).show()
-            Handler(context!!.mainLooper).post {
-                enterMode()
-            }
+            enterMode()
             return
         }
         val accessCode = tv_access_code.text.toString().trim()
@@ -79,7 +78,7 @@ class JoinGameFragment : Fragment() {
         loadMode()
 
         Handler().postDelayed({
-            //if it takes more than 8 seconds, cancel
+            //if it takes more than 10 seconds, cancel
             if(!connected){
                 UIHelper.errorDialog(context!!).show()
                 Handler(context!!.mainLooper).post {
@@ -87,13 +86,13 @@ class JoinGameFragment : Fragment() {
                 }
                 FirebaseDatabase.getInstance().purgeOutstandingWrites()
             }
-        },8000)
+        },10000)
 
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
 
-            connected = game.exists()
+            connected = true
 
-            if(connected){
+            if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
 
                 when {
@@ -124,23 +123,12 @@ class JoinGameFragment : Fragment() {
     }
 
     private fun joinGame(withAccessCode: String, asPlayer: String){
-        var connected = false
-        Handler().postDelayed({
-            //if it takes more than 5 seconds to connect, retry
-            if(!connected){
-                UIHelper.errorDialog(context!!).show()
+            viewModel.ACCESS_CODE = withAccessCode
+            viewModel.currentUser = asPlayer
+            viewModel.addPlayer(asPlayer).addOnCompleteListener {
+                navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
                 enterMode()
-                FirebaseDatabase.getInstance().purgeOutstandingWrites()
             }
-        },8000)
-
-        viewModel.ACCESS_CODE = withAccessCode
-        viewModel.currentUser = asPlayer
-        viewModel.addPlayer(asPlayer).addOnCompleteListener {
-            connected = true
-            navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
-            enterMode()
-        }
     }
 
     private fun changeAccent(){

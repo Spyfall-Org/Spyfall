@@ -22,6 +22,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
+import com.dangerfield.spyfall.util.Connectivity
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -134,30 +135,29 @@ class NewGameFragment : Fragment() {
 
     private fun createGame(game: Game){
         var connected = false
-        if(hasNetworkConnection) {
+        if(Connectivity.isOnline) {
 
             Handler().postDelayed({
                 if(!connected){
-                    //if we havent connected within 8 seconds, stop trying
+                    //if we havent connected within 10 seconds, stop trying
+                    FirebaseDatabase.getInstance().purgeOutstandingWrites()
                     UIHelper.errorDialog(context!!).show()
                     Handler(context!!.mainLooper).post {
                         enterMode()
                     }
-                    FirebaseDatabase.getInstance().purgeOutstandingWrites()
                 }
-            }, 8000)
+            }, 10000)
 
             loadMode()
 
             viewModel.getNewAccessCode {
+                connected = true
                 viewModel.createGame(game, it) {
-                    connected = true
                     Log.d("Elijah", "Called on complete")
                     navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
                     enterMode()
                 }
             }
-
         }else{
             UIHelper.errorDialog(context!!).show()
             enterMode()

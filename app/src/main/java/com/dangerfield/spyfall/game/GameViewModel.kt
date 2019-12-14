@@ -57,15 +57,18 @@ class GameViewModel : ViewModel() {
         return gameObject
     }
 
+    /*
+    Selects random pack and then a random loaction from that pack
+    moves the random pack to the 0th index on firebase (in onComplete)
+    to make it easier to grab roles later on
+     */
     fun getRandomLocation(chosenPacks: ArrayList<String>, onComplete: ((location: String, chosenPacks: ArrayList<String>) -> Unit)? = null) {
         val randomPack = chosenPacks.random()
         db.collection("packs").document(randomPack)
             .get().addOnSuccessListener {
-                val (location,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
-                roles.addAll(mRoles)
+                val location = it.data?.toList()?.random()?.first ?: ""
                 //places the pack with the chosen location at index 0
-                Collections.swap(chosenPacks,
-                    0, chosenPacks.indexOf(randomPack))
+                Collections.swap(chosenPacks, 0, chosenPacks.indexOf(randomPack))
                 onComplete?.invoke(location, chosenPacks)
             }
     }
@@ -77,7 +80,7 @@ class GameViewModel : ViewModel() {
 
         db.collection("packs").document(gameObject.value!!.chosenPacks[0])
             .get().addOnSuccessListener {
-                val (_,mRoles) = it.data?.toList()?.random() as Pair<String, List<String>>
+                val mRoles = it[gameObject.value!!.chosenLocation] as List<String>
                 roles.addAll(mRoles)
                 startGame()
             }
@@ -104,7 +107,7 @@ class GameViewModel : ViewModel() {
             //now push to database
             gameRef.update("playerObjectList", playerObjectList.shuffled()) //shuffled so that the last is not always the spy
 
-        incrementGamesPlayed()
+            incrementGamesPlayed()
     }
 
     fun getAllGameLocations():  LiveData<ArrayList<String>> {

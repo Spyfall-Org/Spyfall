@@ -64,8 +64,8 @@
 	<string name="string_game_players">Игроки:</string>
 	<string name="string_game_locations">Место проживания:</string>
 	<string name="string_locations">Места</string>
-	<string name="string_hide"><u> Show </u></string>
-	<string name="string_show"><u> Показать </u></string>
+	<string name="string_hide">Show</string>
+	<string name="string_show">Показать</string>
 	<string name="string_btn_leave_game">Выйти из игры</string>
 	<string name="string_btn_start_game">Начать игру</string>
 	<string name="dialog_rate_title">Понравилась игра?</string>

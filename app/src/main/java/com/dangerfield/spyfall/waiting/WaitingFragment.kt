@@ -71,10 +71,9 @@ class WaitingFragment : Fragment() {
 
         viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
 
-            //if the game has been started, you cant click create
-            btn_start_game.isClickable = !updatedGame.started
-
             adapter?.players = updatedGame.playerList
+
+            if(updatedGame.started) loadMode() else enterMode()
 
             //we know everything is good to go when the player objects list is done
             if(updatedGame.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment){
@@ -91,7 +90,6 @@ class WaitingFragment : Fragment() {
         //only set the listeners once the view has been created
         btn_start_game.setOnClickListener {
             loadMode()
-
             viewModel.getRolesAndStartGame()
         }
 
@@ -106,9 +104,7 @@ class WaitingFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         tv_acess_code.text = viewModel.ACCESS_CODE
-
     }
 
     private fun leaveGame() {

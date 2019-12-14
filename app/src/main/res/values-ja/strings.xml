@@ -60,8 +60,8 @@
 	<string name="string_game_players">プレイヤー：</string>
 	<string name="string_game_locations">場所：</string>
 	<string name="string_locations">場所</string>
-	<string name="string_hide"><u>表示</u></string>
-	<string name="string_show"><u>表示</u></string>
+	<string name="string_hide">表示</string>
+	<string name="string_show">表示</string>
 	<string name="string_btn_leave_game">ゲームを離れる</string>
 	<string name="string_btn_start_game">ゲームを始める</string>
 	<string name="dialog_rate_title">ゲームが好きですか？</string>

@@ -60,8 +60,8 @@
 	<string name="string_game_players">Giocatori:</string>
 	<string name="string_game_locations">sedi:</string>
 	<string name="string_locations">sedi</string>
-	<string name="string_hide"><u> Mostra </u></string>
-	<string name="string_show"><u> Mostra </u></string>
+	<string name="string_hide">Mostra</string>
+	<string name="string_show">Mostra</string>
 	<string name="string_btn_leave_game">Lascia il gioco</string>
 	<string name="string_btn_start_game">Inizia il gioco</string>
 	<string name="dialog_rate_title">Ti piace il gioco?</string>

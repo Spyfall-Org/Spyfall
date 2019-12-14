@@ -70,9 +70,9 @@
 	<string name="string_game_players">선수 :</string>
 	<string name="string_game_locations">위치 :</string>
 	<string name="string_locations">위치</string>
-	<string name="string_hide"><u>보기 </u></string>
+	<string name="string_hide">보기</string>
 	<string name="string_show">
-		<u>표시</u>
+		표
 	</string>
 	<string name="string_btn_leave_game">게임을 떠나</string>
 	<string name="string_btn_start_game">게임을 시작하다</string>

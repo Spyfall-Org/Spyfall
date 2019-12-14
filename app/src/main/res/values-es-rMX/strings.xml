@@ -76,10 +76,10 @@
     <string name="string_join_name_hint">" Introduzca un nombre de usuario"</string>
     <string name="string_join_game">"Unete al juego "</string>
     <string name="string_join_access_hint">
-        <u>Código de acceso</u>
+        Código de acceso
     </string>
     <string name="string_hide">
-        <u>esconder</u>
+        esconder
     </string>
     <string name="string_game_players">los jugadores
         :</string>

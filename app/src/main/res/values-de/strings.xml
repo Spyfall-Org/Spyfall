@@ -60,8 +60,8 @@
 	<string name="string_game_players">Spieler:</string>
 	<string name="string_game_locations">Standorte:</string>
 	<string name="string_locations">Standorte</string>
-	<string name="string_hide"><u>Show</u></string>
-	<string name="string_show"><u>Anzeigen</u></string>
+	<string name="string_hide">Show</string>
+	<string name="string_show">Anzeigen</string>
 	<string name="string_btn_leave_game">Spiel verlassen</string>
 	<string name="string_btn_start_game">Spiel beginnen</string>
 	<string name="dialog_rate_title">Gefällt dir das Spiel?</string>

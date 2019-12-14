@@ -73,10 +73,10 @@
 	<string name="string_game_locations">Emplacements:</string>
 	<string name="string_locations">Emplacements</string>
 	<string name="string_hide">
-		<u>cacher</u>
+		cacher
 	</string>
 	<string name="string_show">
-		<u>démontrer</u>
+		démontrer
 	</string>
 	<string name="string_btn_leave_game">Quitter jeu</string>
 	<string name="string_btn_start_game">Démarrer jeu</string>

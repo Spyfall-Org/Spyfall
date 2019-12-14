@@ -64,8 +64,8 @@
 	<string name="string_game_players">Người chơi:</string>
 	<string name="string_game_locations">Địa điểm:</string>
 	<string name="string_locations">Địa điểm</string>
-	<string name="string_hide"><u> Hiển thị </u></string>
-	<string name="string_show"><u> Hiển thị </u></string>
+	<string name="string_hide"> Hiển thị</string>
+	<string name="string_show"> Hiển thị</string>
 	<string name="string_btn_leave_game">Rời khỏi trò chơi</string>
 	<string name="string_btn_start_game">Bắt đầu trò chơi</string>
 	<string name="dialog_rate_title">Giống như trò chơi?</string>
