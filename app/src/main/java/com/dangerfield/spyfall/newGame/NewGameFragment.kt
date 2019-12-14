@@ -215,12 +215,11 @@ class NewGameFragment : Fragment() {
         }, 8000)
 
         val list = mutableListOf<List<String>>()
-        //TODO: consider changing to valueeventlistener so it is cancelable if it takes too long
         viewModel.db.collection("packs").get()
             .addOnSuccessListener { collection ->
+                connected = true
             collection.documents.forEach { document ->
                 //add to the list
-                connected = !collection.isEmpty
                 val pack = listOf(document.id) + document.data!!.keys.toList()
                 list.add(pack)
             }
