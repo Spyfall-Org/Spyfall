@@ -98,8 +98,8 @@
     <string name="string_game_players">Players:</string>
     <string name="string_game_locations">Locations:</string>
     <string name="string_locations">Locations</string>
-    <string name="string_hide"><u>Hide</u></string>
-    <string name="string_show"><u>Show</u></string>
+    <string name="string_hide">Hide</string>
+    <string name="string_show">Show</string>
 
     <!--SHARED PREFERNCES-->
     <string name="shared_preferences_color" translatable="false">SHARED_PREFERENCES_COLOR</string>

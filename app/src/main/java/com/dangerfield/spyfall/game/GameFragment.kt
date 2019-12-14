@@ -42,6 +42,8 @@ class GameFragment : Fragment() {
         navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
+        viewModel.incrementAndroidPlayers()
+
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {

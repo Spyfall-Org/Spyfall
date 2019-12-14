@@ -72,7 +72,7 @@ class GameViewModel : ViewModel() {
 
     fun getRolesAndStartGame() {
         if(gameObject.value?.started == true) return
-
+        roles.clear()
         gameRef.update("started", true)
 
         db.collection("packs").document(gameObject.value!!.chosenPacks[0])
@@ -105,7 +105,6 @@ class GameViewModel : ViewModel() {
             gameRef.update("playerObjectList", playerObjectList.shuffled()) //shuffled so that the last is not always the spy
 
         incrementGamesPlayed()
-        incrementAndroidPlayers()
     }
 
     fun getAllGameLocations():  LiveData<ArrayList<String>> {
@@ -123,7 +122,6 @@ class GameViewModel : ViewModel() {
     }
     
     fun endGame(): Task<Void> {
-        roles.clear()
         gameListener.remove()
         //sets to false such that listener in game fragment can be triggered
         gameExists.value = false
@@ -147,7 +145,6 @@ class GameViewModel : ViewModel() {
     fun resetGame()  {
         // resets variables on firebase, which will update viewmodel
         getRandomLocation(gameObject.value?.chosenPacks ?: return) { location, packs ->
-            roles.clear()
             val newGame = Game(location,packs,false,
                 gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
             gameRef.set(newGame)
@@ -169,7 +166,6 @@ class GameViewModel : ViewModel() {
     fun removePlayer(): Task<Void>{
        //when a player leaves a game, you dont want them to hold onto the game data
         gameObject = MutableLiveData()
-        roles.clear()
         gameListener.remove()
         //set to false such that when a user is not timeout removed to a game they already left
         gameExists.postValue(false)
