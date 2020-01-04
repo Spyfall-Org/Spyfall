@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
     private lateinit var navController: NavController
     private var killed = false
     private var themeChanged = false
+    private var uiTheme = Configuration.UI_MODE_NIGHT_YES
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
 
         val currentMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         if (currentMode == Configuration.UI_MODE_NIGHT_NO) {
+            uiTheme = Configuration.UI_MODE_NIGHT_NO
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
@@ -71,7 +73,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
         super.onConfigurationChanged(newConfig)
 
         Log.d("Eli","on config change")
-        this.themeChanged = true
+        if(uiTheme != (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK)){
+            this.themeChanged = true
+        }
         this.recreate()
 
     }
