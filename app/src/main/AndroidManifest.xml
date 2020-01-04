@@ -23,6 +23,7 @@
             tools:ignore="GoogleAppIndexingWarning" />
         <activity
                 android:theme="@style/AppTheme"
+                android:configChanges="uiMode"
                 android:name=".MainActivity"
                 android:windowSoftInputMode="adjustResize"
                 android:screenOrientation="portrait">

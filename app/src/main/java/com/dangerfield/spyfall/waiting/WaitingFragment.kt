@@ -38,7 +38,9 @@ class WaitingFragment : Fragment() {
     lateinit var viewModel: GameViewModel
     private var isGameCreator: Boolean = false
     private var navigateBack: (() -> Unit)? = null
-    private lateinit var navController: NavController
+    private val navController: NavController by lazy {
+        NavHostFragment.findNavController(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_waiting, container, false)
@@ -47,7 +49,6 @@ class WaitingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
         navigateBack = { UIHelper.customSimpleAlert(context!!,
