@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:focusableInTouchMode="true" android:background="@color/colorBackgroundLight" android:focusable="true">
+            android:focusableInTouchMode="true" android:background="@color/colorBackground" android:focusable="true">
 
         <ProgressBar
                 style="?android:attr/progressBarStyle"

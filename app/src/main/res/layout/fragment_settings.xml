@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         tools:context=".settings.SettingsFragment"
         android:id="@+id/frameLayout"
-        android:background="@color/colorBackgroundLight">
+        android:background="@color/colorBackground">
 
     <TextView
             android:text="@string/string_settings"

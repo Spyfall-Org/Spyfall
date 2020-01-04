@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--used for every views background -->
-    <color name="colorBackground">#FCFCFC</color>
-    <color name="buttonColor">@color/colorWhite</color>
+    <!--used for dark light mode -->
+    <color name="colorBackground">#424242</color>
+    <color name="buttonColor">#2E2E2E</color>
 
 
     <color name="colorPrimary">#747474</color>
