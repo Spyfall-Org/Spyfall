@@ -4,6 +4,8 @@
     <!--used for every views background -->
     <color name="colorBackground">#FCFCFC</color>
     <color name="buttonColor">@color/colorWhite</color>
+    <color name="colorLightText">#EE424242</color>
+
 
 
     <color name="colorPrimary">#747474</color>

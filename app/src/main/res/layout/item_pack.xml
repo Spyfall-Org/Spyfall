@@ -13,12 +13,13 @@
 
 
         <View
+                android:id="@+id/view2"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
+                android:background="@color/buttonColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/view2" android:background="#FFFFFF"/>
+                app:layout_constraintStart_toStartOf="parent" />
         <TextView
                 android:text="1"
                 android:layout_width="0dp"
@@ -30,26 +31,39 @@
                 android:textStyle="bold" android:textSize="30sp"
                 android:textColor="#ECECEC" android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/tv_pack_type" android:gravity="center"/>
+
         <TextView
-                android:text="Standard"
+                android:id="@+id/tv_pack_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_pack_type" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent" android:textStyle="bold" android:maxLines="2"
+                android:gravity="center_horizontal"
+                android:maxLines="2"
+                android:text="Standard"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.518"
-                app:layout_constraintTop_toTopOf="@+id/view2" app:layout_constraintVertical_bias="0.0"
-                android:gravity="center_horizontal"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/view2"
+                app:layout_constraintVertical_bias="0.0" />
+
         <TextView
-                android:text="pack"
+                android:id="@+id/textView14"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView14" app:layout_constraintStart_toStartOf="@+id/tv_pack_type"
-                app:layout_constraintEnd_toEndOf="@+id/tv_pack_type" app:layout_constraintHorizontal_bias="0.481"
-                android:layout_marginTop="12dp" app:layout_constraintTop_toTopOf="@+id/tv_pack_type"
-                android:textStyle="bold" android:gravity="center_horizontal"/>
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:text="pack"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/tv_pack_type"
+                app:layout_constraintHorizontal_bias="0.481"
+                app:layout_constraintStart_toStartOf="@+id/tv_pack_type"
+                app:layout_constraintTop_toTopOf="@+id/tv_pack_type" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <View
             android:layout_width="match_parent"

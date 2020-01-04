@@ -54,9 +54,6 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
 
         btn_theme_change.setOnClickListener{ colorChanger.show() }
 
-        val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
-        drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
-        ic_about.setImageDrawable(drawable)
 
         btn_about.setOnClickListener{
             UIHelper.customSimpleAlert(context!!,

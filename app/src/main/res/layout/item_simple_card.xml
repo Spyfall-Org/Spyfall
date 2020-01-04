@@ -23,13 +23,15 @@
                                        app:cardBackgroundColor="@color/colorTextBackground">
 
         <TextView
+                android:id="@+id/tv_simple_card_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_simple_card_text"
-                android:textColor="@android:color/secondary_text_light"
-                android:gravity="center" android:ellipsize="end"
-                android:singleLine="false" android:maxLines="2"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:singleLine="false"
+                android:textColor="@color/colorLightText" />
 
 
     </androidx.cardview.widget.CardView>

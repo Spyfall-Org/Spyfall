@@ -4,15 +4,17 @@
     <!--used for dark light mode -->
     <color name="colorBackground">#424242</color>
     <color name="buttonColor">#2E2E2E</color>
+    <color name="colorLightText">#EEF8F8F8</color>
+
 
 
     <color name="colorPrimary">#747474</color>
-    <color name="colorPrimaryDark">#FCFCFC</color>
+    <color name="colorPrimaryDark">#2E2E2E</color>
     <color name="colorAccent">#D65656</color>
 
 
     <!--used for text views-->
-    <color name="colorTextBackground">#EFEFEF</color>
+    <color name="colorTextBackground">#7C7C7C</color>
     <color name="colorLightGrey">#9C9C9C</color>
 
 

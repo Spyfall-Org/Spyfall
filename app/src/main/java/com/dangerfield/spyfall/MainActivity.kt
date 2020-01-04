@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall
 
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -28,7 +29,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
 
         MobileAds.initialize(this, getString(R.string.ads_mod_app_id))
 
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (mode == Configuration.UI_MODE_NIGHT_NO) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
 
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
