@@ -1,6 +1,5 @@
 # Spyfall
 
-![](https://firebasestorage.googleapis.com/v0/b/github-images.appspot.com/o/Artboard%20%E2%80%93%201.jpg?alt=media&token=c07e6747-6fe3-4083-a889-f5c016d53c39)
 #### Note: under refactor  while learning every day about better Android practices. Such as not putting everything in one view model. My bad.
 
 This is a currently under construciton android application named Spyfall (after the classic game). It is a multiplayer game in which one person is assigned to be a spy while 
