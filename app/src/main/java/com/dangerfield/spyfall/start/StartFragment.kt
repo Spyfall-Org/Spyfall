@@ -19,6 +19,8 @@ import android.net.Uri
 import android.view.animation.AnimationUtils
 import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 
 
 class StartFragment : Fragment() {
@@ -83,6 +85,11 @@ class StartFragment : Fragment() {
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
         btn_rules.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         btn_rules.setTextColor(UIHelper.accentColor)
+
+        DrawableCompat.setTint(
+            DrawableCompat.wrap(btn_settings.drawable),
+            ContextCompat.getColor(context!!, R.color.colorTheme)
+        )
     }
 
     //TODO; make a prefrences object that deal with all of this
