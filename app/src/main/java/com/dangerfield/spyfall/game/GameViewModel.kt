@@ -135,13 +135,15 @@ class GameViewModel : ViewModel() {
 
     fun getNewAccessCode(onComplete: ((code: String) -> Unit)?) {
         var newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
-        db.collection("games").document(newCode).get().addOnCompleteListener {
-            if(it.result?.exists() == true) {
+        db.collection("games").document(newCode).get().addOnSuccessListener {
+            if(it.exists()) {
                 //then the document exists and thus the game code has already been taken
                 getNewAccessCode(onComplete)
             }else{
                 onComplete?.invoke(newCode)
             }
+        }.addOnFailureListener {
+            Log.d("Elijah", "GOT IN FAILURE")
         }
     }
 

@@ -136,7 +136,7 @@ class NewGameFragment : Fragment() {
     private fun createGame(game: Game){
         var connected = false
         if(Connectivity.isOnline) {
-
+            Log.d("Elijah", "GOT ONLINE")
             Handler().postDelayed({
                 if(!connected){
                     //if we havent connected within 10 seconds, stop trying
@@ -159,6 +159,7 @@ class NewGameFragment : Fragment() {
                 }
             }
         }else{
+            Log.d("Elijah", "GOT OFFLINE")
             UIHelper.errorDialog(context!!).show()
             enterMode()
         }
@@ -217,19 +218,21 @@ class NewGameFragment : Fragment() {
         val list = mutableListOf<List<String>>()
         viewModel.db.collection("packs").get()
             .addOnSuccessListener { collection ->
+                if (collection.isEmpty) return@addOnSuccessListener
                 connected = true
-            collection.documents.forEach { document ->
+                collection.documents.forEach { document ->
                 //add to the list
-                val pack = listOf(document.id) + document.data!!.keys.toList()
-                list.add(pack)
-            }
-        }.addOnCompleteListener {
+                    val pack = listOf(document.id) + document.data!!.keys.toList()
+                    list.add(pack)
+                }
 
             UIHelper.packsDialog(context!!, list).show()
             pb_packs.visibility = View.INVISIBLE
             btn_packs.visibility = View.VISIBLE
             btn_packs.isClickable = true
-        }
+        }.addOnFailureListener {
+
+            }
     }
 }
 
