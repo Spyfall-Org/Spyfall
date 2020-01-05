@@ -121,5 +121,7 @@
     <string name="change_name_different_name">please enter a name that is not in the game</string>
     <string name="change_name_title">Change Name</string>
     <string name="end_game_title">Ending the game</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 
 </resources>

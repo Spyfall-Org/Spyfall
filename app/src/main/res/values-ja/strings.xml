@@ -72,4 +72,6 @@
 	<string name="change_name_different_name">ゲームにない名前を入力してください</string>
 	<string name="change_name_title">名前を変更</string>
 	<string name="end_game_title">あなたはゲームを終了しています</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

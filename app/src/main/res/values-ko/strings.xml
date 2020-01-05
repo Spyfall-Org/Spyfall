@@ -80,4 +80,6 @@
 	<string name="dialog_rate_message">꽤 우리에게 리뷰를 제공하여 알려 주시기 바랍니다 :)</string>
 	<string name="dialog_rate_negative">아니</string>
 	<string name="waiting_leaving_message">떠나시겠습니까?</string>
+    <string name="light_mode">Light Mode</string>
+	<string name="dark_mode">Dark Mode</string>
 </resources>

@@ -84,4 +84,6 @@
 	<string name="dialog_rate_message">Pretty s\'il vous plaît laissez-nous savoir en nous donnant une critique :)</string>
 	<string name="dialog_rate_negative">Non</string>
 	<string name="waiting_leaving_message">Êtes-vous sûr de vouloir quitter?</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

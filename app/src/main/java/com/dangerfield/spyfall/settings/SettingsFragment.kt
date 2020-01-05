@@ -1,9 +1,11 @@
 package com.dangerfield.spyfall.settings
 
 import android.app.AlertDialog
+import android.app.UiModeManager
 import android.content.ActivityNotFoundException
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
@@ -13,7 +15,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -24,6 +30,7 @@ import com.dangerfield.spyfall.util.UIHelper
 import kotlinx.android.synthetic.main.alert_custom.*
 import kotlinx.android.synthetic.main.alert_custom.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.fragment_start.*
 
 
 class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
@@ -32,6 +39,11 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
 
     val colorChanger : AlertDialog by lazy { getColorChangeDialog()}
+
+    private val currentMode : Int
+        get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+    private var newMode : Int? = null
 
     lateinit var colors: MutableList<ColorButton>
     lateinit var colorChangeAdapter: ColorChangeAdapter
@@ -51,9 +63,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         super.onViewCreated(view, savedInstanceState)
 
         navController = Navigation.findNavController(parentFragment!!.view!!)
-
         btn_theme_change.setOnClickListener{ colorChanger.show() }
-
 
         btn_about.setOnClickListener{
             UIHelper.customSimpleAlert(context!!,
@@ -76,6 +86,11 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
             ic_ads.visibility = View.GONE
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setTheme()
     }
 
     private fun sendUserToPaidVersion(){
@@ -101,7 +116,12 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         view.apply {
 
             rv_color_change.visibility = View.VISIBLE
-
+            mode_toggle.visibility = View.VISIBLE
+            if(currentMode == Configuration.UI_MODE_NIGHT_YES){
+                mode_toggle.check(R.id.tgl_dark_mode)
+            }else{
+                mode_toggle.check(R.id.tgl_light_mode)
+            }
             rv_color_change.adapter = colorChangeAdapter
             rv_color_change.layoutManager = GridLayoutManager(context,4)
             rv_color_change.setHasFixedSize(true)
@@ -114,10 +134,9 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
                     //color white is the flag for random colors
                     UIHelper.accentColor = if(chosenColor == Color.WHITE) UIHelper.accentColors.random() else chosenColor
                     saveColor(chosenColor)
-                    dialog.dismiss()
-                }else{
-                    Toast.makeText(context!!,resources.getString(R.string.theme_change_error),Toast.LENGTH_LONG).show()
                 }
+                newMode?.let { AppCompatDelegate.setDefaultNightMode(it) }
+                dialog.dismiss()
             }
             btn_custom_alert_negative.text = resources.getString(R.string.negative_action_standard)
             btn_custom_alert_positive.text = resources.getString(R.string.theme_change_positive)
@@ -125,6 +144,13 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
             btn_custom_alert_positive.background.setTint(UIHelper.accentColor)
             tv_custom_alert_message.text = resources.getString(R.string.theme_change_message)
             tv_custom_alert_title.text = resources.getString(R.string.theme_change_title)
+
+            mode_toggle.setOnCheckedChangeListener { _, checkedId ->
+                when(checkedId) {
+                    R.id.tgl_light_mode -> newMode = AppCompatDelegate.MODE_NIGHT_NO
+                    R.id.tgl_dark_mode -> newMode = AppCompatDelegate.MODE_NIGHT_YES
+                }
+            }
         }
         return dialog
     }
@@ -133,5 +159,14 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         val editor = context!!.getSharedPreferences(resources.getString(com.dangerfield.spyfall.R.string.shared_preferences), MODE_PRIVATE).edit()
         editor.putInt(resources.getString(R.string.shared_preferences_color), chosenColor)
         editor.apply()
+    }
+
+    private fun setTheme() {
+        listOf(iv_theme, ic_about, ic_ads).forEach {
+            DrawableCompat.setTint(
+                DrawableCompat.wrap(it.drawable),
+                ContextCompat.getColor(context!!, R.color.colorTheme)
+            )
+        }
     }
 }

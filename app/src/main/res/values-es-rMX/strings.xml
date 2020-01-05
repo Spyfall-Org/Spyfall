@@ -86,4 +86,6 @@
     <string name="string_game_locations">Localizaciones :</string>
     <string name="string_enter_username">"Introduzca un nombre de usuario: "</string>
     <string name="rules_message">"* Estas son las reglas * "</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

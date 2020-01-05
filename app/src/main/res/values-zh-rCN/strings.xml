@@ -75,4 +75,6 @@
     <string name="string_ads">广告</string>
     <string name="string_access_code">访问代码</string>
     <string name="end_game_message">你确定要结束游戏吗？</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

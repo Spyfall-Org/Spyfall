@@ -72,4 +72,6 @@
 	<string name="dialog_rate_message">Довольно, пожалуйста, дайте нам знать, давая нам отзыв :)</string>
 	<string name="dialog_rate_negative">нет</string>
 	<string name="waiting_leaving_message">Вы уверены, что хотите выйти?</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

@@ -72,4 +72,6 @@
 	<string name="dialog_rate_message">Khá vui lòng cho chúng tôi biết bằng cách cho chúng tôi xem xét :)</string>
 	<string name="dialog_rate_negative">Không</string>
 	<string name="waiting_leaving_message">Bạn có chắc bạn muốn để lại?</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>
