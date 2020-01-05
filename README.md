@@ -6,7 +6,7 @@ This is a currently under construciton android application named Spyfall (after 
 all other players are assigned a role at a location. The spy's objective is to figure out the location through a series of well worded questions while not giving
 away that he or she is the spy. Meanwhile, everyone else's objective is to figure out the spy. All players take turns asking questions. 
 
-This project will not run properly as I have not included the back end connection publicly. But here is a (link)[https://appdistribution.firebase.dev/i/ybHzYTED] if you want to download the beta version of the app. 
+This project will not run properly as I have not included the back end connection publicly. But here is a [link](https://appdistribution.firebase.dev/i/ybHzYTED) if you want to download the beta version of the app. 
 
 ![](https://firebasestorage.googleapis.com/v0/b/github-images.appspot.com/o/all-spyfall.png?alt=media&token=2e107a46-b4c9-4f6e-8dea-df70f7f57950)
  
