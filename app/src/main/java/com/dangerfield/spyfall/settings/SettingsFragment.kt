@@ -116,12 +116,24 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         view.apply {
 
             rv_color_change.visibility = View.VISIBLE
-            mode_toggle.visibility = View.VISIBLE
-            if(currentMode == Configuration.UI_MODE_NIGHT_YES){
-                mode_toggle.check(R.id.tgl_dark_mode)
-            }else{
-                mode_toggle.check(R.id.tgl_light_mode)
+
+
+            if( Integer.valueOf(android.os.Build.VERSION.SDK) < 29) { //below api 29 does not have system dark mode
+                mode_toggle.visibility = View.VISIBLE
+                if(currentMode == Configuration.UI_MODE_NIGHT_YES){
+                    mode_toggle.check(R.id.tgl_dark_mode)
+                }else{
+                    mode_toggle.check(R.id.tgl_light_mode)
+                }
+
+                mode_toggle.setOnCheckedChangeListener { _, checkedId ->
+                    when(checkedId) {
+                        R.id.tgl_light_mode -> newMode = AppCompatDelegate.MODE_NIGHT_NO
+                        R.id.tgl_dark_mode -> newMode = AppCompatDelegate.MODE_NIGHT_YES
+                    }
+                }
             }
+
             rv_color_change.adapter = colorChangeAdapter
             rv_color_change.layoutManager = GridLayoutManager(context,4)
             rv_color_change.setHasFixedSize(true)
@@ -145,12 +157,6 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
             tv_custom_alert_message.text = resources.getString(R.string.theme_change_message)
             tv_custom_alert_title.text = resources.getString(R.string.theme_change_title)
 
-            mode_toggle.setOnCheckedChangeListener { _, checkedId ->
-                when(checkedId) {
-                    R.id.tgl_light_mode -> newMode = AppCompatDelegate.MODE_NIGHT_NO
-                    R.id.tgl_dark_mode -> newMode = AppCompatDelegate.MODE_NIGHT_YES
-                }
-            }
         }
         return dialog
     }

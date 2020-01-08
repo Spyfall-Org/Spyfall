@@ -97,7 +97,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope{
     override fun onStop() {
         super.onStop()
           if(viewModel.gameExists.value != null && viewModel.gameExists.value!!){
-
                 //if the user closes the app after starting a game, wait 15 mins and remove the player
                 killGame = GlobalScope.launch{
                     delay(900000 )
