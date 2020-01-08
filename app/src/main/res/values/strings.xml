@@ -63,7 +63,7 @@
     <string name="new_game_error_select_pack">Please select a pack</string>
     <string name="new_game_string_error_name">please enter a name</string>
     <string name="new_game_error_time_limit">please enter a time limit between 1 and 10 minutes</string>
-    <string name="string_pack_description">Chose your packs to be included in the game. One location will be chosen at
+    <string name="string_pack_description">Choose your packs to be included in the game. One location will be chosen at
         random from the selected packs when the game starts.
     </string>
     <string name="string_name_game_name_hint"><u>Username</u></string>
