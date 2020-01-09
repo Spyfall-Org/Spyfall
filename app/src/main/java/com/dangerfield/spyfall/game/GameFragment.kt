@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.game
 
+import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -29,8 +30,10 @@ class GameFragment : Fragment() {
     private lateinit var currentPlayer: Player
     private lateinit var locationsAdapter: GameViewsAdapter
     private lateinit var playersAdapter: GameViewsAdapter
-    private  var timer: CountDownTimer? = null
-    private lateinit var navController: NavController
+    private var changingTheme = false
+    private val navController: NavController by lazy {
+        NavHostFragment.findNavController(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_game, container, false)
@@ -39,7 +42,6 @@ class GameFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //this does not get called again, set all the variables you want to keep(not reassign)
-        navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
         viewModel.incrementAndroidPlayers()
@@ -59,7 +61,6 @@ class GameFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
 
         tv_game_role.maxTextSize = 96.0f
 
@@ -88,6 +89,11 @@ class GameFragment : Fragment() {
         viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
             //someone ended the game
             if(!exists && navController.currentDestination?.id == R.id.gameFragment){ endGame() }
+        })
+
+        viewModel.getTimeLeft().observe(viewLifecycleOwner, androidx.lifecycle.Observer {time ->
+            tv_game_timer.text = time
+            if(time == "0:00") btn_play_again.visibility = View.VISIBLE
         })
     }
 
@@ -121,16 +127,8 @@ class GameFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-
         //just to be super safe
-        if(viewModel.gameExists.value!!){
-            if(timer == null){
-                startTimer(viewModel.gameObject.value!!.timeLimit)
-            }else{
-                Log.d("GAME", "timer was not null")
-            }
-        }
+        if(viewModel.gameTimer == null){ viewModel.startGameTimer()}
     }
 
     private fun hide(){
@@ -147,30 +145,9 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun startTimer(timeLimit : Long): CountDownTimer {
-
-        timer = object : CountDownTimer((60000*timeLimit), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val text = String.format(
-                    Locale.getDefault(), "%d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
-                )
-                tv_game_timer.text = text
-            }
-
-            override fun onFinish() {
-                tv_game_timer.text = "0:00"
-                btn_play_again.visibility = View.VISIBLE
-            }
-        }.start()
-        return timer!!
-    }
 
     fun endGame(){
         viewModel.endGame()
-        timer?.cancel()
-        timer = null
         navController.popBackStack(R.id.startFragment, false)
     }
 
@@ -214,9 +191,18 @@ class GameFragment : Fragment() {
         btn_hide.background.setTint(UIHelper.accentColor)
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        changingTheme = true
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        timer?.cancel()
-        timer = null
+
+        if(!changingTheme) {
+            viewModel.gameTimer?.cancel()
+            viewModel.gameTimer = null
+        }
+        changingTheme = false
     }
 }

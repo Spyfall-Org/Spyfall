@@ -1,6 +1,8 @@
 package com.dangerfield.spyfall.game
 
+import android.os.CountDownTimer
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
@@ -11,7 +13,9 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.fragment_game.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class GameViewModel : ViewModel() {
@@ -32,7 +36,9 @@ class GameViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
     var gameRef = db.collection("games").document(ACCESS_CODE)
     var gameLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
+    private var timeLeft = MutableLiveData<String>()
     private lateinit var gameListener: ListenerRegistration
+    var gameTimer : CountDownTimer? = null
 
     lateinit var currentUser: String
 
@@ -128,7 +134,8 @@ class GameViewModel : ViewModel() {
         gameListener.remove()
         //sets to false such that listener in game fragment can be triggered
         gameExists.value = false
-
+        gameTimer?.cancel()
+        gameTimer = null
         // delete the game on the server
        return gameRef.delete()
     }
@@ -200,4 +207,23 @@ class GameViewModel : ViewModel() {
         db.collection("stats")
             .document("game").update("android_num_of_players",FieldValue.increment(1))
     }
+
+
+    fun startGameTimer() {
+        gameTimer = object : CountDownTimer((60000*gameObject.value?.timeLimit!!), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val text = String.format(
+                    Locale.getDefault(), "%d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
+                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
+                )
+                Log.d("Timer", text)
+                timeLeft.postValue(text)
+            }
+
+            override fun onFinish() { timeLeft.postValue("0:00") }
+        }.start()
+    }
+
+    fun getTimeLeft() = timeLeft
 }
