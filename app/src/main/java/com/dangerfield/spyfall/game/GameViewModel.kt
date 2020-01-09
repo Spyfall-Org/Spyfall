@@ -117,14 +117,17 @@ class GameViewModel : ViewModel() {
     }
 
     fun getAllGameLocations():  LiveData<ArrayList<String>> {
-        val tempLocations = ArrayList<String>()
+        var tempLocations = ArrayList<String>()
         gameObject.value?.let {game ->
             db.collection("packs").get().addOnSuccessListener { collection ->
                 collection.documents.forEach { document ->
                     if (game.chosenPacks.contains(document.id)) tempLocations.addAll(document.data!!.keys.toList())
             }
             }.addOnCompleteListener {
-                gameLocations.value = tempLocations
+                tempLocations.remove(gameObject.value!!.chosenLocation)
+                tempLocations = tempLocations.shuffled().take(13) as ArrayList<String>
+                tempLocations.add(gameObject.value!!.chosenLocation)
+                gameLocations.value = tempLocations.shuffled() as ArrayList<String>
             }
         }
         return gameLocations
