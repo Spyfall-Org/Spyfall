@@ -93,7 +93,7 @@ class GameFragment : Fragment() {
 
         viewModel.getTimeLeft().observe(viewLifecycleOwner, androidx.lifecycle.Observer {time ->
             tv_game_timer.text = time
-            if(time == "0:00") btn_play_again.visibility = View.VISIBLE
+            btn_play_again.visibility = if(time == "0:00") View.VISIBLE else View.GONE
         })
     }
 
