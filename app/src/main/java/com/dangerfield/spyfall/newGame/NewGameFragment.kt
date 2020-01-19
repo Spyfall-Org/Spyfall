@@ -22,6 +22,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
+import com.dangerfield.spyfall.util.Connectivity
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -75,6 +76,7 @@ class NewGameFragment : Fragment() {
         tv_new_game_name.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.addCharacterMax(2)
+        tv_new_game_name.addCharacterMax(25)
 
         btn_create.setOnClickListener { createGame() }
 
@@ -118,7 +120,7 @@ class NewGameFragment : Fragment() {
             playerName.length > 25 -> {Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
                 return}
 
-            timeLimit.isEmpty() || timeLimit.toInt() > 10 -> {
+            timeLimit.isEmpty() || timeLimit.toInt() > 10 || timeLimit.toInt() == 0 -> {
                 Toast.makeText(context, getString(R.string.new_game_error_time_limit), Toast.LENGTH_LONG).show()
                 return
             }
@@ -128,34 +130,36 @@ class NewGameFragment : Fragment() {
 
         viewModel.currentUser = playerName
         createGame(Game("",chosenPacks,false,
-            mutableListOf(playerName) as ArrayList, ArrayList(),timeLimit.toLong()))
+            mutableListOf(playerName) as ArrayList, ArrayList(),timeLimit.toLong(), arrayListOf()))
     }
 
     private fun createGame(game: Game){
         var connected = false
-        if(hasNetworkConnection) {
-
+        if(Connectivity.isOnline) {
+            Log.d("Elijah", "GOT ONLINE")
             Handler().postDelayed({
                 if(!connected){
-                    //if we havent connected within 8 seconds, stop trying
+                    //if we havent connected within 10 seconds, stop trying
+                    FirebaseDatabase.getInstance().purgeOutstandingWrites()
                     UIHelper.errorDialog(context!!).show()
                     Handler(context!!.mainLooper).post {
                         enterMode()
                     }
-                    FirebaseDatabase.getInstance().purgeOutstandingWrites()
                 }
-            }, 8000)
+            }, 10000)
 
             loadMode()
 
-            viewModel.createGame(game, UUID.randomUUID().toString().substring(0, 6).toLowerCase())
-                .addOnCompleteListener {
-                    connected = true
-                    val bundle = bundleOf("FromFragment" to "NewGameFragment")
-                    navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
+            viewModel.getNewAccessCode {
+                connected = true
+                viewModel.createGame(game, it) {
+                    Log.d("Elijah", "Called on complete")
+                    navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
                     enterMode()
                 }
+            }
         }else{
+            Log.d("Elijah", "GOT OFFLINE")
             UIHelper.errorDialog(context!!).show()
             enterMode()
         }
@@ -212,22 +216,23 @@ class NewGameFragment : Fragment() {
         }, 8000)
 
         val list = mutableListOf<List<String>>()
-        //TODO: consider changing to valueeventlistener so it is cancelable if it takes too long
         viewModel.db.collection("packs").get()
             .addOnSuccessListener { collection ->
-            collection.documents.forEach { document ->
+                if (collection.isEmpty) return@addOnSuccessListener
+                connected = true
+                collection.documents.forEach { document ->
                 //add to the list
-                connected = !collection.isEmpty
-                val pack = listOf(document.id) + document.data!!.keys.toList()
-                list.add(pack)
-            }
-        }.addOnCompleteListener {
+                    val pack = listOf(document.id) + document.data!!.keys.toList()
+                    list.add(pack)
+                }
 
             UIHelper.packsDialog(context!!, list).show()
             pb_packs.visibility = View.INVISIBLE
             btn_packs.visibility = View.VISIBLE
             btn_packs.isClickable = true
-        }
+        }.addOnFailureListener {
+
+            }
     }
 }
 

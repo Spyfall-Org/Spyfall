@@ -60,8 +60,8 @@
 	<string name="string_game_players">Spieler:</string>
 	<string name="string_game_locations">Standorte:</string>
 	<string name="string_locations">Standorte</string>
-	<string name="string_hide"><u>Show</u></string>
-	<string name="string_show"><u>Anzeigen</u></string>
+	<string name="string_hide">Show</string>
+	<string name="string_show">Anzeigen</string>
 	<string name="string_btn_leave_game">Spiel verlassen</string>
 	<string name="string_btn_start_game">Spiel beginnen</string>
 	<string name="dialog_rate_title">Gefällt dir das Spiel?</string>
@@ -72,4 +72,6 @@
 	<string name="change_name_different_name">Bitte gib einen Namen ein, der nicht im Spiel ist</string>
 	<string name="change_name_title">Namen ändern</string>
 	<string name="end_game_title">Sie beenden das Spiel</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

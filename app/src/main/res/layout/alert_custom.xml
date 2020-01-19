@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:isScrollContainer="true"
-            android:background="@color/colorBackgroundLight"
+            android:background="@color/colorBackground"
             android:id="@+id/custom_alert_view">
 
         <TextView
@@ -23,38 +23,51 @@
                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                 android:gravity="center_horizontal" android:textSize="18sp"/>
+
         <Button
-                android:text="@string/negative_action_standard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/btn_custom_alert_negative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:background="@drawable/background_button_white"
-                android:textColor="@android:color/secondary_text_light"
-                android:layout_marginEnd="4dp" app:layout_constraintEnd_toStartOf="@+id/alert_guidline"
-                android:textAllCaps="false" android:textSize="18sp" android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/btn_email"/>
+                android:text="@string/negative_action_standard"
+                android:textAllCaps="false"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintTop_toTopOf="@+id/btn_custom_alert_positive"
+                app:layout_constraintEnd_toStartOf="@+id/alert_guidline"
+                app:layout_constraintTop_toBottomOf="@+id/btn_email" />
+
         <Button
-                android:text="@string/positive_action_standard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/btn_custom_alert_positive"
-                android:background="@drawable/background_button_accent" app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp"
-                android:textColor="@android:color/white"
-                app:layout_constraintStart_toStartOf="@+id/alert_guidline" android:layout_marginStart="12dp"
-                android:textAllCaps="false" android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@+id/btn_email"
-                app:layout_constraintVertical_bias="1.0" android:layout_marginTop="16dp"/>
-        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/background_button_accent"
+                android:text="@string/positive_action_standard"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/alert_guidline"
+                app:layout_constraintTop_toBottomOf="@+id/btn_email"
+                app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
                 android:id="@+id/tv_custom_alert_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
-                android:textSize="24sp" android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
                                                     android:id="@+id/alert_guidline"
                                                     android:orientation="vertical" app:layout_constraintGuide_percent=".5"/>
@@ -72,10 +85,56 @@
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:id="@+id/btn_email" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/rv_color_change" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mode_toggle" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp" android:textColor="@android:color/holo_blue_dark"
                 android:autoLink="email" android:visibility="gone"/>
+
+        <RadioGroup
+                android:id="@+id/mode_toggle"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/toggle_outline"
+                android:checkedButton="@+id/tgl_dark_mode"
+                android:orientation="horizontal"
+                android:visibility="gone"
+
+                app:layout_constraintEnd_toEndOf="@+id/tv_custom_alert_message"
+                app:layout_constraintStart_toStartOf="@+id/tv_custom_alert_message"
+                app:layout_constraintTop_toBottomOf="@id/rv_color_change">
+
+            <RadioButton
+                    android:id="@+id/tgl_light_mode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_selected_background"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="@string/light_mode"
+                    android:textColor="@android:color/black" />
+
+            <RadioButton
+                    android:id="@+id/tgl_dark_mode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_selected_background"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/dark_mode"
+                    android:textColor="@android:color/black" />
+        </RadioGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

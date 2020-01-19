@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--used for every views background -->
-    <color name="colorBackground">#FCFCFC</color>
-    <color name="buttonColor">@color/colorWhite</color>
-    <color name="colorLightText">#EE424242</color>
-    <color name="colorTheme">#000000</color>
+    <!--used for dark light mode -->
+    <color name="colorBackground">#424242</color>
+    <color name="buttonColor">#2E2E2E</color>
+    <color name="colorLightText">#EEF8F8F8</color>
+    <color name="colorTheme">#FFFFFF</color>
 
 
 
 
     <color name="colorPrimary">#747474</color>
-    <color name="colorPrimaryDark">#FCFCFC</color>
+    <color name="colorPrimaryDark">#2E2E2E</color>
     <color name="colorAccent">#D65656</color>
 
 
     <!--used for text views-->
-    <color name="colorTextBackground">#EFEFEF</color>
+    <color name="colorTextBackground">#7C7C7C</color>
     <color name="colorLightGrey">#9C9C9C</color>
 
 
     <!--used for fun-->
-    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite">#EEFFFFFF</color>
     <color name="colorBlack">#EE000000</color>
     <color name="colorGreen">#EE5DC074</color>
     <color name="colorYellow">#EED3AF38</color>

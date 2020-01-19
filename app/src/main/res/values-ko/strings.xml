@@ -70,9 +70,9 @@
 	<string name="string_game_players">선수 :</string>
 	<string name="string_game_locations">위치 :</string>
 	<string name="string_locations">위치</string>
-	<string name="string_hide"><u>보기 </u></string>
+	<string name="string_hide">보기</string>
 	<string name="string_show">
-		<u>표시</u>
+		표
 	</string>
 	<string name="string_btn_leave_game">게임을 떠나</string>
 	<string name="string_btn_start_game">게임을 시작하다</string>
@@ -80,4 +80,6 @@
 	<string name="dialog_rate_message">꽤 우리에게 리뷰를 제공하여 알려 주시기 바랍니다 :)</string>
 	<string name="dialog_rate_negative">아니</string>
 	<string name="waiting_leaving_message">떠나시겠습니까?</string>
+    <string name="light_mode">Light Mode</string>
+	<string name="dark_mode">Dark Mode</string>
 </resources>

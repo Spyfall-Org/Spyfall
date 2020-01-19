@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.game
 
+import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -29,8 +30,10 @@ class GameFragment : Fragment() {
     private lateinit var currentPlayer: Player
     private lateinit var locationsAdapter: GameViewsAdapter
     private lateinit var playersAdapter: GameViewsAdapter
-    private  var timer: CountDownTimer? = null
-    private lateinit var navController: NavController
+    private var changingTheme = false
+    private val navController: NavController by lazy {
+        NavHostFragment.findNavController(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_game, container, false)
@@ -39,8 +42,9 @@ class GameFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //this does not get called again, set all the variables you want to keep(not reassign)
-        navController =  NavHostFragment.findNavController(this)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
+
+        viewModel.incrementAndroidPlayers()
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
@@ -58,7 +62,6 @@ class GameFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-
         tv_game_role.maxTextSize = 96.0f
 
         if(BuildConfig.FLAVOR == "free") adView2.loadAd(AdRequest.Builder().build()) else adView2.visibility = View.GONE
@@ -72,9 +75,7 @@ class GameFragment : Fragment() {
         viewModel.getGameUpdates().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             //someone has reset game
             if(!it.started && navController.currentDestination?.id == R.id.gameFragment){
-                viewModel.resetGame().addOnCompleteListener{
-                    navController.popBackStack(R.id.waitingFragment, false)
-                }
+                navController.popBackStack(R.id.waitingFragment, false)
             }
             //now this gets called anytime anything changes
             if(it.started && navController.currentDestination?.id == R.id.gameFragment){
@@ -89,6 +90,11 @@ class GameFragment : Fragment() {
             //someone ended the game
             if(!exists && navController.currentDestination?.id == R.id.gameFragment){ endGame() }
         })
+
+        viewModel.getTimeLeft().observe(viewLifecycleOwner, androidx.lifecycle.Observer {time ->
+            tv_game_timer.text = time
+            btn_play_again.visibility = if(time == "0:00") View.VISIBLE else View.GONE
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,16 +102,19 @@ class GameFragment : Fragment() {
 
         changeAccent()
         //we set the listeners once the view has actually been inflated
-        btn_end_game.setOnClickListener { UIHelper.customSimpleAlert(context!!,
-            getString(R.string.end_game_title),
-            getString(R.string.end_game_message),
-            getString(R.string.end_game_positive_action), {endGame()},
-            getString(R.string.negative_action_standard),{}).show()}
+        btn_end_game.setOnClickListener {
+            if(tv_game_timer.text.toString() == "0:00") endGame()
+            else{
+                UIHelper.customSimpleAlert(context!!,
+                    getString(R.string.end_game_title),
+                    getString(R.string.end_game_message),
+                    getString(R.string.end_game_positive_action), {endGame()},
+                    getString(R.string.negative_action_standard),{}).show()
+            }
+        }
 
         btn_play_again.setOnClickListener{
-            viewModel.resetGame().addOnCompleteListener{
-                navController.popBackStack(R.id.waitingFragment, false)
-            }
+            viewModel.resetGame()
         }
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_hide.setOnClickListener{ hide()}
@@ -118,16 +127,8 @@ class GameFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-
         //just to be super safe
-        if(viewModel.gameExists.value!!){
-            if(timer == null){
-                startTimer(viewModel.gameObject.value!!.timeLimit)
-            }else{
-                Log.d("GAME", "timer was not null")
-            }
-        }
+        if(viewModel.gameTimer == null){ viewModel.startGameTimer()}
     }
 
     private fun hide(){
@@ -144,30 +145,9 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun startTimer(timeLimit : Long): CountDownTimer {
-
-        timer = object : CountDownTimer((60000*timeLimit), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val text = String.format(
-                    Locale.getDefault(), "%d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
-                )
-                tv_game_timer.text = text
-            }
-
-            override fun onFinish() {
-                tv_game_timer.text = "0:00"
-                btn_play_again.visibility = View.VISIBLE
-            }
-        }.start()
-        return timer!!
-    }
 
     fun endGame(){
         viewModel.endGame()
-        timer?.cancel()
-        timer = null
         navController.popBackStack(R.id.startFragment, false)
     }
 
@@ -175,12 +155,9 @@ class GameFragment : Fragment() {
         locationsAdapter = GameViewsAdapter(context!!, ArrayList(), null)
         rv_locations.apply{
             adapter = locationsAdapter
-            layoutManager = GridLayoutManager(context, 2) }
-
-        //attaches observer after the locations adapter is actually initialized
-        viewModel.getAllGameLocations().observe(viewLifecycleOwner, androidx.lifecycle.Observer { locations ->
-            locationsAdapter.items = locations
-        })
+            layoutManager = GridLayoutManager(context, 2)
+        }
+        locationsAdapter.items = viewModel.gameObject.value!!.locationList
     }
 
     private fun configurePlayersAdapter(firstPlayer: String){
@@ -211,9 +188,18 @@ class GameFragment : Fragment() {
         btn_hide.background.setTint(UIHelper.accentColor)
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        changingTheme = true
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        timer?.cancel()
-        timer = null
+
+        if(!changingTheme) {
+            viewModel.gameTimer?.cancel()
+            viewModel.gameTimer = null
+        }
+        changingTheme = false
     }
 }

@@ -79,17 +79,17 @@ class UIHelper {
 
             view.apply{
                 tv_dialog_pack1_header.text = packsList[0][0]
-                rv_dialog_pack1.adapter = SimpleTextAdapter(packsList[0].subList(1,packsList[0].size-1), context)
+                rv_dialog_pack1.adapter = SimpleTextAdapter(packsList[0].subList(1,packsList[0].size), context)
                 rv_dialog_pack1.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack1.setHasFixedSize(true)
 
                 tv_dialog_pack2_header.text = packsList[1][0]
-                rv_dialog_pack2.adapter = SimpleTextAdapter(packsList[1].subList(1,packsList[1].size-1), context)
+                rv_dialog_pack2.adapter = SimpleTextAdapter(packsList[1].subList(1,packsList[1].size), context)
                 rv_dialog_pack2.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack2.setHasFixedSize(true)
 
                 tv_dialog_pack3_header.text = packsList[2][0]
-                rv_dialog_pack3.adapter = SimpleTextAdapter(packsList[2].subList(1,packsList[2].size-1), context)
+                rv_dialog_pack3.adapter = SimpleTextAdapter(packsList[2].subList(1,packsList[2].size), context)
                 rv_dialog_pack3.layoutManager = GridLayoutManager(context,2)
                 rv_dialog_pack3.setHasFixedSize(true)
 
@@ -142,6 +142,7 @@ class UIHelper {
 
                 if(title.trim() == context.resources.getString(R.string.about_title)) {
                     btn_email.visibility = View.VISIBLE
+                    btn_email.setLinkTextColor(accentColor)
                 }
 
                 btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
@@ -151,6 +152,7 @@ class UIHelper {
                 //for theme changing
                 btn_custom_alert_positive.background.setTint(accentColor)
                 tv_custom_alert_message.text = message
+
                 tv_custom_alert_title.text = title
             }
             return dialog

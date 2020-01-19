@@ -64,12 +64,14 @@
 	<string name="string_game_players">Người chơi:</string>
 	<string name="string_game_locations">Địa điểm:</string>
 	<string name="string_locations">Địa điểm</string>
-	<string name="string_hide"><u> Hiển thị </u></string>
-	<string name="string_show"><u> Hiển thị </u></string>
+	<string name="string_hide"> Hiển thị</string>
+	<string name="string_show"> Hiển thị</string>
 	<string name="string_btn_leave_game">Rời khỏi trò chơi</string>
 	<string name="string_btn_start_game">Bắt đầu trò chơi</string>
 	<string name="dialog_rate_title">Giống như trò chơi?</string>
 	<string name="dialog_rate_message">Khá vui lòng cho chúng tôi biết bằng cách cho chúng tôi xem xét :)</string>
 	<string name="dialog_rate_negative">Không</string>
 	<string name="waiting_leaving_message">Bạn có chắc bạn muốn để lại?</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

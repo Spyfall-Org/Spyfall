@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.start
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -15,6 +16,11 @@ import kotlinx.android.synthetic.main.fragment_start.*
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.net.Uri
+import android.view.animation.AnimationUtils
+import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 
 
 class StartFragment : Fragment() {
@@ -28,6 +34,8 @@ class StartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        welcome_message.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
 
         navController = NavHostFragment.findNavController(this)
 
@@ -71,12 +79,17 @@ class StartFragment : Fragment() {
     }
 
     fun changeAccent(){
-        btn_new_game.background.setTint(UIHelper.accentColor)
+        btn_join_game.background.setTint(UIHelper.accentColor)
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
         btn_rules.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         btn_rules.setTextColor(UIHelper.accentColor)
+
+        DrawableCompat.setTint(
+            DrawableCompat.wrap(btn_settings.drawable),
+            ContextCompat.getColor(context!!, R.color.colorTheme)
+        )
     }
 
     //TODO; make a prefrences object that deal with all of this

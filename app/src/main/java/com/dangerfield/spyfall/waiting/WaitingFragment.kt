@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
@@ -37,7 +38,9 @@ class WaitingFragment : Fragment() {
     lateinit var viewModel: GameViewModel
     private var isGameCreator: Boolean = false
     private var navigateBack: (() -> Unit)? = null
-    private lateinit var navController: NavController
+    private val navController: NavController by lazy {
+        NavHostFragment.findNavController(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_waiting, container, false)
@@ -46,15 +49,13 @@ class WaitingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        navController =  Navigation.findNavController(parentFragment!!.view!!)
         viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
         navigateBack = { UIHelper.customSimpleAlert(context!!,
             resources.getString(R.string.waiting_leaving_title),
             resources.getString(R.string.waiting_leaving_message),
             resources.getString(R.string.leave_action_positive), {leaveGame()},
-            resources.getString(R.string.leave_action_negative),{ btn_leave_game.isClickable = true
-            }).show()
+            resources.getString(R.string.leave_action_negative),{}).show()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
@@ -72,16 +73,14 @@ class WaitingFragment : Fragment() {
 
         viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
 
-            //if the game has been started, you cant click create
-            btn_start_game.isClickable = !updatedGame.started
-
             adapter?.players = updatedGame.playerList
 
+            if(updatedGame.started) loadMode() else enterMode()
+
             //we know everything is good to go when the player objects list is done
-            if(updatedGame.playerList.size == updatedGame.playerObjectList.size && navController.currentDestination?.id == R.id.waitingFragment){
+            if(updatedGame.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment){
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
                 enterMode()
-                viewModel.incrementGamesPlayed()
             }
         })
     }
@@ -93,14 +92,13 @@ class WaitingFragment : Fragment() {
         //only set the listeners once the view has been created
         btn_start_game.setOnClickListener {
             loadMode()
-            //only the game creator has the roles automatically
-            //TODO: is you wanted a timeout function, this woud be the place
-            if(viewModel.roles.isEmpty()){ viewModel.getRolesAndStartGame() }else{ viewModel.startGame() }
+            viewModel.getRolesAndStartGame()
         }
 
         btn_leave_game.setOnClickListener {
-            btn_leave_game.isClickable = false
-            navigateBack?.invoke() ?: leaveGame()
+            if(viewModel.gameObject.value?.started == false){
+                navigateBack?.invoke() ?: leaveGame()
+            }
         }
 
         configureLayoutManagerAndRecyclerView()
@@ -108,13 +106,7 @@ class WaitingFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        // we need to check if the user is the game creator every time they come to this screen
-        isGameCreator = arguments?.get("FromFragment") == "NewGameFragment"
-
         tv_acess_code.text = viewModel.ACCESS_CODE
-
-        if(isGameCreator){ viewModel.getRandomLocation() }
     }
 
     private fun leaveGame() {

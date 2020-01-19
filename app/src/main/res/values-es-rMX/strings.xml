@@ -76,14 +76,16 @@
     <string name="string_join_name_hint">" Introduzca un nombre de usuario"</string>
     <string name="string_join_game">"Unete al juego "</string>
     <string name="string_join_access_hint">
-        <u>Código de acceso</u>
+        Código de acceso
     </string>
     <string name="string_hide">
-        <u>esconder</u>
+        esconder
     </string>
     <string name="string_game_players">los jugadores
         :</string>
     <string name="string_game_locations">Localizaciones :</string>
     <string name="string_enter_username">"Introduzca un nombre de usuario: "</string>
     <string name="rules_message">"* Estas son las reglas * "</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>
