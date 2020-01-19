@@ -35,7 +35,6 @@ class GameViewModel : ViewModel() {
     var gameObject: MutableLiveData<Game> = MutableLiveData()
     var db = FirebaseFirestore.getInstance()
     var gameRef = db.collection("games").document(ACCESS_CODE)
-    var gameLocations: MutableLiveData<ArrayList<String>> = MutableLiveData()
     private var timeLeft = MutableLiveData<String>()
     private lateinit var gameListener: ListenerRegistration
     var gameTimer : CountDownTimer? = null
@@ -63,33 +62,51 @@ class GameViewModel : ViewModel() {
         return gameObject
     }
 
+
     /*
-    Selects random pack and then a random loaction from that pack
-    moves the random pack to the 0th index on firebase (in onComplete)
-    to make it easier to grab roles later on
+    retrieves location list to show in game and sets that value on firebase
+    also picks a random location from list to be the chosen location
      */
-    fun getRandomLocation(chosenPacks: ArrayList<String>, onComplete: ((location: String, chosenPacks: ArrayList<String>) -> Unit)? = null) {
-        val randomPack = chosenPacks.random()
-        db.collection("packs").document(randomPack)
-            .get().addOnSuccessListener {
-                val location = it.data?.toList()?.random()?.first ?: ""
-                //places the pack with the chosen location at index 0
-                Collections.swap(chosenPacks, 0, chosenPacks.indexOf(randomPack))
-                onComplete?.invoke(location, chosenPacks)
+    fun getLocations(chosenPacks: ArrayList<String>, onComplete: ((locationList: List<String>) -> Unit)? = null) {
+        val locationList = arrayListOf<String>()
+        val numberFromEach = when(chosenPacks.size) {
+            1 -> 14
+            2 -> 7
+            3 -> 5
+            else -> 14
+        }
+
+        chosenPacks.forEach {pack ->
+            if(locationList.size < 14) {
+                db.collection("packs").document(pack).get().addOnSuccessListener {
+                    val randomLocations =
+                        (it.data?.toList()?.map { field -> field.first } ?: listOf()).shuffled().take(numberFromEach)
+                    locationList.addAll(randomLocations)
+                    if(locationList.size >= 14){
+                        onComplete?.invoke(locationList.take(14))
+                        return@addOnSuccessListener
+                    }
+                }
             }
+        }
     }
 
     fun getRolesAndStartGame() {
         if(gameObject.value?.started == true) return
-        roles.clear()
         gameRef.update("started", true)
+        roles.clear()
 
-        db.collection("packs").document(gameObject.value!!.chosenPacks[0])
-            .get().addOnSuccessListener {
-                val mRoles = it[gameObject.value!!.chosenLocation] as List<String>
-                roles.addAll(mRoles)
-                startGame()
+        //find pack with chosen location
+        gameObject.value!!.chosenPacks.forEach {
+            db.collection("packs").document(it).get().addOnSuccessListener {document ->
+                val documentLocation = document[gameObject.value!!.chosenLocation]
+                if(documentLocation != null) {
+                    val mRoles = documentLocation as ArrayList<String>
+                    roles.addAll(mRoles)
+                    startGame()
+                }
             }
+        }
     }
 
     fun startGame() {
@@ -116,22 +133,6 @@ class GameViewModel : ViewModel() {
             incrementGamesPlayed()
     }
 
-    fun getAllGameLocations():  LiveData<ArrayList<String>> {
-        var tempLocations = ArrayList<String>()
-        gameObject.value?.let {game ->
-            db.collection("packs").get().addOnSuccessListener { collection ->
-                collection.documents.forEach { document ->
-                    if (game.chosenPacks.contains(document.id)) tempLocations.addAll(document.data!!.keys.toList())
-            }
-            }.addOnCompleteListener {
-                tempLocations.remove(gameObject.value!!.chosenLocation)
-                tempLocations = tempLocations.shuffled().take(13) as ArrayList<String>
-                tempLocations.add(gameObject.value!!.chosenLocation)
-                gameLocations.value = tempLocations.shuffled() as ArrayList<String>
-            }
-        }
-        return gameLocations
-    }
     
     fun endGame(): Task<Void> {
         gameListener.remove()
@@ -144,7 +145,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun getNewAccessCode(onComplete: ((code: String) -> Unit)?) {
-        var newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
+        val newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
         db.collection("games").document(newCode).get().addOnSuccessListener {
             if(it.exists()) {
                 //then the document exists and thus the game code has already been taken
@@ -160,17 +161,20 @@ class GameViewModel : ViewModel() {
 
     fun resetGame()  {
         // resets variables on firebase, which will update viewmodel
-        getRandomLocation(gameObject.value?.chosenPacks ?: return) { location, packs ->
-            val newGame = Game(location,packs,false,
-                gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit)
-            gameRef.set(newGame)
-        }
+        val newLocation = gameObject.value!!.locationList.random()
+        val newGame = Game(newLocation,gameObject.value!!.chosenPacks,false,
+            gameObject.value!!.playerList, ArrayList(),gameObject.value!!.timeLimit,gameObject.value!!.locationList )
+        gameRef.set(newGame)
     }
 
+    /**
+     * add to create game: the location list retreive and upload.
+     */
     fun createGame(game: Game, code: String, onComplete: (() -> Unit)? = null) {
-        getRandomLocation(game.chosenPacks) { location , packs ->
-            game.chosenLocation = location
-            game.chosenPacks = packs
+
+        getLocations(chosenPacks = game.chosenPacks) {locationList ->
+            game.chosenLocation = locationList.random()
+            game.locationList = locationList as ArrayList<String>
             gameObject.value = game
             ACCESS_CODE = code
             gameRef.set(game).addOnCompleteListener {

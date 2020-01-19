@@ -155,12 +155,9 @@ class GameFragment : Fragment() {
         locationsAdapter = GameViewsAdapter(context!!, ArrayList(), null)
         rv_locations.apply{
             adapter = locationsAdapter
-            layoutManager = GridLayoutManager(context, 2) }
-
-        //attaches observer after the locations adapter is actually initialized
-        viewModel.getAllGameLocations().observe(viewLifecycleOwner, androidx.lifecycle.Observer { locations ->
-            locationsAdapter.items = locations
-        })
+            layoutManager = GridLayoutManager(context, 2)
+        }
+        locationsAdapter.items = viewModel.gameObject.value!!.locationList
     }
 
     private fun configurePlayersAdapter(firstPlayer: String){
