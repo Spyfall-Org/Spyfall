@@ -67,7 +67,7 @@ class JoinGameFragment : Fragment() {
             enterMode()
             return
         }
-        val accessCode = tv_access_code.text.toString().trim()
+        val accessCode = tv_access_code.text.toString().toLowerCase().trim()
         val userName = tv_username.text.toString().trim()
 
         if(userName.isEmpty() || accessCode.isEmpty()){
