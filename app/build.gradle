@@ -7,13 +7,21 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        config {
+            storeFile file('/Users/elidangerfield/Desktop/apk-keys/spyfall/spyfall.keystore')
+            keyAlias = 'spyfall_keystore'
+            storePassword 'Sixthave1%'
+            keyPassword 'Sixthave3%'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.dangerfield.spyfall"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.1.01"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,11 +37,13 @@ android {
             applicationId "com.dangerfield.spyfall.free"
             versionNameSuffix "-free"
             dimension "version"
+            signingConfig signingConfigs.config
         }
         paid {
             applicationId "com.dangerfield.spyfall.paid"
             versionNameSuffix "-paid"
             dimension "version"
+            signingConfig signingConfigs.config
         }
     }
 

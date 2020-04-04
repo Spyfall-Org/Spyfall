@@ -49,6 +49,9 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlaye
             holder.first_icon.background.setTint(UIHelper.accentColor)
             holder.first_text.visibility = View.VISIBLE
             holder.first_icon.visibility = View.VISIBLE
+        }else {
+            holder.first_text.visibility = View.INVISIBLE
+            holder.first_icon.visibility = View.INVISIBLE
         }
     }
 

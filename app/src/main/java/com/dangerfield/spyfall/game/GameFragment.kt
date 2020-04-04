@@ -66,10 +66,6 @@ class GameFragment : Fragment() {
 
         if(BuildConfig.FLAVOR == "free") adView2.loadAd(AdRequest.Builder().build()) else adView2.visibility = View.GONE
 
-        //set up views every time
-        val firstPlayer = configurePlayerViews()
-        configurePlayersAdapter(firstPlayer)
-        configureLocationsAdapter()
 
         //the observers should not be called unless the fragment is in a started or resumed state
         viewModel.getGameUpdates().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -80,10 +76,10 @@ class GameFragment : Fragment() {
             //now this gets called anytime anything changes
             if(it.started && navController.currentDestination?.id == R.id.gameFragment){
                 //but right now it says: if the game has started, and im still on this screen, and something has changed..
-                var newFirstPlayer =  configurePlayerViews()
-                playersAdapter.first = newFirstPlayer
+                configurePlayerViews()
+                configurePlayersAdapter(viewModel.gameObject.value!!.playerObjectList[0].username)
+                configureLocationsAdapter()
             }
-
         })
 
         viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
@@ -169,7 +165,7 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun configurePlayerViews(): String {
+    private fun configurePlayerViews() {
         //we enforce that no two users have the same username
         currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
 
@@ -180,7 +176,6 @@ class GameFragment : Fragment() {
 
         tv_game_role.text = "Role: ${currentPlayer.role}"
 
-        return viewModel.gameObject.value!!.playerObjectList[0].username
     }
 
     private fun changeAccent(){

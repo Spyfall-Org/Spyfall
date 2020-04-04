@@ -36,7 +36,6 @@ class WaitingFragment : Fragment() {
 
     private var adapter: WaitingPlayersAdapter? = null
     lateinit var viewModel: GameViewModel
-    private var isGameCreator: Boolean = false
     private var navigateBack: (() -> Unit)? = null
     private val navController: NavController by lazy {
         NavHostFragment.findNavController(this)
