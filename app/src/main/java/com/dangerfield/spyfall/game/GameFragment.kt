@@ -125,6 +125,11 @@ class GameFragment : Fragment() {
         super.onResume()
         //just to be super safe
         if(viewModel.gameTimer == null){ viewModel.startGameTimer()}
+
+        if(viewModel.gameObject.value?.started == false && navController.currentDestination?.id == R.id.gameFragment) {
+            //then user returned to the game but the game has been reset
+            navController.popBackStack(R.id.waitingFragment, false)
+        }
     }
 
     private fun hide(){
