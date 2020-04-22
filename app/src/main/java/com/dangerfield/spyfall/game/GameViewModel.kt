@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
 import com.google.android.gms.tasks.Task
@@ -98,8 +99,8 @@ class GameViewModel : ViewModel() {
 
         //find pack with chosen location
         gameObject.value?.let {
-            it.chosenPacks.forEach {
-                db.collection("packs").document(it).get().addOnSuccessListener {document ->
+            it.chosenPacks.forEach {pack->
+                db.collection("packs").document(pack).get().addOnSuccessListener {document ->
                     val documentLocation = document[gameObject.value!!.chosenLocation]
                     if(documentLocation != null) {
                         val mRoles = documentLocation as ArrayList<String>
@@ -200,7 +201,7 @@ class GameViewModel : ViewModel() {
     fun addPlayer(player: String) = gameRef.update("playerList", FieldValue.arrayUnion(player))
 
     fun changeName(newName: String): Task<Void>? {
-        val index = gameObject.value!!.playerList.indexOf("POOP")
+        val index = gameObject.value!!.playerList.indexOf(currentUser)
         if (index == -1) return null
 
         gameObject.value!!.playerList[index] = newName
@@ -222,6 +223,7 @@ class GameViewModel : ViewModel() {
 
 
     fun startGameTimer() {
+        Crashlytics.log("Starting game timer from view model with game: ${gameObject.value}")
         gameObject.value?.timeLimit?.let {time ->
             gameTimer = object : CountDownTimer((60000*time), 1000) {
                 override fun onTick(millisUntilFinished: Long) {

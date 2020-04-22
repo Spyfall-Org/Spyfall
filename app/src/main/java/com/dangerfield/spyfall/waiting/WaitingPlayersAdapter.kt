@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.util.UIHelper
@@ -52,6 +53,8 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
             holder.pencil.visibility = View.VISIBLE
 
             holder.pencil.setOnClickListener {
+                Crashlytics.log("Username: ${viewModel.currentUser} clicked button to change name")
+
                 view.apply{
                     btn_change_name_alert_okay.background.setTint(UIHelper.accentColor)
                     UIHelper.setCursorColor(tv_alert_change_name,UIHelper.accentColor)
@@ -60,6 +63,8 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
                         //as long as they typed some name that doesnt already exist
                         if(newName.isNotEmpty() && newName.length < 25 && !viewModel.gameObject.value!!.playerList.contains(newName) &&
                             viewModel.gameObject.value?.playerObjectList?.size ?: 0 == 0){
+
+                            Crashlytics.log(" ${viewModel.currentUser} attempting to change name to $newName")
 
                             val task = viewModel.changeName(newName)
                             if(task!= null) task.addOnCompleteListener { dialog.dismiss() } else dialog.dismiss()

@@ -20,6 +20,7 @@ import kotlin.collections.ArrayList
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
@@ -125,7 +126,10 @@ class GameFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         //just to be super safe
-        if(viewModel.gameTimer == null){ viewModel.startGameTimer()}
+        if(viewModel.gameTimer == null){
+            Crashlytics.log("Game time was null in on resume, resetting")
+            viewModel.startGameTimer()
+        }
 
         if(viewModel.gameObject.value?.started == false && navController.currentDestination?.id == R.id.gameFragment) {
             //then user returned to the game but the game has been reset
@@ -177,6 +181,7 @@ class GameFragment : Fragment() {
         if(filteredPlayerList.isNotEmpty()){
             currentPlayer = filteredPlayerList[0]
         }else{
+            Crashlytics.log("could not find player ${viewModel.currentUser} in player object list for game: ${viewModel.gameObject.value}")
             navController.popBackStack(R.id.waitingFragment, false)
             Toast.makeText(context, "Something went wrong please check all players internet connection and try again", Toast.LENGTH_LONG).show()
         }

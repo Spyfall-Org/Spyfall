@@ -136,7 +136,7 @@ class NewGameFragment : Fragment() {
     private fun createGame(game: Game){
         var connected = false
         if(Connectivity.isOnline) {
-            Log.d("Elijah", "GOT ONLINE")
+            Crashlytics.log("Connectivity is offline in new game screen")
             Handler().postDelayed({
                 if(!connected && this.isAdded){
                     //if we havent connected within 10 seconds, stop trying
@@ -157,6 +157,7 @@ class NewGameFragment : Fragment() {
                 viewModel.createGame(game, it) {
                     Log.d("Elijah", "Called on complete")
                     if(navController.currentDestination?.id == R.id.newGameFragment) {
+                        Crashlytics.log("Navigating from new game to waiting for player ${game.playerList[0]} with game $it")
                         navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
                         enterMode()
                     }
