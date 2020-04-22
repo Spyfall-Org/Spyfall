@@ -97,13 +97,15 @@ class GameViewModel : ViewModel() {
         roles.clear()
 
         //find pack with chosen location
-        gameObject.value!!.chosenPacks.forEach {
-            db.collection("packs").document(it).get().addOnSuccessListener {document ->
-                val documentLocation = document[gameObject.value!!.chosenLocation]
-                if(documentLocation != null) {
-                    val mRoles = documentLocation as ArrayList<String>
-                    roles.addAll(mRoles)
-                    startGame()
+        gameObject.value?.let {
+            it.chosenPacks.forEach {
+                db.collection("packs").document(it).get().addOnSuccessListener {document ->
+                    val documentLocation = document[gameObject.value!!.chosenLocation]
+                    if(documentLocation != null) {
+                        val mRoles = documentLocation as ArrayList<String>
+                        roles.addAll(mRoles)
+                        startGame()
+                    }
                 }
             }
         }
@@ -183,7 +185,8 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    fun removePlayer(): Task<Void>{
+    fun removePlayer(): Task<Void>? {
+        if(!this::currentUser.isInitialized) return null
        //when a player leaves a game, you dont want them to hold onto the game data
         gameObject = MutableLiveData()
         gameListener.remove()
@@ -196,8 +199,10 @@ class GameViewModel : ViewModel() {
 
     fun addPlayer(player: String) = gameRef.update("playerList", FieldValue.arrayUnion(player))
 
-    fun changeName(newName: String): Task<Void> {
-        val index = gameObject.value!!.playerList.indexOf(currentUser)
+    fun changeName(newName: String): Task<Void>? {
+        val index = gameObject.value!!.playerList.indexOf("POOP")
+        if (index == -1) return null
+
         gameObject.value!!.playerList[index] = newName
         currentUser = newName
         return gameRef.update("playerList", gameObject.value!!.playerList)
@@ -217,19 +222,22 @@ class GameViewModel : ViewModel() {
 
 
     fun startGameTimer() {
-        gameTimer = object : CountDownTimer((60000*gameObject.value?.timeLimit!!), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val text = String.format(
-                    Locale.getDefault(), "%d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
-                )
-                Log.d("Timer", text)
-                timeLeft.postValue(text)
-            }
+        gameObject.value?.timeLimit?.let {time ->
+            gameTimer = object : CountDownTimer((60000*time), 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val text = String.format(
+                        Locale.getDefault(), "%d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
+                    )
+                    Log.d("Timer", text)
+                    timeLeft.postValue(text)
+                }
 
-            override fun onFinish() { timeLeft.postValue("0:00") }
-        }.start()
+                override fun onFinish() { timeLeft.postValue("0:00") }
+            }.start()
+        }
+
     }
 
     fun getTimeLeft() = timeLeft

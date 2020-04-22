@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.models.Player
@@ -172,7 +173,13 @@ class GameFragment : Fragment() {
 
     private fun configurePlayerViews() {
         //we enforce that no two users have the same username
-        currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
+        val filteredPlayerList = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }
+        if(filteredPlayerList.isNotEmpty()){
+            currentPlayer = filteredPlayerList[0]
+        }else{
+            navController.popBackStack(R.id.waitingFragment, false)
+            Toast.makeText(context, "Something went wrong please check all players internet connection and try again", Toast.LENGTH_LONG).show()
+        }
 
         //dont let the spy know the location
         tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){

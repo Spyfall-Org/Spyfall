@@ -91,6 +91,7 @@ class JoinGameFragment : Fragment() {
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
 
             connected = true
+            if(!this.isAdded) return@addOnSuccessListener
 
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
@@ -126,8 +127,10 @@ class JoinGameFragment : Fragment() {
             viewModel.ACCESS_CODE = withAccessCode
             viewModel.currentUser = asPlayer
             viewModel.addPlayer(asPlayer).addOnCompleteListener {
-                navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
-                enterMode()
+                if(navController.currentDestination?.id == R.id.joinGameFragment) {
+                    navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
+                    enterMode()
+                }
             }
     }
 

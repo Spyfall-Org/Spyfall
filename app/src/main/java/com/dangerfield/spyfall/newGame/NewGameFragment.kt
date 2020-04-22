@@ -138,12 +138,14 @@ class NewGameFragment : Fragment() {
         if(Connectivity.isOnline) {
             Log.d("Elijah", "GOT ONLINE")
             Handler().postDelayed({
-                if(!connected){
+                if(!connected && this.isAdded){
                     //if we havent connected within 10 seconds, stop trying
                     FirebaseDatabase.getInstance().purgeOutstandingWrites()
-                    UIHelper.errorDialog(context!!).show()
-                    Handler(context!!.mainLooper).post {
-                        enterMode()
+                    context?.let {
+                        UIHelper.errorDialog(it).show()
+                        Handler(it.mainLooper).post {
+                            enterMode()
+                        }
                     }
                 }
             }, 10000)
@@ -154,8 +156,10 @@ class NewGameFragment : Fragment() {
                 connected = true
                 viewModel.createGame(game, it) {
                     Log.d("Elijah", "Called on complete")
-                    navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
-                    enterMode()
+                    if(navController.currentDestination?.id == R.id.newGameFragment) {
+                        navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
+                        enterMode()
+                    }
                 }
             }
         }else{

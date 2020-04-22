@@ -61,7 +61,8 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
                         if(newName.isNotEmpty() && newName.length < 25 && !viewModel.gameObject.value!!.playerList.contains(newName) &&
                             viewModel.gameObject.value?.playerObjectList?.size ?: 0 == 0){
 
-                            viewModel.changeName(newName).addOnCompleteListener { dialog.dismiss() }
+                            val task = viewModel.changeName(newName)
+                            if(task!= null) task.addOnCompleteListener { dialog.dismiss() } else dialog.dismiss()
 
                         }else{
 
