@@ -21,6 +21,7 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.crashlytics.android.Crashlytics
 
 
 class StartFragment : Fragment() {
@@ -58,6 +59,8 @@ class StartFragment : Fragment() {
         btn_settings.setOnClickListener{
             navController.navigate(R.id.action_startFragment_to_settingsFragment)
         }
+
+        Crashlytics.log("User has entered start screen")
     }
 
     override fun onResume() {

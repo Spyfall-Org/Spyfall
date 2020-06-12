@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
@@ -78,6 +79,7 @@ class WaitingFragment : Fragment() {
 
             //we know everything is good to go when the player objects list is done
             if(updatedGame.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment){
+                Crashlytics.log("Navigating from waiting to game screen with game $updatedGame")
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
                 enterMode()
             }

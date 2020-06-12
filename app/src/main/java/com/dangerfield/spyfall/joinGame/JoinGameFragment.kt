@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.game.GameViewModel
@@ -91,6 +92,7 @@ class JoinGameFragment : Fragment() {
         viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
 
             connected = true
+            if(!this.isAdded) return@addOnSuccessListener
 
             if(game.exists()){
                 val list = (game["playerList"] as ArrayList<String>)
@@ -125,9 +127,15 @@ class JoinGameFragment : Fragment() {
     private fun joinGame(withAccessCode: String, asPlayer: String){
             viewModel.ACCESS_CODE = withAccessCode
             viewModel.currentUser = asPlayer
+            Crashlytics.log("Player: \"$asPlayer\" attempting to join $withAccessCode")
             viewModel.addPlayer(asPlayer).addOnCompleteListener {
-                navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
-                enterMode()
+                if(navController.currentDestination?.id == R.id.joinGameFragment) {
+                    Crashlytics.log("Player: \"$asPlayer\" successfully joined $withAccessCode")
+                    navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
+                    enterMode()
+                }
+            }.addOnFailureListener {
+                Crashlytics.log("Player: $asPlayer was unable to join $withAccessCode")
             }
     }
 

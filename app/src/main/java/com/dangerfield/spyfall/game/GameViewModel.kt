@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
 import com.google.android.gms.tasks.Task
@@ -97,13 +98,15 @@ class GameViewModel : ViewModel() {
         roles.clear()
 
         //find pack with chosen location
-        gameObject.value!!.chosenPacks.forEach {
-            db.collection("packs").document(it).get().addOnSuccessListener {document ->
-                val documentLocation = document[gameObject.value!!.chosenLocation]
-                if(documentLocation != null) {
-                    val mRoles = documentLocation as ArrayList<String>
-                    roles.addAll(mRoles)
-                    startGame()
+        gameObject.value?.let {
+            it.chosenPacks.forEach {pack->
+                db.collection("packs").document(pack).get().addOnSuccessListener {document ->
+                    val documentLocation = document[gameObject.value!!.chosenLocation]
+                    if(documentLocation != null) {
+                        val mRoles = documentLocation as ArrayList<String>
+                        roles.addAll(mRoles)
+                        startGame()
+                    }
                 }
             }
         }
@@ -135,6 +138,7 @@ class GameViewModel : ViewModel() {
 
     
     fun endGame(): Task<Void> {
+        Crashlytics.log("End game function called in view model")
         gameListener.remove()
         //sets to false such that listener in game fragment can be triggered
         gameExists.value = false
@@ -160,6 +164,8 @@ class GameViewModel : ViewModel() {
 
 
     fun resetGame()  {
+        Crashlytics.log("reset game function called in view model")
+
         // resets variables on firebase, which will update viewmodel
         val newLocation = gameObject.value!!.locationList.random()
         val newGame = Game(newLocation,gameObject.value!!.chosenPacks,false,
@@ -183,8 +189,10 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    fun removePlayer(): Task<Void>{
-       //when a player leaves a game, you dont want them to hold onto the game data
+    fun removePlayer(): Task<Void>? {
+        if(!this::currentUser.isInitialized) return null
+        Crashlytics.log("remove player function called in view model")
+        //when a player leaves a game, you dont want them to hold onto the game data
         gameObject = MutableLiveData()
         gameListener.remove()
         //set to false such that when a user is not timeout removed to a game they already left
@@ -196,8 +204,14 @@ class GameViewModel : ViewModel() {
 
     fun addPlayer(player: String) = gameRef.update("playerList", FieldValue.arrayUnion(player))
 
-    fun changeName(newName: String): Task<Void> {
-        val index = gameObject.value!!.playerList.indexOf(currentUser)
+    fun changeName(newName: String): Task<Void>? {
+        val index = gameObject.value!!.playerList.indexOf(currentUser.trim())
+        if (index == -1) {
+            Crashlytics.log("Could not find name: \"${currentUser.trim()}\" in ${gameObject.value!!.playerList} to change to \"$newName\"")
+            return null
+        }
+
+        Crashlytics.log("Successfully change name \"${currentUser.trim()}\" to \"${newName}\"")
         gameObject.value!!.playerList[index] = newName
         currentUser = newName
         return gameRef.update("playerList", gameObject.value!!.playerList)
@@ -217,19 +231,23 @@ class GameViewModel : ViewModel() {
 
 
     fun startGameTimer() {
-        gameTimer = object : CountDownTimer((60000*gameObject.value?.timeLimit!!), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val text = String.format(
-                    Locale.getDefault(), "%d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
-                )
-                Log.d("Timer", text)
-                timeLeft.postValue(text)
-            }
+        Crashlytics.log("Starting game timer from view model with game: ${gameObject.value}")
+        gameObject.value?.timeLimit?.let {time ->
+            gameTimer = object : CountDownTimer((60000*time), 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val text = String.format(
+                        Locale.getDefault(), "%d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
+                    )
+                    Log.d("Timer", text)
+                    timeLeft.postValue(text)
+                }
 
-            override fun onFinish() { timeLeft.postValue("0:00") }
-        }.start()
+                override fun onFinish() { timeLeft.postValue("0:00") }
+            }.start()
+        }
+
     }
 
     fun getTimeLeft() = timeLeft

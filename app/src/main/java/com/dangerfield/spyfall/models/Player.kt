@@ -6,5 +6,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class Player(var role: String,val username: String,var votes: Int): Parcelable {
     constructor() : this("","",0)
+
+    override fun toString(): String {
+        return "(username: $username, role: $role)"
+    }
 }
 

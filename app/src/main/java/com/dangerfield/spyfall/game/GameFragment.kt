@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.models.Player
@@ -19,6 +20,7 @@ import kotlin.collections.ArrayList
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
@@ -124,7 +126,12 @@ class GameFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         //just to be super safe
-        if(viewModel.gameTimer == null){ viewModel.startGameTimer()}
+        if(viewModel.gameTimer == null){
+            Crashlytics.log("Game time was null in on resume, resetting")
+            viewModel.startGameTimer()
+        }
+
+        Log.d("Elijah", "Resumeing with game: ${viewModel.gameObject.value}")
 
         if(viewModel.gameObject.value?.started == false && navController.currentDestination?.id == R.id.gameFragment) {
             //then user returned to the game but the game has been reset
@@ -172,7 +179,14 @@ class GameFragment : Fragment() {
 
     private fun configurePlayerViews() {
         //we enforce that no two users have the same username
-        currentPlayer = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }[0]
+        val filteredPlayerList = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }
+        if(filteredPlayerList.isNotEmpty()){
+            currentPlayer = filteredPlayerList[0]
+        }else{
+            Crashlytics.log("could not find player \"${viewModel.currentUser}\" in player object list for game: ${viewModel.gameObject.value}")
+            navController.popBackStack(R.id.waitingFragment, false)
+            Toast.makeText(context, "Something went wrong please check all players internet connection and try again", Toast.LENGTH_LONG).show()
+        }
 
         //dont let the spy know the location
         tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
