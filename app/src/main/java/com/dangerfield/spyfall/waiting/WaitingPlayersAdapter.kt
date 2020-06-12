@@ -53,7 +53,7 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
             holder.pencil.visibility = View.VISIBLE
 
             holder.pencil.setOnClickListener {
-                Crashlytics.log("Username: ${viewModel.currentUser} clicked button to change name")
+                Crashlytics.log("Username: \"${viewModel.currentUser}\" clicked button to change name")
 
                 view.apply{
                     btn_change_name_alert_okay.background.setTint(UIHelper.accentColor)
@@ -64,9 +64,9 @@ class WaitingPlayersAdapter(val context: Context, playerList: ArrayList<String>,
                         if(newName.isNotEmpty() && newName.length < 25 && !viewModel.gameObject.value!!.playerList.contains(newName) &&
                             viewModel.gameObject.value?.playerObjectList?.size ?: 0 == 0){
 
-                            Crashlytics.log(" ${viewModel.currentUser} attempting to change name to $newName")
+                            Crashlytics.log("\"${viewModel.currentUser}\" attempting to change name to \"$newName\"")
 
-                            val task = viewModel.changeName(newName)
+                            val task = viewModel.changeName(newName.trim())
                             if(task!= null) task.addOnCompleteListener { dialog.dismiss() } else dialog.dismiss()
 
                         }else{

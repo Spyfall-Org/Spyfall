@@ -138,6 +138,7 @@ class GameViewModel : ViewModel() {
 
     
     fun endGame(): Task<Void> {
+        Crashlytics.log("End game function called in view model")
         gameListener.remove()
         //sets to false such that listener in game fragment can be triggered
         gameExists.value = false
@@ -163,6 +164,8 @@ class GameViewModel : ViewModel() {
 
 
     fun resetGame()  {
+        Crashlytics.log("reset game function called in view model")
+
         // resets variables on firebase, which will update viewmodel
         val newLocation = gameObject.value!!.locationList.random()
         val newGame = Game(newLocation,gameObject.value!!.chosenPacks,false,
@@ -188,7 +191,8 @@ class GameViewModel : ViewModel() {
 
     fun removePlayer(): Task<Void>? {
         if(!this::currentUser.isInitialized) return null
-       //when a player leaves a game, you dont want them to hold onto the game data
+        Crashlytics.log("remove player function called in view model")
+        //when a player leaves a game, you dont want them to hold onto the game data
         gameObject = MutableLiveData()
         gameListener.remove()
         //set to false such that when a user is not timeout removed to a game they already left
@@ -201,9 +205,13 @@ class GameViewModel : ViewModel() {
     fun addPlayer(player: String) = gameRef.update("playerList", FieldValue.arrayUnion(player))
 
     fun changeName(newName: String): Task<Void>? {
-        val index = gameObject.value!!.playerList.indexOf(currentUser)
-        if (index == -1) return null
+        val index = gameObject.value!!.playerList.indexOf(currentUser.trim())
+        if (index == -1) {
+            Crashlytics.log("Could not find name: \"${currentUser.trim()}\" in ${gameObject.value!!.playerList} to change to \"$newName\"")
+            return null
+        }
 
+        Crashlytics.log("Successfully change name \"${currentUser.trim()}\" to \"${newName}\"")
         gameObject.value!!.playerList[index] = newName
         currentUser = newName
         return gameRef.update("playerList", gameObject.value!!.playerList)

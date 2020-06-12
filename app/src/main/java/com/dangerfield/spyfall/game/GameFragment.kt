@@ -131,6 +131,8 @@ class GameFragment : Fragment() {
             viewModel.startGameTimer()
         }
 
+        Log.d("Elijah", "Resumeing with game: ${viewModel.gameObject.value}")
+
         if(viewModel.gameObject.value?.started == false && navController.currentDestination?.id == R.id.gameFragment) {
             //then user returned to the game but the game has been reset
             navController.popBackStack(R.id.waitingFragment, false)
@@ -181,7 +183,7 @@ class GameFragment : Fragment() {
         if(filteredPlayerList.isNotEmpty()){
             currentPlayer = filteredPlayerList[0]
         }else{
-            Crashlytics.log("could not find player ${viewModel.currentUser} in player object list for game: ${viewModel.gameObject.value}")
+            Crashlytics.log("could not find player \"${viewModel.currentUser}\" in player object list for game: ${viewModel.gameObject.value}")
             navController.popBackStack(R.id.waitingFragment, false)
             Toast.makeText(context, "Something went wrong please check all players internet connection and try again", Toast.LENGTH_LONG).show()
         }

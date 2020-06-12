@@ -127,9 +127,10 @@ class JoinGameFragment : Fragment() {
     private fun joinGame(withAccessCode: String, asPlayer: String){
             viewModel.ACCESS_CODE = withAccessCode
             viewModel.currentUser = asPlayer
-            Crashlytics.log("Player: $asPlayer joining $withAccessCode")
+            Crashlytics.log("Player: \"$asPlayer\" attempting to join $withAccessCode")
             viewModel.addPlayer(asPlayer).addOnCompleteListener {
                 if(navController.currentDestination?.id == R.id.joinGameFragment) {
+                    Crashlytics.log("Player: \"$asPlayer\" successfully joined $withAccessCode")
                     navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
                     enterMode()
                 }
