@@ -1,15 +1,16 @@
 package com.dangerfield.spyfall.api
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.crashlytics.android.Crashlytics
+import com.dangerfield.spyfall.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.Game
+import com.dangerfield.spyfall.util.Connectivity
 import com.dangerfield.spyfall.util.Event
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
@@ -26,6 +27,11 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
      */
     override var game: LiveData<Game> = MutableLiveData()
 
+
+    /**
+     * Set by Receiver to determine network connection
+     */
+    var hasNetworkConnection: Boolean = false
 
     /**
      * Creates a game node on firebase
@@ -48,8 +54,52 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
      * Adds user name to games player list (no need for checks)
      * Adds listener to firebase to update game
      */
-    override fun joinGame() {
+    override fun joinGame(accessCode: String, username: String): LiveData<Resource<Unit, JoinGameError>>  {
+        val result = MutableLiveData<Resource<Unit, JoinGameError>>()
 
+        if(!Connectivity.isOnline){
+            result.value  = Resource.Error(error = JoinGameError.NETWORK_ERROR)
+        } else {
+            db.collection(Collections.games).document(accessCode).get().addOnSuccessListener { game ->
+
+                if(game.exists()){
+                    val list = (game["playerList"] as ArrayList<String>)
+
+                    when {
+                        list.size >= 8 ->
+                            result.value = Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS)
+
+                        game["started"] == true ->
+                            result.value = Resource.Error(error = JoinGameError.GAME_HAS_STARTED)
+
+                        list.contains(username) ->
+                            result.value = Resource.Error(error = JoinGameError.NAME_TAKEN)
+
+                        username.length > 25 ->
+                            result.value = Resource.Error(error = JoinGameError.NAME_CHARACTER_LIMIT)
+
+                        else -> {
+                            addPlayer(username, accessCode).addOnSuccessListener {
+                                Crashlytics.log("Player: \"$username\" has joined $accessCode")
+                                result.value = Resource.Success(Unit)
+                            }.addOnFailureListener {
+                                Crashlytics.log("Player: \"$username\" was unable to join $accessCode")
+                                result.value = Resource.Error(error = JoinGameError.COULD_NOT_JOIN)
+                            }
+                        }
+                    }
+                }else{
+                    result.value = Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST)
+                }
+            }
+        }
+
+        return result
+    }
+
+    private fun addPlayer(username: String, accessCode: String): Task<Void> {
+        val gameRef = db.collection("games").document(accessCode)
+        return gameRef.update("playerList", FieldValue.arrayUnion(username))
     }
 
     /**

@@ -2,158 +2,105 @@ package com.dangerfield.spyfall.joinGame
 
 import android.graphics.Color
 import android.graphics.PorterDuff
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.os.Handler
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.game.GameViewModel
-import com.dangerfield.spyfall.util.Connectivity
+import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.util.addCharacterMax
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_join_game.*
-import kotlin.collections.ArrayList
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class JoinGameFragment : Fragment() {
+class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
 
-    private lateinit var viewModel: GameViewModel
-    private lateinit var navController: NavController
-    private var hasNetworkConnection = false
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_join_game, container, false)
-    }
+    private val joinGameViewModel: JoinGameViewModel by viewModel()
+    private val navController: NavController by lazy {NavHostFragment.findNavController(this)}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupView()
+    }
 
-        changeAccent()
-
+    private fun setupView() {
+        updateAccent()
         btn_join_game_action.setOnClickListener { joinGameClick() }
-
-        //listeners to hide keyboard when user clicks away
         tv_access_code.onFocusChangeListener = UIHelper.keyboardHider
         tv_username.onFocusChangeListener = UIHelper.keyboardHider
         tv_access_code.addCharacterMax(8)
         tv_username.addCharacterMax(25)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        navController = NavHostFragment.findNavController(this)
-        //scope the view model to the activity so that data can be shared in fragments
-        viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
-
-        viewModel.hasNetworkConnection.observe(viewLifecycleOwner, Observer{
-            hasNetworkConnection = it
-        })
-    }
-
-    private fun joinGameClick(){
-
-        btn_join_game_action.isClickable = false
-
-        if(!Connectivity.isOnline){
-            UIHelper.errorDialog(context!!).show()
-            enterMode()
-            return
-        }
+    private fun joinGameClick() {
+        loadMode()
         val accessCode = tv_access_code.text.toString().toLowerCase().trim()
         val userName = tv_username.text.toString().trim()
 
-        if(userName.isEmpty() || accessCode.isEmpty()){
-            Toast.makeText(context, getString(R.string.join_game_error_fields), Toast.LENGTH_LONG).show()
-            return
-        }
-        var connected = false
-        loadMode()
-
-        Handler().postDelayed({
-            //if it takes more than 10 seconds, cancel
-            if(!connected){
-                UIHelper.errorDialog(context!!).show()
-                Handler(context!!.mainLooper).post {
-                    enterMode()
+        joinGameViewModel.joinGame(accessCode, userName).observe(this, Observer {
+            if(this.isAdded) {
+                when (it) {
+                    is Resource.Success -> handleSuccessfulJoin()
+                    is Resource.Error -> showJoinGameError(it)
                 }
-                FirebaseDatabase.getInstance().purgeOutstandingWrites()
             }
-        },10000)
+        })
+    }
 
-        viewModel.db.collection("games").document(accessCode).get().addOnSuccessListener { game ->
-
-            connected = true
-            if(!this.isAdded) return@addOnSuccessListener
-
-            if(game.exists()){
-                val list = (game["playerList"] as ArrayList<String>)
-
-                when {
-                    list.size >= 8 ->  {
-                        Toast.makeText(context, getString(R.string.join_game_error_max_players), Toast.LENGTH_LONG).show()
-                        enterMode()
-                    }
-                    game["started"]==true -> {
-                        Toast.makeText(context, getString(R.string.join_game_error_started_game), Toast.LENGTH_LONG).show()
-                        enterMode()
-                    }
-                    list.contains(tv_username.text.toString().trim()) -> {
-                        Toast.makeText(context, getString(R.string.join_game_error_taken_name), Toast.LENGTH_LONG).show()
-                        enterMode()
-                    }
-                    userName.length > 25 -> {
-                        Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
-                        enterMode()
-                    }
-                    else -> joinGame(withAccessCode = accessCode, asPlayer = userName)
-                }
-
-            }else{
-                Toast.makeText(context, getString(R.string.join_game_error_access_code), Toast.LENGTH_LONG).show()
-                enterMode()
-            }
+    private fun handleSuccessfulJoin() {
+        if(navController.currentDestination?.id == R.id.joinGameFragment) {
+            navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
+            enterMode()
         }
     }
 
-    private fun joinGame(withAccessCode: String, asPlayer: String){
-            viewModel.ACCESS_CODE = withAccessCode
-            viewModel.currentUser = asPlayer
-            Crashlytics.log("Player: \"$asPlayer\" attempting to join $withAccessCode")
-            viewModel.addPlayer(asPlayer).addOnCompleteListener {
-                if(navController.currentDestination?.id == R.id.joinGameFragment) {
-                    Crashlytics.log("Player: \"$asPlayer\" successfully joined $withAccessCode")
-                    navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
-                    enterMode()
-                }
-            }.addOnFailureListener {
-                Crashlytics.log("Player: $asPlayer was unable to join $withAccessCode")
+    private fun showJoinGameError(result: Resource.Error<Unit, JoinGameError>) {
+        result.error?.let {error ->
+            when(error) {
+                JoinGameError.FIELD_ERROR ->
+                    Toast.makeText(context, getString(R.string.join_game_error_fields), Toast.LENGTH_LONG).show()
+
+                JoinGameError.NETWORK_ERROR ->
+                    UIHelper.errorDialog(requireContext()).show()
+
+                JoinGameError.GAME_DOES_NOT_EXIST ->
+                    Toast.makeText(context, getString(R.string.join_game_error_access_code), Toast.LENGTH_LONG).show()
+
+                JoinGameError.GAME_HAS_MAX_PLAYERS ->
+                    Toast.makeText(context, getString(R.string.join_game_error_max_players), Toast.LENGTH_LONG).show()
+
+                JoinGameError.GAME_HAS_STARTED ->
+                    Toast.makeText(context, getString(R.string.join_game_error_started_game), Toast.LENGTH_LONG).show()
+
+                JoinGameError.NAME_TAKEN ->
+                    Toast.makeText(context, getString(R.string.join_game_error_taken_name), Toast.LENGTH_LONG).show()
+
+                JoinGameError.NAME_CHARACTER_LIMIT ->
+                    Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
+
+                JoinGameError.COULD_NOT_JOIN ->
+                    Toast.makeText(context, getString(R.string.join_game_error_could_not_join), Toast.LENGTH_LONG).show()
             }
+        }
+        enterMode()
     }
 
-    private fun changeAccent(){
+    private fun updateAccent(){
         btn_join_game_action.background.setTint(UIHelper.accentColor)
-
         UIHelper.setCursorColor(tv_access_code,UIHelper.accentColor)
         UIHelper.setCursorColor(tv_username,UIHelper.accentColor)
-
-        pb_join_game.indeterminateDrawable
-            .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
-
+        pb_join_game.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
     }
+
     private fun loadMode(){
         btn_join_game_action.text = ""
         pb_join_game.visibility = View.VISIBLE
         btn_join_game_action.isClickable = false
     }
+
     private fun enterMode(){
         btn_join_game_action.text = getString(R.string.string_join_game)
         pb_join_game.visibility = View.INVISIBLE
