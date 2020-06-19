@@ -77,13 +77,9 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
         return result
     }
 
-    /*
-retrieves location list to show in game and sets that value on firebase
-also picks a random location from list to be the chosen location
- */
-    suspend fun getGameLocations(chosenPacks: ArrayList<String>) : ArrayList<String> {
+    private suspend fun getGameLocations(chosenPacks: ArrayList<String>) : ArrayList<String> {
         val locationList = arrayListOf<String>()
-        //dictates how the number locations we grab from each pack
+        //dictates the number locations we grab from each pack
         val numberFromEach = when(chosenPacks.size) {
             1 -> 14
             2 -> 7
@@ -128,7 +124,7 @@ also picks a random location from list to be the chosen location
                         else -> {
                             addPlayer(username, accessCode).addOnSuccessListener {
                                 Crashlytics.log("Player: \"$username\" has joined $accessCode")
-                                val gameRef: DocumentReference = db.collection("games").document(accessCode)
+                                val gameRef: DocumentReference = db.collection(Collections.games).document(accessCode)
                                 currentSession = CurrentSession(accessCode, username).withListener(gameRef)
                                 result.value = Resource.Success(Unit)
                             }.addOnFailureListener {
@@ -147,7 +143,7 @@ also picks a random location from list to be the chosen location
     }
 
     private fun addPlayer(username: String, accessCode: String): Task<Void> {
-        val gameRef = db.collection("games").document(accessCode)
+        val gameRef = db.collection(Collections.games).document(accessCode)
         return gameRef.update("playerList", FieldValue.arrayUnion(username))
     }
 
