@@ -18,7 +18,8 @@ enum class JoinGameError {
     GAME_HAS_STARTED,
     NAME_TAKEN,
     NAME_CHARACTER_LIMIT,
-    COULD_NOT_JOIN
+    COULD_NOT_JOIN,
+    UNKNOWN_ERROR
 }
 class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
 
@@ -27,8 +28,9 @@ class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
 
         if(username.isEmpty() || accessCode.isEmpty()){
             result.value =  Resource.Error(error = JoinGameError.FIELD_ERROR)
-        }
-        else result = repository.joinGame(accessCode, username) as MutableLiveData<Resource<Unit, JoinGameError>>
+        } else if(username.length > 25) {
+            result.value = Resource.Error(error = JoinGameError.NAME_CHARACTER_LIMIT)
+        } else result = repository.joinGame(accessCode, username) as MutableLiveData<Resource<Unit, JoinGameError>>
 
         return result
     }

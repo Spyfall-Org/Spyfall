@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.game.GameViewModel
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
@@ -32,154 +33,129 @@ import kotlinx.android.synthetic.main.fragment_new_game.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class NewGameFragment : Fragment() {
+class NewGameFragment : Fragment(R.layout.fragment_new_game) {
 
-    private lateinit var viewModel: GameViewModel
-    private lateinit var packsAdapter: PacksAdapter
-    private var hasNetworkConnection = false
-    lateinit var navController: NavController
-    //private lateinit var mInterstitialAd: InterstitialAd
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_game, container, false)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //assigned in on create, as this does not need to be assigned again
-        viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
-    }
+    private val newGameViewModel: NewGameViewModel by viewModel()
+    private val packsAdapter: PacksAdapter by lazy {PacksAdapter( getPacks(), requireContext())}
+    private val navController by lazy { NavHostFragment.findNavController(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupView()
+    }
 
-        //mInterstitialAd = InterstitialAd(context!!)
-        //mInterstitialAd.adUnitId = getString(R.string.test_interstitial)
-        //mInterstitialAd.loadAd(AdRequest.Builder().build())
+    //TODO make this dynamic via firebase call
+    private fun getPacks()
+        = arrayListOf(GamePack(UIHelper.accentColors[0],"Standard",1,"Standard Pack 1",false),
+            GamePack(UIHelper.accentColors[1],"Standard",2,"Standard Pack 2",false),
+            GamePack(UIHelper.accentColors[2],"Special",1,"Special Pack 1",false))
 
-        navController = NavHostFragment.findNavController(this)
-
-        //observer updates our value of internet connection
-        viewModel.hasNetworkConnection.observe(viewLifecycleOwner,Observer{ hasNetworkConnection->
-            this.hasNetworkConnection = hasNetworkConnection
-        })
-
+    private fun setupView() {
         changeAccent()
-
-        //reference views once the view has been created
         tv_new_game_name.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.onFocusChangeListener = UIHelper.keyboardHider
         tv_new_game_time.addCharacterMax(2)
         tv_new_game_name.addCharacterMax(25)
-
         btn_create.setOnClickListener { createGame() }
-
-        btn_packs.setOnClickListener{ showPacksDialog() }
-
+        btn_packs.setOnClickListener{ getPacksInfo() }
         configurePacksAdapter()
     }
 
     private fun configurePacksAdapter(){
-
-        var packs = mutableListOf<GamePack>()
-
-        //TODO: make this dynamic by pulling pack names from firebase
-
-        packs.add(GamePack(UIHelper.accentColors[0],"Standard",1,"Standard Pack 1",false))
-        packs.add(GamePack(UIHelper.accentColors[1],"Standard",2,"Standard Pack 2",false))
-        packs.add(GamePack(UIHelper.accentColors[2],"Special",1,"Special Pack 1",false))
-
         rv_packs.apply{
             layoutManager = GridLayoutManager(context, 3)
-            packsAdapter = PacksAdapter(packs as ArrayList<GamePack>,context!!)
             adapter = packsAdapter
             setHasFixedSize(true)
         }
     }
 
     private fun createGame(){
-
+        loadMode()
         val timeLimit = tv_new_game_time.text.toString().trim()
         val playerName = tv_new_game_name.text.toString().trim()
-        //these strings will be used for queries of the firestore database for which locations to include
         val chosenPacks = packsAdapter.packs.filter {it.isSelected}.map { it.queryString } as ArrayList<String>
 
-        when {
-            chosenPacks.isEmpty() -> {Toast.makeText(context,getString(R.string.new_game_error_select_pack), Toast.LENGTH_LONG).show()
-                return}
-
-            playerName.isEmpty() -> {Toast.makeText(context, getString(R.string.new_game_string_error_name), Toast.LENGTH_LONG).show()
-            return}
-
-            playerName.length > 25 -> {Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
-                return}
-
-            timeLimit.isEmpty() || timeLimit.toInt() > 10 || timeLimit.toInt() == 0 -> {
-                Toast.makeText(context, getString(R.string.new_game_error_time_limit), Toast.LENGTH_LONG).show()
-                return
+        newGameViewModel.createGame(playerName, timeLimit, chosenPacks).observe(viewLifecycleOwner, Observer {
+            if(!this.isAdded) return@Observer
+            when(it) {
+                is Resource.Success -> handleSucessfulGameCreation()
+                is Resource.Error -> it.error?.let { e -> handleErrorCreatingGame(e) }
             }
-        }
-
-        //if (mInterstitialAd.isLoaded) mInterstitialAd.show()
-
-        viewModel.currentUser = playerName
-        createGame(Game("",chosenPacks,false,
-            mutableListOf(playerName) as ArrayList, ArrayList(),timeLimit.toLong(), arrayListOf()))
+        })
     }
 
-    private fun createGame(game: Game){
-        var connected = false
-        if(Connectivity.isOnline) {
-            Crashlytics.log("Connectivity is offline in new game screen")
-            Handler().postDelayed({
-                if(!connected && this.isAdded){
-                    //if we havent connected within 10 seconds, stop trying
-                    FirebaseDatabase.getInstance().purgeOutstandingWrites()
-                    context?.let {
-                        UIHelper.errorDialog(it).show()
-                        Handler(it.mainLooper).post {
-                            enterMode()
-                        }
-                    }
-                }
-            }, 10000)
-
-            loadMode()
-
-            viewModel.getNewAccessCode {
-                connected = true
-                viewModel.createGame(game, it) {
-                    Log.d("Elijah", "Called on complete")
-                    if(navController.currentDestination?.id == R.id.newGameFragment) {
-                        Crashlytics.log("Navigating from new game to waiting for player ${game.playerList[0]} with game $it")
-                        navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
-                        enterMode()
-                    }
-                }
+    private fun handleErrorCreatingGame(error: NewGameError) {
+        if(error == NewGameError.NETWORK_ERROR) {
+            UIHelper.errorDialog(requireContext()).show()
+        } else {
+            error.resId?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
             }
-        }else{
-            Log.d("Elijah", "GOT OFFLINE")
-            UIHelper.errorDialog(context!!).show()
+        }
+        enterMode()
+    }
+
+    private fun handleSucessfulGameCreation() {
+        if(navController.currentDestination?.id == R.id.newGameFragment) {
             enterMode()
+            navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
         }
     }
 
-    fun loadMode(){
+    private fun getPacksInfo() {
+        loadModePacksInfo()
+        newGameViewModel.getPacksDetails().observe(viewLifecycleOwner, Observer {
+            if(!this.isAdded) return@Observer
+            when(it) {
+                is Resource.Success -> it.data?.let{ d -> handlePacksDetailsSuccess(d) }
+                is Resource.Error -> it.error?.let{ e -> handlePacksDetailsError(e) }
+            }
+        })
+    }
+
+    private fun handlePacksDetailsError(error: PackDetailsError) {
+        if(error == PackDetailsError.NETWORK_ERROR) {
+            UIHelper.errorDialog(requireContext()).show()
+        } else {
+            error.resId?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+            }
+        }
+        enterModePacksInfo()
+    }
+
+
+    private fun handlePacksDetailsSuccess(data: List<List<String>>) {
+        UIHelper.packsDialog(requireContext(), data as MutableList<List<String>>).show()
+        enterModePacksInfo()
+    }
+
+    private fun loadMode(){
         pb_new_game.visibility = View.VISIBLE
         btn_create.text = ""
         btn_create.isClickable = false
         btn_packs.isClickable = false
     }
-    fun enterMode(){
+    private fun enterMode(){
         pb_new_game.visibility = View.INVISIBLE
         btn_create.text = getString(R.string.string_btn_create)
         btn_create.isClickable = true
+        btn_packs.isClickable = true
+    }
+
+    private fun loadModePacksInfo() {
+        pb_packs.visibility = View.VISIBLE
+        btn_packs.visibility = View.INVISIBLE
+        btn_packs.isClickable = false
+    }
+
+    private fun enterModePacksInfo() {
+        pb_packs.visibility = View.INVISIBLE
+        btn_packs.visibility = View.VISIBLE
         btn_packs.isClickable = true
     }
 
@@ -199,45 +175,6 @@ class NewGameFragment : Fragment() {
 
         pb_new_game.indeterminateDrawable
             .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
-
-    }
-
-    private fun showPacksDialog() {
-        pb_packs.visibility = View.VISIBLE
-        btn_packs.visibility = View.INVISIBLE
-        btn_packs.isClickable = false
-        //we also might consider a different structure for the backend where the packs are kept in on collection
-        var connected = false
-        Handler().postDelayed({
-            if(!connected){
-                //if we are not connected in 8 seconds, stop trying. Should still work with cache
-                UIHelper.errorDialog(context!!).show()
-                Handler(context!!.mainLooper).post {
-                    pb_packs.visibility = View.INVISIBLE
-                    btn_packs.visibility = View.VISIBLE
-                    btn_packs.isClickable = true
-                }
-            }
-        }, 8000)
-
-        val list = mutableListOf<List<String>>()
-        viewModel.db.collection("packs").get()
-            .addOnSuccessListener { collection ->
-                if (collection.isEmpty) return@addOnSuccessListener
-                connected = true
-                collection.documents.forEach { document ->
-                //add to the list
-                    val pack = listOf(document.id) + document.data!!.keys.toList()
-                    list.add(pack)
-                }
-
-            UIHelper.packsDialog(context!!, list).show()
-            pb_packs.visibility = View.INVISIBLE
-            btn_packs.visibility = View.VISIBLE
-            btn_packs.isClickable = true
-        }.addOnFailureListener {
-
-            }
     }
 }
 

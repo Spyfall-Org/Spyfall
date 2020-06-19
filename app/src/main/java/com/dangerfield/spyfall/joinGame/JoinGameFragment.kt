@@ -41,20 +41,18 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         val userName = tv_username.text.toString().trim()
 
         joinGameViewModel.joinGame(accessCode, userName).observe(this, Observer {
-            if(this.isAdded) {
-                when (it) {
-                    is Resource.Success -> handleSuccessfulJoin()
-                    is Resource.Error -> showJoinGameError(it)
-                }
+            if(!this.isAdded) return@Observer
+            when (it) {
+                is Resource.Success -> handleSuccessfulJoin()
+                is Resource.Error -> showJoinGameError(it)
             }
         })
     }
 
     private fun handleSuccessfulJoin() {
-        if(navController.currentDestination?.id == R.id.joinGameFragment) {
-            enterMode()
-            navController.navigate(R.id.action_joinGameFragment_to_waitingFragment )
-        }
+        if(navController.currentDestination?.id != R.id.joinGameFragment) return
+        enterMode()
+        navController.navigate(R.id.action_joinGameFragment_to_waitingFragment )
     }
 
     private fun showJoinGameError(result: Resource.Error<Unit, JoinGameError>) {
@@ -83,6 +81,9 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
 
                 JoinGameError.COULD_NOT_JOIN ->
                     Toast.makeText(context, getString(R.string.join_game_error_could_not_join), Toast.LENGTH_LONG).show()
+
+                JoinGameError.UNKNOWN_ERROR ->
+                    Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_LONG).show()
             }
         }
         enterMode()
@@ -105,11 +106,5 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         btn_join_game_action.text = getString(R.string.string_join_game)
         pb_join_game.visibility = View.INVISIBLE
         btn_join_game_action.isClickable = true
-    }
-
-    companion object {
-        val EXTRA_ACCESSCODE = "accessCode"
-        val EXTRA_USERNAME = "username"
-
     }
 }

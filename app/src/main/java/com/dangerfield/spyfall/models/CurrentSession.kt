@@ -12,7 +12,7 @@ class CurrentSession (
     var gameListener : ListenerRegistration? = null
 ) {
 
-    fun build(gameRef: DocumentReference): CurrentSession {
+    fun withListener(gameRef: DocumentReference): CurrentSession {
         gameListener = gameRef.addSnapshotListener { result, error ->
             if (error != null)  return@addSnapshotListener
             if (result != null && result.exists()) {

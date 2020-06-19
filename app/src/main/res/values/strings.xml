@@ -17,6 +17,8 @@
     <string name="leave_action_positive">Leave</string>
     <string name="leave_action_negative">Stay</string>
 
+    <string name="unknown_error" translatable="false">We are Sorry. Something went wrong and we are not quite sure what. Please feel free to email us from the settings page. </string>
+
     <string name="error_title">Something went wrong</string>
     <string name="error_message">Please check your internet connection and try again</string>
 

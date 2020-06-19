@@ -1,22 +1,25 @@
 package com.dangerfield.spyfall.api
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.models.Game
+import com.dangerfield.spyfall.newGame.NewGameError
+import com.dangerfield.spyfall.newGame.PackDetailsError
 import com.dangerfield.spyfall.util.Connectivity
-import com.dangerfield.spyfall.util.Event
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Repository(override var db: FirebaseFirestore) : GameRepository() {
 
@@ -41,17 +44,60 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
      * Creates a game node on firebase
      * Returns Access code to that node
      */
-    override fun createGame(chosenPacks: List<String>, timeLimit: Int, username: String): LiveData<Event<String>> {
-        val result = MutableLiveData<Event<String>>()
+    override fun createGame(username: String, timeLimit: Long, chosenPacks: List<String>): LiveData<Resource<Unit, NewGameError>> {
+        var result = MutableLiveData<Resource<Unit, NewGameError>>()
 
-        //TODO get access code and locations list async and await on both of them
-        /*
-        generate access code
-        get list of all locations from chosen packs
-        create game object and update ref
-        set result even with access code
-         */
+        if(!Connectivity.isOnline){
+            result.value  = Resource.Error(error = NewGameError.NETWORK_ERROR)
+        } else {
+            CoroutineScope(IO + job).launch {
+                val accessCode = generateAccessCode()
+                val gameLocations = getGameLocations(chosenPacks as ArrayList<String>)
+                val game = Game(
+                    gameLocations.random(),
+                    chosenPacks,
+                    false,
+                    arrayListOf(username),
+                    arrayListOf(),
+                    timeLimit,
+                    gameLocations
+                )
+
+                val gameRef = db.collection(Collections.games).document(accessCode)
+
+                gameRef.set(game).addOnSuccessListener {
+                    result.value = Resource.Success(Unit)
+                    currentSession = CurrentSession(accessCode, username).withListener(gameRef)
+                }.addOnFailureListener {
+                    result.value  = Resource.Error(error = NewGameError.UNKNOWN_ERROR)
+                }
+            }
+        }
+
         return result
+    }
+
+    /*
+retrieves location list to show in game and sets that value on firebase
+also picks a random location from list to be the chosen location
+ */
+    suspend fun getGameLocations(chosenPacks: ArrayList<String>) : ArrayList<String> {
+        val locationList = arrayListOf<String>()
+        //dictates how the number locations we grab from each pack
+        val numberFromEach = when(chosenPacks.size) {
+            1 -> 14
+            2 -> 7
+            3 -> 5
+            else -> 14
+        }
+
+        chosenPacks.forEach {pack ->
+            val packData = db.collection("packs").document(pack).get().await()
+            val randomLocations = (packData.data?.toList()?.map { field -> field.first } ?: listOf()).shuffled().take(numberFromEach)
+            locationList.addAll(randomLocations)
+        }
+
+        return locationList.take(14) as ArrayList<String>
     }
 
     /**
@@ -79,14 +125,11 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
                         list.contains(username) ->
                             result.value = Resource.Error(error = JoinGameError.NAME_TAKEN)
 
-                        username.length > 25 ->
-                            result.value = Resource.Error(error = JoinGameError.NAME_CHARACTER_LIMIT)
-
                         else -> {
                             addPlayer(username, accessCode).addOnSuccessListener {
                                 Crashlytics.log("Player: \"$username\" has joined $accessCode")
                                 val gameRef: DocumentReference = db.collection("games").document(accessCode)
-                                currentSession = CurrentSession(accessCode, username).build(gameRef)
+                                currentSession = CurrentSession(accessCode, username).withListener(gameRef)
                                 result.value = Resource.Success(Unit)
                             }.addOnFailureListener {
                                 Crashlytics.log("Player: \"$username\" was unable to join $accessCode")
@@ -130,6 +173,31 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
 
     override fun changeName() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getPacksDetails(): LiveData<Resource<List<List<String>>, PackDetailsError>> {
+        val result = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
+
+        if(!Connectivity.isOnline) {
+            result.value = Resource.Error(error = PackDetailsError.NETWORK_ERROR)
+            return result
+        }
+
+        val list = mutableListOf<List<String>>()
+
+        db.collection(Collections.packs).get()
+            .addOnSuccessListener { collection ->
+                collection.documents.forEach { document ->
+                    val pack = listOf(document.id) + document.data!!.keys.toList()
+                    list.add(pack)
+                }
+                result.value = Resource.Success(list)
+
+            }.addOnFailureListener {
+                result.value = Resource.Error(error = PackDetailsError.UNKNOWN_ERROR)
+            }
+
+        return result
     }
 
     private suspend fun generateAccessCode(): String {

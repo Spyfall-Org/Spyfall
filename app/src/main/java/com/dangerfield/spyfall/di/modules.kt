@@ -3,6 +3,8 @@ package com.dangerfield.spyfall.di
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Repository
 import com.dangerfield.spyfall.joinGame.JoinGameViewModel
+import com.dangerfield.spyfall.newGame.NewGameFragment
+import com.dangerfield.spyfall.newGame.NewGameViewModel
 import com.dangerfield.spyfall.waiting.WaitingViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.viewmodel.dsl.viewModel
@@ -14,5 +16,6 @@ val mainModule = module {
 
     viewModel { JoinGameViewModel(get()) }
     viewModel { WaitingViewModel(get()) }
+    viewModel { NewGameViewModel(get()) }
 
 }
