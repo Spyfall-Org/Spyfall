@@ -20,7 +20,7 @@ enum class JoinGameError {
     NAME_CHARACTER_LIMIT,
     COULD_NOT_JOIN
 }
-class JoinGameViewModel(private val repository: Repository) : ViewModel() {
+class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
 
     fun joinGame(accessCode: String, username: String): LiveData<Resource<Unit, JoinGameError>> {
         var result = MutableLiveData<Resource<Unit, JoinGameError>>()

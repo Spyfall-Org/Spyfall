@@ -52,8 +52,8 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
 
     private fun handleSuccessfulJoin() {
         if(navController.currentDestination?.id == R.id.joinGameFragment) {
-            navController.navigate(R.id.action_joinGameFragment_to_waitingFragment)
             enterMode()
+            navController.navigate(R.id.action_joinGameFragment_to_waitingFragment )
         }
     }
 
@@ -105,5 +105,11 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         btn_join_game_action.text = getString(R.string.string_join_game)
         pb_join_game.visibility = View.INVISIBLE
         btn_join_game_action.isClickable = true
+    }
+
+    companion object {
+        val EXTRA_ACCESSCODE = "accessCode"
+        val EXTRA_USERNAME = "username"
+
     }
 }

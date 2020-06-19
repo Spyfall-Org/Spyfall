@@ -1,20 +1,25 @@
 package com.dangerfield.spyfall.api
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.joinGame.JoinGameError
+import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.util.Connectivity
 import com.dangerfield.spyfall.util.Event
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class Repository(override var db: FirebaseFirestore) : GameRepository() {
+
 
     /**
      * job used to tie all coroutines to in order to cancel
@@ -22,11 +27,10 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
     private var job: Job = Job()
 
     /**
-     * Observable data representing the game on firebase
-     * Kept up to date by firebase listener
+     * Holds info for current game being played. Set when joining game
+     * nulled when leaving or ending game
      */
-    override var game: LiveData<Game> = MutableLiveData()
-
+    override var currentSession: CurrentSession? = null
 
     /**
      * Set by Receiver to determine network connection
@@ -38,7 +42,7 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
      * Returns Access code to that node
      */
     override fun createGame(chosenPacks: List<String>, timeLimit: Int, username: String): LiveData<Event<String>> {
-        var result = MutableLiveData<Event<String>>()
+        val result = MutableLiveData<Event<String>>()
 
         //TODO get access code and locations list async and await on both of them
         /*
@@ -81,6 +85,8 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
                         else -> {
                             addPlayer(username, accessCode).addOnSuccessListener {
                                 Crashlytics.log("Player: \"$username\" has joined $accessCode")
+                                val gameRef: DocumentReference = db.collection("games").document(accessCode)
+                                currentSession = CurrentSession(accessCode, username).build(gameRef)
                                 result.value = Resource.Success(Unit)
                             }.addOnFailureListener {
                                 Crashlytics.log("Player: \"$username\" was unable to join $accessCode")
@@ -133,5 +139,4 @@ class Repository(override var db: FirebaseFirestore) : GameRepository() {
         }
         return newCode
     }
-
 }

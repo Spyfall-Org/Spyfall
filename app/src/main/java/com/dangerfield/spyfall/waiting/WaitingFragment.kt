@@ -31,37 +31,36 @@ import com.google.firebase.database.FirebaseDatabase
 
 import kotlinx.android.synthetic.main.fragment_waiting.*
 import kotlinx.coroutines.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.ArrayList
 
-class WaitingFragment : Fragment() {
+class WaitingFragment : Fragment(R.layout.fragment_waiting) {
 
-    private var adapter: WaitingPlayersAdapter? = null
-    lateinit var viewModel: GameViewModel
-    private var navigateBack: (() -> Unit)? = null
+    private val adapter by lazy { WaitingPlayersAdapter(requireContext(), ArrayList())}
+    private val waitingViewModel: WaitingViewModel by viewModel()
+
+    private val navigateBack by lazy {
+        {
+            UIHelper.customSimpleAlert(context!!,
+                resources.getString(R.string.waiting_leaving_title),
+                resources.getString(R.string.waiting_leaving_message),
+                resources.getString(R.string.leave_action_positive), { leaveGame() },
+                resources.getString(R.string.leave_action_negative), {}).show()
+        }
+    }
+
     private val navController: NavController by lazy {
         NavHostFragment.findNavController(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_waiting, container, false)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
-
-        navigateBack = { UIHelper.customSimpleAlert(context!!,
-            resources.getString(R.string.waiting_leaving_title),
-            resources.getString(R.string.waiting_leaving_message),
-            resources.getString(R.string.leave_action_positive), {leaveGame()},
-            resources.getString(R.string.leave_action_negative),{}).show()
-        }
-
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
-                   navigateBack?.invoke()
+                   navigateBack.invoke()
                 }
             })
     }
@@ -71,35 +70,36 @@ class WaitingFragment : Fragment() {
 
         if(BuildConfig.FLAVOR == "free") adView.loadAd(AdRequest.Builder().build())
 
-        viewModel.getGameUpdates().observe(viewLifecycleOwner, Observer { updatedGame ->
+        waitingViewModel.game?.observe(viewLifecycleOwner, Observer {
+            if(!this.isAdded) return@Observer
 
-            adapter?.players = updatedGame.playerList
+            adapter.players = it.playerList
+            if(it.started) loadMode() else enterMode()
 
-            if(updatedGame.started) loadMode() else enterMode()
-
-            //we know everything is good to go when the player objects list is done
-            if(updatedGame.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment){
-                Crashlytics.log("Navigating from waiting to game screen with game $updatedGame")
-                navController.navigate(R.id.action_waitingFragment_to_gameFragment)
+            if(it.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment) {
+                Crashlytics.log("Navigating from waiting to game screen with game $it")
                 enterMode()
+                navController.navigate(R.id.action_waitingFragment_to_gameFragment)
             }
         })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupView()
+    }
 
+    private fun setupView() {
         changeAccent()
-        //only set the listeners once the view has been created
         btn_start_game.setOnClickListener {
             loadMode()
-            viewModel.getRolesAndStartGame()
+          //  viewModel.getRolesAndStartGame()
         }
 
         btn_leave_game.setOnClickListener {
-            if(viewModel.gameObject.value?.started == false){
-                navigateBack?.invoke() ?: leaveGame()
-            }
+//            if(viewModel.gameObject.value?.started == false){
+//                navigateBack?.invoke() ?: leaveGame()
+//            }
         }
 
         configureLayoutManagerAndRecyclerView()
@@ -107,18 +107,17 @@ class WaitingFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        tv_acess_code.text = viewModel.ACCESS_CODE
+        tv_acess_code.text = waitingViewModel.accessCode
     }
 
     private fun leaveGame() {
-        viewModel.removePlayer()
+       // viewModel.removePlayer()
         navController.popBackStack(R.id.startFragment, false)
 
     }
-        private fun configureLayoutManagerAndRecyclerView() {
-            rv_player_list_waiting.layoutManager = LinearLayoutManager(context)
-            adapter = WaitingPlayersAdapter(context!!, ArrayList(),viewModel)
-            rv_player_list_waiting.adapter = adapter
+    private fun configureLayoutManagerAndRecyclerView() {
+        rv_player_list_waiting.layoutManager = LinearLayoutManager(context)
+        rv_player_list_waiting.adapter = adapter
     }
 
     private fun changeAccent(){

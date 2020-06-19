@@ -1,14 +1,16 @@
 package com.dangerfield.spyfall.api
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.dangerfield.spyfall.joinGame.JoinGameError
+import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.util.Event
 import com.google.firebase.firestore.FirebaseFirestore
 
 abstract class GameRepository {
 
-    abstract var game : LiveData<Game>
+    abstract var currentSession: CurrentSession?
     abstract var db : FirebaseFirestore
 
     abstract fun createGame(chosenPacks: List<String>, timeLimit: Int, username: String): LiveData<Event<String>>
