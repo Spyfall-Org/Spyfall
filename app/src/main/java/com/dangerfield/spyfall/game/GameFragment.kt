@@ -3,19 +3,12 @@ package com.dangerfield.spyfall.game
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import com.dangerfield.spyfall.models.Player
 import kotlinx.android.synthetic.main.fragment_game.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
@@ -23,13 +16,14 @@ import androidx.navigation.fragment.NavHostFragment
 import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.util.UIHelper
 import com.google.android.gms.ads.AdRequest
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class GameFragment : Fragment() {
+class GameFragment : Fragment(R.layout.fragment_game) {
 
-    private lateinit var viewModel: GameViewModel
-    private lateinit var currentPlayer: Player
+    private val gameViewModel: RealGameViewModel by viewModel()
     private lateinit var locationsAdapter: GameViewsAdapter
     private lateinit var playersAdapter: GameViewsAdapter
     private var changingTheme = false
@@ -37,16 +31,11 @@ class GameFragment : Fragment() {
         NavHostFragment.findNavController(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_game, container, false)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //this does not get called again, set all the variables you want to keep(not reassign)
-        viewModel = ViewModelProviders.of(activity!!).get(GameViewModel::class.java)
 
-        viewModel.incrementAndroidPlayers()
+        gameViewModel.incrementAndroidPlayers()
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
@@ -56,7 +45,7 @@ class GameFragment : Fragment() {
                         getString(R.string.leave_game_title),
                         getString(R.string.leave_in_game_message),
                         getString(R.string.leave_action_positive),
-                        {endGame()},getString(R.string.leave_action_negative),{}).show()
+                        {triggerEndGame()},getString(R.string.leave_action_negative),{}).show()
                 }
             })
     }
@@ -68,30 +57,29 @@ class GameFragment : Fragment() {
 
         if(BuildConfig.FLAVOR == "free") adView2.loadAd(AdRequest.Builder().build()) else adView2.visibility = View.GONE
 
-
-        //the observers should not be called unless the fragment is in a started or resumed state
-        viewModel.getGameUpdates().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            //someone has reset game
+        gameViewModel.liveGame?.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            //play again has been triggered
             if(!it.started && navController.currentDestination?.id == R.id.gameFragment){
                 navController.popBackStack(R.id.waitingFragment, false)
             }
-            //now this gets called anytime anything changes
+
             if(it.started && navController.currentDestination?.id == R.id.gameFragment){
                 //but right now it says: if the game has started, and im still on this screen, and something has changed..
-                configurePlayerViews()
-                configurePlayersAdapter(viewModel.gameObject.value!!.playerObjectList[0].username)
-                configureLocationsAdapter()
+                configurePlayerViews(it)
+                configurePlayersAdapter(it.playerObjectList[0].username, it.playerList.shuffled() as ArrayList<String>)
+                configureLocationsAdapter(it.locationList)
             }
         })
 
-        viewModel.gameExists.observe(viewLifecycleOwner, androidx.lifecycle.Observer { exists ->
-            //someone ended the game
-            if(!exists && navController.currentDestination?.id == R.id.gameFragment){ endGame() }
-        })
+        gameViewModel.gameExists?.observe(viewLifecycleOwner, androidx.lifecycle.Observer {gameExists ->
+            if(!gameExists && navController.currentDestination?.id == R.id.gameFragment){
+                endGame()
+            }
+        } )
 
-        viewModel.getTimeLeft().observe(viewLifecycleOwner, androidx.lifecycle.Observer {time ->
+        gameViewModel.getTimeLeft().observe(viewLifecycleOwner, androidx.lifecycle.Observer {time ->
             tv_game_timer.text = time
-            btn_play_again.visibility = if(time == "0:00") View.VISIBLE else View.GONE
+            btn_play_again.visibility = if(time == RealGameViewModel.timeOver) View.VISIBLE else View.GONE
         })
     }
 
@@ -101,39 +89,32 @@ class GameFragment : Fragment() {
         changeAccent()
         //we set the listeners once the view has actually been inflated
         btn_end_game.setOnClickListener {
-            if(tv_game_timer.text.toString() == "0:00") endGame()
+            if(tv_game_timer.text.toString() == RealGameViewModel.timeOver) triggerEndGame()
             else{
                 UIHelper.customSimpleAlert(context!!,
                     getString(R.string.end_game_title),
                     getString(R.string.end_game_message),
-                    getString(R.string.end_game_positive_action), {endGame()},
+                    getString(R.string.end_game_positive_action), {triggerEndGame()},
                     getString(R.string.negative_action_standard),{}).show()
             }
         }
 
         btn_play_again.setOnClickListener{
-            viewModel.resetGame()
+           gameViewModel.resetGame()
         }
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_hide.setOnClickListener{ hide()}
 
         tv_game_timer.text = String.format(
             Locale.getDefault(), "%d:%02d",
-            viewModel.gameObject.value?.timeLimit, 0
+            gameViewModel.liveGame?.value?.timeLimit, 0
         )
     }
 
     override fun onResume() {
         super.onResume()
-        //just to be super safe
-        if(viewModel.gameTimer == null){
-            Crashlytics.log("Game time was null in on resume, resetting")
-            viewModel.startGameTimer()
-        }
 
-        Log.d("Elijah", "Resumeing with game: ${viewModel.gameObject.value}")
-
-        if(viewModel.gameObject.value?.started == false && navController.currentDestination?.id == R.id.gameFragment) {
+        if(!gameViewModel.hasStartedGame() && navController.currentDestination?.id == R.id.gameFragment) {
             //then user returned to the game but the game has been reset
             navController.popBackStack(R.id.waitingFragment, false)
         }
@@ -154,47 +135,47 @@ class GameFragment : Fragment() {
     }
 
 
-    fun endGame(){
-        viewModel.endGame()
+    fun triggerEndGame(){ gameViewModel.triggerEndGame() }
+
+    private fun endGame() {
+        gameViewModel.resetTimer()
         navController.popBackStack(R.id.startFragment, false)
     }
 
-    private fun configureLocationsAdapter(){
+    private fun configureLocationsAdapter(locations: ArrayList<String>){
         locationsAdapter = GameViewsAdapter(context!!, ArrayList(), null)
         rv_locations.apply{
             adapter = locationsAdapter
             layoutManager = GridLayoutManager(context, 2)
         }
-        locationsAdapter.items = viewModel.gameObject.value!!.locationList
+        locationsAdapter.items = locations
     }
 
-    private fun configurePlayersAdapter(firstPlayer: String){
+    private fun configurePlayersAdapter(firstPlayer: String, players: ArrayList<String>){
         rv_players.apply{
             layoutManager = GridLayoutManager(context, 2)
-            playersAdapter = GameViewsAdapter(context,(viewModel.gameObject.value!!.playerList.shuffled()) as ArrayList<String>, firstPlayer)
+            playersAdapter = GameViewsAdapter(context, players, firstPlayer)
             adapter = playersAdapter
             setHasFixedSize(true)
         }
     }
 
-    private fun configurePlayerViews() {
-        //we enforce that no two users have the same username
-        val filteredPlayerList = (viewModel.gameObject.value!!.playerObjectList).filter { it.username == viewModel.currentUser }
-        if(filteredPlayerList.isNotEmpty()){
-            currentPlayer = filteredPlayerList[0]
-        }else{
-            Crashlytics.log("could not find player \"${viewModel.currentUser}\" in player object list for game: ${viewModel.gameObject.value}")
+    private fun configurePlayerViews(game: Game) {
+       // we enforce that no two users have the same username
+        val currentPlayer = (game.playerObjectList).find { it.username == gameViewModel.getCurrentUser() }
+        if(currentPlayer == null){
+            Crashlytics.log("could not find player \"${gameViewModel.getCurrentUser()}\" in player object list for game: ${gameViewModel.liveGame?.value}")
             navController.popBackStack(R.id.waitingFragment, false)
             Toast.makeText(context, "Something went wrong please check all players internet connection and try again", Toast.LENGTH_LONG).show()
         }
 
-        //dont let the spy know the location
-        tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
-            "Figure out the location!"
-        } else { "Location: ${viewModel.gameObject.value?.chosenLocation}" }
+        currentPlayer?.let {
+            tv_game_location.text = if(currentPlayer.role.toLowerCase().trim() == "the spy!"){
+                "Figure out the location!"
+            } else { "Location: ${game.chosenLocation}" }
 
-        tv_game_role.text = "Role: ${currentPlayer.role}"
-
+            tv_game_role.text = "Role: ${currentPlayer.role}"
+        }
     }
 
     private fun changeAccent(){
@@ -209,11 +190,7 @@ class GameFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        if(!changingTheme) {
-            viewModel.gameTimer?.cancel()
-            viewModel.gameTimer = null
-        }
+        if(!changingTheme) { gameViewModel.resetTimer() }
         changingTheme = false
     }
 }

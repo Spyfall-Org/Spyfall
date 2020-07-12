@@ -3,34 +3,21 @@ package com.dangerfield.spyfall.waiting
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
-import com.dangerfield.spyfall.game.GameViewModel
-import com.google.android.gms.ads.AdListener
+import com.dangerfield.spyfall.models.Game
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.database.FirebaseDatabase
 
 import kotlinx.android.synthetic.main.fragment_waiting.*
-import kotlinx.coroutines.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.ArrayList
 
@@ -38,8 +25,9 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting) {
 
     private val adapter by lazy { WaitingPlayersAdapter(requireContext(), ArrayList())}
     private val waitingViewModel: WaitingViewModel by viewModel()
+    private var currentGame : Game? = null
 
-    private val navigateBack by lazy {
+    private fun showLeaveGameDialog()
         {
             UIHelper.customSimpleAlert(context!!,
                 resources.getString(R.string.waiting_leaving_title),
@@ -47,7 +35,6 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting) {
                 resources.getString(R.string.leave_action_positive), { leaveGame() },
                 resources.getString(R.string.leave_action_negative), {}).show()
         }
-    }
 
     private val navController: NavController by lazy {
         NavHostFragment.findNavController(this)
@@ -60,7 +47,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting) {
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true){
                 override fun handleOnBackPressed() {
-                   navigateBack.invoke()
+                    showLeaveGameDialog()
                 }
             })
     }
@@ -73,11 +60,11 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting) {
         waitingViewModel.game?.observe(viewLifecycleOwner, Observer {
             if(!this.isAdded) return@Observer
 
+            currentGame = it
             adapter.players = it.playerList
             if(it.started) loadMode() else enterMode()
 
-            if(it.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment) {
-                Crashlytics.log("Navigating from waiting to game screen with game $it")
+            if(it.playerObjectList.size == it.playerList.size && navController.currentDestination?.id == R.id.waitingFragment) {
                 enterMode()
                 navController.navigate(R.id.action_waitingFragment_to_gameFragment)
             }
@@ -93,14 +80,10 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting) {
         changeAccent()
         btn_start_game.setOnClickListener {
             loadMode()
-          //  viewModel.getRolesAndStartGame()
+            waitingViewModel.startGame()
         }
 
-        btn_leave_game.setOnClickListener {
-//            if(viewModel.gameObject.value?.started == false){
-//                navigateBack?.invoke() ?: leaveGame()
-//            }
-        }
+        btn_leave_game.setOnClickListener { showLeaveGameDialog() }
 
         configureLayoutManagerAndRecyclerView()
     }
@@ -111,9 +94,9 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting) {
     }
 
     private fun leaveGame() {
-       // viewModel.removePlayer()
+        if(currentGame?.started == true) return
+        waitingViewModel.leaveGame()
         navController.popBackStack(R.id.startFragment, false)
-
     }
     private fun configureLayoutManagerAndRecyclerView() {
         rv_player_list_waiting.layoutManager = LinearLayoutManager(context)
@@ -126,18 +109,17 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting) {
             .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
     }
 
-    fun loadMode(){
+    private fun loadMode(){
         btn_start_game.text = ""
         pb_waiting.visibility = View.VISIBLE
         btn_leave_game.isClickable = false
         btn_start_game.isClickable = false
     }
-    fun enterMode(){
+    private fun enterMode(){
         btn_start_game.text = getString(R.string.string_btn_start_game)
         pb_waiting.visibility = View.GONE
         btn_leave_game.isClickable = true
         btn_start_game.isClickable = true
     }
-
 }
 

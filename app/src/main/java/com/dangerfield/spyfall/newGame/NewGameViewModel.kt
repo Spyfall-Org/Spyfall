@@ -49,4 +49,7 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
         }
         return packsDetails
     }
+
+    fun getPacks() = repository.getPacks()
+
 }

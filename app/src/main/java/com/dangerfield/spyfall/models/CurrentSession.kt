@@ -7,17 +7,24 @@ import com.google.firebase.firestore.ListenerRegistration
 class CurrentSession (
     val accessCode: String,
     val currentUser: String,
-    val game : MutableLiveData<Game> = MutableLiveData(),
+    val liveGame : MutableLiveData<Game> = MutableLiveData(),
     val gameExists: MutableLiveData<Boolean> = MutableLiveData(),
     var gameListener : ListenerRegistration? = null
 ) {
+
+    fun hasStartedGame() = liveGame.value?.started == true
 
     fun withListener(gameRef: DocumentReference): CurrentSession {
         gameListener = gameRef.addSnapshotListener { result, error ->
             if (error != null)  return@addSnapshotListener
             if (result != null && result.exists()) {
-                game.value = result.toObject(Game::class.java)
-                gameExists.value = true
+                val updatedGame = result.toObject(Game::class.java)
+                if(updatedGame?.playerList?.size == 0) {
+                    gameRef.delete()
+                }else {
+                    liveGame.value = updatedGame
+                    gameExists.value = true
+                }
             }else {
                 gameExists.value = false
             }

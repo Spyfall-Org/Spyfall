@@ -24,21 +24,17 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.crashlytics.android.Crashlytics
 
 
-class StartFragment : Fragment() {
+class StartFragment : Fragment(R.layout.fragment_start) {
 
-    private lateinit var navController: NavController
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        return inflater.inflate(R.layout.fragment_start, container, false)
+    private val navController by lazy { NavHostFragment.findNavController(this)
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         welcome_message.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
 
-        navController = NavHostFragment.findNavController(this)
 
         btn_new_game.setOnClickListener {
             navController.navigate(R.id.action_startFragment_to_newGameFragment)

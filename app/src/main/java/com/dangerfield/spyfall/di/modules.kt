@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.di
 
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Repository
+import com.dangerfield.spyfall.game.RealGameViewModel
 import com.dangerfield.spyfall.joinGame.JoinGameViewModel
 import com.dangerfield.spyfall.newGame.NewGameFragment
 import com.dangerfield.spyfall.newGame.NewGameViewModel
@@ -17,5 +18,7 @@ val mainModule = module {
     viewModel { JoinGameViewModel(get()) }
     viewModel { WaitingViewModel(get()) }
     viewModel { NewGameViewModel(get()) }
+    viewModel { RealGameViewModel(get()) }
+
 
 }

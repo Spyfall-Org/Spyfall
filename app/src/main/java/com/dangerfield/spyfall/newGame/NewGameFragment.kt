@@ -40,19 +40,13 @@ import kotlin.collections.ArrayList
 class NewGameFragment : Fragment(R.layout.fragment_new_game) {
 
     private val newGameViewModel: NewGameViewModel by viewModel()
-    private val packsAdapter: PacksAdapter by lazy {PacksAdapter( getPacks(), requireContext())}
+    private val packsAdapter: PacksAdapter by lazy {PacksAdapter( newGameViewModel.getPacks(), requireContext())}
     private val navController by lazy { NavHostFragment.findNavController(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
     }
-
-    //TODO make this dynamic via firebase call
-    private fun getPacks()
-        = arrayListOf(GamePack(UIHelper.accentColors[0],"Standard",1,"Standard Pack 1",false),
-            GamePack(UIHelper.accentColors[1],"Standard",2,"Standard Pack 2",false),
-            GamePack(UIHelper.accentColors[2],"Special",1,"Special Pack 1",false))
 
     private fun setupView() {
         changeAccent()
