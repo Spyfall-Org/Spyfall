@@ -8,7 +8,7 @@
 	<string name="leave_action_positive">Partire</string>
 	<string name="leave_action_negative">Rimanere</string>
 	<string name="error_title">Qualcosa è andato storto</string>
-	<string name="error_message">per favore controlla la tua connessione Internet e prova di nuovo</string>
+	<string name="newtork_error_message">per favore controlla la tua connessione Internet e prova di nuovo</string>
 	<string name="waiting_leaving_title">Lasciare il gioco</string>
 	<string name="about_title">Di</string>
 	<string name="rules_title">Regole</string>

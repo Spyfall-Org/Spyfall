@@ -1,13 +1,11 @@
 package com.dangerfield.spyfall.settings
 
 import android.app.AlertDialog
-import android.app.UiModeManager
 import android.content.ActivityNotFoundException
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -15,8 +13,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -27,11 +23,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
+import com.dangerfield.spyfall.util.goneIf
 import kotlinx.android.synthetic.main.alert_custom.*
 import kotlinx.android.synthetic.main.alert_custom.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
-import kotlinx.android.synthetic.main.fragment_start.*
-
 
 class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     override fun onColorChange(colorButton: ColorButton) {
@@ -86,6 +81,17 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
             ic_ads.visibility = View.GONE
         }
 
+        btn_tester_settings.setOnClickListener {
+            navController.navigate(R.id.action_settingsFragment_to_testerSettingsFragment)
+        }
+
+        showTesterSettings(BuildConfig.DEBUG)
+    }
+
+    private fun showTesterSettings(debug: Boolean) {
+        btn_tester_settings.goneIf(!debug)
+        iv_tester_settings.goneIf(!debug)
+        tv_tester_settings.goneIf(!debug)
     }
 
     override fun onResume() {
@@ -117,7 +123,6 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
 
             rv_color_change.visibility = View.VISIBLE
 
-
             if( Integer.valueOf(android.os.Build.VERSION.SDK) < 29) { //below api 29 does not have system dark mode
                 mode_toggle.visibility = View.VISIBLE
                 if(currentMode == Configuration.UI_MODE_NIGHT_YES){
@@ -125,7 +130,6 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
                 }else{
                     mode_toggle.check(R.id.tgl_light_mode)
                 }
-
                 mode_toggle.setOnCheckedChangeListener { _, checkedId ->
                     when(checkedId) {
                         R.id.tgl_light_mode -> newMode = AppCompatDelegate.MODE_NIGHT_NO

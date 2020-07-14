@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.dangerfield.spyfall.api.Repository
-import com.dangerfield.spyfall.game.GameViewModel
 
 class Receiver(var repository: Repository): BroadcastReceiver() {
 

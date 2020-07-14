@@ -1,15 +1,14 @@
 package com.dangerfield.spyfall.api
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import com.dangerfield.spyfall.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.CurrentSession
-import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
 import com.dangerfield.spyfall.newGame.NewGameError
 import com.dangerfield.spyfall.newGame.PackDetailsError
 import com.dangerfield.spyfall.util.Event
-import com.dangerfield.spyfall.waiting.StartGameError
+import com.dangerfield.spyfall.waiting.NameChangeError
 import com.google.firebase.firestore.FirebaseFirestore
 
 abstract class GameRepository {
@@ -23,7 +22,7 @@ abstract class GameRepository {
     abstract fun endGame()
     abstract fun startGame()
     abstract fun resetGame()
-    abstract fun changeName()
+    abstract fun changeName(newName: String) :  LiveData<Event<Resource<String, NameChangeError>>>
     abstract fun getPacksDetails(): LiveData<Resource<List<List<String>>, PackDetailsError>>
     abstract fun incrementAndroidPlayers()
     abstract fun incrementGamesPlayed()

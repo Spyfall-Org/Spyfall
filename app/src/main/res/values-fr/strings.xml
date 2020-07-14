@@ -8,7 +8,7 @@
 	<string name="leave_action_positive">Laisser</string>
 	<string name="leave_action_negative">Rester</string>
 	<string name="error_title">Quelque chose a mal tourné</string>
-	<string name="error_message">S\'il vous plaît, vérifiez votre connexion à internet et réessayez</string>
+	<string name="newtork_error_message">S\'il vous plaît, vérifiez votre connexion à internet et réessayez</string>
 	<string name="waiting_leaving_title">Quitter le jeu</string>
 	<string name="about_title">À propos</string>
 	<string name="about_message">Spyfall est un jeu de plateau publié à l\'origine par Hobby World. </string>

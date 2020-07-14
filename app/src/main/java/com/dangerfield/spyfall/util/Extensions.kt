@@ -1,15 +1,15 @@
 package com.dangerfield.spyfall.util
 
+import android.app.Activity
 import android.text.InputFilter
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import kotlinx.coroutines.*
 
 fun EditText.addCharacterMax(max: Int){
     filters = arrayOf(InputFilter.LengthFilter(max))
-}
-
-suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
-    map { async { f(it) } }.awaitAll()
 }
 
 /*
@@ -20,5 +20,38 @@ This function returns the first Non null B in the group
 suspend fun <A,B> Iterable<A>.findFirstNonNullWhenMapped(f: suspend (A) -> B?): B? = coroutineScope {
     map { async { f(it) } }.awaitAll().find { it != null }
 }
+
+fun View.goneIf(predicate: Boolean) {
+    visibility = if(predicate) View.GONE else View.VISIBLE
+}
+
+fun EditText.openKeyboard() {
+    this.requestFocus()
+    val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+}
+
+fun View.setHideKeyBoardOnPressAway(){
+    this.onFocusChangeListener = keyboardHider
+}
+
+private val keyboardHider = View.OnFocusChangeListener { view, b ->
+    if (!b) { hideKeyboardFrom(view) }
+}
+
+private fun hideKeyboardFrom(view: View) {
+    val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun View.hideKeyboard() {
+    val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
+fun TextView.clear() {
+    this.text = ""
+}
+
 
 

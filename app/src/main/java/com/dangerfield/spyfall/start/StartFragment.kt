@@ -1,14 +1,9 @@
 package com.dangerfield.spyfall.start
 
-import android.animation.ValueAnimator
-import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
@@ -17,24 +12,27 @@ import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.view.animation.AnimationUtils
-import android.view.animation.BounceInterpolator
-import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.crashlytics.android.Crashlytics
+import com.dangerfield.spyfall.util.ReviewManager
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class StartFragment : Fragment(R.layout.fragment_start) {
 
-    private val navController by lazy { NavHostFragment.findNavController(this)
+    private val navController by lazy {
+        NavHostFragment.findNavController(this)
     }
+
+    private val startViewModel : StartViewModel by viewModel()
+    private val reviewHelper : ReviewManager by inject()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         welcome_message.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
-
 
         btn_new_game.setOnClickListener {
             navController.navigate(R.id.action_startFragment_to_newGameFragment)
@@ -44,19 +42,17 @@ class StartFragment : Fragment(R.layout.fragment_start) {
             navController.navigate(R.id.action_startFragment_to_joinGameFragment)
         }
 
-        btn_rules.setOnClickListener{
+        btn_rules.setOnClickListener {
             UIHelper.customSimpleAlert(context!!,
                 resources.getString(R.string.rules_title),
                 resources.getString(R.string.rules_message),
                 resources.getString(R.string.positive_action_standard)
-                ,{}, "",{}).show()
+                , {}, "", {}).show()
         }
 
-        btn_settings.setOnClickListener{
+        btn_settings.setOnClickListener {
             navController.navigate(R.id.action_startFragment_to_settingsFragment)
         }
-
-        Crashlytics.log("User has entered start screen")
     }
 
     override fun onResume() {
@@ -64,20 +60,21 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         UIHelper.getSavedColor(context!!)
         changeAccent()
 
-        //increment number of games played, if it is a multiple of 5 and the user hasnt reviewed yet, ask for a review
-        if(incrementGamePlay() % 5 == 0 && !userHasReviewed()){
+        if(startViewModel.isCurrentlyInGame()) {
+            navController.navigate(R.id.action_startFragment_to_waitingFragment)
+        } else if (reviewHelper.shouldPromptForReview()) {
             //show request for review
             UIHelper.customSimpleAlert(context!!,
                 getString(R.string.dialog_rate_title),
                 getString(R.string.dialog_rate_message),
-                getString(R.string.positive_action_standard),{
+                getString(R.string.positive_action_standard), {
                     openStoreForReview()
-                    setUserReview()
-                },getString(R.string.dialog_rate_negative),{}).show()
+                    reviewHelper.setHasClickedToReview()
+                }, getString(R.string.dialog_rate_negative), {}).show()
         }
     }
 
-    fun changeAccent(){
+    private fun changeAccent() {
         btn_join_game.background.setTint(UIHelper.accentColor)
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
@@ -91,38 +88,8 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         )
     }
 
-    //TODO; make a prefrences object that deal with all of this
-    private fun incrementGamePlay(): Int{
-        val editor = context!!.getSharedPreferences(resources.getString(R.string.shared_preferences),
-            Context.MODE_PRIVATE
-        ).edit()
 
-        val newVal = getGamesPlayed() + 1
-        editor.putInt(resources.getString(R.string.shared_preferences_games), newVal)
-        editor.apply()
-
-        return newVal
-    }
-
-    private fun setUserReview(){
-        val editor = context!!.getSharedPreferences(resources.getString(R.string.shared_preferences),
-            Context.MODE_PRIVATE
-        ).edit()
-        editor.putBoolean(resources.getString(R.string.shared_preferences_hasReviewed), true)
-        editor.apply()
-    }
-
-    fun getGamesPlayed(): Int{
-        val prefs = context!!.getSharedPreferences(context!!.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
-        return prefs.getInt(context!!.resources.getString(R.string.shared_preferences_games), 0)
-    }
-
-    fun userHasReviewed(): Boolean {
-        val prefs = context!!.getSharedPreferences(context!!.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
-        return prefs.getBoolean(context!!.resources.getString(R.string.shared_preferences_hasReviewed), false)
-    }
-
-    fun openStoreForReview(){
+    private fun openStoreForReview() {
         val uri = Uri.parse("market://details?id=" + context?.packageName)
         val goToMarket = Intent(Intent.ACTION_VIEW, uri)
         // To count with Play market backstack, After pressing back button,
@@ -132,14 +99,15 @@ class StartFragment : Fragment(R.layout.fragment_start) {
                     Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
                     Intent.FLAG_ACTIVITY_MULTIPLE_TASK
         )
-        try
-        {
+        try {
             startActivity(goToMarket)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + requireContext().packageName)
+                )
+            )
         }
-        catch (e: ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)))
-        }
-
     }
 }

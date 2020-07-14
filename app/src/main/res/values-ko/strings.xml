@@ -8,7 +8,7 @@
 	<string name="leave_action_positive">휴가</string>
 	<string name="leave_action_negative">머무르다</string>
 	<string name="error_title">문제가 발생했습니다</string>
-	<string name="error_message">인터넷 연결을 확인하고 다시 시도하십시오</string>
+	<string name="newtork_error_message">인터넷 연결을 확인하고 다시 시도하십시오</string>
 	<string name="waiting_leaving_title">게임 떠나기</string>
 	<string name="about_title">약</string>
 	<string name="about_message">Spyfall은 원래 Hobby World에서 게시 한 보드 게임입니다. </string>

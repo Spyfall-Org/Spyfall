@@ -8,7 +8,7 @@
 	<string name="leave_action_positive">去る</string>
 	<string name="leave_action_negative">滞在</string>
 	<string name="error_title">何かがうまくいかなかった</string>
-	<string name="error_message">インターネット接続を確認して、もう一度お試しください</string>
+	<string name="newtork_error_message">インターネット接続を確認して、もう一度お試しください</string>
 	<string name="waiting_leaving_title">ゲームを離れる</string>
 	<string name="about_title">約</string>
 	<string name="rules_title">ルール</string>

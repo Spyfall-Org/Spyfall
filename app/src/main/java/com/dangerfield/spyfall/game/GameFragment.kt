@@ -23,7 +23,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class GameFragment : Fragment(R.layout.fragment_game) {
 
-    private val gameViewModel: RealGameViewModel by viewModel()
+    private val gameViewModel: GameViewModel by viewModel()
     private lateinit var locationsAdapter: GameViewsAdapter
     private lateinit var playersAdapter: GameViewsAdapter
     private var changingTheme = false
@@ -79,7 +79,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         gameViewModel.getTimeLeft().observe(viewLifecycleOwner, androidx.lifecycle.Observer {time ->
             tv_game_timer.text = time
-            btn_play_again.visibility = if(time == RealGameViewModel.timeOver) View.VISIBLE else View.GONE
+            btn_play_again.visibility = if(time == GameViewModel.timeOver) View.VISIBLE else View.GONE
         })
     }
 
@@ -89,7 +89,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         changeAccent()
         //we set the listeners once the view has actually been inflated
         btn_end_game.setOnClickListener {
-            if(tv_game_timer.text.toString() == RealGameViewModel.timeOver) triggerEndGame()
+            if(tv_game_timer.text.toString() == GameViewModel.timeOver) triggerEndGame()
             else{
                 UIHelper.customSimpleAlert(context!!,
                     getString(R.string.end_game_title),
@@ -114,7 +114,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     override fun onResume() {
         super.onResume()
 
-        if(!gameViewModel.hasStartedGame() && navController.currentDestination?.id == R.id.gameFragment) {
+        if(gameViewModel.playAgainWasTriggered() && navController.currentDestination?.id == R.id.gameFragment) {
             //then user returned to the game but the game has been reset
             navController.popBackStack(R.id.waitingFragment, false)
         }
@@ -135,7 +135,9 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     }
 
 
-    fun triggerEndGame(){ gameViewModel.triggerEndGame() }
+    fun triggerEndGame(){
+        gameViewModel.triggerEndGame()
+    }
 
     private fun endGame() {
         gameViewModel.resetTimer()

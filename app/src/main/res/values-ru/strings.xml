@@ -8,7 +8,7 @@
 	<string name="leave_action_positive">Покидать</string>
 	<string name="leave_action_negative">Остаться</string>
 	<string name="error_title">Что-то пошло не так</string>
-	<string name="error_message">Пожалуйста, проверьте ваше интернет-соединение и попробуйте снова</string>
+	<string name="newtork_error_message">Пожалуйста, проверьте ваше интернет-соединение и попробуйте снова</string>
 	<string name="waiting_leaving_title">Выход из игры</string>
 	<string name="about_title">Около</string>
 	<string name="about_message">Spyfall - настольная игра, первоначально изданная Hobby World. </string>

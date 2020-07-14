@@ -20,7 +20,7 @@
     <string name="unknown_error" translatable="false">We are Sorry. Something went wrong and we are not quite sure what. Please feel free to email us from the settings page. </string>
 
     <string name="error_title">Something went wrong</string>
-    <string name="error_message">Please check your internet connection and try again</string>
+    <string name="newtork_error_message">Please check your internet connection and try again</string>
 
     <string name="waiting_leaving_title">Leaving Game</string>
 
@@ -71,7 +71,6 @@
     <string name="string_name_game_name_hint"><u>Username</u></string>
 
 
-
     <!--Join Game-->
     <string name="string_join_game">Join Game</string>
     <string name="string_enter_access_code">Enter an access code:</string>
@@ -91,6 +90,8 @@
     <string name="string_change_name_hint"><u>Enter a username</u></string>
     <string name="string_waiting">Waiting for players…</string>
     <string name="string_access_code">Access code:</string>
+    <string name="change_name_error_started_game" translatable="false">Sorry, cannot change name after game has been started</string>
+
 
     <!--Game-->
     <string name="end_game_message">Are you sure you want to end the game?</string>
@@ -110,6 +111,8 @@
     <string name="shared_preferences" translatable="false">SHARED_PREFERNCES</string>
     <string name="shared_preferences_games" translatable="false">>SHARED_PREFERENCES_GAMES</string>
     <string name="shared_preferences_hasReviewed" translatable="false">>SHARED_PREFERENCES_HAS_REVIEWED</string>
+    <string name="shared_preferences_test_db" translatable="false">>SHARED_PREFERENCES_TEST_DB</string>
+
 
     <string name="string_btn_leave_game">Leave Game</string>
     <string name="string_btn_start_game">Start Game</string>
@@ -127,5 +130,7 @@
     <string name="end_game_title">Ending the game</string>
     <string name="light_mode">Light Mode</string>
     <string name="dark_mode">Dark Mode</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

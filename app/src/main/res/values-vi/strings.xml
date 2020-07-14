@@ -8,7 +8,7 @@
 	<string name="leave_action_positive">Rời khỏi</string>
 	<string name="leave_action_negative">Ở lại</string>
 	<string name="error_title">Đã xảy ra lỗi</string>
-	<string name="error_message">Vui lòng kiểm tra kết nối internet của bạn và thử lại</string>
+	<string name="newtork_error_message">Vui lòng kiểm tra kết nối internet của bạn và thử lại</string>
 	<string name="waiting_leaving_title">Rời khỏi trò chơi</string>
 	<string name="about_title">Trong khoảng</string>
 	<string name="about_message">Spyfall là một trò chơi bảng ban đầu được xuất bản bởi Sở thích thế giới. </string>

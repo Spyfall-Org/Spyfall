@@ -8,7 +8,7 @@
 	<string name="leave_action_positive">Verlassen</string>
 	<string name="leave_action_negative">Bleibe</string>
 	<string name="error_title">Etwas ist schief gelaufen</string>
-	<string name="error_message">Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut</string>
+	<string name="newtork_error_message">Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut</string>
 	<string name="waiting_leaving_title">Spiel verlassen</string>
 	<string name="about_title">Über</string>
 	<string name="rules_title">Regeln</string>

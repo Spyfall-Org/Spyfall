@@ -21,11 +21,6 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.net.Uri
-import android.text.Html
-import android.text.method.LinkMovementMethod
 import com.dangerfield.spyfall.R
 
 
@@ -61,7 +56,7 @@ class UIHelper {
         }
 
         fun errorDialog(context: Context) = UIHelper.customSimpleAlert(context,context.resources.getString(R.string.error_title),
-            context.resources.getString(R.string.error_message),context.resources.getString(R.string.positive_action_standard),{},"",{})
+            context.resources.getString(R.string.newtork_error_message),context.resources.getString(R.string.positive_action_standard),{},"",{})
 
         fun packsDialog(context: Context, packsList: MutableList<List<String>>): AlertDialog {
 

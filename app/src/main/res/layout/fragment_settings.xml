@@ -76,6 +76,18 @@
             app:layout_constraintStart_toStartOf="@+id/tv_settings"
             app:layout_constraintTop_toBottomOf="@+id/btn_about" />
 
+    <Button
+            android:id="@+id/btn_tester_settings"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintEnd_toEndOf="@+id/btn_about"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_settings"
+            app:layout_constraintTop_toBottomOf="@+id/btn_ads" />
+
     <ImageView
             android:id="@+id/ic_about"
             android:layout_width="40dp"
@@ -114,6 +126,28 @@
             app:layout_constraintBottom_toBottomOf="@+id/ic_ads"
             app:layout_constraintStart_toStartOf="@+id/tv_about"
             app:layout_constraintTop_toTopOf="@+id/ic_ads" />
+
+    <ImageView
+            android:id="@+id/iv_tester_settings"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:elevation="6dp"
+            android:src="@drawable/ic_tester_settings"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_tester_settings"
+            app:layout_constraintStart_toStartOf="@+id/btn_tester_settings"
+            app:layout_constraintTop_toTopOf="@+id/btn_tester_settings"
+            tools:src="@drawable/ic_tester_settings" />
+
+    <TextView
+            android:id="@+id/tv_tester_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tester Settings"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_tester_settings"
+            app:layout_constraintStart_toStartOf="@+id/tv_ads"
+            app:layout_constraintTop_toTopOf="@+id/iv_tester_settings" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
