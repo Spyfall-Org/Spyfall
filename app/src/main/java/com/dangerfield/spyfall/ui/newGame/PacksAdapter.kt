@@ -1,13 +1,11 @@
-package com.dangerfield.spyfall.newGame
+package com.dangerfield.spyfall.ui.newGame
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.lottie.LottieAnimationView
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.models.GamePack
 import kotlinx.android.synthetic.main.item_pack.view.*
@@ -17,20 +15,14 @@ import java.util.ArrayList
 /**
  * Created by ELIJAH DANGERFIELD on 05/7/2019.
  */
-class PacksAdapter(var packs: ArrayList<GamePack>, private var context: Context?) : RecyclerView.Adapter<PacksAdapter.PackHolder>() {
+class PacksAdapter(var packs: ArrayList<GamePack>) : RecyclerView.Adapter<PacksAdapter.PackHolder>() {
 
     inner class PackHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var number: TextView
-        var packType: TextView
-        var background: ConstraintLayout
+        var number: TextView = view.findViewById(R.id.tv_pack_number)
+        var packType: TextView = view.findViewById(R.id.tv_pack_type)
+        var background: ConstraintLayout = view.findViewById(R.id.card_background)
 
         init {
-            number = view.findViewById(R.id.tv_pack_number)
-            packType = view.findViewById(R.id.tv_pack_type)
-            background = view.findViewById(R.id.card_background)
-
-            context = view.context
-
             view.setOnClickListener { select(view,packs[adapterPosition]) }
         }
     }

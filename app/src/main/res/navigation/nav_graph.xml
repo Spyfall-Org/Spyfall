@@ -3,7 +3,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph" app:startDestination="@id/startFragment">
 
-    <fragment android:id="@+id/startFragment" android:name="com.dangerfield.spyfall.start.StartFragment"
+    <fragment android:id="@+id/startFragment" android:name="com.dangerfield.spyfall.ui.start.StartFragment"
               android:label="StartFragment">
         <action
                 android:id="@+id/action_startFragment_to_joinGameFragment"
@@ -25,7 +25,7 @@
                 app:destination="@id/waitingFragment" />
     </fragment>
 
-    <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.newGame.NewGameFragment"
+    <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.ui.newGame.NewGameFragment"
               android:label="NewGameFragment">
         <action
                 android:id="@+id/action_newGameFragment_to_waitingFragment"
@@ -34,7 +34,7 @@
                 app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
-    <fragment android:id="@+id/joinGameFragment" android:name="com.dangerfield.spyfall.joinGame.JoinGameFragment"
+    <fragment android:id="@+id/joinGameFragment" android:name="com.dangerfield.spyfall.ui.joinGame.JoinGameFragment"
               android:label="JoinGameFragment">
         <action
                 android:id="@+id/action_joinGameFragment_to_waitingFragment"
@@ -43,7 +43,7 @@
                 app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
-    <fragment android:id="@+id/waitingFragment" android:name="com.dangerfield.spyfall.waiting.WaitingFragment"
+    <fragment android:id="@+id/waitingFragment" android:name="com.dangerfield.spyfall.ui.waiting.WaitingFragment"
               android:label="WaitingFragment">
         <action
                 android:id="@+id/action_waitingFragment_to_gameFragment"
@@ -52,9 +52,9 @@
                 app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
-    <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.game.GameFragment"
+    <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.ui.game.GameFragment"
               android:label="GameFragment"/>
-    <fragment android:id="@+id/settingsFragment" android:name="com.dangerfield.spyfall.settings.SettingsFragment"
+    <fragment android:id="@+id/settingsFragment" android:name="com.dangerfield.spyfall.ui.settings.SettingsFragment"
               android:label="fragment_settings" tools:layout="@layout/fragment_settings">
         <action
                 android:id="@+id/action_settingsFragment_to_testerSettingsFragment"
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
             android:id="@+id/testerSettingsFragment"
-            android:name="com.dangerfield.spyfall.testerSettings.TesterSettingsFragment"
+            android:name="com.dangerfield.spyfall.ui.testerSettings.TesterSettingsFragment"
             android:label="fragment_tester_settings"
             tools:layout="@layout/fragment_tester_settings" />
 

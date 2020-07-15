@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.waiting
+package com.dangerfield.spyfall.ui.waiting
 
 import android.view.LayoutInflater
 import android.view.View

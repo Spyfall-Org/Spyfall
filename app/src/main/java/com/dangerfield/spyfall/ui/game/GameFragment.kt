@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.game
+package com.dangerfield.spyfall.ui.game
 
 import android.content.res.Configuration
 import android.graphics.Paint
@@ -172,7 +172,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     private fun configurePlayerViews(game: Game) {
         // we enforce that no two users have the same username
         val currentPlayer =
-            (game.playerObjectList).find { it.username == gameViewModel.getCurrentUser() }
+            (game.playerObjectList).find { it.username == gameViewModel.currentSession.currentUser }
 
         if (currentPlayer == null) {
             navController.popBackStack(R.id.waitingFragment, false)

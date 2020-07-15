@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.newGame
+package com.dangerfield.spyfall.ui.newGame
 
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -14,7 +14,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.util.addCharacterMax
-import com.dangerfield.spyfall.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList

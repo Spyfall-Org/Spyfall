@@ -9,6 +9,5 @@ sealed class Resource<T, E>(
     val error: E? = null
 ) {
     class Success<T,E>(data: T) : Resource<T,E>(data)
-    class Loading<T,E>(data: T? = null) : Resource<T,E>(data)
     class Error<T,E>(data: T? = null, error: E) : Resource<T,E>(data, error)
 }

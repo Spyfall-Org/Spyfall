@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.joinGame
+package com.dangerfield.spyfall.ui.joinGame
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

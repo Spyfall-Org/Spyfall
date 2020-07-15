@@ -2,14 +2,14 @@ package com.dangerfield.spyfall.api
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.dangerfield.spyfall.joinGame.JoinGameError
+import com.dangerfield.spyfall.ui.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
-import com.dangerfield.spyfall.newGame.NewGameError
-import com.dangerfield.spyfall.newGame.PackDetailsError
+import com.dangerfield.spyfall.ui.newGame.NewGameError
+import com.dangerfield.spyfall.ui.newGame.PackDetailsError
 import com.dangerfield.spyfall.util.Event
-import com.dangerfield.spyfall.waiting.NameChangeError
+import com.dangerfield.spyfall.ui.waiting.NameChangeError
 
 interface GameRepository {
     fun createGame(

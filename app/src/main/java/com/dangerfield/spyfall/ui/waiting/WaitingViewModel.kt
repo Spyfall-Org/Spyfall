@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.waiting
+package com.dangerfield.spyfall.ui.waiting
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel

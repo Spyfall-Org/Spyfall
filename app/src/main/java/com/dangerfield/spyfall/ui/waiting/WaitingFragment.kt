@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.waiting
+package com.dangerfield.spyfall.ui.waiting
 
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -75,9 +75,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
 
         waitingViewModel.getNameChangeEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success -> {
-                    changeNameHelper.dismissNameChangeDialog()
-                }
+                is Resource.Success ->  changeNameHelper.dismissNameChangeDialog()
                 is Resource.Error -> handleNameChangeError(it)
             }
         })
@@ -97,8 +95,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
                 NameChangeError.GAME_STARTED,
                 NameChangeError.UNKNOWN_ERROR,
                 NameChangeError.NETWORK_ERROR -> changeNameHelper.dismissNameChangeDialog()
-                else -> {
-                } //no-op. keep dialog up so user can fix mistake
+                else -> { } //no-op. keep dialog up so user can fix mistake
             }
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }

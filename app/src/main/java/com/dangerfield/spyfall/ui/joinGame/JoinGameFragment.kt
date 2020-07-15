@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.joinGame
+package com.dangerfield.spyfall.ui.joinGame
 
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -13,9 +13,8 @@ import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.CurrentSession
-import com.dangerfield.spyfall.newGame.PackDetailsError
 import com.dangerfield.spyfall.util.addCharacterMax
-import com.dangerfield.spyfall.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import kotlinx.android.synthetic.main.fragment_join_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 

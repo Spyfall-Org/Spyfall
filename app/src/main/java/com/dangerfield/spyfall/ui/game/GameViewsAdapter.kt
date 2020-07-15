@@ -1,15 +1,13 @@
-package com.dangerfield.spyfall.game
+package com.dangerfield.spyfall.ui.game
 
 import android.content.Context
 import android.graphics.Paint
-import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.util.UIHelper
-import kotlinx.android.synthetic.main.item_simple_card.*
 import kotlinx.android.synthetic.main.item_simple_card.view.*
 import kotlinx.android.synthetic.main.item_simple_card.view.ic_first
 

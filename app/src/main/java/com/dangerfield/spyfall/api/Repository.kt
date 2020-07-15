@@ -3,12 +3,12 @@ package com.dangerfield.spyfall.api
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.BuildConfig
-import com.dangerfield.spyfall.joinGame.JoinGameError
+import com.dangerfield.spyfall.ui.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.*
-import com.dangerfield.spyfall.newGame.NewGameError
-import com.dangerfield.spyfall.newGame.PackDetailsError
+import com.dangerfield.spyfall.ui.newGame.NewGameError
+import com.dangerfield.spyfall.ui.newGame.PackDetailsError
 import com.dangerfield.spyfall.util.*
-import com.dangerfield.spyfall.waiting.NameChangeError
+import com.dangerfield.spyfall.ui.waiting.NameChangeError
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
@@ -19,24 +19,40 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class Repository(
-    var db: FirebaseFirestore,
+    private var db: FirebaseFirestore,
     private val constants: Constants,
     private val sessionListenerHelper: SessionListenerHelper
 ) : GameRepository, SessionListener {
 
+    private var job: Job = Job()
+    private var liveGame: MutableLiveData<Game> = MutableLiveData()
+    private var sessionEnded: MutableLiveData<Event<Unit>> = MutableLiveData()
 
     /**
-     * job used to tie all coroutines to in order to cancel
+     * All fragments listen to this live data to update views with new game data
      */
-    private var job: Job = Job()
-
-    private var liveGame : MutableLiveData<Game> = MutableLiveData()
-    private var sessionEnded : MutableLiveData<Event<Unit>> = MutableLiveData()
-
     override fun getLiveGame() = liveGame
+
+    /**
+     * All fragments listen to this live data determine when to go back to start
+     */
     override fun getSessionEnded() = sessionEnded
-    override fun onSessionEnded() { sessionEnded.postValue(Event(Unit)) }
-    override fun onGameUpdates(game: Game) { liveGame.postValue(game) }
+
+    /**
+     * Call back used by snapshot listener when game is null (was deleted on db)
+     * or current user was removed
+     */
+    override fun onSessionEnded() {
+        job.cancel()
+        sessionEnded.postValue(Event(Unit))
+    }
+
+    /**
+     * Call back used by snapshot listener to update game
+     */
+    override fun onGameUpdates(game: Game) {
+        liveGame.postValue(game)
+    }
 
     /**
      * Set by Receiver to determine network connection
@@ -45,7 +61,9 @@ class Repository(
 
     /**
      * Creates a game node on firebase
-     * Returns Access code to that node
+     * adds listener to update live data for game
+     * @Success Returns current session
+     * @Error returns NewGameError
      */
     override fun createGame(
         username: String,
@@ -74,8 +92,8 @@ class Repository(
 
                 gameRef.set(game).addOnSuccessListener {
                     val currentSession = CurrentSession(accessCode, username, game)
-                    sessionListenerHelper.addListener(this@Repository, currentSession)
                     result.value = Resource.Success(currentSession)
+                    sessionListenerHelper.addListener(this@Repository, currentSession)
                 }.addOnFailureListener {
                     result.value = Resource.Error(error = NewGameError.UNKNOWN_ERROR)
                 }
@@ -143,8 +161,8 @@ class Repository(
                                     if (game != null) {
                                         val currentSession =
                                             CurrentSession(accessCode, username, game)
-                                        sessionListenerHelper.addListener(this, currentSession)
                                         result.value = Resource.Success(currentSession)
+                                        sessionListenerHelper.addListener(this, currentSession)
                                     } else {
                                         result.value =
                                             Resource.Error(error = JoinGameError.UNKNOWN_ERROR)
@@ -170,8 +188,8 @@ class Repository(
     }
 
     /**
-     * removes user name from games player list
-     * current session ends itself
+     * removes user name from games player list on db
+     * snapshot listener causes session to end
      */
     override fun leaveGame(currentSession: CurrentSession) {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
@@ -180,13 +198,17 @@ class Repository(
 
     /**
      * removes node on fire store
-     * current session ends itself
+     * snapshot listener causes session to end
      */
     override fun endGame(currentSession: CurrentSession) {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         gameRef.delete()
     }
 
+    /**
+     * assigns all players roles in the player objects list
+     * increments statistics for games played
+     */
     override fun startGame(currentSession: CurrentSession) {
         if (currentSession.isBeingStarted()) {
             return
@@ -232,6 +254,9 @@ class Repository(
     }
 
 
+    /**
+     * Resets relevant game data to trigger play again action
+     */
     override fun resetGame(currentSession: CurrentSession) {
         // resets variables on firebase for play again, which will update viewmodel
         val accessCode = currentSession.accessCode
@@ -247,28 +272,35 @@ class Repository(
         }
     }
 
+    /**
+     * allows a user to update their username
+     */
     override fun changeName(
         newName: String,
         currentSession: CurrentSession
     ): LiveData<Event<Resource<String, NameChangeError>>> {
         val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
-
-        val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
-        if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
-        currentSession.game.playerList[index] = newName
-        currentSession.currentUser = newName
-
-        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-        gameRef.update("playerList", currentSession.game.playerList).addOnSuccessListener {
-            result.postValue(Event(Resource.Success(newName)))
-        }.addOnFailureListener {
-            result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+        CoroutineScope(Dispatchers.Default + job).launch {
+            val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
+            if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+            currentSession.game.playerList[index] = newName
+            currentSession.currentUser = newName
+            val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+            gameRef.update("playerList", currentSession.game.playerList).addOnSuccessListener {
+                result.postValue(Event(Resource.Success(newName)))
+            }.addOnFailureListener {
+                result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+            }
         }
-
         return result
     }
 
 
+    /**
+     * fetches all packs and all locations associated with those packs.
+     * Makes first element in each list the name of that pack
+     * returns result
+     */
     override fun getPacksDetails(): LiveData<Resource<List<List<String>>, PackDetailsError>> {
         val result = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
 

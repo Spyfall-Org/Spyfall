@@ -7,14 +7,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import com.dangerfield.spyfall.api.GameRepository
-import com.dangerfield.spyfall.api.Repository
-import com.dangerfield.spyfall.game.GameFragment
+import com.dangerfield.spyfall.ui.game.GameFragment
 import com.dangerfield.spyfall.models.CurrentSession
-import com.dangerfield.spyfall.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import kotlinx.coroutines.*
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 
 fun EditText.addCharacterMax(max: Int){
     filters = arrayOf(InputFilter.LengthFilter(max))

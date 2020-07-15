@@ -3,9 +3,9 @@ package com.dangerfield.spyfall.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dangerfield.spyfall.api.GameRepository
-import com.dangerfield.spyfall.game.GameViewModel
+import com.dangerfield.spyfall.ui.game.GameViewModel
 import com.dangerfield.spyfall.models.CurrentSession
-import com.dangerfield.spyfall.waiting.WaitingViewModel
+import com.dangerfield.spyfall.ui.waiting.WaitingViewModel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

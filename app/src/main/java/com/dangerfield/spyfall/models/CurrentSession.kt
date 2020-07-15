@@ -7,6 +7,7 @@ interface SessionListener {
     fun onSessionEnded()
     fun onGameUpdates(game: Game)
 }
+
 @Parcelize
 class CurrentSession (
     val accessCode: String,
@@ -15,6 +16,5 @@ class CurrentSession (
 ) : Parcelable {
 
     fun isBeingStarted() = game.started
-
 
 }

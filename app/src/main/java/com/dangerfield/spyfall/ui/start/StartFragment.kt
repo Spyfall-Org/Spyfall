@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.start
+package com.dangerfield.spyfall.ui.start
 
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.dangerfield.spyfall.util.ReviewManager
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class StartFragment : Fragment(R.layout.fragment_start) {

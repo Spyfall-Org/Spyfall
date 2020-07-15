@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.newGame
+package com.dangerfield.spyfall.ui.newGame
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

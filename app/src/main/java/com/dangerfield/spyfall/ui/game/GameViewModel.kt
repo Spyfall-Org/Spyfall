@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.game
+package com.dangerfield.spyfall.ui.game
 
 import android.os.CountDownTimer
 import android.util.Log
@@ -37,8 +37,6 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
         stopTimer()
         repository.resetGame(currentSession)
     }
-
-    fun getCurrentUser() = currentSession.currentUser
 
     fun triggerEndGame() {
         repository.endGame(currentSession)

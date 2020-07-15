@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.testerSettings
+package com.dangerfield.spyfall.ui.testerSettings
 
 import android.content.Context
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.settings
+package com.dangerfield.spyfall.ui.settings
 
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
@@ -57,18 +57,18 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navController = Navigation.findNavController(parentFragment!!.view!!)
+        navController = Navigation.findNavController(requireParentFragment().requireView())
         btn_theme_change.setOnClickListener{ colorChanger.show() }
 
         btn_about.setOnClickListener{
-            UIHelper.customSimpleAlert(context!!,
+            UIHelper.customSimpleAlert(requireContext(),
                 resources.getString(R.string.about_title),
                 resources.getString(R.string.about_message),
                 resources.getString(R.string.positive_action_standard),{}, "",{}).show()
         }
         if(BuildConfig.FLAVOR == "free"){
             btn_ads.setOnClickListener{
-                UIHelper.customSimpleAlert(context!!,
+                UIHelper.customSimpleAlert(requireContext(),
                     resources.getString(R.string.ads_title),
                     resources.getString(R.string.remove_ads_message),
                     resources.getString(R.string.ads_positive_action),{sendUserToPaidVersion()},
@@ -112,7 +112,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
     //TODO: consider making a view model for this
     private fun getColorChangeDialog(): AlertDialog {
-        val dialogBuilder = AlertDialog.Builder(context!!)
+        val dialogBuilder = AlertDialog.Builder(requireContext())
         val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
         dialogBuilder.setView(view)
         val dialog = dialogBuilder.create()
@@ -166,7 +166,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
 
     private fun saveColor(chosenColor: Int){
-        val editor = context!!.getSharedPreferences(resources.getString(com.dangerfield.spyfall.R.string.shared_preferences), MODE_PRIVATE).edit()
+        val editor = requireContext().getSharedPreferences(resources.getString(com.dangerfield.spyfall.R.string.shared_preferences), MODE_PRIVATE).edit()
         editor.putInt(resources.getString(R.string.shared_preferences_color), chosenColor)
         editor.apply()
     }
@@ -175,7 +175,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         listOf(iv_theme, ic_about, ic_ads).forEach {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(it.drawable),
-                ContextCompat.getColor(context!!, R.color.colorTheme)
+                ContextCompat.getColor(requireContext(), R.color.colorTheme)
             )
         }
     }

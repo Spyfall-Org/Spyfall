@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.settings
+package com.dangerfield.spyfall.ui.settings
 
 import android.content.Context
 import android.graphics.Color
