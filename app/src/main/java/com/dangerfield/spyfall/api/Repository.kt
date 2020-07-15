@@ -95,7 +95,7 @@ class Repository(
                     result.value = Resource.Success(currentSession)
                     sessionListenerHelper.addListener(this@Repository, currentSession)
                 }.addOnFailureListener {
-                    result.value = Resource.Error(error = NewGameError.UNKNOWN_ERROR)
+                    result.value = Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
                 }
             }
         }
@@ -169,7 +169,7 @@ class Repository(
                                     }
                                 }.addOnFailureListener {
                                     result.value =
-                                        Resource.Error(error = JoinGameError.COULD_NOT_JOIN)
+                                        Resource.Error(error = JoinGameError.COULD_NOT_JOIN, exception = it)
                                 }
                             }
                         }
@@ -289,7 +289,7 @@ class Repository(
             gameRef.update("playerList", currentSession.game.playerList).addOnSuccessListener {
                 result.postValue(Event(Resource.Success(newName)))
             }.addOnFailureListener {
-                result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+                result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR, exception = it)))
             }
         }
         return result
@@ -320,7 +320,7 @@ class Repository(
                 result.value = Resource.Success(list)
 
             }.addOnFailureListener {
-                result.value = Resource.Error(error = PackDetailsError.UNKNOWN_ERROR)
+                result.value = Resource.Error(error = PackDetailsError.UNKNOWN_ERROR, exception = it)
             }
 
         return result

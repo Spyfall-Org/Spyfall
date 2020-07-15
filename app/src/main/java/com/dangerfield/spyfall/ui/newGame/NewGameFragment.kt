@@ -15,6 +15,7 @@ import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
+import com.dangerfield.spyfall.util.CrashlyticsLogger
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
@@ -22,7 +23,7 @@ import kotlin.collections.ArrayList
 class NewGameFragment : Fragment(R.layout.fragment_new_game) {
 
     private val newGameViewModel: NewGameViewModel by viewModel()
-    private val packsAdapter: PacksAdapter by lazy {PacksAdapter( newGameViewModel.getPacks(), requireContext())}
+    private val packsAdapter: PacksAdapter by lazy {PacksAdapter( newGameViewModel.getPacks())}
     private val navController by lazy { NavHostFragment.findNavController(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,19 +60,24 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
             if(!this.isAdded) return@Observer
             when(it) {
                 is Resource.Success -> it.data?.let{session -> handleSucessfulGameCreation(session) }
-                is Resource.Error -> it.error?.let { e -> handleErrorCreatingGame(e) }
+                is Resource.Error -> handleErrorCreatingGame(it)
             }
         })
     }
 
-    private fun handleErrorCreatingGame(error: NewGameError) {
-        if(error == NewGameError.NETWORK_ERROR) {
-            UIHelper.errorDialog(requireContext()).show()
-        } else {
-            error.resId?.let {
-                Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+    private fun handleErrorCreatingGame(result: Resource.Error<CurrentSession, NewGameError>) {
+        result.exception?.let { CrashlyticsLogger.logErrorCreatingGame(it) }
+
+        result.error?.let {error ->
+            if(error == NewGameError.NETWORK_ERROR) {
+                UIHelper.errorDialog(requireContext()).show()
+            } else {
+                error.resId?.let {
+                    Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+                }
             }
         }
+
         enterMode()
     }
 
@@ -90,17 +96,21 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
             if(!this.isAdded) return@Observer
             when(it) {
                 is Resource.Success -> it.data?.let{ d -> handlePacksDetailsSuccess(d) }
-                is Resource.Error -> it.error?.let{ e -> handlePacksDetailsError(e) }
+                is Resource.Error -> handlePacksDetailsError(it)
             }
         })
     }
 
-    private fun handlePacksDetailsError(error: PackDetailsError) {
-        if(error == PackDetailsError.NETWORK_ERROR) {
-            UIHelper.errorDialog(requireContext()).show()
-        } else {
-            error.resId?.let {
-                Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+    private fun handlePacksDetailsError(result: Resource.Error<List<List<String>>, PackDetailsError>) {
+        result.exception?.let { CrashlyticsLogger.logErrorGettingPacksDetails(it) }
+
+        result.error?.let {error ->
+            if(error == PackDetailsError.NETWORK_ERROR) {
+                UIHelper.errorDialog(requireContext()).show()
+            } else {
+                error.resId?.let {
+                    Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+                }
             }
         }
         enterModePacksInfo()

@@ -15,6 +15,7 @@ import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
+import com.dangerfield.spyfall.util.CrashlyticsLogger
 import kotlinx.android.synthetic.main.fragment_join_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -45,13 +46,13 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         joinGameViewModel.joinGame(accessCode, userName).observe(viewLifecycleOwner, Observer {
             if (!this.isAdded) return@Observer
             when (it) {
-                is Resource.Success -> it.data?.let { session -> handleSuccessfulJoin(session) }
-                is Resource.Error -> it.error?.let { e -> showJoinGameError(e) }
+                is Resource.Success -> it.data?.let { session -> handleSuccessfulJoinGame(session) }
+                is Resource.Error -> handleErrorJoinGame(it)
             }
         })
     }
 
-    private fun handleSuccessfulJoin(currentSession: CurrentSession) {
+    private fun handleSuccessfulJoinGame(currentSession: CurrentSession) {
         val bundle = Bundle()
         bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
         if (navController.currentDestination?.id != R.id.joinGameFragment) return
@@ -59,15 +60,18 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         navController.navigate(R.id.action_joinGameFragment_to_waitingFragment, bundle)
     }
 
-    private fun showJoinGameError(error: JoinGameError) {
-        if (error == JoinGameError.NETWORK_ERROR) {
-            UIHelper.errorDialog(requireContext()).show()
-        } else {
-            error.resId?.let {
-                Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+    private fun handleErrorJoinGame(result: Resource.Error<CurrentSession, JoinGameError>) {
+        result.exception?.let { CrashlyticsLogger.logErrorJoiningGame(it) }
+
+        result.error?.let {error ->
+            if (error == JoinGameError.NETWORK_ERROR) {
+                UIHelper.errorDialog(requireContext()).show()
+            } else {
+                error.resId?.let {
+                    Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+                }
             }
         }
-
         enterMode()
     }
 

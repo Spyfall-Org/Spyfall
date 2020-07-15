@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.models.Game
+import com.dangerfield.spyfall.util.CrashlyticsLogger
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.getViewModelFactory
@@ -35,9 +36,8 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //this does not get called again, set all the variables you want to keep(not reassign)
 
-        gameViewModel.incrementAndroidPlayers()
+        lifecycle.addObserver(gameViewModel)
 
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
@@ -64,6 +64,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         gameViewModel.getLiveGame().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             //play again has been triggered
             if (!it.started && navController.currentDestination?.id == R.id.gameFragment) {
+                CrashlyticsLogger.logPlayAgainTriggered(gameViewModel.currentSession)
                 navController.popBackStack(R.id.waitingFragment, false)
             }
 
@@ -79,7 +80,10 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         })
 
         gameViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
-            if (navController.currentDestination?.id == R.id.gameFragment) { endGame() }
+            if (navController.currentDestination?.id == R.id.gameFragment) {
+                CrashlyticsLogger.logSessionEndedInGame(gameViewModel.currentSession)
+                endGame()
+            }
         })
 
         gameViewModel.getTimeLeft()
@@ -107,6 +111,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         }
 
         btn_play_again.setOnClickListener {
+            CrashlyticsLogger.logUserClickedPlayAgain(gameViewModel.currentSession)
             gameViewModel.resetGame()
         }
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
@@ -123,6 +128,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         if (gameViewModel.playAgainWasTriggered() && navController.currentDestination?.id == R.id.gameFragment) {
             //then user returned to the game but the game has been reset
+            CrashlyticsLogger.logUserResumedGameAfterPlayAgainTriggered(gameViewModel.currentSession)
             navController.popBackStack(R.id.waitingFragment, false)
         }
     }
@@ -143,10 +149,12 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
 
     fun triggerEndGame() {
+        CrashlyticsLogger.logUserTiggeredEndGame(gameViewModel.currentSession)
         gameViewModel.triggerEndGame()
     }
 
     private fun endGame() {
+        CrashlyticsLogger.logEndingGame(gameViewModel.currentSession)
         gameViewModel.stopTimer()
         navController.popBackStack(R.id.startFragment, false)
     }
@@ -175,6 +183,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             (game.playerObjectList).find { it.username == gameViewModel.currentSession.currentUser }
 
         if (currentPlayer == null) {
+            CrashlyticsLogger.logErrorFindingCurrentPlayerInGame(gameViewModel.currentSession)
             navController.popBackStack(R.id.waitingFragment, false)
             Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_LONG).show()
         }

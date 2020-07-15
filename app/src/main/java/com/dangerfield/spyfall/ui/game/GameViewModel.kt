@@ -2,15 +2,14 @@ package com.dangerfield.spyfall.ui.game
 
 import android.os.CountDownTimer
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.models.CurrentSession
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class GameViewModel(private val repository: GameRepository, val currentSession: CurrentSession) :
-    ViewModel() {
+    ViewModel(), LifecycleObserver {
 
     private val liveGame = repository.getLiveGame()
     private val sessionEnded = repository.getSessionEnded()
@@ -42,7 +41,8 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
         repository.endGame(currentSession)
     }
 
-    fun incrementAndroidPlayers() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    private fun incrementAndroidPlayers() {
         repository.incrementAndroidPlayers()
     }
 

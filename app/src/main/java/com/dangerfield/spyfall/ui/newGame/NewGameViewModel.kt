@@ -7,8 +7,9 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.CurrentSession
+import java.lang.Exception
 
-enum class NewGameError(val resId: Int? = null) {
+ enum class NewGameError(val resId: Int? = null) {
     NO_SELECTED_PACK(R.string.new_game_error_select_pack),
     EMPTY_NAME(R.string.new_game_string_error_name),
     NAME_CHARACTER_LIMIT(R.string.change_name_character_limit),

@@ -14,6 +14,7 @@ import android.net.Uri
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.util.ReviewManager
 import org.koin.android.ext.android.inject
 

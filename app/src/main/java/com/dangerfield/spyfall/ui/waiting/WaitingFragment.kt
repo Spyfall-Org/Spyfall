@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
+import com.dangerfield.spyfall.util.CrashlyticsLogger
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.getViewModelFactory
@@ -70,26 +71,26 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         })
 
         waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
-            if (navController.currentDestination?.id == R.id.waitingFragment) { navigateToStart() }
+            if (navController.currentDestination?.id == R.id.waitingFragment) {
+                navigateToStart()
+            }
         })
 
         waitingViewModel.getNameChangeEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success ->  changeNameHelper.dismissNameChangeDialog()
+                is Resource.Success ->  handleNameChangeSuccess()
                 is Resource.Error -> handleNameChangeError(it)
             }
         })
     }
 
-    private fun navigateToGameScreen() {
-        val bundle = Bundle()
-        bundle.putParcelable(SESSION_KEY, waitingViewModel.currentSession)
-        navController.navigate(R.id.action_waitingFragment_to_gameFragment, bundle)
+    private fun handleNameChangeSuccess() {
+        CrashlyticsLogger.logSuccesfulNameChange(waitingViewModel.currentSession)
+        changeNameHelper.dismissNameChangeDialog()
     }
 
-    private fun navigateToStart() = navController.popBackStack(R.id.startFragment, false)
-
     private fun handleNameChangeError(result: Resource.Error<String, NameChangeError>) {
+        result.exception?.let { CrashlyticsLogger.logNameChangeError(it) }
         result.error?.let {
             when (it) {
                 NameChangeError.GAME_STARTED,
@@ -101,6 +102,18 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         }
     }
 
+    private fun navigateToGameScreen() {
+        CrashlyticsLogger.logNavigatingToGameScreen(waitingViewModel.currentSession)
+        val bundle = Bundle()
+        bundle.putParcelable(SESSION_KEY, waitingViewModel.currentSession)
+        navController.navigate(R.id.action_waitingFragment_to_gameFragment, bundle)
+    }
+
+    private fun navigateToStart() {
+        CrashlyticsLogger.logSessionEndedInWaiting(waitingViewModel.currentSession)
+        navController.popBackStack(R.id.startFragment, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
@@ -109,6 +122,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun setupView() {
         changeAccent()
         btn_start_game.setOnClickListener {
+            CrashlyticsLogger.logUserClickedStartGame(waitingViewModel.currentSession)
             loadMode()
             waitingViewModel.startGame()
         }
@@ -125,6 +139,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
 
     private fun leaveGame() {
         if (waitingViewModel.currentSession.isBeingStarted()) return
+        CrashlyticsLogger.logUserClickedToLeaveGame(waitingViewModel.currentSession)
         waitingViewModel.leaveGame()
     }
 
@@ -154,6 +169,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     override fun fireNameChangeEvent(newName: String) {
+        CrashlyticsLogger.logUserChangingName(newName, waitingViewModel.currentSession)
         waitingViewModel.fireNameChange(newName)
     }
 
