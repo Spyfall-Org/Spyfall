@@ -12,14 +12,17 @@ import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
+import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.newGame.PackDetailsError
 import com.dangerfield.spyfall.util.addCharacterMax
+import com.dangerfield.spyfall.waiting.WaitingFragment
 import kotlinx.android.synthetic.main.fragment_join_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
 
     private val joinGameViewModel: JoinGameViewModel by viewModel()
-    private val navController: NavController by lazy {NavHostFragment.findNavController(this)}
+    private val navController: NavController by lazy { NavHostFragment.findNavController(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,69 +43,49 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         val accessCode = tv_access_code.text.toString().toLowerCase().trim()
         val userName = tv_username.text.toString().trim()
 
-        joinGameViewModel.joinGame(accessCode, userName).observe(this, Observer {
-            if(!this.isAdded) return@Observer
+        joinGameViewModel.joinGame(accessCode, userName).observe(viewLifecycleOwner, Observer {
+            if (!this.isAdded) return@Observer
             when (it) {
-                is Resource.Success -> handleSuccessfulJoin()
-                is Resource.Error -> showJoinGameError(it)
+                is Resource.Success -> it.data?.let { session -> handleSuccessfulJoin(session) }
+                is Resource.Error -> it.error?.let { e -> showJoinGameError(e) }
             }
         })
     }
 
-    private fun handleSuccessfulJoin() {
-        if(navController.currentDestination?.id != R.id.joinGameFragment) return
+    private fun handleSuccessfulJoin(currentSession: CurrentSession) {
+        val bundle = Bundle()
+        bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
+        if (navController.currentDestination?.id != R.id.joinGameFragment) return
         enterMode()
-        navController.navigate(R.id.action_joinGameFragment_to_waitingFragment )
+        navController.navigate(R.id.action_joinGameFragment_to_waitingFragment, bundle)
     }
 
-    private fun showJoinGameError(result: Resource.Error<Unit, JoinGameError>) {
-        result.error?.let {error ->
-            when(error) {
-                JoinGameError.FIELD_ERROR ->
-                    Toast.makeText(context, getString(R.string.join_game_error_fields), Toast.LENGTH_LONG).show()
-
-                JoinGameError.NETWORK_ERROR ->
-                    UIHelper.errorDialog(requireContext()).show()
-
-                JoinGameError.GAME_DOES_NOT_EXIST ->
-                    Toast.makeText(context, getString(R.string.join_game_error_access_code), Toast.LENGTH_LONG).show()
-
-                JoinGameError.GAME_HAS_MAX_PLAYERS ->
-                    Toast.makeText(context, getString(R.string.join_game_error_max_players), Toast.LENGTH_LONG).show()
-
-                JoinGameError.GAME_HAS_STARTED ->
-                    Toast.makeText(context, getString(R.string.join_game_error_started_game), Toast.LENGTH_LONG).show()
-
-                JoinGameError.NAME_TAKEN ->
-                    Toast.makeText(context, getString(R.string.join_game_error_taken_name), Toast.LENGTH_LONG).show()
-
-                JoinGameError.NAME_CHARACTER_LIMIT ->
-                    Toast.makeText(context, getString(R.string.change_name_character_limit), Toast.LENGTH_LONG).show()
-
-                JoinGameError.COULD_NOT_JOIN ->
-                    Toast.makeText(context, getString(R.string.join_game_error_could_not_join), Toast.LENGTH_LONG).show()
-
-                JoinGameError.UNKNOWN_ERROR ->
-                    Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_LONG).show()
+    private fun showJoinGameError(error: JoinGameError) {
+        if (error == JoinGameError.NETWORK_ERROR) {
+            UIHelper.errorDialog(requireContext()).show()
+        } else {
+            error.resId?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
             }
         }
+
         enterMode()
     }
 
-    private fun updateAccent(){
+    private fun updateAccent() {
         btn_join_game_action.background.setTint(UIHelper.accentColor)
-        UIHelper.setCursorColor(tv_access_code,UIHelper.accentColor)
-        UIHelper.setCursorColor(tv_username,UIHelper.accentColor)
-        pb_join_game.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN )
+        UIHelper.setCursorColor(tv_access_code, UIHelper.accentColor)
+        UIHelper.setCursorColor(tv_username, UIHelper.accentColor)
+        pb_join_game.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
     }
 
-    private fun loadMode(){
+    private fun loadMode() {
         btn_join_game_action.text = ""
         pb_join_game.visibility = View.VISIBLE
         btn_join_game_action.isClickable = false
     }
 
-    private fun enterMode(){
+    private fun enterMode() {
         btn_join_game_action.text = getString(R.string.string_join_game)
         pb_join_game.visibility = View.INVISIBLE
         btn_join_game_action.isClickable = true

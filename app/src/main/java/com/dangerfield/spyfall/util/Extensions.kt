@@ -1,12 +1,20 @@
 package com.dangerfield.spyfall.util
 
 import android.app.Activity
+import android.os.Bundle
 import android.text.InputFilter
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import com.dangerfield.spyfall.api.GameRepository
+import com.dangerfield.spyfall.api.Repository
+import com.dangerfield.spyfall.game.GameFragment
+import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.waiting.WaitingFragment
 import kotlinx.coroutines.*
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 fun EditText.addCharacterMax(max: Int){
     filters = arrayOf(InputFilter.LengthFilter(max))
@@ -51,6 +59,18 @@ fun View.hideKeyboard() {
 
 fun TextView.clear() {
     this.text = ""
+}
+
+fun WaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {
+    //banging because navigation to waiting should be impossible without the arg
+    val currentSession: CurrentSession = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
+    return WaitingViewModelFactory(currentSession)
+}
+
+fun GameFragment.getViewModelFactory(bundle: Bundle): GameViewModelFactory {
+    //banging because navigation to game should be impossible without the arg
+    val currentSession: CurrentSession = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
+    return GameViewModelFactory(currentSession)
 }
 
 

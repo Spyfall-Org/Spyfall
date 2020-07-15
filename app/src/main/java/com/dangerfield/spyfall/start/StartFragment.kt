@@ -25,9 +25,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         NavHostFragment.findNavController(this)
     }
 
-    private val startViewModel : StartViewModel by viewModel()
     private val reviewHelper : ReviewManager by inject()
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +41,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         }
 
         btn_rules.setOnClickListener {
-            UIHelper.customSimpleAlert(context!!,
+            UIHelper.customSimpleAlert(requireContext(),
                 resources.getString(R.string.rules_title),
                 resources.getString(R.string.rules_message),
                 resources.getString(R.string.positive_action_standard)
@@ -57,14 +55,12 @@ class StartFragment : Fragment(R.layout.fragment_start) {
 
     override fun onResume() {
         super.onResume()
-        UIHelper.getSavedColor(context!!)
+        UIHelper.getSavedColor(requireContext())
         changeAccent()
 
-        if(startViewModel.isCurrentlyInGame()) {
-            navController.navigate(R.id.action_startFragment_to_waitingFragment)
-        } else if (reviewHelper.shouldPromptForReview()) {
+        if (reviewHelper.shouldPromptForReview()) {
             //show request for review
-            UIHelper.customSimpleAlert(context!!,
+            UIHelper.customSimpleAlert(requireContext(),
                 getString(R.string.dialog_rate_title),
                 getString(R.string.dialog_rate_message),
                 getString(R.string.positive_action_standard), {
@@ -84,7 +80,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
 
         DrawableCompat.setTint(
             DrawableCompat.wrap(btn_settings.drawable),
-            ContextCompat.getColor(context!!, R.color.colorTheme)
+            ContextCompat.getColor(requireContext(), R.color.colorTheme)
         )
     }
 

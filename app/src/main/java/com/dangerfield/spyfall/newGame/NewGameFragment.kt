@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
+import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.util.addCharacterMax
+import com.dangerfield.spyfall.waiting.WaitingFragment
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
@@ -56,7 +58,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
         newGameViewModel.createGame(playerName, timeLimit, chosenPacks).observe(viewLifecycleOwner, Observer {
             if(!this.isAdded) return@Observer
             when(it) {
-                is Resource.Success -> handleSucessfulGameCreation()
+                is Resource.Success -> it.data?.let{session -> handleSucessfulGameCreation(session) }
                 is Resource.Error -> it.error?.let { e -> handleErrorCreatingGame(e) }
             }
         })
@@ -73,10 +75,12 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
         enterMode()
     }
 
-    private fun handleSucessfulGameCreation() {
+    private fun handleSucessfulGameCreation(currentSession: CurrentSession) {
+        val bundle = Bundle()
+        bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
         if(navController.currentDestination?.id == R.id.newGameFragment) {
             enterMode()
-            navController.navigate(R.id.action_newGameFragment_to_waitingFragment)
+            navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
         }
     }
 

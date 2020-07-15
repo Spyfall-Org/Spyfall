@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
+import com.dangerfield.spyfall.models.CurrentSession
 
 enum class NewGameError(val resId: Int? = null) {
     NO_SELECTED_PACK(R.string.new_game_error_select_pack),
@@ -24,8 +25,8 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
 
     private var packsDetails = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
 
-    fun createGame(username: String, timeLimit: String, selectedPacks: ArrayList<String>): LiveData<Resource<Unit, NewGameError>> {
-        var result = MutableLiveData<Resource<Unit, NewGameError>>()
+    fun createGame(username: String, timeLimit: String, selectedPacks: ArrayList<String>): LiveData<Resource<CurrentSession, NewGameError>> {
+        var result = MutableLiveData<Resource<CurrentSession, NewGameError>>()
 
         when {
             selectedPacks.isEmpty() ->  result.value = Resource.Error(error = NewGameError.NO_SELECTED_PACK)
@@ -37,7 +38,7 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
             timeLimit.isEmpty() || timeLimit.toInt() > 10 || timeLimit.toInt() == 0 ->
                 result.value = Resource.Error(error = NewGameError.TIME_LIMIT_ERROR)
 
-            else -> result = repository.createGame(username, timeLimit.toLong(), selectedPacks) as MutableLiveData<Resource<Unit, NewGameError>>
+            else -> result = repository.createGame(username, timeLimit.toLong(), selectedPacks) as MutableLiveData<Resource<CurrentSession, NewGameError>>
         }
 
         return result

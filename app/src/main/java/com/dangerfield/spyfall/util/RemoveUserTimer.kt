@@ -14,18 +14,18 @@ class RemoveUserTimer(val repository: GameRepository) : LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
-        stopTimerToRemoveUser()
+        //stopTimerToRemoveUser()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onStop() {
-        startTimerToRemoveUser()
+        //startTimerToRemoveUser()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroyed() {
-        stopTimerToRemoveUser()
-        repository.leaveGame()
+        //stopTimerToRemoveUser()
+        //repository.leaveGame()
     }
 
     private fun stopTimerToRemoveUser() {
@@ -39,11 +39,9 @@ class RemoveUserTimer(val repository: GameRepository) : LifecycleObserver {
     }
 
     private fun startTimerToRemoveUser() {
-        repository.currentSession?.let {
-            killGame = GlobalScope.launch {
-                delay(fifteenMins)
-                repository.leaveGame()
-            }
+        killGame = GlobalScope.launch {
+            delay(fifteenMins)
+            //repository.leaveGame()
         }
     }
 }

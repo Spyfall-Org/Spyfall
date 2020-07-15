@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
+import com.dangerfield.spyfall.models.CurrentSession
 import com.dangerfield.spyfall.util.Event
 
 enum class NameChangeError(val resId: Int) {
@@ -15,43 +16,44 @@ enum class NameChangeError(val resId: Int) {
     UNKNOWN_ERROR(R.string.unknown_error)
 }
 
-class WaitingViewModel(private val repository: GameRepository) : ViewModel() {
-    val game = repository.currentSession?.getLiveGame()
-    val accessCode: String = repository.currentSession?.accessCode.orEmpty()
-    val gameExists = repository.currentSession?.getGameExists()
+class WaitingViewModel(private val repository: GameRepository, val currentSession: CurrentSession) : ViewModel() {
 
     private val nameChangeEvent: MediatorLiveData<Event<Resource<String, NameChangeError>>> =
         MediatorLiveData()
 
+    private val liveGame = repository.getLiveGame()
+
+    private val sessionEnded = repository.getSessionEnded()
+
     fun getNameChangeEvent() = nameChangeEvent
 
-    fun getCurrentUser() = repository.currentSession?.currentUser.orEmpty()
+    fun getLiveGame() = liveGame
+
+    fun getSessionEnded() = sessionEnded
 
     fun leaveGame() =
-        repository.leaveGame()
+        repository.leaveGame(currentSession)
 
     fun startGame() =
-        repository.startGame()
+        repository.startGame(currentSession)
 
     fun fireNameChange(newName: String) {
-        if (foundErrors(newName)) return
-        nameChangeEvent.addSource(repository.changeName(newName)) {
+        if (findNameChangeErrors(newName)) return
+        nameChangeEvent.addSource(repository.changeName(newName, currentSession)) {
             nameChangeEvent.value = it
         }
     }
 
-    private fun foundErrors(newName: String): Boolean {
+    private fun findNameChangeErrors(newName: String): Boolean {
         when {
             newName.length > 25 ||
                     newName.isEmpty() -> nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.FORMAT_ERROR))
-            repository.currentSession?.getGameValue()?.playerList?.contains(newName) == true -> nameChangeEvent.value =
+            currentSession.game.playerList.contains(newName) -> nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.NAME_IN_USE))
-            repository.currentSession?.gameHasBegun() == true -> nameChangeEvent.value =
+            currentSession.isBeingStarted() -> nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.GAME_STARTED))
-            else -> {
-                return false
-            }
+            else -> return false
         }
         return true
     }

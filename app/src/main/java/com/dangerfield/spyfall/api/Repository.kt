@@ -3,7 +3,6 @@ package com.dangerfield.spyfall.api
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.BuildConfig
-import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.*
 import com.dangerfield.spyfall.newGame.NewGameError
@@ -19,7 +18,11 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-class Repository(override var db: FirebaseFirestore, val constants: Constants) : GameRepository(), SessionEndListener {
+class Repository(
+    var db: FirebaseFirestore,
+    private val constants: Constants,
+    private val sessionListenerHelper: SessionListenerHelper
+) : GameRepository, SessionListener {
 
 
     /**
@@ -27,13 +30,13 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
      */
     private var job: Job = Job()
 
-    /**
-     * Holds info for current game being played. Set when joining game
-     * nulled when leaving or ending game
-     */
-    override var currentSession: CurrentSession? = null
+    private var liveGame : MutableLiveData<Game> = MutableLiveData()
+    private var sessionEnded : MutableLiveData<Event<Unit>> = MutableLiveData()
 
-    override fun onSessionEnded() { currentSession = null }
+    override fun getLiveGame() = liveGame
+    override fun getSessionEnded() = sessionEnded
+    override fun onSessionEnded() { sessionEnded.postValue(Event(Unit)) }
+    override fun onGameUpdates(game: Game) { liveGame.postValue(game) }
 
     /**
      * Set by Receiver to determine network connection
@@ -44,11 +47,15 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
      * Creates a game node on firebase
      * Returns Access code to that node
      */
-    override fun createGame(username: String, timeLimit: Long, chosenPacks: List<String>): LiveData<Resource<Unit, NewGameError>> {
-        val result = MutableLiveData<Resource<Unit, NewGameError>>()
+    override fun createGame(
+        username: String,
+        timeLimit: Long,
+        chosenPacks: List<String>
+    ): LiveData<Resource<CurrentSession, NewGameError>> {
+        val result = MutableLiveData<Resource<CurrentSession, NewGameError>>()
 
-        if(!Connectivity.isOnline){
-            result.value  = Resource.Error(error = NewGameError.NETWORK_ERROR)
+        if (!Connectivity.isOnline) {
+            result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
         } else {
             CoroutineScope(IO + job).launch {
                 val accessCode = generateAccessCode()
@@ -66,11 +73,11 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
                 val gameRef = db.collection(constants.games).document(accessCode)
 
                 gameRef.set(game).addOnSuccessListener {
-                    result.value = Resource.Success(Unit)
-                    currentSession = CurrentSession(accessCode, username, sessionEndListener = this@Repository)
-                        .withListener(gameRef)
+                    val currentSession = CurrentSession(accessCode, username, game)
+                    sessionListenerHelper.addListener(this@Repository, currentSession)
+                    result.value = Resource.Success(currentSession)
                 }.addOnFailureListener {
-                    result.value  = Resource.Error(error = NewGameError.UNKNOWN_ERROR)
+                    result.value = Resource.Error(error = NewGameError.UNKNOWN_ERROR)
                 }
             }
         }
@@ -78,19 +85,21 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
         return result
     }
 
-    private suspend fun getGameLocations(chosenPacks: ArrayList<String>) : ArrayList<String> {
+    private suspend fun getGameLocations(chosenPacks: ArrayList<String>): ArrayList<String> {
         val locationList = arrayListOf<String>()
         //dictates the number locations we grab from each pack
-        val numberFromEach = when(chosenPacks.size) {
+        val numberFromEach = when (chosenPacks.size) {
             1 -> 14
             2 -> 7
             3 -> 5
             else -> 14
         }
 
-        chosenPacks.forEach {pack ->
-            val packData = db.collection("packs").document(pack).get().await()
-            val randomLocations = (packData.data?.toList()?.map { field -> field.first } ?: listOf()).shuffled().take(numberFromEach)
+        chosenPacks.forEach { pack ->
+            val packData = db.collection(constants.packs).document(pack).get().await()
+            val randomLocations =
+                (packData.data?.toList()?.map { field -> field.first } ?: listOf()).shuffled()
+                    .take(numberFromEach)
             locationList.addAll(randomLocations)
         }
 
@@ -101,44 +110,55 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
      * Adds user name to games player list (no need for checks)
      * Adds listener to firebase to update game
      */
-    override fun joinGame(accessCode: String, username: String): LiveData<Resource<Unit, JoinGameError>>  {
-        val result = MutableLiveData<Resource<Unit, JoinGameError>>()
+    override fun joinGame(
+        accessCode: String,
+        username: String
+    ): LiveData<Resource<CurrentSession, JoinGameError>> {
+        val result = MutableLiveData<Resource<CurrentSession, JoinGameError>>()
 
-        if(!Connectivity.isOnline){
-            result.value  = Resource.Error(error = JoinGameError.NETWORK_ERROR)
+        if (!Connectivity.isOnline) {
+            result.value = Resource.Error(error = JoinGameError.NETWORK_ERROR)
         } else {
-            db.collection(constants.games).document(accessCode).get().addOnSuccessListener { game ->
+            db.collection(constants.games).document(accessCode).get()
+                .addOnSuccessListener { document ->
 
-                if(game.exists()){
-                    val list = (game["playerList"] as ArrayList<String>)
+                    if (document.exists()) {
+                        val list = (document["playerList"] as ArrayList<String>)
 
-                    when {
-                        list.size >= 8 ->
-                            result.value = Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS)
+                        when {
+                            list.size >= 8 ->
+                                result.value =
+                                    Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS)
 
-                        game["started"] == true ->
-                            result.value = Resource.Error(error = JoinGameError.GAME_HAS_STARTED)
+                            document["started"] == true ->
+                                result.value =
+                                    Resource.Error(error = JoinGameError.GAME_HAS_STARTED)
 
-                        list.contains(username) ->
-                            result.value = Resource.Error(error = JoinGameError.NAME_TAKEN)
+                            list.contains(username) ->
+                                result.value = Resource.Error(error = JoinGameError.NAME_TAKEN)
 
-                        else -> {
-                            addPlayer(username, accessCode).addOnSuccessListener {
-                                Crashlytics.log("Player: \"$username\" has joined $accessCode")
-                                val gameRef: DocumentReference = db.collection(constants.games).document(accessCode)
-                                currentSession = CurrentSession(accessCode, username, sessionEndListener = this)
-                                    .withListener(gameRef)
-                                result.value = Resource.Success(Unit)
-                            }.addOnFailureListener {
-                                Crashlytics.log("Player: \"$username\" was unable to join $accessCode")
-                                result.value = Resource.Error(error = JoinGameError.COULD_NOT_JOIN)
+                            else -> {
+                                addPlayer(username, accessCode).addOnSuccessListener {
+                                    val game = document.toObject(Game::class.java)
+                                    if (game != null) {
+                                        val currentSession =
+                                            CurrentSession(accessCode, username, game)
+                                        sessionListenerHelper.addListener(this, currentSession)
+                                        result.value = Resource.Success(currentSession)
+                                    } else {
+                                        result.value =
+                                            Resource.Error(error = JoinGameError.UNKNOWN_ERROR)
+                                    }
+                                }.addOnFailureListener {
+                                    result.value =
+                                        Resource.Error(error = JoinGameError.COULD_NOT_JOIN)
+                                }
                             }
                         }
+                    } else {
+                        result.value = Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST)
                     }
-                }else{
-                    result.value = Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST)
                 }
-            }
         }
 
         return result
@@ -153,97 +173,96 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
      * removes user name from games player list
      * current session ends itself
      */
-    override fun leaveGame() {
-        currentSession?.let { session ->
-            val gameRef = db.collection(constants.games).document(session.accessCode)
-            gameRef.update("playerList", FieldValue.arrayRemove(session.currentUser))
-        }
+    override fun leaveGame(currentSession: CurrentSession) {
+        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+        gameRef.update("playerList", FieldValue.arrayRemove(currentSession.currentUser))
     }
 
     /**
      * removes node on fire store
      * current session ends itself
      */
-    override fun endGame() {
-        currentSession?.let {session ->
-            val gameRef = db.collection(constants.games).document(session.accessCode)
-            gameRef.delete()
-        }
+    override fun endGame(currentSession: CurrentSession) {
+        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+        gameRef.delete()
     }
 
-    override fun startGame() {
-        currentSession?.let {session ->
-            if(session.isBeingStarted()){ return }
-            CoroutineScope(IO + job).launch {
-                val gameRef = db.collection(constants.games).document(session.accessCode)
-                gameRef.update("started", true)
-                val roles = getRoles(session)
-                assignRoles(roles, session, gameRef)
-                incrementGamesPlayed()
-            }
+    override fun startGame(currentSession: CurrentSession) {
+        if (currentSession.isBeingStarted()) {
+            return
+        }
+        CoroutineScope(IO + job).launch {
+            val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+            gameRef.update("started", true)
+            val roles = getRoles(currentSession)
+            assignRoles(roles, currentSession, gameRef)
+            incrementGamesPlayed()
         }
     }
 
     private suspend fun getRoles(currentSession: CurrentSession): ArrayList<String> {
-        val result = currentSession.getLiveGame().value?.let {game ->
-             game.chosenPacks.findFirstNonNullWhenMapped {pack ->
-                db.collection("packs").document(pack).get().await().get(game.chosenLocation) as ArrayList<String>?
-            }
+        val result = currentSession.game.chosenPacks.findFirstNonNullWhenMapped { pack ->
+            db.collection(constants.packs).document(pack).get().await()
+                .get(currentSession.game.chosenLocation) as ArrayList<String>?
         }
         return result ?: arrayListOf()
     }
 
 
-    private suspend fun assignRoles(roles: ArrayList<String>, session: CurrentSession, gameRef: DocumentReference) {
-        if(roles.isNullOrEmpty()){ return }
-
-        session.getLiveGame().value?.let {game ->
-            val playerNames = game.playerList.shuffled()
-            val playerObjectList = ArrayList<Player>()
-            roles.shuffle()
-
-            for (i in 0 until playerNames.size - 1) {
-                playerObjectList.add(Player(roles[i], playerNames[i], 0))
-            }
-
-            playerObjectList.add(Player("The Spy!", playerNames.last(), 0))
-            gameRef.update("playerObjectList", playerObjectList.shuffled()).await()
+    private suspend fun assignRoles(
+        roles: ArrayList<String>,
+        session: CurrentSession,
+        gameRef: DocumentReference
+    ) {
+        if (roles.isNullOrEmpty()) {
+            return
         }
+
+        val playerNames = session.game.playerList.shuffled()
+        val playerObjectList = ArrayList<Player>()
+        roles.shuffle()
+
+        for (i in 0 until playerNames.size - 1) {
+            playerObjectList.add(Player(roles[i], playerNames[i], 0))
+        }
+
+        playerObjectList.add(Player("The Spy!", playerNames.last(), 0))
+        gameRef.update("playerObjectList", playerObjectList.shuffled()).await()
+
     }
 
 
-    override fun resetGame() {
+    override fun resetGame(currentSession: CurrentSession) {
         // resets variables on firebase for play again, which will update viewmodel
-        val accessCode = currentSession?.accessCode ?: return
-
-        currentSession?.getLiveGame()?.value?.let {
+        val accessCode = currentSession.accessCode
+        currentSession.game.let {
             val gameRef = db.collection(constants.games).document(accessCode)
 
-            val newLocation = it.locationList.random()
-            val newGame = Game(newLocation, it.chosenPacks,false,
-                it.playerList, ArrayList(),it.timeLimit, it.locationList )
+            val newLocation = currentSession.game.locationList.random()
+            val newGame = Game(
+                newLocation, it.chosenPacks, false,
+                it.playerList, ArrayList(), it.timeLimit, it.locationList
+            )
             gameRef.set(newGame)
         }
     }
 
-    override fun changeName(newName: String): LiveData<Event<Resource<String, NameChangeError>>> {
-        val result =  MutableLiveData<Event<Resource<String, NameChangeError>>>()
+    override fun changeName(
+        newName: String,
+        currentSession: CurrentSession
+    ): LiveData<Event<Resource<String, NameChangeError>>> {
+        val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
 
-        currentSession?.let {session ->
+        val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
+        if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+        currentSession.game.playerList[index] = newName
+        currentSession.currentUser = newName
 
-            session.getGameValue()?.let { game ->
-                val index = game.playerList.indexOf(session.currentUser)
-                if (index == -1 ) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
-                game.playerList[index] = newName
-                session.currentUser = newName
-
-                val gameRef = db.collection(constants.games).document(session.accessCode)
-                gameRef.update("playerList", game.playerList).addOnSuccessListener {
-                    result.postValue(Event(Resource.Success(newName)))
-                }.addOnFailureListener {
-                    result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
-                }
-            }
+        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+        gameRef.update("playerList", currentSession.game.playerList).addOnSuccessListener {
+            result.postValue(Event(Resource.Success(newName)))
+        }.addOnFailureListener {
+            result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
         }
 
         return result
@@ -253,7 +272,7 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
     override fun getPacksDetails(): LiveData<Resource<List<List<String>>, PackDetailsError>> {
         val result = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
 
-        if(!Connectivity.isOnline) {
+        if (!Connectivity.isOnline) {
             result.value = Resource.Error(error = PackDetailsError.NETWORK_ERROR)
             return result
         }
@@ -277,31 +296,32 @@ class Repository(override var db: FirebaseFirestore, val constants: Constants) :
 
     private suspend fun generateAccessCode(): String {
         var newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
-        while(db.collection(constants.games).document(newCode).get().await().exists()) {
+        while (db.collection(constants.games).document(newCode).get().await().exists()) {
             newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
         }
         return newCode
     }
 
-    override fun incrementGamesPlayed(){
+    override fun incrementGamesPlayed() {
         //this function is used to keep stats about how many Android games have been played
-        if(BuildConfig.DEBUG == true) return
+        if (BuildConfig.DEBUG == true) return
         db.collection(Constants.StatisticsConstants.collection)
-            .document(Constants.StatisticsConstants.document).update(Constants.StatisticsConstants.num_games_played,FieldValue.increment(1))
+            .document(Constants.StatisticsConstants.document)
+            .update(Constants.StatisticsConstants.num_games_played, FieldValue.increment(1))
     }
 
-    override fun incrementAndroidPlayers(){
-        if(BuildConfig.DEBUG == true) return
+    override fun incrementAndroidPlayers() {
+        if (BuildConfig.DEBUG == true) return
 
         //this function is used to keep stats about how many Android games have been played
         db.collection(Constants.StatisticsConstants.collection)
-            .document(Constants.StatisticsConstants.document).update(Constants.StatisticsConstants.num_android_players,FieldValue.increment(1))
+            .document(Constants.StatisticsConstants.document)
+            .update(Constants.StatisticsConstants.num_android_players, FieldValue.increment(1))
     }
 
-    override fun getPacks()
-            = arrayListOf(
-        GamePack(UIHelper.accentColors[0],"Standard",1,"Standard Pack 1",false),
-        GamePack(UIHelper.accentColors[1],"Standard",2,"Standard Pack 2",false),
-        GamePack(UIHelper.accentColors[2],"Special",1,"Special Pack 1",false)
+    override fun getPacks() = arrayListOf(
+        GamePack(UIHelper.accentColors[0], "Standard", 1, "Standard Pack 1", false),
+        GamePack(UIHelper.accentColors[1], "Standard", 2, "Standard Pack 2", false),
+        GamePack(UIHelper.accentColors[2], "Special", 1, "Special Pack 1", false)
     )
 }

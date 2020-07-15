@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
-
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-kapt'
 
 android {
     signingConfigs {
@@ -48,8 +47,12 @@ android {
     }
 
     compileOptions {
-        targetCompatibility = '1.8'
-        sourceCompatibility = '1.8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     androidExtensions {
@@ -91,6 +94,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta02'
     implementation 'android.arch.navigation:navigation-fragment:1.0.0'
     implementation 'android.arch.navigation:navigation-ui:1.0.0'
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     //koin for dependency injection
     //Dependency Injection
