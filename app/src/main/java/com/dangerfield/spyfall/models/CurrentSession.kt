@@ -1,6 +1,8 @@
 package com.dangerfield.spyfall.models
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 interface SessionListener {
@@ -9,12 +11,12 @@ interface SessionListener {
 }
 
 @Parcelize
+@Entity(tableName = "CURRENT_SESSION")
 class CurrentSession (
-    val accessCode: String,
+    @PrimaryKey val accessCode: String,
     var currentUser: String,
     var game : Game
 ) : Parcelable {
-
-    fun isBeingStarted() = game.started
-
+constructor() : this("","", Game("", arrayListOf(),false, arrayListOf(), arrayListOf(),0L,
+    arrayListOf()))
 }

@@ -210,9 +210,7 @@ class Repository(
      * increments statistics for games played
      */
     override fun startGame(currentSession: CurrentSession) {
-        if (currentSession.isBeingStarted()) {
-            return
-        }
+        if (currentSession.game.started) { return }
         CoroutineScope(IO + job).launch {
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             gameRef.update("started", true)
