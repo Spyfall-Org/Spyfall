@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.CrashlyticsLogger
@@ -76,7 +76,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
         })
     }
 
-    private fun handleErrorCreatingGame(result: Resource.Error<CurrentSession, NewGameError>) {
+    private fun handleErrorCreatingGame(result: Resource.Error<Session, NewGameError>) {
         result.exception?.let { CrashlyticsLogger.logErrorCreatingGame(it) }
 
         result.error?.let {error ->
@@ -92,7 +92,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
         enterMode()
     }
 
-    private fun handleSucessfulGameCreation(currentSession: CurrentSession) {
+    private fun handleSucessfulGameCreation(currentSession: Session) {
         val bundle = Bundle()
         bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
         if(navController.currentDestination?.id == R.id.newGameFragment) {

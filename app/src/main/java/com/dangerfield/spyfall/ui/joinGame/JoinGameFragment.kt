@@ -12,7 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.CrashlyticsLogger
@@ -52,7 +52,7 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         })
     }
 
-    private fun handleSuccessfulJoinGame(currentSession: CurrentSession) {
+    private fun handleSuccessfulJoinGame(currentSession: Session) {
         val bundle = Bundle()
         bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
         if (navController.currentDestination?.id != R.id.joinGameFragment) return
@@ -60,7 +60,7 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         navController.navigate(R.id.action_joinGameFragment_to_waitingFragment, bundle)
     }
 
-    private fun handleErrorJoinGame(result: Resource.Error<CurrentSession, JoinGameError>) {
+    private fun handleErrorJoinGame(result: Resource.Error<Session, JoinGameError>) {
         result.exception?.let { CrashlyticsLogger.logErrorJoiningGame(it) }
 
         result.error?.let {error ->

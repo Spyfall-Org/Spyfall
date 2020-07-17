@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.util.Event
 
 enum class NameChangeError(val resId: Int) {
@@ -21,7 +21,7 @@ enum class LeaveGameError(val resId: Int) {
     GAME_STARTED(R.string.leave_game_error_game_started)
 }
 
-class WaitingViewModel(private val repository: GameRepository, val currentSession: CurrentSession) : ViewModel() {
+class WaitingViewModel(private val repository: GameRepository, val currentSession: Session) : ViewModel() {
 
     private val nameChangeEvent: MediatorLiveData<Event<Resource<String, NameChangeError>>> =
             MediatorLiveData()

@@ -30,13 +30,13 @@ class Repository(
     private var liveGame: MutableLiveData<Game> = MutableLiveData()
     private var sessionEndedEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     private var leaveGameEvent: MutableLiveData<Event<Resource<Unit, LeaveGameError>>> = MutableLiveData()
-
+    private val millisecondsInSixHours = 21600000
 
     /**
      * Returns live data holding game object
      * if this is a new game, clear the live data object and set a new listener to update it
      */
-    override fun getLiveGame(currentSession: CurrentSession): MutableLiveData<Game> {
+    override fun getLiveGame(currentSession: Session): MutableLiveData<Game> {
         val creatingNewGame  = !sessionListenerHelper.isListening()
         if (creatingNewGame) {
             liveGame = MutableLiveData()
@@ -94,8 +94,8 @@ class Repository(
         username: String,
         timeLimit: Long,
         chosenPacks: List<String>
-    ): LiveData<Resource<CurrentSession, NewGameError>> {
-        val result = MutableLiveData<Resource<CurrentSession, NewGameError>>()
+    ): LiveData<Resource<Session, NewGameError>> {
+        val result = MutableLiveData<Resource<Session, NewGameError>>()
 
         if (!Connectivity.isOnline) {
             result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
@@ -111,13 +111,14 @@ class Repository(
                     arrayListOf(username),
                     arrayListOf(),
                     timeLimit,
-                    gameLocations
+                    gameLocations,
+                    (System.currentTimeMillis() + millisecondsInSixHours)/1000
                 )
 
                 val gameRef = db.collection(constants.games).document(accessCode)
 
                 gameRef.set(game).addOnSuccessListener {
-                    val currentSession = CurrentSession(accessCode, username, game)
+                    val currentSession = Session(accessCode, username, game)
                     result.value = Resource.Success(currentSession)
                     preferencesHelper.saveSession(currentSession)
                 }.addOnFailureListener {
@@ -158,8 +159,8 @@ class Repository(
     override fun joinGame(
         accessCode: String,
         username: String
-    ): LiveData<Resource<CurrentSession, JoinGameError>> {
-        val result = MutableLiveData<Resource<CurrentSession, JoinGameError>>()
+    ): LiveData<Resource<Session, JoinGameError>> {
+        val result = MutableLiveData<Resource<Session, JoinGameError>>()
 
         if (!Connectivity.isOnline) {
             result.value = Resource.Error(error = JoinGameError.NETWORK_ERROR)
@@ -186,7 +187,7 @@ class Repository(
                                 addPlayer(username, accessCode).addOnSuccessListener {
                                     val game = document.toObject(Game::class.java)
                                     if (game != null) {
-                                        val currentSession = CurrentSession(accessCode, username, game)
+                                        val currentSession = Session(accessCode, username, game)
                                         result.value = Resource.Success(currentSession)
                                         preferencesHelper.saveSession(currentSession)
                                     } else {
@@ -220,7 +221,7 @@ class Repository(
      * removes user name from games player list on db
      * posts to leave game event that both the waiting screen and game screen listen for
      */
-    override fun leaveGame(currentSession: CurrentSession) {
+    override fun leaveGame(currentSession: Session) {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         gameRef.update(Constants.GameFields.playerList, FieldValue.arrayRemove(currentSession.currentUser))
             .addOnSuccessListener {
@@ -240,7 +241,7 @@ class Repository(
      * removes node on fire store
      * snapshot listener causes session to end
      */
-    override fun endGame(currentSession: CurrentSession) {
+    override fun endGame(currentSession: Session) {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         gameRef.delete().addOnSuccessListener {
             preferencesHelper.removeSavedSession(currentSession)
@@ -251,7 +252,7 @@ class Repository(
      * assigns all players roles in the player objects list
      * increments statistics for games played
      */
-    override fun startGame(currentSession: CurrentSession) {
+    override fun startGame(currentSession: Session) {
         if (currentSession.game.started) {
             return
         }
@@ -264,7 +265,7 @@ class Repository(
         }
     }
 
-    private suspend fun getRoles(currentSession: CurrentSession): ArrayList<String> {
+    private suspend fun getRoles(currentSession: Session): ArrayList<String> {
         val result = currentSession.game.chosenPacks.findFirstNonNullWhenMapped { pack ->
             db.collection(constants.packs).document(pack).get().await()
                 .get(currentSession.game.chosenLocation) as ArrayList<String>?
@@ -275,7 +276,7 @@ class Repository(
 
     private suspend fun assignRoles(
         roles: ArrayList<String>,
-        session: CurrentSession,
+        session: Session,
         gameRef: DocumentReference
     ) {
         if (roles.isNullOrEmpty()) {
@@ -299,7 +300,7 @@ class Repository(
     /**
      * Resets relevant game data to trigger play again action
      */
-    override fun resetGame(currentSession: CurrentSession) {
+    override fun resetGame(currentSession: Session) {
         // resets variables on firebase for play again, which will update viewmodel
         val accessCode = currentSession.accessCode
         currentSession.game.let {
@@ -308,7 +309,7 @@ class Repository(
             val newLocation = currentSession.game.locationList.random()
             val newGame = Game(
                 newLocation, it.chosenPacks, false,
-                it.playerList, ArrayList(), it.timeLimit, it.locationList
+                it.playerList, ArrayList(), it.timeLimit, it.locationList, it.expiration
             )
             gameRef.set(newGame)
         }
@@ -319,7 +320,7 @@ class Repository(
      */
     override fun changeName(
         newName: String,
-        currentSession: CurrentSession
+        currentSession: Session
     ): LiveData<Event<Resource<String, NameChangeError>>> {
         val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
         job = Job()
@@ -330,7 +331,7 @@ class Repository(
             copy[index] = newName
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             gameRef.update(Constants.GameFields.playerList, copy).addOnSuccessListener {
-                val updatedSession = CurrentSession(currentSession.accessCode, newName, currentSession.game)
+                val updatedSession = Session(currentSession.accessCode, newName, currentSession.game)
                 preferencesHelper.saveSession(updatedSession)
                 result.postValue(Event(Resource.Success(newName)))
             }.addOnFailureListener {

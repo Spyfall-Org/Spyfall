@@ -14,7 +14,7 @@ import android.net.Uri
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.ReviewManager
 import com.dangerfield.spyfall.util.SavedSessionHelper
@@ -82,7 +82,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         }
     }
 
-    private fun navigateToWaitingScreen(currentSession : CurrentSession, gameInProgress: Boolean) {
+    private fun navigateToWaitingScreen(currentSession : Session, gameInProgress: Boolean) {
         val bundle = Bundle()
         bundle.putBoolean(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG, gameInProgress)
         bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)

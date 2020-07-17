@@ -1,7 +1,7 @@
 package com.dangerfield.spyfall.util
 
 import com.dangerfield.spyfall.api.Constants
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.models.Game
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -12,7 +12,7 @@ class SavedSessionHelper(private val preferencesHelper: PreferencesHelper, priva
      * Checks preferences for a saved game
      * if that game is still on firebase we assume the user can still join it
      */
-    suspend fun whenUserIsInExistingGame(whenTrue : (CurrentSession, Boolean) -> Unit) {
+    suspend fun whenUserIsInExistingGame(whenTrue : (Session, Boolean) -> Unit) {
         preferencesHelper.getSavedSession()?.let {
             try {
                 val result = db.collection(constants.games).document(it.accessCode).get().await()

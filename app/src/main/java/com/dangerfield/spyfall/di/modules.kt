@@ -5,7 +5,7 @@ import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Repository
 import com.dangerfield.spyfall.ui.game.GameViewModel
 import com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.newGame.NewGameViewModel
 import com.dangerfield.spyfall.ui.waiting.WaitingViewModel
 import com.dangerfield.spyfall.util.*
@@ -23,8 +23,8 @@ val mainModule = module {
     single { PreferencesHelper(androidApplication())}
 
     //view models
-    single { (currentSession: CurrentSession) -> WaitingViewModel(get(), currentSession)}
-    single { (currentSession: CurrentSession) -> GameViewModel(get(), currentSession)}
+    single { (currentSession: Session) -> WaitingViewModel(get(), currentSession)}
+    single { (currentSession: Session) -> GameViewModel(get(), currentSession)}
     viewModel { JoinGameViewModel(get()) }
     viewModel { NewGameViewModel(get()) }
 

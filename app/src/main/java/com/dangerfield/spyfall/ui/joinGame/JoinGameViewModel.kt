@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 
 enum class JoinGameError(val resId: Int? = null)  {
     FIELD_ERROR(R.string.join_game_error_fields),
@@ -21,14 +21,14 @@ enum class JoinGameError(val resId: Int? = null)  {
 }
 class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
 
-    fun joinGame(accessCode: String, username: String): LiveData<Resource<CurrentSession, JoinGameError>> {
-        var result = MutableLiveData<Resource<CurrentSession, JoinGameError>>()
+    fun joinGame(accessCode: String, username: String): LiveData<Resource<Session, JoinGameError>> {
+        var result = MutableLiveData<Resource<Session, JoinGameError>>()
 
         if(username.isEmpty() || accessCode.isEmpty()){
             result.value =  Resource.Error(error = JoinGameError.FIELD_ERROR)
         } else if(username.length > 25) {
             result.value = Resource.Error(error = JoinGameError.NAME_CHARACTER_LIMIT)
-        } else result = repository.joinGame(accessCode, username) as MutableLiveData<Resource<CurrentSession, JoinGameError>>
+        } else result = repository.joinGame(accessCode, username) as MutableLiveData<Resource<Session, JoinGameError>>
 
         return result
     }

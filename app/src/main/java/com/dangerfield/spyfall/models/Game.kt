@@ -10,14 +10,16 @@ data class Game(var chosenLocation: String,
                 var playerList: ArrayList<String>,
                 var playerObjectList: ArrayList<Player>,
                 var timeLimit: Long,
-                var locationList: ArrayList<String>
+                var locationList: ArrayList<String>,
+                var expiration: Long
+
 ) : Parcelable{
 
-    constructor() : this("", ArrayList<String>(),false,ArrayList<String>(),ArrayList<Player>(),0.0.toLong(),ArrayList<String>())
+    constructor() : this("", ArrayList<String>(),false,ArrayList<String>(),ArrayList<Player>(),0.0.toLong(),ArrayList<String>(), 0)
 
     companion object {
         fun getEmptyGame(): Game {
-            return Game("", ArrayList<String>(),false,ArrayList<String>(),ArrayList<Player>(),0L ,ArrayList<String>())
+            return Game("", ArrayList<String>(),false,ArrayList<String>(),ArrayList<Player>(),0L ,ArrayList<String>(), 0)
         }
     }
 }

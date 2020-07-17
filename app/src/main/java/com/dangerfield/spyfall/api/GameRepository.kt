@@ -3,7 +3,7 @@ package com.dangerfield.spyfall.api
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dangerfield.spyfall.ui.joinGame.JoinGameError
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
 import com.dangerfield.spyfall.ui.newGame.NewGameError
@@ -17,27 +17,27 @@ interface GameRepository {
         username: String,
         timeLimit: Long,
         chosenPacks: List<String>
-    ): LiveData<Resource<CurrentSession, NewGameError>>
+    ): LiveData<Resource<Session, NewGameError>>
 
     fun joinGame(
         accessCode: String,
         username: String
-    ): LiveData<Resource<CurrentSession, JoinGameError>>
+    ): LiveData<Resource<Session, JoinGameError>>
 
-    fun leaveGame(currentSession: CurrentSession)
-    fun endGame(currentSession: CurrentSession)
-    fun startGame(currentSession: CurrentSession)
-    fun resetGame(currentSession: CurrentSession)
+    fun leaveGame(currentSession: Session)
+    fun endGame(currentSession: Session)
+    fun startGame(currentSession: Session)
+    fun resetGame(currentSession: Session)
     fun changeName(
         newName: String,
-        currentSession: CurrentSession
+        currentSession: Session
     ): LiveData<Event<Resource<String, NameChangeError>>>
 
     fun getPacksDetails(): LiveData<Resource<List<List<String>>, PackDetailsError>>
     fun incrementAndroidPlayers()
     fun incrementGamesPlayed()
     fun getPacks(): ArrayList<GamePack>
-    fun getLiveGame(currentSession: CurrentSession): MutableLiveData<Game>
+    fun getLiveGame(currentSession: Session): MutableLiveData<Game>
     fun getSessionEnded(): MutableLiveData<Event<Unit>>
     fun cancelJobs()
     fun getLeaveGameEvent(): MutableLiveData<Event<Resource<Unit, LeaveGameError>>>

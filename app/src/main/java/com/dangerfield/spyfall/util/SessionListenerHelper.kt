@@ -1,7 +1,7 @@
 package com.dangerfield.spyfall.util
 
 import com.dangerfield.spyfall.api.Constants
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.SessionListener
 import com.google.firebase.firestore.DocumentReference
@@ -24,7 +24,7 @@ class SessionListenerHelper(
 
     fun addListener(
         sessionListener: SessionListener,
-        session: CurrentSession
+        session: Session
     ) {
         val gameRef: DocumentReference = db.collection(constants.games).document(session.accessCode)
         gameListener = gameRef.addSnapshotListener { result, error ->

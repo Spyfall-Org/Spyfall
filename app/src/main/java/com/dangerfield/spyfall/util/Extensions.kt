@@ -7,10 +7,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.dangerfield.spyfall.ui.game.GameFragment
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import kotlinx.coroutines.*
 
@@ -61,13 +59,13 @@ fun TextView.clear() {
 
 fun WaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {
     //banging because navigation to waiting should be impossible without the arg
-    val currentSession: CurrentSession = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
+    val currentSession: Session = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
     return WaitingViewModelFactory(currentSession)
 }
 
 fun GameFragment.getViewModelFactory(bundle: Bundle): GameViewModelFactory {
     //banging because navigation to game should be impossible without the arg
-    val currentSession: CurrentSession = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
+    val currentSession: Session = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
     return GameViewModelFactory(currentSession)
 }
 

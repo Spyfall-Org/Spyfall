@@ -4,11 +4,11 @@ import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
 import com.dangerfield.spyfall.api.GameRepository
-import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.models.Session
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class GameViewModel(private val repository: GameRepository, val currentSession: CurrentSession) :
+class GameViewModel(private val repository: GameRepository, val currentSession: Session) :
     ViewModel(), LifecycleObserver {
 
     private val liveGame = repository.getLiveGame(currentSession)
