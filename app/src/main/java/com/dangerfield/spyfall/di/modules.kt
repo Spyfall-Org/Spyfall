@@ -32,4 +32,5 @@ val mainModule = module {
     factory { Constants(androidApplication(), get()) }
     factory { ReviewHelper(androidContext()) as ReviewManager }
     factory { SavedSessionHelper(get(), get(), get()) }
+    factory { FeedbackHelper(get(), get()) }
 }

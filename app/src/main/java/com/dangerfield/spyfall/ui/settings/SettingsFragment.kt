@@ -22,18 +22,22 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.util.FeedbackHelper
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.goneIf
-import kotlinx.android.synthetic.main.alert_custom.*
-import kotlinx.android.synthetic.main.alert_custom.view.*
+import kotlinx.android.synthetic.main.dialog_custom.*
+import kotlinx.android.synthetic.main.dialog_custom.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     override fun onColorChange(colorButton: ColorButton) {
         colorChanger.btn_custom_alert_positive.background.setTint(colorButton.color)
     }
 
-    val colorChanger : AlertDialog by lazy { getColorChangeDialog()}
+    private val colorChanger : AlertDialog by lazy { getColorChangeDialog()}
+    private val feedbackHelper: FeedbackHelper by inject()
 
     private val currentMode : Int
         get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
@@ -85,6 +89,10 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
             navController.navigate(R.id.action_settingsFragment_to_testerSettingsFragment)
         }
 
+        btn_feedback.setOnClickListener {
+            feedbackHelper.showFeedbackDialog(requireContext())
+        }
+
         showTesterSettings(BuildConfig.DEBUG)
     }
 
@@ -113,7 +121,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     //TODO: consider making a view model for this
     private fun getColorChangeDialog(): AlertDialog {
         val dialogBuilder = AlertDialog.Builder(requireContext())
-        val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
         dialogBuilder.setView(view)
         val dialog = dialogBuilder.create()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
@@ -158,7 +166,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
             btn_custom_alert_positive.text = resources.getString(R.string.theme_change_positive)
             //for theme changing
             btn_custom_alert_positive.background.setTint(UIHelper.accentColor)
-            tv_custom_alert_message.text = resources.getString(R.string.theme_change_message)
+            tv_custom_alert.text = resources.getString(R.string.theme_change_message)
             tv_custom_alert_title.text = resources.getString(R.string.theme_change_title)
 
         }
@@ -172,7 +180,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
 
     private fun setTheme() {
-        listOf(iv_theme, ic_about, ic_ads, iv_tester_settings).forEach {
+        listOf(iv_theme, ic_about, ic_ads, iv_tester_settings, iv_feedback).forEach {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(it.drawable),
                 ContextCompat.getColor(requireContext(), R.color.colorTheme)

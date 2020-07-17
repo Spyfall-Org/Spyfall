@@ -17,7 +17,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:id="@+id/tv_custom_alert_message"
+                android:id="@+id/tv_custom_alert"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert_title"
                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
@@ -74,9 +74,9 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/tv_custom_alert_message"
-                app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert_message"
-                app:layout_constraintEnd_toEndOf="@+id/tv_custom_alert_message" android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="@+id/tv_custom_alert"
+                app:layout_constraintTop_toBottomOf="@+id/tv_custom_alert"
+                app:layout_constraintEnd_toEndOf="@+id/tv_custom_alert" android:layout_marginEnd="8dp"
                 android:id="@+id/rv_color_change" android:layout_marginTop="16dp"
                 app:layout_constraintHorizontal_bias="0.511" android:visibility="gone"/>
         <TextView
@@ -102,8 +102,8 @@
                 android:orientation="horizontal"
                 android:visibility="gone"
 
-                app:layout_constraintEnd_toEndOf="@+id/tv_custom_alert_message"
-                app:layout_constraintStart_toStartOf="@+id/tv_custom_alert_message"
+                app:layout_constraintEnd_toEndOf="@+id/tv_custom_alert"
+                app:layout_constraintStart_toStartOf="@+id/tv_custom_alert"
                 app:layout_constraintTop_toBottomOf="@id/rv_color_change">
 
             <RadioButton

@@ -142,6 +142,7 @@
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="tester_settings">Tester Settings</string>
+    <string name="submit">Submit</string>
 
 
 </resources>

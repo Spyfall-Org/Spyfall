@@ -10,6 +10,8 @@ class Constants(val context: Context, private val preferencesHelper: Preferences
 
     val packs = "packs"
 
+    val feedback = "feedback"
+
     object StatisticsConstants {
         const val collection = "stats"
         const val document = "game"

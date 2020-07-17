@@ -12,7 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import kotlinx.android.synthetic.main.alert_custom.view.*
+import kotlinx.android.synthetic.main.dialog_custom.view.*
 import kotlinx.android.synthetic.main.dialog_packs.view.*
 import android.graphics.PorterDuff
 import android.util.TypedValue
@@ -102,7 +102,7 @@ class UIHelper {
         ): Dialog {
 
             val dialogBuilder = AlertDialog.Builder(context)
-            val view = LayoutInflater.from(context).inflate(R.layout.alert_custom, null)
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
             dialogBuilder.setView(view)
             val dialog = dialogBuilder.create()
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
@@ -146,7 +146,7 @@ class UIHelper {
                 btn_custom_alert_positive.text = positiveText
                 //for theme changing
                 btn_custom_alert_positive.background.setTint(accentColor)
-                tv_custom_alert_message.text = message
+                tv_custom_alert.text = message
 
                 tv_custom_alert_title.text = title
             }
