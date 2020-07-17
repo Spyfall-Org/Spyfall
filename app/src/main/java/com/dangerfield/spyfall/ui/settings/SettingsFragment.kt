@@ -172,7 +172,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
 
     private fun setTheme() {
-        listOf(iv_theme, ic_about, ic_ads).forEach {
+        listOf(iv_theme, ic_about, ic_ads, iv_tester_settings).forEach {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(it.drawable),
                 ContextCompat.getColor(requireContext(), R.color.colorTheme)

@@ -24,6 +24,7 @@ import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.getViewModelFactory
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 
 class GameFragment : Fragment(R.layout.fragment_game) {
 
@@ -59,9 +60,10 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         tv_game_role.maxTextSize = 96.0f
 
-        if (BuildConfig.FLAVOR == "free") adView2.loadAd(
-            AdRequest.Builder().build()
-        ) else adView2.visibility = View.GONE
+        if (BuildConfig.FLAVOR == "free") {
+            val adRequest = AdRequest.Builder().build()
+            adView2.loadAd(adRequest)
+        } else adView2.visibility = View.GONE
 
         gameViewModel.getLiveGame().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             //play again has been triggered

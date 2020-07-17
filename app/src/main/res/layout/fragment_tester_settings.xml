@@ -4,8 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".TesterSettingsFragment">
+        android:layout_height="match_parent">
 
     <TextView
             android:id="@+id/textView12"
@@ -13,8 +12,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="42dp"
-            android:text="Tester Settings"
-            android:textColor="@color/colorBlack"
+            android:text="@string/tester_settings"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="36sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,13 +32,13 @@
                 android:id="@+id/rb_on"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="On" />
+                android:text="@string/on" />
 
         <RadioButton
                 android:id="@+id/rb_off"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Off" />
+                android:text="@string/off" />
     </RadioGroup>
 
     <TextView
@@ -47,7 +46,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Use Test DB"
+            android:text="@string/use_test_db"
+            android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintStart_toStartOf="@+id/textView12"
             app:layout_constraintTop_toBottomOf="@+id/textView12" />
 

@@ -13,13 +13,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             tools:ignore="ExtraText,GoogleAppIndexingWarning"
-
-
             >
-        <service
-                android:name=".util.AppKilledListener"
-                android:stopWithTask="false" />
-
 
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"

@@ -2,7 +2,9 @@
 
     <string name="app_name">Spyfall</string>
     <string name="test_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7008637445039253/7155259736</string>
+    <string name="waiting_banner_ad_unit_id" translatable="false">ca-app-pub-7008637445039253/7155259736</string>
+    <string name="game_banner_ad_unit_id" translatable="false">ca-app-pub-7008637445039253/3012497027</string>
+
     <string name="ads_mod_app_id" translatable="false">ca-app-pub-7008637445039253~6033749759</string>
     <string name="test_interstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
@@ -136,6 +138,10 @@
     <string name="end_game_title">Ending the game</string>
     <string name="light_mode">Light Mode</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="use_test_db">Use Test DB</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+    <string name="tester_settings">Tester Settings</string>
 
 
 </resources>

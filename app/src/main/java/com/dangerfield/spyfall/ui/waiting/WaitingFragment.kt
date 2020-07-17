@@ -3,10 +3,10 @@ package com.dangerfield.spyfall.ui.waiting
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -16,10 +16,11 @@ import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.util.CrashlyticsLogger
-import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.EventObserver
+import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.getViewModelFactory
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import kotlinx.android.synthetic.main.fragment_waiting.*
 
 class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFirer {
@@ -54,7 +55,10 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (BuildConfig.FLAVOR == "free") adView.loadAd(AdRequest.Builder().build())
+        if (BuildConfig.FLAVOR == "free") {
+            val adRequest = AdRequest.Builder().build()
+            adView.loadAd(adRequest)
+        } else adView.visibility = View.GONE
 
         waitingViewModel.getLiveGame().observe(viewLifecycleOwner, Observer {
             if (!this.isAdded) return@Observer
