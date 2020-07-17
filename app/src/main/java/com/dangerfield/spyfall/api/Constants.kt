@@ -10,7 +10,7 @@ class Constants(val context: Context, private val preferencesHelper: Preferences
 
     val packs = "packs"
 
-    val feedback = "feedback"
+    val feedback = if (BuildConfig.DEBUG) "feedback_test" else "feedback"
 
     object StatisticsConstants {
         const val collection = "stats"

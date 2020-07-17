@@ -76,7 +76,6 @@ class FeedbackHelper(
         val device = "${Build.DEVICE}"
         val modelAndProduct = "${Build.MODEL} (${Build.PRODUCT})"
         val appVersion = BuildConfig.VERSION_NAME
-
         val osVersion = getOSString(Build.VERSION.SDK_INT)
 
         val feedback = Feedback(
