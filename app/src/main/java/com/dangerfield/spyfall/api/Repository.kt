@@ -281,10 +281,10 @@ class Repository(
         CoroutineScope(Dispatchers.Default + job).launch {
             val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
             if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
-            currentSession.game.playerList[index] = newName
-            currentSession.currentUser = newName
+            val copy = currentSession.game.playerList.toMutableList()
+            copy[index] = newName
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-            gameRef.update("playerList", currentSession.game.playerList).addOnSuccessListener {
+            gameRef.update("playerList", copy).addOnSuccessListener {
                 result.postValue(Event(Resource.Success(newName)))
             }.addOnFailureListener {
                 result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR, exception = it)))
@@ -334,14 +334,14 @@ class Repository(
 
     override fun incrementGamesPlayed() {
         //this function is used to keep stats about how many Android games have been played
-        if (BuildConfig.DEBUG == true) return
+        if (BuildConfig.DEBUG) return
         db.collection(Constants.StatisticsConstants.collection)
             .document(Constants.StatisticsConstants.document)
             .update(Constants.StatisticsConstants.num_games_played, FieldValue.increment(1))
     }
 
     override fun incrementAndroidPlayers() {
-        if (BuildConfig.DEBUG == true) return
+        if (BuildConfig.DEBUG) return
 
         //this function is used to keep stats about how many Android games have been played
         db.collection(Constants.StatisticsConstants.collection)

@@ -30,7 +30,7 @@ class SessionListenerHelper(
                 when {
                     noUsersInGame -> gameRef.delete() // will cause listener to endSession() when updated
                     currentUserWasRemoved -> endSession(sessionListener)
-                    else -> updateSession(updatedGame, sessionListener, session)
+                    else -> updateSession(updatedGame, sessionListener)
                 }
             } else {
                 endSession(sessionListener)
@@ -43,8 +43,7 @@ class SessionListenerHelper(
         sessionListener.onSessionEnded()
     }
 
-    private fun updateSession(game: Game, sessionListener: SessionListener, session: CurrentSession) {
-        session.game = game
+    private fun updateSession(game: Game, sessionListener: SessionListener) {
         sessionListener.onGameUpdates(game)
     }
 }

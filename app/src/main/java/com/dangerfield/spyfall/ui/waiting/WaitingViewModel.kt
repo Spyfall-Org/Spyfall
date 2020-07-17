@@ -51,7 +51,7 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
                 Event(Resource.Error(error = NameChangeError.FORMAT_ERROR))
             currentSession.game.playerList.contains(newName) -> nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.NAME_IN_USE))
-            currentSession.isBeingStarted() -> nameChangeEvent.value =
+            currentSession.game.started -> nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.GAME_STARTED))
             else -> return false
         }

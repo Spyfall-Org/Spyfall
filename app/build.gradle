@@ -93,10 +93,4 @@ dependencies {
 
     //Dependency Injection
     implementation 'org.koin:koin-android-viewmodel:2.0.1'
-
-    // Room Database
-    def room_version = "2.2.0-alpha02"
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
 }

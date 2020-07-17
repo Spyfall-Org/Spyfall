@@ -60,6 +60,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getLiveGame().observe(viewLifecycleOwner, Observer {
             if (!this.isAdded) return@Observer
 
+            waitingViewModel.currentSession.game = it
             adapter.players = it.playerList
 
             if (it.started) loadMode() else enterMode()
@@ -78,13 +79,14 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
 
         waitingViewModel.getNameChangeEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success ->  handleNameChangeSuccess()
+                is Resource.Success ->  handleNameChangeSuccess(it)
                 is Resource.Error -> handleNameChangeError(it)
             }
         })
     }
 
-    private fun handleNameChangeSuccess() {
+    private fun handleNameChangeSuccess(it: Resource.Success<String, NameChangeError>) {
+        it.data?.let { waitingViewModel.currentSession.currentUser = it }
         CrashlyticsLogger.logSuccesfulNameChange(waitingViewModel.currentSession)
         changeNameHelper.dismissNameChangeDialog()
     }
@@ -138,7 +140,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     private fun leaveGame() {
-        if (waitingViewModel.currentSession.isBeingStarted()) return
+        if (waitingViewModel.currentSession.game.started) return
         CrashlyticsLogger.logUserClickedToLeaveGame(waitingViewModel.currentSession)
         waitingViewModel.leaveGame()
     }

@@ -77,6 +77,8 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 )
                 configureLocationsAdapter(it.locationList)
             }
+
+            gameViewModel.currentSession.game = it
         })
 
         gameViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {

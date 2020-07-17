@@ -25,7 +25,7 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
         return timerText
     }
 
-    fun playAgainWasTriggered() = !currentSession.isBeingStarted()
+    fun playAgainWasTriggered() = !currentSession.game.started
 
     fun stopTimer() {
         gameTimer?.cancel()
