@@ -15,6 +15,13 @@ class SessionListenerHelper(
 ) {
     private var gameListener: ListenerRegistration? = null
 
+    fun isListening() = gameListener != null
+
+    fun removeListener() {
+        gameListener?.remove()
+        gameListener = null
+    }
+
     fun addListener(
         sessionListener: SessionListener,
         session: CurrentSession
@@ -26,11 +33,10 @@ class SessionListenerHelper(
             if (result != null && result.exists()) {
                 val updatedGame = result.toObject(Game::class.java) ?: return@addSnapshotListener
                 val noUsersInGame = updatedGame.playerList.size == 0
-                val currentUserWasRemoved = !updatedGame.playerList.contains(session.currentUser)
-                when {
-                    noUsersInGame -> gameRef.delete() // will cause listener to endSession() when updated
-                    currentUserWasRemoved -> endSession(sessionListener)
-                    else -> updateSession(updatedGame, sessionListener)
+                if (noUsersInGame) {
+                    gameRef.delete() // will cause listener to endSession() when updated
+                } else {
+                    updateSession(updatedGame, sessionListener)
                 }
             } else {
                 endSession(sessionListener)
@@ -39,7 +45,7 @@ class SessionListenerHelper(
     }
 
     private fun endSession(sessionListener: SessionListener) {
-        gameListener?.remove()
+        removeListener()
         sessionListener.onSessionEnded()
     }
 

@@ -16,7 +16,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Game
+import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.CrashlyticsLogger
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.UIHelper
@@ -84,7 +86,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         gameViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.gameFragment) {
                 CrashlyticsLogger.logSessionEndedInGame(gameViewModel.currentSession)
-                endGame()
+                handleEndGame()
             }
         })
 
@@ -94,6 +96,10 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 btn_play_again.visibility =
                     if (time == GameViewModel.timeOver) View.VISIBLE else View.GONE
             })
+
+        gameViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
+            if (it is Resource.Success) handleEndGame()
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,6 +129,12 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             Locale.getDefault(), "%d:%02d",
             gameViewModel.currentSession.game.timeLimit, 0
         )
+
+        arguments?.get(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
+            if((it as Boolean)) {
+                tv_game_timer.visibility = View.INVISIBLE
+            }
+        }
     }
 
     override fun onResume() {
@@ -155,7 +167,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         gameViewModel.triggerEndGame()
     }
 
-    private fun endGame() {
+    private fun handleEndGame() {
         CrashlyticsLogger.logEndingGame(gameViewModel.currentSession)
         gameViewModel.stopTimer()
         navController.popBackStack(R.id.startFragment, false)

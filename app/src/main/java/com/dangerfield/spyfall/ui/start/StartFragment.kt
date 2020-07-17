@@ -14,8 +14,13 @@ import android.net.Uri
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.crashlytics.android.Crashlytics
+import com.dangerfield.spyfall.models.CurrentSession
+import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.ReviewManager
+import com.dangerfield.spyfall.util.SavedSessionHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 
@@ -26,6 +31,8 @@ class StartFragment : Fragment(R.layout.fragment_start) {
     }
 
     private val reviewHelper : ReviewManager by inject()
+
+    private val savedSessionHelper : SavedSessionHelper by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,8 +65,13 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         UIHelper.getSavedColor(requireContext())
         changeAccent()
 
+        CoroutineScope(Dispatchers.IO).launch {
+            savedSessionHelper.whenUserIsInExistingGame {session, started ->
+                navigateToWaitingScreen(session, started)
+            }
+        }
+
         if (reviewHelper.shouldPromptForReview()) {
-            //show request for review
             UIHelper.customSimpleAlert(requireContext(),
                 getString(R.string.dialog_rate_title),
                 getString(R.string.dialog_rate_message),
@@ -68,6 +80,13 @@ class StartFragment : Fragment(R.layout.fragment_start) {
                     reviewHelper.setHasClickedToReview()
                 }, getString(R.string.dialog_rate_negative), {}).show()
         }
+    }
+
+    private fun navigateToWaitingScreen(currentSession : CurrentSession, gameInProgress: Boolean) {
+        val bundle = Bundle()
+        bundle.putBoolean(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG, gameInProgress)
+        bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
+        navController.navigate(R.id.action_startFragment_to_waitingFragment, bundle)
     }
 
     private fun changeAccent() {

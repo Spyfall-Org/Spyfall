@@ -13,13 +13,19 @@ import kotlinx.android.synthetic.main.item_player_card.view.*
 interface CurrentUserHelper {
     fun getCurrentUser() : String
 }
-class WaitingPlayersAdapter(private val currentUserHelper: CurrentUserHelper, private val nameHelper: ChangeNameHelper) : RecyclerView.Adapter<WaitingPlayersAdapter.ViewHolder>() {
+class WaitingPlayersAdapter(username: String, private val nameHelper: ChangeNameHelper) : RecyclerView.Adapter<WaitingPlayersAdapter.ViewHolder>() {
 
     var players = ArrayList<String>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
+    var currentUserName = username
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val number: TextView = view.tv_player_number
@@ -34,7 +40,7 @@ class WaitingPlayersAdapter(private val currentUserHelper: CurrentUserHelper, pr
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.number.text = (position + 1).toString()
         holder.name.text = players[position]
-        holder.pencil.goneIf(holder.name.text.trim() != currentUserHelper.getCurrentUser().trim())
+        holder.pencil.goneIf(holder.name.text.trim() != currentUserName.trim())
         holder.pencil.setOnClickListener { nameHelper.showNameChangeDialog(holder.itemView.context) }
     }
 

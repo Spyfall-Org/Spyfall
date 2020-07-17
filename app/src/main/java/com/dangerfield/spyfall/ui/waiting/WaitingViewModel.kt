@@ -16,26 +16,41 @@ enum class NameChangeError(val resId: Int) {
     UNKNOWN_ERROR(R.string.unknown_error)
 }
 
+enum class LeaveGameError(val resId: Int) {
+    UNKNOWN_ERROR(R.string.unknown_error),
+    GAME_STARTED(R.string.leave_game_error_game_started)
+}
+
 class WaitingViewModel(private val repository: GameRepository, val currentSession: CurrentSession) : ViewModel() {
 
     private val nameChangeEvent: MediatorLiveData<Event<Resource<String, NameChangeError>>> =
+            MediatorLiveData()
+
+    private val leaveGameEvent: MediatorLiveData<Event<Resource<Unit, LeaveGameError>>> =
         MediatorLiveData()
 
-    private val liveGame = repository.getLiveGame()
-
-    private val sessionEnded = repository.getSessionEnded()
+    private val liveGame = repository.getLiveGame(currentSession)
 
     fun getNameChangeEvent() = nameChangeEvent
 
+    fun getLeaveGameEvent() = repository.getLeaveGameEvent()
+
     fun getLiveGame() = liveGame
-
-    fun getSessionEnded() = sessionEnded
-
-    fun leaveGame() =
-        repository.leaveGame(currentSession)
 
     fun startGame() =
         repository.startGame(currentSession)
+
+    fun fireLeaveGameEvent() {
+        if(findLeaveGameErrors()) return
+        repository.leaveGame(currentSession)
+    }
+
+    private fun findLeaveGameErrors(): Boolean {
+        return if(currentSession.game.started){
+            leaveGameEvent.value = Event(Resource.Error(error = LeaveGameError.GAME_STARTED))
+            true
+        } else false
+    }
 
     fun fireNameChange(newName: String) {
         if (findNameChangeErrors(newName)) return

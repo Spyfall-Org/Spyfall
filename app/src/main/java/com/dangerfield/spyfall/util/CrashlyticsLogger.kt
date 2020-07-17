@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.util
 
+import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.dangerfield.spyfall.models.CurrentSession
 import java.lang.Exception
@@ -8,6 +9,8 @@ class CrashlyticsLogger {
     companion object {
         fun logErrorCreatingGame(it: Exception) {
             Crashlytics.log("ERROR CREATING GAME.\n exception: ${it.localizedMessage}")
+            Log.d("Elijah", "ERROR CREATING GAME.\n exception: ${it.localizedMessage}")
+
         }
 
         fun logErrorGettingPacksDetails(it: Exception) {
@@ -16,6 +19,8 @@ class CrashlyticsLogger {
 
         fun logErrorJoiningGame(it: Exception) {
             Crashlytics.log("ERROR JOINING GAME.\n exception: ${it.localizedMessage}")
+            Log.d("Elijah", "ERROR JOINING GAME.\n exception: ${it.localizedMessage}")
+
         }
 
         fun logNavigatingToGameScreen(currentSession: CurrentSession) {
@@ -32,6 +37,8 @@ class CrashlyticsLogger {
 
         fun logNameChangeError(it: Exception) {
             Crashlytics.log("ERROR CHANGING NAME.\n exception: ${it.localizedMessage}")
+            Log.d("Elijah", "ERROR CHANGING NAME.\n exception: ${it.localizedMessage}")
+
         }
 
         fun logUserChangingName(newName: String, currentSession: CurrentSession) {
@@ -72,6 +79,16 @@ class CrashlyticsLogger {
 
         fun logErrorFindingCurrentPlayerInGame(currentSession: CurrentSession) {
             Crashlytics.log("Error finding current user in the game.\nCurrent Session: $currentSession")
+        }
+
+        fun logLeaveGameError(it: Exception) {
+            Crashlytics.log("ERROR LEAVING GAME.\n exception: ${it.localizedMessage}")
+            Log.d("Elijah", "ERROR LEAVING GAME.\n exception: ${it.localizedMessage}")
+
+        }
+
+        fun logErrorWhenCheckingIfUserisAlreadyInGame() {
+            Crashlytics.log("Error when checking if current user is in already in game")
         }
     }
 }

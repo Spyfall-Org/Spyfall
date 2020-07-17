@@ -8,6 +8,7 @@ import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
 import com.dangerfield.spyfall.ui.newGame.NewGameError
 import com.dangerfield.spyfall.ui.newGame.PackDetailsError
+import com.dangerfield.spyfall.ui.waiting.LeaveGameError
 import com.dangerfield.spyfall.util.Event
 import com.dangerfield.spyfall.ui.waiting.NameChangeError
 
@@ -36,6 +37,8 @@ interface GameRepository {
     fun incrementAndroidPlayers()
     fun incrementGamesPlayed()
     fun getPacks(): ArrayList<GamePack>
-    fun getLiveGame(): MutableLiveData<Game>
+    fun getLiveGame(currentSession: CurrentSession): MutableLiveData<Game>
     fun getSessionEnded(): MutableLiveData<Event<Unit>>
+    fun cancelJobs()
+    fun getLeaveGameEvent(): MutableLiveData<Event<Resource<Unit, LeaveGameError>>>
 }

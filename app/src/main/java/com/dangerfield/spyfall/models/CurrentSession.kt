@@ -14,4 +14,8 @@ class CurrentSession (
     var currentUser: String,
     var game : Game
 ) : Parcelable {
+
+    override fun toString(): String {
+        return "(accessCode: $accessCode, username: $currentUser)"
+    }
 }

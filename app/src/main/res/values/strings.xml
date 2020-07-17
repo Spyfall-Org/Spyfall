@@ -90,6 +90,8 @@
     <string name="string_change_name_hint"><u>Enter a username</u></string>
     <string name="string_waiting">Waiting for players…</string>
     <string name="string_access_code">Access code:</string>
+    <string name="leave_game_error_game_started" translatable="false">Were sorry, you cannot leave the game when it has already been started</string>
+
     <string name="change_name_error_started_game" translatable="false">Sorry, cannot change name after game has been started</string>
 
 
@@ -112,6 +114,10 @@
     <string name="shared_preferences_games" translatable="false">>SHARED_PREFERENCES_GAMES</string>
     <string name="shared_preferences_hasReviewed" translatable="false">>SHARED_PREFERENCES_HAS_REVIEWED</string>
     <string name="shared_preferences_test_db" translatable="false">>SHARED_PREFERENCES_TEST_DB</string>
+    <string name="shared_preferences_session_code" translatable="false">>SHARED_PREFERENCES_SESSION_CODE</string>
+    <string name="shared_preferences_session_current_user" translatable="false">>SHARED_PREFERENCES_SESSION_USER</string>
+
+
 
 
     <string name="string_btn_leave_game">Leave Game</string>
@@ -130,7 +136,6 @@
     <string name="end_game_title">Ending the game</string>
     <string name="light_mode">Light Mode</string>
     <string name="dark_mode">Dark Mode</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

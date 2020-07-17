@@ -22,10 +22,9 @@ import com.dangerfield.spyfall.util.getViewModelFactory
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.fragment_waiting.*
 
-class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFirer,
-    CurrentUserHelper {
+class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFirer {
 
-    private val adapter by lazy { WaitingPlayersAdapter(this, changeNameHelper) }
+    private val adapter by lazy { WaitingPlayersAdapter(waitingViewModel.currentSession.currentUser, changeNameHelper) }
     private val changeNameHelper by lazy { ChangeNameHelper(this) }
     private val waitingViewModel: WaitingViewModel by viewModels { getViewModelFactory(requireArguments()) }
 
@@ -71,22 +70,33 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
             }
         })
 
-        waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
-            if (navController.currentDestination?.id == R.id.waitingFragment) {
-                navigateToStart()
-            }
-        })
-
         waitingViewModel.getNameChangeEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
                 is Resource.Success ->  handleNameChangeSuccess(it)
                 is Resource.Error -> handleNameChangeError(it)
             }
         })
+
+        waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is Resource.Success -> navigateToStart()
+                is Resource.Error -> handleLeaveGameError(it)
+            }
+        })
+    }
+
+    private fun handleLeaveGameError(result: Resource.Error<Unit, LeaveGameError>) {
+        result.exception?.let { CrashlyticsLogger.logLeaveGameError(it) }
+        result.error?.let {
+            Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun handleNameChangeSuccess(it: Resource.Success<String, NameChangeError>) {
-        it.data?.let { waitingViewModel.currentSession.currentUser = it }
+        it.data?.let {
+            waitingViewModel.currentSession.currentUser = it
+            adapter.currentUserName = it
+        }
         CrashlyticsLogger.logSuccesfulNameChange(waitingViewModel.currentSession)
         changeNameHelper.dismissNameChangeDialog()
     }
@@ -107,6 +117,9 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun navigateToGameScreen() {
         CrashlyticsLogger.logNavigatingToGameScreen(waitingViewModel.currentSession)
         val bundle = Bundle()
+        arguments?.get(NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
+            bundle.putBoolean(NAVIGATE_TO_STARTED_GAME_FLAG, it as Boolean)
+        }
         bundle.putParcelable(SESSION_KEY, waitingViewModel.currentSession)
         navController.navigate(R.id.action_waitingFragment_to_gameFragment, bundle)
     }
@@ -140,9 +153,8 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     private fun leaveGame() {
-        if (waitingViewModel.currentSession.game.started) return
         CrashlyticsLogger.logUserClickedToLeaveGame(waitingViewModel.currentSession)
-        waitingViewModel.leaveGame()
+        waitingViewModel.fireLeaveGameEvent()
     }
 
     private fun configureLayoutManagerAndRecyclerView() {
@@ -175,12 +187,9 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.fireNameChange(newName)
     }
 
-    override fun getCurrentUser(): String {
-        return waitingViewModel.currentSession.currentUser
-    }
-
     companion object {
         const val SESSION_KEY = "123_pls_help_me"
+        const val NAVIGATE_TO_STARTED_GAME_FLAG = "thisisasupercoolkey"
     }
 }
 

@@ -2,33 +2,26 @@ package com.dangerfield.spyfall.api
 
 import android.content.Context
 import com.dangerfield.spyfall.BuildConfig
-import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.util.PreferencesHelper
 
-class Constants(val context: Context) {
+class Constants(val context: Context, private val preferencesHelper: PreferencesHelper) {
     val games: String
-        get() = if (BuildConfig.DEBUG && getUseTestDbState()) "games_test" else "games"
+        get() = if (BuildConfig.DEBUG && preferencesHelper.getUseTestDbState()) "games_test" else "games"
 
     val packs = "packs"
 
     object StatisticsConstants {
-        val collection = "stats"
-        val document = "game"
-        val num_android_players = "android_num_of_players"
-        val num_games_played = "num_games_played"
+        const val collection = "stats"
+        const val document = "game"
+        const val num_android_players = "android_num_of_players"
+        const val num_games_played = "num_games_played"
     }
 
-    private fun getUseTestDbState(): Boolean {
-        return preferences.getBoolean(
-            context.resources.getString(R.string.shared_preferences_test_db),
-            true
-        )
-    }
-
-    private val preferences by lazy {
-            context.getSharedPreferences(
-            context.resources.getString(R.string.shared_preferences),
-            Context.MODE_PRIVATE
-        )
+    object GameFields {
+        const val playerObjectList = "playerObjectList"
+        const val playerList = "playerList"
+        const val theSpyRole = "The Spy!"
+        const val started = "started"
     }
 }
 

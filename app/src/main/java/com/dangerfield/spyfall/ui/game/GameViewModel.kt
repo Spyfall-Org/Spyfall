@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 class GameViewModel(private val repository: GameRepository, val currentSession: CurrentSession) :
     ViewModel(), LifecycleObserver {
 
-    private val liveGame = repository.getLiveGame()
+    private val liveGame = repository.getLiveGame(currentSession)
     private val sessionEnded = repository.getSessionEnded()
     private var gameTimer: CountDownTimer? = null
     private var timerText = MutableLiveData<String>()
@@ -19,6 +19,8 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
     fun getLiveGame() = liveGame
 
     fun getSessionEnded() = sessionEnded
+
+    fun getLeaveGameEvent() = repository.getLeaveGameEvent()
 
     fun getTimeLeft(): MutableLiveData<String> {
         if (gameTimer == null) startTimer()

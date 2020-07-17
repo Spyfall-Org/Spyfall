@@ -7,7 +7,6 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.CurrentSession
-import java.lang.Exception
 
  enum class NewGameError(val resId: Int? = null) {
     NO_SELECTED_PACK(R.string.new_game_error_select_pack),
@@ -25,6 +24,8 @@ enum class PackDetailsError(val resId: Int? = null) {
 class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
 
     private var packsDetails = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
+
+    fun cancelPendingOperations() =repository.cancelJobs()
 
     fun createGame(username: String, timeLimit: String, selectedPacks: ArrayList<String>): LiveData<Resource<CurrentSession, NewGameError>> {
         var result = MutableLiveData<Resource<CurrentSession, NewGameError>>()
