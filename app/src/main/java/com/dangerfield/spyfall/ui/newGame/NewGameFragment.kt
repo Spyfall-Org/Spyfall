@@ -38,6 +38,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     newGameViewModel.cancelPendingOperations()
+                    navController.popBackStack(R.id.startFragment, false)
                 }
             })
     }
