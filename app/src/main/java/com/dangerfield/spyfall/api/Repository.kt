@@ -1,6 +1,8 @@
 package com.dangerfield.spyfall.api
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.BuildConfig
 import com.dangerfield.spyfall.ui.joinGame.JoinGameError
@@ -29,7 +31,8 @@ class Repository(
     private var job: Job = Job()
     private var liveGame: MutableLiveData<Game> = MutableLiveData()
     private var sessionEndedEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    private var leaveGameEvent: MutableLiveData<Event<Resource<Unit, LeaveGameError>>> = MutableLiveData()
+    private var leaveGameEvent: MutableLiveData<Event<Resource<Unit, LeaveGameError>>> =
+        MutableLiveData()
     private val millisecondsInSixHours = 21600000
 
     /**
@@ -37,7 +40,7 @@ class Repository(
      * if this is a new game, clear the live data object and set a new listener to update it
      */
     override fun getLiveGame(currentSession: Session): MutableLiveData<Game> {
-        val creatingNewGame  = !sessionListenerHelper.isListening()
+        val creatingNewGame = !sessionListenerHelper.isListening()
         if (creatingNewGame) {
             liveGame = MutableLiveData()
             sessionListenerHelper.addListener(this, currentSession)
@@ -112,7 +115,7 @@ class Repository(
                     arrayListOf(),
                     timeLimit,
                     gameLocations,
-                    (System.currentTimeMillis() + millisecondsInSixHours)/1000
+                    (System.currentTimeMillis() + millisecondsInSixHours) / 1000
                 )
 
                 val gameRef = db.collection(constants.games).document(accessCode)
@@ -165,48 +168,54 @@ class Repository(
         if (!Connectivity.isOnline) {
             result.value = Resource.Error(error = JoinGameError.NETWORK_ERROR)
         } else {
-            db.collection(constants.games).document(accessCode).get()
-                .addOnSuccessListener { document ->
+            job = Job()
+            CoroutineScope(IO + job).launch {
+                db.collection(constants.games).document(accessCode).get()
+                    .addOnSuccessListener { document ->
 
-                    if (document.exists()) {
-                        val list = (document[Constants.GameFields.playerList] as ArrayList<String>)
+                        if (document.exists()) {
+                            val list =
+                                (document[Constants.GameFields.playerList] as ArrayList<String>)
 
-                        when {
-                            list.size >= 8 ->
-                                result.value =
-                                    Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS)
-
-                            document[Constants.GameFields.started] == true ->
-                                result.value =
-                                    Resource.Error(error = JoinGameError.GAME_HAS_STARTED)
-
-                            list.contains(username) ->
-                                result.value = Resource.Error(error = JoinGameError.NAME_TAKEN)
-
-                            else -> {
-                                addPlayer(username, accessCode).addOnSuccessListener {
-                                    val game = document.toObject(Game::class.java)
-                                    if (game != null) {
-                                        val currentSession = Session(accessCode, username, game)
-                                        result.value = Resource.Success(currentSession)
-                                        preferencesHelper.saveSession(currentSession)
-                                    } else {
-                                        result.value =
-                                            Resource.Error(error = JoinGameError.UNKNOWN_ERROR)
-                                    }
-                                }.addOnFailureListener {
+                            when {
+                                list.size >= 8 ->
                                     result.value =
-                                        Resource.Error(
-                                            error = JoinGameError.COULD_NOT_JOIN,
-                                            exception = it
-                                        )
+                                        Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS)
+
+                                document[Constants.GameFields.started] == true ->
+                                    result.value =
+                                        Resource.Error(error = JoinGameError.GAME_HAS_STARTED)
+
+                                list.contains(username) ->
+                                    result.value = Resource.Error(error = JoinGameError.NAME_TAKEN)
+
+                                else -> {
+                                    addPlayer(username, accessCode).addOnSuccessListener {
+                                        val game = document.toObject(Game::class.java)
+                                        if (game != null) {
+                                            val currentSession = Session(accessCode, username, game)
+                                            result.value = Resource.Success(currentSession)
+                                            preferencesHelper.saveSession(currentSession)
+                                        } else {
+                                            result.value =
+                                                Resource.Error(error = JoinGameError.UNKNOWN_ERROR)
+                                        }
+                                    }.addOnFailureListener {
+                                        result.value =
+                                            Resource.Error(
+                                                error = JoinGameError.COULD_NOT_JOIN,
+                                                exception = it
+                                            )
+                                    }
                                 }
                             }
+                        } else {
+                            result.value = Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST)
                         }
-                    } else {
-                        result.value = Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST)
+                    }.addOnFailureListener {
+                        result.value = Resource.Error(error = JoinGameError.NETWORK_ERROR)
                     }
-                }
+            }
         }
 
         return result
@@ -223,15 +232,18 @@ class Repository(
      */
     override fun leaveGame(currentSession: Session) {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-        gameRef.update(Constants.GameFields.playerList, FieldValue.arrayRemove(currentSession.currentUser))
+        gameRef.update(
+            Constants.GameFields.playerList,
+            FieldValue.arrayRemove(currentSession.currentUser)
+        )
             .addOnSuccessListener {
                 sessionListenerHelper.removeListener()
                 preferencesHelper.removeSavedSession(currentSession)
                 leaveGameEvent.value = Event(Resource.Success(Unit))
             }.addOnFailureListener {
                 leaveGameEvent.value =
-                Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
-        }
+                    Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
+            }
     }
 
     override fun getLeaveGameEvent() = leaveGameEvent
@@ -323,15 +335,18 @@ class Repository(
         currentSession: Session
     ): LiveData<Event<Resource<String, NameChangeError>>> {
         val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
-        job = Job()
-        CoroutineScope(Dispatchers.Default + job).launch {
-            val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
-            if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
-            val copy = currentSession.game.playerList.toMutableList()
-            copy[index] = newName
+        val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
+        if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+        val copy = currentSession.game.playerList.toMutableList()
+        copy[index] = newName
+        if (currentSession.game.started) {
+            result.postValue(Event(Resource.Error(error = NameChangeError.GAME_STARTED)))
+
+        } else {
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             gameRef.update(Constants.GameFields.playerList, copy).addOnSuccessListener {
-                val updatedSession = Session(currentSession.accessCode, newName, currentSession.game)
+                val updatedSession =
+                    Session(currentSession.accessCode, newName, currentSession.game)
                 preferencesHelper.saveSession(updatedSession)
                 result.postValue(Event(Resource.Success(newName)))
             }.addOnFailureListener {
@@ -345,6 +360,7 @@ class Repository(
                 )
             }
         }
+
         return result
     }
 

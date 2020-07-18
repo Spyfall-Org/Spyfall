@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -27,6 +28,17 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    joinGameViewModel.cancelPendingOperations()
+                    navController.popBackStack(R.id.startFragment, false)
+                }
+            })
     }
 
     private fun setupView() {

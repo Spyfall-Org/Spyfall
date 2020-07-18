@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.ui.game
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
@@ -16,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.api.Constants
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
@@ -132,11 +134,11 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             gameViewModel.currentSession.game.timeLimit, 0
         )
 
-        arguments?.get(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
-            if((it as Boolean)) {
-                tv_game_timer.visibility = View.INVISIBLE
-            }
-        }
+        tv_game_timer.visibility = arguments?.getBoolean(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
+            if((it)) {
+                 View.INVISIBLE
+            } else  View.VISIBLE
+        } ?:  View.VISIBLE
     }
 
     override fun onResume() {
@@ -194,24 +196,27 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     }
 
     private fun configurePlayerViews(game: Game) {
-        // we enforce that no two users have the same username
         val currentPlayer =
             (game.playerObjectList).find { it.username == gameViewModel.currentSession.currentUser }
 
-        if (currentPlayer == null) {
-            CrashlyticsLogger.logErrorFindingCurrentPlayerInGame(gameViewModel.currentSession)
-            navController.popBackStack(R.id.waitingFragment, false)
-            Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_LONG).show()
+        if(currentPlayer == null) {
+            if(gameViewModel.currentSession.currentUser == gameViewModel.currentSession.revertToPreviousUsername()) {
+                Toast.makeText(context, getString(R.string.name_change_end_game), Toast.LENGTH_LONG).show()
+                triggerEndGame()
+            }else {
+                gameViewModel.forceRefreshGame()
+            }
+            return
         }
 
-        currentPlayer?.let {
-            tv_game_location.text = if (currentPlayer.role.toLowerCase().trim() == "the spy!") {
+        currentPlayer.let {
+            tv_game_location.text = if (it.role == Constants.GameFields.theSpyRole) {
                 "Figure out the location!"
             } else {
                 "Location: ${game.chosenLocation}"
             }
 
-            tv_game_role.text = "Role: ${currentPlayer.role}"
+            tv_game_role.text = "Role: ${it.role}"
         }
     }
 

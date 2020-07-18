@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.ui.waiting
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
+import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.util.CrashlyticsLogger
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.UIHelper
@@ -55,10 +57,11 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (BuildConfig.FLAVOR == "free") {
+        adView.visibility = if (BuildConfig.FLAVOR == "free") {
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
-        } else adView.visibility = View.GONE
+            View.VISIBLE
+        } else View.GONE
 
         waitingViewModel.getLiveGame().observe(viewLifecycleOwner, Observer {
             if (!this.isAdded) return@Observer
@@ -98,6 +101,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
 
     private fun handleNameChangeSuccess(it: Resource.Success<String, NameChangeError>) {
         it.data?.let {
+            waitingViewModel.currentSession.updateCurrentUsername(it)
             waitingViewModel.currentSession.currentUser = it
             adapter.currentUserName = it
         }
@@ -120,9 +124,10 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
 
     private fun navigateToGameScreen() {
         CrashlyticsLogger.logNavigatingToGameScreen(waitingViewModel.currentSession)
+        changeNameHelper.dismissNameChangeDialog()
         val bundle = Bundle()
-        arguments?.get(NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
-            bundle.putBoolean(NAVIGATE_TO_STARTED_GAME_FLAG, it as Boolean)
+        arguments?.getBoolean(NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
+            bundle.putBoolean(NAVIGATE_TO_STARTED_GAME_FLAG, it)
         }
         bundle.putParcelable(SESSION_KEY, waitingViewModel.currentSession)
         navController.navigate(R.id.action_waitingFragment_to_gameFragment, bundle)

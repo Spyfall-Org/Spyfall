@@ -68,6 +68,8 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
         }
     }
 
+    fun forceRefreshGame() { liveGame.postValue(liveGame.value) }
+
     companion object {
         const val timeOver = "0:00"
     }

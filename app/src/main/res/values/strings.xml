@@ -82,7 +82,7 @@
     <string name="join_game_error_started_game">Sorry, this game has been started</string>
     <string name="join_game_error_taken_name">Sorry, that name is taken by another player</string>
     <string name="join_game_error_access_code">Sorry, no game was found with that access code</string>
-    <string name="join_game_error_could_not_join" translatable="false">Sorry, the developer of this app tried really hard but this game could not be joined</string>
+    <string name="join_game_error_could_not_join" translatable="false">Sorry, this game could not be joined</string>
 
     <string name="string_join_access_hint"><u>Access code</u></string>
     <string name="string_join_name_hint"><u>Enter a username</u></string>
@@ -143,6 +143,7 @@
     <string name="on">On</string>
     <string name="tester_settings">Tester Settings</string>
     <string name="submit">Submit</string>
+    <string name="name_change_end_game">We are sorry. We had to end the game due to a name change, please try again.</string>
 
 
 </resources>

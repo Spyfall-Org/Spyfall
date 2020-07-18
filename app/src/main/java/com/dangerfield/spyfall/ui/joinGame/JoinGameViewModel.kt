@@ -32,4 +32,7 @@ class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
 
         return result
     }
+
+    fun cancelPendingOperations() = repository.cancelJobs()
+
 }
