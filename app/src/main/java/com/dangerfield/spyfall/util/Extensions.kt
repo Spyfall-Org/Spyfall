@@ -57,6 +57,10 @@ fun TextView.clear() {
     this.text = ""
 }
 
+suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
+    map { async { f(it) } }.awaitAll()
+}
+
 fun WaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {
     //banging because navigation to waiting should be impossible without the arg
     val currentSession: Session = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
