@@ -13,23 +13,46 @@ class SavedSessionHelper(private val preferencesHelper: PreferencesHelper, priva
      * if that game is still on firebase we assume the user can still join it
      */
     suspend fun whenUserIsInExistingGame(whenTrue : (Session, Boolean) -> Unit) {
-        preferencesHelper.getSavedSession()?.let {
+        preferencesHelper.getSavedSession()?.let {session ->
             try {
-                val result = db.collection(constants.games).document(it.accessCode).get().await()
+                val result = db.collection(constants.games).document(session.accessCode).get().await()
                 if(result.exists()) {
                     val updatedGame = result.toObject(Game::class.java) ?: return
-                    if(updatedGame.playerList.contains(it.currentUser)) {
+                    if( userCanEnterGame(updatedGame, session)) {
                         if(updatedGame.started){
-                            whenTrue.invoke(it, true) // user in game that has been started
-
+                            if(userCanEnterStartedGame(updatedGame, session)) {
+                                whenTrue.invoke(session, true) // user in game that has been started
+                            }
                         }else {
-                            whenTrue.invoke(it, false) // user in game that has not been started
+                            whenTrue.invoke(session, false) // user in game that has not been started
                         }
                     }
                 }
             } catch (e: Exception) {
                 CrashlyticsLogger.logErrorWhenCheckingIfUserisAlreadyInGame()
             }
+        }
+    }
+
+    private fun userCanEnterGame(game: Game, currentSession: Session): Boolean {
+        return (
+            !gameIsExpired(game)
+            && (game.playerList.contains(currentSession.currentUser) || game.playerList.contains(currentSession.previousUserName))
+        )
+    }
+
+    private fun userCanEnterStartedGame(game: Game, currentSession: Session): Boolean {
+        return (
+            !gameIsExpired(game)
+            && (game.playerObjectList.find { it.username == currentSession.currentUser }
+            ?: (game.playerObjectList).find { it.username == currentSession.previousUserName }) != null
+        )
+    }
+
+    private fun gameIsExpired(game: Game): Boolean {
+        game. expiration.let {expiration ->
+            val now = System.currentTimeMillis() / 1000
+            return expiration <= now
         }
     }
 }

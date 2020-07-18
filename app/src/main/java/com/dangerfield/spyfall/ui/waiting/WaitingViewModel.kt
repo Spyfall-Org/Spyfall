@@ -18,7 +18,6 @@ enum class NameChangeError(val resId: Int) {
 
 enum class LeaveGameError(val resId: Int) {
     UNKNOWN_ERROR(R.string.unknown_error),
-    GAME_STARTED(R.string.leave_game_error_game_started)
 }
 
 class WaitingViewModel(private val repository: GameRepository, val currentSession: Session) : ViewModel() {
@@ -31,6 +30,8 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
 
     private val liveGame = repository.getLiveGame(currentSession)
 
+    fun getSessionEnded() = repository.getSessionEnded()
+
     fun getNameChangeEvent() = nameChangeEvent
 
     fun getLeaveGameEvent() = repository.getLeaveGameEvent()
@@ -41,15 +42,7 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
         repository.startGame(currentSession)
 
     fun fireLeaveGameEvent() {
-        if(findLeaveGameErrors()) return
         repository.leaveGame(currentSession)
-    }
-
-    private fun findLeaveGameErrors(): Boolean {
-        return if(currentSession.game.started){
-            leaveGameEvent.value = Event(Resource.Error(error = LeaveGameError.GAME_STARTED))
-            true
-        } else false
     }
 
     fun fireNameChange(newName: String) {

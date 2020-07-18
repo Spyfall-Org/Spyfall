@@ -3,7 +3,6 @@ package com.dangerfield.spyfall.ui.waiting
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -16,13 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
-import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.util.CrashlyticsLogger
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.getViewModelFactory
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import kotlinx.android.synthetic.main.fragment_waiting.*
 
 class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFirer {
@@ -35,7 +32,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         UIHelper.customSimpleAlert(requireContext(),
             resources.getString(R.string.waiting_leaving_title),
             resources.getString(R.string.waiting_leaving_message),
-            resources.getString(R.string.leave_action_positive), { leaveGame() },
+            resources.getString(R.string.leave_action_positive), { fireLeaveGameEvent() },
             resources.getString(R.string.leave_action_negative), {}).show()
     }
 
@@ -88,6 +85,13 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
             when (it) {
                 is Resource.Success -> navigateToStart()
                 is Resource.Error -> handleLeaveGameError(it)
+            }
+        })
+
+        waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
+            if (navController.currentDestination?.id == R.id.waitingFragment) {
+                CrashlyticsLogger.logSessionEndedInWaiting(waitingViewModel.currentSession)
+                navigateToStart()
             }
         })
     }
@@ -161,7 +165,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         tv_acess_code.text = waitingViewModel.currentSession.accessCode
     }
 
-    private fun leaveGame() {
+    private fun fireLeaveGameEvent() {
         CrashlyticsLogger.logUserClickedToLeaveGame(waitingViewModel.currentSession)
         waitingViewModel.fireLeaveGameEvent()
     }
@@ -180,7 +184,6 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun loadMode() {
         btn_start_game.text = ""
         pb_waiting.visibility = View.VISIBLE
-        btn_leave_game.isClickable = false
         btn_start_game.isClickable = false
     }
 

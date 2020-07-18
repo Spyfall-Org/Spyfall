@@ -103,10 +103,17 @@ class Repository(
         if (!Connectivity.isOnline) {
             result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
         } else {
+            Log.d("Elijah", "Starting create game")
             job = Job()
             CoroutineScope(IO + job).launch {
+                Log.d("Elijah", "coroutine - Starting create game")
+
                 val accessCode = generateAccessCode()
+                Log.d("Elijah", "coroutine - got access code create game")
+
                 val gameLocations = getGameLocations(chosenPacks as ArrayList<String>)
+                Log.d("Elijah", "coroutine - got locations create game")
+
                 val game = Game(
                     gameLocations.random(),
                     chosenPacks,
@@ -119,12 +126,19 @@ class Repository(
                 )
 
                 val gameRef = db.collection(constants.games).document(accessCode)
+                Log.d(
+                    "Elijah",
+                    "coroutine - about to set firebase collection ${constants.games} access code${accessCode}"
+                )
+
 
                 gameRef.set(game).addOnSuccessListener {
+                    Log.d("Elijah", "coroutine - success")
                     val currentSession = Session(accessCode, username, game)
                     result.value = Resource.Success(currentSession)
                     preferencesHelper.saveSession(currentSession)
                 }.addOnFailureListener {
+                    Log.d("Elijah", "fail")
                     result.value =
                         Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
                 }
@@ -172,7 +186,6 @@ class Repository(
             CoroutineScope(IO + job).launch {
                 db.collection(constants.games).document(accessCode).get()
                     .addOnSuccessListener { document ->
-
                         if (document.exists()) {
                             val list =
                                 (document[Constants.GameFields.playerList] as ArrayList<String>)
@@ -231,19 +244,27 @@ class Repository(
      * posts to leave game event that both the waiting screen and game screen listen for
      */
     override fun leaveGame(currentSession: Session) {
-        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-        gameRef.update(
-            Constants.GameFields.playerList,
-            FieldValue.arrayRemove(currentSession.currentUser)
-        )
-            .addOnSuccessListener {
-                sessionListenerHelper.removeListener()
-                preferencesHelper.removeSavedSession(currentSession)
-                leaveGameEvent.value = Event(Resource.Success(Unit))
-            }.addOnFailureListener {
+        if (currentSession.game.started) {
+            endGame(currentSession).addOnFailureListener {
                 leaveGameEvent.value =
                     Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
             }
+        } else {
+            val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+            gameRef.update(
+                Constants.GameFields.playerList,
+                FieldValue.arrayRemove(currentSession.currentUser)
+            )
+                .addOnSuccessListener {
+                    sessionListenerHelper.removeListener()
+                    preferencesHelper.removeSavedSession(currentSession)
+                    leaveGameEvent.value = Event(Resource.Success(Unit))
+                }.addOnFailureListener {
+                    leaveGameEvent.value =
+                        Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
+                }
+
+        }
     }
 
     override fun getLeaveGameEvent() = leaveGameEvent
@@ -253,9 +274,9 @@ class Repository(
      * removes node on fire store
      * snapshot listener causes session to end
      */
-    override fun endGame(currentSession: Session) {
+    override fun endGame(currentSession: Session): Task<Void> {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-        gameRef.delete().addOnSuccessListener {
+        return gameRef.delete().addOnSuccessListener {
             preferencesHelper.removeSavedSession(currentSession)
         }
     }
@@ -265,9 +286,7 @@ class Repository(
      * increments statistics for games played
      */
     override fun startGame(currentSession: Session) {
-        if (currentSession.game.started) {
-            return
-        }
+        if (currentSession.game.started) return
         CoroutineScope(IO + job).launch {
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             gameRef.update(Constants.GameFields.started, true)
@@ -317,7 +336,6 @@ class Repository(
         val accessCode = currentSession.accessCode
         currentSession.game.let {
             val gameRef = db.collection(constants.games).document(accessCode)
-
             val newLocation = currentSession.game.locationList.random()
             val newGame = Game(
                 newLocation, it.chosenPacks, false,

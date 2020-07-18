@@ -84,6 +84,13 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 configureLocationsAdapter(it.locationList)
             }
 
+            if (it.started
+                && it.playerObjectList.size != it.playerList.size
+                && navController.currentDestination?.id == R.id.gameFragment
+            ) {
+                triggerEndGame()
+            }
+
             gameViewModel.currentSession.game = it
         })
 
@@ -134,11 +141,12 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             gameViewModel.currentSession.game.timeLimit, 0
         )
 
-        tv_game_timer.visibility = arguments?.getBoolean(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
-            if((it)) {
-                 View.INVISIBLE
-            } else  View.VISIBLE
-        } ?:  View.VISIBLE
+        tv_game_timer.visibility =
+            arguments?.getBoolean(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
+                if ((it)) {
+                    View.INVISIBLE
+                } else View.VISIBLE
+            } ?: View.VISIBLE
     }
 
     override fun onResume() {
@@ -198,14 +206,12 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     private fun configurePlayerViews(game: Game) {
         val currentPlayer =
             (game.playerObjectList).find { it.username == gameViewModel.currentSession.currentUser }
+                ?: (game.playerObjectList).find { it.username == gameViewModel.currentSession.previousUserName }
 
-        if(currentPlayer == null) {
-            if(gameViewModel.currentSession.currentUser == gameViewModel.currentSession.revertToPreviousUsername()) {
-                Toast.makeText(context, getString(R.string.name_change_end_game), Toast.LENGTH_LONG).show()
+        if (currentPlayer == null) {
+                Toast.makeText(context, getString(R.string.name_change_end_game), Toast.LENGTH_LONG)
+                    .show()
                 triggerEndGame()
-            }else {
-                gameViewModel.forceRefreshGame()
-            }
             return
         }
 

@@ -11,6 +11,7 @@ import com.dangerfield.spyfall.ui.newGame.PackDetailsError
 import com.dangerfield.spyfall.ui.waiting.LeaveGameError
 import com.dangerfield.spyfall.util.Event
 import com.dangerfield.spyfall.ui.waiting.NameChangeError
+import com.google.android.gms.tasks.Task
 
 interface GameRepository {
     fun createGame(
@@ -25,7 +26,7 @@ interface GameRepository {
     ): LiveData<Resource<Session, JoinGameError>>
 
     fun leaveGame(currentSession: Session)
-    fun endGame(currentSession: Session)
+    fun endGame(currentSession: Session): Task<Void>
     fun startGame(currentSession: Session)
     fun resetGame(currentSession: Session)
     fun changeName(
