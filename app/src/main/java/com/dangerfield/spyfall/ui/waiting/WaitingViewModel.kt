@@ -32,6 +32,8 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
 
     fun getSessionEnded() = repository.getSessionEnded()
 
+    fun getRemoveInactiveUserEvent() = repository.getRemoveInactiveUserEvent()
+
     fun getNameChangeEvent() = nameChangeEvent
 
     fun getLeaveGameEvent() = repository.getLeaveGameEvent()
@@ -65,4 +67,6 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
         }
         return true
     }
+
+    var hasNavigatedUsingSavedSessionToStartedGame = false
 }

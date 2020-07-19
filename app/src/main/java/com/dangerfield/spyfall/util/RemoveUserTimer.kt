@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.util
 
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -9,8 +10,9 @@ import kotlinx.coroutines.*
 
 class RemoveUserTimer(val repository: GameRepository, private val preferencesHelper: PreferencesHelper) : LifecycleObserver {
 
-    private var killGame: Job = Job()
+    private var removeUserJob: Job = Job()
     private val fifteenMins = 900000L
+    private val tenSeconds = 10000L
     private val currentSession : Session?
     get() { return preferencesHelper.getSavedSession() }
 
@@ -30,22 +32,28 @@ class RemoveUserTimer(val repository: GameRepository, private val preferencesHel
     fun onDestroyed() {
         stopTimerToRemoveUser()
         currentSession?.let {
-            repository.leaveGame(it)
+            Log.d("Elijah", "removing user")
+            repository.removeInactiveUser(it)
         }
     }
 
     private fun stopTimerToRemoveUser() {
-        if (killGame.isActive) {
+        Log.d("Elijah", "Stopping timer to remove user")
+
+        if (removeUserJob.isActive) {
             try {
-                killGame.cancel()
+                removeUserJob.cancel()
             } catch (e: CancellationException) { }
         }
     }
 
     private fun startTimerToRemoveUser(currentSession: Session) {
-        killGame = GlobalScope.launch {
-            delay(fifteenMins)
-            repository.leaveGame(currentSession)
+        Log.d("Elijah", "Starting timer to remove user")
+
+        removeUserJob = GlobalScope.launch {
+            delay(tenSeconds)
+            Log.d("Elijah", "removing user")
+            repository.removeInactiveUser(currentSession)
         }
     }
 }

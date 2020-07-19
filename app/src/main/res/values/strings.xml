@@ -118,6 +118,8 @@
     <string name="shared_preferences_test_db" translatable="false">>SHARED_PREFERENCES_TEST_DB</string>
     <string name="shared_preferences_session_code" translatable="false">>SHARED_PREFERENCES_SESSION_CODE</string>
     <string name="shared_preferences_session_current_user" translatable="false">>SHARED_PREFERENCES_SESSION_USER</string>
+    <string name="shared_preferences_session_previous_user" translatable="false">>SHARED_PREFERENCES_SESSION_PREV_USER</string>
+
 
 
 

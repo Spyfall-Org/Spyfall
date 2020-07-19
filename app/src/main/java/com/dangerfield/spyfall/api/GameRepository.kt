@@ -42,4 +42,6 @@ interface GameRepository {
     fun getSessionEnded(): MutableLiveData<Event<Unit>>
     fun cancelJobs()
     fun getLeaveGameEvent(): MutableLiveData<Event<Resource<Unit, LeaveGameError>>>
+    fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>>
+    fun removeInactiveUser(currentSession: Session)
 }

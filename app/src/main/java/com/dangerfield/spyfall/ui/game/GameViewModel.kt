@@ -22,6 +22,8 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
 
     fun getLeaveGameEvent() = repository.getLeaveGameEvent()
 
+    fun getRemoveInactiveUserEvent() = repository.getRemoveInactiveUserEvent()
+
     fun getTimeLeft(): MutableLiveData<String> {
         if (gameTimer == null) startTimer()
         return timerText
@@ -50,7 +52,7 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
 
     private fun startTimer() {
         currentSession.game.timeLimit.let { time ->
-            gameTimer = object : CountDownTimer((60000 * time), 1000) {
+            gameTimer = object : CountDownTimer(getMillisecondsFromMin(time), 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     val text = String.format(
                         Locale.getDefault(), "%d:%02d",
@@ -67,6 +69,10 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
             }.start()
         }
     }
+
+    //0 is special to debug mode to get a 10 seconds game
+    private fun getMillisecondsFromMin(time: Long) = if(time == 0L) 10000 else (60000 * time)
+
 
     fun forceRefreshGame() { liveGame.postValue(liveGame.value) }
 

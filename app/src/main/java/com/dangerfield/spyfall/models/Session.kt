@@ -22,6 +22,6 @@ class Session (
     }
 
     override fun toString(): String {
-        return "(accessCode: $accessCode, username: $currentUser)"
+        return "(accessCode: $accessCode, username: $currentUser, prevUsername: $previousUserName)"
     }
 }

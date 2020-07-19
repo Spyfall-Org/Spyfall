@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.ui.newGame
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
@@ -37,7 +38,7 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
 
             username.length > 25 ->  result.value = Resource.Error(error = NewGameError.NAME_CHARACTER_LIMIT)
 
-            timeLimit.isEmpty() || timeLimit.toInt() > 10 || timeLimit.toInt() == 0 ->
+            timeLimit.isEmpty() || timeLimit.toInt() > 10 || zeroTimeCheck(timeLimit.toInt()) ->
                 result.value = Resource.Error(error = NewGameError.TIME_LIMIT_ERROR)
 
             else -> result = repository.createGame(username, timeLimit.toLong(), selectedPacks) as MutableLiveData<Resource<Session, NewGameError>>
@@ -45,6 +46,11 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
 
         return result
     }
+
+    //in debug I want to be able to use zero
+    private fun zeroTimeCheck(time: Int) =
+        !BuildConfig.DEBUG && time == 0
+
 
     fun getPacksDetails(): MutableLiveData<Resource<List<List<String>>, PackDetailsError>> {
         if(packsDetails.value?.data.isNullOrEmpty()){

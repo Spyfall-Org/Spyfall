@@ -82,9 +82,9 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         }
     }
 
-    private fun navigateToWaitingScreen(currentSession : Session, gameInProgress: Boolean) {
+    private fun navigateToWaitingScreen(currentSession : Session, started: Boolean) {
         val bundle = Bundle()
-        bundle.putBoolean(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG, gameInProgress)
+        bundle.putBoolean(WaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME, true)
         bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
         navController.navigate(R.id.action_startFragment_to_waitingFragment, bundle)
     }

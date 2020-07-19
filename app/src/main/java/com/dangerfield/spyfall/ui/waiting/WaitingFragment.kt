@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
-import com.dangerfield.spyfall.util.CrashlyticsLogger
+import com.dangerfield.spyfall.util.LogHelper
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.getViewModelFactory
@@ -82,22 +82,32 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         })
 
         waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success -> navigateToStart()
-                is Resource.Error -> handleLeaveGameError(it)
+            if (navController.currentDestination?.id == R.id.waitingFragment) {
+                // handle leave game events differently in the game screen
+                when (it) {
+                    is Resource.Success -> navigateToStart()
+                    is Resource.Error -> handleLeaveGameError(it)
+                }
             }
         })
 
         waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment) {
-                CrashlyticsLogger.logSessionEndedInWaiting(waitingViewModel.currentSession)
+                LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
+                navigateToStart()
+            }
+        })
+
+        waitingViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
+            if (navController.currentDestination?.id == R.id.waitingFragment && it is Resource.Success) {
+                LogHelper.removedInactiveUser(waitingViewModel.currentSession)
                 navigateToStart()
             }
         })
     }
 
     private fun handleLeaveGameError(result: Resource.Error<Unit, LeaveGameError>) {
-        result.exception?.let { CrashlyticsLogger.logLeaveGameError(it) }
+        result.exception?.let { LogHelper.logLeaveGameError(it) }
         result.error?.let {
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }
@@ -109,12 +119,12 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
             waitingViewModel.currentSession.currentUser = it
             adapter.currentUserName = it
         }
-        CrashlyticsLogger.logSuccesfulNameChange(waitingViewModel.currentSession)
+        LogHelper.logSuccesfulNameChange(waitingViewModel.currentSession)
         changeNameHelper.dismissNameChangeDialog()
     }
 
     private fun handleNameChangeError(result: Resource.Error<String, NameChangeError>) {
-        result.exception?.let { CrashlyticsLogger.logNameChangeError(it) }
+        result.exception?.let { LogHelper.logNameChangeError(it) }
         result.error?.let {
             when (it) {
                 NameChangeError.GAME_STARTED,
@@ -127,18 +137,28 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     private fun navigateToGameScreen() {
-        CrashlyticsLogger.logNavigatingToGameScreen(waitingViewModel.currentSession)
+
+        LogHelper.logNavigatingToGameScreen(waitingViewModel.currentSession)
         changeNameHelper.dismissNameChangeDialog()
         val bundle = Bundle()
-        arguments?.getBoolean(NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
-            bundle.putBoolean(NAVIGATE_TO_STARTED_GAME_FLAG, it)
+
+        /*
+        We only want to do this once because if a user that navigated to game using
+        saved session gets to play again, we want to make sure they can see the timer
+         */
+        arguments?.getBoolean(NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)?.let {
+            if(!waitingViewModel.hasNavigatedUsingSavedSessionToStartedGame) {
+                bundle.putBoolean(NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME, it)
+                waitingViewModel.hasNavigatedUsingSavedSessionToStartedGame = true
+            }
         }
+
         bundle.putParcelable(SESSION_KEY, waitingViewModel.currentSession)
         navController.navigate(R.id.action_waitingFragment_to_gameFragment, bundle)
     }
 
     private fun navigateToStart() {
-        CrashlyticsLogger.logSessionEndedInWaiting(waitingViewModel.currentSession)
+        LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
         navController.popBackStack(R.id.startFragment, false)
     }
 
@@ -150,7 +170,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun setupView() {
         changeAccent()
         btn_start_game.setOnClickListener {
-            CrashlyticsLogger.logUserClickedStartGame(waitingViewModel.currentSession)
+            LogHelper.logUserClickedStartGame(waitingViewModel.currentSession)
             loadMode()
             waitingViewModel.startGame()
         }
@@ -166,7 +186,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     private fun fireLeaveGameEvent() {
-        CrashlyticsLogger.logUserClickedToLeaveGame(waitingViewModel.currentSession)
+        LogHelper.logUserClickedToLeaveGame(waitingViewModel.currentSession)
         waitingViewModel.fireLeaveGameEvent()
     }
 
@@ -195,13 +215,13 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     override fun fireNameChangeEvent(newName: String) {
-        CrashlyticsLogger.logUserChangingName(newName, waitingViewModel.currentSession)
+        LogHelper.logUserChangingName(newName, waitingViewModel.currentSession)
         waitingViewModel.fireNameChange(newName)
     }
 
     companion object {
         const val SESSION_KEY = "123_pls_help_me"
-        const val NAVIGATE_TO_STARTED_GAME_FLAG = "thisisasupercoolkey"
+        const val NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME = "thisisasupercoolkey"
     }
 }
 

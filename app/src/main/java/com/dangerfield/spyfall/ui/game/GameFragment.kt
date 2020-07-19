@@ -20,13 +20,13 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Constants
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Game
+import com.dangerfield.spyfall.models.Player
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
-import com.dangerfield.spyfall.util.CrashlyticsLogger
+import com.dangerfield.spyfall.util.LogHelper
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.getViewModelFactory
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 
 class GameFragment : Fragment(R.layout.fragment_game) {
 
@@ -70,7 +70,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         gameViewModel.getLiveGame().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             //play again has been triggered
             if (!it.started && navController.currentDestination?.id == R.id.gameFragment) {
-                CrashlyticsLogger.logPlayAgainTriggered(gameViewModel.currentSession)
+                LogHelper.logPlayAgainTriggered(gameViewModel.currentSession)
                 navController.popBackStack(R.id.waitingFragment, false)
             }
 
@@ -78,7 +78,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 //but right now it says: if the game has started, and im still on this screen, and something has changed..
                 configurePlayerViews(it)
                 configurePlayersAdapter(
-                    it.playerObjectList[0].username,
+                    it.playerObjectList,
                     it.playerList.shuffled() as ArrayList<String>
                 )
                 configureLocationsAdapter(it.locationList)
@@ -96,7 +96,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         gameViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.gameFragment) {
-                CrashlyticsLogger.logSessionEndedInGame(gameViewModel.currentSession)
+                LogHelper.logSessionEndedInGame(gameViewModel.currentSession)
                 handleEndGame()
             }
         })
@@ -109,7 +109,16 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             })
 
         gameViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
-            if (it is Resource.Success) handleEndGame()
+            if (navController.currentDestination?.id == R.id.gameFragment) {
+                if (it is Resource.Success) handleEndGame()
+            }
+        })
+
+        gameViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
+            if (navController.currentDestination?.id == R.id.gameFragment && it is Resource.Success) {
+                LogHelper.removedInactiveUser(gameViewModel.currentSession)
+                navigateToStart()
+            }
         })
     }
 
@@ -130,7 +139,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         }
 
         btn_play_again.setOnClickListener {
-            CrashlyticsLogger.logUserClickedPlayAgain(gameViewModel.currentSession)
+            LogHelper.logUserClickedPlayAgain(gameViewModel.currentSession)
             gameViewModel.resetGame()
         }
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
@@ -142,7 +151,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         )
 
         tv_game_timer.visibility =
-            arguments?.getBoolean(WaitingFragment.NAVIGATE_TO_STARTED_GAME_FLAG)?.let {
+            arguments?.getBoolean(WaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)?.let {
                 if ((it)) {
                     View.INVISIBLE
                 } else View.VISIBLE
@@ -154,7 +163,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         if (gameViewModel.playAgainWasTriggered() && navController.currentDestination?.id == R.id.gameFragment) {
             //then user returned to the game but the game has been reset
-            CrashlyticsLogger.logUserResumedGameAfterPlayAgainTriggered(gameViewModel.currentSession)
+            LogHelper.logUserResumedGameAfterPlayAgainTriggered(gameViewModel.currentSession)
             navController.popBackStack(R.id.waitingFragment, false)
         }
     }
@@ -175,12 +184,16 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
 
     fun triggerEndGame() {
-        CrashlyticsLogger.logUserTiggeredEndGame(gameViewModel.currentSession)
+        LogHelper.logUserTiggeredEndGame(gameViewModel.currentSession)
         gameViewModel.triggerEndGame()
     }
 
     private fun handleEndGame() {
-        CrashlyticsLogger.logEndingGame(gameViewModel.currentSession)
+        LogHelper.logEndingGame(gameViewModel.currentSession)
+        navigateToStart()
+    }
+
+    private fun navigateToStart() {
         gameViewModel.stopTimer()
         navController.popBackStack(R.id.startFragment, false)
     }
@@ -194,7 +207,8 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         locationsAdapter.items = locations
     }
 
-    private fun configurePlayersAdapter(firstPlayer: String, players: ArrayList<String>) {
+    private fun configurePlayersAdapter(playerObjects: List<Player>, players: ArrayList<String>) {
+        val firstPlayer = findFirstPlayer(playerObjects, players)
         rv_players.apply {
             layoutManager = GridLayoutManager(context, 2)
             playersAdapter = GameViewsAdapter(context, players, firstPlayer)
@@ -203,12 +217,21 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         }
     }
 
+    private fun findFirstPlayer(playerObjects: List<Player>, players: java.util.ArrayList<String>): String? {
+        playerObjects.forEach {playerObject ->
+            val username = players.find { playerObject.username == it }
+            if(username != null) return username
+        }
+        return ""
+    }
+
     private fun configurePlayerViews(game: Game) {
         val currentPlayer =
             (game.playerObjectList).find { it.username == gameViewModel.currentSession.currentUser }
                 ?: (game.playerObjectList).find { it.username == gameViewModel.currentSession.previousUserName }
 
         if (currentPlayer == null) {
+            Log.d("Elijah", "BIG OLE NAME CHANGE ERROR: ${gameViewModel.currentSession}")
                 Toast.makeText(context, getString(R.string.name_change_end_game), Toast.LENGTH_LONG)
                     .show()
                 triggerEndGame()

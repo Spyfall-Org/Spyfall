@@ -16,7 +16,7 @@ import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
-import com.dangerfield.spyfall.util.CrashlyticsLogger
+import com.dangerfield.spyfall.util.LogHelper
 import kotlinx.android.synthetic.main.fragment_join_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -73,7 +73,7 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
     }
 
     private fun handleErrorJoinGame(result: Resource.Error<Session, JoinGameError>) {
-        result.exception?.let { CrashlyticsLogger.logErrorJoiningGame(it) }
+        result.exception?.let { LogHelper.logErrorJoiningGame(it) }
 
         result.error?.let {error ->
             if (error == JoinGameError.NETWORK_ERROR) {

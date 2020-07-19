@@ -16,7 +16,7 @@ import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
-import com.dangerfield.spyfall.util.CrashlyticsLogger
+import com.dangerfield.spyfall.util.LogHelper
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
@@ -78,7 +78,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
     }
 
     private fun handleErrorCreatingGame(result: Resource.Error<Session, NewGameError>) {
-        result.exception?.let { CrashlyticsLogger.logErrorCreatingGame(it) }
+        result.exception?.let { LogHelper.logErrorCreatingGame(it) }
 
         result.error?.let {error ->
             if(error == NewGameError.NETWORK_ERROR) {
@@ -114,7 +114,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
     }
 
     private fun handlePacksDetailsError(result: Resource.Error<List<List<String>>, PackDetailsError>) {
-        result.exception?.let { CrashlyticsLogger.logErrorGettingPacksDetails(it) }
+        result.exception?.let { LogHelper.logErrorGettingPacksDetails(it) }
 
         result.error?.let {error ->
             if(error == PackDetailsError.NETWORK_ERROR) {
