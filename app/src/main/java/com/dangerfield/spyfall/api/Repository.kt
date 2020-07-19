@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.BuildConfig
 import com.dangerfield.spyfall.ui.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.*
+import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.ui.newGame.NewGameError
 import com.dangerfield.spyfall.ui.newGame.PackDetailsError
 import com.dangerfield.spyfall.ui.waiting.LeaveGameError
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import java.util.*
 
 class Repository(
@@ -40,6 +42,7 @@ class Repository(
     private var sessionEndedEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     private var leaveGameEvent = MutableLiveData<Event<Resource<Unit, LeaveGameError>>>()
     private var removeInactiveUserEvent = MutableLiveData<Event<Resource<Unit, Unit>>>()
+
     /**
      * Provides VMs with access to global events
      */
@@ -47,9 +50,11 @@ class Repository(
         addListenerIfNewGame(currentSession)
         return liveGame
     }
+
     override fun getSessionEnded() = sessionEndedEvent
     override fun getLeaveGameEvent() = leaveGameEvent
-    override fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>> = removeInactiveUserEvent
+    override fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>> =
+        removeInactiveUserEvent
 
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -240,6 +245,35 @@ class Repository(
         }
     }
 
+    override fun reassignRoles(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>> {
+        val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
+        job = Job()
+        CoroutineScope(IO + job).launch {
+            val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+            gameRef.update(Constants.GameFields.started, true)
+            try {
+                val newLocation =
+                    currentSession.game.locationList.filter { it != currentSession.game.chosenLocation }
+                        .random()
+                val newSession = currentSession.copy()
+                newSession.game.chosenLocation = newLocation
+                val roles = getRoles(newSession)
+                assignRoles(roles, newSession, gameRef)
+                result.postValue(Event(Resource.Success(Unit)))
+            } catch (e: Exception) {
+                result.postValue(
+                    Event(
+                        Resource.Error(
+                            error = StartGameError.Unknown,
+                            exception = e
+                        )
+                    )
+                )
+            }
+        }
+        return result
+    }
+
 
     /**
      * removes node on fire store
@@ -256,15 +290,30 @@ class Repository(
      * assigns all players roles in the player objects list
      * increments statistics for games played
      */
-    override fun startGame(currentSession: Session) {
-        if (currentSession.game.started) return
+    override fun startGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>> {
+        val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
+
+        job = Job()
         CoroutineScope(IO + job).launch {
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             gameRef.update(Constants.GameFields.started, true)
-            val roles = getRoles(currentSession)
-            assignRoles(roles, currentSession, gameRef)
-            incrementGamesPlayed()
+            try {
+                val roles = getRoles(currentSession)
+                assignRoles(roles, currentSession, gameRef)
+                result.postValue(Event(Resource.Success(Unit)))
+                incrementGamesPlayed()
+            } catch (e: Exception) {
+                result.postValue(
+                    Event(
+                        Resource.Error(
+                            error = StartGameError.Unknown,
+                            exception = e
+                        )
+                    )
+                )
+            }
         }
+        return result
     }
 
     /**
@@ -408,8 +457,9 @@ class Repository(
         gameRef: DocumentReference
     ) {
         if (roles.isNullOrEmpty()) {
-            return
+            throw Exception()
         }
+
 
         val playerNames = session.game.playerList.shuffled()
         val playerObjectList = ArrayList<Player>()
@@ -420,8 +470,9 @@ class Repository(
         }
 
         playerObjectList.add(Player(Constants.GameFields.theSpyRole, playerNames.last(), 0))
+        Log.d("Elijah", "Starting game in 10 seconds")
+        delay(10000)
         gameRef.update(Constants.GameFields.playerObjectList, playerObjectList.shuffled()).await()
-
     }
 
     private fun addPlayer(username: String, accessCode: String): Task<Void> {

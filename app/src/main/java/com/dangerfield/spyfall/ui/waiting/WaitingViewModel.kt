@@ -6,6 +6,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
+import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.util.Event
 
 enum class NameChangeError(val resId: Int) {
@@ -30,6 +31,7 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
 
     private val liveGame = repository.getLiveGame(currentSession)
 
+
     fun getSessionEnded() = repository.getSessionEnded()
 
     fun getRemoveInactiveUserEvent() = repository.getRemoveInactiveUserEvent()
@@ -40,10 +42,20 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
 
     fun getLiveGame() = liveGame
 
-    fun startGame() =
-        repository.startGame(currentSession)
+    fun fireStartGame(): MediatorLiveData<Event<Resource<Unit, StartGameError>>> {
+        val result = MediatorLiveData<Event<Resource<Unit, StartGameError>>>()
+        if(currentSession.game.started) {
+            result.postValue(Event(Resource.Error(error = StartGameError.GAME_STARTED )))
+        } else {
+            result.addSource(repository.startGame(currentSession)) {
+                result.postValue(it)
+            }
+        }
+        return result
+    }
 
     fun fireLeaveGameEvent() {
+        repository.cancelJobs()
         repository.leaveGame(currentSession)
     }
 

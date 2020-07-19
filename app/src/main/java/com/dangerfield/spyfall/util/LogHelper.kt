@@ -91,5 +91,10 @@ class LogHelper {
             Crashlytics.log("Removing Inactive User.\nCurrent Session: $currentSession")
             Log.d("Elijah", "Removing Inactive User.\n Current Session: ${currentSession}")
         }
+
+        fun logStartGameError(it: Exception) {
+            Crashlytics.log("ERROR STARTING GAME.\n exception: ${it.localizedMessage}")
+            Log.d("Elijah", "ERROR STARTING GAME.\n exception: ${it.localizedMessage}")
+        }
     }
 }

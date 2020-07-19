@@ -6,6 +6,7 @@ import com.dangerfield.spyfall.ui.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.GamePack
+import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.ui.newGame.NewGameError
 import com.dangerfield.spyfall.ui.newGame.PackDetailsError
 import com.dangerfield.spyfall.ui.waiting.LeaveGameError
@@ -27,7 +28,7 @@ interface GameRepository {
 
     fun leaveGame(currentSession: Session)
     fun endGame(currentSession: Session): Task<Void>
-    fun startGame(currentSession: Session)
+    fun startGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>>
     fun resetGame(currentSession: Session)
     fun changeName(
         newName: String,
@@ -44,4 +45,5 @@ interface GameRepository {
     fun getLeaveGameEvent(): MutableLiveData<Event<Resource<Unit, LeaveGameError>>>
     fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>>
     fun removeInactiveUser(currentSession: Session)
+    fun reassignRoles(currentSession: Session) : MutableLiveData<Event<Resource<Unit, StartGameError>>>
 }

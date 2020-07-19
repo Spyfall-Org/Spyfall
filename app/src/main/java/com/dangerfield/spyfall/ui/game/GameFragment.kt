@@ -36,7 +36,6 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     private val navController: NavController by lazy {
         NavHostFragment.findNavController(this)
     }
-
     private val gameViewModel: GameViewModel by viewModels { getViewModelFactory(requireArguments()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,12 +67,14 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         } else adView2.visibility = View.GONE
 
         gameViewModel.getLiveGame().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            gameViewModel.currentSession.game = it
             //play again has been triggered
             if (!it.started && navController.currentDestination?.id == R.id.gameFragment) {
                 LogHelper.logPlayAgainTriggered(gameViewModel.currentSession)
                 navController.popBackStack(R.id.waitingFragment, false)
             }
 
+            //normal updates
             if (it.started && navController.currentDestination?.id == R.id.gameFragment) {
                 //but right now it says: if the game has started, and im still on this screen, and something has changed..
                 configurePlayerViews(it)
@@ -84,14 +85,13 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 configureLocationsAdapter(it.locationList)
             }
 
+            //user left the game as the game was starting
             if (it.started
                 && it.playerObjectList.size != it.playerList.size
                 && navController.currentDestination?.id == R.id.gameFragment
             ) {
-                triggerEndGame()
+                handleReassign()
             }
-
-            gameViewModel.currentSession.game = it
         })
 
         gameViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
@@ -110,7 +110,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         gameViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.gameFragment) {
-                if (it is Resource.Success) handleEndGame()
+                if (it is Resource.Success) navigateToStart()
             }
         })
 
@@ -120,6 +120,26 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 navigateToStart()
             }
         })
+    }
+
+    private fun handleReassign() {
+        Log.d("Elijah", "Reassigning roles")
+        val startedGame = arguments?.getBoolean(WaitingFragment.STARTER) != null
+        if(startedGame) gameViewModel.reassignRoles().observe(viewLifecycleOwner, EventObserver {
+            when(it) {
+                is Resource.Success -> {/* no-op. User will get updates */}
+                is Resource.Error -> handleReassignError(it)
+            }
+        })
+
+    }
+
+    private fun handleReassignError(e: Resource.Error<Unit, StartGameError>) {
+        e.exception?.let { LogHelper.logStartGameError(it) }
+        e.error?.let {
+            Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
+        }
+        triggerEndGame()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

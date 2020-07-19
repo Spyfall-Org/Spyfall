@@ -9,7 +9,7 @@ interface SessionListener {
 }
 
 @Parcelize
-class Session (
+data class Session (
     val accessCode: String,
     var currentUser: String,
     var game : Game,

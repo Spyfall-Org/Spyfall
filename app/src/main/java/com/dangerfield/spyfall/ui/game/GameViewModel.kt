@@ -3,11 +3,16 @@ package com.dangerfield.spyfall.ui.game
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
+import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.models.Session
+import java.lang.Exception
 import java.util.*
 import java.util.concurrent.TimeUnit
-
+enum class StartGameError(val resId: Int) {
+    Unknown(R.string.start_game_unknown_error),
+    GAME_STARTED(R.string.change_name_error_started_game),
+}
 class GameViewModel(private val repository: GameRepository, val currentSession: Session) :
     ViewModel(), LifecycleObserver {
 
@@ -73,8 +78,7 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
     //0 is special to debug mode to get a 10 seconds game
     private fun getMillisecondsFromMin(time: Long) = if(time == 0L) 10000 else (60000 * time)
 
-
-    fun forceRefreshGame() { liveGame.postValue(liveGame.value) }
+    fun reassignRoles() = repository.reassignRoles(currentSession)
 
     companion object {
         const val timeOver = "0:00"

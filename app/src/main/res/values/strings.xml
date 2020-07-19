@@ -109,6 +109,10 @@
     <string name="string_locations">Locations</string>
     <string name="string_hide">Hide</string>
     <string name="string_show">Show</string>
+    <string name="start_game_unknown_error" translatable="false">We are sorry there was an unknown error starting the game. Please try again.</string>
+    <string name="start_game_started_error" translatable="false">Sorry, it looks like someone else has already started the game. It may be loading.</string>
+
+
 
     <!--SHARED PREFERNCES-->
     <string name="shared_preferences_color" translatable="false">SHARED_PREFERENCES_COLOR</string>
@@ -119,8 +123,6 @@
     <string name="shared_preferences_session_code" translatable="false">>SHARED_PREFERENCES_SESSION_CODE</string>
     <string name="shared_preferences_session_current_user" translatable="false">>SHARED_PREFERENCES_SESSION_USER</string>
     <string name="shared_preferences_session_previous_user" translatable="false">>SHARED_PREFERENCES_SESSION_PREV_USER</string>
-
-
 
 
 
@@ -140,12 +142,12 @@
     <string name="end_game_title">Ending the game</string>
     <string name="light_mode">Light Mode</string>
     <string name="dark_mode">Dark Mode</string>
-    <string name="use_test_db">Use Test DB</string>
-    <string name="off">Off</string>
-    <string name="on">On</string>
-    <string name="tester_settings">Tester Settings</string>
-    <string name="submit">Submit</string>
-    <string name="name_change_end_game">We are sorry. We had to end the game due to a name change, please try again.</string>
+    <string name="use_test_db" translatable="false">Use Test DB</string>
+    <string name="off" translatable="false">Off</string>
+    <string name="on" translatable="false">On</string>
+    <string name="tester_settings" translatable="false">Tester Settings</string>
+    <string name="submit" translatable="false">Submit</string>
+    <string name="name_change_end_game" translatable="false">We are sorry. We had to end the game due to a name change, please try again.</string>
 
 
 </resources>
