@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.ui.settings
 
+import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context.MODE_PRIVATE
@@ -32,8 +33,14 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
+
     override fun onColorChange(colorButton: ColorButton) {
-        colorChanger.btn_custom_alert_positive.background.setTint(colorButton.color)
+        val anim = ValueAnimator.ofArgb(UIHelper.accentColor, colorButton.color)
+        anim.addUpdateListener {
+            colorChanger.btn_custom_alert_positive.background.setTint(it.animatedValue as Int)
+        }
+        anim.duration = 300;
+        anim.start();
     }
 
     private val colorChanger : AlertDialog by lazy { getColorChangeDialog()}
