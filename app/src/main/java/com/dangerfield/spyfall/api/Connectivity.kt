@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.util
+package com.dangerfield.spyfall.api
 
 import java.io.IOException
 

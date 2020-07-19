@@ -153,11 +153,11 @@ class Repository(
     override fun joinGame(
         accessCode: String,
         username: String
-    ): LiveData<Resource<Session, JoinGameError>> {
-        val result = MutableLiveData<Resource<Session, JoinGameError>>()
+    ): LiveData<Event<Resource<Session, JoinGameError>>> {
+        val result = MutableLiveData<Event<Resource<Session, JoinGameError>>>()
 
         if (!Connectivity.isOnline) {
-            result.value = Resource.Error(error = JoinGameError.NETWORK_ERROR)
+            result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
         } else {
             job = Job()
             CoroutineScope(IO + job).launch {
@@ -170,40 +170,44 @@ class Repository(
                             when {
                                 list.size >= 8 ->
                                     result.value =
-                                        Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS)
+                                        Event(Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS))
 
                                 document[Constants.GameFields.started] == true ->
                                     result.value =
-                                        Resource.Error(error = JoinGameError.GAME_HAS_STARTED)
+                                        Event(Resource.Error(error = JoinGameError.GAME_HAS_STARTED))
 
                                 list.contains(username) ->
-                                    result.value = Resource.Error(error = JoinGameError.NAME_TAKEN)
+                                    result.value =
+                                        Event(Resource.Error(error = JoinGameError.NAME_TAKEN))
 
                                 else -> {
                                     addPlayer(username, accessCode).addOnSuccessListener {
                                         val game = document.toObject(Game::class.java)
                                         if (game != null) {
                                             val currentSession = Session(accessCode, username, game)
-                                            result.value = Resource.Success(currentSession)
+                                            result.value = Event(Resource.Success(currentSession))
                                             preferencesHelper.saveSession(currentSession)
                                         } else {
                                             result.value =
-                                                Resource.Error(error = JoinGameError.UNKNOWN_ERROR)
+                                                Event(Resource.Error(error = JoinGameError.UNKNOWN_ERROR))
                                         }
                                     }.addOnFailureListener {
                                         result.value =
-                                            Resource.Error(
-                                                error = JoinGameError.COULD_NOT_JOIN,
-                                                exception = it
+                                            Event(
+                                                Resource.Error(
+                                                    error = JoinGameError.COULD_NOT_JOIN,
+                                                    exception = it
+                                                )
                                             )
                                     }
                                 }
                             }
                         } else {
-                            result.value = Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST)
+                            result.value =
+                                Event(Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST))
                         }
                     }.addOnFailureListener {
-                        result.value = Resource.Error(error = JoinGameError.NETWORK_ERROR)
+                        result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
                     }
             }
         }
@@ -456,7 +460,9 @@ class Repository(
         session: Session,
         gameRef: DocumentReference
     ) {
-        if (roles.isNullOrEmpty()) { throw Exception() }
+        if (roles.isNullOrEmpty()) {
+            throw Exception()
+        }
 
         val playerNames = session.game.playerList.shuffled()
         val playerObjectList = ArrayList<Player>()

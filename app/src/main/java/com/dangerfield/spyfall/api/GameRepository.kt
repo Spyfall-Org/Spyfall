@@ -24,7 +24,7 @@ interface GameRepository {
     fun joinGame(
         accessCode: String,
         username: String
-    ): LiveData<Resource<Session, JoinGameError>>
+    ): LiveData<Event<Resource<Session, JoinGameError>>>
 
     fun leaveGame(currentSession: Session)
     fun endGame(currentSession: Session): Task<Void>
