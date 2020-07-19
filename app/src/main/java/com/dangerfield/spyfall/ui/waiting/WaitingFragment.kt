@@ -16,10 +16,7 @@ import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.ui.game.StartGameError
-import com.dangerfield.spyfall.util.LogHelper
-import com.dangerfield.spyfall.util.EventObserver
-import com.dangerfield.spyfall.util.UIHelper
-import com.dangerfield.spyfall.util.getViewModelFactory
+import com.dangerfield.spyfall.util.*
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.fragment_waiting.*
 
@@ -90,10 +87,10 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
             adapter.players = it.playerList
             tv_acess_code.text = waitingViewModel.currentSession.accessCode
 
-            if (it.started) loadMode() else enterMode()
+            showLoading(it.started)
 
             if (it.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment) {
-                enterMode()
+                showLoading(false)
                 navigateToGameScreen()
             }
         })
@@ -141,11 +138,10 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun fireStartGame() {
         LogHelper.logUserClickedStartGame(waitingViewModel.currentSession)
         navigationBundle.putBoolean(STARTER, true)
-        loadMode()
+        showLoading(true)
         waitingViewModel.fireStartGame().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success -> {/*no-op player list change will trigger navigation*/
-                }
+                is Resource.Success -> { } /*no-op player list change will trigger navigation*/
                 is Resource.Error -> handleStartGameError(it)
             }
         })
@@ -197,6 +193,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         e.error?.let {
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }
+        showLoading(false)
     }
 
     private fun navigateToGameScreen() {
@@ -232,17 +229,10 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
             .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
     }
 
-    private fun loadMode() {
-        btn_start_game.text = ""
-        pb_waiting.visibility = View.VISIBLE
-        btn_start_game.isClickable = false
-    }
-
-    private fun enterMode() {
-        btn_start_game.text = getString(R.string.string_btn_start_game)
-        pb_waiting.visibility = View.GONE
-        btn_leave_game.isClickable = true
-        btn_start_game.isClickable = true
+    private fun showLoading(loading: Boolean) {
+        btn_start_game.isClickable = !loading
+        btn_start_game.text = if(loading) "" else getString(R.string.string_btn_start_game)
+        pb_waiting.goneIf(!loading)
     }
 
     private fun showLeaveGameDialog() {
