@@ -31,7 +31,6 @@ class StartFragment : Fragment(R.layout.fragment_start) {
     }
 
     private val reviewHelper : ReviewManager by inject()
-
     private val savedSessionHelper : SavedSessionHelper by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -456,10 +456,7 @@ class Repository(
         session: Session,
         gameRef: DocumentReference
     ) {
-        if (roles.isNullOrEmpty()) {
-            throw Exception()
-        }
-
+        if (roles.isNullOrEmpty()) { throw Exception() }
 
         val playerNames = session.game.playerList.shuffled()
         val playerObjectList = ArrayList<Player>()
@@ -470,8 +467,6 @@ class Repository(
         }
 
         playerObjectList.add(Player(Constants.GameFields.theSpyRole, playerNames.last(), 0))
-        Log.d("Elijah", "Starting game in 10 seconds")
-        delay(10000)
         gameRef.update(Constants.GameFields.playerObjectList, playerObjectList.shuffled()).await()
     }
 

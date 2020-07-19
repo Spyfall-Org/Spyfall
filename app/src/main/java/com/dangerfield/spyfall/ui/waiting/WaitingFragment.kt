@@ -25,18 +25,19 @@ import kotlinx.android.synthetic.main.fragment_waiting.*
 
 class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFirer {
 
-    private val adapter by lazy { WaitingPlayersAdapter(waitingViewModel.currentSession.currentUser, changeNameHelper) }
-    private val changeNameHelper by lazy { ChangeNameHelper(this) }
-    private val waitingViewModel: WaitingViewModel by viewModels { getViewModelFactory(requireArguments()) }
-    private val navigationBundle = Bundle()
-
-    private fun showLeaveGameDialog() {
-        UIHelper.customSimpleAlert(requireContext(),
-            resources.getString(R.string.waiting_leaving_title),
-            resources.getString(R.string.waiting_leaving_message),
-            resources.getString(R.string.leave_action_positive), { fireLeaveGameEvent() },
-            resources.getString(R.string.leave_action_negative), {}).show()
+    private val adapter by lazy {
+        WaitingPlayersAdapter(
+            waitingViewModel.currentSession.currentUser,
+            changeNameHelper
+        )
     }
+    private val changeNameHelper by lazy { ChangeNameHelper(this) }
+    private val waitingViewModel: WaitingViewModel by viewModels {
+        getViewModelFactory(
+            requireArguments()
+        )
+    }
+    private val navigationBundle = Bundle()
 
     private val navController: NavController by lazy {
         NavHostFragment.findNavController(this)
@@ -53,20 +54,43 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
             })
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupView()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        observeGameUpdates()
+        observeNameChangeEvent()
+        observeLeaveGameEvent()
+        observeSessionEnded()
+        observeInactiveUserRemoved()
+    }
+
+    private fun setupView() {
+        changeAccent()
+        btn_start_game.setOnClickListener { fireStartGame() }
+
+        btn_leave_game.setOnClickListener { showLeaveGameDialog() }
+
+        configureLayoutManagerAndRecyclerView()
 
         adView.visibility = if (BuildConfig.FLAVOR == "free") {
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
             View.VISIBLE
         } else View.GONE
+    }
 
+    private fun observeGameUpdates() {
         waitingViewModel.getLiveGame().observe(viewLifecycleOwner, Observer {
             if (!this.isAdded) return@Observer
 
             waitingViewModel.currentSession.game = it
             adapter.players = it.playerList
+            tv_acess_code.text = waitingViewModel.currentSession.accessCode
 
             if (it.started) loadMode() else enterMode()
 
@@ -75,14 +99,18 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
                 navigateToGameScreen()
             }
         })
+    }
 
+    private fun observeNameChangeEvent() {
         waitingViewModel.getNameChangeEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success ->  handleNameChangeSuccess(it)
+                is Resource.Success -> handleNameChangeSuccess(it)
                 is Resource.Error -> handleNameChangeError(it)
             }
         })
+    }
 
+    private fun observeLeaveGameEvent() {
         waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment) {
                 // handle leave game events differently in the game screen
@@ -92,14 +120,18 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
                 }
             }
         })
+    }
 
+    private fun observeSessionEnded() {
         waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment) {
                 LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
                 navigateToStart()
             }
         })
+    }
 
+    private fun observeInactiveUserRemoved() {
         waitingViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment && it is Resource.Success) {
                 LogHelper.removedInactiveUser(waitingViewModel.currentSession)
@@ -132,46 +164,11 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
                 NameChangeError.GAME_STARTED,
                 NameChangeError.UNKNOWN_ERROR,
                 NameChangeError.NETWORK_ERROR -> changeNameHelper.dismissNameChangeDialog()
-                else -> { } //no-op. keep dialog up so user can fix mistake
+                else -> {
+                } //no-op. keep dialog up so user can fix mistake
             }
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun navigateToGameScreen() {
-        LogHelper.logNavigatingToGameScreen(waitingViewModel.currentSession)
-        changeNameHelper.dismissNameChangeDialog()
-        /*
-        We only want to do this once because if a user that navigated to game using
-        saved session gets to play again, we want to make sure they can see the timer
-         */
-        arguments?.getBoolean(NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)?.let {
-            if(!waitingViewModel.hasNavigatedUsingSavedSessionToStartedGame) {
-                navigationBundle.putBoolean(NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME, it)
-                waitingViewModel.hasNavigatedUsingSavedSessionToStartedGame = true
-            }
-        }
-        navigationBundle.putParcelable(SESSION_KEY, waitingViewModel.currentSession)
-        navController.navigate(R.id.action_waitingFragment_to_gameFragment, navigationBundle)
-    }
-
-    private fun navigateToStart() {
-        LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
-        navController.popBackStack(R.id.startFragment, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupView()
-    }
-
-    private fun setupView() {
-        changeAccent()
-        btn_start_game.setOnClickListener { fireStartGame() }
-
-        btn_leave_game.setOnClickListener { showLeaveGameDialog() }
-
-        configureLayoutManagerAndRecyclerView()
     }
 
     private fun fireStartGame() {
@@ -179,8 +176,9 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         navigationBundle.putBoolean(STARTER, true)
         loadMode()
         waitingViewModel.fireStartGame().observe(viewLifecycleOwner, EventObserver {
-            when(it) {
-                is Resource.Success -> {/*no-op player list change will trigger navigation*/}
+            when (it) {
+                is Resource.Success -> {/*no-op player list change will trigger navigation*/
+                }
                 is Resource.Error -> handleStartGameError(it)
             }
         })
@@ -203,11 +201,27 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.fireNameChange(newName)
     }
 
-    override fun onResume() {
-        super.onResume()
-        tv_acess_code.text = waitingViewModel.currentSession.accessCode
+    private fun navigateToGameScreen() {
+        LogHelper.logNavigatingToGameScreen(waitingViewModel.currentSession)
+        changeNameHelper.dismissNameChangeDialog()
+        /*
+        We only want to do this once because if a user that navigated to game using
+        saved session gets to play again, we want to make sure they can see the timer
+         */
+        arguments?.getBoolean(NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)?.let {
+            if (!waitingViewModel.hasNavigatedUsingSavedSessionToStartedGame) {
+                navigationBundle.putBoolean(NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME, it)
+                waitingViewModel.hasNavigatedUsingSavedSessionToStartedGame = true
+            }
+        }
+        navigationBundle.putParcelable(SESSION_KEY, waitingViewModel.currentSession)
+        navController.navigate(R.id.action_waitingFragment_to_gameFragment, navigationBundle)
     }
 
+    private fun navigateToStart() {
+        LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
+        navController.popBackStack(R.id.startFragment, false)
+    }
 
     private fun configureLayoutManagerAndRecyclerView() {
         rv_player_list_waiting.layoutManager = LinearLayoutManager(context)
@@ -231,6 +245,14 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         pb_waiting.visibility = View.GONE
         btn_leave_game.isClickable = true
         btn_start_game.isClickable = true
+    }
+
+    private fun showLeaveGameDialog() {
+        UIHelper.customSimpleAlert(requireContext(),
+            resources.getString(R.string.waiting_leaving_title),
+            resources.getString(R.string.waiting_leaving_message),
+            resources.getString(R.string.leave_action_positive), { fireLeaveGameEvent() },
+            resources.getString(R.string.leave_action_negative), {}).show()
     }
 
     companion object {

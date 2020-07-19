@@ -24,7 +24,7 @@ import kotlin.collections.ArrayList
 class NewGameFragment : Fragment(R.layout.fragment_new_game) {
 
     private val newGameViewModel: NewGameViewModel by viewModel()
-    private val packsAdapter: PacksAdapter by lazy {PacksAdapter( newGameViewModel.getPacks())}
+    private val packsAdapter: PacksAdapter by lazy {PacksAdapter(newGameViewModel.getPacks())}
     private val navController by lazy { NavHostFragment.findNavController(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

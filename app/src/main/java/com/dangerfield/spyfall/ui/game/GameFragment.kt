@@ -59,13 +59,29 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        tv_game_role.maxTextSize = 96.0f
+        observeGameUpdates()
+        observeSessionEndedEvent()
+        observeTimeLeft()
+        observeGameLeftEvent()
+        observeRemovedInactiveUserEvent()
+    }
 
-        if (BuildConfig.FLAVOR == "free") {
-            val adRequest = AdRequest.Builder().build()
-            adView2.loadAd(adRequest)
-        } else adView2.visibility = View.GONE
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupView()
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (gameViewModel.playAgainWasTriggered() && navController.currentDestination?.id == R.id.gameFragment) {
+            //then user returned to the game but the game has been reset
+            LogHelper.logUserResumedGameAfterPlayAgainTriggered(gameViewModel.currentSession)
+            navController.popBackStack(R.id.waitingFragment, false)
+        }
+    }
+
+    private fun observeGameUpdates() {
         gameViewModel.getLiveGame().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             gameViewModel.currentSession.game = it
             //play again has been triggered
@@ -93,27 +109,35 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 handleReassign()
             }
         })
+    }
 
+    private fun observeSessionEndedEvent() {
         gameViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.gameFragment) {
                 LogHelper.logSessionEndedInGame(gameViewModel.currentSession)
                 handleEndGame()
             }
         })
+    }
 
+    private fun observeTimeLeft() {
         gameViewModel.getTimeLeft()
             .observe(viewLifecycleOwner, androidx.lifecycle.Observer { time ->
                 tv_game_timer.text = time
                 btn_play_again.visibility =
                     if (time == GameViewModel.timeOver) View.VISIBLE else View.GONE
             })
+    }
 
+    private fun observeGameLeftEvent() {
         gameViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.gameFragment) {
                 if (it is Resource.Success) navigateToStart()
             }
         })
+    }
 
+    private fun observeRemovedInactiveUserEvent() {
         gameViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.gameFragment && it is Resource.Success) {
                 LogHelper.removedInactiveUser(gameViewModel.currentSession)
@@ -131,7 +155,6 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 is Resource.Error -> handleReassignError(it)
             }
         })
-
     }
 
     private fun handleReassignError(e: Resource.Error<Unit, StartGameError>) {
@@ -142,11 +165,16 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         triggerEndGame()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setupView() {
+        tv_game_role.maxTextSize = 96.0f
+
+        if (BuildConfig.FLAVOR == "free") {
+            val adRequest = AdRequest.Builder().build()
+            adView2.loadAd(adRequest)
+        } else adView2.visibility = View.GONE
 
         changeAccent()
-        //we set the listeners once the view has actually been inflated
+
         btn_end_game.setOnClickListener {
             if (tv_game_timer.text.toString() == GameViewModel.timeOver) triggerEndGame()
             else {
@@ -171,21 +199,12 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         )
 
         tv_game_timer.visibility =
-            arguments?.getBoolean(WaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)?.let {
-                if ((it)) {
-                    View.INVISIBLE
-                } else View.VISIBLE
-            } ?: View.VISIBLE
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if (gameViewModel.playAgainWasTriggered() && navController.currentDestination?.id == R.id.gameFragment) {
-            //then user returned to the game but the game has been reset
-            LogHelper.logUserResumedGameAfterPlayAgainTriggered(gameViewModel.currentSession)
-            navController.popBackStack(R.id.waitingFragment, false)
-        }
+            arguments?.getBoolean(WaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)
+                ?.let {
+                    if ((it)) {
+                        View.INVISIBLE
+                    } else View.VISIBLE
+                } ?: View.VISIBLE
     }
 
     private fun hide() {
