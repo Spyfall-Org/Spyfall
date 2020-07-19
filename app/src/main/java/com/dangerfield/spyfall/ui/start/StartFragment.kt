@@ -23,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-
 class StartFragment : Fragment(R.layout.fragment_start) {
 
     private val navController by lazy {
@@ -51,7 +50,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
                 resources.getString(R.string.rules_title),
                 resources.getString(R.string.rules_message),
                 resources.getString(R.string.positive_action_standard)
-                , {}, "", {}).show()
+                , {}, "", {}, true).show()
         }
 
         btn_settings.setOnClickListener {
@@ -64,6 +63,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         UIHelper.getSavedColor(requireContext())
         changeAccent()
 
+        //TODO make this a joinPreviousGame() fun in view model
         CoroutineScope(Dispatchers.IO).launch {
             savedSessionHelper.whenUserIsInExistingGame {session, started ->
                 navigateToWaitingScreen(session, started)

@@ -10,13 +10,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
-import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
-import com.dangerfield.spyfall.util.LogHelper
+import com.dangerfield.spyfall.util.*
 import kotlinx.android.synthetic.main.fragment_new_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
@@ -45,8 +43,8 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
 
     private fun setupView() {
         changeAccent()
-        tv_new_game_name.onFocusChangeListener = UIHelper.keyboardHider
-        tv_new_game_time.onFocusChangeListener = UIHelper.keyboardHider
+        tv_new_game_name.setHideKeyBoardOnPressAway()
+        tv_new_game_time.setHideKeyBoardOnPressAway()
         tv_new_game_time.addCharacterMax(2)
         tv_new_game_name.addCharacterMax(25)
         btn_create.setOnClickListener { createGame() }
@@ -62,8 +60,9 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
         }
     }
 
+    //TODO change this to be a fire event
     private fun createGame(){
-        loadMode()
+        showLoadingForCreateGame(true)
         val timeLimit = tv_new_game_time.text.toString().trim()
         val playerName = tv_new_game_name.text.toString().trim()
         val chosenPacks = packsAdapter.packs.filter {it.isSelected}.map { it.queryString } as ArrayList<String>
@@ -90,26 +89,28 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
             }
         }
 
-        enterMode()
+        showLoadingForCreateGame(false)
     }
 
     private fun handleSucessfulGameCreation(currentSession: Session) {
         val bundle = Bundle()
         bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
         if(navController.currentDestination?.id == R.id.newGameFragment) {
-            enterMode()
+            showLoadingForCreateGame(false)
             navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
         }
     }
 
+    //TODO change this to be a fire thingy, you can post the same value using a force
     private fun getPacksInfo() {
-        loadModePacksInfo()
+        showLoadingForGettingPacks(true)
         newGameViewModel.getPacksDetails().observe(viewLifecycleOwner, Observer {
             if(!this.isAdded) return@Observer
             when(it) {
                 is Resource.Success -> it.data?.let{ d -> handlePacksDetailsSuccess(d) }
                 is Resource.Error -> handlePacksDetailsError(it)
             }
+            showLoadingForGettingPacks(false)
         })
     }
 
@@ -125,38 +126,23 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
                 }
             }
         }
-        enterModePacksInfo()
     }
-
 
     private fun handlePacksDetailsSuccess(data: List<List<String>>) {
         UIHelper.packsDialog(requireContext(), data as MutableList<List<String>>).show()
-        enterModePacksInfo()
     }
 
-    private fun loadMode(){
-        pb_new_game.visibility = View.VISIBLE
-        btn_create.text = ""
-        btn_create.isClickable = false
-        btn_packs.isClickable = false
-    }
-    private fun enterMode(){
-        pb_new_game.visibility = View.INVISIBLE
-        btn_create.text = getString(R.string.string_btn_create)
-        btn_create.isClickable = true
-        btn_packs.isClickable = true
+    private fun showLoadingForCreateGame(loading: Boolean) {
+        pb_new_game.goneIf(!loading)
+        btn_create.text = if(loading) "" else getString(R.string.string_btn_create)
+        btn_create.isClickable = !loading
+        btn_packs.isClickable = !loading
     }
 
-    private fun loadModePacksInfo() {
-        pb_packs.visibility = View.VISIBLE
-        btn_packs.visibility = View.INVISIBLE
-        btn_packs.isClickable = false
-    }
-
-    private fun enterModePacksInfo() {
-        pb_packs.visibility = View.INVISIBLE
-        btn_packs.visibility = View.VISIBLE
-        btn_packs.isClickable = true
+    private fun showLoadingForGettingPacks(loading: Boolean) {
+        pb_packs.goneIf(!loading)
+        btn_packs.goneIf(loading)
+        btn_packs.isClickable = !loading
     }
 
     private fun changeAccent(){
@@ -167,7 +153,6 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
         btn_packs.setImageDrawable(drawable)
 
         UIHelper.setCursorColor(tv_new_game_name,UIHelper.accentColor)
-
         UIHelper.setCursorColor(tv_new_game_time,UIHelper.accentColor)
 
         pb_packs.indeterminateDrawable

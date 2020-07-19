@@ -106,7 +106,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 && it.playerObjectList.size != it.playerList.size
                 && navController.currentDestination?.id == R.id.gameFragment
             ) {
-                handleReassign()
+                triggerReassign()
             }
         })
     }
@@ -146,7 +146,13 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         })
     }
 
-    private fun handleReassign() {
+    fun triggerEndGame() {
+        LogHelper.logUserTiggeredEndGame(gameViewModel.currentSession)
+        gameViewModel.triggerEndGame()
+    }
+
+    //TODO add observer to listen elsehwere
+    private fun triggerReassign() {
         Log.d("Elijah", "Reassigning roles")
         val startedGame = arguments?.getBoolean(WaitingFragment.STARTER) != null
         if(startedGame) gameViewModel.reassignRoles().observe(viewLifecycleOwner, EventObserver {
@@ -163,6 +169,12 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }
         triggerEndGame()
+    }
+
+
+    private fun handleEndGame() {
+        LogHelper.logEndingGame(gameViewModel.currentSession)
+        navigateToStart()
     }
 
     private fun setupView() {
@@ -188,6 +200,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         btn_play_again.setOnClickListener {
             LogHelper.logUserClickedPlayAgain(gameViewModel.currentSession)
+            //TODO change to trigger reset and handle errors
             gameViewModel.resetGame()
         }
         btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
@@ -219,17 +232,6 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             tv_game_location.visibility = View.VISIBLE
             btn_hide.text = resources.getString(R.string.string_hide)
         }
-    }
-
-
-    fun triggerEndGame() {
-        LogHelper.logUserTiggeredEndGame(gameViewModel.currentSession)
-        gameViewModel.triggerEndGame()
-    }
-
-    private fun handleEndGame() {
-        LogHelper.logEndingGame(gameViewModel.currentSession)
-        navigateToStart()
     }
 
     private fun navigateToStart() {

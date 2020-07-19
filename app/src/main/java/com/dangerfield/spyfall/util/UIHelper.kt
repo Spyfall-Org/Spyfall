@@ -38,15 +38,6 @@ class UIHelper {
                 Color.parseColor("#FF5800"),
                 Color.parseColor("#E3212F"))
 
-        val keyboardHider = View.OnFocusChangeListener { view, b ->
-            if (!b) { this.hideKeyboardFrom(view) }
-        }
-
-        private fun hideKeyboardFrom(view: View) {
-            val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-
         fun getSavedColor(context: Context){
             val prefs = context.getSharedPreferences(context.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
             val savedColor: Int = prefs.getInt(context.resources.getString(R.string.shared_preferences_color), 0)
@@ -98,7 +89,7 @@ class UIHelper {
 
         fun customSimpleAlert(
             context: Context, title: String, message: String, positiveText: String, positiveAction: (() -> Unit),
-            negativeText: String, negativeAction: (() -> Unit)
+            negativeText: String, negativeAction: (() -> Unit), leftAlignText: Boolean = false
         ): Dialog {
 
             val dialogBuilder = AlertDialog.Builder(context)
@@ -109,6 +100,9 @@ class UIHelper {
             dialog.setCanceledOnTouchOutside(true)
 
             view.apply {
+                if (leftAlignText) {
+                    tv_custom_alert.textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
+                }
                 if (negativeText.isEmpty()) {
                     //remove the negative button
                     btn_custom_alert_negative.visibility = View.GONE

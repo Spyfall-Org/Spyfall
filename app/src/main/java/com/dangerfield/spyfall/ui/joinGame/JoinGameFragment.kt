@@ -17,6 +17,7 @@ import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.LogHelper
+import com.dangerfield.spyfall.util.setHideKeyBoardOnPressAway
 import kotlinx.android.synthetic.main.fragment_join_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -44,12 +45,13 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
     private fun setupView() {
         updateAccent()
         btn_join_game_action.setOnClickListener { joinGameClick() }
-        tv_access_code.onFocusChangeListener = UIHelper.keyboardHider
-        tv_username.onFocusChangeListener = UIHelper.keyboardHider
+        tv_access_code.setHideKeyBoardOnPressAway()
+        tv_username.setHideKeyBoardOnPressAway()
         tv_access_code.addCharacterMax(8)
         tv_username.addCharacterMax(25)
     }
 
+    //TODO change this to be fireJoinGame click and observe in on activity created
     private fun joinGameClick() {
         loadMode()
         val accessCode = tv_access_code.text.toString().toLowerCase().trim()

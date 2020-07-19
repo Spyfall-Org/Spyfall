@@ -72,9 +72,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun setupView() {
         changeAccent()
         btn_start_game.setOnClickListener { fireStartGame() }
-
         btn_leave_game.setOnClickListener { showLeaveGameDialog() }
-
         configureLayoutManagerAndRecyclerView()
 
         adView.visibility = if (BuildConfig.FLAVOR == "free") {
@@ -140,6 +138,29 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         })
     }
 
+    private fun fireStartGame() {
+        LogHelper.logUserClickedStartGame(waitingViewModel.currentSession)
+        navigationBundle.putBoolean(STARTER, true)
+        loadMode()
+        waitingViewModel.fireStartGame().observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is Resource.Success -> {/*no-op player list change will trigger navigation*/
+                }
+                is Resource.Error -> handleStartGameError(it)
+            }
+        })
+    }
+
+    private fun fireLeaveGameEvent() {
+        LogHelper.logUserClickedToLeaveGame(waitingViewModel.currentSession)
+        waitingViewModel.fireLeaveGameEvent()
+    }
+
+    override fun fireNameChangeEvent(newName: String) {
+        LogHelper.logUserChangingName(newName, waitingViewModel.currentSession)
+        waitingViewModel.fireNameChange(newName)
+    }
+
     private fun handleLeaveGameError(result: Resource.Error<Unit, LeaveGameError>) {
         result.exception?.let { LogHelper.logLeaveGameError(it) }
         result.error?.let {
@@ -171,34 +192,11 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         }
     }
 
-    private fun fireStartGame() {
-        LogHelper.logUserClickedStartGame(waitingViewModel.currentSession)
-        navigationBundle.putBoolean(STARTER, true)
-        loadMode()
-        waitingViewModel.fireStartGame().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success -> {/*no-op player list change will trigger navigation*/
-                }
-                is Resource.Error -> handleStartGameError(it)
-            }
-        })
-    }
-
     private fun handleStartGameError(e: Resource<Unit, StartGameError>) {
         e.exception?.let { LogHelper.logStartGameError(it) }
         e.error?.let {
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun fireLeaveGameEvent() {
-        LogHelper.logUserClickedToLeaveGame(waitingViewModel.currentSession)
-        waitingViewModel.fireLeaveGameEvent()
-    }
-
-    override fun fireNameChangeEvent(newName: String) {
-        LogHelper.logUserChangingName(newName, waitingViewModel.currentSession)
-        waitingViewModel.fireNameChange(newName)
     }
 
     private fun navigateToGameScreen() {

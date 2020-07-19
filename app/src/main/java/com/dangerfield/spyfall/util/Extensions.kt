@@ -35,8 +35,9 @@ fun EditText.openKeyboard() {
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
 
-fun View.setHideKeyBoardOnPressAway(){
+fun View.setHideKeyBoardOnPressAway(): View {
     this.onFocusChangeListener = keyboardHider
+    return this
 }
 
 private val keyboardHider = View.OnFocusChangeListener { view, b ->
