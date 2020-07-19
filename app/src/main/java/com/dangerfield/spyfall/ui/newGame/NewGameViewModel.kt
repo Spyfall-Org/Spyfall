@@ -1,6 +1,7 @@
 package com.dangerfield.spyfall.ui.newGame
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.BuildConfig
@@ -8,8 +9,9 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
+import com.dangerfield.spyfall.util.Event
 
- enum class NewGameError(val resId: Int? = null) {
+enum class NewGameError(val resId: Int? = null) {
     NO_SELECTED_PACK(R.string.new_game_error_select_pack),
     EMPTY_NAME(R.string.new_game_string_error_name),
     NAME_CHARACTER_LIMIT(R.string.change_name_character_limit),
@@ -22,43 +24,63 @@ enum class PackDetailsError(val resId: Int? = null) {
     NETWORK_ERROR,
     UNKNOWN_ERROR(R.string.unknown_error)
 }
+
 class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
 
-    private var packsDetails = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
+    private var showPackEvent = MediatorLiveData<Event<Resource<List<List<String>>, PackDetailsError>>>()
+    private var createGameEvent = MediatorLiveData<Event<Resource<Session, NewGameError>>>()
+    private var packsDetails : List<List<String>>? = null
 
-    fun cancelPendingOperations() =repository.cancelJobs()
+    fun getShowPackEvent() = showPackEvent
+    fun getCreateGameEvent() = createGameEvent
+    fun getPacks() = repository.getPacks()
+    fun cancelPendingOperations() = repository.cancelJobs()
 
-    fun createGame(username: String, timeLimit: String, selectedPacks: ArrayList<String>): LiveData<Resource<Session, NewGameError>> {
-        var result = MutableLiveData<Resource<Session, NewGameError>>()
-
-        when {
-            selectedPacks.isEmpty() ->  result.value = Resource.Error(error = NewGameError.NO_SELECTED_PACK)
-
-            username.isEmpty() ->  result.value = Resource.Error(error = NewGameError.EMPTY_NAME)
-
-            username.length > 25 ->  result.value = Resource.Error(error = NewGameError.NAME_CHARACTER_LIMIT)
-
-            timeLimit.isEmpty() || timeLimit.toInt() > 10 || zeroTimeCheck(timeLimit.toInt()) ->
-                result.value = Resource.Error(error = NewGameError.TIME_LIMIT_ERROR)
-
-            else -> result = repository.createGame(username, timeLimit.toLong(), selectedPacks) as MutableLiveData<Resource<Session, NewGameError>>
+    fun triggerCreateGameEvent(
+        username: String,
+        timeLimit: String,
+        selectedPacks: ArrayList<String>
+    ) {
+        val error = findCreateGameError(username, timeLimit, selectedPacks)
+        if(error != null) {
+            createGameEvent.postValue(Event(Resource.Error(error = error)))
+        } else {
+            val repoResult = repository.createGame(username, timeLimit.toLong(), selectedPacks)
+            createGameEvent.addSource(repoResult) {
+                createGameEvent.postValue(Event(it))
+                createGameEvent.removeSource(repoResult)
+            }
         }
+    }
 
-        return result
+    fun triggerGetPackDetailsEvent() {
+        if(packsDetails.isNullOrEmpty()){
+            val repoResult = repository.getPacksDetails()
+            showPackEvent.addSource(repoResult) {
+                it.data?.let {d -> packsDetails = d }
+                showPackEvent.postValue(Event(it))
+                showPackEvent.removeSource(repoResult)
+            }
+        } else {
+            packsDetails?.let { showPackEvent.postValue(Event(Resource.Success(it))) }
+        }
+    }
+
+    private fun findCreateGameError(username: String,
+                                    timeLimit: String,
+                                    selectedPacks: ArrayList<String>): NewGameError? {
+        return when {
+            selectedPacks.isEmpty() -> NewGameError.NO_SELECTED_PACK
+            username.isEmpty() ->  NewGameError.EMPTY_NAME
+            username.length > 25 ->  NewGameError.NAME_CHARACTER_LIMIT
+            timeLimit.isEmpty() || timeLimit.toInt() > 10 || zeroTimeCheck(timeLimit.toInt()) ->
+                NewGameError.TIME_LIMIT_ERROR
+            else -> null
+        }
     }
 
     //in debug I want to be able to use zero
     private fun zeroTimeCheck(time: Int) =
         !BuildConfig.DEBUG && time == 0
-
-
-    fun getPacksDetails(): MutableLiveData<Resource<List<List<String>>, PackDetailsError>> {
-        if(packsDetails.value?.data.isNullOrEmpty()){
-            packsDetails = repository.getPacksDetails() as MutableLiveData<Resource<List<List<String>>, PackDetailsError>>
-        }
-        return packsDetails
-    }
-
-    fun getPacks() = repository.getPacks()
 
 }
