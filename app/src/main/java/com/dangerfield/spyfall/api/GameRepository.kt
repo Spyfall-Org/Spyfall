@@ -30,7 +30,7 @@ interface GameRepository {
         username: String
     ): LiveData<Event<Resource<Session, JoinGameError>>>
 
-    fun leaveGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, LeaveGameError>>>
+    fun leaveGame(currentSession: Session)
     fun endGame(currentSession: Session): MutableLiveData<Resource<Unit, Exception>>
     fun startGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>>
     fun resetGame(currentSession: Session):  MutableLiveData<Resource<Unit, PlayAgainError>>
@@ -46,6 +46,7 @@ interface GameRepository {
     fun getLiveGame(currentSession: Session): MutableLiveData<Game>
     fun getSessionEnded(): MutableLiveData<Event<Unit>>
     fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>>
+    fun getLeaveGameEvent():  MutableLiveData<Event<Resource<Unit, LeaveGameError>>>
     fun removeInactiveUser(currentSession: Session)
     fun reassignRoles(currentSession: Session) : MutableLiveData<Event<Resource<Unit, StartGameError>>>
     fun cancelJobs() : Unit?

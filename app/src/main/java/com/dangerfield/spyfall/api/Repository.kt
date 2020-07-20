@@ -53,6 +53,7 @@ class Repository(
     private var liveGame: MutableLiveData<Game> = MutableLiveData()
     private var sessionEndedEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     private var removeInactiveUserEvent = MutableLiveData<Event<Resource<Unit, Unit>>>()
+    private var leaveGameEvent = MutableLiveData<Event<Resource<Unit, LeaveGameError>>>()
 
     /**
      * Provides VMs with access to global events
@@ -61,10 +62,9 @@ class Repository(
         addListenerIfNewGame(currentSession)
         return liveGame
     }
-
+    override fun getLeaveGameEvent() = leaveGameEvent
     override fun getSessionEnded() = sessionEndedEvent
-    override fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>> =
-        removeInactiveUserEvent
+    override fun getRemoveInactiveUserEvent() = removeInactiveUserEvent
 
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -226,8 +226,7 @@ class Repository(
      * removes user name from games player list on db
      * posts to leave game event that both the waiting screen and game screen listen for
      */
-    override fun leaveGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, LeaveGameError>>> {
-        val result = MutableLiveData<Event<Resource<Unit, LeaveGameError>>>()
+    override fun leaveGame(currentSession: Session) {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         gameRef.update(
             Constants.GameFields.playerList,
@@ -235,12 +234,11 @@ class Repository(
         ).addOnSuccessListener {
             sessionListenerHelper.removeListener()
             preferencesHelper.removeSavedSession()
-            result.value = Event(Resource.Success(Unit))
+            leaveGameEvent.value = Event(Resource.Success(Unit))
         }.addOnFailureListener {
-            result.value =
+            leaveGameEvent.value =
                 Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
         }
-        return result
     }
 
     override fun removeInactiveUser(currentSession: Session) {

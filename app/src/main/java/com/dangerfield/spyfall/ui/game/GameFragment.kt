@@ -63,6 +63,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         observeReassignEvent()
         observeCurrentUserPlayAgainEvent()
         observeCurrentUserEndedGame()
+        observeLeaveGameEvent()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,6 +105,15 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             if (navController.currentDestination?.id == R.id.gameFragment) {
                 LogHelper.logSessionEndedInGame(gameViewModel.currentSession)
                 handleSessionEnded()
+            }
+        })
+    }
+
+    private fun observeLeaveGameEvent() {
+        gameViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is Resource.Success -> navigateToStart()
+                is Resource.Error -> handleLeaveGameError(it)
             }
         })
     }
@@ -179,6 +189,13 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
     private fun handlePlayAgainError(e: Resource.Error<Unit, PlayAgainError>) {
         e.exception?.let { LogHelper.logErrorPlayAgain(it) }
+        e.error?.let {
+            Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleLeaveGameError(e: Resource.Error<Unit, LeaveGameError>) {
+        e.exception?.let { LogHelper.logLeaveGameError(it) }
         e.error?.let {
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }
@@ -285,9 +302,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 ?: (game.playerObjectList).find { it.username == gameViewModel.currentSession.previousUserName }
 
         if (currentPlayer == null) {
-                Toast.makeText(context, getString(R.string.name_change_end_game), Toast.LENGTH_LONG)
-                    .show()
-                triggerEndGame()
+            navigateToStart()
             return
         }
 

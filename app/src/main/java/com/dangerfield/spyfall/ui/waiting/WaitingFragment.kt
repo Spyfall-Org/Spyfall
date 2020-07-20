@@ -119,13 +119,9 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun observeLeaveGameEvent() {
         waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success -> {
-                    Log.d("Elijah", "Calling navigate to start with leave game event")
-                    navigateToStart()
-                }
+                is Resource.Success -> navigateToStart()
                 is Resource.Error -> handleLeaveGameError(it)
             }
-
         })
     }
 
@@ -133,8 +129,6 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment) {
                 LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
-                Log.d("Elijah", "navigating to start on session ended")
-
                 navigateToStart()
             }
         })
@@ -144,7 +138,6 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment && it is Resource.Success) {
                 LogHelper.removedInactiveUser(waitingViewModel.currentSession)
-                Log.d("Elijah", "navigating to start from inactive user")
                 navigateToStart()
             }
         })
