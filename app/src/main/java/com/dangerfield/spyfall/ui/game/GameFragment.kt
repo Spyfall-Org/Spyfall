@@ -272,7 +272,6 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 ?: (game.playerObjectList).find { it.username == gameViewModel.currentSession.previousUserName }
 
         if (currentPlayer == null) {
-            Log.d("Elijah", "BIG OLE NAME CHANGE ERROR: ${gameViewModel.currentSession}")
                 Toast.makeText(context, getString(R.string.name_change_end_game), Toast.LENGTH_LONG)
                     .show()
                 triggerEndGame()

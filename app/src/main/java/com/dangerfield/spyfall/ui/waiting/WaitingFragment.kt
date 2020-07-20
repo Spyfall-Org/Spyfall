@@ -83,8 +83,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun observeCurrentUserStartsGame() {
         waitingViewModel.getStartGameEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success -> {
-                } /*no-op player list change will trigger navigation*/
+                is Resource.Success -> {} //no-op player list change will trigger navigation
                 is Resource.Error -> handleStartGameError(it)
             }
         })
@@ -151,6 +150,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         LogHelper.logUserClickedStartGame(waitingViewModel.currentSession)
         navigationBundle.putBoolean(STARTER, true)
         showLoading(true)
+        waitingViewModel.triggerStartGameEvent()
     }
 
     private fun triggerLeaveGameEvent() {

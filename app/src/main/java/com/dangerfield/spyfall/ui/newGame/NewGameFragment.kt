@@ -141,8 +141,8 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
     }
 
     private fun showLoadingForGettingPacks(loading: Boolean) {
-        pb_packs.goneIf(!loading)
-        btn_packs.goneIf(loading)
+        pb_packs.visibleIf(loading)
+        btn_packs.visibleIf(!loading)
         btn_packs.isClickable = !loading
     }
 

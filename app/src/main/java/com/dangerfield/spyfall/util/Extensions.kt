@@ -29,6 +29,11 @@ fun View.goneIf(predicate: Boolean) {
     visibility = if(predicate) View.GONE else View.VISIBLE
 }
 
+fun View.visibleIf(predicate: Boolean) {
+    visibility = if(predicate) View.VISIBLE else View.INVISIBLE
+}
+
+
 fun EditText.openKeyboard() {
     this.requestFocus()
     val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
