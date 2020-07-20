@@ -11,10 +11,6 @@ import com.dangerfield.spyfall.models.GamePack
 import kotlinx.android.synthetic.main.item_pack.view.*
 import java.util.ArrayList
 
-
-/**
- * Created by ELIJAH DANGERFIELD on 05/7/2019.
- */
 class PacksAdapter(var packs: ArrayList<GamePack>) : RecyclerView.Adapter<PacksAdapter.PackHolder>() {
 
     inner class PackHolder(view: View) : RecyclerView.ViewHolder(view) {

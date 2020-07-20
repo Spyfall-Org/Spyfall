@@ -14,7 +14,7 @@ import com.dangerfield.spyfall.util.openKeyboard
 import kotlinx.android.synthetic.main.dialog_change_name.view.*
 
 interface NameChangeEventFirer {
-    fun fireNameChangeEvent(newName: String)
+    fun triggerNameChangeEvent(newName: String)
 }
 
 class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
@@ -29,7 +29,7 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
     }
 
     private fun handleNameChange(newName: String) {
-        eventFirer.fireNameChangeEvent(newName)
+        eventFirer.triggerNameChangeEvent(newName)
     }
 
     private fun buildDialog(context: Context): AlertDialog {

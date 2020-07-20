@@ -22,20 +22,20 @@ import kotlinx.android.synthetic.main.fragment_waiting.*
 
 class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFirer {
 
+    private val changeNameHelper by lazy { ChangeNameHelper(this) }
+    private val navigationBundle = Bundle()
     private val adapter by lazy {
         WaitingPlayersAdapter(
             waitingViewModel.currentSession.currentUser,
             changeNameHelper
         )
     }
-    private val changeNameHelper by lazy { ChangeNameHelper(this) }
+
     private val waitingViewModel: WaitingViewModel by viewModels {
         getViewModelFactory(
             requireArguments()
         )
     }
-    private val navigationBundle = Bundle()
-
     private val navController: NavController by lazy {
         NavHostFragment.findNavController(this)
     }
@@ -64,11 +64,12 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         observeLeaveGameEvent()
         observeSessionEnded()
         observeInactiveUserRemoved()
+        observeCurrentUserStartsGame()
     }
 
     private fun setupView() {
         changeAccent()
-        btn_start_game.setOnClickListener { fireStartGame() }
+        btn_start_game.setOnClickListener { triggerStartGameEvent() }
         btn_leave_game.setOnClickListener { showLeaveGameDialog() }
         configureLayoutManagerAndRecyclerView()
 
@@ -77,6 +78,16 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
             adView.loadAd(adRequest)
             View.VISIBLE
         } else View.GONE
+    }
+
+    private fun observeCurrentUserStartsGame() {
+        waitingViewModel.getStartGameEvent().observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is Resource.Success -> {
+                } /*no-op player list change will trigger navigation*/
+                is Resource.Error -> handleStartGameError(it)
+            }
+        })
     }
 
     private fun observeGameUpdates() {
@@ -109,6 +120,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment) {
                 // handle leave game events differently in the game screen
+                //TODO REMOVE CHECK AND TEST WITH DELAY TIMER HERE AFTER NAVIGATION
                 when (it) {
                     is Resource.Success -> navigateToStart()
                     is Resource.Error -> handleLeaveGameError(it)
@@ -135,34 +147,22 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         })
     }
 
-    private fun fireStartGame() {
+    private fun triggerStartGameEvent() {
         LogHelper.logUserClickedStartGame(waitingViewModel.currentSession)
         navigationBundle.putBoolean(STARTER, true)
         showLoading(true)
-        waitingViewModel.fireStartGame().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success -> { } /*no-op player list change will trigger navigation*/
-                is Resource.Error -> handleStartGameError(it)
-            }
-        })
     }
 
-    private fun fireLeaveGameEvent() {
+    private fun triggerLeaveGameEvent() {
         LogHelper.logUserClickedToLeaveGame(waitingViewModel.currentSession)
-        waitingViewModel.fireLeaveGameEvent()
+        waitingViewModel.triggerLeaveGameEvent()
     }
 
-    override fun fireNameChangeEvent(newName: String) {
+    override fun triggerNameChangeEvent(newName: String) {
         LogHelper.logUserChangingName(newName, waitingViewModel.currentSession)
-        waitingViewModel.fireNameChange(newName)
+        waitingViewModel.triggerChangeNameEvent(newName)
     }
 
-    private fun handleLeaveGameError(result: Resource.Error<Unit, LeaveGameError>) {
-        result.exception?.let { LogHelper.logLeaveGameError(it) }
-        result.error?.let {
-            Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
-        }
-    }
 
     private fun handleNameChangeSuccess(it: Resource.Success<String, NameChangeError>) {
         it.data?.let {
@@ -172,6 +172,13 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         }
         LogHelper.logSuccesfulNameChange(waitingViewModel.currentSession)
         changeNameHelper.dismissNameChangeDialog()
+    }
+
+    private fun handleLeaveGameError(result: Resource.Error<Unit, LeaveGameError>) {
+        result.exception?.let { LogHelper.logLeaveGameError(it) }
+        result.error?.let {
+            Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun handleNameChangeError(result: Resource.Error<String, NameChangeError>) {
@@ -239,7 +246,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         UIHelper.customSimpleAlert(requireContext(),
             resources.getString(R.string.waiting_leaving_title),
             resources.getString(R.string.waiting_leaving_message),
-            resources.getString(R.string.leave_action_positive), { fireLeaveGameEvent() },
+            resources.getString(R.string.leave_action_positive), { triggerLeaveGameEvent() },
             resources.getString(R.string.leave_action_negative), {}).show()
     }
 

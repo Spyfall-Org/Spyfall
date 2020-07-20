@@ -23,46 +23,45 @@ enum class LeaveGameError(val resId: Int) {
 
 class WaitingViewModel(private val repository: GameRepository, val currentSession: Session) : ViewModel() {
 
-    private val nameChangeEvent: MediatorLiveData<Event<Resource<String, NameChangeError>>> =
-            MediatorLiveData()
+    var hasNavigatedUsingSavedSessionToStartedGame = false
 
-    private val leaveGameEvent: MediatorLiveData<Event<Resource<Unit, LeaveGameError>>> =
-        MediatorLiveData()
+    private val nameChangeEvent = MediatorLiveData<Event<Resource<String, NameChangeError>>>()
+    private val startGameEvent = MediatorLiveData<Event<Resource<Unit, StartGameError>>>()
 
-    private val liveGame = repository.getLiveGame(currentSession)
-
-
-    fun getSessionEnded() = repository.getSessionEnded()
-
-    fun getRemoveInactiveUserEvent() = repository.getRemoveInactiveUserEvent()
-
+    //user triggered events
     fun getNameChangeEvent() = nameChangeEvent
+    fun getStartGameEvent() = startGameEvent
 
+    //Global events/data
+    fun getLiveGame() = repository.getLiveGame(currentSession)
+    fun getSessionEnded() = repository.getSessionEnded()
+    fun getRemoveInactiveUserEvent() = repository.getRemoveInactiveUserEvent()
     fun getLeaveGameEvent() = repository.getLeaveGameEvent()
 
-    fun getLiveGame() = liveGame
-
-    fun fireStartGame(): MediatorLiveData<Event<Resource<Unit, StartGameError>>> {
-        val result = MediatorLiveData<Event<Resource<Unit, StartGameError>>>()
+    fun triggerStartGameEvent() {
         if(currentSession.game.started) {
-            result.postValue(Event(Resource.Error(error = StartGameError.GAME_STARTED )))
+            startGameEvent.postValue(Event(Resource.Error(error = StartGameError.GAME_STARTED )))
         } else {
-            result.addSource(repository.startGame(currentSession)) {
-                result.postValue(it)
+            val repoResult = repository.startGame(currentSession)
+            startGameEvent.addSource(repoResult) {
+                startGameEvent.postValue(it)
+                startGameEvent.removeSource(repoResult)
             }
         }
-        return result
     }
 
-    fun fireLeaveGameEvent() {
+    fun triggerLeaveGameEvent() {
+        //triggers global state change in repo that this view model provides
         repository.cancelJobs()
         repository.leaveGame(currentSession)
     }
 
-    fun fireNameChange(newName: String) {
+    fun triggerChangeNameEvent(newName: String) {
         if (findNameChangeErrors(newName)) return
-        nameChangeEvent.addSource(repository.changeName(newName, currentSession)) {
+        val repoResults = repository.changeName(newName, currentSession)
+        nameChangeEvent.addSource(repoResults) {
             nameChangeEvent.value = it
+            nameChangeEvent.removeSource(repoResults)
         }
     }
 
@@ -79,6 +78,4 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
         }
         return true
     }
-
-    var hasNavigatedUsingSavedSessionToStartedGame = false
 }

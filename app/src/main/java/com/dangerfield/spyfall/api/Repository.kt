@@ -40,7 +40,7 @@ class Repository(
      */
     private var liveGame: MutableLiveData<Game> = MutableLiveData()
     private var sessionEndedEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    private var leaveGameEvent = MutableLiveData<Event<Resource<Unit, LeaveGameError>>>()
+    private var leaveGameEvent = MutableLiveData<Event<Resource<Unit, LeaveGameError>>>() //TODO see if this can be removed
     private var removeInactiveUserEvent = MutableLiveData<Event<Resource<Unit, Unit>>>()
 
     /**

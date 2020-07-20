@@ -1,8 +1,6 @@
 package com.dangerfield.spyfall.ui.newGame
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R

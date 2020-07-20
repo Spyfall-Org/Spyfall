@@ -40,13 +40,9 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        joinGameViewModel.getJoinGameEvent().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success -> it.data?.let { session -> handleSuccessfulJoinGame(session) }
-                is Resource.Error -> handleErrorJoinGame(it)
-            }
-        })
+        observeJoinGameEvent()
     }
+
     private fun setupView() {
         updateTheme()
         btn_join_game_action.setOnClickListener { triggerJoinGame() }
@@ -54,6 +50,15 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         tv_username.setHideKeyBoardOnPressAway()
         tv_access_code.addCharacterMax(8)
         tv_username.addCharacterMax(25)
+    }
+
+    private fun observeJoinGameEvent() {
+        joinGameViewModel.getJoinGameEvent().observe(viewLifecycleOwner, EventObserver {
+            when (it) {
+                is Resource.Success -> it.data?.let { session -> handleSuccessfulJoinGame(session) }
+                is Resource.Error -> handleErrorJoinGame(it)
+            }
+        })
     }
 
     private fun triggerJoinGame() {

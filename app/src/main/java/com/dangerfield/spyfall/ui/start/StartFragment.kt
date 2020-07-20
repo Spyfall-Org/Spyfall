@@ -20,43 +20,21 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class StartFragment : Fragment(R.layout.fragment_start) {
 
+    private val reviewHelper : ReviewHelper by inject()
+    private val startViewModel : StartViewModel by viewModel()
     private val navController by lazy {
         NavHostFragment.findNavController(this)
     }
 
-    private val reviewHelper : ReviewHelper by inject()
-    private val startViewModel : StartViewModel by viewModel()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        welcome_message.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
-
-        btn_new_game.setOnClickListener {
-            navController.navigate(R.id.action_startFragment_to_newGameFragment)
-        }
-
-        btn_join_game.setOnClickListener {
-            navController.navigate(R.id.action_startFragment_to_joinGameFragment)
-        }
-
-        btn_rules.setOnClickListener {
-            UIHelper.customSimpleAlert(requireContext(),
-                resources.getString(R.string.rules_title),
-                resources.getString(R.string.rules_message),
-                resources.getString(R.string.positive_action_standard)
-                , {}, "", {}, true).show()
-        }
-
-        btn_settings.setOnClickListener {
-            navController.navigate(R.id.action_startFragment_to_settingsFragment)
-        }
+        setupView()
     }
 
     override fun onResume() {
         super.onResume()
         UIHelper.getSavedColor(requireContext())
-        changeAccent()
+        updateTheme()
 
         startViewModel.searchForUserInExistingGame()
 
@@ -74,9 +52,38 @@ class StartFragment : Fragment(R.layout.fragment_start) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        observeUserFoundInGameEvent()
+    }
+
+    private fun observeUserFoundInGameEvent() {
         startViewModel.getFoundUserInExistingGame().observe(viewLifecycleOwner, EventObserver {
             navigateToWaitingScreen(it.session, it.started)
         })
+    }
+
+    private fun setupView() {
+        welcome_message.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
+
+        btn_new_game.setOnClickListener {
+            navController.navigate(R.id.action_startFragment_to_newGameFragment)
+        }
+
+        btn_join_game.setOnClickListener {
+            navController.navigate(R.id.action_startFragment_to_joinGameFragment)
+        }
+
+        btn_rules.setOnClickListener {
+            UIHelper.customSimpleAlert(requireContext(),
+                resources.getString(R.string.rules_title),
+                resources.getString(R.string.rules_message),
+                resources.getString(R.string.positive_action_standard)
+                , {}, "", {}, true
+            ).show()
+        }
+
+        btn_settings.setOnClickListener {
+            navController.navigate(R.id.action_startFragment_to_settingsFragment)
+        }
     }
 
     private fun navigateToWaitingScreen(currentSession : Session, started: Boolean) {
@@ -86,7 +93,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         navController.navigate(R.id.action_startFragment_to_waitingFragment, bundle)
     }
 
-    private fun changeAccent() {
+    private fun updateTheme() {
         btn_join_game.background.setTint(UIHelper.accentColor)
 
         val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
