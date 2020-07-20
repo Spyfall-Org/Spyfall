@@ -12,7 +12,6 @@ class RemoveUserTimer(val repository: GameRepository, private val preferencesHel
 
     private var removeUserJob: Job = Job()
     private val fifteenMins = 900000L
-    private val tenSeconds = 10000L
     private val currentSession : Session?
     get() { return preferencesHelper.getSavedSession() }
 
@@ -32,14 +31,11 @@ class RemoveUserTimer(val repository: GameRepository, private val preferencesHel
     fun onDestroyed() {
         stopTimerToRemoveUser()
         currentSession?.let {
-            Log.d("Elijah", "removing user")
             repository.removeInactiveUser(it)
         }
     }
 
     private fun stopTimerToRemoveUser() {
-        Log.d("Elijah", "Stopping timer to remove user")
-
         if (removeUserJob.isActive) {
             try {
                 removeUserJob.cancel()
@@ -48,11 +44,8 @@ class RemoveUserTimer(val repository: GameRepository, private val preferencesHel
     }
 
     private fun startTimerToRemoveUser(currentSession: Session) {
-        Log.d("Elijah", "Starting timer to remove user")
-
         removeUserJob = GlobalScope.launch {
-            delay(tenSeconds)
-            Log.d("Elijah", "removing user")
+            delay(fifteenMins)
             repository.removeInactiveUser(currentSession)
         }
     }
