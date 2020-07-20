@@ -110,8 +110,8 @@
     <string name="string_hide">Hide</string>
     <string name="string_show">Show</string>
     <string name="start_game_unknown_error" translatable="false">We are sorry there was an unknown error starting the game. Please try again.</string>
+    <string name="play_again_unknown_error" translatable="false">We are sorry there was an unknown error resetting the game to play again. Please try again.</string>
     <string name="start_game_started_error" translatable="false">Sorry, it looks like someone else has already started the game. It may be loading.</string>
-
 
 
     <!--SHARED PREFERNCES-->

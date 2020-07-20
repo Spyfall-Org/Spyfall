@@ -40,16 +40,17 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         updateTheme()
 
         startViewModel.searchForUserInExistingGame()
+        if (reviewHelper.shouldPromptForReview()) { showReviewDialog() }
+    }
 
-        if (reviewHelper.shouldPromptForReview()) {
-            UIHelper.customSimpleAlert(requireContext(),
-                getString(R.string.dialog_rate_title),
-                getString(R.string.dialog_rate_message),
-                getString(R.string.positive_action_standard), {
-                    reviewHelper.setHasClickedToReview()
-                    openStoreForReview()
-                }, getString(R.string.dialog_rate_negative), {}).show()
-        }
+    private fun showReviewDialog() {
+        UIHelper.customSimpleAlert(requireContext(),
+            getString(R.string.dialog_rate_title),
+            getString(R.string.dialog_rate_message),
+            getString(R.string.positive_action_standard), {
+                reviewHelper.setHasClickedToReview()
+                reviewHelper.openStoreForReview()
+            }, getString(R.string.dialog_rate_negative), {}).show()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -75,18 +76,20 @@ class StartFragment : Fragment(R.layout.fragment_start) {
             navController.navigate(R.id.action_startFragment_to_joinGameFragment)
         }
 
-        btn_rules.setOnClickListener {
-            UIHelper.customSimpleAlert(requireContext(),
-                resources.getString(R.string.rules_title),
-                resources.getString(R.string.rules_message),
-                resources.getString(R.string.positive_action_standard)
-                , {}, "", {}, true
-            ).show()
-        }
+        btn_rules.setOnClickListener { showRulesDialog() }
 
         btn_settings.setOnClickListener {
             navController.navigate(R.id.action_startFragment_to_settingsFragment)
         }
+    }
+
+    private fun showRulesDialog() {
+        UIHelper.customSimpleAlert(requireContext(),
+            resources.getString(R.string.rules_title),
+            resources.getString(R.string.rules_message),
+            resources.getString(R.string.positive_action_standard)
+            , {}, "", {}, true
+        ).show()
     }
 
     private fun navigateToWaitingScreen(currentSession : Session, started: Boolean) {
@@ -108,27 +111,5 @@ class StartFragment : Fragment(R.layout.fragment_start) {
             DrawableCompat.wrap(btn_settings.drawable),
             ContextCompat.getColor(requireContext(), R.color.colorTheme)
         )
-    }
-
-    private fun openStoreForReview() {
-        val uri = Uri.parse("market://details?id=" + requireActivity().packageName)
-        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-        // To count with Play market backstack, After pressing back button,
-        // to taken back to our application, we need to add following flags to intent.
-        goToMarket.addFlags(
-            Intent.FLAG_ACTIVITY_NO_HISTORY or
-                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-        )
-        try {
-            startActivity( goToMarket)
-        } catch (e: ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + requireActivity().packageName)
-                )
-            )
-        }
     }
 }

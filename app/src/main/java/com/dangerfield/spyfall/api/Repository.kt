@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.BuildConfig
 import com.dangerfield.spyfall.ui.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.*
+import com.dangerfield.spyfall.ui.game.PlayAgainError
 import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.ui.newGame.NewGameError
 import com.dangerfield.spyfall.ui.newGame.PackDetailsError
@@ -276,13 +277,21 @@ class Repository(
      * removes node on fire store
      * snapshot listener causes session to end
      */
-    //TODO make this return livedata for success or failure.
-    // Clean session either way, in view navigate on failure. Succuess will trigger on its own
-    override fun endGame(currentSession: Session): Task<Void> {
+    override fun endGame(currentSession: Session): MutableLiveData<Resource<Unit, Exception>> {
+        val result = MutableLiveData<Resource<Unit, Exception>>()
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-        return gameRef.delete().addOnSuccessListener {
-            preferencesHelper.removeSavedSession(currentSession)
+        CoroutineScope(IO).launch {
+            try {
+                gameRef.delete().await()
+                result.postValue(Resource.Success(Unit))
+            } catch (e: Exception) {
+                result.postValue(Resource.Error(error = e))
+            } finally {
+                preferencesHelper.removeSavedSession(currentSession)
+            }
         }
+
+        return result
     }
 
     /**
@@ -318,19 +327,23 @@ class Repository(
     /**
      * Resets relevant game data to trigger play again action
      */
-    //TODO make this return a live data of success or error for play again error
-    override fun resetGame(currentSession: Session) {
-        // resets variables on firebase for play again, which will update viewmodel
+    override fun resetGame(currentSession: Session): MutableLiveData<Resource<Unit, PlayAgainError>> {
+        val result = MutableLiveData<Resource<Unit, PlayAgainError>>()
         val accessCode = currentSession.accessCode
         currentSession.game.let {
             val gameRef = db.collection(constants.games).document(accessCode)
-            val newLocation = currentSession.game.locationList.random()
+            val newLocation = currentSession.game.locationList.filter { location -> location != currentSession.game.chosenLocation }.random()
             val newGame = Game(
                 newLocation, it.chosenPacks, false,
                 it.playerList, ArrayList(), it.timeLimit, it.locationList, it.expiration
             )
-            gameRef.set(newGame)
+            gameRef.set(newGame).addOnSuccessListener {
+                result.postValue(Resource.Success(Unit))
+            }.addOnFailureListener {e ->
+                result.postValue(Resource.Error(error = PlayAgainError.Unknown, exception = e))
+            }
         }
+        return result
     }
 
     /**

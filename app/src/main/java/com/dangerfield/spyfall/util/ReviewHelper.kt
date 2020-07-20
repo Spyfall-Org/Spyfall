@@ -1,10 +1,16 @@
 package com.dangerfield.spyfall.util
 
+import android.content.ActivityNotFoundException
 import android.content.Context
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import androidx.core.content.ContextCompat.startActivity
 import com.dangerfield.spyfall.R
 
 class ReviewHelper(val context: Context){
+
+    private val promptingFrequency = 10
 
     private val preferences = context.getSharedPreferences(
         context.resources.getString(R.string.shared_preferences),
@@ -19,7 +25,7 @@ class ReviewHelper(val context: Context){
      * and has not yet clicked to give a review
      */
     fun shouldPromptForReview(): Boolean {
-        return incrementTimesVisitedStartScreen() % 5 == 0 && !userHasClickedToReview()
+        return incrementTimesVisitedStartScreen() % promptingFrequency == 0 && !userHasClickedToReview()
     }
 
     fun setHasClickedToReview() {
@@ -33,7 +39,6 @@ class ReviewHelper(val context: Context){
         val newVal = getGamesPlayed() + 1
         editor.putInt(context.resources.getString(R.string.shared_preferences_games), newVal)
         editor.apply()
-        Log.d("Elijah", "User has visited start screen for the ${newVal} time")
         return newVal
     }
 
@@ -46,4 +51,26 @@ class ReviewHelper(val context: Context){
             context.resources.getString(R.string.shared_preferences_hasReviewed),
             false
         )
+
+    fun openStoreForReview() {
+        val uri = Uri.parse("market://details?id=" + context.packageName)
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        goToMarket.addFlags(
+            Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK or
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+        )
+        try {
+            startActivity( context, goToMarket, Bundle())
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                context,
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + context.packageName)
+                ), Bundle()
+            )
+        }
+    }
 }

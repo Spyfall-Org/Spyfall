@@ -62,10 +62,6 @@ class LogHelper {
             Crashlytics.log("User clicked play again\nCurrent Session: $currentSession")
         }
 
-        fun logUserResumedGameAfterPlayAgainTriggered(currentSession: Session) {
-            Crashlytics.log("User resumed game after play again had been triggered. Navigating to waiting screen.\nCurrent Session: $currentSession")
-        }
-
         fun logUserTiggeredEndGame(currentSession: Session) {
             Crashlytics.log("User triggered end game\nCurrent Session: $currentSession")
         }
@@ -95,6 +91,11 @@ class LogHelper {
         fun logStartGameError(it: Exception) {
             Crashlytics.log("ERROR STARTING GAME.\n exception: ${it.localizedMessage}")
             Log.d("Elijah", "ERROR STARTING GAME.\n exception: ${it.localizedMessage}")
+        }
+
+        fun logErrorPlayAgain(it: Exception) {
+            Crashlytics.log("ERROR PLAY AGAIN GAME.\n exception: ${it.localizedMessage}")
+            Log.d("Elijah", "ERROR PLAY AGAIN GAME.\n exception: ${it.localizedMessage}")
         }
     }
 }
