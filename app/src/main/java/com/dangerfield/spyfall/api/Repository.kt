@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Repository(
     private var db: FirebaseFirestore,
@@ -105,41 +106,32 @@ class Repository(
             Log.d("Elijah", "Starting create game")
             job = Job()
             CoroutineScope(IO + job).launch {
-                Log.d("Elijah", "coroutine - Starting create game")
+                try {
+                    val accessCode = generateAccessCode()
+                    val gameLocations = getGameLocations(chosenPacks as ArrayList<String>)
+                    val game = Game(
+                        gameLocations.random(),
+                        chosenPacks as ArrayList<String>,
+                        false,
+                        arrayListOf(username),
+                        arrayListOf(),
+                        timeLimit,
+                        gameLocations,
+                        (System.currentTimeMillis() + millisecondsInSixHours) / 1000
+                    )
 
-                val accessCode = generateAccessCode()
-                Log.d("Elijah", "coroutine - got access code create game")
-
-                val gameLocations = getGameLocations(chosenPacks as ArrayList<String>)
-                Log.d("Elijah", "coroutine - got locations create game")
-
-                val game = Game(
-                    gameLocations.random(),
-                    chosenPacks,
-                    false,
-                    arrayListOf(username),
-                    arrayListOf(),
-                    timeLimit,
-                    gameLocations,
-                    (System.currentTimeMillis() + Companion.millisecondsInSixHours) / 1000
-                )
-
-                val gameRef = db.collection(constants.games).document(accessCode)
-                Log.d(
-                    "Elijah",
-                    "coroutine - about to set firebase collection ${constants.games} access code${accessCode}"
-                )
-
-
-                gameRef.set(game).addOnSuccessListener {
-                    Log.d("Elijah", "coroutine - success")
-                    val currentSession = Session(accessCode, username, game)
-                    result.value = Resource.Success(currentSession)
-                    preferencesHelper.saveSession(currentSession)
-                }.addOnFailureListener {
-                    Log.d("Elijah", "fail")
+                    val gameRef = db.collection(constants.games).document(accessCode)
+                    gameRef.set(game).addOnSuccessListener {
+                        val currentSession = Session(accessCode, username, game)
+                        result.value = Resource.Success(currentSession)
+                        preferencesHelper.saveSession(currentSession)
+                    }.addOnFailureListener {
+                        result.value =
+                            Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
+                    }
+                } catch (e: Exception) {
                     result.value =
-                        Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
+                        Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = e)
                 }
             }
         }
@@ -255,7 +247,6 @@ class Repository(
         job = Job()
         CoroutineScope(IO + job).launch {
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-            gameRef.update(Constants.GameFields.started, true)
             try {
                 val newLocation =
                     currentSession.game.locationList.filter { it != currentSession.game.chosenLocation }

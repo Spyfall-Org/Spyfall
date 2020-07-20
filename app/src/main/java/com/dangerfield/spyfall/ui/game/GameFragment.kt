@@ -154,8 +154,8 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     //TODO add observer to listen elsehwere
     private fun triggerReassign() {
         Log.d("Elijah", "Reassigning roles")
-        val startedGame = arguments?.getBoolean(WaitingFragment.STARTER) != null
-        if(startedGame) gameViewModel.reassignRoles().observe(viewLifecycleOwner, EventObserver {
+        val currentUserStatedGame = arguments?.getBoolean(WaitingFragment.STARTER) != null
+        if(currentUserStatedGame) gameViewModel.reassignRoles().observe(viewLifecycleOwner, EventObserver {
             when(it) {
                 is Resource.Success -> {/* no-op. User will get updates */}
                 is Resource.Error -> handleReassignError(it)
