@@ -157,11 +157,11 @@ class Repository(
                 db.collection(constants.games).document(accessCode).get()
                     .addOnSuccessListener { document ->
                         if (document.exists()) {
-                            val list =
+                            val playersList =
                                 (document[Constants.GameFields.playerList] as ArrayList<String>)
 
                             when {
-                                list.size >= 8 ->
+                                playersList.size >= 8 ->
                                     result.value =
                                         Event(Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS))
 
@@ -169,7 +169,7 @@ class Repository(
                                     result.value =
                                         Event(Resource.Error(error = JoinGameError.GAME_HAS_STARTED))
 
-                                list.contains(username) ->
+                                playersList.contains(username) ->
                                     result.value =
                                         Event(Resource.Error(error = JoinGameError.NAME_TAKEN))
 
