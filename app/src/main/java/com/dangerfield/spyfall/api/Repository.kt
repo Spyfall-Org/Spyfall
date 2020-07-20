@@ -83,9 +83,8 @@ class Repository(
     /**
      * cancels all operations with context tied to job
      */
-    override fun cancelJobs() {
-        job.cancel()
-    }
+    override fun cancelJobs() =job.cancel()
+
 
     /**
      * Creates a game node on firebase
@@ -277,6 +276,8 @@ class Repository(
      * removes node on fire store
      * snapshot listener causes session to end
      */
+    //TODO make this return livedata for success or failure.
+    // Clean session either way, in view navigate on failure. Succuess will trigger on its own
     override fun endGame(currentSession: Session): Task<Void> {
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         return gameRef.delete().addOnSuccessListener {
@@ -317,6 +318,7 @@ class Repository(
     /**
      * Resets relevant game data to trigger play again action
      */
+    //TODO make this return a live data of success or error for play again error
     override fun resetGame(currentSession: Session) {
         // resets variables on firebase for play again, which will update viewmodel
         val accessCode = currentSession.accessCode
