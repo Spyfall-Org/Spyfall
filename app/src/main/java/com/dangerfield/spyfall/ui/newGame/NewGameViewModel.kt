@@ -32,7 +32,7 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
     fun getShowPackEvent() = showPackEvent
     fun getCreateGameEvent() = createGameEvent
     fun getPacks() = repository.getPacks()
-    fun cancelPendingOperations() = repository.cancelJobs()
+    fun cancelPendingOperations() = repository.cancelCreateGame()
 
     fun triggerCreateGameEvent(
         username: String,

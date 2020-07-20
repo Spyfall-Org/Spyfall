@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.ui.waiting
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -117,14 +118,14 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
 
     private fun observeLeaveGameEvent() {
         waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
-            if (navController.currentDestination?.id == R.id.waitingFragment) {
-                // handle leave game events differently in the game screen
-                //TODO REMOVE CHECK AND TEST WITH DELAY TIMER HERE AFTER NAVIGATION
-                when (it) {
-                    is Resource.Success -> navigateToStart()
-                    is Resource.Error -> handleLeaveGameError(it)
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("Elijah", "Calling navigate to start with leave game event")
+                    navigateToStart()
                 }
+                is Resource.Error -> handleLeaveGameError(it)
             }
+
         })
     }
 
@@ -132,6 +133,8 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment) {
                 LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
+                Log.d("Elijah", "navigating to start on session ended")
+
                 navigateToStart()
             }
         })
@@ -141,6 +144,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment && it is Resource.Success) {
                 LogHelper.removedInactiveUser(waitingViewModel.currentSession)
+                Log.d("Elijah", "navigating to start from inactive user")
                 navigateToStart()
             }
         })
@@ -221,6 +225,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     private fun navigateToStart() {
+        Log.d("Elijah", "navigating to start")
         LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
         navController.popBackStack(R.id.startFragment, false)
     }

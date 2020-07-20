@@ -32,7 +32,7 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    joinGameViewModel.cancelPendingOperations()
+                    joinGameViewModel.cancelJoinGame()
                     navController.popBackStack(R.id.startFragment, false)
                 }
             })

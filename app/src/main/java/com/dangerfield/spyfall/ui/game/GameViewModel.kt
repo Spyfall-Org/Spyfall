@@ -28,7 +28,6 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
     private val liveGame = repository.getLiveGame(currentSession)
     private val sessionEndedEvent = repository.getSessionEnded()
     private val removeInactiveUserEvent = repository.getRemoveInactiveUserEvent()
-    private val leaveGameEvent = repository.getLeaveGameEvent()
 
     //Locally triggered events
     private val reassignEvent = MediatorLiveData<Event<Resource<Unit, StartGameError>>>()
@@ -39,8 +38,6 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
     fun getLiveGame() = liveGame
 
     fun getSessionEnded() = sessionEndedEvent
-
-    fun getLeaveGameEvent() = leaveGameEvent
 
     fun getRemoveInactiveUserEvent() = removeInactiveUserEvent
 

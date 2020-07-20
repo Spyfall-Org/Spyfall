@@ -15,6 +15,7 @@ import com.dangerfield.spyfall.ui.waiting.LeaveGameError
 import com.dangerfield.spyfall.util.Event
 import com.dangerfield.spyfall.ui.waiting.NameChangeError
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.Job
 import java.lang.Exception
 
 interface GameRepository {
@@ -29,7 +30,7 @@ interface GameRepository {
         username: String
     ): LiveData<Event<Resource<Session, JoinGameError>>>
 
-    fun leaveGame(currentSession: Session)
+    fun leaveGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, LeaveGameError>>>
     fun endGame(currentSession: Session): MutableLiveData<Resource<Unit, Exception>>
     fun startGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>>
     fun resetGame(currentSession: Session):  MutableLiveData<Resource<Unit, PlayAgainError>>
@@ -44,9 +45,12 @@ interface GameRepository {
     fun getPacks(): ArrayList<GamePack>
     fun getLiveGame(currentSession: Session): MutableLiveData<Game>
     fun getSessionEnded(): MutableLiveData<Event<Unit>>
-    fun cancelJobs()
-    fun getLeaveGameEvent(): MutableLiveData<Event<Resource<Unit, LeaveGameError>>>
     fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>>
     fun removeInactiveUser(currentSession: Session)
     fun reassignRoles(currentSession: Session) : MutableLiveData<Event<Resource<Unit, StartGameError>>>
+    fun cancelJobs() : Unit?
+    fun cancelCreateGame(): Unit?
+    fun cancelJoinGame(): Unit?
+    fun cancelChangeName(): Unit?
+    fun cancelStartGame(): Unit?
 }

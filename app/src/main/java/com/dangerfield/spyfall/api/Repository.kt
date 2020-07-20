@@ -31,10 +31,20 @@ class Repository(
     private val preferencesHelper: PreferencesHelper
 ) : GameRepository, SessionListener {
 
+    private var createGameJob: Job? = null
+    private var joinGameJob: Job? = null
+    private var changeNameJob: Job? = null
+    private var startGameJob: Job? = null
+
+    override fun cancelCreateGame() = createGameJob?.cancel()
+    override fun cancelJoinGame() = joinGameJob?.cancel()
+    override fun cancelChangeName() = changeNameJob?.cancel()
+    override fun cancelStartGame() = startGameJob?.cancel()
+
+
     /**
      * Job used to tie the coroutine context of cancellable operations to
      */
-    private var job: Job = Job()
 
     ////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -42,8 +52,6 @@ class Repository(
      */
     private var liveGame: MutableLiveData<Game> = MutableLiveData()
     private var sessionEndedEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    private var leaveGameEvent =
-        MutableLiveData<Event<Resource<Unit, LeaveGameError>>>() //TODO see if this can be removed
     private var removeInactiveUserEvent = MutableLiveData<Event<Resource<Unit, Unit>>>()
 
     /**
@@ -55,7 +63,6 @@ class Repository(
     }
 
     override fun getSessionEnded() = sessionEndedEvent
-    override fun getLeaveGameEvent() = leaveGameEvent
     override fun getRemoveInactiveUserEvent(): MutableLiveData<Event<Resource<Unit, Unit>>> =
         removeInactiveUserEvent
 
@@ -63,10 +70,10 @@ class Repository(
 
     /**
      * Call back used by snapshot listener when game is null (was deleted on db)
-     * or current user was removed
      */
     override fun onSessionEnded() {
         cancelJobs()
+        preferencesHelper.removeSavedSession()
         sessionEndedEvent.postValue(Event(Unit))
     }
 
@@ -84,7 +91,14 @@ class Repository(
     /**
      * cancels all operations with context tied to job
      */
-    override fun cancelJobs() =job.cancel()
+    override fun cancelJobs() = listOf(
+        createGameJob,
+        joinGameJob,
+        changeNameJob,
+        startGameJob
+    ).forEach {
+        it?.cancel()
+    }
 
 
     /**
@@ -104,8 +118,8 @@ class Repository(
             result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
         } else {
             Log.d("Elijah", "Starting create game")
-            job = Job()
-            CoroutineScope(IO + job).launch {
+
+            createGameJob = CoroutineScope(IO).launch {
                 try {
                     val accessCode = generateAccessCode()
                     val gameLocations = getGameLocations(chosenPacks as ArrayList<String>)
@@ -152,8 +166,8 @@ class Repository(
         if (!Connectivity.isOnline) {
             result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
         } else {
-            job = Job()
-            CoroutineScope(IO + job).launch {
+
+            joinGameJob = CoroutineScope(IO).launch {
                 db.collection(constants.games).document(accessCode).get()
                     .addOnSuccessListener { document ->
                         if (document.exists()) {
@@ -212,19 +226,21 @@ class Repository(
      * removes user name from games player list on db
      * posts to leave game event that both the waiting screen and game screen listen for
      */
-    override fun leaveGame(currentSession: Session) {
+    override fun leaveGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, LeaveGameError>>> {
+        val result = MutableLiveData<Event<Resource<Unit, LeaveGameError>>>()
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         gameRef.update(
             Constants.GameFields.playerList,
             FieldValue.arrayRemove(currentSession.currentUser)
         ).addOnSuccessListener {
             sessionListenerHelper.removeListener()
-            preferencesHelper.removeSavedSession(currentSession)
-            leaveGameEvent.value = Event(Resource.Success(Unit))
+            preferencesHelper.removeSavedSession()
+            result.value = Event(Resource.Success(Unit))
         }.addOnFailureListener {
-            leaveGameEvent.value =
+            result.value =
                 Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
         }
+        return result
     }
 
     override fun removeInactiveUser(currentSession: Session) {
@@ -234,7 +250,7 @@ class Repository(
             FieldValue.arrayRemove(currentSession.currentUser)
         ).addOnSuccessListener {
             sessionListenerHelper.removeListener()
-            preferencesHelper.removeSavedSession(currentSession)
+            preferencesHelper.removeSavedSession()
             removeInactiveUserEvent.value = Event(Resource.Success(Unit))
         }.addOnFailureListener {
             removeInactiveUserEvent.value =
@@ -244,8 +260,7 @@ class Repository(
 
     override fun reassignRoles(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>> {
         val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
-        job = Job()
-        CoroutineScope(IO + job).launch {
+        CoroutineScope(IO).launch {
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             try {
                 val newLocation =
@@ -287,7 +302,7 @@ class Repository(
             } catch (e: Exception) {
                 result.postValue(Resource.Error(error = e))
             } finally {
-                preferencesHelper.removeSavedSession(currentSession)
+                preferencesHelper.removeSavedSession()
             }
         }
 
@@ -301,8 +316,7 @@ class Repository(
     override fun startGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>> {
         val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
 
-        job = Job()
-        CoroutineScope(IO + job).launch {
+        startGameJob = CoroutineScope(IO).launch {
             val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             gameRef.update(Constants.GameFields.started, true)
             try {
@@ -332,14 +346,16 @@ class Repository(
         val accessCode = currentSession.accessCode
         currentSession.game.let {
             val gameRef = db.collection(constants.games).document(accessCode)
-            val newLocation = currentSession.game.locationList.filter { location -> location != currentSession.game.chosenLocation }.random()
+            val newLocation =
+                currentSession.game.locationList.filter { location -> location != currentSession.game.chosenLocation }
+                    .random()
             val newGame = Game(
                 newLocation, it.chosenPacks, false,
                 it.playerList, ArrayList(), it.timeLimit, it.locationList, it.expiration
             )
             gameRef.set(newGame).addOnSuccessListener {
                 result.postValue(Resource.Success(Unit))
-            }.addOnFailureListener {e ->
+            }.addOnFailureListener { e ->
                 result.postValue(Resource.Error(error = PlayAgainError.Unknown, exception = e))
             }
         }
@@ -354,34 +370,37 @@ class Repository(
         currentSession: Session
     ): LiveData<Event<Resource<String, NameChangeError>>> {
         val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
-        val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
-        if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
-        val copy = currentSession.game.playerList.toMutableList()
-        copy[index] = newName
-        if (currentSession.game.started) {
-            result.postValue(Event(Resource.Error(error = NameChangeError.GAME_STARTED)))
 
-        } else {
-            val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-            gameRef.update(Constants.GameFields.playerList, copy).addOnSuccessListener {
-                val updatedSession =
-                    Session(
-                        accessCode = currentSession.accessCode,
-                        previousUserName = currentSession.currentUser,
-                        currentUser = newName,
-                        game = currentSession.game
-                    )
-                preferencesHelper.saveSession(updatedSession)
-                result.postValue(Event(Resource.Success(newName)))
-            }.addOnFailureListener {
-                result.postValue(
-                    Event(
-                        Resource.Error(
-                            error = NameChangeError.UNKNOWN_ERROR,
-                            exception = it
+        changeNameJob = CoroutineScope(IO).launch {
+            val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
+            if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+            val copy = currentSession.game.playerList.toMutableList()
+            copy[index] = newName
+            if (currentSession.game.started) {
+                result.postValue(Event(Resource.Error(error = NameChangeError.GAME_STARTED)))
+
+            } else {
+                val gameRef = db.collection(constants.games).document(currentSession.accessCode)
+                gameRef.update(Constants.GameFields.playerList, copy).addOnSuccessListener {
+                    val updatedSession =
+                        Session(
+                            accessCode = currentSession.accessCode,
+                            previousUserName = currentSession.currentUser,
+                            currentUser = newName,
+                            game = currentSession.game
+                        )
+                    preferencesHelper.saveSession(updatedSession)
+                    result.postValue(Event(Resource.Success(newName)))
+                }.addOnFailureListener {
+                    result.postValue(
+                        Event(
+                            Resource.Error(
+                                error = NameChangeError.UNKNOWN_ERROR,
+                                exception = it
+                            )
                         )
                     )
-                )
+                }
             }
         }
 

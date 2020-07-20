@@ -59,7 +59,6 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         observeGameUpdates()
         observeSessionEndedEvent()
         observeTimeLeft()
-        observeGameLeftEvent()
         observeRemovedInactiveUserEvent()
         observeReassignEvent()
         observeCurrentUserPlayAgainEvent()
@@ -118,16 +117,6 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             })
     }
 
-    private fun observeGameLeftEvent() {
-        gameViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
-            if (navController.currentDestination?.id == R.id.gameFragment) {
-                when(it) {
-                    is Resource.Success -> navigateToStart()
-                    is Resource.Error -> handleLeaveGameError(it)
-                }
-            }
-        })
-    }
 
     private fun observeRemovedInactiveUserEvent() {
         gameViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
@@ -189,13 +178,6 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     }
 
     private fun handlePlayAgainError(e: Resource.Error<Unit, PlayAgainError>) {
-        e.exception?.let { LogHelper.logErrorPlayAgain(it) }
-        e.error?.let {
-            Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun handleLeaveGameError(e: Resource.Error<Unit, LeaveGameError>) {
         e.exception?.let { LogHelper.logErrorPlayAgain(it) }
         e.error?.let {
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()

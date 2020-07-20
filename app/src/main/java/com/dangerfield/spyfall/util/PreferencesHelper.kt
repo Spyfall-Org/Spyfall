@@ -16,7 +16,7 @@ interface ColorPreferences {
 
 interface SessionSaver {
     fun saveSession(currentSession: Session)
-    fun removeSavedSession(currentSession: Session)
+    fun removeSavedSession()
     fun getSavedSession() : Session?
 }
 class PreferencesHelper(val context: Context) : TesterPreferences, ColorPreferences , SessionSaver {
@@ -49,7 +49,7 @@ class PreferencesHelper(val context: Context) : TesterPreferences, ColorPreferen
         editor.apply()
     }
 
-    override fun removeSavedSession(currentSession: Session) {
+    override fun removeSavedSession() {
         val editor = preferences.edit()
         editor.remove(context.resources.getString(R.string.shared_preferences_session_code))
         editor.remove(context.resources.getString(R.string.shared_preferences_session_current_user))

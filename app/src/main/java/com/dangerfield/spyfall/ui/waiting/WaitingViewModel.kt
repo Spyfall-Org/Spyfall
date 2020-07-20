@@ -27,6 +27,8 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
 
     private val nameChangeEvent = MediatorLiveData<Event<Resource<String, NameChangeError>>>()
     private val startGameEvent = MediatorLiveData<Event<Resource<Unit, StartGameError>>>()
+    private val leaveGameEvent = MediatorLiveData<Event<Resource<Unit, LeaveGameError>>>()
+
 
     //user triggered events
     fun getNameChangeEvent() = nameChangeEvent
@@ -36,7 +38,7 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
     fun getLiveGame() = repository.getLiveGame(currentSession)
     fun getSessionEnded() = repository.getSessionEnded()
     fun getRemoveInactiveUserEvent() = repository.getRemoveInactiveUserEvent()
-    fun getLeaveGameEvent() = repository.getLeaveGameEvent()
+    fun getLeaveGameEvent() = leaveGameEvent
 
     fun triggerStartGameEvent() {
         if(currentSession.game.started) {
@@ -51,9 +53,13 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
     }
 
     fun triggerLeaveGameEvent() {
-        //triggers global state change in repo that this view model provides
-        repository.cancelJobs()
-        repository.leaveGame(currentSession)
+        repository.cancelChangeName()
+        repository.cancelStartGame()
+        val repoResult = repository.leaveGame(currentSession)
+        leaveGameEvent.addSource(repoResult) {
+            leaveGameEvent.postValue(it)
+            leaveGameEvent.removeSource(repoResult)
+        }
     }
 
     fun triggerChangeNameEvent(newName: String) {
