@@ -40,7 +40,8 @@ class Repository(
      */
     private var liveGame: MutableLiveData<Game> = MutableLiveData()
     private var sessionEndedEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    private var leaveGameEvent = MutableLiveData<Event<Resource<Unit, LeaveGameError>>>() //TODO see if this can be removed
+    private var leaveGameEvent =
+        MutableLiveData<Event<Resource<Unit, LeaveGameError>>>() //TODO see if this can be removed
     private var removeInactiveUserEvent = MutableLiveData<Event<Resource<Unit, Unit>>>()
 
     /**
@@ -263,6 +264,8 @@ class Repository(
                 newSession.game.chosenLocation = newLocation
                 val roles = getRoles(newSession)
                 assignRoles(roles, newSession, gameRef)
+                db.collection(constants.games).document(currentSession.accessCode)
+                    .update(Constants.GameFields.chosenLocation, newLocation).await()
                 result.postValue(Event(Resource.Success(Unit)))
             } catch (e: Exception) {
                 result.postValue(

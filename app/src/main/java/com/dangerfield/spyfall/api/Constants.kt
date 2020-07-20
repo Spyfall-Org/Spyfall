@@ -28,6 +28,8 @@ class Constants(val context: Context, private val preferencesHelper: Preferences
         const val theSpyRole = "The Spy!"
         const val started = "started"
         const val expiration = "expiration"
+        const val chosenLocation = "chosenLocation"
+
     }
 }
 
