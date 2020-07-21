@@ -38,10 +38,8 @@ class UIHelper {
 
         fun getSavedColor(context: Context){
             val prefs = context.getSharedPreferences(context.resources.getString(R.string.shared_preferences), Context.MODE_PRIVATE)
-            val savedColor = prefs.getInt(context.resources.getString(R.string.shared_preferences_color),0)
-            if(savedColor != 0) {
-                accentColor = if(savedColor == Color.WHITE) accentColors.random() else savedColor
-            }
+            val savedColor = prefs.getInt(context.resources.getString(R.string.shared_preferences_color), Color.WHITE)
+            accentColor = if(savedColor == Color.WHITE) accentColors.random() else savedColor
         }
 
         fun errorDialog(context: Context) = UIHelper.customSimpleAlert(context,context.resources.getString(R.string.error_title),
