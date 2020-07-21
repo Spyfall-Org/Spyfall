@@ -62,6 +62,7 @@ class Repository(
         addListenerIfNewGame(currentSession)
         return liveGame
     }
+
     override fun getLeaveGameEvent() = leaveGameEvent
     override fun getSessionEnded() = sessionEndedEvent
     override fun getRemoveInactiveUserEvent() = removeInactiveUserEvent
@@ -137,15 +138,17 @@ class Repository(
                     val gameRef = db.collection(constants.games).document(accessCode)
                     gameRef.set(game).addOnSuccessListener {
                         val currentSession = Session(accessCode, username, game)
-                        result.value = Resource.Success(currentSession)
+                        result.postValue(Resource.Success(currentSession))
                         preferencesHelper.saveSession(currentSession)
                     }.addOnFailureListener {
-                        result.value =
+                        result.postValue(
                             Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
+                        )
                     }
                 } catch (e: Exception) {
-                    result.value =
+                    result.postValue(
                         Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = e)
+                    )
                 }
             }
         }
