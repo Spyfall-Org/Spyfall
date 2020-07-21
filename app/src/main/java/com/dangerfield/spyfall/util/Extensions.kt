@@ -29,14 +29,20 @@ fun View.goneIf(predicate: Boolean) {
     visibility = if(predicate) View.GONE else View.VISIBLE
 }
 
+fun View.visibleIf(predicate: Boolean) {
+    visibility = if(predicate) View.VISIBLE else View.INVISIBLE
+}
+
+
 fun EditText.openKeyboard() {
     this.requestFocus()
     val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
 
-fun View.setHideKeyBoardOnPressAway(){
+fun View.setHideKeyBoardOnPressAway(): View {
     this.onFocusChangeListener = keyboardHider
+    return this
 }
 
 private val keyboardHider = View.OnFocusChangeListener { view, b ->
@@ -55,6 +61,10 @@ fun View.hideKeyboard() {
 
 fun TextView.clear() {
     this.text = ""
+}
+
+suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
+    map { async { f(it) } }.awaitAll()
 }
 
 fun WaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {

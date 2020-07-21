@@ -1,14 +1,14 @@
 package com.dangerfield.spyfall.ui.joinGame
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
+import com.dangerfield.spyfall.util.Event
 
-enum class JoinGameError(val resId: Int? = null)  {
+enum class JoinGameError(val resId: Int? = null) {
     FIELD_ERROR(R.string.join_game_error_fields),
     GAME_DOES_NOT_EXIST(R.string.join_game_error_access_code),
     GAME_HAS_MAX_PLAYERS(R.string.join_game_error_max_players),
@@ -19,17 +19,29 @@ enum class JoinGameError(val resId: Int? = null)  {
     UNKNOWN_ERROR(R.string.unknown_error),
     NETWORK_ERROR
 }
+
 class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
 
-    fun joinGame(accessCode: String, username: String): LiveData<Resource<Session, JoinGameError>> {
-        var result = MutableLiveData<Resource<Session, JoinGameError>>()
+    private val joinGameEvent = MediatorLiveData<Event<Resource<Session, JoinGameError>>>()
+    fun getJoinGameEvent() = joinGameEvent
 
-        if(username.isEmpty() || accessCode.isEmpty()){
-            result.value =  Resource.Error(error = JoinGameError.FIELD_ERROR)
-        } else if(username.length > 25) {
-            result.value = Resource.Error(error = JoinGameError.NAME_CHARACTER_LIMIT)
-        } else result = repository.joinGame(accessCode, username) as MutableLiveData<Resource<Session, JoinGameError>>
-
-        return result
+    fun joinGame(accessCode: String, username: String) {
+        when {
+            username.isEmpty() || accessCode.isEmpty() -> joinGameEvent.value =
+                Event(Resource.Error(error = JoinGameError.FIELD_ERROR))
+            username.length > 25 -> joinGameEvent.value =
+                Event(Resource.Error(error = JoinGameError.NAME_CHARACTER_LIMIT))
+            else -> {
+                val repoResults = repository.joinGame(accessCode, username)
+                joinGameEvent.addSource(repoResults) {
+                    joinGameEvent.postValue(it)
+                    joinGameEvent.removeSource(repoResults)
+                }
+            }
+        }
     }
+
+    fun cancelJoinGame() = repository.cancelJoinGame()
+
+
 }

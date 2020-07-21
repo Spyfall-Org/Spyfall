@@ -7,6 +7,7 @@ import com.dangerfield.spyfall.ui.game.GameViewModel
 import com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.newGame.NewGameViewModel
+import com.dangerfield.spyfall.ui.start.StartViewModel
 import com.dangerfield.spyfall.ui.waiting.WaitingViewModel
 import com.dangerfield.spyfall.util.*
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,9 +28,12 @@ val mainModule = module {
     single { (currentSession: Session) -> GameViewModel(get(), currentSession)}
     viewModel { JoinGameViewModel(get()) }
     viewModel { NewGameViewModel(get()) }
+    viewModel { StartViewModel(get()) }
 
     factory { SessionListenerHelper(get(), get()) }
     factory { Constants(androidApplication(), get()) }
-    factory { ReviewHelper(androidContext()) as ReviewManager }
+    factory { ReviewHelper(androidContext()) }
     factory { SavedSessionHelper(get(), get(), get()) }
+    factory { FeedbackHelper(get(), get()) }
+    factory { DBCleaner(get(), get()) }
 }

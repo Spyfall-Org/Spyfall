@@ -7,9 +7,9 @@ import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.models.Session
 import kotlinx.coroutines.*
 
-class RemoveUserTimer(val repository: GameRepository, val preferencesHelper: PreferencesHelper) : LifecycleObserver {
+class RemoveUserTimer(val repository: GameRepository, private val preferencesHelper: PreferencesHelper) : LifecycleObserver {
 
-    private var killGame: Job = Job()
+    private var removeUserJob: Job = Job()
     private val fifteenMins = 900000L
     private val currentSession : Session?
     get() { return preferencesHelper.getSavedSession() }
@@ -30,22 +30,22 @@ class RemoveUserTimer(val repository: GameRepository, val preferencesHelper: Pre
     fun onDestroyed() {
         stopTimerToRemoveUser()
         currentSession?.let {
-            repository.leaveGame(it)
+            repository.removeInactiveUser(it)
         }
     }
 
     private fun stopTimerToRemoveUser() {
-        if (killGame.isActive) {
+        if (removeUserJob.isActive) {
             try {
-                killGame.cancel()
+                removeUserJob.cancel()
             } catch (e: CancellationException) { }
         }
     }
 
     private fun startTimerToRemoveUser(currentSession: Session) {
-        killGame = GlobalScope.launch {
+        removeUserJob = GlobalScope.launch {
             delay(fifteenMins)
-            repository.leaveGame(currentSession)
+            repository.removeInactiveUser(currentSession)
         }
     }
 }

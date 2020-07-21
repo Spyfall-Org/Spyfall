@@ -11,10 +11,10 @@ import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.clear
 import com.dangerfield.spyfall.util.hideKeyboard
 import com.dangerfield.spyfall.util.openKeyboard
-import kotlinx.android.synthetic.main.alert_change_name.view.*
+import kotlinx.android.synthetic.main.dialog_change_name.view.*
 
 interface NameChangeEventFirer {
-    fun fireNameChangeEvent(newName: String)
+    fun triggerNameChangeEvent(newName: String)
 }
 
 class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
@@ -29,13 +29,13 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
     }
 
     private fun handleNameChange(newName: String) {
-        eventFirer.fireNameChangeEvent(newName)
+        eventFirer.triggerNameChangeEvent(newName)
     }
 
     private fun buildDialog(context: Context): AlertDialog {
         val dialogBuilder = AlertDialog.Builder(context)
         if (dialogView == null) dialogView =
-            LayoutInflater.from(context).inflate(R.layout.alert_change_name, null)
+            LayoutInflater.from(context).inflate(R.layout.dialog_change_name, null)
         dialogBuilder.setView(dialogView)
         val dialog = dialogBuilder.create()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));

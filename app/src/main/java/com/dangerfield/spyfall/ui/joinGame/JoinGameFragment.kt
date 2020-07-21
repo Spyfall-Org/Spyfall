@@ -6,16 +6,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
-import com.dangerfield.spyfall.util.addCharacterMax
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
-import com.dangerfield.spyfall.util.CrashlyticsLogger
+import com.dangerfield.spyfall.util.*
 import kotlinx.android.synthetic.main.fragment_join_game.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -29,22 +27,33 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         setupView()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    joinGameViewModel.cancelJoinGame()
+                    navController.popBackStack(R.id.startFragment, false)
+                }
+            })
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        observeJoinGameEvent()
+    }
+
     private fun setupView() {
-        updateAccent()
-        btn_join_game_action.setOnClickListener { joinGameClick() }
-        tv_access_code.onFocusChangeListener = UIHelper.keyboardHider
-        tv_username.onFocusChangeListener = UIHelper.keyboardHider
+        updateTheme()
+        btn_join_game_action.setOnClickListener { triggerJoinGame() }
+        tv_access_code.setHideKeyBoardOnPressAway()
+        tv_username.setHideKeyBoardOnPressAway()
         tv_access_code.addCharacterMax(8)
         tv_username.addCharacterMax(25)
     }
 
-    private fun joinGameClick() {
-        loadMode()
-        val accessCode = tv_access_code.text.toString().toLowerCase().trim()
-        val userName = tv_username.text.toString().trim()
-
-        joinGameViewModel.joinGame(accessCode, userName).observe(viewLifecycleOwner, Observer {
-            if (!this.isAdded) return@Observer
+    private fun observeJoinGameEvent() {
+        joinGameViewModel.getJoinGameEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
                 is Resource.Success -> it.data?.let { session -> handleSuccessfulJoinGame(session) }
                 is Resource.Error -> handleErrorJoinGame(it)
@@ -52,17 +61,24 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         })
     }
 
+    private fun triggerJoinGame() {
+        showLoading(true)
+        val accessCode = tv_access_code.text.toString().toLowerCase().trim()
+        val userName = tv_username.text.toString().trim()
+        joinGameViewModel.joinGame(accessCode, userName)
+    }
+
     private fun handleSuccessfulJoinGame(currentSession: Session) {
+        showLoading(false)
         val bundle = Bundle()
         bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
         if (navController.currentDestination?.id != R.id.joinGameFragment) return
-        enterMode()
         navController.navigate(R.id.action_joinGameFragment_to_waitingFragment, bundle)
     }
 
     private fun handleErrorJoinGame(result: Resource.Error<Session, JoinGameError>) {
-        result.exception?.let { CrashlyticsLogger.logErrorJoiningGame(it) }
-
+        showLoading(false)
+        result.exception?.let { LogHelper.logErrorJoiningGame(it) }
         result.error?.let {error ->
             if (error == JoinGameError.NETWORK_ERROR) {
                 UIHelper.errorDialog(requireContext()).show()
@@ -72,25 +88,18 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
                 }
             }
         }
-        enterMode()
     }
 
-    private fun updateAccent() {
+    private fun updateTheme() {
         btn_join_game_action.background.setTint(UIHelper.accentColor)
         UIHelper.setCursorColor(tv_access_code, UIHelper.accentColor)
         UIHelper.setCursorColor(tv_username, UIHelper.accentColor)
         pb_join_game.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
     }
 
-    private fun loadMode() {
-        btn_join_game_action.text = ""
-        pb_join_game.visibility = View.VISIBLE
-        btn_join_game_action.isClickable = false
-    }
-
-    private fun enterMode() {
-        btn_join_game_action.text = getString(R.string.string_join_game)
-        pb_join_game.visibility = View.INVISIBLE
-        btn_join_game_action.isClickable = true
+    private fun showLoading(loading: Boolean) {
+        btn_join_game_action.text = if(loading) "" else  getString(R.string.string_join_game)
+        btn_join_game_action.isClickable = !loading
+        pb_join_game.goneIf(!loading)
     }
 }

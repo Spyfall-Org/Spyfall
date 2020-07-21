@@ -16,7 +16,7 @@ interface ColorPreferences {
 
 interface SessionSaver {
     fun saveSession(currentSession: Session)
-    fun removeSavedSession(currentSession: Session)
+    fun removeSavedSession()
     fun getSavedSession() : Session?
 }
 class PreferencesHelper(val context: Context) : TesterPreferences, ColorPreferences , SessionSaver {
@@ -45,13 +45,15 @@ class PreferencesHelper(val context: Context) : TesterPreferences, ColorPreferen
         val editor = preferences.edit()
         editor.putString(context.resources.getString(R.string.shared_preferences_session_code), currentSession.accessCode)
         editor.putString(context.resources.getString(R.string.shared_preferences_session_current_user), currentSession.currentUser)
+        editor.putString(context.resources.getString(R.string.shared_preferences_session_previous_user), currentSession.previousUserName)
         editor.apply()
     }
 
-    override fun removeSavedSession(currentSession: Session) {
+    override fun removeSavedSession() {
         val editor = preferences.edit()
         editor.remove(context.resources.getString(R.string.shared_preferences_session_code))
         editor.remove(context.resources.getString(R.string.shared_preferences_session_current_user))
+        editor.remove(context.resources.getString(R.string.shared_preferences_session_previous_user))
         editor.apply()
     }
 
@@ -66,6 +68,11 @@ class PreferencesHelper(val context: Context) : TesterPreferences, ColorPreferen
             null
         ) ?: return null
 
-        return Session(accessCode = accessCode, currentUser = currentUser, game = Game.getEmptyGame())
+        val prevUser =  preferences.getString(
+            context.resources.getString(R.string.shared_preferences_session_previous_user),
+            currentUser
+        ) ?: currentUser
+
+        return Session(accessCode = accessCode, currentUser = currentUser, game = Game.getEmptyGame(), previousUserName = prevUser)
     }
 }

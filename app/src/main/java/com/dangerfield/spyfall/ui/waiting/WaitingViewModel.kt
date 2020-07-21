@@ -6,6 +6,7 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
+import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.util.Event
 
 enum class NameChangeError(val resId: Int) {
@@ -18,44 +19,56 @@ enum class NameChangeError(val resId: Int) {
 
 enum class LeaveGameError(val resId: Int) {
     UNKNOWN_ERROR(R.string.unknown_error),
-    GAME_STARTED(R.string.leave_game_error_game_started)
 }
 
 class WaitingViewModel(private val repository: GameRepository, val currentSession: Session) : ViewModel() {
 
-    private val nameChangeEvent: MediatorLiveData<Event<Resource<String, NameChangeError>>> =
-            MediatorLiveData()
+    var hasNavigatedUsingSavedSessionToStartedGame = false
 
-    private val leaveGameEvent: MediatorLiveData<Event<Resource<Unit, LeaveGameError>>> =
-        MediatorLiveData()
+    //user triggered events
+    private val nameChangeEvent = MediatorLiveData<Event<Resource<String, NameChangeError>>>()
+    private val startGameEvent = MediatorLiveData<Event<Resource<Unit, StartGameError>>>()
 
+    //Globally triggered events
     private val liveGame = repository.getLiveGame(currentSession)
+    private val sessionEndedEvent = repository.getSessionEnded()
+    private val removeInactiveUserEvent = repository.getRemoveInactiveUserEvent()
+    private val leaveGameEvent = repository.getLeaveGameEvent()
 
+    //user triggered events
     fun getNameChangeEvent() = nameChangeEvent
+    fun getStartGameEvent() = startGameEvent
 
-    fun getLeaveGameEvent() = repository.getLeaveGameEvent()
-
+    //Global events/data
     fun getLiveGame() = liveGame
+    fun getSessionEnded() = sessionEndedEvent
+    fun getRemoveInactiveUserEvent() = removeInactiveUserEvent
+    fun getLeaveGameEvent() = leaveGameEvent
 
-    fun startGame() =
-        repository.startGame(currentSession)
+    fun triggerStartGameEvent() {
+        if(currentSession.game.started) {
+            startGameEvent.postValue(Event(Resource.Error(error = StartGameError.GAME_STARTED )))
+        } else {
+            val repoResult = repository.startGame(currentSession)
+            startGameEvent.addSource(repoResult) {
+                startGameEvent.postValue(it)
+                startGameEvent.removeSource(repoResult)
+            }
+        }
+    }
 
-    fun fireLeaveGameEvent() {
-        if(findLeaveGameErrors()) return
+    fun triggerLeaveGameEvent() {
+        repository.cancelChangeName()
+        repository.cancelStartGame()
         repository.leaveGame(currentSession)
     }
 
-    private fun findLeaveGameErrors(): Boolean {
-        return if(currentSession.game.started){
-            leaveGameEvent.value = Event(Resource.Error(error = LeaveGameError.GAME_STARTED))
-            true
-        } else false
-    }
-
-    fun fireNameChange(newName: String) {
+    fun triggerChangeNameEvent(newName: String) {
         if (findNameChangeErrors(newName)) return
-        nameChangeEvent.addSource(repository.changeName(newName, currentSession)) {
+        val repoResults = repository.changeName(newName, currentSession)
+        nameChangeEvent.addSource(repoResults) {
             nameChangeEvent.value = it
+            nameChangeEvent.removeSource(repoResults)
         }
     }
 

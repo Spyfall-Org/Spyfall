@@ -6,9 +6,14 @@ import com.dangerfield.spyfall.util.PreferencesHelper
 
 class Constants(val context: Context, private val preferencesHelper: PreferencesHelper) {
     val games: String
-        get() = if (BuildConfig.DEBUG && preferencesHelper.getUseTestDbState()) "games_test" else "games"
+        get() = if (BuildConfig.DEBUG && preferencesHelper.getUseTestDbState()) games_test else games_prod
+
+    val games_test = "games_test"
+    val games_prod = "games"
 
     val packs = "packs"
+
+    val feedback = if (BuildConfig.DEBUG) "feedback_test" else "feedback"
 
     object StatisticsConstants {
         const val collection = "stats"
@@ -22,6 +27,9 @@ class Constants(val context: Context, private val preferencesHelper: Preferences
         const val playerList = "playerList"
         const val theSpyRole = "The Spy!"
         const val started = "started"
+        const val expiration = "expiration"
+        const val chosenLocation = "chosenLocation"
+
     }
 }
 
