@@ -39,7 +39,7 @@ class SessionListenerHelper(
                     updateSession(updatedGame, sessionListener)
                 }
             } else {
-                endSession(sessionListener)
+                endSession(sessionListener) // game ref has been deleted
             }
         }
     }
