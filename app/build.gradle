@@ -58,6 +58,11 @@ android {
     androidExtensions {
         experimental = true
     }
+
+    // Always show the result of every unit test when running via command line, even if it passes.
+    testOptions.unitTests {
+        includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -96,4 +101,12 @@ dependencies {
 
     //Dependency Injection
     implementation 'org.koin:koin-android-viewmodel:2.0.1'
+
+    //testing
+    testImplementation "androidx.test.ext:junit-ktx:$androidXTestExtKotlinRunnerVersion"
+    testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation 'org.mockito:mockito-core:3.0.0'
+    testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+
 }

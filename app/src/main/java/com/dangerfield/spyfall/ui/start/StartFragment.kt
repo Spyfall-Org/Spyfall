@@ -1,9 +1,6 @@
 package com.dangerfield.spyfall.ui.start
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.graphics.PorterDuff
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
