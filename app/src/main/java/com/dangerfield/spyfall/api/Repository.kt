@@ -230,6 +230,7 @@ class Repository(
      * posts to leave game event that both the waiting screen and game screen listen for
      */
     override fun leaveGame(currentSession: Session) {
+        val numberOfPlayersBeforeLeaving = currentSession.copy().game.playerList.size
         val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         gameRef.update(
             Constants.GameFields.playerList,
@@ -237,7 +238,10 @@ class Repository(
         ).addOnSuccessListener {
             sessionListenerHelper.removeListener()
             preferencesHelper.removeSavedSession()
-            leaveGameEvent.value = Event(Resource.Success(Unit))
+            if(numberOfPlayersBeforeLeaving > 1){
+                leaveGameEvent.value = Event(Resource.Success(Unit))
+            }
+            //otherwise let the session ended trigger take care of user experience
         }.addOnFailureListener {
             leaveGameEvent.value =
                 Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
