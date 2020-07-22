@@ -7,14 +7,13 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
 
 class FireStoreService(private val db: FirebaseFirestore, private val constants: Constants) :
     GameService {
 
     override fun getGame(accessCode: String): Task<Game?> {
         val result: TaskCompletionSource<Game?> = TaskCompletionSource()
-        db.collection(constants.games).document("accessCode").get().addOnSuccessListener { doc ->
+        db.collection(constants.games).document(accessCode).get().addOnSuccessListener { doc ->
             val game = if (doc != null && doc.exists()) {
                 doc.toObject(Game::class.java)
             } else {

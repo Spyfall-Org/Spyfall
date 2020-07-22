@@ -24,18 +24,9 @@ import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
-//TODO you can mock this repo in testing and just verify certain methods were called in the view model test
-/*
-ex: you can mock the sessionListenerHelper and prefrences helper and verify() that the remove listener and remove
-prefrences were called when leaving the game
-
-you would have to find a way that you can say when (firebaseService.leave) then call success listener such
-that you can also assert that the leave game event was posted to with a success
- */
 class Repository(
-    private var db: FirebaseFirestore, //TODO change because mockito cant mock this
-    private val constants: Constants, //TODO change you change the firebase thing, give the constants to that
-    private val sessionListenerService: SessionListenerService, //TODO make this implement an interface to make it easier to mock
+    private var fireStoreService: GameService,
+    private val sessionListenerService: SessionListenerService,
     private val preferencesHelper: PreferencesHelper
 ) : GameRepository, SessionUpdater {
 
@@ -143,16 +134,16 @@ class Repository(
                         (System.currentTimeMillis() + millisecondsInSixHours) / 1000
                     )
 
-                    val gameRef = db.collection(constants.games).document(accessCode)
-                    gameRef.set(game).addOnSuccessListener {
-                        val currentSession = Session(accessCode, username, game)
-                        result.postValue(Resource.Success(currentSession))
-                        preferencesHelper.saveSession(currentSession)
-                    }.addOnFailureListener {
-                        result.postValue(
-                            Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
-                        )
-                    }
+                    fireStoreService.setGame(accessCode, game)
+                        .addOnSuccessListener {
+                            val currentSession = Session(accessCode, username, game)
+                            result.postValue(Resource.Success(currentSession))
+                            preferencesHelper.saveSession(currentSession)
+                        }.addOnFailureListener {
+                            result.postValue(
+                                Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
+                            )
+                        }
                 } catch (e: Exception) {
                     result.postValue(
                         Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = e)
@@ -179,54 +170,46 @@ class Repository(
         } else {
 
             joinGameJob = CoroutineScope(IO).launch {
-                db.collection(constants.games).document(accessCode).get()
-                    .addOnSuccessListener { document ->
-                        if (document.exists()) {
-                            val playersList =
-                                (document[Constants.GameFields.playerList] as ArrayList<String>)
+                fireStoreService.getGame(accessCode).addOnSuccessListener { game ->
+                    if (game == null) {
+                        result.value =
+                            Event(Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST))
+                    } else {
+                        when {
+                            game.playerList.size >= 8 ->
+                                result.value =
+                                    Event(Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS))
 
-                            when {
-                                playersList.size >= 8 ->
+                            game.started ->
+                                result.value =
+                                    Event(Resource.Error(error = JoinGameError.GAME_HAS_STARTED))
+
+                            game.playerList.contains(username) ->
+                                result.value =
+                                    Event(Resource.Error(error = JoinGameError.NAME_TAKEN))
+
+                            else -> {
+                                addPlayer(username, accessCode).addOnSuccessListener {
+                                    val currentSession = Session(accessCode, username, game)
+                                    result.value = Event(Resource.Success(currentSession))
+                                    preferencesHelper.saveSession(currentSession)
+
+                                }.addOnFailureListener {
                                     result.value =
-                                        Event(Resource.Error(error = JoinGameError.GAME_HAS_MAX_PLAYERS))
-
-                                document[Constants.GameFields.started] == true ->
-                                    result.value =
-                                        Event(Resource.Error(error = JoinGameError.GAME_HAS_STARTED))
-
-                                playersList.contains(username) ->
-                                    result.value =
-                                        Event(Resource.Error(error = JoinGameError.NAME_TAKEN))
-
-                                else -> {
-                                    addPlayer(username, accessCode).addOnSuccessListener {
-                                        val game = document.toObject(Game::class.java)
-                                        if (game != null) {
-                                            val currentSession = Session(accessCode, username, game)
-                                            result.value = Event(Resource.Success(currentSession))
-                                            preferencesHelper.saveSession(currentSession)
-                                        } else {
-                                            result.value =
-                                                Event(Resource.Error(error = JoinGameError.UNKNOWN_ERROR))
-                                        }
-                                    }.addOnFailureListener {
-                                        result.value =
-                                            Event(
-                                                Resource.Error(
-                                                    error = JoinGameError.COULD_NOT_JOIN,
-                                                    exception = it
-                                                )
+                                        Event(
+                                            Resource.Error(
+                                                error = JoinGameError.COULD_NOT_JOIN,
+                                                exception = it
                                             )
-                                    }
+                                        )
                                 }
                             }
-                        } else {
-                            result.value =
-                                Event(Resource.Error(error = JoinGameError.GAME_DOES_NOT_EXIST))
                         }
-                    }.addOnFailureListener {
-                        result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
                     }
+
+                }.addOnFailureListener {
+                    result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
+                }
             }
         }
 
@@ -239,33 +222,27 @@ class Repository(
      */
     override fun leaveGame(currentSession: Session) {
         val numberOfPlayersBeforeLeaving = currentSession.copy().game.playerList.size
-        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-        gameRef.update(
-            Constants.GameFields.playerList,
-            FieldValue.arrayRemove(currentSession.currentUser)
-        ).addOnSuccessListener {
-            sessionListenerService.removeListener()
-            preferencesHelper.removeSavedSession()
-            if(numberOfPlayersBeforeLeaving > 1){
-                leaveGameEvent.value = Event(Resource.Success(Unit))
-            }
-            //otherwise let the session ended trigger take care of user experience
-        }.addOnFailureListener {
+        fireStoreService.removePlayer(currentSession.accessCode, currentSession.currentUser)
+            .addOnSuccessListener {
+                sessionListenerService.removeListener()
+                preferencesHelper.removeSavedSession()
+                if (numberOfPlayersBeforeLeaving > 1) {
+                    leaveGameEvent.value = Event(Resource.Success(Unit))
+                }
+                //otherwise let the session ended trigger take care of user experience
+            }.addOnFailureListener {
             leaveGameEvent.value =
                 Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
         }
     }
 
     override fun removeInactiveUser(currentSession: Session) {
-        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-        gameRef.update(
-            Constants.GameFields.playerList,
-            FieldValue.arrayRemove(currentSession.currentUser)
-        ).addOnSuccessListener {
-            sessionListenerService.removeListener()
-            preferencesHelper.removeSavedSession()
-            removeInactiveUserEvent.value = Event(Resource.Success(Unit))
-        }.addOnFailureListener {
+        fireStoreService.removePlayer(currentSession.accessCode, currentSession.currentUser)
+            .addOnSuccessListener {
+                sessionListenerService.removeListener()
+                preferencesHelper.removeSavedSession()
+                removeInactiveUserEvent.value = Event(Resource.Success(Unit))
+            }.addOnFailureListener {
             removeInactiveUserEvent.value =
                 Event(Resource.Error(error = Unit, exception = it))
         }
@@ -274,7 +251,6 @@ class Repository(
     override fun reassignRoles(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>> {
         val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
         CoroutineScope(IO).launch {
-            val gameRef = db.collection(constants.games).document(currentSession.accessCode)
             try {
                 val newLocation =
                     currentSession.game.locationList.filter { it != currentSession.game.chosenLocation }
@@ -282,9 +258,8 @@ class Repository(
                 val newSession = currentSession.copy()
                 newSession.game.chosenLocation = newLocation
                 val roles = getRoles(newSession)
-                assignRoles(roles, newSession, gameRef)
-                db.collection(constants.games).document(currentSession.accessCode)
-                    .update(Constants.GameFields.chosenLocation, newLocation).await()
+                assignRoles(roles.toMutableList(), newSession)
+                fireStoreService.updateChosenLocation(currentSession.accessCode, newLocation).await()
                 result.postValue(Event(Resource.Success(Unit)))
             } catch (e: Exception) {
                 result.postValue(
@@ -307,10 +282,9 @@ class Repository(
      */
     override fun endGame(currentSession: Session): MutableLiveData<Resource<Unit, Exception>> {
         val result = MutableLiveData<Resource<Unit, Exception>>()
-        val gameRef = db.collection(constants.games).document(currentSession.accessCode)
         CoroutineScope(IO).launch {
             try {
-                gameRef.delete().await()
+                fireStoreService.endGame(currentSession.accessCode).await()
                 result.postValue(Resource.Success(Unit))
             } catch (e: Exception) {
                 result.postValue(Resource.Error(error = e))
@@ -330,11 +304,10 @@ class Repository(
         val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
 
         startGameJob = CoroutineScope(IO).launch {
-            val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-            gameRef.update(Constants.GameFields.started, true)
+            fireStoreService.setStarted(currentSession.accessCode, true)
             try {
                 val roles = getRoles(currentSession)
-                assignRoles(roles, currentSession, gameRef)
+                assignRoles(roles.toMutableList(), currentSession)
                 result.postValue(Event(Resource.Success(Unit)))
                 incrementGamesPlayed()
             } catch (e: Exception) {
@@ -358,7 +331,6 @@ class Repository(
         val result = MutableLiveData<Resource<Unit, PlayAgainError>>()
         val accessCode = currentSession.accessCode
         currentSession.game.let {
-            val gameRef = db.collection(constants.games).document(accessCode)
             val newLocation =
                 currentSession.game.locationList.filter { location -> location != currentSession.game.chosenLocation }
                     .random()
@@ -366,7 +338,7 @@ class Repository(
                 newLocation, it.chosenPacks, false,
                 it.playerList, ArrayList(), it.timeLimit, it.locationList, it.expiration
             )
-            gameRef.set(newGame).addOnSuccessListener {
+            fireStoreService.setGame(currentSession.accessCode, newGame).addOnSuccessListener {
                 result.postValue(Resource.Success(Unit))
             }.addOnFailureListener { e ->
                 result.postValue(Resource.Error(error = PlayAgainError.Unknown, exception = e))
@@ -393,8 +365,8 @@ class Repository(
                 result.postValue(Event(Resource.Error(error = NameChangeError.GAME_STARTED)))
 
             } else {
-                val gameRef = db.collection(constants.games).document(currentSession.accessCode)
-                gameRef.update(Constants.GameFields.playerList, copy).addOnSuccessListener {
+                fireStoreService.setPlayerList(currentSession.accessCode, copy)
+                    .addOnSuccessListener {
                     val updatedSession =
                         Session(
                             accessCode = currentSession.accessCode,
@@ -434,41 +406,29 @@ class Repository(
             return result
         }
 
-        val list = mutableListOf<List<String>>()
-
-        db.collection(constants.packs).get()
-            .addOnSuccessListener { collection ->
-                collection.documents.forEach { document ->
-                    val pack = listOf(document.id) + document.data!!.keys.toList()
-                    list.add(pack)
-                }
-                result.value = Resource.Success(list)
-
-            }.addOnFailureListener {
+        fireStoreService.getPackDetails().addOnSuccessListener {
+            if (it != null){
+                result.value = Resource.Success(it)
+            }else {
                 result.value =
-                    Resource.Error(error = PackDetailsError.UNKNOWN_ERROR, exception = it)
+                    Resource.Error(error = PackDetailsError.UNKNOWN_ERROR)
             }
+        }.addOnFailureListener {
+            result.value =
+                Resource.Error(error = PackDetailsError.UNKNOWN_ERROR, exception = it)
+        }
 
         return result
     }
 
     override fun incrementGamesPlayed() {
-        //this function is used to keep stats about how many Android games have been played
-        if (BuildConfig.DEBUG) return
-        db.collection(Constants.StatisticsConstants.collection)
-            .document(Constants.StatisticsConstants.document)
-            .update(Constants.StatisticsConstants.num_games_played, FieldValue.increment(1))
+        if (!BuildConfig.DEBUG) fireStoreService.incrementNumGamesPlayed()
     }
 
     override fun incrementAndroidPlayers() {
-        if (BuildConfig.DEBUG) return
+        if (!BuildConfig.DEBUG) fireStoreService.incrementNumAndroidPlayers()
 
-        //this function is used to keep stats about how many Android games have been played
-        db.collection(Constants.StatisticsConstants.collection)
-            .document(Constants.StatisticsConstants.document)
-            .update(Constants.StatisticsConstants.num_android_players, FieldValue.increment(1))
     }
-
     override fun getPacks() = arrayListOf(
         GamePack(UIHelper.accentColors[0], "Standard", 1, "Standard Pack 1", false),
         GamePack(UIHelper.accentColors[1], "Standard", 2, "Standard Pack 2", false),
@@ -481,29 +441,25 @@ class Repository(
 
     private suspend fun generateAccessCode(): String {
         var newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
-        while (db.collection(constants.games).document(newCode).get().await().exists()) {
+        while (fireStoreService.accessCodeExists(newCode).await()) {
             newCode = UUID.randomUUID().toString().substring(0, 6).toLowerCase()
         }
         return newCode
     }
 
-    private suspend fun getRoles(currentSession: Session): ArrayList<String> {
+    private suspend fun getRoles(currentSession: Session): List<String> {
         val result = currentSession.game.chosenPacks.findFirstNonNullWhenMapped { pack ->
-            db.collection(constants.packs).document(pack).get().await()
-                .get(currentSession.game.chosenLocation) as ArrayList<String>?
+            fireStoreService.findRolesForLocatinoInPack(pack, currentSession.game.chosenLocation).await()
         }
-        return result ?: arrayListOf()
+        return result ?: listOf()
     }
 
 
     private suspend fun assignRoles(
-        roles: ArrayList<String>,
-        session: Session,
-        gameRef: DocumentReference
+        roles: MutableList<String>,
+        session: Session
     ) {
-        if (roles.isNullOrEmpty()) {
-            throw Exception()
-        }
+        if (roles.isNullOrEmpty()) { throw Exception("Empty Roles in assign roles function") }
 
         val playerNames = session.game.playerList.shuffled()
         val playerObjectList = ArrayList<Player>()
@@ -514,13 +470,12 @@ class Repository(
         }
 
         playerObjectList.add(Player(Constants.GameFields.theSpyRole, playerNames.last(), 0))
-        gameRef.update(Constants.GameFields.playerObjectList, playerObjectList.shuffled()).await()
+        fireStoreService.setPlayerObjectsList(session.accessCode, playerObjectList.shuffled()).await()
     }
 
-    private fun addPlayer(username: String, accessCode: String): Task<Void> {
-        val gameRef = db.collection(constants.games).document(accessCode)
-        return gameRef.update(Constants.GameFields.playerList, FieldValue.arrayUnion(username))
-    }
+    private fun addPlayer(username: String, accessCode: String): Task<Void>
+        = fireStoreService.addPlayer(accessCode, username)
+
 
 
     private suspend fun getGameLocations(chosenPacks: ArrayList<String>): ArrayList<String> {
@@ -534,11 +489,10 @@ class Repository(
         }
 
         chosenPacks.forEach { pack ->
-            val packData = db.collection(constants.packs).document(pack).get().await()
-            val randomLocations =
-                (packData.data?.toList()?.map { field -> field.first } ?: listOf()).shuffled()
-                    .take(numberFromEach)
-            locationList.addAll(randomLocations)
+            val randomLocations = fireStoreService.getLocationsFromPack(pack, numberFromEach).await()
+            if(randomLocations != null) {
+                locationList.addAll(randomLocations)
+            }
         }
 
         return locationList.take(14) as ArrayList<String>
