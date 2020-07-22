@@ -34,7 +34,7 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
     private val liveGame = repository.getLiveGame(currentSession)
     private val sessionEndedEvent = repository.getSessionEnded()
     private val removeInactiveUserEvent = repository.getRemoveInactiveUserEvent()
-    private val leaveGameEvent = MediatorLiveData<Event<Resource<Unit, LeaveGameError>>>()
+    private val leaveGameEvent = repository.getLeaveGameEvent()
 
     //user triggered events
     fun getNameChangeEvent() = nameChangeEvent
@@ -59,22 +59,9 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
     }
 
     fun triggerLeaveGameEvent() {
-        val numberOfPlayersBeforeLeaving = currentSession.copy().game.playerList.size
         repository.cancelChangeName()
         repository.cancelStartGame()
         repository.leaveGame(currentSession)
-        val repoResult = repository.getLeaveGameEvent()
-        leaveGameEvent.addSource(repoResult) {
-            Log.d("Elijah", "Got ${numberOfPlayersBeforeLeaving} players before ending")
-            if(it.peekContent() is Resource.Error || numberOfPlayersBeforeLeaving > 1) {
-                leaveGameEvent.postValue(it)
-                leaveGameEvent.removeSource(repoResult)
-            }
-            /*
-            if its an error leaving, we want to post that
-            otherwise if the user is the last one to leave, just let the session ended trigger handle things
-             */
-        }
     }
 
     fun triggerChangeNameEvent(newName: String) {
