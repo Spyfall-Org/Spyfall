@@ -10,16 +10,12 @@ interface TesterPreferences {
     fun setUseTestDbState(useTest: Boolean)
 }
 
-interface ColorPreferences {
-
-}
-
 interface SessionSaver {
     fun saveSession(currentSession: Session)
     fun removeSavedSession()
     fun getSavedSession() : Session?
 }
-class PreferencesHelper(val context: Context) : TesterPreferences, ColorPreferences , SessionSaver {
+class PreferencesHelper(val context: Context) : TesterPreferences , SessionSaver {
 
     private val preferences by lazy {
         context.getSharedPreferences(

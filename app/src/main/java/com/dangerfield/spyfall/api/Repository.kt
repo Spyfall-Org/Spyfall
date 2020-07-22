@@ -24,12 +24,20 @@ import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
+//TODO you can mock this repo in testing and just verify certain methods were called in the view model test
+/*
+ex: you can mock the sessionListenerHelper and prefrences helper and verify() that the remove listener and remove
+prefrences were called when leaving the game
+
+you would have to find a way that you can say when (firebaseService.leave) then call success listener such
+that you can also assert that the leave game event was posted to with a success
+ */
 class Repository(
-    private var db: FirebaseFirestore,
-    private val constants: Constants,
-    private val sessionListenerHelper: SessionListenerHelper,
+    private var db: FirebaseFirestore, //TODO change because mockito cant mock this
+    private val constants: Constants, //TODO change you change the firebase thing, give the constants to that
+    private val sessionListenerService: SessionListenerService, //TODO make this implement an interface to make it easier to mock
     private val preferencesHelper: PreferencesHelper
-) : GameRepository, SessionListener {
+) : GameRepository, SessionUpdater {
 
     private var createGameJob: Job? = null
     private var joinGameJob: Job? = null
@@ -81,7 +89,7 @@ class Repository(
     /**
      * Call back used by snapshot listener to update game
      */
-    override fun onGameUpdates(game: Game) = liveGame.postValue(game)
+    override fun onSessionGameUpdates(game: Game) = liveGame.postValue(game)
 
     /**
      * Set by Receiver to determine network connection
@@ -236,7 +244,7 @@ class Repository(
             Constants.GameFields.playerList,
             FieldValue.arrayRemove(currentSession.currentUser)
         ).addOnSuccessListener {
-            sessionListenerHelper.removeListener()
+            sessionListenerService.removeListener()
             preferencesHelper.removeSavedSession()
             if(numberOfPlayersBeforeLeaving > 1){
                 leaveGameEvent.value = Event(Resource.Success(Unit))
@@ -254,7 +262,7 @@ class Repository(
             Constants.GameFields.playerList,
             FieldValue.arrayRemove(currentSession.currentUser)
         ).addOnSuccessListener {
-            sessionListenerHelper.removeListener()
+            sessionListenerService.removeListener()
             preferencesHelper.removeSavedSession()
             removeInactiveUserEvent.value = Event(Resource.Success(Unit))
         }.addOnFailureListener {
@@ -537,10 +545,10 @@ class Repository(
     }
 
     private fun addListenerIfNewGame(currentSession: Session) {
-        val creatingNewGame = !sessionListenerHelper.isListening()
+        val creatingNewGame = !sessionListenerService.isListening()
         if (creatingNewGame) {
             clearGameLiveData()
-            sessionListenerHelper.addListener(this, currentSession)
+            sessionListenerService.addListener(this, currentSession)
         }
     }
 

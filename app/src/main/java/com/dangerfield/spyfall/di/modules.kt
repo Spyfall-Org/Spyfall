@@ -30,7 +30,7 @@ val mainModule = module {
     viewModel { NewGameViewModel(get()) }
     viewModel { StartViewModel(get()) }
 
-    factory { SessionListenerHelper(get(), get()) }
+    factory { SessionListenerHelper(get(), get()) as SessionListenerService }
     factory { Constants(androidApplication(), get()) }
     factory { ReviewHelper(androidContext()) }
     factory { SavedSessionHelper(get(), get(), get()) }
