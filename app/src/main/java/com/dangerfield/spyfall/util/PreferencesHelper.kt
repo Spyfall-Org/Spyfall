@@ -15,7 +15,10 @@ interface SessionSaver {
     fun removeSavedSession()
     fun getSavedSession() : Session?
 }
-class PreferencesHelper(val context: Context) : TesterPreferences , SessionSaver {
+
+interface PreferencesService : TesterPreferences, SessionSaver
+
+class PreferencesHelper(val context: Context) : PreferencesService {
 
     private val preferences by lazy {
         context.getSharedPreferences(

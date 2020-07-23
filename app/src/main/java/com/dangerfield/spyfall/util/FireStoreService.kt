@@ -105,7 +105,7 @@ class FireStoreService(private val db: FirebaseFirestore, private val constants:
         return result.task
     }
 
-    override fun findRolesForLocatinoInPack(
+    override fun findRolesForLocationInPack(
         pack: String,
         chosenLocation: String
     ): Task<List<String>?> {

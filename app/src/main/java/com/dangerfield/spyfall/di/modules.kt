@@ -21,7 +21,7 @@ val mainModule = module {
     single { Repository(get(), get(), get()) as GameRepository }
     single { RemoveUserTimer(get(), get())}
     single { FirebaseFirestore.getInstance()}
-    single { PreferencesHelper(androidApplication())}
+    single { PreferencesHelper(androidApplication()) as PreferencesService}
 
     //view models
     single { (currentSession: Session) -> WaitingViewModel(get(), currentSession)}

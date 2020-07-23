@@ -14,9 +14,6 @@ import com.dangerfield.spyfall.ui.waiting.LeaveGameError
 import com.dangerfield.spyfall.util.*
 import com.dangerfield.spyfall.ui.waiting.NameChangeError
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.tasks.await
@@ -27,7 +24,8 @@ import kotlin.collections.ArrayList
 class Repository(
     private var fireStoreService: GameService,
     private val sessionListenerService: SessionListenerService,
-    private val preferencesHelper: PreferencesHelper
+    private val preferencesHelper: PreferencesService,
+    private val dispatcher: CoroutineDispatcher = IO
 ) : GameRepository, SessionUpdater {
 
     private var createGameJob: Job? = null
@@ -119,7 +117,7 @@ class Repository(
         } else {
             Log.d("Elijah", "Starting create game")
 
-            createGameJob = CoroutineScope(IO).launch {
+            createGameJob = CoroutineScope(dispatcher).launch {
                 try {
                     val accessCode = generateAccessCode()
                     val gameLocations = getGameLocations(chosenPacks as ArrayList<String>)
@@ -169,7 +167,7 @@ class Repository(
             result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
         } else {
 
-            joinGameJob = CoroutineScope(IO).launch {
+            joinGameJob = CoroutineScope(dispatcher).launch {
                 fireStoreService.getGame(accessCode).addOnSuccessListener { game ->
                     if (game == null) {
                         result.value =
@@ -231,9 +229,9 @@ class Repository(
                 }
                 //otherwise let the session ended trigger take care of user experience
             }.addOnFailureListener {
-            leaveGameEvent.value =
-                Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
-        }
+                leaveGameEvent.value =
+                    Event(Resource.Error(error = LeaveGameError.UNKNOWN_ERROR, exception = it))
+            }
     }
 
     override fun removeInactiveUser(currentSession: Session) {
@@ -243,14 +241,14 @@ class Repository(
                 preferencesHelper.removeSavedSession()
                 removeInactiveUserEvent.value = Event(Resource.Success(Unit))
             }.addOnFailureListener {
-            removeInactiveUserEvent.value =
-                Event(Resource.Error(error = Unit, exception = it))
-        }
+                removeInactiveUserEvent.value =
+                    Event(Resource.Error(error = Unit, exception = it))
+            }
     }
 
     override fun reassignRoles(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>> {
         val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
-        CoroutineScope(IO).launch {
+        CoroutineScope(dispatcher).launch {
             try {
                 val newLocation =
                     currentSession.game.locationList.filter { it != currentSession.game.chosenLocation }
@@ -259,7 +257,8 @@ class Repository(
                 newSession.game.chosenLocation = newLocation
                 val roles = getRoles(newSession)
                 assignRoles(roles.toMutableList(), newSession)
-                fireStoreService.updateChosenLocation(currentSession.accessCode, newLocation).await()
+                fireStoreService.updateChosenLocation(currentSession.accessCode, newLocation)
+                    .await()
                 result.postValue(Event(Resource.Success(Unit)))
             } catch (e: Exception) {
                 result.postValue(
@@ -282,7 +281,7 @@ class Repository(
      */
     override fun endGame(currentSession: Session): MutableLiveData<Resource<Unit, Exception>> {
         val result = MutableLiveData<Resource<Unit, Exception>>()
-        CoroutineScope(IO).launch {
+        CoroutineScope(dispatcher).launch {
             try {
                 fireStoreService.endGame(currentSession.accessCode).await()
                 result.postValue(Resource.Success(Unit))
@@ -303,7 +302,7 @@ class Repository(
     override fun startGame(currentSession: Session): MutableLiveData<Event<Resource<Unit, StartGameError>>> {
         val result = MutableLiveData<Event<Resource<Unit, StartGameError>>>()
 
-        startGameJob = CoroutineScope(IO).launch {
+        startGameJob = CoroutineScope(dispatcher).launch {
             fireStoreService.setStarted(currentSession.accessCode, true)
             try {
                 val roles = getRoles(currentSession)
@@ -356,36 +355,38 @@ class Repository(
     ): LiveData<Event<Resource<String, NameChangeError>>> {
         val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
 
-        changeNameJob = CoroutineScope(IO).launch {
+        changeNameJob = CoroutineScope(dispatcher).launch {
             val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
-            if (index == -1) result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+            if (index == -1) {
+                result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
+                return@launch
+            }
             val copy = currentSession.game.playerList.toMutableList()
             copy[index] = newName
             if (currentSession.game.started) {
                 result.postValue(Event(Resource.Error(error = NameChangeError.GAME_STARTED)))
-
             } else {
                 fireStoreService.setPlayerList(currentSession.accessCode, copy)
                     .addOnSuccessListener {
-                    val updatedSession =
-                        Session(
-                            accessCode = currentSession.accessCode,
-                            previousUserName = currentSession.currentUser,
-                            currentUser = newName,
-                            game = currentSession.game
-                        )
-                    preferencesHelper.saveSession(updatedSession)
-                    result.postValue(Event(Resource.Success(newName)))
-                }.addOnFailureListener {
-                    result.postValue(
-                        Event(
-                            Resource.Error(
-                                error = NameChangeError.UNKNOWN_ERROR,
-                                exception = it
+                        val updatedSession =
+                            Session(
+                                accessCode = currentSession.accessCode,
+                                previousUserName = currentSession.currentUser,
+                                currentUser = newName,
+                                game = currentSession.game
+                            )
+                        preferencesHelper.saveSession(updatedSession)
+                        result.postValue(Event(Resource.Success(newName)))
+                    }.addOnFailureListener {
+                        result.postValue(
+                            Event(
+                                Resource.Error(
+                                    error = NameChangeError.UNKNOWN_ERROR,
+                                    exception = it
+                                )
                             )
                         )
-                    )
-                }
+                    }
             }
         }
 
@@ -407,9 +408,9 @@ class Repository(
         }
 
         fireStoreService.getPackDetails().addOnSuccessListener {
-            if (it != null){
+            if (it != null) {
                 result.value = Resource.Success(it)
-            }else {
+            } else {
                 result.value =
                     Resource.Error(error = PackDetailsError.UNKNOWN_ERROR)
             }
@@ -429,6 +430,7 @@ class Repository(
         if (!BuildConfig.DEBUG) fireStoreService.incrementNumAndroidPlayers()
 
     }
+
     override fun getPacks() = arrayListOf(
         GamePack(UIHelper.accentColors[0], "Standard", 1, "Standard Pack 1", false),
         GamePack(UIHelper.accentColors[1], "Standard", 2, "Standard Pack 2", false),
@@ -447,19 +449,20 @@ class Repository(
         return newCode
     }
 
-    private suspend fun getRoles(currentSession: Session): List<String> {
-        val result = currentSession.game.chosenPacks.findFirstNonNullWhenMapped { pack ->
-            fireStoreService.findRolesForLocatinoInPack(pack, currentSession.game.chosenLocation).await()
-        }
-        return result ?: listOf()
-    }
+    private suspend fun getRoles(currentSession: Session): List<String> =
+        currentSession.game.chosenPacks.pmap(dispatcher) {
+            fireStoreService.findRolesForLocationInPack(it, currentSession.game.chosenLocation)
+                .await()
+        }.find { it != null } ?: listOf()
 
 
     private suspend fun assignRoles(
         roles: MutableList<String>,
         session: Session
     ) {
-        if (roles.isNullOrEmpty()) { throw Exception("Empty Roles in assign roles function") }
+        if (roles.isNullOrEmpty()) {
+            throw Exception("Empty Roles in assign roles function")
+        }
 
         val playerNames = session.game.playerList.shuffled()
         val playerObjectList = ArrayList<Player>()
@@ -470,12 +473,12 @@ class Repository(
         }
 
         playerObjectList.add(Player(Constants.GameFields.theSpyRole, playerNames.last(), 0))
-        fireStoreService.setPlayerObjectsList(session.accessCode, playerObjectList.shuffled()).await()
+        fireStoreService.setPlayerObjectsList(session.accessCode, playerObjectList.shuffled())
+            .await()
     }
 
-    private fun addPlayer(username: String, accessCode: String): Task<Void>
-        = fireStoreService.addPlayer(accessCode, username)
-
+    private fun addPlayer(username: String, accessCode: String): Task<Void> =
+        fireStoreService.addPlayer(accessCode, username)
 
 
     private suspend fun getGameLocations(chosenPacks: ArrayList<String>): ArrayList<String> {
@@ -489,8 +492,9 @@ class Repository(
         }
 
         chosenPacks.forEach { pack ->
-            val randomLocations = fireStoreService.getLocationsFromPack(pack, numberFromEach).await()
-            if(randomLocations != null) {
+            val randomLocations =
+                fireStoreService.getLocationsFromPack(pack, numberFromEach).await()
+            if (randomLocations != null) {
                 locationList.addAll(randomLocations)
             }
         }

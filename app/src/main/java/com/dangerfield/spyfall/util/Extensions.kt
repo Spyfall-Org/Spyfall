@@ -16,15 +16,6 @@ fun EditText.addCharacterMax(max: Int){
     filters = arrayOf(InputFilter.LengthFilter(max))
 }
 
-/*
-maps each item A to a deferrable B? by accepting a function that takes in A and gives back B?
-and calling it asynchronously for all items.
-This function returns the first Non null B in the group
- */
-suspend fun <A,B> Iterable<A>.findFirstNonNullWhenMapped(f: suspend (A) -> B?): B? = coroutineScope {
-    map { async { f(it) } }.awaitAll().find { it != null }
-}
-
 fun View.goneIf(predicate: Boolean) {
     visibility = if(predicate) View.GONE else View.VISIBLE
 }
@@ -63,9 +54,9 @@ fun TextView.clear() {
     this.text = ""
 }
 
-suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
-    map { async { f(it) } }.awaitAll()
-}
+suspend fun <A, B> Iterable<A>.pmap(dispatcher: CoroutineDispatcher = Dispatchers.Default, f: suspend (A) -> B): List<B> =
+    map { CoroutineScope(dispatcher).async {  f(it) } }.awaitAll()
+
 
 fun WaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {
     //banging because navigation to waiting should be impossible without the arg
