@@ -5,11 +5,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dangerfield.spyfall.api.Repository
 import com.dangerfield.spyfall.di.TestKoinApp
 import com.dangerfield.spyfall.models.Game
-import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.testUtil.getOrAwaitValue
 import com.dangerfield.spyfall.testUtil.getVoidTask
-import com.dangerfield.spyfall.ui.game.GameViewModel
-import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.util.ConnectivityHelper
 import com.dangerfield.spyfall.util.GameService
 import com.dangerfield.spyfall.util.PreferencesService
@@ -23,7 +20,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.equalTo
 import org.junit.*
 import org.junit.runner.RunWith
