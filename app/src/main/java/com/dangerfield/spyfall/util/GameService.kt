@@ -17,7 +17,7 @@ interface GameService {
     fun incrementNumAndroidPlayers()
     fun incrementNumGamesPlayed()
     fun accessCodeExists(code: String) : Task<Boolean>
-    fun findRolesForLocationInPack(pack: String, chosenLocation: String): Task<List<String>?>
+    suspend fun findRolesForLocationInPacks(packs: List<String>, chosenLocation: String): Task<List<String>?>
     fun setPlayerObjectsList(accessCode: String, list: List<Player>) : Task<Void>
     fun getLocationsFromPack(pack: String, numberOfLocations: Int) : Task<List<String>?>
 

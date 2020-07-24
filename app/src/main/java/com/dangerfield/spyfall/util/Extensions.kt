@@ -55,7 +55,7 @@ fun TextView.clear() {
 }
 
 suspend fun <A, B> Iterable<A>.pmap(dispatcher: CoroutineDispatcher = Dispatchers.Default, f: suspend (A) -> B): List<B> =
-    map { CoroutineScope(dispatcher).async {  f(it) } }.awaitAll()
+    map { CoroutineScope(dispatcher).async(dispatcher) {  f(it) } }.awaitAll()
 
 
 fun WaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {

@@ -7,6 +7,8 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class FireStoreService(private val db: FirebaseFirestore, private val constants: Constants) :
     GameService {
@@ -105,7 +107,25 @@ class FireStoreService(private val db: FirebaseFirestore, private val constants:
         return result.task
     }
 
-    override fun findRolesForLocationInPack(
+    override suspend fun findRolesForLocationInPacks(
+        packs: List<String>,
+        chosenLocation: String
+    ): Task<List<String>?> {
+        val result: TaskCompletionSource<List<String>?> = TaskCompletionSource()
+
+        try {
+            val roles = packs.pmap {pack ->
+                findRolesForLocationInPack(pack, chosenLocation).await()
+            }.find { it != null } ?: listOf()
+            result.setResult(roles)
+        } catch (e : Exception) {
+            result.setException(e)
+        }
+
+        return result.task
+    }
+
+    private fun findRolesForLocationInPack(
         pack: String,
         chosenLocation: String
     ): Task<List<String>?> {

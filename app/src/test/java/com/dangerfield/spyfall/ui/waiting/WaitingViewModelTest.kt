@@ -356,9 +356,43 @@ class WaitingViewModelTest {
     1. that increment games played gets called
     2. that there are different results based on what firebase returns for the roles (null, empty, failure, real results)
      */
+
+    @Test
+    fun `given backend failure, when getting roles, then error should be posted to start game event`() = runBlockingTest {
+        Mockito.`when`(gameService.findRolesForLocationInPacks(any(), any()))
+            .thenReturn(Tasks.forException(Exception()))
+        testSubjectRealRepo.triggerStartGameEvent()
+        //assert that an unknown error is posted to the start game event
+        val value = testSubjectRealRepo.getStartGameEvent().getOrAwaitValue()
+        assertThat(value?.getContentIfNotHandled()?.error, equalTo(StartGameError.Unknown))
+    }
+
+    @Test
+    fun `given backend gives null, when getting roles, then error should be posted to start game event`() = runBlockingTest {
+            Mockito.`when`(gameService.findRolesForLocationInPacks(any(), any()))
+                .thenReturn(Tasks.forResult(null))
+            testSubjectRealRepo.triggerStartGameEvent()
+        val value = testSubjectRealRepo.getStartGameEvent().getOrAwaitValue()
+        assertThat(value?.getContentIfNotHandled()?.error, equalTo(StartGameError.Unknown))
+        }
+
+    @Test
+    fun `given backend gives empty list, when getting roles, then error should be posted to start game event`() = runBlockingTest {
+
+        Mockito.`when`(gameService.findRolesForLocationInPacks(any(), any()))
+            .thenReturn(Tasks.forResult(listOf()))
+        // when name start game is triggered
+        testSubjectRealRepo.triggerStartGameEvent()
+        val value = testSubjectRealRepo.getStartGameEvent().getOrAwaitValue()
+        assertThat(value?.getContentIfNotHandled()?.error, equalTo(StartGameError.Unknown))
+    }
+
     @Test
     fun triggerStartGame_firestoreErrorSettingPlayerObjects_postsUnknownError() = runBlockingTest {
-        //given that firestore fails when pushing player objects
+        //given that backend gets roles but firestore fails when pushing player objects
+        val list = listOf("role one", "role two", "role three")
+        Mockito.`when`(gameService.findRolesForLocationInPacks(any(), any()))
+            .thenReturn(Tasks.forResult(list))
         Mockito.`when`(gameService.setPlayerObjectsList(any(), any()))
             .thenReturn(Tasks.forException(Exception()))
         // when name start game is triggered
@@ -369,4 +403,34 @@ class WaitingViewModelTest {
         assertThat(value?.getContentIfNotHandled()?.error, equalTo(StartGameError.Unknown))
     }
 
+    @Test
+    fun triggerStartGame_firestoreSucceedsSettingPlayerObjects_postsSuccess() = runBlockingTest {
+        //given that backend gets roles and firestore succeeds when pushing player objects
+        val list = listOf("role one", "role two", "role three")
+        Mockito.`when`(gameService.findRolesForLocationInPacks(any(), any()))
+            .thenReturn(Tasks.forResult(list))
+        Mockito.`when`(gameService.setPlayerObjectsList(any(), any()))
+            .thenReturn(getVoidTask())
+        //when start game is triggered
+        testSubjectRealRepo.triggerStartGameEvent()
+
+        //assert that success is posted
+        val value = testSubjectRealRepo.getStartGameEvent().getOrAwaitValue()
+        assert(value?.getContentIfNotHandled() is Resource.Success)
+    }
+
+    @Test
+    fun triggerStartGame_firestoreSucceeds_incrementsGamesPlayed() = runBlockingTest {
+        //given that backend gets roles and firestore succeeds when pushing player objects
+        val list = listOf("role one", "role two", "role three")
+        Mockito.`when`(gameService.findRolesForLocationInPacks(any(), any()))
+            .thenReturn(Tasks.forResult(list))
+        Mockito.`when`(gameService.setPlayerObjectsList(any(), any()))
+            .thenReturn(getVoidTask())
+        //when start game is triggered
+        testSubjectRealRepo.triggerStartGameEvent()
+
+        //assert that increment games played is called
+        verify(gameService, times(1)).incrementNumGamesPlayed()
+    }
 }

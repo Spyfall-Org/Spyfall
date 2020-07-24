@@ -191,6 +191,7 @@ class Repository(
 
                             else -> {
                                 addPlayer(username, accessCode).addOnSuccessListener {
+                                    game.playerList.add(username)
                                     val currentSession = Session(accessCode, username, game)
                                     result.value = Event(Resource.Success(currentSession))
                                     preferencesHelper.saveSession(currentSession)
@@ -209,7 +210,7 @@ class Repository(
                     }
 
                 }.addOnFailureListener {
-                    result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
+                    result.value = Event(Resource.Error(error = JoinGameError.UNKNOWN_ERROR))
                 }
             }
         }
@@ -331,7 +332,6 @@ class Repository(
      */
     override fun resetGame(currentSession: Session): MutableLiveData<Resource<Unit, PlayAgainError>> {
         val result = MutableLiveData<Resource<Unit, PlayAgainError>>()
-        val accessCode = currentSession.accessCode
         currentSession.game.let {
             val newLocation =
                 currentSession.game.locationList.filter { location -> location != currentSession.game.chosenLocation }
@@ -405,7 +405,7 @@ class Repository(
     override fun getPacksDetails(): LiveData<Resource<List<List<String>>, PackDetailsError>> {
         val result = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
 
-         CoroutineScope(dispatcher).launch {
+        CoroutineScope(dispatcher).launch {
 
             if (!connectivityHelper.isOnline()) {
                 result.value = Resource.Error(error = PackDetailsError.NETWORK_ERROR)
@@ -454,11 +454,11 @@ class Repository(
         return newCode
     }
 
-    private suspend fun getRoles(currentSession: Session): List<String> =
-        currentSession.game.chosenPacks.pmap(dispatcher) {
-            fireStoreService.findRolesForLocationInPack(it, currentSession.game.chosenLocation)
-                .await()
-        }.find { it != null } ?: listOf()
+    private suspend fun getRoles(currentSession: Session) =
+        fireStoreService.findRolesForLocationInPacks(
+            currentSession.game.chosenPacks,
+            currentSession.game.chosenLocation
+        ).await() ?: listOf()
 
 
     private suspend fun assignRoles(
@@ -516,9 +516,9 @@ class Repository(
     }
 
     private fun packsDetailsIsFull(list: List<List<String>>): Boolean {
-        if(list.isEmpty() || list.size < 3) return false
+        if (list.isEmpty() || list.size < 3) return false
         var result = true
-        list.forEach { if(it.isEmpty()) result = false }
+        list.forEach { if (it.isEmpty()) result = false }
         return result
     }
 

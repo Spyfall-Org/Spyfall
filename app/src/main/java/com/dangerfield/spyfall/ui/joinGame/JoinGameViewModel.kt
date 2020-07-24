@@ -42,6 +42,4 @@ class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
     }
 
     fun cancelJoinGame() = repository.cancelJoinGame()
-
-
 }

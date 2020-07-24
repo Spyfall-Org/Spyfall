@@ -34,7 +34,7 @@ val mainModule = module {
     factory { FireStoreService(get(), get()) as GameService }
     factory { Constants(androidApplication(), get()) }
     factory { ReviewHelper(androidContext()) }
-    factory { SavedSessionHelper(get(), get(), get()) }
+    factory { SavedSessionHelper(get(), get()) }
     factory { FeedbackHelper(get(), get()) }
     factory { DBCleaner(get(), get()) }
 
