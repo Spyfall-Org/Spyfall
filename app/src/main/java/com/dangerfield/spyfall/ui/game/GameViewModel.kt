@@ -75,7 +75,7 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
     fun triggerReassignRoles() {
         val repoResult = repository.reassignRoles(currentSession)
         reassignEvent.addSource(repoResult) {
-            repoResult.postValue(it)
+            reassignEvent.postValue(it)
             reassignEvent.removeSource(repoResult)
         }
     }

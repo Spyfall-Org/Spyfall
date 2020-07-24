@@ -1,27 +1,25 @@
 package com.dangerfield.spyfall.ui.start
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.util.Event
 import com.dangerfield.spyfall.util.SavedSessionHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 data class SavedSession(val session: Session, val started: Boolean)
 
-class StartViewModel(val savedSessionHelper : SavedSessionHelper) : ViewModel() {
+class StartViewModel(private val savedSessionHelper : SavedSessionHelper) : ViewModel() {
 
-    private val foundUserInExistingGame = MutableLiveData<Event<SavedSession>>()
+    private val searchForUserInGameEvent = MediatorLiveData<Event<Resource<SavedSession, Unit>>>()
 
-    fun getFoundUserInExistingGame() = foundUserInExistingGame
+    fun getSearchForUserInGameEvent() = searchForUserInGameEvent
 
-    fun searchForUserInExistingGame() {
-        CoroutineScope(Dispatchers.IO).launch {
-            savedSessionHelper.whenUserIsInExistingGame {session, started ->
-               foundUserInExistingGame.postValue(Event(SavedSession(session, started)))
-            }
+    fun triggerSearchForUserInExistingGame() {
+            val result = savedSessionHelper.findUserInExistingGame()
+        searchForUserInGameEvent.addSource(result) {
+            searchForUserInGameEvent.postValue(Event(it))
+            searchForUserInGameEvent.removeSource(result)
         }
     }
 }

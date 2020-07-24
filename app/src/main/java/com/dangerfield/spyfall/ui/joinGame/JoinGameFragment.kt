@@ -65,7 +65,7 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
         showLoading(true)
         val accessCode = tv_access_code.text.toString().toLowerCase().trim()
         val userName = tv_username.text.toString().trim()
-        joinGameViewModel.joinGame(accessCode, userName)
+        joinGameViewModel.triggerJoinGame(accessCode, userName)
     }
 
     private fun handleSuccessfulJoinGame(currentSession: Session) {

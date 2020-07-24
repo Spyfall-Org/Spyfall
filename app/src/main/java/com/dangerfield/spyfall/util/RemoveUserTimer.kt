@@ -7,7 +7,7 @@ import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.models.Session
 import kotlinx.coroutines.*
 
-class RemoveUserTimer(val repository: GameRepository, private val preferencesHelper: PreferencesHelper) : LifecycleObserver {
+class RemoveUserTimer(val repository: GameRepository, private val preferencesHelper: PreferencesService) : LifecycleObserver {
 
     private var removeUserJob: Job = Job()
     private val fifteenMins = 900000L

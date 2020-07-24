@@ -1,9 +1,6 @@
 package com.dangerfield.spyfall.ui.start
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.graphics.PorterDuff
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -14,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_start.*
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.EventObserver
@@ -39,7 +37,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         UIHelper.getSavedColor(requireContext())
         updateTheme()
 
-        startViewModel.searchForUserInExistingGame()
+        startViewModel.triggerSearchForUserInExistingGame()
         if (reviewHelper.shouldPromptForReview()) { showReviewDialog() }
     }
 
@@ -60,8 +58,11 @@ class StartFragment : Fragment(R.layout.fragment_start) {
     }
 
     private fun observeUserFoundInGameEvent() {
-        startViewModel.getFoundUserInExistingGame().observe(viewLifecycleOwner, EventObserver {
-            navigateToWaitingScreen(it.session, it.started)
+        startViewModel.getSearchForUserInGameEvent().observe(viewLifecycleOwner, EventObserver {
+            when(it) {
+                is Resource.Success -> it.data?.let { d-> navigateToWaitingScreen(d.session, d.started) }
+                is Resource.Error -> {} //noop
+            }
         })
     }
 
