@@ -37,4 +37,5 @@ val mainModule = module {
     factory { SavedSessionHelper(get(), get(), get()) }
     factory { FeedbackHelper(get(), get()) }
     factory { DBCleaner(get(), get()) }
+
 }

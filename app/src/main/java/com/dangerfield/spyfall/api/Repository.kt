@@ -25,6 +25,7 @@ class Repository(
     private var fireStoreService: GameService,
     private val sessionListenerService: SessionListenerService,
     private val preferencesHelper: PreferencesService,
+    private val connectivityHelper: ConnectivityHelper = Connectivity(),
     private val dispatcher: CoroutineDispatcher = IO
 ) : GameRepository, SessionUpdater {
 
@@ -111,13 +112,13 @@ class Repository(
         chosenPacks: List<String>
     ): LiveData<Resource<Session, NewGameError>> {
         val result = MutableLiveData<Resource<Session, NewGameError>>()
+        createGameJob = CoroutineScope(dispatcher).launch {
 
-        if (!Connectivity.isOnline) {
-            result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
-        } else {
-            Log.d("Elijah", "Starting create game")
+            if (!connectivityHelper.isOnline()) {
+                result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
+            } else {
+                Log.d("Elijah", "Starting create game")
 
-            createGameJob = CoroutineScope(dispatcher).launch {
                 try {
                     val accessCode = generateAccessCode()
                     val gameLocations = getGameLocations(chosenPacks as ArrayList<String>)
@@ -163,11 +164,12 @@ class Repository(
     ): LiveData<Event<Resource<Session, JoinGameError>>> {
         val result = MutableLiveData<Event<Resource<Session, JoinGameError>>>()
 
-        if (!Connectivity.isOnline) {
-            result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
-        } else {
+        joinGameJob = CoroutineScope(dispatcher).launch {
 
-            joinGameJob = CoroutineScope(dispatcher).launch {
+            if (!connectivityHelper.isOnline()) {
+                result.value = Event(Resource.Error(error = JoinGameError.NETWORK_ERROR))
+            } else {
+
                 fireStoreService.getGame(accessCode).addOnSuccessListener { game ->
                     if (game == null) {
                         result.value =
@@ -402,21 +404,23 @@ class Repository(
     override fun getPacksDetails(): LiveData<Resource<List<List<String>>, PackDetailsError>> {
         val result = MutableLiveData<Resource<List<List<String>>, PackDetailsError>>()
 
-        if (!Connectivity.isOnline) {
-            result.value = Resource.Error(error = PackDetailsError.NETWORK_ERROR)
-            return result
-        }
+         CoroutineScope(dispatcher).launch {
 
-        fireStoreService.getPackDetails().addOnSuccessListener {
-            if (it != null) {
-                result.value = Resource.Success(it)
+            if (!connectivityHelper.isOnline()) {
+                result.value = Resource.Error(error = PackDetailsError.NETWORK_ERROR)
             } else {
-                result.value =
-                    Resource.Error(error = PackDetailsError.UNKNOWN_ERROR)
+                fireStoreService.getPackDetails().addOnSuccessListener {
+                    if (it != null) {
+                        result.value = Resource.Success(it)
+                    } else {
+                        result.value =
+                            Resource.Error(error = PackDetailsError.UNKNOWN_ERROR)
+                    }
+                }.addOnFailureListener {
+                    result.value =
+                        Resource.Error(error = PackDetailsError.UNKNOWN_ERROR, exception = it)
+                }
             }
-        }.addOnFailureListener {
-            result.value =
-                Resource.Error(error = PackDetailsError.UNKNOWN_ERROR, exception = it)
         }
 
         return result

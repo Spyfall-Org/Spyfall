@@ -8,7 +8,7 @@ import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
 class SavedSessionHelper(
-    private val preferencesHelper: PreferencesHelper,
+    private val preferencesHelper: PreferencesService,
     private val db: FirebaseFirestore,
     private val constants: Constants
 ) {

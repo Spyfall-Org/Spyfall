@@ -15,10 +15,7 @@ import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.util.*
 import com.google.android.gms.tasks.Tasks
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argWhere
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
@@ -47,9 +44,12 @@ class WaitingViewModelTest {
     private val prefHelper: PreferencesService = Mockito.mock(PreferencesService::class.java)
     private val sessionListener: SessionListenerService =
         Mockito.mock(SessionListenerService::class.java)
+    private val testConnectivityHelper = object : ConnectivityHelper {
+        override suspend fun isOnline(): Boolean = true
+    }
 
     private val testDispatcher = TestCoroutineDispatcher()
-    private val testRepository = Repository(gameService, sessionListener, prefHelper, testDispatcher)
+    private val testRepository = Repository(gameService, sessionListener, prefHelper, testConnectivityHelper, testDispatcher)
     private val mockRepo: GameRepository = Mockito.mock(GameRepository::class.java)
     private lateinit var testSubjectMockRepo: WaitingViewModel
     private lateinit var testSubjectRealRepo: WaitingViewModel
@@ -352,7 +352,7 @@ class WaitingViewModelTest {
 
     //TODO find a way to test the getting roles function, as it is not currently testable
     /*
-    This blocks you from testin
+    This blocks you from testing:
     1. that increment games played gets called
     2. that there are different results based on what firebase returns for the roles (null, empty, failure, real results)
      */
