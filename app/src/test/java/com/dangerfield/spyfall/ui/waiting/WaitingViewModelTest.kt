@@ -8,8 +8,8 @@ import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Repository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.di.TestKoinApp
-import com.dangerfield.spyfall.getOrAwaitValue
-import com.dangerfield.spyfall.getVoidTask
+import com.dangerfield.spyfall.testUtil.getOrAwaitValue
+import com.dangerfield.spyfall.testUtil.getVoidTask
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.game.StartGameError

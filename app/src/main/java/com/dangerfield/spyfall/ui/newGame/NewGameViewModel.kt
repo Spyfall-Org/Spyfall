@@ -25,9 +25,10 @@ enum class PackDetailsError(val resId: Int? = null) {
 
 class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
 
-    private var showPackEvent = MediatorLiveData<Event<Resource<List<List<String>>, PackDetailsError>>>()
+    private var showPackEvent =
+        MediatorLiveData<Event<Resource<List<List<String>>, PackDetailsError>>>()
     private var createGameEvent = MediatorLiveData<Event<Resource<Session, NewGameError>>>()
-    private var packsDetails : List<List<String>>? = null
+    private var packsDetails: List<List<String>>? = null
 
     fun getShowPackEvent() = showPackEvent
     fun getCreateGameEvent() = createGameEvent
@@ -40,7 +41,7 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
         selectedPacks: ArrayList<String>
     ) {
         val error = findCreateGameError(username, timeLimit, selectedPacks)
-        if(error != null) {
+        if (error != null) {
             createGameEvent.postValue(Event(Resource.Error(error = error)))
         } else {
             val repoResult = repository.createGame(username, timeLimit.toLong(), selectedPacks)
@@ -52,10 +53,12 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
     }
 
     fun triggerGetPackDetailsEvent() {
-        if(packsDetails.isNullOrEmpty()){
+        if (packsDetails.isNullOrEmpty()) {
             val repoResult = repository.getPacksDetails()
             showPackEvent.addSource(repoResult) {
-                it.data?.let {d -> packsDetails = d }
+                if (it is Resource.Success) {
+                    it.data?.let { d -> packsDetails = d }
+                }
                 showPackEvent.postValue(Event(it))
                 showPackEvent.removeSource(repoResult)
             }
@@ -64,13 +67,15 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
         }
     }
 
-    private fun findCreateGameError(username: String,
-                                    timeLimit: String,
-                                    selectedPacks: ArrayList<String>): NewGameError? {
+    private fun findCreateGameError(
+        username: String,
+        timeLimit: String,
+        selectedPacks: ArrayList<String>
+    ): NewGameError? {
         return when {
             selectedPacks.isEmpty() -> NewGameError.NO_SELECTED_PACK
-            username.isEmpty() ->  NewGameError.EMPTY_NAME
-            username.length > 25 ->  NewGameError.NAME_CHARACTER_LIMIT
+            username.isEmpty() -> NewGameError.EMPTY_NAME
+            username.length > 25 -> NewGameError.NAME_CHARACTER_LIMIT
             timeLimit.isEmpty() || timeLimit.toInt() > 10 || zeroTimeCheck(timeLimit.toInt()) ->
                 NewGameError.TIME_LIMIT_ERROR
             else -> null

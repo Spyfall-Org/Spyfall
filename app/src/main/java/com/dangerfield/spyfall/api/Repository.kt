@@ -112,6 +112,7 @@ class Repository(
         chosenPacks: List<String>
     ): LiveData<Resource<Session, NewGameError>> {
         val result = MutableLiveData<Resource<Session, NewGameError>>()
+
         createGameJob = CoroutineScope(dispatcher).launch {
 
             if (!connectivityHelper.isOnline()) {
@@ -410,7 +411,7 @@ class Repository(
                 result.value = Resource.Error(error = PackDetailsError.NETWORK_ERROR)
             } else {
                 fireStoreService.getPackDetails().addOnSuccessListener {
-                    if (it != null) {
+                    if (it != null && packsDetailsIsFull(it)) {
                         result.value = Resource.Success(it)
                     } else {
                         result.value =
@@ -512,6 +513,13 @@ class Repository(
             clearGameLiveData()
             sessionListenerService.addListener(this, currentSession)
         }
+    }
+
+    private fun packsDetailsIsFull(list: List<List<String>>): Boolean {
+        if(list.isEmpty() || list.size < 3) return false
+        var result = true
+        list.forEach { if(it.isEmpty()) result = false }
+        return result
     }
 
     companion object {

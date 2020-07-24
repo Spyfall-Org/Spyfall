@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall
+package com.dangerfield.spyfall.testUtil
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
