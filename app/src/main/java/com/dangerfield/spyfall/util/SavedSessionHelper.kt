@@ -1,56 +1,74 @@
 package com.dangerfield.spyfall.util
 
-import com.dangerfield.spyfall.api.Constants
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.dangerfield.spyfall.BuildConfig
+import com.dangerfield.spyfall.api.GameService
+import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.models.Game
-import com.google.firebase.firestore.FirebaseFirestore
+import com.dangerfield.spyfall.ui.start.SavedSession
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
+interface EpochGetter {
+    fun getCurrentEpoch(): Long
+}
+
 class SavedSessionHelper(
-    private val preferencesHelper: PreferencesHelper,
-    private val db: FirebaseFirestore,
-    private val constants: Constants
+    private val preferencesHelper: PreferencesService,
+    private val gameService: GameService,
+    private val dispatcher: CoroutineDispatcher = IO,
+    private val epochGetter: EpochGetter = object : EpochGetter {
+        override fun getCurrentEpoch() = System.currentTimeMillis() / 1000
+    }
 ) {
     /**
      * Checks preferences for a saved game
      * if that game is still on firebase we assume the user can still join it
      */
-    suspend fun whenUserIsInExistingGame(navigateToGame: (Session, Boolean) -> Unit) {
-        preferencesHelper.getSavedSession()?.let { session ->
-            try {
-                val result =
-                    db.collection(constants.games).document(session.accessCode).get().await()
-                if (result.exists()) {
-                    val updatedGame = result.toObject(Game::class.java) ?: return
-                    if (userCanEnterGame(updatedGame, session)) {
-                        navigateToGame.invoke(session, updatedGame.started)
+    fun findUserInExistingGame(): LiveData<Resource<SavedSession, Unit>> {
+        val result = MutableLiveData<Resource<SavedSession, Unit>>()
+        CoroutineScope(dispatcher).launch {
+            preferencesHelper.getSavedSession()?.let { session ->
+                try {
+                    val game = gameService.getGame(session.accessCode).await()
+                    if (game != null && userCanEnterGame(game, session)) {
+                        result.postValue(Resource.Success(SavedSession(session, game.started)))
+                    } else {
+                        result.postValue(Resource.Error(error = Unit))
                     }
+                } catch (e: Exception) {
+                    if (!BuildConfig.DEBUG) LogHelper.logErrorWhenCheckingIfUserisAlreadyInGame()
+                    result.postValue(Resource.Error(error = Unit))
                 }
-            } catch (e: Exception) {
-                LogHelper.logErrorWhenCheckingIfUserisAlreadyInGame()
-            }
+            } ?: result.postValue(Resource.Error(error = Unit))
         }
+        return result
     }
 
     private fun userCanEnterGame(game: Game, currentSession: Session): Boolean {
         return (!gameIsExpired(game)
-                && (game.playerList.contains(currentSession.currentUser) || game.playerList.contains(currentSession.previousUserName))
+                && (game.playerList.contains(currentSession.currentUser) || game.playerList.contains(
+            currentSession.previousUserName
+        ))
                 && (!gameIsStarted(game) || userCanEnterStartedGame(game, currentSession))
                 )
     }
 
-    private fun userCanEnterStartedGame(game: Game, currentSession: Session): Boolean {
-        return (
-                !gameIsExpired(game)
-                        && (game.playerObjectList.find { it.username == currentSession.currentUser } != null
-                        || game.playerObjectList.find { it.username == currentSession.previousUserName } != null)
-                )
-    }
+    private fun userCanEnterStartedGame(game: Game, currentSession: Session): Boolean = (
+            (game.playerObjectList.find { it.username == currentSession.currentUser } != null
+                    || game.playerObjectList.find { it.username == currentSession.previousUserName } != null)
+            )
+
 
     private fun gameIsExpired(game: Game): Boolean {
         game.expiration.let { expiration ->
-            val now = System.currentTimeMillis() / 1000
+            val now = epochGetter.getCurrentEpoch()
             return expiration <= now
         }
     }

@@ -3,7 +3,6 @@ package com.dangerfield.spyfall.util
 import com.dangerfield.spyfall.api.Constants
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.models.Game
-import com.dangerfield.spyfall.models.SessionListener
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -12,18 +11,18 @@ import com.google.firebase.firestore.ListenerRegistration
 class SessionListenerHelper(
     private val constants: Constants,
     private val db: FirebaseFirestore
-) {
+) : SessionListenerService {
     private var gameListener: ListenerRegistration? = null
 
-    fun isListening() = gameListener != null
+    override fun isListening() = gameListener != null
 
-    fun removeListener() {
+    override fun removeListener() {
         gameListener?.remove()
         gameListener = null
     }
 
-    fun addListener(
-        sessionListener: SessionListener,
+    override fun addListener(
+        sessionUpdater: SessionUpdater,
         session: Session
     ) {
         val gameRef: DocumentReference = db.collection(constants.games).document(session.accessCode)
@@ -36,20 +35,20 @@ class SessionListenerHelper(
                 if (noUsersInGame) {
                     gameRef.delete() // will cause listener to endSession() when updated
                 } else {
-                    updateSession(updatedGame, sessionListener)
+                    updateSession(updatedGame, sessionUpdater)
                 }
             } else {
-                endSession(sessionListener) // game ref has been deleted
+                endSession(sessionUpdater) // game ref has been deleted
             }
         }
     }
 
-    private fun endSession(sessionListener: SessionListener) {
+    private fun endSession(sessionUpdater: SessionUpdater) {
         removeListener()
-        sessionListener.onSessionEnded()
+        sessionUpdater.onSessionEnded()
     }
 
-    private fun updateSession(game: Game, sessionListener: SessionListener) {
-        sessionListener.onGameUpdates(game)
+    private fun updateSession(game: Game, sessionUpdater: SessionUpdater) {
+        sessionUpdater.onSessionGameUpdates(game)
     }
 }

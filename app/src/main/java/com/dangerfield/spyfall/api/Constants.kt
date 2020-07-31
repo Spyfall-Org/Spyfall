@@ -2,9 +2,9 @@ package com.dangerfield.spyfall.api
 
 import android.content.Context
 import com.dangerfield.spyfall.BuildConfig
-import com.dangerfield.spyfall.util.PreferencesHelper
+import com.dangerfield.spyfall.util.PreferencesService
 
-class Constants(val context: Context, private val preferencesHelper: PreferencesHelper) {
+class Constants(val context: Context, private val preferencesHelper: PreferencesService) {
     val games: String
         get() = if (BuildConfig.DEBUG && preferencesHelper.getUseTestDbState()) games_test else games_prod
 

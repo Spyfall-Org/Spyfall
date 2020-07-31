@@ -8,13 +8,13 @@ import androidx.lifecycle.Observer
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.util.DBCleaner
-import com.dangerfield.spyfall.util.PreferencesHelper
+import com.dangerfield.spyfall.util.PreferencesService
 import kotlinx.android.synthetic.main.fragment_tester_settings.*
 import org.koin.android.ext.android.inject
 
 class TesterSettingsFragment : Fragment(R.layout.fragment_tester_settings) {
 
-    private val preferencesHelper : PreferencesHelper by inject()
+    private val preferencesHelper : PreferencesService by inject()
     private val dbCleaner : DBCleaner by inject()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

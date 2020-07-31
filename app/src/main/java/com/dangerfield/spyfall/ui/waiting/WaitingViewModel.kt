@@ -1,6 +1,5 @@
 package com.dangerfield.spyfall.ui.waiting
 
-import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R

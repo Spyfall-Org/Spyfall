@@ -1,17 +1,17 @@
 package com.dangerfield.spyfall.api
 
+import com.dangerfield.spyfall.util.ConnectivityHelper
 import java.io.IOException
 
-object Connectivity {
+class Connectivity : ConnectivityHelper{
 
     /**
      * Checks whether device is currently online or not by Pinging a server
      * This uses Google's DNS (very unlikely to ever be down)
      * Preferable compared to connectivity/session manager as connected != online
      */
-    var isOnline: Boolean = false
-        private set
-        get() {
+
+    override suspend fun isOnline(): Boolean {
         val runtime = Runtime.getRuntime()
         try {
             val ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8")

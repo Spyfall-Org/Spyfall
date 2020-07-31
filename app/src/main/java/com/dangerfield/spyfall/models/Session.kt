@@ -3,11 +3,6 @@ package com.dangerfield.spyfall.models
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-interface SessionListener {
-    fun onSessionEnded()
-    fun onGameUpdates(game: Game)
-}
-
 @Parcelize
 data class Session (
     val accessCode: String,

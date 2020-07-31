@@ -25,7 +25,7 @@ class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
     private val joinGameEvent = MediatorLiveData<Event<Resource<Session, JoinGameError>>>()
     fun getJoinGameEvent() = joinGameEvent
 
-    fun joinGame(accessCode: String, username: String) {
+    fun triggerJoinGame(accessCode: String, username: String) {
         when {
             username.isEmpty() || accessCode.isEmpty() -> joinGameEvent.value =
                 Event(Resource.Error(error = JoinGameError.FIELD_ERROR))
@@ -42,6 +42,4 @@ class JoinGameViewModel(private val repository: GameRepository) : ViewModel() {
     }
 
     fun cancelJoinGame() = repository.cancelJoinGame()
-
-
 }
