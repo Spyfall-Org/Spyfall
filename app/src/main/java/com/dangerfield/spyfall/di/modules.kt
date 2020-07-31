@@ -1,8 +1,6 @@
 package com.dangerfield.spyfall.di
 
-import com.dangerfield.spyfall.api.Constants
-import com.dangerfield.spyfall.api.GameRepository
-import com.dangerfield.spyfall.api.Repository
+import com.dangerfield.spyfall.api.*
 import com.dangerfield.spyfall.ui.game.GameViewModel
 import com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel
 import com.dangerfield.spyfall.models.Session
@@ -28,7 +26,7 @@ val mainModule = module {
     single { (currentSession: Session) -> GameViewModel(get(), currentSession)}
     viewModel { JoinGameViewModel(get()) }
     viewModel { NewGameViewModel(get()) }
-    viewModel { StartViewModel(get()) }
+    viewModel { StartViewModel(get(), get()) }
 
     factory { SessionListenerHelper(get(), get()) as SessionListenerService }
     factory { FireStoreService(get(), get()) as GameService }

@@ -3,6 +3,7 @@ package com.dangerfield.spyfall.util
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dangerfield.spyfall.BuildConfig
+import com.dangerfield.spyfall.api.GameService
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.models.Game

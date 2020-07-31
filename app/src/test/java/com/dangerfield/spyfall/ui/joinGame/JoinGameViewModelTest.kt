@@ -8,7 +8,7 @@ import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.testUtil.getOrAwaitValue
 import com.dangerfield.spyfall.testUtil.getVoidTask
 import com.dangerfield.spyfall.util.ConnectivityHelper
-import com.dangerfield.spyfall.util.GameService
+import com.dangerfield.spyfall.api.GameService
 import com.dangerfield.spyfall.util.PreferencesService
 import com.dangerfield.spyfall.util.SessionListenerService
 import com.google.android.gms.tasks.Tasks

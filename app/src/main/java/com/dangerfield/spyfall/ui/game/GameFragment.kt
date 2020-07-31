@@ -288,13 +288,9 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         }
     }
 
-    private fun findFirstPlayer(playerObjects: List<Player>, players: java.util.ArrayList<String>): String? {
-        playerObjects.forEach {playerObject ->
-            val username = players.find { playerObject.username == it }
-            if(username != null) return username
-        }
-        return ""
-    }
+    private fun findFirstPlayer(playerObjects: List<Player>, players: java.util.ArrayList<String>): String
+        = playerObjects.find { playerObject -> players.contains(playerObject.username) }?.username ?: ""
+
 
     private fun configurePlayerViews(game: Game) {
         val currentPlayer =

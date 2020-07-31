@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dangerfield.spyfall.api.GameRepository
+import com.dangerfield.spyfall.api.GameService
 import com.dangerfield.spyfall.api.Repository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.di.TestKoinApp
@@ -40,7 +41,8 @@ class WaitingViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val gameService: GameService = Mockito.mock(GameService::class.java)
+    private val gameService: GameService = Mockito.mock(
+        GameService::class.java)
     private val prefHelper: PreferencesService = Mockito.mock(PreferencesService::class.java)
     private val sessionListener: SessionListenerService =
         Mockito.mock(SessionListenerService::class.java)

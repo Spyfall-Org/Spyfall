@@ -9,9 +9,8 @@ import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.testUtil.getOrAwaitValue
 import com.dangerfield.spyfall.testUtil.getVoidTask
-import com.dangerfield.spyfall.ui.newGame.NewGameViewModel
 import com.dangerfield.spyfall.util.ConnectivityHelper
-import com.dangerfield.spyfall.util.GameService
+import com.dangerfield.spyfall.api.GameService
 import com.dangerfield.spyfall.util.PreferencesService
 import com.dangerfield.spyfall.util.SessionListenerService
 import com.google.android.gms.tasks.Tasks
@@ -22,8 +21,6 @@ import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.equalTo
 import org.junit.After
 import org.junit.Assert.*

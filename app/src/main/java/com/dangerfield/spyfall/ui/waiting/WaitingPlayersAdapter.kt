@@ -17,9 +17,9 @@ class WaitingPlayersAdapter(username: String, private val nameHelper: ChangeName
 
     var players = ArrayList<String>()
         set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+        field = value
+        notifyDataSetChanged()
+    }
 
     var currentUserName = username
     set(value) {

@@ -1,8 +1,8 @@
-package com.dangerfield.spyfall.util
+package com.dangerfield.spyfall.api
 
-import com.dangerfield.spyfall.api.Constants
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
+import com.dangerfield.spyfall.util.pmap
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.firestore.FieldValue

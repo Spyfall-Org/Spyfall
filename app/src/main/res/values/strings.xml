@@ -148,6 +148,10 @@
     <string name="tester_settings" translatable="false">Tester Settings</string>
     <string name="submit" translatable="false">Submit</string>
     <string name="name_change_end_game" translatable="false">We are sorry. We had to end the game due to a name change, please try again.</string>
+    <string name="enter_previous_game">Enter previous game?</string>
+    <string name="enter_previous_game_message">Looks like you were found in a game, would you like to pick up where you left off?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 
 </resources>

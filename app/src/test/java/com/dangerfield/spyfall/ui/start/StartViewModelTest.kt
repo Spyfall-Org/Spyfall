@@ -9,7 +9,7 @@ import com.dangerfield.spyfall.models.Player
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.testUtil.getOrAwaitValue
 import com.dangerfield.spyfall.util.EpochGetter
-import com.dangerfield.spyfall.util.GameService
+import com.dangerfield.spyfall.api.GameService
 import com.dangerfield.spyfall.util.PreferencesService
 import com.dangerfield.spyfall.util.SavedSessionHelper
 import com.google.android.gms.tasks.Tasks

@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.util
+package com.dangerfield.spyfall.api
 
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
