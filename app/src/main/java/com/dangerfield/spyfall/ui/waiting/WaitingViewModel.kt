@@ -68,8 +68,9 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
         repository.cancelChangeName()
     }
 
-    fun triggerChangeNameEvent(newName: String) {
+    fun triggerChangeNameEvent(newName: String, onLoading: (() -> Unit)? = null) {
         if (findNameChangeErrors(newName)) return
+        onLoading?.invoke()
         val repoResults = repository.changeName(newName, currentSession)
         nameChangeEvent.addSource(repoResults) {
             nameChangeEvent.value = it

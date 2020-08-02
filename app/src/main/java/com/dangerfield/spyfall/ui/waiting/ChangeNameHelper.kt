@@ -12,10 +12,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.transition.TransitionManager
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.util.UIHelper
-import com.dangerfield.spyfall.util.clear
-import com.dangerfield.spyfall.util.hideKeyboard
-import com.dangerfield.spyfall.util.openKeyboard
+import com.dangerfield.spyfall.util.*
 import kotlinx.android.synthetic.main.dialog_change_name.view.*
 
 
@@ -35,27 +32,36 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
         dialogView?.tv_alert_change_name?.openKeyboard()
     }
 
-    private fun handleNameChange(newName: String, dialog: View) {
-        showLoadingState(dialog)
+    private fun handleNameChange(newName: String) {
         eventFirer.triggerNameChangeEvent(newName)
     }
 
-    private fun showLoadingState(dialog: View) {
-        dialog.tv_alert_change_name.visibility = View.INVISIBLE
-        dialog.progressBar.visibility = View.VISIBLE
-        dialog.btn_change_name_alert_okay.visibility = View.GONE
+    fun updateLoadingState(loading: Boolean) {
+        dialogView?.let {dialog ->
+            dialog.tv_alert_change_name.invisibleIf(loading)
+            dialog.progressBar.visibleIf(loading)
+            dialog.btn_change_name_alert_okay.goneIf(loading)
 
-        val set = ConstraintSet()
-        set.clone(dialog.change_name_layout)
-        set.clear(R.id.btn_alert_change_name_canel, ConstraintSet.END)
-        set.connect(
-            R.id.btn_alert_change_name_canel,
-            ConstraintSet.END,
-            R.id.tv_alert_change_name,
-            ConstraintSet.END
-        )
-        TransitionManager.beginDelayedTransition(dialog.change_name_layout)
-        set.applyTo(dialog.change_name_layout)
+            val loadingSet = ConstraintSet()
+            val origionalSet = ConstraintSet()
+            loadingSet.clone(dialog.change_name_layout)
+            origionalSet.clone(dialog.change_name_layout)
+
+            loadingSet.clear(R.id.btn_alert_change_name_canel, ConstraintSet.END)
+            loadingSet.connect(
+                R.id.btn_alert_change_name_canel,
+                ConstraintSet.END,
+                R.id.tv_alert_change_name,
+                ConstraintSet.END
+            )
+
+            TransitionManager.beginDelayedTransition(dialog.change_name_layout)
+            if(loading) {
+                loadingSet.applyTo(dialog.change_name_layout)
+            } else {
+                origionalSet.applyTo(dialog.change_name_layout)
+            }
+        }
     }
 
     private fun buildDialog(context: Context): AlertDialog {
@@ -68,12 +74,13 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
         dialogView?.apply {
 
             UIHelper.updateDrawableToTheme(context, R.drawable.edit_text_custom_cursor)
+            tv_alert_change_name.addCharacterMax(25)
             btn_change_name_alert_okay.background.setTint(UIHelper.accentColor)
             progressBar.indeterminateDrawable
                 .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN)
             btn_change_name_alert_okay.setOnClickListener {
                 val newName = tv_alert_change_name.text.toString().trim()
-                handleNameChange(newName, this)
+                handleNameChange(newName)
             }
             btn_alert_change_name_canel.setOnClickListener {
                 eventFirer.cancelNameChangeEvent()

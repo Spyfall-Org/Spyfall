@@ -57,6 +57,11 @@ fun TextView.clear() {
     this.text = ""
 }
 
+fun View.invisibleIf(condition: Boolean) {
+    visibility = if(condition) View.INVISIBLE else View.VISIBLE
+}
+
+
 fun TextView.containsValidOrEmptyEmail(): Boolean {
     val target = this.text
     return Patterns.EMAIL_ADDRESS.matcher(target).matches() || target.isEmpty()

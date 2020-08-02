@@ -89,6 +89,7 @@
                 android:hint="email"
                 android:inputType="textEmailAddress"
                 android:paddingStart="8dp"
+                android:textCursorDrawable="@drawable/edit_text_custom_cursor"
                 app:layout_constraintEnd_toEndOf="@+id/tv_feedback"
                 app:layout_constraintStart_toStartOf="@+id/tv_feedback"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -98,7 +99,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="If you would like to be contacted back please leave an email"
+                android:text="Contact Information (optional)"
                 android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
                 app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"

@@ -88,7 +88,7 @@
     <string name="string_join_name_hint"><u>Enter a username</u></string>
 
     <!--Waiting -->
-    <string name="change_name_character_limit">please enter a name less than 25 characters</string>
+    <string name="change_name_character_limit">please enter a name between 1 and 25 characters</string>
     <string name="string_change_name_hint"><u>Enter a username</u></string>
     <string name="string_waiting">Waiting for players…</string>
     <string name="string_access_code">Access code:</string>
