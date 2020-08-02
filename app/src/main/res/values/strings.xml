@@ -88,7 +88,7 @@
     <string name="string_join_name_hint"><u>Enter a username</u></string>
 
     <!--Waiting -->
-    <string name="change_name_character_limit">please enter a name less than 25 characters</string>
+    <string name="change_name_character_limit">please enter a name between 1 and 25 characters</string>
     <string name="string_change_name_hint"><u>Enter a username</u></string>
     <string name="string_waiting">Waiting for players…</string>
     <string name="string_access_code">Access code:</string>
@@ -130,7 +130,7 @@
     <string name="string_btn_start_game">Start Game</string>
     <string name="dialog_rate_title">Like the game?</string>
     <string name="dialog_rate_message">Pretty please let us know by giving us a review :)</string>
-    <string name="dialog_rate_negative">No</string>
+    <string name="dialog_rate_negative">Maybe Later</string>
     <string name="waiting_leaving_message" tools:ignore="ExtraTranslation">Are you sure you want to leave?</string>
     <string name="email_subject" translatable="false">a comment from me</string>
     <string name="about_message">Spyfall is a board game originally published by Hobby World. This mobile adaptation of

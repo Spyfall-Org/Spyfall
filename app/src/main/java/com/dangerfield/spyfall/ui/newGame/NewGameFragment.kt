@@ -161,8 +161,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
         btn_packs.setImageDrawable(drawable)
 
-        UIHelper.setCursorColor(tv_new_game_name, UIHelper.accentColor)
-        UIHelper.setCursorColor(tv_new_game_time, UIHelper.accentColor)
+        UIHelper.updateDrawableToTheme(requireContext(), R.drawable.edit_text_custom_cursor)
 
         pb_packs.indeterminateDrawable
             .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN)

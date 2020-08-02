@@ -92,8 +92,7 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
 
     private fun updateTheme() {
         btn_join_game_action.background.setTint(UIHelper.accentColor)
-        UIHelper.setCursorColor(tv_access_code, UIHelper.accentColor)
-        UIHelper.setCursorColor(tv_username, UIHelper.accentColor)
+        UIHelper.updateDrawableToTheme(requireContext(), R.drawable.edit_text_custom_cursor)
         pb_join_game.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
     }
 

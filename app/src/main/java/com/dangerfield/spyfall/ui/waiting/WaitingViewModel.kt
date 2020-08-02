@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.ui.waiting
 
+import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R
@@ -63,8 +64,13 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
         repository.leaveGame(currentSession)
     }
 
-    fun triggerChangeNameEvent(newName: String) {
+    fun cancelNameChangeEvent() {
+        repository.cancelChangeName()
+    }
+
+    fun triggerChangeNameEvent(newName: String, onLoading: (() -> Unit)? = null) {
         if (findNameChangeErrors(newName)) return
+        onLoading?.invoke()
         val repoResults = repository.changeName(newName, currentSession)
         nameChangeEvent.addSource(repoResults) {
             nameChangeEvent.value = it
@@ -77,8 +83,10 @@ class WaitingViewModel(private val repository: GameRepository, val currentSessio
             newName.length > 25 ||
                     newName.isEmpty() -> nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.FORMAT_ERROR))
-            currentSession.game.playerList.contains(newName) -> nameChangeEvent.value =
+            currentSession.game.playerList.contains(newName) -> {nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.NAME_IN_USE))
+                Log.d("Elijah", "name: $newName was taken")
+            }
             currentSession.game.started -> nameChangeEvent.value =
                 Event(Resource.Error(error = NameChangeError.GAME_STARTED))
             else -> return false

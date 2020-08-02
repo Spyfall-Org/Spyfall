@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/change_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_dialog">
 
     <EditText
+            android:id="@+id/tv_alert_change_name"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/tv_alert_change_name" android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="@+id/tv_alert_change_name_title"
-            app:layout_constraintEnd_toEndOf="@+id/tv_alert_change_name_title"
             android:layout_marginTop="16dp"
+            android:background="@drawable/back_ground_edit_text"
+            android:ems="10"
             android:hint="@string/string_change_name_hint"
-            app:layout_constraintHorizontal_bias="0.549"
-            app:layout_constraintTop_toBottomOf="@+id/tv_alert_change_name_title"
-            android:background="@drawable/back_ground_edit_text" android:paddingStart="8dp"/>
+            android:inputType="textPersonName"
+            android:paddingStart="8dp"
+            android:textCursorDrawable="@drawable/edit_text_custom_cursor"
+            app:layout_constraintEnd_toEndOf="@+id/tv_alert_change_name_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_alert_change_name_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_alert_change_name_title" />
 
     <Button
             android:id="@+id/btn_alert_change_name_canel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/background_button_white"
             android:text="@string/negative_action_standard"
             android:textAllCaps="false"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/tv_alert_change_name"
-            app:layout_constraintTop_toTopOf="@+id/btn_change_name_alert_okay" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_alert_change_name" />
 
     <Button
             android:id="@+id/btn_change_name_alert_okay"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginStart="8dp"
             android:background="@drawable/background_button_accent"
             android:text="@string/positive_action_standard"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tv_alert_change_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_alert_change_name"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/btn_alert_change_name_canel" />
 
     <TextView
             android:id="@+id/tv_alert_change_name_title"
@@ -62,4 +67,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5" />
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_alert_change_name"
+            app:layout_constraintEnd_toEndOf="@+id/tv_alert_change_name"
+            app:layout_constraintStart_toStartOf="@+id/tv_alert_change_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_alert_change_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,6 +18,9 @@ import androidx.core.content.ContextCompat
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import android.widget.EditText
+import androidx.annotation.RawRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.R
 
@@ -166,6 +169,13 @@ class UIHelper {
                 field.set(editor, drawables)
             } catch (ignored: Exception) {
             }
+        }
+
+        fun updateDrawableToTheme(context: Context, id: Int) {
+            val unwrappedDrawable =
+                AppCompatResources.getDrawable(context, id)
+            val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
+            DrawableCompat.setTint(wrappedDrawable, accentColor)
         }
     }
 }

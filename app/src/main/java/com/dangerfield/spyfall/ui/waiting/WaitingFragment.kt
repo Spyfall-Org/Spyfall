@@ -122,10 +122,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     private fun observeLeaveGameEvent() {
         waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                is Resource.Success -> {
-                    Log.d("Elijah", "Navigating back to start because of a leave game event")
-                    navigateToStart()
-                }
+                is Resource.Success ->  navigateToStart()
                 is Resource.Error -> handleLeaveGameError(it)
             }
         })
@@ -135,7 +132,6 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment) {
                 LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
-                Log.d("Elijah", "Navigating back to start because of a session ended event")
                 navigateToStart()
             }
         })
@@ -145,7 +141,6 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
             if (navController.currentDestination?.id == R.id.waitingFragment && it is Resource.Success) {
                 LogHelper.removedInactiveUser(waitingViewModel.currentSession)
-                Log.d("Elijah", "Navigating back to start because of a remove inactive user event")
                 navigateToStart()
             }
         })
@@ -165,13 +160,18 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
 
     override fun triggerNameChangeEvent(newName: String) {
         LogHelper.logUserChangingName(newName, waitingViewModel.currentSession)
-        waitingViewModel.triggerChangeNameEvent(newName)
+        waitingViewModel.triggerChangeNameEvent(newName) {
+            changeNameHelper.updateLoadingState(true)
+        }
+    }
+
+    override fun cancelNameChangeEvent() {
+        waitingViewModel.cancelNameChangeEvent()
     }
 
     private fun handleNameChangeSuccess(it: Resource.Success<String, NameChangeError>) {
         it.data?.let {
             waitingViewModel.currentSession.updateCurrentUsername(it)
-            waitingViewModel.currentSession.currentUser = it
             adapter.currentUserName = it
         }
         LogHelper.logSuccesfulNameChange(waitingViewModel.currentSession)
@@ -193,7 +193,9 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
                 NameChangeError.UNKNOWN_ERROR,
                 NameChangeError.NETWORK_ERROR -> changeNameHelper.dismissNameChangeDialog()
                 else -> {
-                } //no-op. keep dialog up so user can fix mistake
+                    //stop loading so user can fix error
+                    changeNameHelper.updateLoadingState(false)
+                }
             }
             Toast.makeText(context, resources.getString(it.resId), Toast.LENGTH_SHORT).show()
         }

@@ -118,7 +118,6 @@ class Repository(
             if (!connectivityHelper.isOnline()) {
                 result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
             } else {
-                Log.d("Elijah", "Starting create game")
 
                 try {
                     val accessCode = generateAccessCode()
@@ -131,7 +130,7 @@ class Repository(
                         arrayListOf(),
                         timeLimit,
                         gameLocations,
-                        (System.currentTimeMillis() + millisecondsInSixHours) / 1000
+                        (System.currentTimeMillis() + millisecondsInTwoHours) / 1000
                     )
 
                     fireStoreService.setGame(accessCode, game)
@@ -359,22 +358,24 @@ class Repository(
         val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
 
         changeNameJob = CoroutineScope(dispatcher).launch {
-            val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
+            val copyPlayers = currentSession.game.playerList.toMutableList()
+            val copyOldName = currentSession.currentUser
+            val index = copyPlayers.indexOf(copyOldName)
             if (index == -1) {
                 result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
                 return@launch
             }
-            val copy = currentSession.game.playerList.toMutableList()
-            copy[index] = newName
+            copyPlayers[index] = newName
             if (currentSession.game.started) {
                 result.postValue(Event(Resource.Error(error = NameChangeError.GAME_STARTED)))
             } else {
-                fireStoreService.setPlayerList(currentSession.accessCode, copy)
+                fireStoreService.setPlayerList(currentSession.accessCode, copyPlayers)
                     .addOnSuccessListener {
+                        Log.d("Elijah", "Succesful name change")
                         val updatedSession =
                             Session(
                                 accessCode = currentSession.accessCode,
-                                previousUserName = currentSession.currentUser,
+                                previousUserName = copyOldName,
                                 currentUser = newName,
                                 game = currentSession.game
                             )
@@ -523,6 +524,6 @@ class Repository(
     }
 
     companion object {
-        private const val millisecondsInSixHours = 21600000
+        private const val millisecondsInTwoHours = 7200000
     }
 }
