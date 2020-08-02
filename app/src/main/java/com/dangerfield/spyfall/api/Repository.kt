@@ -136,10 +136,12 @@ class Repository(
 
                     fireStoreService.setGame(accessCode, game)
                         .addOnSuccessListener {
+                            Log.d("Elijah", "Sucess!  create game")
                             val currentSession = Session(accessCode, username, game)
                             result.postValue(Resource.Success(currentSession))
                             preferencesHelper.saveSession(currentSession)
                         }.addOnFailureListener {
+                            Log.d("Elijah", "FAIL create game")
                             result.postValue(
                                 Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
                             )
@@ -359,22 +361,24 @@ class Repository(
         val result = MutableLiveData<Event<Resource<String, NameChangeError>>>()
 
         changeNameJob = CoroutineScope(dispatcher).launch {
-            val index = currentSession.game.playerList.indexOf(currentSession.currentUser)
+            val copyPlayers = currentSession.game.playerList.toMutableList()
+            val copyOldName = currentSession.currentUser
+            val index = copyPlayers.indexOf(copyOldName)
             if (index == -1) {
                 result.postValue(Event(Resource.Error(error = NameChangeError.UNKNOWN_ERROR)))
                 return@launch
             }
-            val copy = currentSession.game.playerList.toMutableList()
-            copy[index] = newName
+            copyPlayers[index] = newName
             if (currentSession.game.started) {
                 result.postValue(Event(Resource.Error(error = NameChangeError.GAME_STARTED)))
             } else {
-                fireStoreService.setPlayerList(currentSession.accessCode, copy)
+                fireStoreService.setPlayerList(currentSession.accessCode, copyPlayers)
                     .addOnSuccessListener {
+                        Log.d("Elijah", "Succesful name change")
                         val updatedSession =
                             Session(
                                 accessCode = currentSession.accessCode,
-                                previousUserName = currentSession.currentUser,
+                                previousUserName = copyOldName,
                                 currentUser = newName,
                                 game = currentSession.game
                             )

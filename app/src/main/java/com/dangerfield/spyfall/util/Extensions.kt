@@ -3,14 +3,17 @@ package com.dangerfield.spyfall.util
 import android.app.Activity
 import android.os.Bundle
 import android.text.InputFilter
+import android.text.TextUtils
+import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import com.dangerfield.spyfall.ui.game.GameFragment
 import com.dangerfield.spyfall.models.Session
+import com.dangerfield.spyfall.ui.game.GameFragment
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import kotlinx.coroutines.*
+
 
 fun EditText.addCharacterMax(max: Int){
     filters = arrayOf(InputFilter.LengthFilter(max))
@@ -52,6 +55,11 @@ fun View.hideKeyboard() {
 
 fun TextView.clear() {
     this.text = ""
+}
+
+fun TextView.containsValidOrEmptyEmail(): Boolean {
+    val target = this.text
+    return Patterns.EMAIL_ADDRESS.matcher(target).matches() || target.isEmpty()
 }
 
 suspend fun <A, B> Iterable<A>.pmap(dispatcher: CoroutineDispatcher = Dispatchers.Default, f: suspend (A) -> B): List<B> =

@@ -168,10 +168,13 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
         waitingViewModel.triggerChangeNameEvent(newName)
     }
 
+    override fun cancelNameChangeEvent() {
+        waitingViewModel.cancelNameChangeEvent()
+    }
+
     private fun handleNameChangeSuccess(it: Resource.Success<String, NameChangeError>) {
         it.data?.let {
             waitingViewModel.currentSession.updateCurrentUsername(it)
-            waitingViewModel.currentSession.currentUser = it
             adapter.currentUserName = it
         }
         LogHelper.logSuccesfulNameChange(waitingViewModel.currentSession)

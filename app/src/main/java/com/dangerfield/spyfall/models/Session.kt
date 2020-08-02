@@ -17,6 +17,6 @@ data class Session (
     }
 
     override fun toString(): String {
-        return "(accessCode: $accessCode, username: $currentUser, prevUsername: $previousUserName)"
+        return "(accessCode: $accessCode, username: $currentUser, prevUsername: $previousUserName) game: ${game}"
     }
 }

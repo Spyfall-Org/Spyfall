@@ -21,6 +21,7 @@
                 android:layout_marginEnd="32dp"
                 android:background="@null"
                 android:hint="What feedback do you have for us? "
+                android:textCursorDrawable="@drawable/edit_text_custom_cursor"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +31,7 @@
                 android:id="@+id/btn_feedback_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/background_button_white"
                 android:text="@string/negative_action_standard"
@@ -38,7 +39,7 @@
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toBottomOf="@+id/tv_feedback" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
 
         <Button
                 android:id="@+id/btn_feedback_submit"
@@ -77,6 +78,31 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent=".5" />
+
+        <EditText
+                android:id="@+id/editTextTextEmailAddress"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/back_ground_edit_text"
+                android:ems="10"
+                android:hint="email"
+                android:inputType="textEmailAddress"
+                android:paddingStart="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_feedback"
+                app:layout_constraintStart_toStartOf="@+id/tv_feedback"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+        <TextView
+                android:id="@+id/textView9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="If you would like to be contacted back please leave an email"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
+                app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
+                app:layout_constraintTop_toBottomOf="@+id/tv_feedback" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

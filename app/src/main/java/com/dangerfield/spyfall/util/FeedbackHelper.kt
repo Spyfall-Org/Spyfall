@@ -40,7 +40,7 @@ class FeedbackHelper(
 
         dialogView?.apply {
             btn_feedback_submit.background.setTint(UIHelper.accentColor)
-            UIHelper.setCursorColor(tv_feedback, UIHelper.accentColor)
+            UIHelper.updateDrawableToTheme(context, R.drawable.edit_text_custom_cursor)
             btn_feedback_submit.setOnClickListener {
                 val feedbackText = tv_feedback.text.toString().trim()
                 if (feedbackText.isNullOrEmpty()) {
@@ -49,7 +49,15 @@ class FeedbackHelper(
                         "Looks like your feedback was empty. We would appreciate any feedback you have to give :)",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else {
+                }
+                else if(!tv_feedback.containsValidOrEmptyEmail()) {
+                    Toast.makeText(
+                        context,
+                        "Looks like your email was not formatted properly. Please try again :)",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else {
                     submitFeedback(feedbackText, context)
                     Toast.makeText(
                         context,
