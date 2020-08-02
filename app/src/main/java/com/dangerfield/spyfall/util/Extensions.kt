@@ -65,7 +65,6 @@ fun View.invisibleIf(condition: Boolean) {
 
 fun TextView.containsValidOrEmptyEmail(): Boolean {
     val target = this.text
-    Log.d("Elijah", "valid or empty: ${target.toString().trim().isEmpty()}")
     return Patterns.EMAIL_ADDRESS.matcher(target).matches() || target.toString().trim().isEmpty()
 }
 

@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.ui.start
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.di.TestKoinApp
 import com.dangerfield.spyfall.models.Game
@@ -10,6 +11,7 @@ import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.testUtil.getOrAwaitValue
 import com.dangerfield.spyfall.util.EpochGetter
 import com.dangerfield.spyfall.api.GameService
+import com.dangerfield.spyfall.api.Repository
 import com.dangerfield.spyfall.util.PreferencesService
 import com.dangerfield.spyfall.util.SavedSessionHelper
 import com.google.android.gms.tasks.Tasks
@@ -41,6 +43,9 @@ class StartViewModelTest {
     private val epochGetter = Mockito.mock(EpochGetter::class.java)
     private val savedSessionHelper =
         SavedSessionHelper(preferencesHelper, gameService, testDispatcher, epochGetter)
+
+    private val testRepository = Mockito.mock(GameRepository::class.java)
+
     private val currentUser = "Eli"
     private lateinit var testSubject: StartViewModel
     private val normalGame = Game(
@@ -56,7 +61,7 @@ class StartViewModelTest {
 
     @Before
     fun setUp() {
-        testSubject = StartViewModel(savedSessionHelper)
+        testSubject = StartViewModel(savedSessionHelper, testRepository)
         whenever(epochGetter.getCurrentEpoch()).thenReturn(1000)
     }
 
@@ -288,4 +293,6 @@ class StartViewModelTest {
             val value = testSubject.getSearchForUserInGameEvent().getOrAwaitValue()
             assert(value?.getContentIfNotHandled() is Resource.Success)
         }
+
+    //TODO test when user is removed from session and then another trigger to search that nothing is found (ERROR result)
 }
