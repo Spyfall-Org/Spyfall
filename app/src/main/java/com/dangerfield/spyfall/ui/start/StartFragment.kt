@@ -48,13 +48,11 @@ class StartFragment : Fragment(R.layout.fragment_start) {
     }
 
     private fun showReviewDialog() {
-        UIHelper.customSimpleAlert(requireContext(),
-            getString(R.string.dialog_rate_title),
-            getString(R.string.dialog_rate_message),
-            getString(R.string.positive_action_standard), {
-                reviewHelper.setHasClickedToReview()
-                reviewHelper.openStoreForReview()
-            }, getString(R.string.dialog_rate_negative), {}).show()
+        UIHelper.getReviewDialog(requireContext(),
+        positiveAction = {
+            reviewHelper.setHasClickedToReview()
+            reviewHelper.openStoreForReview()
+        }).show()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

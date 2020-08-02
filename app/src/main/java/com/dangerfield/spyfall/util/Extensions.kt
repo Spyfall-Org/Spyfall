@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -64,7 +65,8 @@ fun View.invisibleIf(condition: Boolean) {
 
 fun TextView.containsValidOrEmptyEmail(): Boolean {
     val target = this.text
-    return Patterns.EMAIL_ADDRESS.matcher(target).matches() || target.isEmpty()
+    Log.d("Elijah", "valid or empty: ${target.toString().trim().isEmpty()}")
+    return Patterns.EMAIL_ADDRESS.matcher(target).matches() || target.toString().trim().isEmpty()
 }
 
 suspend fun <A, B> Iterable<A>.pmap(dispatcher: CoroutineDispatcher = Dispatchers.Default, f: suspend (A) -> B): List<B> =
