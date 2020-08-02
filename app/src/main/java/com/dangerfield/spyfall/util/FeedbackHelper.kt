@@ -50,7 +50,7 @@ class FeedbackHelper(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                else if(!tv_feedback.containsValidOrEmptyEmail()) {
+                else if(!tv_email.containsValidOrEmptyEmail()) {
                     Toast.makeText(
                         context,
                         "Looks like your email was not formatted properly. Please try again :)",
@@ -58,7 +58,7 @@ class FeedbackHelper(
                     ).show()
                 }
                 else {
-                    submitFeedback(feedbackText, context)
+                    submitFeedback(feedbackText, tv_email.text.trim().toString())
                     Toast.makeText(
                         context,
                         "Thank you for your feedback! We rely on it to bring you a good experience",
@@ -76,7 +76,7 @@ class FeedbackHelper(
         return dialog
     }
 
-    private fun submitFeedback(message: String, context: Context) {
+    private fun submitFeedback(message: String, email: String) {
 
         val dateFormat: DateFormat = SimpleDateFormat("MM/dd/yyyy")
 
@@ -93,7 +93,8 @@ class FeedbackHelper(
             device = device,
             modelAndProduct = modelAndProduct,
             appVersion = appVersion,
-            date = dateFormat.format(Date())
+            date = dateFormat.format(Date()),
+            email = if(email.isNullOrEmpty()) "NO_EMAIL_PROVIDED" else email
         )
 
         db.collection(constants.feedback).document("Android-" + UUID.randomUUID()).set(feedback)

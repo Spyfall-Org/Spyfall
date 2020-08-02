@@ -7,6 +7,7 @@ data class Feedback(
     val device: String,
     val apiLevel: String,
     val modelAndProduct: String,
-    val date: String
+    val date: String,
+    val email: String
 ) {
 }
