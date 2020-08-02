@@ -18,6 +18,6 @@ jobs:
     - name: Decode google-services.json
       env:
         FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
-        run: echo $FIREBASE_CONFIG > app/google-services.json
+      run: echo $FIREBASE_CONFIG > app/google-services.json
     - name: Test
       run: ./gradlew test
