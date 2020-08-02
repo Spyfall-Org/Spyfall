@@ -56,6 +56,5 @@ class DBCleaner(private val db: FirebaseFirestore, private val constants: Consta
         }
 
         return result
-
     }
 }
