@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "69407680342",
+    "firebase_url": "https://spyfall-14bb2.firebaseio.com",
+    "project_id": "spyfall-14bb2",
+    "storage_bucket": "spyfall-14bb2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69407680342:android:eb6bfaf08267053b",
+        "android_client_info": {
+          "package_name": "com.dangerfield.spyfall.free"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69407680342-e1un5qbptlfdt6comclr1uu61l1qi7kf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxG_gIFfrAhPO4AzInqFTQyMtg_0k3jjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69407680342-e1un5qbptlfdt6comclr1uu61l1qi7kf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "69407680342-ttnb9l4154987hmii5ta4auqms4cb28m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "jdr.spyfall"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69407680342:android:76ec78c817342319",
+        "android_client_info": {
+          "package_name": "com.dangerfield.spyfall.paid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69407680342-e1un5qbptlfdt6comclr1uu61l1qi7kf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxG_gIFfrAhPO4AzInqFTQyMtg_0k3jjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69407680342-e1un5qbptlfdt6comclr1uu61l1qi7kf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "69407680342-ttnb9l4154987hmii5ta4auqms4cb28m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "jdr.spyfall"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
