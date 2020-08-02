@@ -118,7 +118,6 @@ class Repository(
             if (!connectivityHelper.isOnline()) {
                 result.value = Resource.Error(error = NewGameError.NETWORK_ERROR)
             } else {
-                Log.d("Elijah", "Starting create game")
 
                 try {
                     val accessCode = generateAccessCode()
@@ -131,17 +130,15 @@ class Repository(
                         arrayListOf(),
                         timeLimit,
                         gameLocations,
-                        (System.currentTimeMillis() + millisecondsInSixHours) / 1000
+                        (System.currentTimeMillis() + millisecondsInTwoHours) / 1000
                     )
 
                     fireStoreService.setGame(accessCode, game)
                         .addOnSuccessListener {
-                            Log.d("Elijah", "Sucess!  create game")
                             val currentSession = Session(accessCode, username, game)
                             result.postValue(Resource.Success(currentSession))
                             preferencesHelper.saveSession(currentSession)
                         }.addOnFailureListener {
-                            Log.d("Elijah", "FAIL create game")
                             result.postValue(
                                 Resource.Error(error = NewGameError.UNKNOWN_ERROR, exception = it)
                             )
@@ -527,6 +524,6 @@ class Repository(
     }
 
     companion object {
-        private const val millisecondsInSixHours = 21600000
+        private const val millisecondsInTwoHours = 7200000
     }
 }
