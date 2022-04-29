@@ -3,7 +3,7 @@ package com.dangerfield.spyfall.api
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.crashlytics.android.BuildConfig
+import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.ui.joinGame.JoinGameError
 import com.dangerfield.spyfall.models.*
 import com.dangerfield.spyfall.ui.game.PlayAgainError

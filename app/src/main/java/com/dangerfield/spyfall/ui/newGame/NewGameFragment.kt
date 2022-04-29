@@ -15,7 +15,7 @@ import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.waiting.WaitingFragment
 import com.dangerfield.spyfall.util.*
 import kotlinx.android.synthetic.main.fragment_new_game.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
 
 class NewGameFragment : Fragment(R.layout.fragment_new_game) {

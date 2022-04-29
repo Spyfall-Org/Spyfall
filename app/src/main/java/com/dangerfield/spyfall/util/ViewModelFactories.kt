@@ -6,15 +6,15 @@ import com.dangerfield.spyfall.api.GameRepository
 import com.dangerfield.spyfall.ui.game.GameViewModel
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.waiting.WaitingViewModel
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class WaitingViewModelFactory( val currentSession: Session) :
     ViewModelProvider.Factory, KoinComponent {
 
     val repository: GameRepository by inject()
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return WaitingViewModel(repository, currentSession) as T
     }
 }
@@ -24,7 +24,7 @@ class GameViewModelFactory( val currentSession: Session) :
 
     val repository: GameRepository by inject()
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return GameViewModel(repository, currentSession) as T
     }
 }
