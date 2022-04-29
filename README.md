@@ -1,5 +1,10 @@
 # Spyfall
 
+<img width="300" alt="underconstruction" src="https://user-images.githubusercontent.com/45648517/147427264-79336a36-ca50-4c03-a36f-d64a6065fd81.png">
+
+
+## As any developer who continues to learn does, I have decided this code is trash. It doesnt reflect my knowledge or experience, I am currently updating it to do so. 
+
 This project is a multiplayer game in which one person is assigned to be a spy while 
 all other players are assigned a role at a location. The spy's objective is to figure out the location through a series of well worded questions while not giving
 away that he or she is the spy. Meanwhile, everyone else's objective is to figure out the spy. All players take turns asking questions. 

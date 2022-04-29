@@ -11,7 +11,7 @@ import com.dangerfield.spyfall.util.*
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val mainModule = module {
