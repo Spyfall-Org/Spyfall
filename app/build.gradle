@@ -106,11 +106,16 @@ dependencies {
     implementation "io.insert-koin:koin-android:3.1.6"
 
     //testing
+    // Koin testing tools
+    testImplementation "io.insert-koin:koin-test:3.1.6"
+    // Needed JUnit version
+    testImplementation "io.insert-koin:koin-test-junit4:3.1.6"
+
     testImplementation "androidx.test.ext:junit-ktx:$androidXTestExtKotlinRunnerVersion"
     testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     testImplementation 'org.mockito:mockito-core:3.0.0'
-    testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
