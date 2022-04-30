@@ -6,14 +6,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 
 android {
-    signingConfigs {
-        config {
-            storeFile file('/Users/elidangerfield/Desktop/apk-keys/spyfall/spyfall.keystore')
-            keyAlias = 'spyfall_keystore'
-            storePassword 'Sixthave1%'
-            keyPassword 'Sixthave3%'
-        }
-    }
+
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.dangerfield.spyfall"
@@ -40,13 +33,11 @@ android {
             applicationId "com.dangerfield.spyfall.free"
             versionNameSuffix "-free"
             dimension "version"
-            signingConfig signingConfigs.config
         }
         paid {
             applicationId "com.dangerfield.spyfall.paid"
             versionNameSuffix "-paid"
             dimension "version"
-            signingConfig signingConfigs.config
         }
     }
 
