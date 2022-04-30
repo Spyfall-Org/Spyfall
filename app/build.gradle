@@ -5,12 +5,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 
+apply from: 'checkstyle.gradle'
+
 android {
 
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.dangerfield.spyfall"
-        compileSdkVersion 31
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 10
