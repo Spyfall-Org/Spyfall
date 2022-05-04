@@ -4,7 +4,6 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.gitlab.arturbosch.detekt'
 apply from: 'checkstyle.gradle'
 
 android {
@@ -58,16 +57,6 @@ android {
     // Always show the result of every unit test when running via command line, even if it passes.
     testOptions.unitTests {
         includeAndroidResources = true
-    }
-}
-
-detekt {
-    toolVersion = "1.20.0"
-    basePath = projectDir
-    reports {
-        html { enabled = true }
-        txt { enabled = false }
-        xml { enabled = false }
     }
 }
 

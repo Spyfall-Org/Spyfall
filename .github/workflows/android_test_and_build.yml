@@ -38,8 +38,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Run Kotlin Linter
-        run: ./gradlew ktlintStagingDebugCheck
+      - name: Detekt All
+        run: ./gradlew detekt
 
   build_and_assemble:
     runs-on: [ ubuntu-latest ]
