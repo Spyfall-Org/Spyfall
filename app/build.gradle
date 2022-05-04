@@ -4,20 +4,14 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
+apply from: 'checkstyle.gradle'
+apply from: 'detekt.gradle'
 
 android {
-    signingConfigs {
-        config {
-            storeFile file('/Users/elidangerfield/Desktop/apk-keys/spyfall/spyfall.keystore')
-            keyAlias = 'spyfall_keystore'
-            storePassword 'Sixthave1%'
-            keyPassword 'Sixthave3%'
-        }
-    }
+
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.dangerfield.spyfall"
-        compileSdkVersion 31
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 10
@@ -40,13 +34,11 @@ android {
             applicationId "com.dangerfield.spyfall.free"
             versionNameSuffix "-free"
             dimension "version"
-            signingConfig signingConfigs.config
         }
         paid {
             applicationId "com.dangerfield.spyfall.paid"
             versionNameSuffix "-paid"
             dimension "version"
-            signingConfig signingConfigs.config
         }
     }
 
@@ -88,7 +80,6 @@ dependencies {
     //ad mob
     implementation 'com.google.android.gms:play-services-ads:20.6.0'
 
-
     //firebase libraries
     implementation 'com.google.firebase:firebase-database:20.0.4'
     implementation 'com.google.firebase:firebase-firestore:24.1.1'
@@ -119,5 +110,4 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
-
 }
