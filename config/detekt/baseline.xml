@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+    <ManuallySuppressedIssues/>
+    <CurrentIssues>
+        <ID>ComplexMethod:FeedbackHelper.kt$FeedbackHelper$private fun getOSString(code: Int): String</ID>
+        <ID>EmptyCatchBlock:RemoveUserTimer.kt$RemoveUserTimer${ }</ID>
+        <ID>EmptyClassBlock:Feedback.kt$Feedback${ }</ID>
+        <ID>ForbiddenComment:SettingsFragment.kt$SettingsFragment$//TODO: consider making a view model for this</ID>
+        <ID>ForbiddenComment:UIHelper.kt$UIHelper.Companion$//TODO: make dynamic by pulling from firebase and adding recycler views as needed</ID>
+        <ID>LongParameterList:UIHelper.kt$UIHelper.Companion$( context: Context, title: String, message: String, positiveText: String, positiveAction: (() -> Unit), negativeText: String, negativeAction: (() -> Unit), leftAlignText: Boolean = false )</ID>
+        <ID>MagicNumber:ChangeNameHelper.kt$ChangeNameHelper$25</ID>
+        <ID>MagicNumber:DBCleaner.kt$DBCleaner$1000</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$10</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$11</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$12</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$13</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$14</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$15</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$16</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$17</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$18</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$19</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$20</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$21</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$22</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$23</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$24</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$25</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$26</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$27</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$28</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$29</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$3</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$30</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$4</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$5</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$6</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$7</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$8</ID>
+        <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$9</ID>
+        <ID>MagicNumber:GameFragment.kt$GameFragment$96.0f</ID>
+        <ID>MagicNumber:GameViewModel.kt$GameViewModel$10000</ID>
+        <ID>MagicNumber:GameViewModel.kt$GameViewModel$60000</ID>
+        <ID>MagicNumber:GameViewModel.kt$GameViewModel.&lt;no name provided>$1000</ID>
+        <ID>MagicNumber:GameViewModel.kt$GameViewModel.&lt;no name provided>$60</ID>
+        <ID>MagicNumber:JoinGameFragment.kt$JoinGameFragment$25</ID>
+        <ID>MagicNumber:JoinGameFragment.kt$JoinGameFragment$8</ID>
+        <ID>MagicNumber:JoinGameViewModel.kt$JoinGameViewModel$25</ID>
+        <ID>MagicNumber:NewGameFragment.kt$NewGameFragment$25</ID>
+        <ID>MagicNumber:NewGameFragment.kt$NewGameFragment$3</ID>
+        <ID>MagicNumber:NewGameViewModel.kt$NewGameViewModel$10</ID>
+        <ID>MagicNumber:NewGameViewModel.kt$NewGameViewModel$25</ID>
+        <ID>MagicNumber:RemoveUserTimer.kt$RemoveUserTimer$900000L</ID>
+        <ID>MagicNumber:Repository.kt$Repository$1000</ID>
+        <ID>MagicNumber:Repository.kt$Repository$14</ID>
+        <ID>MagicNumber:Repository.kt$Repository$3</ID>
+        <ID>MagicNumber:Repository.kt$Repository$5</ID>
+        <ID>MagicNumber:Repository.kt$Repository$6</ID>
+        <ID>MagicNumber:Repository.kt$Repository$7</ID>
+        <ID>MagicNumber:Repository.kt$Repository$8</ID>
+        <ID>MagicNumber:ReviewHelper.kt$ReviewHelper$10</ID>
+        <ID>MagicNumber:SavedSessionHelper.kt$SavedSessionHelper.&lt;no name provided>$1000</ID>
+        <ID>MagicNumber:SettingsFragment.kt$SettingsFragment$29</ID>
+        <ID>MagicNumber:SettingsFragment.kt$SettingsFragment$300</ID>
+        <ID>MagicNumber:SettingsFragment.kt$SettingsFragment$4</ID>
+        <ID>MagicNumber:WaitingViewModel.kt$WaitingViewModel$25</ID>
+        <ID>MaxLineLength:ColorChangeAdapter.kt$ColorChangeAdapter$class</ID>
+        <ID>MaxLineLength:Extensions.kt$suspend</ID>
+        <ID>MaxLineLength:Game.kt$Game$constructor() : this("", ArrayList&lt;String>(),false,ArrayList&lt;String>(),ArrayList&lt;Player>(),0.0.toLong(),ArrayList&lt;String>(), 0)</ID>
+        <ID>MaxLineLength:Game.kt$Game.Companion$return Game("", ArrayList&lt;String>(),false,ArrayList&lt;String>(),ArrayList&lt;Player>(),0L ,ArrayList&lt;String>(), 0)</ID>
+        <ID>MaxLineLength:GameFragment.kt$GameFragment$//but right now it says: if the game has started, and im still on this screen, and something has changed..</ID>
+        <ID>MaxLineLength:GameViewsAdapter.kt$GameViewsAdapter$class</ID>
+        <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_code), currentSession.accessCode)</ID>
+        <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_current_user), currentSession.currentUser)</ID>
+        <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_previous_user), currentSession.previousUserName)</ID>
+        <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$return Session(accessCode = accessCode, currentUser = currentUser, game = Game.getEmptyGame(), previousUserName = prevUser)</ID>
+        <ID>MaxLineLength:Receiver.kt$Receiver$val networkInfo: NetworkInfo? = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo</ID>
+        <ID>MaxLineLength:RemoveUserTimer.kt$RemoveUserTimer$class</ID>
+        <ID>MaxLineLength:SettingsFragment.kt$SettingsFragment$UIHelper.accentColor = if(chosenColor == Color.WHITE) UIHelper.accentColors.random() else chosenColor</ID>
+        <ID>MaxLineLength:SettingsFragment.kt$SettingsFragment$val editor = requireContext().getSharedPreferences(resources.getString(com.dangerfield.spyfall.R.string.shared_preferences), MODE_PRIVATE).edit()</ID>
+        <ID>MaxLineLength:StartViewModel.kt$StartViewModel$class</ID>
+        <ID>MaxLineLength:WaitingPlayersAdapter.kt$WaitingPlayersAdapter$class</ID>
+        <ID>NewLineAtEndOfFile:ChangeNameHelper.kt$com.dangerfield.spyfall.ui.waiting.ChangeNameHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:ColorButton.kt$com.dangerfield.spyfall.ui.settings.ColorButton.kt</ID>
+        <ID>NewLineAtEndOfFile:ColorChangeAdapter.kt$com.dangerfield.spyfall.ui.settings.ColorChangeAdapter.kt</ID>
+        <ID>NewLineAtEndOfFile:Connectivity.kt$com.dangerfield.spyfall.api.Connectivity.kt</ID>
+        <ID>NewLineAtEndOfFile:ConnectivityHelper.kt$com.dangerfield.spyfall.util.ConnectivityHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:DBCleaner.kt$com.dangerfield.spyfall.util.DBCleaner.kt</ID>
+        <ID>NewLineAtEndOfFile:Feedback.kt$com.dangerfield.spyfall.models.Feedback.kt</ID>
+        <ID>NewLineAtEndOfFile:FeedbackHelper.kt$com.dangerfield.spyfall.util.FeedbackHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:Game.kt$com.dangerfield.spyfall.models.Game.kt</ID>
+        <ID>NewLineAtEndOfFile:GameRepository.kt$com.dangerfield.spyfall.api.GameRepository.kt</ID>
+        <ID>NewLineAtEndOfFile:GameService.kt$com.dangerfield.spyfall.api.GameService.kt</ID>
+        <ID>NewLineAtEndOfFile:GameViewModel.kt$com.dangerfield.spyfall.ui.game.GameViewModel.kt</ID>
+        <ID>NewLineAtEndOfFile:JoinGameViewModel.kt$com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel.kt</ID>
+        <ID>NewLineAtEndOfFile:KoinApp.kt$com.dangerfield.spyfall.di.KoinApp.kt</ID>
+        <ID>NewLineAtEndOfFile:LogHelper.kt$com.dangerfield.spyfall.util.LogHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:MainActivity.kt$com.dangerfield.spyfall.MainActivity.kt</ID>
+        <ID>NewLineAtEndOfFile:NewGameViewModel.kt$com.dangerfield.spyfall.ui.newGame.NewGameViewModel.kt</ID>
+        <ID>NewLineAtEndOfFile:PacksAdapter.kt$com.dangerfield.spyfall.ui.newGame.PacksAdapter.kt</ID>
+        <ID>NewLineAtEndOfFile:PreferencesHelper.kt$com.dangerfield.spyfall.util.PreferencesHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:Receiver.kt$com.dangerfield.spyfall.util.Receiver.kt</ID>
+        <ID>NewLineAtEndOfFile:RemoveUserTimer.kt$com.dangerfield.spyfall.util.RemoveUserTimer.kt</ID>
+        <ID>NewLineAtEndOfFile:Repository.kt$com.dangerfield.spyfall.api.Repository.kt</ID>
+        <ID>NewLineAtEndOfFile:Resource.kt$com.dangerfield.spyfall.api.Resource.kt</ID>
+        <ID>NewLineAtEndOfFile:ReviewHelper.kt$com.dangerfield.spyfall.util.ReviewHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:SavedSessionHelper.kt$com.dangerfield.spyfall.util.SavedSessionHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:SessionListenerHelper.kt$com.dangerfield.spyfall.util.SessionListenerHelper.kt</ID>
+        <ID>NewLineAtEndOfFile:SessionListenerService.kt$com.dangerfield.spyfall.util.SessionListenerService.kt</ID>
+        <ID>NewLineAtEndOfFile:SessionUpdater.kt$com.dangerfield.spyfall.util.SessionUpdater.kt</ID>
+        <ID>NewLineAtEndOfFile:StartViewModel.kt$com.dangerfield.spyfall.ui.start.StartViewModel.kt</ID>
+        <ID>NewLineAtEndOfFile:TesterSettingsFragment.kt$com.dangerfield.spyfall.ui.testerSettings.TesterSettingsFragment.kt</ID>
+        <ID>NewLineAtEndOfFile:ThemeChangeableActivity.kt$com.dangerfield.spyfall.util.ThemeChangeableActivity.kt</ID>
+        <ID>NewLineAtEndOfFile:ViewModelFactories.kt$com.dangerfield.spyfall.util.ViewModelFactories.kt</ID>
+        <ID>NewLineAtEndOfFile:WaitingViewModel.kt$com.dangerfield.spyfall.ui.waiting.WaitingViewModel.kt</ID>
+        <ID>NewLineAtEndOfFile:modules.kt$com.dangerfield.spyfall.di.modules.kt</ID>
+        <ID>PrintStackTrace:Connectivity.kt$Connectivity$e</ID>
+        <ID>ReturnCount:PreferencesHelper.kt$PreferencesHelper$override fun getSavedSession(): Session?</ID>
+        <ID>SwallowedException:DBCleaner.kt$DBCleaner$catch (e: Exception) { result.postValue(Resource.Error(error = "Failed to delete games")) }</ID>
+        <ID>SwallowedException:RemoveUserTimer.kt$RemoveUserTimer$catch (e: CancellationException) { }</ID>
+        <ID>SwallowedException:ReviewHelper.kt$ReviewHelper$catch (e: ActivityNotFoundException) { startActivity( context, Intent( Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + context.packageName) ), Bundle() ) }</ID>
+        <ID>SwallowedException:SavedSessionHelper.kt$SavedSessionHelper$catch (e: Exception) { if (!BuildConfig.DEBUG) LogHelper.logErrorWhenCheckingIfUserisAlreadyInGame() result.postValue(Resource.Error(error = Unit)) }</ID>
+        <ID>SwallowedException:SettingsFragment.kt$SettingsFragment$catch (e: ActivityNotFoundException) { Log.d("Tag", "Error launching to paid version") }</ID>
+        <ID>TooGenericExceptionCaught:DBCleaner.kt$DBCleaner$e: Exception</ID>
+        <ID>TooGenericExceptionCaught:FireStoreService.kt$FireStoreService$e : Exception</ID>
+        <ID>TooGenericExceptionCaught:Repository.kt$Repository$e: Exception</ID>
+        <ID>TooGenericExceptionCaught:SavedSessionHelper.kt$SavedSessionHelper$e: Exception</ID>
+        <ID>TooGenericExceptionThrown:Repository.kt$Repository$throw Exception("Empty Roles in assign roles function")</ID>
+        <ID>TooManyFunctions:Extensions.kt$com.dangerfield.spyfall.util.Extensions.kt</ID>
+        <ID>TooManyFunctions:FireStoreService.kt$FireStoreService : GameService</ID>
+        <ID>TooManyFunctions:GameFragment.kt$GameFragment : Fragment</ID>
+        <ID>TooManyFunctions:GameRepository.kt$GameRepository</ID>
+        <ID>TooManyFunctions:GameService.kt$GameService</ID>
+        <ID>TooManyFunctions:GameViewModel.kt$GameViewModel : ViewModelLifecycleObserver</ID>
+        <ID>TooManyFunctions:LogHelper.kt$LogHelper$Companion</ID>
+        <ID>TooManyFunctions:NewGameFragment.kt$NewGameFragment : Fragment</ID>
+        <ID>TooManyFunctions:Repository.kt$Repository : GameRepositorySessionUpdater</ID>
+        <ID>TooManyFunctions:StartFragment.kt$StartFragment : Fragment</ID>
+        <ID>TooManyFunctions:WaitingFragment.kt$WaitingFragment : FragmentNameChangeEventFirer</ID>
+        <ID>TooManyFunctions:WaitingViewModel.kt$WaitingViewModel : ViewModel</ID>
+        <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$currentSession: Session</ID>
+        <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$it: Exception</ID>
+        <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$newName: String</ID>
+        <ID>UtilityClassWithPublicConstructor:LogHelper.kt$LogHelper</ID>
+        <ID>UtilityClassWithPublicConstructor:UIHelper.kt$UIHelper</ID>
+        <ID>VariableNaming:Constants.kt$Constants$val games_prod = "games"</ID>
+        <ID>VariableNaming:Constants.kt$Constants$val games_test = "games_test"</ID>
+        <ID>VariableNaming:GameViewsAdapter.kt$GameViewsAdapter.ViewHolder$val first_icon = view.ic_first</ID>
+        <ID>VariableNaming:GameViewsAdapter.kt$GameViewsAdapter.ViewHolder$val first_text = view.tv_first</ID>
+        <ID>WildcardImport:ChangeNameHelper.kt$import com.dangerfield.spyfall.util.*</ID>
+        <ID>WildcardImport:ColorChangeAdapter.kt$import android.view.*</ID>
+        <ID>WildcardImport:Extensions.kt$import kotlinx.coroutines.*</ID>
+        <ID>WildcardImport:GameFragment.kt$import com.dangerfield.spyfall.util.*</ID>
+        <ID>WildcardImport:GameViewModel.kt$import androidx.lifecycle.*</ID>
+        <ID>WildcardImport:JoinGameFragment.kt$import com.dangerfield.spyfall.util.*</ID>
+        <ID>WildcardImport:KoinApp.kt$import org.koin.core.logger.Level.*</ID>
+        <ID>WildcardImport:NewGameFragment.kt$import com.dangerfield.spyfall.util.*</ID>
+        <ID>WildcardImport:RemoveUserTimer.kt$import kotlinx.coroutines.*</ID>
+        <ID>WildcardImport:Repository.kt$import com.dangerfield.spyfall.models.*</ID>
+        <ID>WildcardImport:Repository.kt$import com.dangerfield.spyfall.util.*</ID>
+        <ID>WildcardImport:Repository.kt$import kotlinx.coroutines.*</ID>
+        <ID>WildcardImport:WaitingFragment.kt$import com.dangerfield.spyfall.util.*</ID>
+        <ID>WildcardImport:modules.kt$import com.dangerfield.spyfall.api.*</ID>
+        <ID>WildcardImport:modules.kt$import com.dangerfield.spyfall.util.*</ID>
+    </CurrentIssues>
+</SmellBaseline>

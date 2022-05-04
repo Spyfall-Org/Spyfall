@@ -4,7 +4,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
-
+apply plugin: 'io.gitlab.arturbosch.detekt'
 apply from: 'checkstyle.gradle'
 
 android {
@@ -61,6 +61,16 @@ android {
     }
 }
 
+detekt {
+    toolVersion = "1.20.0"
+    basePath = projectDir
+    reports {
+        html { enabled = true }
+        txt { enabled = false }
+        xml { enabled = false }
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.0-alpha03'
@@ -79,7 +89,6 @@ dependencies {
 
     //ad mob
     implementation 'com.google.android.gms:play-services-ads:20.6.0'
-
 
     //firebase libraries
     implementation 'com.google.firebase:firebase-database:20.0.4'
