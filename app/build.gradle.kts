@@ -5,7 +5,6 @@ plugins {
     id("kotlin-android-extensions")
     id("com.google.gms.google-services")
     id("kotlin-kapt")
-
 }
 
 apply(from = "checkstyle.gradle")
