@@ -12,19 +12,24 @@ apply(from = "detekt.gradle")
 
 android {
 
-    compileSdkVersion(31)
+    compileSdk = ConfigData.compileSdkVersion
     defaultConfig {
         applicationId = "com.dangerfield.spyfall"
-        minSdkVersion(21)
-        targetSdkVersion(31)
-        versionCode = 10
-        versionName = "1.2.1"
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
+        versionCode = ConfigData.versionCode
+        versionName = ConfigData.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         named("release") {
             isMinifyEnabled = false
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
+            setProguardFiles(
+                listOf(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            )
         }
         named("debug") {
             versionNameSuffix = "-DEBUG"
@@ -63,54 +68,54 @@ android {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("androidx.appcompat:appcompat:1.6.0-alpha03")
-    implementation("androidx.core:core-ktx:1.9.0-alpha03")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-beta01")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test:runner:1.5.0-alpha03")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0-alpha06")
-    implementation("androidx.recyclerview:recyclerview:1.3.0-alpha02")
-    implementation("android.arch.navigation:navigation-fragment:1.0.0")
-    implementation("android.arch.navigation:navigation-ui:1.0.0")
-    implementation("androidx.fragment:fragment-ktx:1.4.1")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.legacy.support)
+
+    implementation(libs.androidx.lifecycle.ext)
+    implementation(libs.androidx.lifecycle.vm)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.arch.fragment.navigation)
+    implementation(libs.arch.navigation.ui)
+    implementation(libs.androidx.fragmnet)
 
     //ad mob
-    implementation("com.google.android.gms:play-services-ads:20.6.0")
+    implementation(libs.google.play.services)
 
     //firebase libraries
-    implementation("com.google.firebase:firebase-database:20.0.4")
-    implementation("com.google.firebase:firebase-firestore:24.1.1")
-    implementation("com.google.firebase:firebase-storage:20.0.1")
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
 
-    //that sweet sweet kotlin coroutines library
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
+    //  that sweet sweet kotlin coroutines library
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.play.servies)
 
-    //lottie for animations
-    implementation("com.airbnb.android:lottie:3.7.0")
+    // lottie for animations
+    implementation(libs.lottie)
 
-    //Dependency Injection
-    implementation("io.insert-koin:koin-core:3.1.6")
-    implementation("io.insert-koin:koin-android:3.1.6")
+    // Dependency Injection
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 
-    implementation("com.google.dagger:hilt-android:2.40.5")
-    kapt("com.google.dagger:hilt-android-compiler:2.40.5")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     //testing
     // Koin testing tools
-    testImplementation("io.insert-koin:koin-test:3.1.6")
-    // Needed JUnit version
-    testImplementation("io.insert-koin:koin-test-junit4:3.1.6")
+    testImplementation(libs.koin.testing)
+    //Needed JUnit version
+    testImplementation(libs.koin.junit)
 
-    testImplementation("androidx.test.ext:junit-ktx:1.1.3")
-    testImplementation("androidx.test:core-ktx:1.4.0")
-    testImplementation("org.robolectric:robolectric:4.6.1")
-    testImplementation("org.mockito:mockito-core:3.9.0")
-    testImplementation("androidx.arch.core:core-testing:2.1.0")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+    testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.roboelectric)
+    testImplementation(libs.mockito)
+    testImplementation(libs.androidx.test.arch.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.coroutines.test)
 }

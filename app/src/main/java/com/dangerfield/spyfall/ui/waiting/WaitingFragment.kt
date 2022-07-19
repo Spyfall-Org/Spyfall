@@ -233,7 +233,7 @@ class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFire
     }
 
     private fun configureLayoutManagerAndRecyclerView() {
-        rv_player_list_waiting.layoutManager = LinearLayoutManager(context)
+        rv_player_list_waiting.layoutManager = LinearLayoutManager(requireContext())
         rv_player_list_waiting.adapter = adapter
     }
 
