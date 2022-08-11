@@ -7,18 +7,15 @@ plugins {
     id("kotlin-kapt")
 }
 
-apply(from = "checkstyle.gradle")
-apply(from = "detekt.gradle")
-
 android {
 
-    compileSdk = ConfigData.compileSdkVersion
+    compileSdk = AppVersions.compileSdkVersion
     defaultConfig {
         applicationId = "com.dangerfield.spyfall"
-        minSdk = ConfigData.minSdkVersion
-        targetSdk = ConfigData.targetSdkVersion
-        versionCode = ConfigData.versionCode
-        versionName = ConfigData.versionName
+        minSdk = AppVersions.minSdkVersion
+        targetSdk = AppVersions.targetSdkVersion
+        versionCode = AppVersions.versionCode
+        versionName = AppVersions.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
