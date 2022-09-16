@@ -1,5 +1,7 @@
 [versions]
 
+#plugins
+detekt = "1.21.0"
 
 [libraries]
 # AndroidX

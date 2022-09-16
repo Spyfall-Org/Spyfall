@@ -9,3 +9,21 @@ fun Project.getLibVersion(name: String): String = extensions.getByType<VersionCa
     .named("libs")
     .findVersion(name).get()
     .requiredVersion
+
+
+
+/**
+ * Get array of source path for all modules
+ */
+fun Project.getModuleSources(vararg excludeModules: String = emptyArray()): Array<String> {
+    val sources = mutableListOf<String>()
+
+    rootProject.subprojects.forEach { project ->
+        if (!excludeModules.contains(project.name)) {
+            val path = project.path.substring(1).replace(":", "/")
+            sources.add("$path/src")
+        }
+    }
+
+    return sources.toTypedArray()
+}

@@ -7,3 +7,7 @@ plugins {
 repositories {
     mavenCentral()
 }
+
+dependencies {
+    implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${libs.versions.detekt.get()}")
+}

@@ -1,3 +1,4 @@
+import extension.script
 
 buildscript {
     repositories {
@@ -17,6 +18,7 @@ buildscript {
     }
 }
 
+
 allprojects {
     repositories {
         google()
@@ -24,6 +26,7 @@ allprojects {
         maven("https://maven.fabric.io/public")
     }
 }
+
 
 tasks.register<Delete>("clean").configure {
     delete(rootProject.buildDir)
