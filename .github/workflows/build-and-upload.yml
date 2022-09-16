@@ -88,19 +88,17 @@ jobs:
         run: ./gradlew test --stacktrace
 
       - name: Upload Reports
-        needs: Unit tests
         uses: actions/upload-artifact@v2
         with:
           name: Test-Reports
-          path: app/build/reports
+          path: app/build/reports/tests/testFreeDebugUnitTest
         if: always()
 
       - name: Test Report
-        needs: Upload Reports
         uses: dorny/test-reporter@v1
         if: always()
         with:
           name: JUnit Tests
-          path: app/build/reports
+          path: app/build/reports/tests/testFreeDebugUnitTest
           reporter: java-junit
           fail-on-error: false
