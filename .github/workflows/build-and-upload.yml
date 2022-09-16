@@ -11,12 +11,13 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+#--------------------------------------------------------------------------------------------------#
+
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - uses: actions/cache@v2
         with:
@@ -33,6 +34,9 @@ jobs:
         with:
           java-version: 11
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
       - name: Build the app
         run: ./gradlew assembleDebug
 
@@ -40,7 +44,8 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: debug apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/free/debug/app-free-debug.apk
+  #--------------------------------------------------------------------------------------------------#
 
   lint:
     runs-on: [ ubuntu-latest ]
@@ -50,18 +55,24 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
       - name: Detekt All
-        run: ./gradlew detekt
+        run: ./gradlew detektAll
+
       - name: Checkstyle
-        run: ./gradlew checkstyle
+        run: ./gradlew checkstyleAll
+  #--------------------------------------------------------------------------------------------------#
 
   test:
     runs-on: macos-latest
     needs: build
     strategy:
       matrix:
-        api-level: [21, 23, 29]
-        target: [default]
+        api-level: [ 21, 23, 29 ]
+        target: [ default ]
 
     steps:
       - name: Checkout the code
@@ -85,18 +96,18 @@ jobs:
       - name: Unit tests
         run: ./gradlew test --stacktrace
 
-      - name: Instrumentation Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: x86
-          profile: Nexus 6
-          script: ./gradlew connectedCheck --stacktrace
-
       - name: Upload Reports
         uses: actions/upload-artifact@v2
         with:
           name: Test-Reports
           path: app/build/reports
         if: always()
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()# run this step even if previous step failed
+        with:
+          name: JUnit Tests
+          path: app/build/reports
+          reporter: java-junit# Format of test results
+          fail-on-error: false
