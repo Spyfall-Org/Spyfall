@@ -1,4 +1,4 @@
-name: Check PR
+name: Pull Request Check
 
 on:
   # Triggers the workflow on every pull request to master branch
@@ -44,7 +44,7 @@ jobs:
           name: debug apk
           path: app/build/outputs/apk/free/debug/app-free-debug.apk
 
-  lint:
+  style:
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
@@ -64,11 +64,6 @@ jobs:
 
   test:
     runs-on: macos-latest
-    needs: build
-    strategy:
-      matrix:
-        api-level: [ 21, 23, 29 ]
-        target: [ default ]
 
     steps:
       - name: Checkout the code
@@ -105,5 +100,5 @@ jobs:
         with:
           name: JUnit Tests
           path: app/build/reports
-          reporter: java-junit# Format of test results
+          reporter: java-junit
           fail-on-error: false
