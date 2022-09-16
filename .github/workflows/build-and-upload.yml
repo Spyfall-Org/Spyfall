@@ -101,7 +101,7 @@ jobs:
 
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: always()# run this step even if previous step failed
+        if: always()
         with:
           name: JUnit Tests
           path: app/build/reports
