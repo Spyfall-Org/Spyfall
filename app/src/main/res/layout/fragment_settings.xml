@@ -181,5 +181,4 @@
             app:layout_constraintStart_toStartOf="@+id/tv_ads"
             app:layout_constraintTop_toTopOf="@+id/btn_feedback" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
