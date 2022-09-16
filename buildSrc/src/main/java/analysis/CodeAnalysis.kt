@@ -1,4 +1,4 @@
-package config
+package analysis
 
 internal object CodeAnalysis {
 

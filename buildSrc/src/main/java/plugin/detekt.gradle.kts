@@ -1,6 +1,6 @@
-package script
+package plugin
 
-import config.CodeAnalysis
+import analysis.CodeAnalysis
 import extension.detektVersion
 import extension.getModuleSources
 import io.gitlab.arturbosch.detekt.Detekt

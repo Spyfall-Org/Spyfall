@@ -19,7 +19,8 @@ buildscript {
 }
 
 plugins {
-    id("script.detekt")
+    plugin.detekt
+    plugin.checkstyle
 }
 
 allprojects {
@@ -29,7 +30,6 @@ allprojects {
         maven("https://maven.fabric.io/public")
     }
 }
-
 
 tasks.register<Delete>("clean").configure {
     delete(rootProject.buildDir)
