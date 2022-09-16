@@ -18,6 +18,9 @@ buildscript {
     }
 }
 
+plugins {
+    id("script.detekt")
+}
 
 allprojects {
     repositories {

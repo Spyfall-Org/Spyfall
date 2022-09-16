@@ -12,7 +12,7 @@ plugins {
 detekt {
     toolVersion = detektVersion
     config = files("$rootDir/config/detekt/detekt.yml")
-    baseline = file("$rootDir/config/detekt/baseline.xml")
+    baseline = file("$rootDir/config/detekt/detekt-baseline.xml")
     autoCorrect = true
     parallel = true
 
@@ -28,7 +28,7 @@ dependencies {
 
 tasks.withType<Detekt>().configureEach {
     config.from(files("$rootDir/config/detekt/detekt.yml"))
-    baseline.set(file("$rootDir/config/detekt/baseline.xml"))
+    baseline.set(file("$rootDir/config/detekt/detekt-baseline.xml"))
     autoCorrect = true
     jvmTarget = "1.8"
 
