@@ -26,15 +26,15 @@ fi
 
 # prompt for module type
 PS3="Please select module type: "
-options=("Platform Library" "Feature Library" "Feature" "Quit")
+options=("Library" "Feature" "Quit")
 select option in "${options[@]}"; do
     case $REPLY in
         1)
             package="dangerfield.$module"
             break
             ;;
-        [2-3])
-            package="com.dangerfield.spyfall.$module"
+        [2])
+            package="com.dangerfield.spyfall.features.$module"
             break
             ;;
         4)
