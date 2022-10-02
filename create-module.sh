@@ -5,7 +5,7 @@ wd=$(pwd)
 
 # prompt for module info
 if [ -z "$module" ]; then
-    read -r -p "Enter module name: " module
+    read -r -p "Enter module name (in camelCase) : " module
 fi
 
 module=${module//:/}
@@ -24,10 +24,13 @@ select option in "${options[@]}"; do
     case $REPLY in
         1)
             package="spyfallx.$module"
+            safepackage="spyfallx.$safename"
             break
             ;;
         2)
+            parent="features"
             package="com.dangerfield.spyfall.$module"
+            safepackage="com.dangerfield.spyfall.$safename"
             path="features/$path"
             break
             ;;
@@ -44,12 +47,12 @@ done
 # move example dir and rename
 cp -r example "$path"
 cd "$path" || exit
-mv example.gradle.kts "$safename".gradle.kts
+mv example.gradle.kts build.gradle.kts
 
 # create manifest and src path
 
-printf "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest package=\"%s\" />\n" "$safename" > src/main/AndroidManifest.xml
-mkdir -p "src/main/java/${safename//.//}"
+printf "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest package=\"%s\" />\n" "$safepackage" > src/main/AndroidManifest.xml
+mkdir -p "src/main/java/$safepackage"
 
 # update README
 parentOrEmpty=$([ -z "$parent" ] && echo "" || echo " $parent")
@@ -59,16 +62,19 @@ echo "$(
 )" > README.md
 
 # update project settings
-projectPath=$([ -z "$parent" ] && echo ":$module" || echo " :$parent:$module")
+projectPath=$([ -z "$parent" ] && echo ":$module" || echo "$parent:$module")
 cd "$wd" && echo "$(
     printf "include(\"%s\")\n" "$projectPath"
     cat settings.gradle.kts
 )" > settings.gradle.kts
 
 # notify of completion
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+
 echo ""
-echo "THE \"$name\" MODULE HAS BEEN CREATED!"
+echo -e ${Green}"THE \"$name\" MODULE HAS BEEN CREATED!"
 echo ""
-echo "TODO:"
-echo "* ORGANIZE AND ALPHABETIZE settings.gradle.kts"
-echo "* UPDATE THE INFO IN $path/README.md"
+echo -e ${Red}"TODO:"
+echo -e ${Red}"* ORGANIZE AND ALPHABETIZE settings.gradle.kts"
+echo -e ${Red}"* UPDATE THE INFO IN $path/README.md"

@@ -14,10 +14,14 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-ui" />
-            <option value="$PROJECT_DIR$/settings-api" />
-            <option value="$PROJECT_DIR$/settings-impl" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/settings" />
+            <option value="$PROJECT_DIR$/features/settingsApi" />
+            <option value="$PROJECT_DIR$/features/waiting" />
+            <option value="$PROJECT_DIR$/features/waitingApi" />
+            <option value="$PROJECT_DIR$/features/welcome" />
+            <option value="$PROJECT_DIR$/features/welcomeApi" />
           </set>
         </option>
       </GradleProjectSettings>
