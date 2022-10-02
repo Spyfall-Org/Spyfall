@@ -1,17 +1,13 @@
 plugins {
     id("kotlin-android")
-    id("com.android.application")
+    id("com.android.library")
 }
 
 android {
-
     compileSdk = AppVersions.compileSdkVersion
     defaultConfig {
-        applicationId = "com.dangerfield.spyfall"
         minSdk = AppVersions.minSdkVersion
         targetSdk = AppVersions.targetSdkVersion
-        versionCode = AppVersions.versionCode
-        versionName = AppVersions.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -26,10 +22,6 @@ android {
     }
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
