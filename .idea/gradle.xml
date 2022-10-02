@@ -16,6 +16,8 @@
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-ui" />
+            <option value="$PROJECT_DIR$/settings-api" />
+            <option value="$PROJECT_DIR$/settings-impl" />
           </set>
         </option>
       </GradleProjectSettings>
