@@ -29,5 +29,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.fragmnet)
 
+    // Dependency Injection
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
     implementation(getModule(":features:settingsApi"))
 }

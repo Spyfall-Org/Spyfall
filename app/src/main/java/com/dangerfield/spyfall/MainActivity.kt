@@ -9,7 +9,7 @@ class MainActivity : ThemeChangeableActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_2)
     }
 
     override fun onSupportNavigateUp(): Boolean {

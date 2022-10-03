@@ -57,7 +57,7 @@
     <fragment android:id="@+id/gameFragment" android:name="com.dangerfield.spyfall.ui.game.GameFragment"
               android:label="GameFragment"/>
     <fragment android:id="@+id/settingsFragment" android:name="com.dangerfield.spyfall.ui.settings.SettingsFragment"
-              android:label="fragment_settings" tools:layout="@layout/fragment_settings">
+              android:label="fragment_settings" tools:layout="@layout/fragment_settings2">
         <action
                 android:id="@+id/action_settingsFragment_to_testerSettingsFragment"
                 app:destination="@id/testerSettingsFragment" />

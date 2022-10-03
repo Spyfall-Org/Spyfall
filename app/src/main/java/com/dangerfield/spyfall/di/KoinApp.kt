@@ -19,7 +19,7 @@ class KoinApp : Application() {
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) ERROR else NONE)
             androidContext(this@KoinApp)
-            modules(mainModule)
+            modules(spyfallModules)
         }
 
         setupFireStoreSettings()

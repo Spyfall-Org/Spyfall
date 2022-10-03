@@ -1,6 +1,8 @@
 package com.dangerfield.spyfall.di
 
 import com.dangerfield.spyfall.api.*
+import com.dangerfield.spyfall.di.modules.settingsModule
+import com.dangerfield.spyfall.di.modules.welcomeModule
 import com.dangerfield.spyfall.ui.game.GameViewModel
 import com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel
 import com.dangerfield.spyfall.models.Session
@@ -13,6 +15,7 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+
 
 val mainModule = module {
 
@@ -37,3 +40,9 @@ val mainModule = module {
     factory { DBCleaner(get(), get()) }
 
 }
+
+val spyfallModules = listOf(
+    mainModule,
+    settingsModule,
+    welcomeModule
+    )

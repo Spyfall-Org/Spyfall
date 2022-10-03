@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.dialog_custom.*
 import kotlinx.android.synthetic.main.dialog_custom.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 
 class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
 

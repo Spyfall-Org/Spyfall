@@ -115,4 +115,11 @@ dependencies {
     testImplementation(libs.androidx.test.arch.core)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.coroutines.test)
+
+    implementation(getModule(":features:settingsApi"))
+    implementation(getModule(":features:settings"))
+    implementation(getModule(":features:welcome"))
+    implementation(getModule(":features:welcomeApi"))
+
+
 }
