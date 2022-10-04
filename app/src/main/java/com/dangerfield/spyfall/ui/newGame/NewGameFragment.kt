@@ -157,7 +157,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
     private fun changeAccent() {
         btn_create.background.setTint(UIHelper.accentColor)
 
-        val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
+        val drawable = resources.getDrawable(R.drawable.ic_info).mutate()
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
         btn_packs.setImageDrawable(drawable)
 

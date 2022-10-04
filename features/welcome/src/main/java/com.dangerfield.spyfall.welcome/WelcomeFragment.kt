@@ -16,21 +16,7 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.btn_settings).let {
-            it.setOnClickListener {
-                navigateToSettings()
-            }
-        }
-    }
 
-    private fun navigateToSettings() {
-        requireActivity().supportFragmentManager.commit {
-            add(
-                R.id.content,
-                settingsFragmentFactory.newInstance(),
-            )
-            addToBackStack(null)
-        }
     }
 
     companion object : WelcomeFragmentFactory {

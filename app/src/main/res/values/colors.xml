@@ -2,18 +2,14 @@
 <resources>
 
     <!--used for every views background -->
-    <color name="colorBackground">#FCFCFC</color>
+    <color name="colorBackground">?colorAccent</color>
     <color name="buttonColor">@color/colorWhite</color>
     <color name="colorLightText">#EE424242</color>
     <color name="colorTheme">#000000</color>
 
-
-
-
     <color name="colorPrimary">#747474</color>
     <color name="colorPrimaryDark">#FCFCFC</color>
-    <color name="colorAccent">#D65656</color>
-
+    <color name="colorAccent">?accentColor</color>
 
     <!--used for text views-->
     <color name="colorTextBackground">#EFEFEF</color>
@@ -26,7 +22,5 @@
     <color name="colorGreen">#EE5DC074</color>
     <color name="colorYellow">#EED3AF38</color>
     <color name="colorPink">#C388B3</color>
-
-
 
 </resources>

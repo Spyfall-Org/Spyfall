@@ -143,7 +143,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
     private fun updateTheme() {
         btn_join_game.background.setTint(UIHelper.accentColor)
 
-        val drawable = resources.getDrawable(R.drawable.ic_rules).mutate()
+        val drawable = resources.getDrawable(R.drawable.ic_info).mutate()
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
         btn_rules.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         btn_rules.setTextColor(UIHelper.accentColor)

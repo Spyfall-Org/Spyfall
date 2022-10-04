@@ -29,7 +29,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="24dp"
-            android:background="@drawable/background_button_white"
+            android:background="@drawable/background_button_primary"
             android:text="@string/negative_action_standard"
             android:textAllCaps="false"
             android:textColor="?android:attr/textColorPrimary"

@@ -29,15 +29,5 @@ dependencies {
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.fragmnet)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
-
-    // Dependency Injection
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
-
-    implementation(getModule("core"))
-    implementation(getModule("coreUi"))
-    implementation(getModule("features:welcomeApi"))
-    implementation(getModule("features:settingsApi"))
 }

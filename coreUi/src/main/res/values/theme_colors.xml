@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--
+In this file we can define names for colors we want to define for each theme.
+ <attr name="buttonPrimaryBgStartColor" format="reference|color"/>
+ -->
+
+    <attr name="accentColor" format="reference|color"/>
+
+    <!--    for ui elements meant to be shown with the accent colors as a background-->
+    <attr name="onAccentColor" format="reference|color"/>
+
+    <!--    for ui elements meant to be shown on top of the primary color-->
+    <attr name="onPrimaryColor" format="reference|color"/>
+
+</resources>

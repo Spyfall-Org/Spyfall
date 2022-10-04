@@ -28,7 +28,7 @@
                 android:name=".MainActivity"
                 android:configChanges="uiMode"
                 android:screenOrientation="portrait"
-                android:theme="@style/AppTheme"
+                android:theme="@style/GreenTheme"
                 android:windowSoftInputMode="adjustResize"
                 android:exported="true">
             <intent-filter>

@@ -81,7 +81,7 @@
                     android:layout_marginStart="42dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="42dp"
-                    android:background="@drawable/background_button_white"
+                    android:background="@drawable/background_button_primary"
                     android:text="@string/string_btn_leave_game"
                     android:textAllCaps="false"
                     android:textColor="?android:attr/textColorPrimary"

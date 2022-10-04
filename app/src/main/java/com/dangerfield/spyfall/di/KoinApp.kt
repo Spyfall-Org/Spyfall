@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.di
 
 import android.app.Application
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.dangerfield.spyfall.di.modules.spyfallModules
 import com.dangerfield.spyfall.util.RemoveUserTimer
 import com.google.firebase.firestore.BuildConfig
 import com.google.firebase.firestore.FirebaseFirestore

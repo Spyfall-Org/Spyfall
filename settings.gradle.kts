@@ -1,7 +1,8 @@
+include(":core")
 enableFeaturePreview("VERSION_CATALOGS")
 
 include(":app")
-include(":core-ui")
+include(":coreUi")
 include("features:waitingApi")
 include("features:waiting")
 include("features:welcomeApi")
