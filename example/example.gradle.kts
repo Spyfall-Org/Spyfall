@@ -20,7 +20,10 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         freeCompilerArgs = listOf("-Xjvm-default=enable")
     }
-}
+
+    buildFeatures {
+        viewBinding = true
+    }}
 
 
 dependencies {
@@ -28,6 +31,5 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
-    implementation(libs.androidx.fragmnet)
-
+    implementation(libs.androidx.fragment.ktx)
 }

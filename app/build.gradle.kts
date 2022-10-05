@@ -78,7 +78,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.arch.fragment.navigation)
     implementation(libs.arch.navigation.ui)
-    implementation(libs.androidx.fragmnet)
+    implementation(libs.androidx.fragment.ktx)
 
     //ad mob
     implementation(libs.google.play.services)
