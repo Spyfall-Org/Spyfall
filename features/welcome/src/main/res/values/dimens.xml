@@ -2,4 +2,7 @@
 <resources>
     <dimen name="settings_ic_width">30dp</dimen>
     <dimen name="settings_icon_height">30dp</dimen>
+    <dimen name="welcome_text_large">62sp</dimen>
+    <dimen name="welcome_text_small">36sp</dimen>
+    <dimen name="rules_margin_bottom">32dp</dimen>
 </resources>
