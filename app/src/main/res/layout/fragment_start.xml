@@ -80,7 +80,7 @@
             android:background="@drawable/background_button_accent"
             android:text="@string/string_join_game"
             android:textAllCaps="false"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/btn_rules"
             app:layout_constraintEnd_toEndOf="parent"

@@ -62,7 +62,7 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlaye
             view.setOnClickListener {
 
                 if(text.paintFlags != Paint.STRIKE_THRU_TEXT_FLAG){
-                    text.setTextColor(view.context.resources.getColor(R.color.colorLightGrey))
+                    text.setTextColor(view.context.resources.getColor(R.color.grey100))
                     text.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 }else{
                     text.setTextColor(view.context.resources.getColor(R.color.colorLightText))

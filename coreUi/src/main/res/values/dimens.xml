@@ -4,4 +4,8 @@
     <dimen name="BubbleButtonTextSize">18sp</dimen>
     <dimen name="BubbleButtonHeight">50dp</dimen>
 
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+
 </resources>

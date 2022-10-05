@@ -128,7 +128,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="42dp"
                 app:layout_constraintHorizontal_bias="0.457"
-                android:textColor="@color/colorWhite" android:id="@+id/btn_create"
+                android:textColor="@color/white" android:id="@+id/btn_create"
                 app:layout_constraintTop_toBottomOf="@+id/textView5" android:layout_marginTop="32dp"
                 android:textAllCaps="false" android:textSize="18sp" android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>

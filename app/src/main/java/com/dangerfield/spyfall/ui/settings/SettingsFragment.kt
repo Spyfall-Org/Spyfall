@@ -189,7 +189,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         listOf(iv_theme, ic_about, ic_ads, iv_tester_settings, iv_feedback).forEach {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(it.drawable),
-                ContextCompat.getColor(requireContext(), R.color.colorTheme)
+                ContextCompat.getColor(requireContext(), R.color.black)
             )
         }
     }

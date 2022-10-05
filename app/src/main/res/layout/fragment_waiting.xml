@@ -68,7 +68,7 @@
                     android:background="@drawable/background_button_accent"
                     android:text="@string/string_btn_start_game"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="@+id/btn_leave_game"
                     app:layout_constraintStart_toStartOf="@+id/btn_leave_game"

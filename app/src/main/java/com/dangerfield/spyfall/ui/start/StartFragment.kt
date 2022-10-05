@@ -150,7 +150,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
 
         DrawableCompat.setTint(
             DrawableCompat.wrap(btn_settings.drawable),
-            ContextCompat.getColor(requireContext(), R.color.colorTheme)
+            ContextCompat.getColor(requireContext(), R.color.black)
         )
     }
 }
