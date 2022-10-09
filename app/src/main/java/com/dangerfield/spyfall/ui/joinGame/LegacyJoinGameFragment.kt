@@ -3,21 +3,21 @@ package com.dangerfield.spyfall.ui.joinGame
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
-import com.dangerfield.spyfall.ui.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.waiting.LegacyWaitingFragment
 import com.dangerfield.spyfall.util.*
-import kotlinx.android.synthetic.main.fragment_join_game.*
+import kotlinx.android.synthetic.main.fragment_join_game_legacy.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
+class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
 
     private val joinGameViewModel: JoinGameViewModel by viewModel()
     private val navController: NavController by lazy { NavHostFragment.findNavController(this) }
@@ -71,7 +71,7 @@ class JoinGameFragment : Fragment(R.layout.fragment_join_game) {
     private fun handleSuccessfulJoinGame(currentSession: Session) {
         showLoading(false)
         val bundle = Bundle()
-        bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
+        bundle.putParcelable(LegacyWaitingFragment.SESSION_KEY, currentSession)
         if (navController.currentDestination?.id != R.id.joinGameFragment) return
         navController.navigate(R.id.action_joinGameFragment_to_waitingFragment, bundle)
     }

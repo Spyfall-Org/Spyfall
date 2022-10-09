@@ -15,16 +15,13 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.api.Constants
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.ui.game.StartGameError
 import com.dangerfield.spyfall.util.*
 import com.google.android.gms.ads.AdRequest
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_waiting.*
-import org.koin.android.ext.android.inject
+import kotlinx.android.synthetic.main.fragment_waiting_legacy.*
 
-class WaitingFragment : Fragment(R.layout.fragment_waiting), NameChangeEventFirer {
+class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameChangeEventFirer {
 
     private val changeNameHelper by lazy { ChangeNameHelper(this) }
     private val navigationBundle = Bundle()

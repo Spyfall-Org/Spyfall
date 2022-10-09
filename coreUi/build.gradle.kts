@@ -34,4 +34,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.appcompat)
+
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 }

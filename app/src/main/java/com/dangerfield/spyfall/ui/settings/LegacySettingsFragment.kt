@@ -28,10 +28,10 @@ import com.dangerfield.spyfall.util.UIHelper
 import com.dangerfield.spyfall.util.goneIf
 import kotlinx.android.synthetic.main.dialog_custom.*
 import kotlinx.android.synthetic.main.dialog_custom.view.*
-import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.fragment_settings_legacy.*
 import org.koin.android.ext.android.inject
 
-class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
+class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
 
     override fun onColorChange(colorButton: ColorButton) {
         val anim = ValueAnimator.ofArgb(UIHelper.accentColor, colorButton.color)
@@ -61,7 +61,7 @@ class SettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         colors.add(ColorButton(Color.WHITE,false))
         colorChangeAdapter = ColorChangeAdapter(colors, context, this)
 
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        return inflater.inflate(R.layout.fragment_settings_legacy, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

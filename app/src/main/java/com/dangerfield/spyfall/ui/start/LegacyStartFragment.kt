@@ -14,16 +14,16 @@ import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
 import com.dangerfield.spyfall.ui.waiting.LeaveGameError
-import com.dangerfield.spyfall.ui.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.waiting.LegacyWaitingFragment
 import com.dangerfield.spyfall.util.EventObserver
 import com.dangerfield.spyfall.util.LogHelper
 import com.dangerfield.spyfall.util.ReviewHelper
 import com.dangerfield.spyfall.util.UIHelper
-import kotlinx.android.synthetic.main.fragment_start.*
+import kotlinx.android.synthetic.main.fragment_start_legacy.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class StartFragment : Fragment(R.layout.fragment_start) {
+class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
 
     private val reviewHelper: ReviewHelper by inject()
     private val startViewModel: StartViewModel by viewModel()
@@ -135,8 +135,8 @@ class StartFragment : Fragment(R.layout.fragment_start) {
 
     private fun navigateToWaitingScreen(currentSession: Session, started: Boolean) {
         val bundle = Bundle()
-        bundle.putBoolean(WaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME, started)
-        bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
+        bundle.putBoolean(LegacyWaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME, started)
+        bundle.putParcelable(LegacyWaitingFragment.SESSION_KEY, currentSession)
         navController.navigate(R.id.action_startFragment_to_waitingFragment, bundle)
     }
 

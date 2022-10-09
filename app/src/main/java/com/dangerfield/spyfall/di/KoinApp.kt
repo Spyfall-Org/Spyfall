@@ -2,8 +2,10 @@ package com.dangerfield.spyfall.di
 
 import android.app.Application
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.dangerfield.spyfall.di.modules.legacySpyfallModules
 import com.dangerfield.spyfall.di.modules.spyfallModules
 import com.dangerfield.spyfall.util.RemoveUserTimer
+import com.dangerfield.spyfall.util.isLegacyBuild
 import com.google.firebase.firestore.BuildConfig
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -20,7 +22,7 @@ class KoinApp : Application() {
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) ERROR else NONE)
             androidContext(this@KoinApp)
-            modules(spyfallModules)
+            modules(if(isLegacyBuild()) legacySpyfallModules else spyfallModules)
         }
 
         setupFireStoreSettings()

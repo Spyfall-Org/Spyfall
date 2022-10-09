@@ -31,6 +31,13 @@ android {
         named("debug") {
             versionNameSuffix = "-DEBUG"
         }
+
+        create("legacy") {
+            signingConfig = signingConfigs.getByName("debug")
+            versionNameSuffix = "-LEGACY"
+            matchingFallbacks += "debug"
+            matchingFallbacks += "release"
+        }
     }
 
     flavorDimensions("version")

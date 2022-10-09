@@ -1,7 +1,11 @@
 package com.dangerfield.spyfall.di.modules
 
+val legacySpyfallModules = listOf(
+    mainModule
+)
+
 val spyfallModules = listOf(
-    mainModule,
+    migrationModule,
     settingsModule,
     welcomeModule
 )

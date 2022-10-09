@@ -1,15 +1,24 @@
 package com.dangerfield.spyfall
 
 import android.os.Bundle
-import android.util.Log
 import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.util.ThemeChangeableActivity
+import com.dangerfield.spyfall.util.isLegacyBuild
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.activityScope
+import org.koin.core.scope.Scope
 
-class MainActivity : ThemeChangeableActivity(){
+class MainActivity : ThemeChangeableActivity(), AndroidScopeComponent{
+
+    override val scope: Scope by activityScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_2)
+        if(isLegacyBuild()) {
+            setContentView(R.layout.activity_main_legacy)
+        } else {
+            setContentView(R.layout.activity_main)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

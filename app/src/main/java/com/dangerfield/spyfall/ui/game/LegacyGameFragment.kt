@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_game.*
 import java.util.*
 import kotlin.collections.ArrayList
 import androidx.activity.OnBackPressedCallback
@@ -21,11 +20,12 @@ import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Game
 import com.dangerfield.spyfall.models.Player
 import com.dangerfield.spyfall.ui.waiting.LeaveGameError
-import com.dangerfield.spyfall.ui.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.waiting.LegacyWaitingFragment
 import com.dangerfield.spyfall.util.*
 import com.google.android.gms.ads.AdRequest
+import kotlinx.android.synthetic.main.fragment_game_legacy.*
 
-class GameFragment : Fragment(R.layout.fragment_game) {
+class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
 
     private lateinit var locationsAdapter: GameViewsAdapter
     private lateinit var playersAdapter: GameViewsAdapter
@@ -170,7 +170,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     }
 
     private fun triggerReassign() {
-        val currentUserStatedGame = arguments?.getBoolean(WaitingFragment.STARTER) != null
+        val currentUserStatedGame = arguments?.getBoolean(LegacyWaitingFragment.STARTER) != null
         if(currentUserStatedGame) gameViewModel.triggerReassignRoles()
     }
 
@@ -237,7 +237,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         )
 
         tv_game_timer.visibility =
-            arguments?.getBoolean(WaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)
+            arguments?.getBoolean(LegacyWaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)
                 ?.let {
                     if ((it)) {
                         View.INVISIBLE

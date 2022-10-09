@@ -3,16 +3,14 @@ package com.dangerfield.spyfall.util
 import android.app.Activity
 import android.os.Bundle
 import android.text.InputFilter
-import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import com.dangerfield.spyfall.models.Session
-import com.dangerfield.spyfall.ui.game.GameFragment
-import com.dangerfield.spyfall.ui.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.game.LegacyGameFragment
+import com.dangerfield.spyfall.ui.waiting.LegacyWaitingFragment
 import kotlinx.coroutines.*
 
 
@@ -72,15 +70,15 @@ suspend fun <A, B> Iterable<A>.pmap(dispatcher: CoroutineDispatcher = Dispatcher
     map { CoroutineScope(dispatcher).async(dispatcher) {  f(it) } }.awaitAll()
 
 
-fun WaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {
+fun LegacyWaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {
     //banging because navigation to waiting should be impossible without the arg
-    val currentSession: Session = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
+    val currentSession: Session = bundle.getParcelable(LegacyWaitingFragment.SESSION_KEY)!!
     return WaitingViewModelFactory(currentSession)
 }
 
-fun GameFragment.getViewModelFactory(bundle: Bundle): GameViewModelFactory {
+fun LegacyGameFragment.getViewModelFactory(bundle: Bundle): GameViewModelFactory {
     //banging because navigation to game should be impossible without the arg
-    val currentSession: Session = bundle.getParcelable(WaitingFragment.SESSION_KEY)!!
+    val currentSession: Session = bundle.getParcelable(LegacyWaitingFragment.SESSION_KEY)!!
     return GameViewModelFactory(currentSession)
 }
 

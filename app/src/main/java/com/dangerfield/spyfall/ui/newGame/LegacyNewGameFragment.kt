@@ -3,22 +3,21 @@ package com.dangerfield.spyfall.ui.newGame
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.api.Resource
 import com.dangerfield.spyfall.models.Session
-import com.dangerfield.spyfall.ui.waiting.WaitingFragment
+import com.dangerfield.spyfall.ui.waiting.LegacyWaitingFragment
 import com.dangerfield.spyfall.util.*
-import kotlinx.android.synthetic.main.fragment_new_game.*
+import kotlinx.android.synthetic.main.fragment_new_game_legacy.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.collections.ArrayList
 
-class NewGameFragment : Fragment(R.layout.fragment_new_game) {
+class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
 
     private val newGameViewModel: NewGameViewModel by viewModel()
     private val packsAdapter: PacksAdapter by lazy { PacksAdapter(newGameViewModel.getPacks()) }
@@ -109,7 +108,7 @@ class NewGameFragment : Fragment(R.layout.fragment_new_game) {
     private fun handleSucessfulGameCreation(currentSession: Session) {
         showLoadingForCreateGame(false)
         val bundle = Bundle()
-        bundle.putParcelable(WaitingFragment.SESSION_KEY, currentSession)
+        bundle.putParcelable(LegacyWaitingFragment.SESSION_KEY, currentSession)
         if (navController.currentDestination?.id == R.id.newGameFragment) {
             navController.navigate(R.id.action_newGameFragment_to_waitingFragment, bundle)
         }
