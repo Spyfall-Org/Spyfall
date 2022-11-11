@@ -56,3 +56,18 @@ if (rootProject.tasks.findByName("detektAll") == null) {
         }
     }
 }
+
+val detektProjectBaseline by tasks.registering(io.gitlab.arturbosch.detekt.DetektCreateBaselineTask::class) {
+    description = "Overrides current baseline."
+    ignoreFailures.set(true)
+    parallel.set(true)
+    setSource(files(rootDir))
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    baseline.set(file("$rootDir/config/detekt/detekt-baseline.xml"))
+    include("**/*.kt")
+    include("**/*.kts")
+    exclude("**/resources/**")
+    exclude("**/build/**")
+    exclude("**/buildSrc/**")
+    exclude("**/test/**/*.kt")
+}
