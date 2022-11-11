@@ -1,6 +1,6 @@
 package com.dangerfield.spyfall.welcome.splash
 
-import com.dangerfield.spyfall.welcome.splash.SplashViewModel.GameStatus.*
+import com.dangerfield.spyfall.welcome.splash.SplashViewModel.GameStatus
 import com.dangerfield.spyfall.welcome.welcome.WelcomeNavigator
 import spyfallx.core.doNothing
 
@@ -10,9 +10,9 @@ class SplashPresenter(
 
     fun bindState(state: SplashViewModel.State) {
         when(state.gameStatus) {
-            is FoundInGame -> doNothing()
-            NotFoundInGame -> navigator.navigateToWelcome(null)
-            SearchingForGame -> doNothing()
+            is GameStatus.FoundInGame -> doNothing()
+            GameStatus.NotFoundInGame -> navigator.navigateToWelcome(null)
+            GameStatus.SearchingForGame -> doNothing()
         }
     }
 }
