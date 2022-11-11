@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.di.modules
+package com.dangerfield.spyfall.di.koinModules
 
 import com.dangerfield.spyfall.api.*
 import com.dangerfield.spyfall.util.*

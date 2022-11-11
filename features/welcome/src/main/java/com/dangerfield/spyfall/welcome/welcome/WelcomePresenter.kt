@@ -1,10 +1,9 @@
 package com.dangerfield.spyfall.welcome.welcome
 
 import com.dangerfield.spyfall.welcome.databinding.FragmentWelcomeBinding
-import spyfallx.coreui.supportFragmentManager
 
 class WelcomePresenter(
-    private val fragment: WelcomeFragment,
+    fragment: WelcomeFragment,
     private val navigator: WelcomeNavigator
 ) {
 
@@ -16,25 +15,19 @@ class WelcomePresenter(
 
     private fun setupView() {
         binding.btnJoinGame.setOnClickListener {
-            navigator.navigateToJoinGame(fragment.supportFragmentManager)
+            navigator.navigateToJoinGame()
         }
 
         binding.btnNewGame.setOnClickListener {
-            navigator.navigateToNewGame(fragment.supportFragmentManager)
+            navigator.navigateToNewGame()
         }
 
         binding.btnSettings.setOnClickListener {
-            navigator.navigateToSettings(fragment.supportFragmentManager)
+            navigator.navigateToSettings()
         }
 
         binding.btnRules.setOnClickListener {
-            navigator.navigateToRules(fragment.supportFragmentManager)
+            navigator.navigateToRules()
         }
     }
-}
-
-class WelcomePresenterFactory(
-    private val welcomeNavigator: WelcomeNavigator
-) {
-    fun create(fragment: WelcomeFragment) = WelcomePresenter(fragment, welcomeNavigator)
 }

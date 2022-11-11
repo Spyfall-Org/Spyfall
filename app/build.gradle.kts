@@ -17,6 +17,7 @@ android {
         versionCode = AppVersions.versionCode
         versionName = AppVersions.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["screenOrientation"] = "unspecified"
     }
     buildTypes {
         named("release") {
@@ -33,6 +34,7 @@ android {
         }
 
         create("legacy") {
+            manifestPlaceholders["screenOrientation"] = "portrait"
             signingConfig = signingConfigs.getByName("debug")
             versionNameSuffix = "-LEGACY"
             matchingFallbacks += "debug"
@@ -124,6 +126,9 @@ dependencies {
     testImplementation(libs.coroutines.test)
 
     implementation(getModule("coreUi"))
+    implementation(getModule("coreGameApi"))
+    implementation(getModule("coreGame"))
+    implementation(getModule("core"))
     implementation(getModule(":features:settingsApi"))
     implementation(getModule(":features:settings"))
     implementation(getModule(":features:welcome"))

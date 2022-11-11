@@ -38,6 +38,9 @@ koin-junit = "io.insert-koin:koin-test-junit4:3.1.6"
 hilt-android = "com.google.dagger:hilt-android:2.40.5"
 hilt-compiler = "com.google.dagger:hilt-android-compiler:2.40.5"
 
+javax-inject = { module = "javax.inject:javax.inject", version = "1" }
+
+
 #Firebase
 firebase-database = "com.google.firebase:firebase-database:20.0.5"
 firebase-firestore = "com.google.firebase:firebase-firestore:24.2.0"

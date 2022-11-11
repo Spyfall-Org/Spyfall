@@ -1,10 +1,11 @@
 package com.dangerfield.spyfall.welcome.welcome
 
-import androidx.fragment.app.FragmentManager
+import spyfallx.core.Session
 
 interface WelcomeNavigator {
-    fun navigateToSettings(fragmentManager: FragmentManager?)
-    fun navigateToNewGame(fragmentManager: FragmentManager?)
-    fun navigateToJoinGame(fragmentManager: FragmentManager?)
-    fun navigateToRules(fragmentManager: FragmentManager?)
+    fun navigateToSettings()
+    fun navigateToNewGame()
+    fun navigateToJoinGame()
+    fun navigateToWelcome(session: Session?)
+    fun navigateToRules()
 }

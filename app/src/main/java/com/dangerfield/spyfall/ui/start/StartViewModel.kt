@@ -20,7 +20,7 @@ class StartViewModel(private val savedSessionHelper : SavedSessionHelper, privat
     fun getSearchForUserInGameEvent() = searchForUserInGameEvent
 
     fun triggerSearchForUserInExistingGame() {
-            val result = savedSessionHelper.findUserInExistingGame()
+        val result = savedSessionHelper.findUserInExistingGame()
         searchForUserInGameEvent.addSource(result) {
             searchForUserInGameEvent.postValue(Event(it))
             searchForUserInGameEvent.removeSource(result)

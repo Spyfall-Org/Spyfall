@@ -6,12 +6,14 @@ import com.dangerfield.spyfall.settingsapi.SettingsFragmentFactory
 import com.dangerfield.spyfall.welcome.R
 import com.dangerfield.spyfall.welcome.join_game.JoinGameFragment
 import com.dangerfield.spyfall.welcome.new_game.NewGameFragment
+import spyfallx.core.Session
 
 class WelcomeNavigatorImpl(
     private val settingsFragmentFactory: SettingsFragmentFactory,
-    ) : WelcomeNavigator {
+    private val fragmentManager: FragmentManager?
+) : WelcomeNavigator {
 
-    override fun navigateToSettings(fragmentManager: FragmentManager?) {
+    override fun navigateToSettings() {
         fragmentManager?.commit {
             add(
                 R.id.content,
@@ -21,17 +23,17 @@ class WelcomeNavigatorImpl(
         }
     }
 
-    override fun navigateToNewGame(fragmentManager: FragmentManager?) {
+    override fun navigateToNewGame() {
         fragmentManager?.commit {
             add(
                 R.id.content,
-               NewGameFragment(),
+                NewGameFragment(),
             )
             addToBackStack(null)
         }
     }
 
-    override fun navigateToJoinGame(fragmentManager: FragmentManager?) {
+    override fun navigateToJoinGame() {
         fragmentManager?.commit {
             add(
                 R.id.content,
@@ -41,6 +43,16 @@ class WelcomeNavigatorImpl(
         }
     }
 
-    override fun navigateToRules(fragmentManager: FragmentManager?) {
+    override fun navigateToRules() {
+    }
+
+    override fun navigateToWelcome(session: Session?) {
+        fragmentManager?.commit {
+            add(
+                R.id.content,
+                WelcomeFragment(),
+            )
+            addToBackStack(null)
+        }
     }
 }

@@ -2,26 +2,28 @@ package com.dangerfield.spyfall.di
 
 import android.app.Application
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.dangerfield.spyfall.di.modules.legacySpyfallModules
-import com.dangerfield.spyfall.di.modules.spyfallModules
+import com.dangerfield.spyfall.di.koinModules.legacySpyfallModules
+import com.dangerfield.spyfall.di.koinModules.spyfallModules
 import com.dangerfield.spyfall.util.RemoveUserTimer
 import com.dangerfield.spyfall.util.isLegacyBuild
 import com.google.firebase.firestore.BuildConfig
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import dagger.hilt.android.HiltAndroidApp
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level.*
 
-class KoinApp : Application() {
+@HiltAndroidApp
+class SpyfallApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) ERROR else NONE)
-            androidContext(this@KoinApp)
+            androidContext(this@SpyfallApp)
             modules(if(isLegacyBuild()) legacySpyfallModules else spyfallModules)
         }
 

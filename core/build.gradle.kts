@@ -1,6 +1,7 @@
 plugins {
     id("kotlin-android")
     id("com.android.library")
+    id("kotlin-android-extensions")
 }
 
 android {
@@ -20,11 +21,14 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         freeCompilerArgs = listOf("-Xjvm-default=enable")
     }
+
+    androidExtensions {
+        isExperimental = true
+    }
 }
 
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)

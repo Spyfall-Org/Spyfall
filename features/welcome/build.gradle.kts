@@ -35,12 +35,11 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
-
-    // Dependency Injection
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.compiler)
 
     implementation(getModule("core"))
+    implementation(getModule("coreGameApi"))
     implementation(getModule("coreUi"))
     implementation(getModule("features:welcomeApi"))
     implementation(getModule("features:settingsApi"))

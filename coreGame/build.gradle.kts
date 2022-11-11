@@ -20,16 +20,19 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         freeCompilerArgs = listOf("-Xjvm-default=enable")
     }
-}
+
+    buildFeatures {
+        viewBinding = true
+    }}
 
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.fragment.ktx)
 
+    implementation(getModule("coreGameApi"))
     implementation(getModule("core"))
 
 }

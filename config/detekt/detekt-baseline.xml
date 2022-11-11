@@ -89,7 +89,7 @@
     <ID>NewLineAtEndOfFile:Feedback.kt$com.dangerfield.spyfall.models.Feedback.kt</ID>
     <ID>NewLineAtEndOfFile:FeedbackHelper.kt$com.dangerfield.spyfall.util.FeedbackHelper.kt</ID>
     <ID>NewLineAtEndOfFile:Game.kt$com.dangerfield.spyfall.models.Game.kt</ID>
-    <ID>NewLineAtEndOfFile:GameRepository.kt$com.dangerfield.spyfall.api.GameRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:spyfallx.coregameapi.GameRepository.kt$com.dangerfield.spyfall.api.spyfallx.coregameapi.GameRepository.kt</ID>
     <ID>NewLineAtEndOfFile:GameService.kt$com.dangerfield.spyfall.api.GameService.kt</ID>
     <ID>NewLineAtEndOfFile:GameViewModel.kt$com.dangerfield.spyfall.ui.game.GameViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:JoinGameViewModel.kt$com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel.kt</ID>
@@ -113,7 +113,7 @@
     <ID>NewLineAtEndOfFile:ThemeChangeableActivity.kt$com.dangerfield.spyfall.util.ThemeChangeableActivity.kt</ID>
     <ID>NewLineAtEndOfFile:ViewModelFactories.kt$com.dangerfield.spyfall.util.ViewModelFactories.kt</ID>
     <ID>NewLineAtEndOfFile:WaitingViewModel.kt$com.dangerfield.spyfall.ui.waiting.WaitingViewModel.kt</ID>
-    <ID>NewLineAtEndOfFile:modules.kt$com.dangerfield.spyfall.di.modules.kt</ID>
+    <ID>NewLineAtEndOfFile:modules.kt$com.dangerfield.spyfall.di.koinModules.kt</ID>
     <ID>PrintStackTrace:Connectivity.kt$Connectivity$e</ID>
     <ID>ReturnCount:PreferencesHelper.kt$PreferencesHelper$override fun getSavedSession(): Session?</ID>
     <ID>SwallowedException:DBCleaner.kt$DBCleaner$e: Exception</ID>
@@ -129,7 +129,7 @@
     <ID>TooManyFunctions:Extensions.kt$com.dangerfield.spyfall.util.Extensions.kt</ID>
     <ID>TooManyFunctions:FireStoreService.kt$FireStoreService : GameService</ID>
     <ID>TooManyFunctions:GameFragment.kt$GameFragment : Fragment</ID>
-    <ID>TooManyFunctions:GameRepository.kt$GameRepository</ID>
+    <ID>TooManyFunctions:spyfallx.coregameapi.GameRepository.kt$spyfallx.coregameapi.GameRepository</ID>
     <ID>TooManyFunctions:GameService.kt$GameService</ID>
     <ID>TooManyFunctions:GameViewModel.kt$GameViewModel : ViewModelLifecycleObserver</ID>
     <ID>TooManyFunctions:LogHelper.kt$LogHelper$Companion</ID>

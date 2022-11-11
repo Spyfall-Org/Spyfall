@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.di.modules
+package com.dangerfield.spyfall.di.koinModules
 
 val legacySpyfallModules = listOf(
     mainModule
@@ -7,5 +7,7 @@ val legacySpyfallModules = listOf(
 val spyfallModules = listOf(
     migrationModule,
     settingsModule,
-    welcomeModule
+    welcomeModule,
+    appModule
 )
+
