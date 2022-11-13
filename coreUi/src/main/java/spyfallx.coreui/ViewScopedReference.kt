@@ -20,16 +20,14 @@ class ViewScopedReference<T>(
     private var instance: T? = null
 
     init {
-        CoroutineScope(Dispatchers.Main).launch {
-            fragment.viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                fragment.viewLifecycleOwner.lifecycle.addObserver(viewLifeCycleObserver)
-            }
+        fragment.viewLifecycleOwnerLiveData.observeForever {
+            fragment.viewLifecycleOwner.lifecycle.addObserver(viewLifeCycleObserver)
         }
     }
 
     override fun getValue(thisRef: Any, property: KProperty<*>): T? = instance
 
-    private val viewLifeCycleObserver =  object : DefaultLifecycleObserver {
+    private val viewLifeCycleObserver = object : DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
             instance = factory(fragment.requireView())
         }
@@ -40,6 +38,6 @@ class ViewScopedReference<T>(
     }
 }
 
-fun <T> Fragment.viewScoped(factory: (View) -> T) : ViewScopedReference<T> {
+fun <T> Fragment.viewScoped(factory: (View) -> T): ViewScopedReference<T> {
     return ViewScopedReference(this, factory)
 }

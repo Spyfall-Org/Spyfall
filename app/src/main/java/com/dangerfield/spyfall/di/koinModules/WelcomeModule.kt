@@ -20,10 +20,5 @@ val welcomeModule = module {
 
     viewModel { SplashViewModel(get(), get()) }
 
-    factory<SplashPresenterFactory>(named(SplashPresenter::class.java.name)) {
-        {
-            SplashPresenter(WelcomeNavigatorImpl(get(), it.supportFragmentManager))
-        }
-    }
 }
 

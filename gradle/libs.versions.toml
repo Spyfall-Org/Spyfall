@@ -35,8 +35,10 @@ koin-android = "io.insert-koin:koin-android:3.1.6"
 koin-testing = "io.insert-koin:koin-test:3.1.6"
 koin-junit = "io.insert-koin:koin-test-junit4:3.1.6"
 
-hilt-android = "com.google.dagger:hilt-android:2.40.5"
-hilt-compiler = "com.google.dagger:hilt-android-compiler:2.40.5"
+hilt-android = "com.google.dagger:hilt-android:2.44.1"
+hilt-compiler = "com.google.dagger:hilt-compiler:2.44.1"
+hilt-android-compiler = "com.google.dagger:hilt-android-compiler:2.44.1"
+hilt-gradle = "com.google.dagger:hilt-android-gradle-plugin:2.44.1"
 
 javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 

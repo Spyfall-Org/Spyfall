@@ -5,6 +5,7 @@ plugins {
     id("kotlin-android-extensions")
     id("com.google.gms.google-services")
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -49,11 +50,6 @@ android {
             versionNameSuffix = "-free"
             dimension = "version"
         }
-        create("paid") {
-            applicationId = "com.dangerfield.spyfall.paid"
-            versionNameSuffix = "-paid"
-            dimension = "version"
-        }
     }
 
     compileOptions {
@@ -70,6 +66,17 @@ android {
         isExperimental = true
     }
 
+    kapt {
+        correctErrorTypes = true
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
+    }
+
+    hilt {
+        enableAggregatingTask = true
+    }
 }
 
 dependencies {

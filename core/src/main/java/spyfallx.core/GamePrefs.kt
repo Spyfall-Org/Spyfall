@@ -2,11 +2,12 @@ package spyfallx.core
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import javax.inject.Inject
 
 private const val KEY_USERNAME = "KEY_USERNAME"
 private const val KEY_ACCESS_CODE = "KEY_ACCESS_CODE"
 
-class GamePrefs(private val sharedPreferences: SharedPreferences) {
+class GamePrefs @Inject constructor (private val sharedPreferences: SharedPreferences) {
 
     var session: Session?
         get() = allOrNone(

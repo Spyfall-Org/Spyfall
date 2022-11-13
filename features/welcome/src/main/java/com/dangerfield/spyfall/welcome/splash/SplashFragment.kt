@@ -13,12 +13,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
+    private val splashViewModel: SplashViewModel by viewModels()
+
     @Inject
-    private lateinit var splashViewModel: SplashViewModel
+    lateinit var presenterFactory: SplashPresenterFactory
 
-    private val presenterFactory by inject<SplashPresenterFactory>()
-
-    private val presenter by viewScoped { presenterFactory.invoke(this) }
+    private val presenter by viewScoped { presenterFactory.create(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

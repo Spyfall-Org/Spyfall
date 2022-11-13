@@ -5,8 +5,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import spyfallx.core.Game
+import javax.inject.Inject
 
-class SpyfallRepository : GameRepository {
+class SpyfallRepository @Inject constructor() : GameRepository {
 
     override fun getGame(accessCode: String): Flow<Game> = flow {
 

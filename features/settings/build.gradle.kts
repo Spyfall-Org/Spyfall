@@ -1,6 +1,8 @@
 plugins {
     id("kotlin-android")
     id("com.android.library")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -32,6 +34,8 @@ dependencies {
     // Dependency Injection
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     implementation(getModule(":features:settingsApi"))
 }
