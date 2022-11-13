@@ -209,10 +209,8 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
     private fun setupView() {
         tv_game_role.maxTextSize = 96.0f
 
-        if (BuildConfig.FLAVOR == "free") {
-            val adRequest = AdRequest.Builder().build()
-            adView2.loadAd(adRequest)
-        } else adView2.visibility = View.GONE
+        val adRequest = AdRequest.Builder().build()
+        adView2.loadAd(adRequest)
 
         changeAccent()
 

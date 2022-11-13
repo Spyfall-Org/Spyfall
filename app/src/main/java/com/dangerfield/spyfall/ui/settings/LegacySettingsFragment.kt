@@ -76,20 +76,6 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
                 resources.getString(R.string.about_message),
                 resources.getString(R.string.positive_action_standard),{}, "",{}).show()
         }
-        if(BuildConfig.FLAVOR == "free"){
-            btn_ads.setOnClickListener{
-                UIHelper.customSimpleAlert(requireContext(),
-                    resources.getString(R.string.ads_title),
-                    resources.getString(R.string.remove_ads_message),
-                    resources.getString(R.string.ads_positive_action),{sendUserToPaidVersion()},
-                    resources.getString(R.string.negative_action_standard),{}).show()
-            }
-        }else{
-            //if the user is using the paid version lets just make sure they cant see this
-            btn_ads.visibility = View.GONE
-            tv_ads.visibility = View.GONE
-            ic_ads.visibility = View.GONE
-        }
 
         btn_tester_settings.setOnClickListener {
             navController.navigate(R.id.action_settingsFragment_to_testerSettingsFragment)
@@ -186,7 +172,7 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
 
     private fun setTheme() {
-        listOf(iv_theme, ic_about, ic_ads, iv_tester_settings, iv_feedback).forEach {
+        listOf(iv_theme, ic_about, iv_tester_settings, iv_feedback).forEach {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(it.drawable),
                 ContextCompat.getColor(requireContext(), R.color.black)

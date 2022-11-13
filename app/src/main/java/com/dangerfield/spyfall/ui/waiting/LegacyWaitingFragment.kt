@@ -74,11 +74,9 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
         btn_leave_game.setOnClickListener { showLeaveGameDialog() }
         configureLayoutManagerAndRecyclerView()
 
-        adView.visibility = if (BuildConfig.FLAVOR == "free") {
-            val adRequest = AdRequest.Builder().build()
-            adView.loadAd(adRequest)
-            View.VISIBLE
-        } else View.GONE
+        adView.visibility =View.VISIBLE
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     private fun observeCurrentUserStartsGame() {

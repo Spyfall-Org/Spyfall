@@ -1,25 +1,23 @@
+import com.spyfall.convention.shared.Constants
+
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    id("spyfall.android.application")
+    id("spyfall.android.hilt")
     id("com.google.firebase.crashlytics")
     id("kotlin-android-extensions")
     id("com.google.gms.google-services")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
 
-    compileSdk = AppVersions.compileSdkVersion
     defaultConfig {
-        applicationId = "com.dangerfield.spyfall"
-        minSdk = AppVersions.minSdkVersion
-        targetSdk = AppVersions.targetSdkVersion
-        versionCode = AppVersions.versionCode
-        versionName = AppVersions.versionName
+        applicationId = "com.dangerfield.spyfall.free"
+        versionCode = Constants.versionCode
+        versionName = Constants.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["screenOrientation"] = "unspecified"
     }
+
     buildTypes {
         named("release") {
             isMinifyEnabled = false
@@ -43,31 +41,8 @@ android {
         }
     }
 
-    flavorDimensions("version")
-    productFlavors {
-        create("free") {
-            applicationId = "com.dangerfield.spyfall.free"
-            versionNameSuffix = "-free"
-            dimension = "version"
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-        freeCompilerArgs = listOf("-Xjvm-default=enable")
-    }
-
     androidExtensions {
         isExperimental = true
-    }
-
-    kapt {
-        correctErrorTypes = true
     }
 
     packagingOptions {
@@ -97,7 +72,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     //ad mob
-    implementation(libs.google.play.services)
+    implementation(libs.google.play.services.ads)
 
     //firebase libraries
     implementation(libs.firebase.database)

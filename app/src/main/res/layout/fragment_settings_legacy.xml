@@ -65,16 +65,7 @@
             app:layout_constraintStart_toStartOf="@+id/tv_settings"
             app:layout_constraintTop_toBottomOf="@+id/btn_theme_change" />
 
-    <Button
-            android:id="@+id/btn_ads"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:textColor="?android:attr/textColorPrimary"
-            app:layout_constraintEnd_toEndOf="@+id/btn_about"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/tv_settings"
-            app:layout_constraintTop_toBottomOf="@+id/btn_feedback" />
+
 
     <Button
             android:id="@+id/btn_tester_settings"
@@ -85,7 +76,7 @@
             app:layout_constraintEnd_toEndOf="@+id/btn_about"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_settings"
-            app:layout_constraintTop_toBottomOf="@+id/btn_ads" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_about" />
 
     <Button
             android:id="@+id/btn_feedback"
@@ -118,24 +109,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/ic_about"
             app:layout_constraintStart_toStartOf="@+id/tv_theme"
             app:layout_constraintTop_toTopOf="@+id/ic_about" />
-    <ImageView
-            android:src="@drawable/ic_ads_"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/ic_ads"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_ads" app:layout_constraintTop_toTopOf="@+id/btn_ads"
-            app:layout_constraintStart_toStartOf="@+id/btn_ads"/>
 
-    <TextView
-            android:id="@+id/tv_ads"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/string_ads"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/ic_ads"
-            app:layout_constraintStart_toStartOf="@+id/tv_about"
-            app:layout_constraintTop_toTopOf="@+id/ic_ads" />
+
 
     <ImageView
             android:id="@+id/iv_tester_settings"
@@ -167,7 +142,7 @@
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/iv_tester_settings"
-            app:layout_constraintStart_toStartOf="@+id/tv_ads"
+            app:layout_constraintStart_toStartOf="@+id/tv_settings"
             app:layout_constraintTop_toTopOf="@+id/iv_tester_settings" />
 
     <TextView
@@ -178,7 +153,7 @@
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/btn_feedback"
-            app:layout_constraintStart_toStartOf="@+id/tv_ads"
+            app:layout_constraintStart_toStartOf="@+id/tv_settings"
             app:layout_constraintTop_toTopOf="@+id/btn_feedback" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
