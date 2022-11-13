@@ -46,9 +46,9 @@ dependencies {
     kapt(libs.hilt.compiler)
 
 
-    implementation(getModule("core"))
-    implementation(getModule("coreGameApi"))
-    implementation(getModule("coreUi"))
+    implementation(getModule("libraries:core"))
+    implementation(getModule("libraries:coreGameApi"))
+    implementation(getModule("libraries:coreUi"))
     implementation(getModule("features:welcomeApi"))
     implementation(getModule("features:settingsApi"))
 }

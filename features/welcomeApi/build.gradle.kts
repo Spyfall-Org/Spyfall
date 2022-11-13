@@ -30,6 +30,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.fragment.ktx)
 
-    implementation(getModule("core"))
+    implementation(getModule("libraries:core"))
 
 }

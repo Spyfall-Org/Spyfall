@@ -14,10 +14,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/coreGame" />
-            <option value="$PROJECT_DIR$/coreGameApi" />
-            <option value="$PROJECT_DIR$/coreUi" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/settingsApi" />
@@ -25,6 +21,11 @@
             <option value="$PROJECT_DIR$/features/waitingApi" />
             <option value="$PROJECT_DIR$/features/welcome" />
             <option value="$PROJECT_DIR$/features/welcomeApi" />
+            <option value="$PROJECT_DIR$/libraries" />
+            <option value="$PROJECT_DIR$/libraries/core" />
+            <option value="$PROJECT_DIR$/libraries/coreGame" />
+            <option value="$PROJECT_DIR$/libraries/coreGameApi" />
+            <option value="$PROJECT_DIR$/libraries/coreUi" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -98,10 +98,10 @@
     <ID>NewLineAtEndOfFile:Feedback.kt$com.dangerfield.spyfall.models.Feedback.kt</ID>
     <ID>NewLineAtEndOfFile:FeedbackHelper.kt$com.dangerfield.spyfall.util.FeedbackHelper.kt</ID>
     <ID>NewLineAtEndOfFile:Game.kt$com.dangerfield.spyfall.models.Game.kt</ID>
-    <ID>NewLineAtEndOfFile:Game.kt$spyfallx.core.Game.kt</ID>
-    <ID>NewLineAtEndOfFile:GamePrefs.kt$spyfallx.core.GamePrefs.kt</ID>
+    <ID>NewLineAtEndOfFile:Game.kt$Game.kt</ID>
+    <ID>NewLineAtEndOfFile:GamePrefs.kt$GamePrefs.kt</ID>
     <ID>NewLineAtEndOfFile:GameRepository.kt$com.dangerfield.spyfall.api.GameRepository.kt</ID>
-    <ID>NewLineAtEndOfFile:GameRepository.kt$spyfallx.coregameapi.GameRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:GameRepository.kt$GameRepository.kt</ID>
     <ID>NewLineAtEndOfFile:GameService.kt$com.dangerfield.spyfall.api.GameService.kt</ID>
     <ID>NewLineAtEndOfFile:GameViewModel.kt$com.dangerfield.spyfall.ui.game.GameViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:JoinGameViewModel.kt$com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel.kt</ID>
@@ -111,7 +111,7 @@
     <ID>NewLineAtEndOfFile:Migration.kt$com.dangerfield.spyfall.di.koinModules.Migration.kt</ID>
     <ID>NewLineAtEndOfFile:NewGameViewModel.kt$com.dangerfield.spyfall.ui.newGame.NewGameViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:PacksAdapter.kt$com.dangerfield.spyfall.ui.newGame.PacksAdapter.kt</ID>
-    <ID>NewLineAtEndOfFile:Player.kt$spyfallx.core.Player.kt</ID>
+    <ID>NewLineAtEndOfFile:Player.kt$Player.kt</ID>
     <ID>NewLineAtEndOfFile:PreferencesHelper.kt$com.dangerfield.spyfall.util.PreferencesHelper.kt</ID>
     <ID>NewLineAtEndOfFile:Receiver.kt$com.dangerfield.spyfall.util.Receiver.kt</ID>
     <ID>NewLineAtEndOfFile:RemoveUserTimer.kt$com.dangerfield.spyfall.util.RemoveUserTimer.kt</ID>
@@ -119,13 +119,13 @@
     <ID>NewLineAtEndOfFile:Resource.kt$com.dangerfield.spyfall.api.Resource.kt</ID>
     <ID>NewLineAtEndOfFile:ReviewHelper.kt$com.dangerfield.spyfall.util.ReviewHelper.kt</ID>
     <ID>NewLineAtEndOfFile:SavedSessionHelper.kt$com.dangerfield.spyfall.util.SavedSessionHelper.kt</ID>
-    <ID>NewLineAtEndOfFile:Session.kt$spyfallx.core.Session.kt</ID>
+    <ID>NewLineAtEndOfFile:Session.kt$Session.kt</ID>
     <ID>NewLineAtEndOfFile:SessionListenerHelper.kt$com.dangerfield.spyfall.util.SessionListenerHelper.kt</ID>
     <ID>NewLineAtEndOfFile:SessionListenerService.kt$com.dangerfield.spyfall.util.SessionListenerService.kt</ID>
     <ID>NewLineAtEndOfFile:SessionUpdater.kt$com.dangerfield.spyfall.util.SessionUpdater.kt</ID>
     <ID>NewLineAtEndOfFile:SettingsModule.kt$com.dangerfield.spyfall.di.koinModules.SettingsModule.kt</ID>
     <ID>NewLineAtEndOfFile:SpyfallApp.kt$com.dangerfield.spyfall.di.SpyfallApp.kt</ID>
-    <ID>NewLineAtEndOfFile:SpyfallRepository.kt$spyfallx.coregame.SpyfallRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:SpyfallRepository.kt$SpyfallRepository.kt</ID>
     <ID>NewLineAtEndOfFile:StartViewModel.kt$com.dangerfield.spyfall.ui.start.StartViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:StateFlowExt.kt$spyfallx.coreui.StateFlowExt.kt</ID>
     <ID>NewLineAtEndOfFile:TesterSettingsFragment.kt$com.dangerfield.spyfall.ui.testerSettings.TesterSettingsFragment.kt</ID>

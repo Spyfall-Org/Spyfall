@@ -1,8 +1,6 @@
 plugins {
     id("kotlin-android")
     id("com.android.library")
-    id("com.google.dagger.hilt.android")
-    id("kotlin-kapt")
 }
 
 android {
@@ -33,11 +31,5 @@ dependencies {
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.fragment.ktx)
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-
-    implementation(getModule("coreGameApi"))
-    implementation(getModule("core"))
-
+    implementation(getModule("libraries:core"))
 }

@@ -1,6 +1,5 @@
 package com.dangerfield.spyfall.welcome.welcome
 
-import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.dangerfield.spyfall.settingsapi.SettingsFragmentFactory

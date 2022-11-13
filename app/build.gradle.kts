@@ -132,13 +132,12 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.coroutines.test)
 
-    implementation(getModule("coreUi"))
-    implementation(getModule("coreGameApi"))
-    implementation(getModule("coreGame"))
-    implementation(getModule("core"))
+    implementation(getModule("libraries:coreUi"))
+    implementation(getModule("libraries:coreGameApi"))
+    implementation(getModule("libraries:coreGame"))
+    implementation(getModule("libraries:core"))
     implementation(getModule(":features:settingsApi"))
     implementation(getModule(":features:settings"))
     implementation(getModule(":features:welcome"))
     implementation(getModule(":features:welcomeApi"))
-
 }
