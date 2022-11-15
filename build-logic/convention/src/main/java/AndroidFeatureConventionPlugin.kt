@@ -1,8 +1,6 @@
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
 
 class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -12,10 +10,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply("spyfall.android.hilt")
             }
 
-            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
             dependencies {
-                //TODO add libraries shared between all features
+                // TODO add libraries shared between all features
 //                add("implementation", project(":core:model"))
 //                add("implementation", project(":core:ui"))
 //                add("implementation", project(":core:designsystem"))

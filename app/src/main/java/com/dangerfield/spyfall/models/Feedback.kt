@@ -9,5 +9,4 @@ data class Feedback(
     val modelAndProduct: String,
     val date: String,
     val email: String
-) {
-}
+)

@@ -8,6 +8,8 @@ pluginManagement {
 }
 enableFeaturePreview("VERSION_CATALOGS")
 
+rootProject.name = "spyfall"
+
 include(":app")
 include("libraries:coreUi")
 include("libraries:coreGame")

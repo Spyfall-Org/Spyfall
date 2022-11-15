@@ -8,15 +8,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.migration.DisableInstallInCheck
 
-@Module(includes = [SettingsAppModule.Bindings::class])
+@Module
 @InstallIn(SingletonComponent::class)
 object SettingsAppModule {
-
-    @Module
-    @DisableInstallInCheck
-    interface Bindings {
-
-    }
 
     @Provides
     fun provideSettingsFragmentFactory() : SettingsFragmentFactory = SettingsFragment

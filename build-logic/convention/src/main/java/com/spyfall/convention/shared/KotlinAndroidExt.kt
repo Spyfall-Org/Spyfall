@@ -47,6 +47,10 @@ internal fun Project.configureKotlinAndroid(
             // Set JVM target to 1.8
             jvmTarget = JavaVersion.VERSION_1_8.toString()
         }
+
+        buildFeatures {
+            viewBinding = true
+        }
     }
 
     val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")

@@ -99,17 +99,6 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         setTheme()
     }
 
-    private fun sendUserToPaidVersion(){
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("market://details?id=com.dangerfield.spyfall.paid")
-        try
-        {
-            startActivity(intent)
-        }
-        catch (e: ActivityNotFoundException) {
-            Log.d("Tag", "Error launching to paid version")
-        }
-    }
     //TODO: consider making a view model for this
     private fun getColorChangeDialog(): AlertDialog {
         val dialogBuilder = AlertDialog.Builder(requireContext())

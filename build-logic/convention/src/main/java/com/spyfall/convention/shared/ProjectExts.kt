@@ -1,4 +1,4 @@
-package extension
+package com.spyfall.convention.shared
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension

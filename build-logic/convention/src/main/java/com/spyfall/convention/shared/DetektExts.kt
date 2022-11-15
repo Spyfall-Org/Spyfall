@@ -1,4 +1,4 @@
-package extension
+package com.spyfall.convention.shared
 import org.gradle.api.Project
 
 @Suppress("ObjectPropertyName") private var _detektVersion: String? = null

@@ -1,4 +1,4 @@
-package analysis
+package com.spyfall.convention.shared
 
 internal object CodeAnalysis {
 

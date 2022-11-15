@@ -12,7 +12,7 @@ class SplashPresenter(
 ) {
 
     fun bindState(state: SplashViewModel.State) {
-        when(state.gameStatus) {
+        when (state.gameStatus) {
             is GameStatus.FoundInGame -> navigator.navigateToWelcome(state.gameStatus.session)
             GameStatus.NotFoundInGame -> navigator.navigateToWelcome(null)
             GameStatus.SearchingForGame -> doNothing()
@@ -21,5 +21,6 @@ class SplashPresenter(
 }
 
 class SplashPresenterFactory(private val settingsFragmentFactory: SettingsFragmentFactory) {
-    fun create(fragment: SplashFragment) = SplashPresenter(WelcomeNavigatorImpl(settingsFragmentFactory, fragment.supportFragmentManager))
+    fun create(fragment: SplashFragment) =
+        SplashPresenter(WelcomeNavigatorImpl(settingsFragmentFactory, fragment.supportFragmentManager))
 }

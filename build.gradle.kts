@@ -1,24 +1,22 @@
-import extension.script
 
 buildscript {
     repositories {
         google()
         mavenCentral()
-
     }
     dependencies {
         classpath(libs.android.gradlePlugin)
         classpath(libs.kotlin.gradlePlugin)
         classpath(libs.google.play.services)
         classpath(libs.firebase.crashlytics)
-        classpath (libs.hilt.gradle)
+        classpath(libs.hilt.gradle)
     }
 }
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.20" apply false
-    plugin.detekt
-    plugin.checkstyle
+    alias(libs.plugins.kotlin.jvm) apply false
+    id("spyfall.android.detekt")
+    id("spyfall.android.checkstyle")
 }
 
 allprojects {

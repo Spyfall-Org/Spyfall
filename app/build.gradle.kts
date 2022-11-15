@@ -1,4 +1,5 @@
 import com.spyfall.convention.shared.Constants
+import com.spyfall.convention.shared.getModule
 
 plugins {
     id("spyfall.android.application")
@@ -71,10 +72,10 @@ dependencies {
     implementation(libs.arch.navigation.ui)
     implementation(libs.androidx.fragment.ktx)
 
-    //ad mob
+    // ad mob
     implementation(libs.google.play.services.ads)
 
-    //firebase libraries
+    // firebase libraries
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
@@ -93,10 +94,10 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    //testing
+    // testing
     // Koin testing tools
     testImplementation(libs.koin.testing)
-    //Needed JUnit version
+    // Needed JUnit version
     testImplementation(libs.koin.junit)
 
     testImplementation(libs.androidx.test.junit)
@@ -106,13 +107,12 @@ dependencies {
     testImplementation(libs.androidx.test.arch.core)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.coroutines.test)
-
     implementation(getModule("libraries:coreUi"))
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreGame"))
     implementation(getModule("libraries:core"))
-    implementation(getModule(":features:settingsApi"))
-    implementation(getModule(":features:settings"))
-    implementation(getModule(":features:welcome"))
-    implementation(getModule(":features:welcomeApi"))
+    implementation(getModule("features:settingsApi"))
+    implementation(getModule("features:settings"))
+    implementation(getModule("features:welcome"))
+    implementation(getModule("features:welcomeApi"))
 }
