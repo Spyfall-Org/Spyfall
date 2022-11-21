@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.settings.LegacySettingsFragment"
+        tools:context=".legacy.ui.settings.LegacySettingsFragment"
         android:id="@+id/frameLayout"
         android:background="@color/colorBackground">
 

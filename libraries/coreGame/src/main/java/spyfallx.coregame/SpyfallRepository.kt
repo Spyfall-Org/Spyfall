@@ -14,7 +14,7 @@ class SpyfallRepository @Inject constructor() : GameRepository {
     }
 
     override suspend fun gameExists(accessCode: String): Boolean {
-        delay(1000)
+        delay(5000)
         return false
     }
 }

@@ -16,7 +16,9 @@ class ViewScopedReference<T>(
 
     init {
         fragment.viewLifecycleOwnerLiveData.observeForever {
-            fragment.viewLifecycleOwner.lifecycle.addObserver(viewLifeCycleObserver)
+            if (fragment.view != null) {
+                fragment.viewLifecycleOwner.lifecycle.addObserver(viewLifeCycleObserver)
+            }
         }
     }
 

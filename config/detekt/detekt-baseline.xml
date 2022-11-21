@@ -124,7 +124,7 @@
     <ID>NewLineAtEndOfFile:SessionListenerService.kt$com.dangerfield.spyfall.util.SessionListenerService.kt</ID>
     <ID>NewLineAtEndOfFile:SessionUpdater.kt$com.dangerfield.spyfall.util.SessionUpdater.kt</ID>
     <ID>NewLineAtEndOfFile:SettingsModule.kt$com.dangerfield.spyfall.di.koinModules.SettingsModule.kt</ID>
-    <ID>NewLineAtEndOfFile:SpyfallApp.kt$com.dangerfield.spyfall.di.SpyfallApp.kt</ID>
+    <ID>NewLineAtEndOfFile:SpyfallApp.kt$com.dangerfield.spyfall.SpyfallApp.kt</ID>
     <ID>NewLineAtEndOfFile:SpyfallRepository.kt$SpyfallRepository.kt</ID>
     <ID>NewLineAtEndOfFile:StartViewModel.kt$com.dangerfield.spyfall.ui.start.StartViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:StateFlowExt.kt$spyfallx.coreui.StateFlowExt.kt</ID>

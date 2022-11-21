@@ -1,15 +1,11 @@
 package com.dangerfield.spyfall.welcome.splash
 
-import com.dangerfield.spyfall.settingsapi.SettingsFragmentFactory
+import com.dangerfield.spyfall.welcome.WelcomeNavigator
 import com.dangerfield.spyfall.welcome.splash.SplashViewModel.GameStatus
-import com.dangerfield.spyfall.welcome.welcome.WelcomeNavigator
-import com.dangerfield.spyfall.welcome.welcome.WelcomeNavigatorImpl
 import spyfallx.core.doNothing
-import spyfallx.coreui.supportFragmentManager
+import javax.inject.Inject
 
-class SplashPresenter(
-    private val navigator: WelcomeNavigator
-) {
+class SplashPresenter @Inject constructor(private val navigator: WelcomeNavigator) {
 
     fun bindState(state: SplashViewModel.State) {
         when (state.gameStatus) {
@@ -20,7 +16,3 @@ class SplashPresenter(
     }
 }
 
-class SplashPresenterFactory(private val settingsFragmentFactory: SettingsFragmentFactory) {
-    fun create(fragment: SplashFragment) =
-        SplashPresenter(WelcomeNavigatorImpl(settingsFragmentFactory, fragment.supportFragmentManager))
-}

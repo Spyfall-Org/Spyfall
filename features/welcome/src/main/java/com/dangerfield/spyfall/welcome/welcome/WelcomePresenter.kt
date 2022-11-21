@@ -1,9 +1,14 @@
 package com.dangerfield.spyfall.welcome.welcome
 
+import androidx.fragment.app.Fragment
+import com.dangerfield.spyfall.welcome.WelcomeNavigator
 import com.dangerfield.spyfall.welcome.databinding.FragmentWelcomeBinding
+import dagger.hilt.android.scopes.FragmentScoped
+import javax.inject.Inject
 
-class WelcomePresenter(
-    fragment: WelcomeFragment,
+@FragmentScoped
+class WelcomePresenter @Inject constructor(
+    fragment: Fragment,
     private val navigator: WelcomeNavigator
 ) {
 
