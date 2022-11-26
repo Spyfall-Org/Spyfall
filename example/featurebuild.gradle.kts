@@ -5,5 +5,5 @@ plugins {
 }
 
 dependencies {
-    implementation(getModule("features:settingsApi"))
+    implementation(getModule("libraries:core"))
 }

@@ -3,6 +3,7 @@ fragment = "1.5.0"
 androidGradlePlugin = "7.3.1"
 kotlin = "1.7.20"
 androidDesugarJdkLibs = "1.2.0"
+hilt = "2.44.1"
 
 #plugins
 detekt = "1.21.0"
@@ -40,10 +41,10 @@ koin-android = "io.insert-koin:koin-android:3.1.6"
 koin-testing = "io.insert-koin:koin-test:3.1.6"
 koin-junit = "io.insert-koin:koin-test-junit4:3.1.6"
 
-hilt-android = "com.google.dagger:hilt-android:2.44.1"
-hilt-compiler = "com.google.dagger:hilt-compiler:2.44.1"
-hilt-android-compiler = "com.google.dagger:hilt-android-compiler:2.44.1"
-hilt-gradle = "com.google.dagger:hilt-android-gradle-plugin:2.44.1"
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-gradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 
 javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 
@@ -66,10 +67,14 @@ lottie = "com.airbnb.android:lottie:3.7.0"
 # Lint
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
+
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 
 [plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

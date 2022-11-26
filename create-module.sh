@@ -25,6 +25,8 @@ select option in "${options[@]}"; do
         1)
             package="spyfallx.$module"
             safepackage="spyfallx.$safename"
+            path="libraries/$path"
+            parent="libraries"
             break
             ;;
         2)
@@ -47,7 +49,16 @@ done
 # move example dir and rename
 cp -r example "$path"
 cd "$path" || exit
-mv example.gradle.kts build.gradle.kts
+
+if [[ "$path" =~ .*"features".* ]]; then
+  mv featurebuild.gradle.kts build.gradle.kts
+  rm librarybuild.gradle.kts
+fi
+
+if [[ "$path" =~ .*"libraries".* ]]; then
+  mv librarybuild.gradle.kts build.gradle.kts
+  rm featurebuild.gradle.kts
+fi
 
 # create manifest and src path
 
@@ -68,6 +79,7 @@ cd "$wd" && echo "$(
     cat settings.gradle.kts
 )" > settings.gradle.kts
 
+sort settings.gradle.kts
 # notify of completion
 Red='\033[0;31m'          # Red
 Green='\033[0;32m'        # Green

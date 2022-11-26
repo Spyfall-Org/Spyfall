@@ -106,7 +106,7 @@
     <ID>NewLineAtEndOfFile:GameViewModel.kt$com.dangerfield.spyfall.ui.game.GameViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:JoinGameViewModel.kt$com.dangerfield.spyfall.ui.joinGame.JoinGameViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:LogHelper.kt$com.dangerfield.spyfall.util.LogHelper.kt</ID>
-    <ID>NewLineAtEndOfFile:MainActivity.kt$com.dangerfield.spyfall.MainActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:MainActivity.kt$MainActivity.kt</ID>
     <ID>NewLineAtEndOfFile:MainModule.kt$com.dangerfield.spyfall.di.koinModules.MainModule.kt</ID>
     <ID>NewLineAtEndOfFile:Migration.kt$com.dangerfield.spyfall.di.koinModules.Migration.kt</ID>
     <ID>NewLineAtEndOfFile:NewGameViewModel.kt$com.dangerfield.spyfall.ui.newGame.NewGameViewModel.kt</ID>
@@ -124,7 +124,7 @@
     <ID>NewLineAtEndOfFile:SessionListenerService.kt$com.dangerfield.spyfall.util.SessionListenerService.kt</ID>
     <ID>NewLineAtEndOfFile:SessionUpdater.kt$com.dangerfield.spyfall.util.SessionUpdater.kt</ID>
     <ID>NewLineAtEndOfFile:SettingsModule.kt$com.dangerfield.spyfall.di.koinModules.SettingsModule.kt</ID>
-    <ID>NewLineAtEndOfFile:SpyfallApp.kt$com.dangerfield.spyfall.SpyfallApp.kt</ID>
+    <ID>NewLineAtEndOfFile:SpyfallApp.kt$SpyfallApp.kt</ID>
     <ID>NewLineAtEndOfFile:SpyfallRepository.kt$SpyfallRepository.kt</ID>
     <ID>NewLineAtEndOfFile:StartViewModel.kt$com.dangerfield.spyfall.ui.start.StartViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:StateFlowExt.kt$spyfallx.coreui.StateFlowExt.kt</ID>

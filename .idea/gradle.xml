@@ -24,12 +24,20 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/apps" />
+            <option value="$PROJECT_DIR$/apps/spyfall" />
+            <option value="$PROJECT_DIR$/apps/werewolf" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/createGame" />
+            <option value="$PROJECT_DIR$/features/createGameApi" />
+            <option value="$PROJECT_DIR$/features/joinGame" />
+            <option value="$PROJECT_DIR$/features/joinGameApi" />
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/settingsApi" />
+            <option value="$PROJECT_DIR$/features/splash" />
+            <option value="$PROJECT_DIR$/features/splashApi" />
             <option value="$PROJECT_DIR$/features/waiting" />
             <option value="$PROJECT_DIR$/features/waitingApi" />
             <option value="$PROJECT_DIR$/features/welcome" />
@@ -43,5 +51,6 @@
         </option>
       </GradleProjectSettings>
     </option>
+    <option name="offlineMode" value="true" />
   </component>
 </project>
