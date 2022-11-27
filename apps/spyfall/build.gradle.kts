@@ -1,4 +1,5 @@
-import com.spyfall.convention.shared.Constants
+import com.spyfall.convention.shared.SpyfallConstants
+import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.getModule
 
 plugins {
@@ -13,10 +14,13 @@ android {
 
     defaultConfig {
         applicationId = "com.dangerfield.spyfall.free"
-        versionCode = Constants.versionCode
-        versionName = Constants.versionName
+        versionCode = SpyfallConstants.versionCode
+        versionName = SpyfallConstants.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["screenOrientation"] = "unspecified"
+
+        buildConfigField("VERSION_CODE", SpyfallConstants.versionCode)
+        buildConfigField("VERSION_NAME", SpyfallConstants.versionName)
     }
 
     buildTypes {
@@ -109,10 +113,10 @@ dependencies {
     testImplementation(libs.coroutines.test)
     implementation(getModule("libraries:coreUi"))
     implementation(getModule("libraries:coreGameApi"))
-    implementation(getModule("libraries:coreGame"))
+    implementation(getModule("libraries:coreSpyfallGame"))
     implementation(getModule("libraries:core"))
     implementation(getModule("features:settingsApi"))
     implementation(getModule("features:settings"))
     implementation(getModule("features:welcome"))
-    implementation(getModule("features:welcomeApi"))
+    implementation(getModule("features:splash"))
 }

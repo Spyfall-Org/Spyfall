@@ -120,7 +120,7 @@
 
     <!--SHARED PREFERNCES-->
     <string name="shared_preferences_color" translatable="false">SHARED_PREFERENCES_COLOR</string>
-    <string name="shared_preferences" translatable="false">SHARED_PREFERNCES</string>
+    <string name="shared_preferences" translatable="false">SPYFALL_SHARED_PREFERNCES</string>
     <string name="shared_preferences_games" translatable="false">>SHARED_PREFERENCES_GAMES</string>
     <string name="shared_preferences_hasReviewed" translatable="false">>SHARED_PREFERENCES_HAS_REVIEWED</string>
     <string name="shared_preferences_test_db" translatable="false">>SHARED_PREFERENCES_TEST_DB</string>

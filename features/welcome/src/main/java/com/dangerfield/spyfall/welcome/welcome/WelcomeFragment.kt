@@ -3,9 +3,8 @@ package com.dangerfield.spyfall.welcome.welcome
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.dangerfield.spyfall.welcome.R
-import com.dangerfield.spyfall.welcomeapi.WelcomeFragmentFactory
 import dagger.hilt.android.AndroidEntryPoint
-import spyfallx.core.Session
+import spyfallx.coregameapi.Session
 import spyfallx.coreui.viewScoped
 import javax.inject.Inject
 import javax.inject.Provider
@@ -23,8 +22,8 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
     private val session: Session?
         get() = arguments?.getParcelable(KEY_SESSION)
 
-    companion object : WelcomeFragmentFactory {
-        override fun newInstance(session: Session?) = WelcomeFragment().apply {
+    companion object {
+        fun newInstance(session: Session?) = WelcomeFragment().apply {
             arguments = bundleOf(KEY_SESSION to session)
         }
     }

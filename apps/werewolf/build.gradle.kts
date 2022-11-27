@@ -1,22 +1,25 @@
+
+import com.spyfall.convention.shared.WerewolfConstants
+import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.getModule
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("spyfall.android.application")
+    id("spyfall.android.hilt")
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.dangerfield.werewolf"
-    compileSdk = 32
 
     defaultConfig {
         applicationId = "com.dangerfield.werewolf"
-        minSdk = 21
-        targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
-
+        versionCode = WerewolfConstants.versionCode
+        versionName = WerewolfConstants.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("VERSION_CODE", WerewolfConstants.versionCode)
+        buildConfigField("VERSION_NAME", WerewolfConstants.versionName)
     }
 
     buildTypes {
@@ -25,25 +28,40 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+
+    hilt {
+        enableAggregatingTask = true
     }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.7.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.legacy.support)
+
+    implementation(libs.androidx.lifecycle.ext)
+    implementation(libs.androidx.lifecycle.vm)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.arch.fragment.navigation)
+    implementation(libs.arch.navigation.ui)
+    implementation(libs.androidx.fragment.ktx)
+
+    // firebase libraries
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+
     implementation(getModule("libraries:coreUi"))
+    implementation(getModule("libraries:coreGameApi"))
+    implementation(getModule("libraries:coreSpyfallGame"))
+    implementation(getModule("libraries:core"))
+    implementation(getModule("features:settingsApi"))
+    implementation(getModule("features:settings"))
     implementation(getModule("features:welcome"))
-    implementation(getModule("features:welcomeApi"))
+    implementation(getModule("features:splash"))
 }

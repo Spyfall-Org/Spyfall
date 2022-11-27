@@ -21,15 +21,15 @@ class LogHelper {
         }
 
         fun logNavigatingToGameScreen(currentSession: Session) {
-          //  Crashlytics.log("User Navigating from waiting to game,\nCurrent Session: $currentSession")
+          //  Crashlytics.log("User Navigating from waiting to game,\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logSessionEndedInWaiting(currentSession: Session) {
-         //   Crashlytics.log("Session ended in waiting screen.\nCurrent Session: $currentSession")
+         //   Crashlytics.log("spyfallx.coregameapi.Session ended in waiting screen.\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logSuccesfulNameChange(currentSession: Session) {
-          //  Crashlytics.log("Successful name change.\nCurrent Session: $currentSession")
+          //  Crashlytics.log("Successful name change.\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logNameChangeError(it: Exception) {
@@ -38,39 +38,39 @@ class LogHelper {
         }
 
         fun logUserChangingName(newName: String, currentSession: Session) {
-           // Crashlytics.log("User attempting to change name\nCurrent Session: $currentSession\nNew Name: $newName")
+           // Crashlytics.log("User attempting to change name\nCurrent spyfallx.coregameapi.Session: $currentSession\nNew Name: $newName")
         }
 
         fun logUserClickedStartGame(currentSession: Session) {
-           // Crashlytics.log("User clicked start game\nCurrent Session: $currentSession")
+           // Crashlytics.log("User clicked start game\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logUserClickedToLeaveGame(currentSession: Session) {
-           // Crashlytics.log("User clicked leave game\nCurrent Session: $currentSession")
+           // Crashlytics.log("User clicked leave game\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logPlayAgainTriggered(currentSession: Session) {
-           // Crashlytics.log("Play again was triggered in game screen\nCurrent Session: $currentSession")
+           // Crashlytics.log("Play again was triggered in game screen\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logSessionEndedInGame(currentSession: Session) {
-           // Crashlytics.log("Session was ended in game screen\nCurrent Session: $currentSession")
+           // Crashlytics.log("spyfallx.coregameapi.Session was ended in game screen\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logUserClickedPlayAgain(currentSession: Session) {
-           // Crashlytics.log("User clicked play again\nCurrent Session: $currentSession")
+           // Crashlytics.log("User clicked play again\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logUserTiggeredEndGame(currentSession: Session) {
-            //Crashlytics.log("User triggered end game\nCurrent Session: $currentSession")
+            //Crashlytics.log("User triggered end game\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logEndingGame(currentSession: Session) {
-           // Crashlytics.log("Game ending,\nCurrent Session: $currentSession")
+           // Crashlytics.log("Game ending,\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logErrorFindingCurrentPlayerInGame(currentSession: Session) {
-           // Crashlytics.log("Error finding current user in the game.\nCurrent Session: $currentSession")
+           // Crashlytics.log("Error finding current user in the game.\nCurrent spyfallx.coregameapi.Session: $currentSession")
         }
 
         fun logLeaveGameError(it: Exception) {
@@ -83,8 +83,8 @@ class LogHelper {
         }
 
         fun removedInactiveUser(currentSession: Session) {
-          //  Crashlytics.log("Removing Inactive User.\nCurrent Session: $currentSession")
-            Log.d("Elijah", "Removing Inactive User.\n Current Session: ${currentSession}")
+          //  Crashlytics.log("Removing Inactive User.\nCurrent spyfallx.coregameapi.Session: $currentSession")
+            Log.d("Elijah", "Removing Inactive User.\n Current spyfallx.coregameapi.Session: ${currentSession}")
         }
 
         fun logStartGameError(it: Exception) {

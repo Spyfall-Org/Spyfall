@@ -8,10 +8,26 @@ if [ -z "$module" ]; then
     read -r -p "Enter module name (in camelCase) : " module
 fi
 
+read -r -p "Enter module parent (blank for none): " parent
+
 module=${module//:/}
 path=$module
 name=$module
 
+# setup with parent if exists
+if [ -n "$parent" ]; then
+    parent=${parent//:/}
+    path=$parent/$module
+    name=$parent.$module
+
+    # verify parent path exists
+    if [ -d "$parent" ] || [ -d "libraries/$parent" ] || [ -d "features/$parent" ];
+    then
+      echo "$parent DOES exist!"
+    else
+      echo "$parent DOES NOT exist!" && exit
+    fi
+fi
 
 #lowercased version of the packagename
 safename="$(tr [A-Z] [a-z] <<< "$name")"
@@ -26,14 +42,14 @@ select option in "${options[@]}"; do
             package="spyfallx.$module"
             safepackage="spyfallx.$safename"
             path="libraries/$path"
-            parent="libraries"
+            parent="libraries:$parent"
             break
             ;;
         2)
-            parent="features"
             package="com.dangerfield.spyfall.$module"
             safepackage="com.dangerfield.spyfall.$safename"
             path="features/$path"
+            parent="features:$parent"
             break
             ;;
         3)

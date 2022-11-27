@@ -77,12 +77,14 @@
     <ID>MaxLineLength:GameViewsAdapter.kt$GameViewsAdapter$class</ID>
     <ID>MaxLineLength:LegacyGameFragment.kt$LegacyGameFragment$//but right now it says: if the game has started, and im still on this screen, and something has changed..</ID>
     <ID>MaxLineLength:LegacySettingsFragment.kt$LegacySettingsFragment$UIHelper.accentColor = if(chosenColor == Color.WHITE) UIHelper.accentColors.random() else chosenColor</ID>
-    <ID>MaxLineLength:LegacySettingsFragment.kt$LegacySettingsFragment$val editor = requireContext().getSharedPreferences(resources.getString(com.dangerfield.spyfall.R.string.shared_preferences), MODE_PRIVATE).edit()</ID>
+    <ID>MaxLineLength:LegacySettingsFragment.kt$LegacySettingsFragment$val editor =
+      requireContext().getSharedPreferences(resources.getString(com.dangerfield.spyfall.R.string.shared_preferences),
+      MODE_PRIVATE).edit()</ID>
     <ID>MaxLineLength:Migration.kt$*</ID>
     <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_code), currentSession.accessCode)</ID>
     <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_current_user), currentSession.currentUser)</ID>
     <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_previous_user), currentSession.previousUserName)</ID>
-    <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$return Session(accessCode = accessCode, currentUser = currentUser, game = Game.getEmptyGame(), previousUserName = prevUser)</ID>
+    <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$return spyfallx.coregameapi.Session(accessCode = accessCode, currentUser = currentUser, game = Game.getEmptyGame(), previousUserName = prevUser)</ID>
     <ID>MaxLineLength:Receiver.kt$Receiver$val networkInfo: NetworkInfo? = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo</ID>
     <ID>MaxLineLength:RemoveUserTimer.kt$RemoveUserTimer$class</ID>
     <ID>MaxLineLength:StartViewModel.kt$StartViewModel$class</ID>
@@ -119,7 +121,7 @@
     <ID>NewLineAtEndOfFile:Resource.kt$com.dangerfield.spyfall.api.Resource.kt</ID>
     <ID>NewLineAtEndOfFile:ReviewHelper.kt$com.dangerfield.spyfall.util.ReviewHelper.kt</ID>
     <ID>NewLineAtEndOfFile:SavedSessionHelper.kt$com.dangerfield.spyfall.util.SavedSessionHelper.kt</ID>
-    <ID>NewLineAtEndOfFile:Session.kt$Session.kt</ID>
+    <ID>NewLineAtEndOfFile:spyfallx.coregameapi.Session.kt$spyfallx.coregameapi.Session.kt</ID>
     <ID>NewLineAtEndOfFile:SessionListenerHelper.kt$com.dangerfield.spyfall.util.SessionListenerHelper.kt</ID>
     <ID>NewLineAtEndOfFile:SessionListenerService.kt$com.dangerfield.spyfall.util.SessionListenerService.kt</ID>
     <ID>NewLineAtEndOfFile:SessionUpdater.kt$com.dangerfield.spyfall.util.SessionUpdater.kt</ID>
@@ -135,7 +137,7 @@
     <ID>PackageNaming:JoinGameFragment.kt$package com.dangerfield.spyfall.welcome.join_game</ID>
     <ID>PackageNaming:NewGameFragment.kt$package com.dangerfield.spyfall.welcome.new_game</ID>
     <ID>PrintStackTrace:Connectivity.kt$Connectivity$e</ID>
-    <ID>ReturnCount:PreferencesHelper.kt$PreferencesHelper$override fun getSavedSession(): Session?</ID>
+    <ID>ReturnCount:PreferencesHelper.kt$PreferencesHelper$override fun getSavedSession(): spyfallx.coregameapi.Session?</ID>
     <ID>SwallowedException:DBCleaner.kt$DBCleaner$e: Exception</ID>
     <ID>SwallowedException:LegacySettingsFragment.kt$LegacySettingsFragment$e: ActivityNotFoundException</ID>
     <ID>SwallowedException:RemoveUserTimer.kt$RemoveUserTimer$e: CancellationException</ID>
@@ -158,7 +160,7 @@
     <ID>TooManyFunctions:LogHelper.kt$LogHelper$Companion</ID>
     <ID>TooManyFunctions:Repository.kt$Repository : GameRepositorySessionUpdater</ID>
     <ID>TooManyFunctions:WaitingViewModel.kt$WaitingViewModel : ViewModel</ID>
-    <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$currentSession: Session</ID>
+    <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$currentSession: spyfallx.coregameapi.Session</ID>
     <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$it: Exception</ID>
     <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$newName: String</ID>
     <ID>UtilityClassWithPublicConstructor:LogHelper.kt$LogHelper</ID>

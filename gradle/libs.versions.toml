@@ -31,7 +31,7 @@ arch-fragment-navigation = "android.arch.navigation:navigation-fragment:1.0.0"
 arch-navigation-ui = "android.arch.navigation:navigation-ui:1.0.0"
 
 google-play-services-ads = "com.google.android.gms:play-services-ads:21.0.0"
-google-play-services = "com.google.gms:google-services:4.3.14"
+google-services = "com.google.gms:google-services:4.3.14"
 
 coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
 coroutines-play-servies = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0"

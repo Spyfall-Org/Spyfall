@@ -1,5 +1,6 @@
 import com.android.build.gradle.LibraryExtension
-import com.spyfall.convention.shared.Constants
+import com.spyfall.convention.shared.SharedConstants
+import com.spyfall.convention.shared.SpyfallConstants
 import com.spyfall.convention.shared.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,7 +16,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = Constants.targetSdk
+                defaultConfig.targetSdk = SharedConstants.targetSdk
             }
         }
     }

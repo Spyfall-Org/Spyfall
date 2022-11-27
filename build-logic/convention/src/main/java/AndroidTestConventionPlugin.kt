@@ -1,5 +1,5 @@
 import com.android.build.gradle.TestExtension
-import com.spyfall.convention.shared.Constants.testingTargetSdk
+import com.spyfall.convention.shared.SharedConstants
 import com.spyfall.convention.shared.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,7 +15,7 @@ class AndroidTestConventionPlugin : Plugin<Project> {
 
             extensions.configure<TestExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = testingTargetSdk
+                defaultConfig.targetSdk = SharedConstants.testingTargetSdk
             }
         }
     }

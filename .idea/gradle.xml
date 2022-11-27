@@ -37,20 +37,19 @@
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/settingsApi" />
             <option value="$PROJECT_DIR$/features/splash" />
-            <option value="$PROJECT_DIR$/features/splashApi" />
+            <option value="$PROJECT_DIR$/features/splash/spyfall" />
+            <option value="$PROJECT_DIR$/features/splash/werewolf" />
             <option value="$PROJECT_DIR$/features/waiting" />
             <option value="$PROJECT_DIR$/features/waitingApi" />
             <option value="$PROJECT_DIR$/features/welcome" />
-            <option value="$PROJECT_DIR$/features/welcomeApi" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/core" />
-            <option value="$PROJECT_DIR$/libraries/coreGame" />
             <option value="$PROJECT_DIR$/libraries/coreGameApi" />
+            <option value="$PROJECT_DIR$/libraries/coreSpyfallGame" />
             <option value="$PROJECT_DIR$/libraries/coreUi" />
           </set>
         </option>
       </GradleProjectSettings>
     </option>
-    <option name="offlineMode" value="true" />
   </component>
 </project>

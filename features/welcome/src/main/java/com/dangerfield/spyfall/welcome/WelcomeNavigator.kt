@@ -1,6 +1,6 @@
 package com.dangerfield.spyfall.welcome
 
-import spyfallx.core.Session
+import spyfallx.coregameapi.Session
 
 interface WelcomeNavigator {
     fun navigateToSettings()

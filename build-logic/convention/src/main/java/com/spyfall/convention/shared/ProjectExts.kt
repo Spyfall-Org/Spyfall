@@ -1,7 +1,9 @@
 package com.spyfall.convention.shared
 
+import com.android.build.api.dsl.VariantDimension
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 
 @Suppress("UnstableApiUsage")
@@ -9,8 +11,6 @@ fun Project.getLibVersion(name: String): String = extensions.getByType<VersionCa
     .named("libs")
     .findVersion(name).get()
     .requiredVersion
-
-
 
 /**
  * Get array of source path for all modules
@@ -26,4 +26,19 @@ fun Project.getModuleSources(vararg excludeModules: String = emptyArray()): Arra
     }
 
     return sources.toTypedArray()
+}
+
+/**
+ * Simplify adding BuildConfig fields to build variants
+ */
+@Suppress("UnstableApiUsage")
+fun VariantDimension.buildConfigField(name: String, value: Any?) {
+    when (value) {
+        null -> buildConfigField("String", name, "null")
+        is String -> buildConfigField("String", name, "\"$value\"")
+        is Boolean -> buildConfigField("boolean", name, value.toString())
+        is Int -> buildConfigField("int", name, value.toString())
+        is Provider<*> -> buildConfigField(name, value.get())
+        else -> throw IllegalArgumentException("Unknown type for $value")
+    }
 }

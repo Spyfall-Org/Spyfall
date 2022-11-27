@@ -17,10 +17,10 @@ internal fun Project.configureKotlinAndroid(
     commonExtension: CommonExtension<*, *, *, *>,
 ) {
     commonExtension.apply {
-        compileSdk = Constants.compileSdk
+        compileSdk = SharedConstants.compileSdk
 
         defaultConfig {
-            minSdk = Constants.minSdk
+            minSdk = SharedConstants.minSdk
         }
 
         compileOptions {
@@ -49,6 +49,7 @@ internal fun Project.configureKotlinAndroid(
         }
 
         buildFeatures {
+            buildConfig = true
             viewBinding = true
         }
     }

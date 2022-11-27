@@ -10,6 +10,5 @@ dependencies {
     implementation(getModule("libraries:core"))
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreUi"))
-    implementation(getModule("features:welcomeApi"))
     implementation(getModule("features:settingsApi"))
 }
