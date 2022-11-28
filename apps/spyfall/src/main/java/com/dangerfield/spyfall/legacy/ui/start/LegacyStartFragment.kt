@@ -7,6 +7,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -143,8 +144,8 @@ class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
     private fun updateTheme() {
         btn_join_game.background.setTint(UIHelper.accentColor)
 
-        val drawable = resources.getDrawable(R.drawable.ic_info).mutate()
-        drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
+        val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_info, null)
+        drawable?.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
         btn_rules.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         btn_rules.setTextColor(UIHelper.accentColor)
 

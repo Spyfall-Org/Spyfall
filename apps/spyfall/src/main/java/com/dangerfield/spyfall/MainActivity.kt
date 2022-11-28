@@ -1,27 +1,22 @@
 package com.dangerfield.spyfall
 
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.legacy.ui.settings.RequireUpdateFragment
 import com.dangerfield.spyfall.legacy.util.CheckForForcedUpdate
-import com.dangerfield.spyfall.legacy.util.UIHelper
+import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.isLegacyBuild
 import com.dangerfield.spyfall.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main_legacy.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ThemeChangeableActivity() {
 
     private val checkForForcedUpdate: CheckForForcedUpdate by inject()
 
