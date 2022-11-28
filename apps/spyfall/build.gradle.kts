@@ -8,6 +8,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("kotlin-android-extensions")
     id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -68,6 +69,8 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
+    implementation("androidx.core:core-ktx:+")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.0.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso.core)
@@ -85,8 +88,8 @@ dependencies {
     implementation(libs.firebase.storage)
 
     //  that sweet sweet kotlin coroutines library
-    implementation(libs.coroutines.core)
-    implementation(libs.coroutines.play.servies)
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     // lottie for animations
     implementation(libs.lottie)
@@ -110,7 +113,7 @@ dependencies {
     testImplementation(libs.mockito)
     testImplementation(libs.androidx.test.arch.core)
     testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.coroutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
     implementation(getModule("libraries:coreUi"))
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreSpyfallGame"))

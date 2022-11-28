@@ -52,6 +52,8 @@
     <string name="theme_change_positive">Change</string>
     <string name="theme_change_error">No color was selected</string>
 
+    <string name="update_title" translatable="false">We\'ve made some changes</string>
+    <string name="update_message" translatable="false">Please update to the latest version</string>
 
     <!--Settings-->
     <string name="string_content_description_settings">Settings Button</string>
@@ -129,7 +131,6 @@
     <string name="shared_preferences_session_previous_user" translatable="false">>SHARED_PREFERENCES_SESSION_PREV_USER</string>
 
 
-
     <string name="string_btn_leave_game">Leave Game</string>
     <string name="string_btn_start_game">Start Game</string>
     <string name="dialog_rate_title">Like the game?</string>
@@ -155,6 +156,8 @@
     <string name="enter_previous_game_message" translatable="false">Looks like you were found in a game, would you like to pick up where you left off?</string>
     <string name="yes" translatable="false">Yes</string>
     <string name="no" translatable="false">No</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

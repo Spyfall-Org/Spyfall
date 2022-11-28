@@ -25,6 +25,11 @@
                 app:destination="@id/waitingFragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_startFragment_to_requireUpdateFragment"
+                app:destination="@id/requireUpdateFragment"
+                app:popUpTo="@id/startFragment"
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.legacy.ui.newGame.LegacyNewGameFragment"
@@ -67,5 +72,10 @@
             android:name="com.dangerfield.spyfall.legacy.ui.testerSettings.TesterSettingsFragment"
             android:label="fragment_tester_settings"
             tools:layout="@layout/fragment_tester_settings" />
+    <fragment
+            android:id="@+id/requireUpdateFragment"
+            android:name="com.dangerfield.spyfall.legacy.ui.settings.RequireUpdateFragment"
+            android:label="fragment_require_update"
+            tools:layout="@layout/fragment_require_update" />
 
 </navigation>

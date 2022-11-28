@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.legacy.api
 
+import android.util.Log
 import com.dangerfield.spyfall.legacy.models.Game
 import com.dangerfield.spyfall.legacy.models.Player
 import com.dangerfield.spyfall.legacy.util.pmap
@@ -162,6 +163,16 @@ class FireStoreService(private val db: FirebaseFirestore, private val constants:
             result.setException(it)
         }
         return result.task
+    }
+
+    override suspend fun getRequiredVersionCode(): Int? {
+        val result = db.collection(constants.configCollection)
+            .document(constants.requiredVersionCodeDocument)
+            .get()
+            .await()
+            .get(constants.requiredVersionCodeField) as? Long
+
+        return result?.toInt()
     }
 }
 

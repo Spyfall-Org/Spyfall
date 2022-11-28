@@ -18,6 +18,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     id("spyfall.android.detekt")
     id("spyfall.android.checkstyle")
+    id("org.jetbrains.kotlin.android") version "1.7.20" apply false
 }
 
 allprojects {

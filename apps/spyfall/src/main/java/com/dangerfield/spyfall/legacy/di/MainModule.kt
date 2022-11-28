@@ -1,5 +1,7 @@
 package com.dangerfield.spyfall.legacy.di
 
+import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
+import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
 import com.dangerfield.spyfall.legacy.api.Constants
 import com.dangerfield.spyfall.legacy.api.FireStoreService
 import com.dangerfield.spyfall.legacy.api.GameRepository
@@ -11,6 +13,7 @@ import com.dangerfield.spyfall.legacy.ui.joinGame.JoinGameViewModel
 import com.dangerfield.spyfall.legacy.ui.newGame.NewGameViewModel
 import com.dangerfield.spyfall.legacy.ui.start.StartViewModel
 import com.dangerfield.spyfall.legacy.ui.waiting.WaitingViewModel
+import com.dangerfield.spyfall.legacy.util.CheckForForcedUpdate
 import com.dangerfield.spyfall.legacy.util.DBCleaner
 import com.dangerfield.spyfall.legacy.util.FeedbackHelper
 import com.dangerfield.spyfall.legacy.util.PreferencesHelper
@@ -25,6 +28,8 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import spyfallx.core.BuildInfo
+import spyfallx.core.TargetApp
 
 val mainModule = module {
 
@@ -41,7 +46,10 @@ val mainModule = module {
     viewModel { StartViewModel(get(), get()) }
 
     factory { SessionListenerHelper(get(), get()) as SessionListenerService }
+    factory { BuildInfo(targetApp = TargetApp.SPYFALL, versionCode = VERSION_CODE, versionName = VERSION_NAME) }
+
     factory { FireStoreService(get(), get()) as GameService }
+    factory { CheckForForcedUpdate(get(), get()) }
     factory { Constants(androidApplication(), get()) }
     factory { ReviewHelper(androidContext()) }
     factory { SavedSessionHelper(get(), get()) }

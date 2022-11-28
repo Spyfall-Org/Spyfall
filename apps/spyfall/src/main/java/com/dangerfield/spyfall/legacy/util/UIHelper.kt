@@ -102,8 +102,8 @@ class UIHelper {
             message: String,
             positiveText: String,
             positiveAction: (() -> Unit),
-            negativeText: String,
-            negativeAction: (() -> Unit),
+            negativeText: String? = null,
+            negativeAction: (() -> Unit) = {},
             leftAlignText: Boolean = false
         ): Dialog {
 
@@ -118,7 +118,7 @@ class UIHelper {
                 if (leftAlignText) {
                     tv_custom_alert.textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
                 }
-                if (negativeText.isEmpty()) {
+                if (negativeText.isNullOrEmpty()) {
                     //remove the negative button
                     btn_custom_alert_negative.visibility = View.GONE
 
@@ -181,6 +181,20 @@ class UIHelper {
                 btn_positive.background.setTint(accentColor)
             }
             return dialog
+        }
+
+        fun getForcedUpdateDialog(
+            context: Context,
+            positiveAction: () -> Unit
+        ): Dialog {
+            return customSimpleAlert(
+                context = context,
+                title = context.getString(R.string.update_title),
+                message = context.getString(R.string.update_message),
+                positiveText = context.getString(R.string.positive_action_standard),
+                positiveAction = positiveAction,
+                leftAlignText = false
+            )
         }
 
         fun updateDrawableToTheme(context: Context, id: Int) {

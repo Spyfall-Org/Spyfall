@@ -13,6 +13,10 @@ class Constants(val context: Context, private val preferencesHelper: Preferences
 
     val packs = "packs"
 
+    val configCollection = "config"
+    val requiredVersionCodeDocument = "required_version_code"
+    val requiredVersionCodeField = "code"
+
     val feedback = if (BuildConfig.DEBUG) "feedback_test" else "feedback"
 
     object StatisticsConstants {

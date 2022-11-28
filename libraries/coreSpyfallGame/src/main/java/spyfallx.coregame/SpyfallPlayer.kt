@@ -1,5 +1,6 @@
 package spyfallx.coregame
 
+import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import spyfallx.coregameapi.Player
 
@@ -9,4 +10,4 @@ data class SpyfallPlayer(
     override var id: String,
     override val isHost: Boolean,
     val role: String?,
-) : Player
+) : Player, Parcelable

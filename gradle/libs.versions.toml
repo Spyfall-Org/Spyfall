@@ -4,6 +4,7 @@ androidGradlePlugin = "7.3.1"
 kotlin = "1.7.20"
 androidDesugarJdkLibs = "1.2.0"
 hilt = "2.44.1"
+coroutines = "1.6.4"
 
 #plugins
 detekt = "1.21.0"
@@ -27,14 +28,14 @@ android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs
 androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }
 
+kotlin-std = "org.jetbrains.kotlin:kotlin-stdlib:1.0.0"
+
 arch-fragment-navigation = "android.arch.navigation:navigation-fragment:1.0.0"
 arch-navigation-ui = "android.arch.navigation:navigation-ui:1.0.0"
 
 google-play-services-ads = "com.google.android.gms:play-services-ads:21.0.0"
 google-services = "com.google.gms:google-services:4.3.14"
 
-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
-coroutines-play-servies = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0"
 
 koin-core = "io.insert-koin:koin-core:3.1.6"
 koin-android = "io.insert-koin:koin-android:3.1.6"
@@ -59,7 +60,12 @@ junit = "junit:junit:4.13.2"
 roboelectric = "org.robolectric:robolectric:4.6.1"
 mockito = "org.mockito:mockito-core:3.9.0"
 mockito-kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-coroutines-test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
+
+# KotlinX Coroutines
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-rx3 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 #UI
 lottie = "com.airbnb.android:lottie:3.7.0"

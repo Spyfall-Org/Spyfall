@@ -7,6 +7,7 @@ plugins {
     id("spyfall.android.application")
     id("spyfall.android.hilt")
     id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -43,6 +44,8 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
+    implementation("androidx.core:core-ktx:+")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.0.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso.core)

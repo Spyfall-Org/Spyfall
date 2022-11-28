@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat.startActivity
 import com.dangerfield.spyfall.R
 
-class ReviewHelper(val context: Context){
+class ReviewHelper(val context: Context) {
 
     private val promptingFrequency = 10
 
@@ -45,7 +45,6 @@ class ReviewHelper(val context: Context){
     private fun getGamesPlayed() =
         preferences.getInt(context.resources.getString(R.string.shared_preferences_games), 0)
 
-
     private fun userHasClickedToReview() =
         preferences.getBoolean(
             context.resources.getString(R.string.shared_preferences_hasReviewed),
@@ -53,24 +52,16 @@ class ReviewHelper(val context: Context){
         )
 
     fun openStoreForReview() {
-        val uri = Uri.parse("market://details?id=" + context.packageName)
-        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-        goToMarket.addFlags(
-            Intent.FLAG_ACTIVITY_NO_HISTORY or
-                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK or
-                    Intent.FLAG_ACTIVITY_NEW_TASK
-        )
         try {
-            startActivity( context, goToMarket, Bundle())
+            val uri = Uri.parse("market://details?id=" + context.packageName)
+            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(context, goToMarket, Bundle())
         } catch (e: ActivityNotFoundException) {
-            startActivity(
-                context,
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=" + context.packageName)
-                ), Bundle()
-            )
+            val uri = Uri.parse("http://play.google.com/store/apps/details?id=" + context.packageName)
+            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(context, goToMarket, Bundle())
         }
     }
 }

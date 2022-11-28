@@ -1,17 +1,16 @@
 import com.spyfall.convention.shared.getModule
 
 plugins {
-    id("spyfall.android.feature")
+    id("spyfall.android.library")
     id("org.jetbrains.kotlin.android")
 }
 
 dependencies {
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
-    implementation(getModule("libraries:core"))
+    implementation(libs.androidx.core)
+    implementation(libs.javax.inject)
+    implementation(libs.kotlinx.coroutines)
     implementation(getModule("libraries:coreGameApi"))
-    implementation(getModule("libraries:coreUi"))
-    implementation(getModule("features:settingsApi"))
+    implementation(getModule("libraries:core"))
     implementation("androidx.core:core-ktx:+")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.0.0")
 }
