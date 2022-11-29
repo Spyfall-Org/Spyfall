@@ -1,6 +1,9 @@
 package com.dangerfield.spyfall.legacy.ui.start
 
 import android.app.Dialog
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
@@ -143,15 +146,16 @@ class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
 
     private fun updateTheme() {
         btn_join_game.background.setTint(UIHelper.accentColor)
-
-        val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_info, null)
-        drawable?.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
-        btn_rules.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         btn_rules.setTextColor(UIHelper.accentColor)
 
         DrawableCompat.setTint(
             DrawableCompat.wrap(btn_settings.drawable),
             ContextCompat.getColor(requireContext(), R.color.black)
+        )
+
+        DrawableCompat.setTint(
+            DrawableCompat.wrap(iv_rules.drawable),
+            UIHelper.accentColor
         )
     }
 }
