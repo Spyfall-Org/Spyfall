@@ -1,6 +1,5 @@
 package com.dangerfield.spyfall.legacy.api
 
-import android.util.Log
 import com.dangerfield.spyfall.legacy.models.Game
 import com.dangerfield.spyfall.legacy.models.Player
 import com.dangerfield.spyfall.legacy.util.pmap
@@ -9,7 +8,7 @@ import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
+import kotlin.Exception
 
 class FireStoreService(private val db: FirebaseFirestore, private val constants: Constants) :
     GameService {
@@ -166,11 +165,15 @@ class FireStoreService(private val db: FirebaseFirestore, private val constants:
     }
 
     override suspend fun getRequiredVersionCode(): Int? {
-        val result = db.collection(constants.configCollection)
-            .document(constants.requiredVersionCodeDocument)
-            .get()
-            .await()
-            .get(constants.requiredVersionCodeField) as? Long
+        val result = try {
+            db.collection(constants.configCollection)
+                .document(constants.requiredVersionCodeDocument)
+                .get()
+                .await()
+                .get(constants.requiredVersionCodeField) as? Long
+        } catch (e: Exception){
+            null
+        }
 
         return result?.toInt()
     }
