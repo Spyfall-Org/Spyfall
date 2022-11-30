@@ -11,18 +11,21 @@
 
     <TextView
             android:id="@+id/tv_update_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/update_title"
+            android:textAlignment="center"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="24sp"
+            android:textSize="34sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_update_message"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
             android:id="@+id/tv_update_message"
@@ -36,7 +39,9 @@
             android:text="@string/update_message"
             android:textAlignment="center"
             android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_update_title" />
 
@@ -50,14 +55,20 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="50dp"
             android:background="@drawable/background_button_accent"
-            android:text="@string/positive_action_standard"
+            android:text="@string/okay"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/tv_update_message"
-            app:layout_constraintStart_toStartOf="@+id/tv_update_message"
             app:layout_constraintBottom_toBottomOf="parent"
-             />
+            app:layout_constraintEnd_toEndOf="@+id/tv_update_message"
+            app:layout_constraintStart_toStartOf="@+id/tv_update_message" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".25" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

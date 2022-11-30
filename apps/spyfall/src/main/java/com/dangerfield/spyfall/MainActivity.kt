@@ -1,43 +1,46 @@
 package com.dangerfield.spyfall
 
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
+import android.util.Log
 import androidx.fragment.app.commit
 import androidx.navigation.Navigation.findNavController
-import com.dangerfield.spyfall.legacy.ui.settings.RequireUpdateFragment
-import com.dangerfield.spyfall.legacy.util.CheckForForcedUpdate
+import com.dangerfield.spyfall.MainActivityViewModel.Step.ForceUpdateDecision
+import com.dangerfield.spyfall.MainActivityViewModel.Step.SplashDecision
 import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.isLegacyBuild
 import com.dangerfield.spyfall.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import spyfallx.core.BuildInfo
+import spyfallx.coreui.collectWhileStarted
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ThemeChangeableActivity() {
 
-    private val checkForForcedUpdate: CheckForForcedUpdate by inject()
+    private val mainActivityViewModel: MainActivityViewModel by viewModel()
+
+    @Inject
+    lateinit var buildInfo: BuildInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (isLegacyBuild()) {
+
+        if (buildInfo.isLegacySpyfall) {
             setContentView(R.layout.activity_main_legacy)
         } else {
             setContentView(R.layout.activity_main)
-            supportFragmentManager.commit { add(R.id.content, SplashFragment()) }
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        CoroutineScope(Dispatchers.Default).launch {
-            if (checkForForcedUpdate.shouldRequireUpdate()) {
-                if (isLegacyBuild()) {
+        mainActivityViewModel.state.collectWhileStarted(this) { state ->
+            when (state.step) {
+                is ForceUpdateDecision -> if (state.step.shouldShowForceUpdate) {
+                    Log.d("Elijah", "forcing update")
                     showBlockingUpdateLegacy()
-                } else {
-                    showBlockingUpdate()
+                }
+                is SplashDecision -> if (state.step.shouldShowSplash) {
+                    Log.d("Elijah", "showing splash")
+                    supportFragmentManager.commit { add(R.id.content, SplashFragment()) }
                 }
             }
         }
@@ -48,16 +51,6 @@ class MainActivity : ThemeChangeableActivity() {
             findNavController(this, R.id.nav_host_fragment).navigateUp()
         } else {
             super.onSupportNavigateUp()
-        }
-    }
-
-    private fun showBlockingUpdate() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            val backStackRootId = supportFragmentManager.getBackStackEntryAt(0).id
-            supportFragmentManager.popBackStack(backStackRootId, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        }
-        supportFragmentManager.commit {
-            replace(R.id.content, RequireUpdateFragment())
         }
     }
 

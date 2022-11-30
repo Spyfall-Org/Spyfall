@@ -1,10 +1,12 @@
 package com.dangerfield.spyfall.navigation
 
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.splash.ForcedUpdateFragment
 import com.dangerfield.spyfall.splash.SplashNavigator
 import com.dangerfield.spyfall.welcome.welcome.WelcomeFragment
 import spyfallx.coregameapi.Session
@@ -18,8 +20,15 @@ class InternalSplashNavigator @Inject constructor(
 ) : SplashNavigator {
 
     override fun navigateToWelcome(session: Session?) {
-        navigateToAsRoot(InternalWelcomeNavigator.WELCOME) {
+        Log.d("Elijah", "Navigating to welcome")
+        navigateToAsRoot(WELCOME) {
             WelcomeFragment()
+        }
+    }
+
+    override fun navigateToForcedUpdate() {
+        navigateToAsRoot(FORCE_UPDATE) {
+            ForcedUpdateFragment()
         }
     }
 
@@ -35,5 +44,6 @@ class InternalSplashNavigator @Inject constructor(
 
     companion object {
         const val WELCOME = "Welcome"
+        const val FORCE_UPDATE = "ForceUpdate"
     }
 }

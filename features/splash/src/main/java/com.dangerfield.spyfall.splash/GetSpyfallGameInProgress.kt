@@ -11,7 +11,6 @@ class GetSpyfallGameInProgress @Inject constructor(
     private val spyfallRepository: SpyfallRepository
 ) : GetGameInProgress {
     override suspend fun invoke(): SpyfallSession? {
-        delay(5000)
         return spyfallGamePreferences.session?.let { sessionFound ->
             if (!spyfallRepository.gameExists(sessionFound.accessCode)) {
                 spyfallGamePreferences.session = null

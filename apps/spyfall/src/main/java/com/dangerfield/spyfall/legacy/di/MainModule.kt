@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.legacy.di
 
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
+import com.dangerfield.spyfall.MainActivityViewModel
 import com.dangerfield.spyfall.legacy.api.Constants
 import com.dangerfield.spyfall.legacy.api.FireStoreService
 import com.dangerfield.spyfall.legacy.api.GameRepository
@@ -13,7 +14,6 @@ import com.dangerfield.spyfall.legacy.ui.joinGame.JoinGameViewModel
 import com.dangerfield.spyfall.legacy.ui.newGame.NewGameViewModel
 import com.dangerfield.spyfall.legacy.ui.start.StartViewModel
 import com.dangerfield.spyfall.legacy.ui.waiting.WaitingViewModel
-import com.dangerfield.spyfall.legacy.util.CheckForForcedUpdate
 import com.dangerfield.spyfall.legacy.util.DBCleaner
 import com.dangerfield.spyfall.legacy.util.FeedbackHelper
 import com.dangerfield.spyfall.legacy.util.PreferencesHelper
@@ -23,6 +23,9 @@ import com.dangerfield.spyfall.legacy.util.ReviewHelper
 import com.dangerfield.spyfall.legacy.util.SavedSessionHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerService
+import com.dangerfield.spyfall.legacy.util.isLegacyBuild
+import com.dangerfield.spyfall.splash.CheckForRequiredSpyfallUpdate
+import com.dangerfield.spyfall.splash.CheckForRequiredUpdate
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -43,13 +46,21 @@ val mainModule = module {
     single { (currentSession: Session) -> GameViewModel(get(), currentSession) }
     viewModel { JoinGameViewModel(get()) }
     viewModel { NewGameViewModel(get()) }
+    viewModel { MainActivityViewModel(get(), get()) }
     viewModel { StartViewModel(get(), get()) }
 
     factory { SessionListenerHelper(get(), get()) as SessionListenerService }
-    factory { BuildInfo(targetApp = TargetApp.SPYFALL, versionCode = VERSION_CODE, versionName = VERSION_NAME) }
+    factory {
+        BuildInfo(
+            targetApp = TargetApp.Spyfall(isLegacyBuild()),
+            versionCode = VERSION_CODE,
+            versionName = VERSION_NAME
+        )
+    }
+
+    factory { CheckForRequiredSpyfallUpdate(get(), get()) as CheckForRequiredUpdate }
 
     factory { FireStoreService(get(), get()) as GameService }
-    factory { CheckForForcedUpdate(get(), get()) }
     factory { Constants(androidApplication(), get()) }
     factory { ReviewHelper(androidContext()) }
     factory { SavedSessionHelper(get(), get()) }

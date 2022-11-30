@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.legacy.util.isLegacyBuild
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +30,12 @@ object CoreModule {
     }
 
     @Provides
-    fun provideBuildInfo(): BuildInfo = BuildInfo(TargetApp.SPYFALL, VERSION_CODE, VERSION_NAME)
+    @Singleton
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
 
+    @Provides
+    fun provideBuildInfo(): BuildInfo =
+        BuildInfo(TargetApp.Spyfall(isLegacyBuild = isLegacyBuild()), VERSION_CODE, VERSION_NAME)
 }

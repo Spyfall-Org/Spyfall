@@ -3,11 +3,9 @@ package com.dangerfield.spyfall.navigation
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentFactory
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.legacy.ui.settings.RequireUpdateFragment
 import com.dangerfield.spyfall.settings.SettingsFragment
 import com.dangerfield.spyfall.splash.SplashFragment
 import com.dangerfield.spyfall.welcome.WelcomeNavigator

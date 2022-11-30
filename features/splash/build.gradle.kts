@@ -6,10 +6,14 @@ plugins {
 }
 
 dependencies {
-    implementation(getModule("libraries:core"))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.coroutines.play.services)
+
+    implementation(getModule("libraries:coreCommon"))
     implementation(getModule("libraries:coreUi"))
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreSpyfallGame"))
-    implementation("androidx.core:core-ktx:+")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.0.0")
 }

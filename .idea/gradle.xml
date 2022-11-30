@@ -41,8 +41,10 @@
             <option value="$PROJECT_DIR$/features/waitingApi" />
             <option value="$PROJECT_DIR$/features/welcome" />
             <option value="$PROJECT_DIR$/libraries" />
-            <option value="$PROJECT_DIR$/libraries/core" />
+            <option value="$PROJECT_DIR$/libraries/coreApi" />
+            <option value="$PROJECT_DIR$/libraries/coreCommon" />
             <option value="$PROJECT_DIR$/libraries/coreGameApi" />
+            <option value="$PROJECT_DIR$/libraries/coreSpyfall" />
             <option value="$PROJECT_DIR$/libraries/coreSpyfallGame" />
             <option value="$PROJECT_DIR$/libraries/coreUi" />
             <option value="$PROJECT_DIR$/libraries/coreWerewolfGame" />

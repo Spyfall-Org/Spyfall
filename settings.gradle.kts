@@ -1,3 +1,5 @@
+include("libraries:coreSpyfall")
+include("libraries:coreApi")
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -16,7 +18,7 @@ include("libraries:coreUi")
 include("libraries:coreWerewolfGame")
 include("libraries:coreSpyfallGame")
 include("libraries:coreGameApi")
-include("libraries:core")
+include("libraries:coreCommon")
 include("features:createGame")
 include("features:createGameApi")
 include("features:joinGame")

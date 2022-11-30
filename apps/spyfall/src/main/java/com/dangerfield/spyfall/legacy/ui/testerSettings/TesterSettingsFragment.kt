@@ -10,9 +10,6 @@ import com.dangerfield.spyfall.legacy.api.Resource
 import com.dangerfield.spyfall.legacy.util.DBCleaner
 import com.dangerfield.spyfall.legacy.util.PreferencesService
 import kotlinx.android.synthetic.main.fragment_tester_settings.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class TesterSettingsFragment : Fragment(R.layout.fragment_tester_settings) {
@@ -33,15 +30,13 @@ class TesterSettingsFragment : Fragment(R.layout.fragment_tester_settings) {
 
         btn_clean_db.setOnClickListener {
             showDbCleanLoading()
-            CoroutineScope(Dispatchers.IO).launch {
-                dbCleaner.cleandb()
-                    .observe(viewLifecycleOwner, Observer {
-                        when (it) {
-                            is Resource.Success -> it.data?.let { s -> handleCleanDbMessage(s) }
-                            is Resource.Error -> it.error?.let { e -> handleCleanDbMessage(e) }
-                        }
-                    })
-            }
+            dbCleaner.cleandb()
+                .observe(viewLifecycleOwner) {
+                    when (it) {
+                        is Resource.Success -> it.data?.let { s -> handleCleanDbMessage(s) }
+                        is Resource.Error -> it.error?.let { e -> handleCleanDbMessage(e) }
+                    }
+                }
         }
     }
 

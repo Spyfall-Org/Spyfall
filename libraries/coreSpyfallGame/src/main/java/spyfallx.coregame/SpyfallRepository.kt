@@ -11,7 +11,6 @@ class SpyfallRepository @Inject constructor() : GameRepository<SpyfallGame> {
     override fun getGame(accessCode: String): Flow<SpyfallGame> = flow {}
 
     override suspend fun gameExists(accessCode: String): Boolean {
-        delay(5000)
         return false
     }
 }

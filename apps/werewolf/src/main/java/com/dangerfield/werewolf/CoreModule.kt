@@ -27,8 +27,9 @@ object CoreModule {
         )
     }
 
+
     @Provides
-    fun provideBuildInfo(): BuildInfo = BuildInfo(TargetApp.WEREWOLF, VERSION_CODE, VERSION_NAME)
+    fun provideBuildInfo(): BuildInfo = BuildInfo(TargetApp.Werewolf, VERSION_CODE, VERSION_NAME)
 
 
     @Provides

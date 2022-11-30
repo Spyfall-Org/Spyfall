@@ -8,7 +8,7 @@ plugins {
 dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.android)
-    implementation(getModule("libraries:core"))
+    implementation(getModule("libraries:coreCommon"))
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreUi"))
     implementation(getModule("features:settingsApi"))

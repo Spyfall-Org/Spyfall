@@ -1,5 +1,6 @@
 import com.spyfall.convention.shared.SpyfallConstants
 import com.spyfall.convention.shared.buildConfigField
+import com.spyfall.convention.shared.configureSpyfallFlavors
 import com.spyfall.convention.shared.getModule
 
 plugins {
@@ -37,15 +38,9 @@ android {
         named("debug") {
             versionNameSuffix = "-DEBUG"
         }
-
-        create("legacy") {
-            manifestPlaceholders["screenOrientation"] = "portrait"
-            signingConfig = signingConfigs.getByName("debug")
-            versionNameSuffix = "-LEGACY"
-            matchingFallbacks += "debug"
-            matchingFallbacks += "release"
-        }
     }
+
+    configureSpyfallFlavors(this)
 
     androidExtensions {
         isExperimental = true
@@ -117,7 +112,7 @@ dependencies {
     implementation(getModule("libraries:coreUi"))
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreSpyfallGame"))
-    implementation(getModule("libraries:core"))
+    implementation(getModule("libraries:coreCommon"))
     implementation(getModule("features:settingsApi"))
     implementation(getModule("features:settings"))
     implementation(getModule("features:welcome"))

@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.splash
 
+import android.util.Log
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import com.dangerfield.spyfall.splash.SplashViewModel.GameStatus
@@ -22,8 +23,8 @@ class SplashPresenter @Inject constructor(
     init {
 
         val id = when (buildInfo.targetApp) {
-            TargetApp.SPYFALL -> R.drawable.spyfall_logo_transparent
-            TargetApp.WEREWOLF -> R.drawable.were_wolf_logo_transparent
+            is TargetApp.Spyfall -> R.drawable.spyfall_logo_transparent
+            is TargetApp.Werewolf -> R.drawable.were_wolf_logo_transparent
         }
 
         val drawable = AppCompatResources.getDrawable(binding.root.context, id)
@@ -32,10 +33,15 @@ class SplashPresenter @Inject constructor(
     }
 
     fun bindState(state: SplashViewModel.State) {
-        when (state.gameStatus) {
-            is GameStatus.FoundInGame -> navigator.navigateToWelcome(state.gameStatus.session)
-            GameStatus.NotFoundInGame -> navigator.navigateToWelcome(null)
-            GameStatus.SearchingForGame -> doNothing()
+        if (state.isUpdateRequired) {
+            Log.d("Elijah", "GOT UPDATE IS REQUIRED")
+            navigator.navigateToForcedUpdate()
+        } else {
+            when (state.gameStatus) {
+                is GameStatus.FoundInGame -> navigator.navigateToWelcome(state.gameStatus.session)
+                GameStatus.NotFoundInGame -> navigator.navigateToWelcome(null)
+                GameStatus.SearchingForGame -> doNothing()
+            }
         }
     }
 }

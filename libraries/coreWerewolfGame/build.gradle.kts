@@ -10,7 +10,7 @@ dependencies {
     implementation(libs.javax.inject)
     implementation(libs.kotlinx.coroutines)
     implementation(getModule("libraries:coreGameApi"))
-    implementation(getModule("libraries:core"))
+    implementation(getModule("libraries:coreCommon"))
     implementation("androidx.core:core-ktx:+")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.0.0")
 }

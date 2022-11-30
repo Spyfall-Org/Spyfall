@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.concurrent.CancellationException
 import kotlin.Exception
 
 class FireStoreService(private val db: FirebaseFirestore, private val constants: Constants) :
@@ -172,7 +173,7 @@ class FireStoreService(private val db: FirebaseFirestore, private val constants:
                 .await()
                 .get(constants.requiredVersionCodeField) as? Long
         } catch (e: Exception){
-            null
+            if (e is CancellationException) throw e else null
         }
 
         return result?.toInt()

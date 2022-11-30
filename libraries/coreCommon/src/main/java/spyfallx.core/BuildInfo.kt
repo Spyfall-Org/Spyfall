@@ -12,12 +12,13 @@ data class BuildInfo(
 ) {
 
     val isDebug: Boolean = BuildConfig.DEBUG
+    val isLegacySpyfall = targetApp is TargetApp.Spyfall && targetApp.isLegacyBuild
 }
 
 /**
  * All applications build from the Spyfall codebase
  */
-enum class TargetApp {
-    SPYFALL,
-    WEREWOLF,
+sealed class TargetApp {
+    class Spyfall(val isLegacyBuild: Boolean) : TargetApp()
+    object Werewolf : TargetApp()
 }

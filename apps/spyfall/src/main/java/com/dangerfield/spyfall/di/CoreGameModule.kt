@@ -1,7 +1,9 @@
 package com.dangerfield.spyfall.di
 
-import com.dangerfield.spyfall.splash.GetSpyfallGameInProgress
+import com.dangerfield.spyfall.splash.CheckForRequiredSpyfallUpdate
+import com.dangerfield.spyfall.splash.CheckForRequiredUpdate
 import com.dangerfield.spyfall.splash.GetGameInProgress
+import com.dangerfield.spyfall.splash.GetSpyfallGameInProgress
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,5 +21,8 @@ object CoreGameModule {
 
         @Binds
         fun bindGetGameInProgress(impl: GetSpyfallGameInProgress): GetGameInProgress
+
+        @Binds
+        fun bindCheckForRequiredUpdate(impl: CheckForRequiredSpyfallUpdate): CheckForRequiredUpdate
     }
 }

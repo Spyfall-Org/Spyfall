@@ -9,4 +9,8 @@ class InternalSplashNavigator @Inject constructor() : SplashNavigator {
     override fun navigateToWelcome(session: Session?) {
         doNothing()
     }
+
+    override fun navigateToForcedUpdate() {
+        doNothing()
+    }
 }
