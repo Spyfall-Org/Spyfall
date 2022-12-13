@@ -1,6 +1,7 @@
 package com.spyfall.convention.shared
 
 import com.android.build.api.dsl.CommonExtension
+import com.spyfall.convention.shared.SharedConstants.targetSdk
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
