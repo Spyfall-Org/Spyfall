@@ -6,11 +6,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.creategame.NewGameFragment
 import com.dangerfield.spyfall.settings.SettingsFragment
-import com.dangerfield.spyfall.splash.SplashFragment
+import com.dangerfield.spyfall.splash.splash.SplashFragment
 import com.dangerfield.spyfall.welcome.WelcomeNavigator
 import com.dangerfield.spyfall.welcome.join_game.JoinGameFragment
-import com.dangerfield.spyfall.welcome.new_game.NewGameFragment
 import com.dangerfield.spyfall.welcome.welcome.WelcomeFragment
 import spyfallx.coregameapi.Session
 import javax.inject.Inject

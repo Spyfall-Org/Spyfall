@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.splash.ForcedUpdateFragment
-import com.dangerfield.spyfall.splash.SplashNavigator
+import com.dangerfield.spyfall.splash.forcedupdate.ForcedUpdateFragment
+import com.dangerfield.spyfall.splash.splash.SplashNavigator
 import com.dangerfield.spyfall.welcome.welcome.WelcomeFragment
 import spyfallx.coregameapi.Session
 import javax.inject.Inject

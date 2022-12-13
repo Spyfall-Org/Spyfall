@@ -6,9 +6,6 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
-
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.coroutines.play.services)
 

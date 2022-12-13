@@ -16,7 +16,7 @@ sealed class WerewolfPlayer(
         isHost: Boolean,
         isAlive: Boolean,
         role: String,
-        val minion: WerewolfPlayer
+        val minion: WerewolfPlayer?
     ) : WerewolfPlayer(username, id, isHost, role, isAlive,)
 
     class Villager(

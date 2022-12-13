@@ -8,7 +8,7 @@ import com.dangerfield.spyfall.MainActivityViewModel.Step.ForceUpdateDecision
 import com.dangerfield.spyfall.MainActivityViewModel.Step.SplashDecision
 import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.isLegacyBuild
-import com.dangerfield.spyfall.splash.SplashFragment
+import com.dangerfield.spyfall.splash.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import spyfallx.core.BuildInfo

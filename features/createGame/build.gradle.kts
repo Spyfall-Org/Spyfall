@@ -6,4 +6,5 @@ plugins {
 
 dependencies {
     implementation(getModule("libraries:coreCommon"))
+    implementation(getModule("libraries:coreUi"))
 }

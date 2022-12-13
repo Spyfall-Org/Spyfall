@@ -9,6 +9,9 @@
 /captures
 .externalNativeBuild
 
+# Sensitive scripts
+/scripts/remote_config
+
 # Generated files
 bin/
 gen/

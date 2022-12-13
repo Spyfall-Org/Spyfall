@@ -1,6 +1,5 @@
 import com.android.build.gradle.LibraryExtension
 import com.spyfall.convention.shared.SharedConstants
-import com.spyfall.convention.shared.SpyfallConstants
 import com.spyfall.convention.shared.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project

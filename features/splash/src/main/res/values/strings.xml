@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="okay">Okay</string>
-    <string name="update_message">Please update your app to the newest version</string>
+    <string name="update_message">Please update to the newest version to keep using this app.</string>
     <string name="update_title">We\'ve made some changes</string>
 </resources>

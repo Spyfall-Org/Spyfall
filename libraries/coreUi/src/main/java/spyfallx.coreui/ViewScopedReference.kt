@@ -38,3 +38,10 @@ class ViewScopedReference<T>(
 fun <T> Fragment.viewScoped(factory: (View) -> T): ViewScopedReference<T> {
     return ViewScopedReference(this, factory)
 }
+
+/**
+ * Convenience function to view scope an object, when you have no need to call
+ */
+fun <T> Fragment.viewScope(factory: (View) -> T) {
+    ViewScopedReference(this, factory)
+}

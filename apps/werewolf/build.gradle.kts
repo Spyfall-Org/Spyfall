@@ -67,4 +67,5 @@ dependencies {
     implementation(getModule("features:settings"))
     implementation(getModule("features:welcome"))
     implementation(getModule("features:splash"))
+    implementation(getModule("features:splash:werewolf"))
 }

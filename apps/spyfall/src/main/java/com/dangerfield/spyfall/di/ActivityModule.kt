@@ -2,7 +2,7 @@ package com.dangerfield.spyfall.di
 
 import com.dangerfield.spyfall.navigation.InternalSplashNavigator
 import com.dangerfield.spyfall.navigation.InternalWelcomeNavigator
-import com.dangerfield.spyfall.splash.SplashNavigator
+import com.dangerfield.spyfall.splash.splash.SplashNavigator
 import com.dangerfield.spyfall.welcome.WelcomeNavigator
 import dagger.Binds
 import dagger.Module

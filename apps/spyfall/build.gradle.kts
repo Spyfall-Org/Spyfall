@@ -1,7 +1,7 @@
-import com.spyfall.convention.shared.SpyfallConstants
 import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.configureSpyfallFlavors
 import com.spyfall.convention.shared.getModule
+import com.spyfall.convention.shared.spyfall.SpyfallConstants
 
 plugins {
     id("spyfall.android.application")
@@ -116,5 +116,7 @@ dependencies {
     implementation(getModule("features:settingsApi"))
     implementation(getModule("features:settings"))
     implementation(getModule("features:welcome"))
+    implementation(getModule("features:createGame"))
     implementation(getModule("features:splash"))
+    implementation(getModule("features:splash:spyfall"))
 }
