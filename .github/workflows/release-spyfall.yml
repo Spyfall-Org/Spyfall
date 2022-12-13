@@ -3,7 +3,7 @@ name: Spyfall GitHub Release with APKs
 on:
   push:
     branches:
-      - "spyfall/release/*"
+      - 'spyfall/release*'
 
 jobs:
   build:
@@ -26,8 +26,53 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
-      - name: Build app
+      - name: Get Tag
+        id: var
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Build apk
         run: ./gradlew assembleLegacyRelease
+
+      - name: Sign APK
+        id: sign_apk
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: apps/spyfall/build/outputs/apk/Legacy/release
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEYALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Make artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release-signed
+          path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+
+      - name: Build AAB
+        run: bash ./gradlew bundleLegacyRelease
+
+      - name: Sign AAB
+        id: sign_aab
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: apps/spyfall/build/outputs/bundle/Legacy/release
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEYALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Make artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release-signed
+          path: ${{steps.sign_aab.outputs.signedReleaseFile}}
+
+      - name: Build Changelog
+        id: changelog
+        uses: ardalanamini/auto-changelog@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         id: create_release
@@ -38,14 +83,25 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
           draft: true
+          body: ${{ steps.changelog.outputs.changelog }} &#x20;
           prerelease: false
 
-      - name: Upload app
+      - name: Upload APK
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: apps/spyfall/Legacy/release/spyfall-legacy-release.apk
-          asset_name: spyfall-legacy-release.apk
-          asset_content_type: application/vnd.android.package-archive
+          asset_path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.apk
+          asset_content_type: application/zip
+
+      - name: Upload AAB
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{steps.sign_aab.outputs.signedReleaseFile}}
+          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.aab
+          asset_content_type: application/zip
