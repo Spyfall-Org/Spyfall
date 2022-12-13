@@ -12,31 +12,23 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.options.Option
 import java.io.File
 import java.io.FileInputStream
 
 /**
- * uses the projects app version to create a config for that version.
- * After uploading an app version we increment the number and start developing for the next version
- * upon doing that we create the config for that new version by running this task
+ * Gradle task to create a new app config based on the appVersionName passed in or based on the current app version
  *
- * you can run this task via: {APP_NAME}CreateAppConfig
- * ./gradlew werewolfCreateAppConfig
- * ./gradlew spyfallCreateAppConfig
+ * you can run this task via:
  *
+ * ./gradlew {APP_NAME}CreateAppConfig --appVersionName="{APP_VERSION_NAME}"
+ *
+ * ex: ./gradlew werewolfCreateAppConfig --appVersionName="1.2.3"
  */
 
 const val RED = "\u001b[31m"
 const val GREEN = "\u001b[32m"
 const val RESET = "\u001b[0m"
-
-fun printRed(text: String) {
-    println(RED + text + RESET)
-}
-
-fun printGreen(text: String) {
-    println(GREEN + text + RESET)
-}
 
 internal fun Project.configureAppConfigCreationTask() {
     val name = this.projectDir.name
@@ -58,13 +50,22 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
     @get:Input
     abstract val serviceAccountJsonFile: Property<File>
 
+    @set:Option(
+        option = "appVersionName",
+        description = "The App Version Name That You Would Like To Create A Config For."
+    )
+    @get:Input
+    var inputAppVersionName: String? = null
+
     @TaskAction
     fun taskAction() {
 
-        val appVersion = getAppVersion(projectName.get()) ?: kotlin.run {
+        val appVersion = inputAppVersionName ?: getAppVersion(projectName.get()) ?: kotlin.run {
             printRed(
                 """
-                Version for project name ${projectName.get()} could not be found
+                Version for project name ${projectName.get()} could not be found. 
+                Please ensure you passed one in using -Pargs 
+                or that the CreateAppConfig.kt script has access to the app version
                 """.trimIndent()
             )
             return
@@ -151,11 +152,12 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
         val documents = collection(SharedConstants.configCollection).listDocuments().sortedWith { first, second ->
             val firstValues = first.simpleName.split(".")
             val secondValues = second.simpleName.split(".")
-            return@sortedWith if (isFirstLarger(firstValues, secondValues)) -1 else 1
+            return@sortedWith if (isFirstLarger(firstValues, secondValues)) 1 else -1
         }
 
         val indexOfNewAppVersion = getNewAppVersionPosition(documents, appVersion)
-        return if (indexOfNewAppVersion == 0) {
+        return if (indexOfNewAppVersion <= 0) {
+            printRed("NO PREVIOUS MOST APP CONFIG FOUND")
             null // this is likely the first app config being made in this case
         } else if (indexOfNewAppVersion >= documents.size) {
             documents.last() // this should not happen.
@@ -172,7 +174,10 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
             .sortedWith { first, second ->
                 val firstValues = first.split(".")
                 val secondValues = second.split(".")
-                return@sortedWith if (isFirstLarger(firstValues, secondValues)) -1 else 1
+                return@sortedWith if (isFirstLarger(firstValues, secondValues)) 1 else -1
+            }
+            .apply {
+                printRed("Sorted list of documents after adding new one is $this")
             }
 
         return sortedDocumentNameList.indexOf(appVersion)
@@ -202,10 +207,18 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
         val app = try {
             println("Initializing Firebase app")
             FirebaseApp.initializeApp(options, appName)
-        } catch(e: IllegalStateException) {
+        } catch (e: IllegalStateException) {
             println("Firebase app already initialized")
             null
         }
         return FirestoreClient.getFirestore(app)
     }
+}
+
+fun printRed(text: String) {
+    println(RED + text + RESET)
+}
+
+fun printGreen(text: String) {
+    println(GREEN + text + RESET)
 }
