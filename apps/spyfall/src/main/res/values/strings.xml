@@ -52,9 +52,6 @@
     <string name="theme_change_positive">Change</string>
     <string name="theme_change_error">No color was selected</string>
 
-    <string name="update_title" translatable="false">We\'ve made some changes</string>
-    <string name="update_message" translatable="false">Please update to the latest version</string>
-
     <!--Settings-->
     <string name="string_content_description_settings">Settings Button</string>
     <string name="string_settings">Settings</string>
