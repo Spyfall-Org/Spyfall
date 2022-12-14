@@ -19,7 +19,7 @@ jobs:
         shell: bash
 
       - name: Download aab artifact
-      - uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: app-release-signed.aab
 
