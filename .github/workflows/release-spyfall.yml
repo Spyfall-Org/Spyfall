@@ -56,7 +56,7 @@ jobs:
         id: sign_aab
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: apps/spyfall/build/outputs/bundle/Legacy/release
+          releaseDirectory: apps/spyfall/build/outputs/bundle/LegacyRelease
           signingKeyBase64: ${{ secrets.KEYSTORE }}
           alias: ${{ secrets.KEYALIAS }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
