@@ -1,9 +1,8 @@
-name: Spyfall GitHub Release with APKs
+name: Publish Spyfall
 
 on:
-  push:
-    tags:
-      - 'spyfall/v*'
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -11,97 +10,24 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-
-      - name: Copy CI gradle.properties
-        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/download-artifact@v3
         with:
-          distribution: 'zulu'
-          java-version: 11
+          name: app-release-signed.aab
+          path: apps/spyfall/build/outputs/bundle/LegacyRelease/app-release-signed.aab
 
-      - name: Set Tag Version
-        id: tag_version
-        run: echo ::set-output name=TAG_VERSION::${GITHUB_REF#refs/tags/}
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: apps/spyfall/build/outputs/bundle/LegacyRelease/app-release-signed.aab
 
-      - name: Build apk
-        run: ./gradlew assembleLegacyRelease
-
-      - name: Sign APK
-        id: sign_apk
-        uses: r0adkll/sign-android-release@v1
+      - name: Publish To Google Play
+        uses: r0adkll/upload-google-play@v1
         with:
-          releaseDirectory: apps/spyfall/build/outputs/apk/Legacy/release
-          signingKeyBase64: ${{ secrets.KEYSTORE }}
-          alias: ${{ secrets.KEYALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Make artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-release-signed
-          path: ${{steps.sign_apk.outputs.signedReleaseFile}}
-
-      - name: Build AAB
-        run: bash ./gradlew bundleLegacyRelease
-
-      - name: Sign AAB
-        id: sign_aab
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: apps/spyfall/build/outputs/bundle/LegacyRelease
-          signingKeyBase64: ${{ secrets.KEYSTORE }}
-          alias: ${{ secrets.KEYALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Make artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-release-signed
-          path: ${{steps.sign_aab.outputs.signedReleaseFile}}
-
-      - name: Build Changelog
-        id: changelog
-        uses: ardalanamini/auto-changelog@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: ${{ github.ref_name }}
-          draft: true
-          body: ${{ steps.changelog.outputs.changelog }} &#x20;
-          prerelease: false
-
-      - name: Upload APK
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{steps.sign_apk.outputs.signedReleaseFile}}
-          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.apk
-          asset_content_type: application/zip
-
-      - name: Upload AAB
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{steps.sign_aab.outputs.signedReleaseFile}}
-          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.aab
-          asset_content_type: application/zip
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+          packageName: com.dangerfield.spyfall.free
+          releaseFiles: apps/spyfall/build/outputs/bundle/LegacyRelease/app-release-signed.aab
+          track: production
+          status: inProgress
+          inAppUpdatePriority: 0
+          userFraction: 0.33
