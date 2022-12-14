@@ -3,7 +3,7 @@ name: Spyfall GitHub Release with APKs
 on:
   push:
     tags:
-      - 'v*'
+      - 'spyfall/v*'
 
 jobs:
   build:

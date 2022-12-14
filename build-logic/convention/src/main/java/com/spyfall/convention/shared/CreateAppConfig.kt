@@ -6,7 +6,6 @@ import com.google.cloud.firestore.Firestore
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
-import com.spyfall.convention.shared.spyfall.SpyfallConstants
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -25,10 +24,6 @@ import java.io.FileInputStream
  *
  * ex: ./gradlew werewolfCreateAppConfig --appVersionName="1.2.3"
  */
-
-const val RED = "\u001b[31m"
-const val GREEN = "\u001b[32m"
-const val RESET = "\u001b[0m"
 
 internal fun Project.configureAppConfigCreationTask() {
     val name = this.projectDir.name
@@ -60,7 +55,7 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
     @TaskAction
     fun taskAction() {
 
-        val appVersion = inputAppVersionName ?: getAppVersion(projectName.get()) ?: kotlin.run {
+        val appVersion = inputAppVersionName ?: project.getVersionName() ?: kotlin.run {
             printRed(
                 """
                 Version for project name ${projectName.get()} could not be found. 
@@ -113,13 +108,6 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
             }
         }
     }
-
-    private fun getAppVersion(projectName: String): String? =
-        when (projectName) {
-            "spyfall" -> SpyfallConstants.versionName
-            "werewolf" -> WerewolfConstants.versionName
-            else -> null
-        }
 
     private fun classifyAppConfigValidation(
         newConfigName: String,

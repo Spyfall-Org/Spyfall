@@ -1,6 +1,7 @@
 package com.spyfall.convention.shared
 
 import com.android.build.api.dsl.VariantDimension
+import com.spyfall.convention.shared.spyfall.SpyfallConstants
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
@@ -42,3 +43,16 @@ fun VariantDimension.buildConfigField(name: String, value: Any?) {
         else -> throw IllegalArgumentException("Unknown type for $value")
     }
 }
+
+
+
+fun Project.getVersionName(): String? =
+    when (this.projectDir.name) {
+        "spyfall" -> SpyfallConstants.versionName
+        "werewolf" -> WerewolfConstants.versionName
+        else -> null
+    }
+
+const val RED = "\u001b[31m"
+const val GREEN = "\u001b[32m"
+const val RESET = "\u001b[0m"
