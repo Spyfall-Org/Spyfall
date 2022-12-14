@@ -12,6 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Make file tree script executable
+        run: chmod +x scripts/print-file-tree.sh
+        shell: bash
+
+      - name: Print file tree
+        run: ./scripts/print-file-tree.sh
+        shell: bash
+
       - uses: actions/download-artifact@v3
         with:
           name: app-release-signed.aab
