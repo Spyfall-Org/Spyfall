@@ -27,7 +27,7 @@ jobs:
           java-version: 11
 
       - name: Set Tag Name
-        run: echo ::set-env name=TAG_NAME::"v${GITHUB_REF##*/}"
+        run: echo ::set-env name=TAG_NAME::${GITHUB_REF##*/}
 
       - name: Build apk
         run: ./gradlew assembleLegacyRelease
