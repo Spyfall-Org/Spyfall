@@ -26,6 +26,10 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
+      - name: Set Tag Version
+        id: tag_version
+        run: echo ::set-output name=TAG_VERSION::${GITHUB_REF#refs/tags/}
+
       - name: Build apk
         run: ./gradlew assembleLegacyRelease
 
@@ -76,8 +80,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{GITHUB_REF##*/}}
-          release_name: ${{GITHUB_REF##*/}}
+          tag_name: ${{ steps.get_version.outputs.TAG_VERSION }}
+          release_name: ${{ steps.get_version.outputs.TAG_VERSION }}
           draft: true
           body: ${{ steps.changelog.outputs.changelog }} &#x20;
           prerelease: false
