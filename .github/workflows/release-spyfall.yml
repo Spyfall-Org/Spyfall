@@ -12,13 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - uses: actions/download-artifact@v3
         with:
           name: app-release-signed.aab
           path: apps/spyfall/build/outputs/bundle/LegacyRelease/app-release-signed.aab
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: apps/spyfall/build/outputs/bundle/LegacyRelease
 
       - name: Publish To Google Play
         uses: r0adkll/upload-google-play@v1
