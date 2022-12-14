@@ -10,6 +10,9 @@ jobs:
     timeout-minutes: 45
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Make file tree script executable
         run: chmod +x scripts/print-file-tree.sh
         shell: bash
