@@ -2,8 +2,8 @@ name: Spyfall GitHub Release with APKs
 
 on:
   push:
-    branches:
-      - 'spyfall/release*'
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -26,9 +26,8 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
-      - name: Get Tag
-        id: var
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Set Tag Name
+        run: echo ::set-env name=TAG_NAME::"v${GITHUB_REF##*/}"
 
       - name: Build apk
         run: ./gradlew assembleLegacyRelease
@@ -81,7 +80,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          release_name: ${{ env.RELEASE_NAME }}
           draft: true
           body: ${{ steps.changelog.outputs.changelog }} &#x20;
           prerelease: false
