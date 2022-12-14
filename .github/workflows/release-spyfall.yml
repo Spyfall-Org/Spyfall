@@ -10,8 +10,6 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Make file tree script executable
         run: chmod +x scripts/print-file-tree.sh
         shell: bash
@@ -20,14 +18,10 @@ jobs:
         run: ./scripts/print-file-tree.sh
         shell: bash
 
+      - name: Download aab artifact
       - uses: actions/download-artifact@v3
         with:
           name: app-release-signed.aab
-          path: apps/spyfall/build/outputs/bundle/LegacyRelease/app-release-signed.aab
-
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: apps/spyfall/build/outputs/bundle/LegacyRelease
 
       - name: Publish To Google Play
         uses: r0adkll/upload-google-play@v1
