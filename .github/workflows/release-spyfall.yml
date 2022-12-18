@@ -1,8 +1,9 @@
-name: Publish Spyfall
+name: Spyfall GitHub Release Draft with APKs
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'spyfall/v*'
 
 jobs:
   build:
@@ -13,26 +14,100 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Make file tree script executable
-        run: chmod +x scripts/print-file-tree.sh
-        shell: bash
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
 
-      - name: Print file tree
-        run: ./scripts/print-file-tree.sh
-        shell: bash
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: Download aab artifact
-        uses: actions/download-artifact@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          name: app-release-signed.aab
+          distribution: 'zulu'
+          java-version: 11
 
-      - name: Publish To Google Play
+      - name: Build apk
+        run: ./gradlew assembleLegacyRelease
+
+      - name: Sign APK
+        id: sign_apk
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: apps/spyfall/build/outputs/apk/Legacy/release
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEYALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Make apk artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release-signed
+          path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+
+      - name: Build AAB
+        run: bash ./gradlew bundleLegacyRelease
+
+      - name: Sign AAB
+        id: sign_aab
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: apps/spyfall/build/outputs/bundle/LegacyRelease
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEYALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Make aab artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release-signed
+          path: ${{steps.sign_aab.outputs.signedReleaseFile}}
+
+      - name: Build Changelog
+        id: changelog
+        uses: ardalanamini/auto-changelog@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          draft: true
+          body: ${{ steps.changelog.outputs.changelog }} &#x20;
+          prerelease: false
+
+      - name: Upload APK to Github Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+          asset_name: app-release-signed.apk
+          asset_content_type: application/zip
+
+      - name: Upload AAB to GithubRelease
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{steps.sign_aab.outputs.signedReleaseFile}}
+          asset_name: app-release-signed.aab
+          asset_content_type: application/zip
+
+      - name: Upload AAB to Google Play Console
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+          serviceAccountJson: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
           packageName: com.dangerfield.spyfall.free
-          releaseFiles: apps/spyfall/build/outputs/bundle/LegacyRelease/app-release-signed.aab
+          releaseFiles: ${{steps.sign_aab.outputs.signedReleaseFile}}
           track: production
           status: inProgress
-          inAppUpdatePriority: 0
           userFraction: 0.33
