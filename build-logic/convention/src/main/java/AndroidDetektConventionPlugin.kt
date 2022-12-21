@@ -1,4 +1,5 @@
 
+import com.spyfall.convention.shared.BuildEnvironment
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -43,6 +44,7 @@ fun Detekt.setupCommonDetektSettings() {
     parallel = true
     autoCorrect = true
     buildUponDefaultConfig = false
+    ignoreFailures = BuildEnvironment.isCIBuild
     jvmTarget = "1.8"
 
     // Setup sources for run

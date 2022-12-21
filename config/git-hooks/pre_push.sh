@@ -4,4 +4,5 @@ gradle=${GRADLE_CMD:-./gradlew}
 
 # run code analysis
 $gradle \
+    detektAll \
     checkstyleAll \
