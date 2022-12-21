@@ -35,6 +35,7 @@ for hook in "$path/config/git-hooks"/*.sh; do
 
     # create symbolic link for git hook
     ln $ln_options "$hook" "$path/.git/hooks/$name"
+    chmod +x "$path/.git/hooks/$name"
 done
 
 if (( !quiet )); then
