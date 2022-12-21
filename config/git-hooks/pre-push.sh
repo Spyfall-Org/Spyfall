@@ -3,8 +3,6 @@
 # run code analysis
 echo "*****Running Code Analysis******"
 
-git stash -q --keep-index
-
 ./gradlew detektAll
 ./gradlew checkstyleAll
 
