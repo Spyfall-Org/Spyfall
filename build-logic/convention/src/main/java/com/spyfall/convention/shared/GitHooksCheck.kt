@@ -8,7 +8,7 @@ internal fun Project.configureGitHooksCheck() {
         project.rootProject.file("config/git-hooks")
             .listFiles()
             .forEach {
-                val installedGitHook = project.rootProject.file(".git/hooks/${it.name}")
+                val installedGitHook = project.rootProject.file(".git/hooks/${it.nameWithoutExtension}")
 
                 if (!installedGitHook.isFile && !BuildEnvironment.isCIBuild) {
                     throw IllegalStateException(
