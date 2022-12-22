@@ -20,7 +20,6 @@ if (( helper )); then
     exit
 fi
 
-this=$(basename "$0" .sh)
 path=$(git rev-parse --show-toplevel)
 ln_options=
 
@@ -31,15 +30,12 @@ else
 fi
 
 # link all shell scripts in /hooks to .git/hooks
-for hook in "$path/hooks"/*.sh; do
+for hook in "$path/config/git-hooks"/*.sh; do
     name=$(basename "$hook" .sh)
-
-    if [ "$name" == "$this" ]; then
-        continue # skip this shell script
-    fi
 
     # create symbolic link for git hook
     ln $ln_options "$hook" "$path/.git/hooks/$name"
+    chmod +x "$path/.git/hooks/$name"
 done
 
 if (( !quiet )); then

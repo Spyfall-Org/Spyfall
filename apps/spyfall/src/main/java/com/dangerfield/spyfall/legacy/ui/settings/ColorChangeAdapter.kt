@@ -2,13 +2,19 @@ package com.dangerfield.spyfall.legacy.ui.settings
 
 import android.content.Context
 import android.graphics.Color
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
 import kotlinx.android.synthetic.main.item_change_color.view.*
 
-class ColorChangeAdapter(var colors: List<ColorButton>, private var context: Context?, val mCallback: ColorChanger) : RecyclerView.Adapter<ColorChangeAdapter.ViewHolder>() {
+class ColorChangeAdapter(
+    var colors: List<ColorButton>,
+    private var context: Context?,
+    val mCallback: ColorChanger
+) : RecyclerView.Adapter<ColorChangeAdapter.ViewHolder>() {
 
     var selectedPosition = -1
 
@@ -20,12 +26,12 @@ class ColorChangeAdapter(var colors: List<ColorButton>, private var context: Con
             context = view.context
 
             view.setOnClickListener {
-                //first, unselect the previous
-                if(selectedPosition != -1){ colors[selectedPosition].isSelected = false }
-                //now select this one
+                // first, unselect the previous
+                if (selectedPosition != -1) { colors[selectedPosition].isSelected = false }
+                // now select this one
                 colors[adapterPosition].isSelected = true
                 selectedPosition = adapterPosition
-                if(colors[adapterPosition].color != Color.WHITE){
+                if (colors[adapterPosition].color != Color.WHITE) {
                     mCallback.onColorChange((colors[adapterPosition]))
                 }
                 notifyDataSetChanged()
@@ -39,16 +45,16 @@ class ColorChangeAdapter(var colors: List<ColorButton>, private var context: Con
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(colors[position].color == Color.WHITE){
+        if (colors[position].color == Color.WHITE) {
             holder.hiddenText.visibility = View.VISIBLE
             holder.hiddenText.text = context!!.resources.getString(R.string.change_theme_random_colors)
-        }else{
+        } else {
             holder.background.setBackgroundColor(colors[position].color)
             holder.hiddenText.visibility = View.INVISIBLE
         }
-        if(colors[position].isSelected){
+        if (colors[position].isSelected) {
             select(holder.itemView)
-        }else{
+        } else {
             unselect(holder.itemView)
         }
     }
@@ -57,13 +63,13 @@ class ColorChangeAdapter(var colors: List<ColorButton>, private var context: Con
         return colors.size
     }
 
-    private fun unselect(view: View){
-        //unselect
+    private fun unselect(view: View) {
+        // unselect
         view.color_change_filter.visibility = View.INVISIBLE
         view.color_change_check_animation.visibility = View.INVISIBLE
     }
-    private fun select(view: View){
-        //select
+    private fun select(view: View) {
+        // select
         view.color_change_filter.visibility = View.VISIBLE
         view.color_change_check_animation.speed = 2.0f
         view.color_change_check_animation.visibility = View.VISIBLE

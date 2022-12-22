@@ -1,4 +1,4 @@
-package com.dangerfield.spyfall.splash.spyfall
+package com.dangerfield.spyfall.splash.werewolf
 
 import com.dangerfield.spyfall.splash.forcedupdate.AppUpdateDataSource
 import com.google.firebase.firestore.FirebaseFirestore
@@ -7,7 +7,7 @@ import spyfallx.core.BuildInfo
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
-class SpyfallAppUpdateDataSource @Inject constructor(
+class WerewolfAppUpdateDataSource @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val buildInfo: BuildInfo
 ) : AppUpdateDataSource {

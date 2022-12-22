@@ -18,9 +18,7 @@ import com.dangerfield.spyfall.legacy.util.hideKeyboard
 import com.dangerfield.spyfall.legacy.util.invisibleIf
 import com.dangerfield.spyfall.legacy.util.openKeyboard
 import com.dangerfield.spyfall.legacy.util.visibleIf
-import com.dangerfield.spyfall.legacy.util.*
 import kotlinx.android.synthetic.main.dialog_change_name.view.*
-
 
 interface NameChangeEventFirer {
     fun triggerNameChangeEvent(newName: String)
@@ -30,7 +28,7 @@ interface NameChangeEventFirer {
 class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
 
     private var nameChangeDialog: AlertDialog? = null
-    private var dialogView: View? = null;
+    private var dialogView: View? = null
 
     fun showNameChangeDialog(context: Context) {
         nameChangeDialog = buildDialog(context)
@@ -43,7 +41,7 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
     }
 
     fun updateLoadingState(loading: Boolean) {
-        dialogView?.let {dialog ->
+        dialogView?.let { dialog ->
             dialog.tv_alert_change_name.invisibleIf(loading)
             dialog.progressBar.visibleIf(loading)
             dialog.btn_change_name_alert_okay.goneIf(loading)
@@ -62,7 +60,7 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
             )
 
             TransitionManager.beginDelayedTransition(dialog.change_name_layout)
-            if(loading) {
+            if (loading) {
                 loadingSet.applyTo(dialog.change_name_layout)
             } else {
                 origionalSet.applyTo(dialog.change_name_layout)
@@ -75,7 +73,7 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
         dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_change_name, null)
         dialogBuilder.setView(dialogView)
         val dialog = dialogBuilder.create()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialogView?.apply {
 

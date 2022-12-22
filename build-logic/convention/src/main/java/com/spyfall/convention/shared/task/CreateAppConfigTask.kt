@@ -1,4 +1,4 @@
-package com.spyfall.convention.shared
+package com.spyfall.convention.shared.task
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.DocumentReference
@@ -6,6 +6,11 @@ import com.google.cloud.firestore.Firestore
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
+import com.spyfall.convention.shared.GREEN
+import com.spyfall.convention.shared.RED
+import com.spyfall.convention.shared.RESET
+import com.spyfall.convention.shared.SharedConstants
+import com.spyfall.convention.shared.getVersionName
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -60,7 +65,7 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
                 """
                 Version for project name ${projectName.get()} could not be found. 
                 Please ensure you passed one in using -Pargs 
-                or that the CreateAppConfig.kt script has access to the app version
+                or that the CreateAppConfigTask.kt script has access to the app version
                 """.trimIndent()
             )
             return
@@ -186,6 +191,7 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
     private fun String.isAppConfigFormat(): Boolean =
         this.contains(".") && this.replace(".", "").trim().toIntOrNull()?.let { true } ?: false
 
+    @Suppress("TooGenericExceptionCaught")
     private fun getDb(serviceAccountJsonPath: String, appName: String): Firestore {
         val serviceAccount = FileInputStream(serviceAccountJsonPath)
         val credentials = GoogleCredentials.fromStream(serviceAccount)
@@ -196,7 +202,7 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
             println("Initializing Firebase app")
             FirebaseApp.initializeApp(options, appName)
         } catch (e: IllegalStateException) {
-            println("Firebase app already initialized")
+            println("Firebase app already initialized. $e")
             null
         }
         return FirestoreClient.getFirestore(app)

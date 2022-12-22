@@ -24,6 +24,7 @@ class ForcedUpdatePresenter @Inject constructor(
         }
     }
 
+    @Suppress("SwallowedException")
     private fun openStoreForReview(context: Context) {
         try {
             val uri = Uri.parse("market://details?id=" + context.packageName)

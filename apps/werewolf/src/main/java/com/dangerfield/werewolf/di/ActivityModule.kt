@@ -11,11 +11,11 @@ import dagger.hilt.android.components.ActivityComponent
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class ActivityModule {
+interface ActivityModule {
 
     @Binds
-    abstract fun bindSplashNavigator(impl: InternalSplashNavigator): SplashNavigator
+    fun bindSplashNavigator(impl: InternalSplashNavigator): SplashNavigator
 
     @Binds
-    abstract fun bindWelcomeNavigator(impl: InternalWelcomeNavigator): WelcomeNavigator
+    fun bindWelcomeNavigator(impl: InternalWelcomeNavigator): WelcomeNavigator
 }

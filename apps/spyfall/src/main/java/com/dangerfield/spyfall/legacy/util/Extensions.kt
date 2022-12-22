@@ -11,21 +11,23 @@ import android.widget.TextView
 import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.ui.game.LegacyGameFragment
 import com.dangerfield.spyfall.legacy.ui.waiting.LegacyWaitingFragment
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
-
-fun EditText.addCharacterMax(max: Int){
+fun EditText.addCharacterMax(max: Int) {
     filters = arrayOf(InputFilter.LengthFilter(max))
 }
 
 fun View.goneIf(predicate: Boolean) {
-    visibility = if(predicate) View.GONE else View.VISIBLE
+    visibility = if (predicate) View.GONE else View.VISIBLE
 }
 
 fun View.visibleIf(predicate: Boolean) {
-    visibility = if(predicate) View.VISIBLE else View.INVISIBLE
+    visibility = if (predicate) View.VISIBLE else View.INVISIBLE
 }
-
 
 fun EditText.openKeyboard() {
     this.requestFocus()
@@ -57,30 +59,28 @@ fun TextView.clear() {
 }
 
 fun View.invisibleIf(condition: Boolean) {
-    visibility = if(condition) View.INVISIBLE else View.VISIBLE
+    visibility = if (condition) View.INVISIBLE else View.VISIBLE
 }
-
 
 fun TextView.containsValidOrEmptyEmail(): Boolean {
     val target = this.text
     return Patterns.EMAIL_ADDRESS.matcher(target).matches() || target.toString().trim().isEmpty()
 }
 
-suspend fun <A, B> Iterable<A>.pmap(dispatcher: CoroutineDispatcher = Dispatchers.Default, f: suspend (A) -> B): List<B> =
-    map { CoroutineScope(dispatcher).async(dispatcher) {  f(it) } }.awaitAll()
-
+suspend fun <A, B> Iterable<A>.pmap(
+    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    f: suspend (A) -> B
+): List<B> =
+    map { CoroutineScope(dispatcher).async(dispatcher) { f(it) } }.awaitAll()
 
 fun LegacyWaitingFragment.getViewModelFactory(bundle: Bundle): WaitingViewModelFactory {
-    //banging because navigation to waiting should be impossible without the arg
+    // banging because navigation to waiting should be impossible without the arg
     val currentSession: Session = bundle.getParcelable(LegacyWaitingFragment.SESSION_KEY)!!
     return WaitingViewModelFactory(currentSession)
 }
 
 fun LegacyGameFragment.getViewModelFactory(bundle: Bundle): GameViewModelFactory {
-    //banging because navigation to game should be impossible without the arg
+    // banging because navigation to game should be impossible without the arg
     val currentSession: Session = bundle.getParcelable(LegacyWaitingFragment.SESSION_KEY)!!
     return GameViewModelFactory(currentSession)
 }
-
-
-

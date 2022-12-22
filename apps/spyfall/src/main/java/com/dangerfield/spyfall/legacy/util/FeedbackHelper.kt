@@ -36,7 +36,7 @@ class FeedbackHelper(
         dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_feedback, null)
         dialogBuilder.setView(dialogView)
         val dialog = dialogBuilder.create()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialogView?.apply {
             btn_feedback_submit.background.setTint(UIHelper.accentColor)
@@ -49,15 +49,13 @@ class FeedbackHelper(
                         "Looks like your feedback was empty. We would appreciate any feedback you have to give :)",
                         Toast.LENGTH_SHORT
                     ).show()
-                }
-                else if(!tv_email.containsValidOrEmptyEmail()) {
+                } else if (!tv_email.containsValidOrEmptyEmail()) {
                     Toast.makeText(
                         context,
                         "Looks like your email was not formatted properly. Please try again :)",
                         Toast.LENGTH_SHORT
                     ).show()
-                }
-                else {
+                } else {
                     submitFeedback(feedbackText, tv_email.text.trim().toString())
                     Toast.makeText(
                         context,
@@ -94,7 +92,7 @@ class FeedbackHelper(
             modelAndProduct = modelAndProduct,
             appVersion = appVersion,
             date = dateFormat.format(Date()),
-            email = if(email.isNullOrEmpty()) "NO_EMAIL_PROVIDED" else email
+            email = if (email.isNullOrEmpty()) "NO_EMAIL_PROVIDED" else email
         )
 
         db.collection(constants.feedback).document("Android-" + UUID.randomUUID()).set(feedback)

@@ -1,12 +1,11 @@
 package com.dangerfield.spyfall.legacy.util
 
 import com.dangerfield.spyfall.legacy.api.Constants
-import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.models.Game
+import com.dangerfield.spyfall.legacy.models.Session
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-
 
 class SessionListenerHelper(
     private val constants: Constants,

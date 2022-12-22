@@ -19,7 +19,6 @@ import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.addCharacterMax
 import com.dangerfield.spyfall.legacy.util.goneIf
 import com.dangerfield.spyfall.legacy.util.setHideKeyBoardOnPressAway
-import com.dangerfield.spyfall.legacy.util.*
 import kotlinx.android.synthetic.main.fragment_join_game_legacy.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -35,13 +34,15 @@ class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(this,
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     joinGameViewModel.cancelJoinGame()
                     navController.popBackStack(R.id.startFragment, false)
                 }
-            })
+            }
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,12 +60,15 @@ class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
     }
 
     private fun observeJoinGameEvent() {
-        joinGameViewModel.getJoinGameEvent().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success -> it.data?.let { session -> handleSuccessfulJoinGame(session) }
-                is Resource.Error -> handleErrorJoinGame(it)
+        joinGameViewModel.getJoinGameEvent().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                when (it) {
+                    is Resource.Success -> it.data?.let { session -> handleSuccessfulJoinGame(session) }
+                    is Resource.Error -> handleErrorJoinGame(it)
+                }
             }
-        })
+        )
     }
 
     private fun triggerJoinGame() {
@@ -85,7 +89,7 @@ class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
     private fun handleErrorJoinGame(result: Resource.Error<Session, JoinGameError>) {
         showLoading(false)
         result.exception?.let { LogHelper.logErrorJoiningGame(it) }
-        result.error?.let {error ->
+        result.error?.let { error ->
             if (error == JoinGameError.NETWORK_ERROR) {
                 UIHelper.errorDialog(requireContext()).show()
             } else {
@@ -103,7 +107,7 @@ class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
     }
 
     private fun showLoading(loading: Boolean) {
-        btn_join_game_action.text = if(loading) "" else  getString(R.string.string_join_game)
+        btn_join_game_action.text = if (loading) "" else getString(R.string.string_join_game)
         btn_join_game_action.isClickable = !loading
         pb_join_game.goneIf(!loading)
     }

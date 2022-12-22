@@ -165,6 +165,7 @@ class FireStoreService(private val db: FirebaseFirestore, private val constants:
         return result.task
     }
 
+    @Suppress("TooGenericExceptionCaught")
     override suspend fun getRequiredVersionCode(): Int? {
         val result = try {
             db.collection(constants.configCollection)
@@ -172,7 +173,7 @@ class FireStoreService(private val db: FirebaseFirestore, private val constants:
                 .get()
                 .await()
                 .get(constants.requiredVersionCodeField) as? Long
-        } catch (e: Exception){
+        } catch (e: Exception) {
             if (e is CancellationException) throw e else null
         }
 

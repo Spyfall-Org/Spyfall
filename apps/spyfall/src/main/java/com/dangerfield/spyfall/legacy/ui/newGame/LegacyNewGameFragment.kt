@@ -20,7 +20,6 @@ import com.dangerfield.spyfall.legacy.util.addCharacterMax
 import com.dangerfield.spyfall.legacy.util.goneIf
 import com.dangerfield.spyfall.legacy.util.setHideKeyBoardOnPressAway
 import com.dangerfield.spyfall.legacy.util.visibleIf
-import com.dangerfield.spyfall.legacy.util.*
 import kotlinx.android.synthetic.main.fragment_new_game_legacy.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,13 +36,15 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(this,
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     newGameViewModel.cancelPendingOperations()
                     navController.popBackStack(R.id.startFragment, false)
                 }
-            })
+            }
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -64,24 +65,30 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
     }
 
     private fun observeShowPacksEvent() {
-        newGameViewModel.getShowPackEvent().observe(viewLifecycleOwner, EventObserver {
-            if (!this.isAdded) return@EventObserver
-            when (it) {
-                is Resource.Success -> it.data?.let { d -> handlePacksDetailsSuccess(d) }
-                is Resource.Error -> handlePacksDetailsError(it)
+        newGameViewModel.getShowPackEvent().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                if (!this.isAdded) return@EventObserver
+                when (it) {
+                    is Resource.Success -> it.data?.let { d -> handlePacksDetailsSuccess(d) }
+                    is Resource.Error -> handlePacksDetailsError(it)
+                }
+                showLoadingForGettingPacks(false)
             }
-            showLoadingForGettingPacks(false)
-        })
+        )
     }
 
     private fun observeCreateGameEvent() {
-        newGameViewModel.getCreateGameEvent().observe(viewLifecycleOwner, EventObserver {
-            if (!this.isAdded) return@EventObserver
-            when (it) {
-                is Resource.Success -> it.data?.let { session -> handleSucessfulGameCreation(session) }
-                is Resource.Error -> handleErrorCreatingGame(it)
+        newGameViewModel.getCreateGameEvent().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                if (!this.isAdded) return@EventObserver
+                when (it) {
+                    is Resource.Success -> it.data?.let { session -> handleSucessfulGameCreation(session) }
+                    is Resource.Error -> handleErrorCreatingGame(it)
+                }
             }
-        })
+        )
     }
 
     private fun triggerCreateGameEvent() {
@@ -176,4 +183,3 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
             .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
     }
 }
-

@@ -2,8 +2,8 @@ package com.dangerfield.spyfall.legacy.util
 
 import android.content.Context
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.models.Game
+import com.dangerfield.spyfall.legacy.models.Session
 
 interface TesterPreferences {
     fun getUseTestDbState(): Boolean
@@ -13,7 +13,7 @@ interface TesterPreferences {
 interface SessionSaver {
     fun saveSession(currentSession: Session)
     fun removeSavedSession()
-    fun getSavedSession() : Session?
+    fun getSavedSession(): Session?
 }
 
 interface PreferencesService : TesterPreferences, SessionSaver
@@ -56,22 +56,28 @@ class PreferencesHelper(val context: Context) : PreferencesService {
         editor.apply()
     }
 
+    @Suppress("ReturnCount")
     override fun getSavedSession(): Session? {
         val accessCode = preferences.getString(
             context.resources.getString(R.string.shared_preferences_session_code),
             null
         ) ?: return null
 
-        val currentUser =  preferences.getString(
+        val currentUser = preferences.getString(
             context.resources.getString(R.string.shared_preferences_session_current_user),
             null
         ) ?: return null
 
-        val prevUser =  preferences.getString(
+        val prevUser = preferences.getString(
             context.resources.getString(R.string.shared_preferences_session_previous_user),
             currentUser
         ) ?: currentUser
 
-        return Session(accessCode = accessCode, currentUser = currentUser, game = Game.getEmptyGame(), previousUserName = prevUser)
+        return Session(
+            accessCode = accessCode,
+            currentUser = currentUser,
+            game = Game.getEmptyGame(),
+            previousUserName = prevUser
+        )
     }
 }
