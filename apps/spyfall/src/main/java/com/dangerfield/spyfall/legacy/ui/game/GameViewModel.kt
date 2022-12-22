@@ -2,7 +2,12 @@ package com.dangerfield.spyfall.legacy.ui.game
 
 import android.os.CountDownTimer
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ViewModel
 import com.dangerfield.spyfall.R
 import com.dangerfield.spyfall.legacy.api.GameRepository
 import com.dangerfield.spyfall.legacy.api.Resource
@@ -24,14 +29,14 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
 
     private var gameTimer: CountDownTimer? = null
 
-    //Globally triggered events
+    // Globally triggered events
     private val liveGame = repository.getLiveGame(currentSession)
     private val sessionEndedEvent = repository.getSessionEnded()
     private val removeInactiveUserEvent = repository.getRemoveInactiveUserEvent()
     private val leaveGameEvent = repository.getLeaveGameEvent()
 
 
-    //Locally triggered events
+    // Locally triggered events
     private val reassignEvent = MediatorLiveData<Event<Resource<Unit, StartGameError>>>()
     private val playAgainEvent = MediatorLiveData<Event<Resource<Unit, PlayAgainError>>>()
     private val currentUserEndedGameEvent = MediatorLiveData<Event<Resource<Unit, Exception>>>()
@@ -105,7 +110,7 @@ class GameViewModel(private val repository: GameRepository, val currentSession: 
         gameTimer = null
     }
 
-    //0 is special to debug mode to get a 10 seconds game
+    // 0 is special to debug mode to get a 10 seconds game
     private fun getMillisecondsFromMin(time: Long) = if(time == 0L) 10000 else (60000 * time)
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

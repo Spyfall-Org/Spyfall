@@ -82,8 +82,5 @@ class NewGameViewModel(private val repository: GameRepository) : ViewModel() {
         }
     }
 
-    //in debug I want to be able to use zero
-    private fun zeroTimeCheck(time: Int) =
-        !BuildConfig.DEBUG && time == 0
-
+    private fun zeroTimeCheck(time: Int) = !BuildConfig.DEBUG && time == 0
 }

@@ -21,7 +21,6 @@ import com.dangerfield.spyfall.legacy.util.LogHelper
 import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.getViewModelFactory
 import com.dangerfield.spyfall.legacy.util.goneIf
-import com.dangerfield.spyfall.legacy.util.*
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.fragment_waiting_legacy.*
 
@@ -48,12 +47,14 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this,
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     showLeaveGameDialog()
                 }
-            })
+            }
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,71 +79,89 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
         btn_leave_game.setOnClickListener { showLeaveGameDialog() }
         configureLayoutManagerAndRecyclerView()
 
-        adView.visibility =View.VISIBLE
+        adView.visibility = View.VISIBLE
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
     }
 
     private fun observeCurrentUserStartsGame() {
-        waitingViewModel.getStartGameEvent().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success -> {} //no-op player list change will trigger navigation
-                is Resource.Error -> handleStartGameError(it)
+        waitingViewModel.getStartGameEvent().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                when (it) {
+                    is Resource.Success -> {} // no-op player list change will trigger navigation
+                    is Resource.Error -> handleStartGameError(it)
+                }
             }
-        })
+        )
     }
 
     private fun observeGameUpdates() {
-        waitingViewModel.getLiveGame().observe(viewLifecycleOwner, Observer {
-            if (!this.isAdded) return@Observer
+        waitingViewModel.getLiveGame().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (!this.isAdded) return@Observer
 
-            waitingViewModel.currentSession.game = it
-            adapter.players = it.playerList
-            tv_acess_code.text = waitingViewModel.currentSession.accessCode
+                waitingViewModel.currentSession.game = it
+                adapter.players = it.playerList
+                tv_acess_code.text = waitingViewModel.currentSession.accessCode
 
-            showLoading(it.started)
+                showLoading(it.started)
 
-            if (it.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment) {
-                showLoading(false)
-                navigateToGameScreen()
+                if (it.playerObjectList.size > 0 && navController.currentDestination?.id == R.id.waitingFragment) {
+                    showLoading(false)
+                    navigateToGameScreen()
+                }
             }
-        })
+        )
     }
 
     private fun observeNameChangeEvent() {
-        waitingViewModel.getNameChangeEvent().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success -> handleNameChangeSuccess(it)
-                is Resource.Error -> handleNameChangeError(it)
+        waitingViewModel.getNameChangeEvent().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                when (it) {
+                    is Resource.Success -> handleNameChangeSuccess(it)
+                    is Resource.Error -> handleNameChangeError(it)
+                }
             }
-        })
+        )
     }
 
     private fun observeLeaveGameEvent() {
-        waitingViewModel.getLeaveGameEvent().observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                is Resource.Success ->  navigateToStart()
-                is Resource.Error -> handleLeaveGameError(it)
+        waitingViewModel.getLeaveGameEvent().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                when (it) {
+                    is Resource.Success -> navigateToStart()
+                    is Resource.Error -> handleLeaveGameError(it)
+                }
             }
-        })
+        )
     }
 
     private fun observeSessionEnded() {
-        waitingViewModel.getSessionEnded().observe(viewLifecycleOwner, EventObserver {
-            if (navController.currentDestination?.id == R.id.waitingFragment) {
-                LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
-                navigateToStart()
+        waitingViewModel.getSessionEnded().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                if (navController.currentDestination?.id == R.id.waitingFragment) {
+                    LogHelper.logSessionEndedInWaiting(waitingViewModel.currentSession)
+                    navigateToStart()
+                }
             }
-        })
+        )
     }
 
     private fun observeInactiveUserRemoved() {
-        waitingViewModel.getRemoveInactiveUserEvent().observe(viewLifecycleOwner, EventObserver {
-            if (navController.currentDestination?.id == R.id.waitingFragment && it is Resource.Success) {
-                LogHelper.removedInactiveUser(waitingViewModel.currentSession)
-                navigateToStart()
+        waitingViewModel.getRemoveInactiveUserEvent().observe(
+            viewLifecycleOwner,
+            EventObserver {
+                if (navController.currentDestination?.id == R.id.waitingFragment && it is Resource.Success) {
+                    LogHelper.removedInactiveUser(waitingViewModel.currentSession)
+                    navigateToStart()
+                }
             }
-        })
+        )
     }
 
     private fun triggerStartGameEvent() {
@@ -192,7 +211,7 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
                 NameChangeError.UNKNOWN_ERROR,
                 NameChangeError.NETWORK_ERROR -> changeNameHelper.dismissNameChangeDialog()
                 else -> {
-                    //stop loading so user can fix error
+                    // stop loading so user can fix error
                     changeNameHelper.updateLoadingState(false)
                 }
             }
@@ -244,16 +263,18 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
 
     private fun showLoading(loading: Boolean) {
         btn_start_game.isClickable = !loading
-        btn_start_game.text = if(loading) "" else getString(R.string.string_btn_start_game)
+        btn_start_game.text = if (loading) "" else getString(R.string.string_btn_start_game)
         pb_waiting.goneIf(!loading)
     }
 
     private fun showLeaveGameDialog() {
-        UIHelper.customSimpleAlert(requireContext(),
+        UIHelper.customSimpleAlert(
+            requireContext(),
             resources.getString(R.string.waiting_leaving_title),
             resources.getString(R.string.waiting_leaving_message),
             resources.getString(R.string.leave_action_positive), { triggerLeaveGameEvent() },
-            resources.getString(R.string.leave_action_negative), {}).show()
+            resources.getString(R.string.leave_action_negative), {}
+        ).show()
     }
 
     companion object {
@@ -262,5 +283,3 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
         const val STARTER = "thisisanothhersupercoolkey"
     }
 }
-
-

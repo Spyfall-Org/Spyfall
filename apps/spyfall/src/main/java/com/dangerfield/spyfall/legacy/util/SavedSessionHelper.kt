@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.legacy.api.GameService
 import com.dangerfield.spyfall.legacy.api.Resource
-import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.models.Game
+import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.ui.start.SavedSession
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -52,19 +52,23 @@ class SavedSessionHelper(
     }
 
     private fun userCanEnterGame(game: Game, currentSession: Session): Boolean {
-        return (!gameIsExpired(game)
-                && (game.playerList.contains(currentSession.currentUser) || game.playerList.contains(
-            currentSession.previousUserName
-        ))
-                && (!gameIsStarted(game) || userCanEnterStartedGame(game, currentSession))
-                )
+        return (
+            !gameIsExpired(game) &&
+                (
+                    game.playerList.contains(currentSession.currentUser) || game.playerList.contains(
+                        currentSession.previousUserName
+                    )
+                    ) &&
+                (!gameIsStarted(game) || userCanEnterStartedGame(game, currentSession))
+            )
     }
 
     private fun userCanEnterStartedGame(game: Game, currentSession: Session): Boolean = (
-            (game.playerObjectList.find { it.username == currentSession.currentUser } != null
-                    || game.playerObjectList.find { it.username == currentSession.previousUserName } != null)
+        (
+            game.playerObjectList.find { it.username == currentSession.currentUser } != null ||
+                game.playerObjectList.find { it.username == currentSession.previousUserName } != null
             )
-
+        )
 
     private fun gameIsExpired(game: Game): Boolean {
         game.expiration.let { expiration ->

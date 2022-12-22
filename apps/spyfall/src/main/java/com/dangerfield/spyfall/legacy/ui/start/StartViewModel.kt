@@ -10,7 +10,7 @@ import com.dangerfield.spyfall.legacy.util.SavedSessionHelper
 
 data class SavedSession(val session: Session, val started: Boolean)
 
-class StartViewModel(private val savedSessionHelper : SavedSessionHelper, private val repository: GameRepository) : ViewModel() {
+class StartViewModel(private val savedSessionHelper: SavedSessionHelper, private val repository: GameRepository) : ViewModel() {
 
     private val searchForUserInGameEvent = MediatorLiveData<Event<Resource<SavedSession, Unit>>>()
     private val leaveGameEvent = repository.getLeaveGameEvent()

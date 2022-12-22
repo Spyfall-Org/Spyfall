@@ -18,7 +18,6 @@ import com.dangerfield.spyfall.legacy.models.Game
 import com.dangerfield.spyfall.legacy.models.Player
 import com.dangerfield.spyfall.legacy.ui.waiting.LeaveGameError
 import com.dangerfield.spyfall.legacy.ui.waiting.LegacyWaitingFragment
-import com.dangerfield.spyfall.legacy.util.*
 import com.dangerfield.spyfall.legacy.util.EventObserver
 import com.dangerfield.spyfall.legacy.util.LogHelper
 import com.dangerfield.spyfall.legacy.util.UIHelper
