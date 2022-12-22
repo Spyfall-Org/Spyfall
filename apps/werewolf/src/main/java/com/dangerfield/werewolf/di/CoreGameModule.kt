@@ -1,7 +1,9 @@
 package com.dangerfield.werewolf.di
 
+import com.dangerfield.spyfall.splash.forcedupdate.AppUpdateDataSource
 import com.dangerfield.spyfall.splash.splash.GetGameInProgress
 import com.dangerfield.spyfall.splash.werewolf.GetWerewolfGameInProgress
+import com.dangerfield.spyfall.splash.werewolf.WerewolfAppUpdateDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,5 +20,8 @@ object CoreGameModule {
 
         @Binds
         fun bindGetGameInProgress(impl: GetWerewolfGameInProgress): GetGameInProgress
+
+        @Binds
+        fun bindAppUpdateDataSource(impl: WerewolfAppUpdateDataSource): AppUpdateDataSource
     }
 }
