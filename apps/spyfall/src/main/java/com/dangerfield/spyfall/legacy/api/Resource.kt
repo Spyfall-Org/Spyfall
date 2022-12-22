@@ -11,6 +11,6 @@ sealed class Resource<T, E>(
     val error: E? = null,
     val exception: Exception? = null
 ) {
-    class Success<T,E>(data: T) : Resource<T, E>(data)
-    class Error<T,E>(data: T? = null, error: E, exception: Exception? = null) : Resource<T, E>(data, error, exception)
+    class Success<T, E>(data: T) : Resource<T, E>(data)
+    class Error<T, E>(data: T? = null, error: E, exception: Exception? = null) : Resource<T, E>(data, error, exception)
 }

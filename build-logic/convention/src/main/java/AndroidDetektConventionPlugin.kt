@@ -42,7 +42,7 @@ class AndroidDetektConventionPlugin : Plugin<Project> {
 fun Detekt.setupCommonDetektSettings() {
     // Common properties
     parallel = true
-    autoCorrect = true
+    autoCorrect = !BuildEnvironment.isCIBuild
     buildUponDefaultConfig = false
     ignoreFailures = BuildEnvironment.isCIBuild
     jvmTarget = "1.8"
