@@ -96,6 +96,7 @@ class UIHelper {
             return dialog
         }
 
+        @Suppress("LongParameterList")
         fun customSimpleAlert(
             context: Context,
             title: String,

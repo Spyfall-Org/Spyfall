@@ -56,6 +56,7 @@ class PreferencesHelper(val context: Context) : PreferencesService {
         editor.apply()
     }
 
+    @Suppress("ReturnCount")
     override fun getSavedSession(): Session? {
         val accessCode = preferences.getString(
             context.resources.getString(R.string.shared_preferences_session_code),

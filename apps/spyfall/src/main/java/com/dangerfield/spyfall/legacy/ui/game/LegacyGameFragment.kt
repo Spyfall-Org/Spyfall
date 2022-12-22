@@ -89,7 +89,8 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
 
                 // normal updates
                 if (it.started && navController.currentDestination?.id == R.id.gameFragment) {
-                    // but right now it says: if the game has started, and im still on this screen, and something has changed..
+                    // but right now it says: if the game has started, \
+                    // and im still on this screen, and something has changed..
                     configurePlayerViews(it)
                     configurePlayersAdapter(
                         it.playerObjectList,

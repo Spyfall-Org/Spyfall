@@ -2,6 +2,7 @@
 exitStatus=0 # 0 is a success
 detektErrors=0
 checkstyleErrors=0
+projectDir=$(pwd)
 
 #Echo output colors:
 RED='\033[0;31m'

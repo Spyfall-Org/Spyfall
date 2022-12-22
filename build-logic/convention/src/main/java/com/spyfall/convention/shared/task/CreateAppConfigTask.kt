@@ -191,6 +191,7 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
     private fun String.isAppConfigFormat(): Boolean =
         this.contains(".") && this.replace(".", "").trim().toIntOrNull()?.let { true } ?: false
 
+    @Suppress("TooGenericExceptionCaught")
     private fun getDb(serviceAccountJsonPath: String, appName: String): Firestore {
         val serviceAccount = FileInputStream(serviceAccountJsonPath)
         val credentials = GoogleCredentials.fromStream(serviceAccount)
@@ -201,7 +202,7 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
             println("Initializing Firebase app")
             FirebaseApp.initializeApp(options, appName)
         } catch (e: IllegalStateException) {
-            println("Firebase app already initialized")
+            println("Firebase app already initialized. $e")
             null
         }
         return FirestoreClient.getFirestore(app)
