@@ -16,13 +16,14 @@ jobs:
   createrelease:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate inputs
-        run : ./scripts/validate_release_inputs.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }} ${{ github.event.inputs.versionCode }}
 
       - name: Check out the main branch
         uses: actions/checkout@v3
         with:
           ref: main
+
+      - name: Validate inputs
+        run: ./scripts/validate_release_inputs.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }} ${{ github.event.inputs.versionCode }}
 
       - name: Set the version code
         run: ./scripts/set_version_code.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionCode }}
