@@ -42,6 +42,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Add test google services json files
+        run: ./scripts/create_google_json_files.main.kts
+
       - name: Build the app
         run: ./gradlew assembleDebug
 
