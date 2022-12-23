@@ -38,10 +38,10 @@ jobs:
         run: git push origin release-spyfall/v${{ github.event.inputs.versionName }}
 
       - name: Create pull request into main
-        uses: thomaseizinger/create-pull-request@1.0.0
+        uses: peter-evans/create-pull-request@v4
         with:
-          github-token: ${{ github.token }}
-          head: release-spyfall/v${{ github.event.inputs.versionName }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release-spyfall/v${{ github.event.inputs.versionName }}
           base: main
           title: Spyfall v${{ github.event.inputs.versionName }} into main
           body: |
