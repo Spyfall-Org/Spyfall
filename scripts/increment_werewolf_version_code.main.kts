@@ -18,7 +18,7 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
-printGreen("Incrementing the version code for spyfall")
+printGreen("Incrementing the version code for werewolf")
 
 // Load the .properties file
 val properties = Properties()
@@ -26,11 +26,11 @@ val reader = BufferedReader(FileReader("app_versions.properties"))
 properties.load(reader)
 reader.close()
 
-// Update the value of the "spyfall.versionCode" property
-val currentVersion = properties.getProperty("spyfall.versionCode").toInt()
-printGreen("current version code for spyfall is $currentVersion. New version will be ${currentVersion + 1}")
+// Update the value of the "werewolf.versionCode" property
+val currentVersion = properties.getProperty("werewolf.versionCode").toInt()
+printGreen("current version code for werewolf is $currentVersion. New version will be ${currentVersion + 1}")
 
-properties.setProperty("spyfall.versionCode", "${currentVersion + 1}")
+properties.setProperty("werewolf.versionCode", "${currentVersion + 1}")
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app_versions.properties"))
@@ -44,5 +44,5 @@ writer.newLine()
 properties.store(writer, null)
 writer.close()
 
-printGreen("spyfall version code successfully incremented to ${currentVersion + 1}")
+printGreen("werewolf version code successfully incremented to ${currentVersion + 1}")
 
