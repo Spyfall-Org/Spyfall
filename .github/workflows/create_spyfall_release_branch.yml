@@ -22,7 +22,7 @@ jobs:
         run: ./scripts/set_version_code.main.kts spyfall ${{ github.event.inputs.versionName }}
 
       - name: Change version name
-        run: ./scripts/set_version_name.main.kts spyfall ${{ github.event.inputs.versionName }}
+        run: ./scripts/set_version_name.main.kts spyfall ${{ github.event.inputs.versionCode }}
 
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v4
