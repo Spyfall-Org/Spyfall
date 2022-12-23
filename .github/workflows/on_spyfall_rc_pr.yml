@@ -4,7 +4,7 @@ on:
   # Triggers the workflow on every pull request unless its a release branch
   pull_request:
     branches:
-      - 'release-spyfall**'
+      - "release-spyfall**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
