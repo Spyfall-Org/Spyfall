@@ -22,7 +22,7 @@ jobs:
           git config user.email noreply@github.com
 
       - name: Increment version code
-        run: ./scripts/increment_version_code.main.kts
+        run: ./scripts/increment_version_code.main.kts spyfall
 
       - name: Change version name
         run: ./scripts/increment_version_code.main.kts spyfall ${{ github.event.inputs.versionName }}
