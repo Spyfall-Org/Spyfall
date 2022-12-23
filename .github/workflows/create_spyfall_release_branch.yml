@@ -19,10 +19,10 @@ jobs:
           ref: main
 
       - name: Set the version code
-        run: ./scripts/set_version_code.main.kts spyfall ${{ github.event.inputs.versionName }}
+        run: ./scripts/set_version_code.main.kts spyfall ${{ github.event.inputs.versionCode }}
 
       - name: Change version name
-        run: ./scripts/set_version_name.main.kts spyfall ${{ github.event.inputs.versionCode }}
+        run: ./scripts/set_version_name.main.kts spyfall ${{ github.event.inputs.versionName }}
 
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v4
