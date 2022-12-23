@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate inputs
-        run : ./validate_release_inputs.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }} ${{ github.event.inputs.versionCode }}
+        run : ./scripts/validate_release_inputs.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }} ${{ github.event.inputs.versionCode }}
 
       - name: Check out the main branch
         uses: actions/checkout@v3
