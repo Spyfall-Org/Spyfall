@@ -48,9 +48,11 @@ fun Project.getVersionCode(): Int? =
 fun Project.loadAppVersionProperty(property: String): String = Properties().let {
     val file = File(appVersionsPath)
     it.load(file.inputStream())
+    @Suppress("SwallowedException")
     try {
         it.getProperty(property)
     } catch (e: NullPointerException) {
+        @Suppress("TooGenericExceptionThrown")
         throw Error(
             """No app version property found named: $property. 
                 Please make sure this property is listed exactly as \"$property\" 

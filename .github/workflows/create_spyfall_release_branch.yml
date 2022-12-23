@@ -5,9 +5,7 @@ on:
       versionName:
         description: 'Name of version  (ie 5.5.0)'
         required: true
-      versionCode:
-        description: 'Version number (50500)'
-        required: true
+
 jobs:
   createrelease:
     runs-on: ubuntu-latest
@@ -22,7 +20,10 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
       - name: Change version number and name
-        run: printf 'ext.version_code = ${{ github.event.inputs.versionCode }}\next.version_name = "${{ github.event.inputs.versionName }}"\n' > app_versions.gradle
+        run: ./scripts/increment_version_code.main.kts
+      - name: Change version name
+        run: ./scripts/increment_version_code.main.kts spyfall
+      run: ./scripts/increment_version_code.main.kts ${{ github.event.inputs.versionName }}
       - name: Update Changelog
         uses: thomaseizinger/keep-a-changelog-new-release@v1
         with:
@@ -30,36 +31,23 @@ jobs:
       - name: Commit changelog and manifest files
         id: make-commit
         run: |
-          git add app_versions.gradle
+          git add app_versions.properties
           git add CHANGELOG.md
-          git commit --message "Prepare release ${{ github.event.inputs.versionName }}"
+          git commit --message "Prepare spyfall release ${{ github.event.inputs.versionName }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
       - name: Push new branch
-        run: git push origin release/v${{ github.event.inputs.versionName }}
-      - name: Submit strings.xml for translation
-        uses: andstor/copycat-action@v3
-        with:
-          personal_token: ${{ secrets.ANDROID_I18N_PAT }}
-          src_path: resources/src/main/res/values/strings.xml
-          src_branch: release/v${{ github.event.inputs.versionName }}
-          dst_path: en/strings.xml
-          dst_owner: your-repo-owner
-          dst_repo_name: android-i18n
-          dst_branch: master
-          clean: true
-          commit_message: release/v${{ github.event.inputs.versionName }} BOT New Strings for translation submitted.
+        run: git push origin release-spyfall/v${{ github.event.inputs.versionName }}
       - name: Create pull request into main
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          head: release/v${{ github.event.inputs.versionName }}
+          head: release-spyfall/v${{ github.event.inputs.versionName }}
           base: main
-          title: v${{ github.event.inputs.versionName }} into main
-          reviewers: ${{ github.event.issue.user.login }}
+          title: Spyfall v${{ github.event.inputs.versionName }} into main
           body: |
             Hi!
             This PR was created in response workflow running.
-            I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
+            I've updated the version name and code in commit: ${{ steps.make-commit.outputs.commit }}.
       - name: Create pull request to develop
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
@@ -72,28 +60,3 @@ jobs:
             Hi!
             This PR was created in response workflow running.
             I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
-  @Elijah-Dangerfield
-  
-  Add heading textAdd bold text, <Cmd+b>Add italic text, <Cmd+i>
-  Add a quote, <Cmd+Shift+.>Add code, <Cmd+e>Add a link, <Cmd+k>
-  Add a bulleted list, <Cmd+Shift+8>Add a numbered list, <Cmd+Shift+7>Add a task list, <Cmd+Shift+l>
-  Directly mention a user or team
-  Reference an issue or pull request
-  Leave a comment
-  No file chosen
-  Attach files by dragging & dropping, selecting or pasting them.
-  Styling with Markdown is supported
-  Footer
-  © 2022 GitHub, Inc.
-  Footer navigation
-  Terms
-  Privacy
-  Security
-  Status
-  Docs
-  Contact GitHub
-  Pricing
-  API
-  Training
-  Blog
-  About
