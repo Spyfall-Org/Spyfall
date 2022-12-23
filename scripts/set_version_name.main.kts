@@ -19,12 +19,13 @@ fun printGreen(text: String) {
 }
 
 @Suppress("ComplexCondition")
-if (args.size < 1 || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
+if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
     printRed("""
-        This script increments the version code for the supplied application name 
+        This script sets the version name for the supplied application name 
         
-        Usage: ./increment_version_code.main.kts [option] 
-        option: "spyfall" ,"werewolf" ...
+        Usage: ./set_version_name.main.kts [appName] [versionName] 
+        appName: "spyfall" ,"werewolf", ...
+        versionName: "1.2.4", "1.5.19", ...
     """.trimIndent())
 
     @Suppress("TooGenericExceptionThrown")
@@ -32,8 +33,9 @@ if (args.size < 1 || args[0] == "-h" || args[0] == "--help" || args[0].contains(
 }
 
 val appName = args[0]
+val newVersionName = args[1]
 
-printGreen("Incrementing the version code for $appName")
+printGreen("Setting the version name for $appName")
 
 // Load the .properties file
 val properties = Properties()
@@ -41,11 +43,11 @@ val reader = BufferedReader(FileReader("app_versions.properties"))
 properties.load(reader)
 reader.close()
 
-// Update the value of the "versionCode" property
-val currentVersion = properties.getProperty("$appName.versionCode").toInt()
-printGreen("current version code for $appName is $currentVersion. New version will be ${currentVersion + 1}")
+// Update the value of the "versionName" property
+val currentVersionName = properties.getProperty("$appName.versionName").toString()
+printGreen("current version name for $appName is $currentVersionName")
 
-properties.setProperty("$appName.versionCode", "${currentVersion + 1}")
+properties.setProperty("$appName.versionName", newVersionName)
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app_versions.properties"))
@@ -59,5 +61,5 @@ writer.newLine()
 properties.store(writer, null)
 writer.close()
 
-printGreen("$appName version code successfully incremented to ${currentVersion + 1}")
+printGreen("$appName version name successfully set to $newVersionName")
 
