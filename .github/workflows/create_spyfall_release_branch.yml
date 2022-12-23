@@ -9,7 +9,6 @@ on:
 jobs:
   createrelease:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
