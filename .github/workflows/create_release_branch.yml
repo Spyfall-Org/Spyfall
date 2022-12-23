@@ -38,6 +38,7 @@ jobs:
           commit-message: Prepare ${{ github.event.inputs.appName }} release ${{ github.event.inputs.versionName }}
           title: ${{ github.event.inputs.appName }} v${{ github.event.inputs.versionName }} into main
           body: |
-            Hi!
-            This PR was created in response workflow running.
-            I've updated the version name and code in commit: ${{ steps.make-commit.outputs.commit }}.
+            This PR was created automatically via a workflow running.
+            Every change to this PR re runs the checks and uploads new builds.
+            Merging this PR will make a final build and use that build to create a release on Github, and the Google Play Store. 
+            To learn more about our release process you can read our [release documentation](https://spyfall-org.github.io/how-to/release/)
