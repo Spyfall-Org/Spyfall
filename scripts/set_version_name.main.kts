@@ -18,8 +18,7 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
-@Suppress("ComplexCondition")
-if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
+if (args.size < 2 || args[0] == "-h" || args[0].contains("help")) {
     printRed("""
         This script sets the version name for the supplied application name 
         
@@ -32,8 +31,8 @@ if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains(
     throw Exception("See Message Above")
 }
 
-val appName = args[0]
-val newVersionName = args[1]
+val appName = args[0].trim()
+val newVersionName = args[1].trim()
 
 printGreen("Setting the version name for $appName")
 

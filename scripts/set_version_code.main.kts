@@ -33,8 +33,8 @@ if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains
     throw Exception("See Message Above")
 }
 
-val appName = args[0]
-val inputVersionCode = args.getOrNull(1)
+val appName = args[0].trim()
+val inputVersionCode = args.getOrNull(1)?.trim()
 
 if (inputVersionCode == null) {
     printGreen("Incrementing the version code for $appName")
@@ -50,14 +50,14 @@ reader.close()
 
 // Update the value of the "versionCode" property
 val currentVersion = properties.getProperty("$appName.versionCode").toInt()
-val newVersionCode = inputVersionCode ?: currentVersion
+val newVersionCode = inputVersionCode ?: (currentVersion + 1)
 
 printGreen("""
     current version code for $appName is $currentVersion. 
-    New version will be ${inputVersionCode ?: currentVersion + 1}""".trimIndent()
+    New version will be $newVersionCode""".trimIndent()
 )
 
-properties.setProperty("$appName.versionCode", "${inputVersionCode ?: currentVersion + 1}")
+properties.setProperty("$appName.versionCode", "$newVersionCode")
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app_versions.properties"))
