@@ -37,5 +37,9 @@ object CoreModule {
 
     @Provides
     fun provideBuildInfo(): BuildInfo =
-        BuildInfo(TargetApp.Spyfall(isLegacyBuild = isLegacyBuild()), VERSION_CODE, VERSION_NAME)
+        BuildInfo(
+            targetApp = TargetApp.Spyfall(isLegacyBuild = isLegacyBuild()),
+            versionCode = VERSION_CODE,
+            versionName = VERSION_NAME
+        )
 }

@@ -1,6 +1,4 @@
 
-import com.spyfall.convention.shared.WerewolfConstants
-import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.getModule
 
 plugins {
@@ -15,12 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dangerfield.werewolf"
-        versionCode = WerewolfConstants.versionCode
-        versionName = WerewolfConstants.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("VERSION_CODE", WerewolfConstants.versionCode)
-        buildConfigField("VERSION_NAME", WerewolfConstants.versionName)
     }
 
     buildTypes {

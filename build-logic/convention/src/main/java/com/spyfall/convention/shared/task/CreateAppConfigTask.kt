@@ -11,6 +11,8 @@ import com.spyfall.convention.shared.RED
 import com.spyfall.convention.shared.RESET
 import com.spyfall.convention.shared.SharedConstants
 import com.spyfall.convention.shared.getVersionName
+import com.spyfall.convention.shared.printGreen
+import com.spyfall.convention.shared.printRed
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -209,10 +211,4 @@ internal abstract class CreateAppConfigTask : DefaultTask() {
     }
 }
 
-fun printRed(text: String) {
-    println(RED + text + RESET)
-}
 
-fun printGreen(text: String) {
-    println(GREEN + text + RESET)
-}
