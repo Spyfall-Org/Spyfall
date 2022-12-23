@@ -27,16 +27,10 @@ jobs:
       - name: Change version name
         run: ./scripts/increment_version_code.main.kts spyfall ${{ github.event.inputs.versionName }}
 
-      - name: Update Changelog
-        uses: thomaseizinger/keep-a-changelog-new-release@v1
-        with:
-          version: ${{ github.event.inputs.versionName }}
-
       - name: Commit changelog and manifest files
         id: make-commit
         run: |
           git add app_versions.properties
-          git add CHANGELOG.md
           git commit --message "Prepare spyfall release ${{ github.event.inputs.versionName }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
