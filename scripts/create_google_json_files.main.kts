@@ -1,3 +1,5 @@
+#!/usr/bin/env kotlin
+
 import java.io.File
 
 val red = "\u001b[31m"
