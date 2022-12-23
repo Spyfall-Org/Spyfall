@@ -19,12 +19,14 @@ fun printGreen(text: String) {
 }
 
 @Suppress("ComplexCondition")
-if (args.size < 1 || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
+if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
     printRed("""
-        This script increments the version code for the supplied application name 
+        This script sets the version code for the supplied application name by either taking input to set it
+        or automatically incrementing the version code by 1
         
-        Usage: ./increment_version_code.main.kts [option] 
-        option: "spyfall" ,"werewolf" ...
+        Usage: ./set_version_code.main.kts [appName] [versionCode] 
+        appName: "spyfall" ,"werewolf", ...
+        versionCode: 500, 543, ...
     """.trimIndent())
 
     @Suppress("TooGenericExceptionThrown")
@@ -32,8 +34,13 @@ if (args.size < 1 || args[0] == "-h" || args[0] == "--help" || args[0].contains(
 }
 
 val appName = args[0]
+val inputVersionCode = args.getOrNull(1)
 
-printGreen("Incrementing the version code for $appName")
+if (inputVersionCode == null) {
+    printGreen("Incrementing the version code for $appName")
+} else {
+    printGreen("setting the version code for $appName to inputted version of $inputVersionCode")
+}
 
 // Load the .properties file
 val properties = Properties()
@@ -43,9 +50,14 @@ reader.close()
 
 // Update the value of the "versionCode" property
 val currentVersion = properties.getProperty("$appName.versionCode").toInt()
-printGreen("current version code for $appName is $currentVersion. New version will be ${currentVersion + 1}")
+val newVersionCode = inputVersionCode ?: currentVersion
 
-properties.setProperty("$appName.versionCode", "${currentVersion + 1}")
+printGreen("""
+    current version code for $appName is $currentVersion. 
+    New version will be ${inputVersionCode ?: currentVersion + 1}""".trimIndent()
+)
+
+properties.setProperty("$appName.versionCode", "${inputVersionCode ?: currentVersion + 1}")
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app_versions.properties"))
@@ -59,5 +71,5 @@ writer.newLine()
 properties.store(writer, null)
 writer.close()
 
-printGreen("$appName version code successfully incremented to ${currentVersion + 1}")
+printGreen("$appName version code successfully incremented to ${inputVersionCode ?: currentVersion + 1}")
 
