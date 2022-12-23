@@ -1,9 +1,12 @@
-name: Create Spyfall Release Branch
+name: Create Release Branch
 on:
   workflow_dispatch:
     inputs:
+      appName:
+        description: 'Name (lowercase) of the app to release. [spyfall | werewolf ...]'
+        required: true
       versionName:
-        description: 'Name of version  (ie 5.5.0)'
+        description: 'Version being released (ie 5.5.0)'
         required: true
       versionCode:
         description: 'Version Code (ie 550). Automatically increments if not provided.'
@@ -19,18 +22,18 @@ jobs:
           ref: main
 
       - name: Set the version code
-        run: ./scripts/set_version_code.main.kts spyfall ${{ github.event.inputs.versionCode }}
+        run: ./scripts/set_version_code.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionCode }}
 
       - name: Change version name
-        run: ./scripts/set_version_name.main.kts spyfall ${{ github.event.inputs.versionName }}
+        run: ./scripts/set_version_name.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }}
 
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release-spyfall/v${{ github.event.inputs.versionName }}
-          commit-message: Prepare spyfall release ${{ github.event.inputs.versionName }}
-          title: Spyfall v${{ github.event.inputs.versionName }} into main
+          branch: release-${{ github.event.inputs.appName }}/v${{ github.event.inputs.versionName }}
+          commit-message: Prepare ${{ github.event.inputs.appName }} release ${{ github.event.inputs.versionName }}
+          title: ${{ github.event.inputs.appName }} v${{ github.event.inputs.versionName }} into main
           body: |
             Hi!
             This PR was created in response workflow running.
