@@ -71,5 +71,9 @@ writer.newLine()
 properties.store(writer, null)
 writer.close()
 
-printGreen("$appName version code successfully incremented to ${inputVersionCode ?: currentVersion + 1}")
 
+if (inputVersionCode == null) {
+    printGreen("$appName version code successfully incremented to $newVersionCode")
+} else {
+    printGreen("$appName version code successfully set to $newVersionCode")
+}
