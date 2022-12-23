@@ -18,7 +18,19 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
-printGreen("Incrementing the version code for spyfall")
+if (args.size < 1 || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
+    printRed("""
+        This scipt increments the version code for the supplied application name 
+        
+        Usage: ./increment_version_code.main.kts [option] 
+        option: "spyfall" ,"werewolf" ...
+    """.trimIndent())
+    throw Exception("See Message Above")
+}
+
+val appName = args[0]
+
+printGreen("Incrementing the version code for $appName")
 
 // Load the .properties file
 val properties = Properties()
@@ -26,11 +38,11 @@ val reader = BufferedReader(FileReader("app_versions.properties"))
 properties.load(reader)
 reader.close()
 
-// Update the value of the "spyfall.versionCode" property
-val currentVersion = properties.getProperty("spyfall.versionCode").toInt()
-printGreen("current version code for spyfall is $currentVersion. New version will be ${currentVersion + 1}")
+// Update the value of the "versionCode" property
+val currentVersion = properties.getProperty("$appName.versionCode").toInt()
+printGreen("current version code for $appName is $currentVersion. New version will be ${currentVersion + 1}")
 
-properties.setProperty("spyfall.versionCode", "${currentVersion + 1}")
+properties.setProperty("$appName.versionCode", "${currentVersion + 1}")
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app_versions.properties"))
@@ -44,5 +56,5 @@ writer.newLine()
 properties.store(writer, null)
 writer.close()
 
-printGreen("spyfall version code successfully incremented to ${currentVersion + 1}")
+printGreen("$appName version code successfully incremented to ${currentVersion + 1}")
 
