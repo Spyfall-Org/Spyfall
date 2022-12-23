@@ -1,14 +1,15 @@
-name: Build and Upload Spyfall Assets
+name: Build, Test, and Upload Assets for Spyfall
 
 on:
-  # Triggers the workflow on every pull request
+  # Triggers the workflow on every pull request unless its a release branch
   pull_request:
     branches:
-      - "release-spyfall**"
+      - 'release-spyfall**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# ensures only 1 of these workflows can exist on a PR at a time. Cancels old ones when new ones are triggered
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
@@ -17,8 +18,80 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Copy gradle properties file
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build the app
+        run: ./gradlew assembleDebug
+
+      - name: Upload apk
+        uses: actions/upload-artifact@v2
+        with:
+          name: debug apk
+          path: app/build/outputs/apk/free/debug/app-free-debug.apk
+
+  style:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Detekt All
+        run: ./gradlew detektAll
+
+      - name: Checkstyle
+        run: ./gradlew checkstyleAll
+
+  test:
+    runs-on: macos-latest
 
     steps:
-      - name: Print
-        run: echo printing
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Copy  gradle properties file
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Unit tests
+        run: ./gradlew test --stacktrace
