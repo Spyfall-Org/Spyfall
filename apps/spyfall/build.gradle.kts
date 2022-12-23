@@ -1,7 +1,5 @@
-import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.configureSpyfallFlavors
 import com.spyfall.convention.shared.getModule
-import com.spyfall.convention.shared.spyfall.SpyfallConstants
 
 plugins {
     id("spyfall.android.application")
@@ -16,13 +14,8 @@ android {
 
     defaultConfig {
         applicationId = "com.dangerfield.spyfall.free"
-        versionCode = SpyfallConstants.versionCode
-        versionName = SpyfallConstants.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["screenOrientation"] = "unspecified"
-
-        buildConfigField("VERSION_CODE", SpyfallConstants.versionCode)
-        buildConfigField("VERSION_NAME", SpyfallConstants.versionName)
     }
 
     buildTypes {
