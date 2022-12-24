@@ -25,6 +25,9 @@ jobs:
       - name: Get serivce account json file
         run: echo "$SPYFALL_SERVICE_ACCOUNT_KEY" > service_key.json
 
+      - name: Print out serivce account json file
+        run: cat $service_key.json
+
       - name: Download google files
         run: ./scripts/get_google_files.main.kts service_key.json
 
