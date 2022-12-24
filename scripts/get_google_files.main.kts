@@ -9,20 +9,27 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.ServiceAccountCredentials
-import com.google.firebase.appdistribution.gradle.models.ServiceAccountCredentials
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.FileInputStream
 import java.io.FileOutputStream
 
 // These file ids can be found in the url of the sharable google drive links to these files
 data class FileInfo(val id: String, val pathToStore: String)
-val spyfallGoogleServicesFileInfo = FileInfo(id ="1uieO42nwfDV6E1_EIFoBgDMRy0A5cBcy", pathToStore = "apps/spyfall/google-services.json")
-val spyfallServiceAccountKeyFileInfo = FileInfo(id ="1uSnJx6Xr4nx4alpNHsAtv57gvgeb34cZ", pathToStore = "apps/spyfall/service-account-key.json")
 
-val werewolfGoogleServicesFileInfo = FileInfo(id ="1DCmIFGyqAzwd79CvOFi72Gf7rcksmW8B", pathToStore = "apps/werewolf/google-services.json")
-val werewolfServiceAccountKeyFileInfo = FileInfo(id ="1dP6c2fjc5BPecvyOKRk08ZZv8yxrIRnC", pathToStore = "apps/werewolf/service-account-key.json")
+val spyfallGoogleServicesFileInfo =
+    FileInfo(id ="1uieO42nwfDV6E1_EIFoBgDMRy0A5cBcy", pathToStore = "apps/spyfall/google-services.json")
+
+val spyfallServiceAccountKeyFileInfo =
+    FileInfo(id ="1uSnJx6Xr4nx4alpNHsAtv57gvgeb34cZ", pathToStore = "apps/spyfall/service-account-key.json")
+
+val werewolfGoogleServicesFileInfo =
+    FileInfo(id ="1DCmIFGyqAzwd79CvOFi72Gf7rcksmW8B", pathToStore = "apps/werewolf/google-services.json")
+
+val werewolfServiceAccountKeyFileInfo =
+    FileInfo(id ="1dP6c2fjc5BPecvyOKRk08ZZv8yxrIRnC", pathToStore = "apps/werewolf/service-account-key.json")
 
 val fileInfoList = listOf(
     spyfallGoogleServicesFileInfo,
@@ -59,13 +66,14 @@ if ( isHelpCall || args.isEmpty()) {
 val serviceAccountKeyString = args[0]
 
 fun getFiles() {
-    val inputStream = ByteArrayInputStream(serviceAccountKeyString.toByteArray())
+    val inputStream = FileInputStream(serviceAccountKeyString)
     val credentials = ServiceAccountCredentials.fromStream(inputStream)
+    val scopedCredentials = credentials.createScoped(listOf(DriveScopes.DRIVE))
 
     val transport: HttpTransport = NetHttpTransport()
     val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
 
-    val drive = Drive.Builder(transport, jsonFactory, HttpCredentialsAdapter(credentials)).build()
+    val drive = Drive.Builder(transport, jsonFactory, HttpCredentialsAdapter(scopedCredentials)).build()
 
     fileInfoList.forEach {
         val driveFile = drive.files().get(it.id).execute()

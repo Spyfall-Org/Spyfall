@@ -22,6 +22,12 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
+      - name: Get serivce account json file
+        run: echo ${{ secrets.SPYFALL_SERVICE_ACCOUNT_KEY }} > service_key.json
+
+      - name: Download google files
+        run: ./scripts/get_google_files.main.kts service_key.json
+
       - uses: actions/cache@v2
         with:
           path: |
