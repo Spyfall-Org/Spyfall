@@ -29,10 +29,7 @@ jobs:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
 
-      - name: Print out serivce account json file
-        run: cat service_key.json
-
-      - name: Download google files
+      - name: Download secret files
         run: ./scripts/get_secret_files.main.kts service_key.json
 
       - uses: actions/cache@v2
@@ -73,6 +70,16 @@ jobs:
         with:
           java-version: 11
 
+      - name: Create service key json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_key.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Download secret files
+        run: ./scripts/get_secret_files.main.kts service_key.json
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
@@ -88,6 +95,16 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
+
+      - name: Create service key json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_key.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Download secret files
+        run: ./scripts/get_secret_files.main.kts service_key.json
 
       - uses: actions/cache@v2
         with:

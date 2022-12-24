@@ -26,6 +26,16 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
+      - name: Create service key json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_key.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Download secret files
+        run: ./scripts/get_secret_files.main.kts service_key.json
+
       - name: Build apk
         run: ./gradlew assembleLegacyRelease
 
