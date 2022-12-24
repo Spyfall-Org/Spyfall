@@ -1,11 +1,10 @@
 name: Pull Request Workflow
 
 on:
-  # Triggers the workflow on every pull request other than release
   pull_request:
     branches:
       exclude:
-      - "release**"
+        - "release**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
