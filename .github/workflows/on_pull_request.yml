@@ -22,11 +22,8 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
-      - name: Create the service key file in base 64
-        run: cat service_key.json | base64
-
-      - name: Put the service key into the service key file
-        run: echo "${{ secrets.SPYFALL_SERVICE_ACCOUNT_KEY }}" > service_key.json
+      - name: Create the service key file
+        run: touch service_key.json && echo $SPYFALL_SERVICE_ACCOUNT_KEY | base64 -d > service_key.json
 
       - name: Print out serivce account json file
         run: cat service_key.json
