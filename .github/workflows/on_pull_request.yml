@@ -33,7 +33,7 @@ jobs:
         run: cat service_key.json
 
       - name: Download google files
-        run: ./scripts/get_google_files.main.kts service_key.json
+        run: ./scripts/get_secret_files.main.kts service_key.json
 
       - uses: actions/cache@v2
         with:
@@ -54,9 +54,6 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
-
-      - name: Add test google services json files
-        run: ./scripts/create_google_json_files.main.kts
 
       - name: Build the app
         run: ./gradlew assembleDebug

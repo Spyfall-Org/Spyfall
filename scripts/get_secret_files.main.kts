@@ -20,16 +20,28 @@ import java.io.FileOutputStream
 data class FileInfo(val id: String, val pathToStore: String)
 
 val spyfallGoogleServicesFileInfo =
-    FileInfo(id ="1uieO42nwfDV6E1_EIFoBgDMRy0A5cBcy", pathToStore = "apps/spyfall/google-services.json")
+    FileInfo(
+        id ="1uieO42nwfDV6E1_EIFoBgDMRy0A5cBcy",
+        pathToStore = "apps/spyfall/google-services.json"
+    )
 
 val spyfallServiceAccountKeyFileInfo =
-    FileInfo(id ="1uSnJx6Xr4nx4alpNHsAtv57gvgeb34cZ", pathToStore = "apps/spyfall/service-account-key.json")
+    FileInfo(
+        id ="1uSnJx6Xr4nx4alpNHsAtv57gvgeb34cZ",
+        pathToStore = "apps/spyfall/service-account-key.json".toString()
+    )
 
 val werewolfGoogleServicesFileInfo =
-    FileInfo(id ="1DCmIFGyqAzwd79CvOFi72Gf7rcksmW8B", pathToStore = "apps/werewolf/google-services.json")
+    FileInfo(
+        id ="1DCmIFGyqAzwd79CvOFi72Gf7rcksmW8B",
+        pathToStore = "apps/werewolf/google-services.json"
+    )
 
 val werewolfServiceAccountKeyFileInfo =
-    FileInfo(id ="1dP6c2fjc5BPecvyOKRk08ZZv8yxrIRnC", pathToStore = "apps/werewolf/service-account-key.json")
+    FileInfo(
+        id ="1dP6c2fjc5BPecvyOKRk08ZZv8yxrIRnC",
+        pathToStore = "apps/werewolf/service-account-key.json"
+    )
 
 val fileInfoList = listOf(
     spyfallGoogleServicesFileInfo,
@@ -74,7 +86,7 @@ fun getFiles() {
     val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
 
     val drive = Drive.Builder(transport, jsonFactory, HttpCredentialsAdapter(scopedCredentials)).build()
-
+    var successfulFetches = 0
     fileInfoList.forEach {
         val driveFile = drive.files().get(it.id).execute()
 
@@ -84,6 +96,16 @@ fun getFiles() {
             val outputFile = FileOutputStream(it.pathToStore)
             outputStream.writeTo(outputFile)
         }
+
+        successfulFetches += 1
+    }
+
+    if(successfulFetches == fileInfoList.size) {
+        printGreen("Downloaded all secret files")
+    } else {
+        printRed("DID NOT Download all secret files")
+        @Suppress("TooGenericExceptionThrown")
+        throw Exception("See Message Above")
     }
 }
 
