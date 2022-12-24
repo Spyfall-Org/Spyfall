@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Get serivce account json file
-        run: echo "$SPYFALL_SERVICE_ACCOUNT_KEY" > service_key.json
+        run: echo "${{ secrets.SPYFALL_SERVICE_ACCOUNT_KEY }}" > service_key.json
 
       - name: Print out serivce account json file
         run: cat service_key.json
