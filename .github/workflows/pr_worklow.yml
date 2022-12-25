@@ -1,4 +1,4 @@
-name: PR workflow 1
+name: PR workflow 2
 
 on:
   pull_request:
@@ -16,4 +16,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Job
-        run: echo "running workflow 1"
+        run: echo "running workflow 2"
