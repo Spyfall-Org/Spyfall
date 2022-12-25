@@ -11,6 +11,8 @@ import java.io.File
 val red = "\u001b[31m"
 val green = "\u001b[32m"
 val reset = "\u001b[0m"
+
+@Suppress("MagicNumber")
 val minArgs = 6
 
 fun printRed(text: String) {
