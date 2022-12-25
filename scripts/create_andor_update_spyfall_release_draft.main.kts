@@ -11,6 +11,7 @@ import java.io.File
 val red = "\u001b[31m"
 val green = "\u001b[32m"
 val reset = "\u001b[0m"
+val minArgs = 6
 
 fun printRed(text: String) {
     println(red + text + reset)
@@ -21,7 +22,7 @@ fun printGreen(text: String) {
 }
 
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
-if ( isHelpCall || args.size < 6) {
+if ( isHelpCall || args.size < minArgs) {
     @Suppress("MaxLineLength")
     printRed("""
         This script uploads the debug and 
@@ -41,6 +42,7 @@ if ( isHelpCall || args.size < 6) {
     throw Exception("See Message Above")
 }
 
+@Suppress("MagicNumber")
 fun doWork() {
     val releaseApkPath = args[0]
     val releaseAabPath = args[1]
