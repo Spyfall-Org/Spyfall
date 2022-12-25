@@ -1,4 +1,4 @@
-name: Release Pull Request Workflow
+name: Pull Request Workflow
 
 on:
   # Triggers the workflow for pull requests into any (**) base branch
@@ -11,7 +11,7 @@ on:
 
 # ensures only 1 of these workflows can exist on a PR at a time. Cancels old ones when new ones are triggered
 concurrency:
-  group: ${{ github.head_ref }}
+  group: pr-workflow-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
