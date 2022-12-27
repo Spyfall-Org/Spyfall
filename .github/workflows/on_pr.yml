@@ -50,9 +50,25 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
 
+      - name: Set spyfall release environment variable
+          run: |
+            if [[ $GITHUB_HEAD_REF =~ release-spyfall ]]; then
+              echo "{isSpyfallReleasePR}={true}" >> $GITHUB_ENV
+            else
+              echo "{isSpyfallReleasePR}={false}" >> $GITHUB_ENV
+            fi
+
+      - name: Set werewolf release environment variable
+          run: |
+            if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
+              echo "{isWerewolfReleasePR}={true}" >> $GITHUB_ENV
+            else
+              echo "{isWerewolfReleasePR}={false}" >> $GITHUB_ENV
+            fi
+
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.kts $GITHUB_ENV
+        run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
 
       - name: Upload spyfall legacy debug apk
         if: contains(env, 'spyfallLegacyDebugApkPath')
