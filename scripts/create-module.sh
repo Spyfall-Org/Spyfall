@@ -79,7 +79,7 @@ echo "$(
 )" > README.md
 
 # update project settings
-projectPath=$([ -z "$parent" ] && echo ":$module" || echo "$parent:$module")
+projectPath=$([ -z "$parent" ] && echo "$module" || echo "$parent:$module")
 
 cd "$wd" && echo "$(
     printf "include(\"%s\")\n" "$projectPath"

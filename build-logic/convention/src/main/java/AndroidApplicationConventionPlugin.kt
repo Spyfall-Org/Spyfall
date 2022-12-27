@@ -5,7 +5,7 @@ import com.spyfall.convention.shared.configureGitHooksCheck
 import com.spyfall.convention.shared.configureKotlinAndroid
 import com.spyfall.convention.shared.getVersionCode
 import com.spyfall.convention.shared.getVersionName
-import com.spyfall.convention.shared.task.configureAppConfigCreationTask
+import com.spyfall.convention.shared.loadGradleProperty
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -26,10 +26,12 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     versionCode = getVersionCode()
                     buildConfigField("VERSION_CODE", versionCode)
                     buildConfigField("VERSION_NAME", versionName)
+                    buildConfigField(
+                        "CONFIG_COLLECTION_KEY",
+                        loadGradleProperty("com.spyfall.configCollectionKey"))
                 }
             }
 
-            configureAppConfigCreationTask()
             configureGitHooksCheck()
         }
     }

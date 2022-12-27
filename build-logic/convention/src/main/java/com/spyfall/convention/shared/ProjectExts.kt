@@ -61,8 +61,28 @@ fun Project.loadAppVersionProperty(property: String): String = Properties().let 
     }
 }
 
+@Suppress("TooGenericExceptionCaught")
+fun Project.loadGradleProperty(property: String): Any = Properties().let {
+    val file = File(gradlePropertyPath)
+    it.load(file.inputStream())
+    @Suppress("SwallowedException")
+    try {
+        it.getProperty(property)
+    } catch (e: NullPointerException) {
+        @Suppress("TooGenericExceptionThrown")
+        throw Error(
+            """No property found named: $property. 
+                Please make sure this property is listed exactly as \"$property\" 
+                in $gradlePropertyPath""".trimMargin()
+        )
+    }
+}
+
 val Project.appVersionsPath: String
     get() = "$rootDir/app_versions.properties"
+
+val Project.gradlePropertyPath: String
+    get() = "$rootDir/gradle.properties"
 
 fun Project.getProjectType(): ProjectType? = when (project.name) {
     "spyfall" -> ProjectType.Spyfall

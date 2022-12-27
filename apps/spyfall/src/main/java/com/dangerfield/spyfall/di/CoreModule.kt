@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.dangerfield.spyfall.BuildConfig.CONFIG_COLLECTION_KEY
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
 import com.dangerfield.spyfall.R
@@ -40,6 +41,7 @@ object CoreModule {
         BuildInfo(
             targetApp = TargetApp.Spyfall(isLegacyBuild = isLegacyBuild()),
             versionCode = VERSION_CODE,
-            versionName = VERSION_NAME
+            versionName = VERSION_NAME,
+            configKey = CONFIG_COLLECTION_KEY
         )
 }

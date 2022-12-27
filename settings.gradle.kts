@@ -1,5 +1,3 @@
-include("features:splash:werewolf")
-include("features:splash:spyfall")
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -33,3 +31,7 @@ include("features:createGame:spyfall")
 include("features:waitingApi")
 include("features:waiting")
 include("features:welcome")
+include("libraries:coreConfig")
+include("libraries:configApi")
+include("features:splash:werewolf")
+include("features:splash:spyfall")

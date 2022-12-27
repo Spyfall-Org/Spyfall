@@ -1,4 +1,4 @@
-name: Release Pull Request Extras
+name: Spyfall Release Candidate
 # Creates assets files and publishes them to a draft release
 on:
   # Triggers the workflow for pull requests into any (**) base branch
@@ -17,7 +17,7 @@ concurrency:
 jobs:
   upload:
     runs-on: ubuntu-latest
-    if:  startsWith(github.head_ref, 'release')
+    if:  startsWith(github.head_ref, 'release-spyfall')
     steps:
 
       - name: Checkout the code
@@ -45,10 +45,10 @@ jobs:
       - name: Download secret files
         run: ./scripts/get_secret_files.main.kts service_key.json
 
-      - name: Build release apk
+      - name: Build Release APK
         run: ./gradlew assembleLegacyRelease
 
-      - name: Sign APK
+      - name: Sign Release APK
         id: sign_apk
         uses: r0adkll/sign-android-release@v1
         with:
@@ -94,4 +94,4 @@ jobs:
           path: ${{steps.sign_aab.outputs.signedReleaseFile}}
 
       - name: Create Or Update the Draft Release
-        run: ./create_andor_update_spyfall_release_draft ${{steps.sign_apk.outputs.signedReleaseFile}} ${{steps.sign_aab.outputs.signedReleaseFile}} ${{steps.builddebugapk.outputs.apk}} "$GITHUB_REPOSITORY" "$GITHUB_TOKEN" "${{ github.ref_name }}"
+        run: .scripts/update_artifcats_comment.main.kts ${{steps.sign_apk.outputs.signedReleaseFile}} ${{steps.sign_aab.outputs.signedReleaseFile}} ${{steps.builddebugapk.outputs.apk}} "$GITHUB_REPOSITORY" "$GITHUB_TOKEN" "${{ github.ref_name }}"
