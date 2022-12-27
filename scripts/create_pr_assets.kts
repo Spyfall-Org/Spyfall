@@ -37,9 +37,9 @@ if (isHelpCall) {
 }
 
 fun main() {
-    val shouldBuildSpyfallRelease = args.getOrNull(0)?.let { it.toBoolean() } ?: false
-    val shouldBuildWerewolfRelease = args.getOrNull(1)?.let { it.toBoolean() } ?: false
-    val envFile = File(args.get(2))
+    val envFile = File(args.get(0))
+    val shouldBuildSpyfallRelease = args.getOrNull(1)?.let { it.toBoolean() } ?: false
+    val shouldBuildWerewolfRelease = args.getOrNull(2)?.let { it.toBoolean() } ?: false
 
     val spyfallVersionName = getAppVersionName("spyfall")
     val werewolfVersionName = getAppVersionName("werewolf")
