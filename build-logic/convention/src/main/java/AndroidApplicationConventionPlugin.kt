@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.ApplicationExtension
+import com.spyfall.convention.shared.BuildEnvironment
 import com.spyfall.convention.shared.SharedConstants
 import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.configureGitHooksCheck
@@ -30,13 +31,17 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     buildConfigField("VERSION_CODE", versionCode)
                     buildConfigField("VERSION_NAME", versionName)
                     buildConfigField("CONFIG_COLLECTION_KEY", loadGradleProperty("com.spyfall.configCollectionKey"))
-                            // Set signing config to debug so that devs can build release builds locally.
-                    // These builds should never be uploaded.
-                    signingConfig = signingConfigs.getByName("debug")
-
                 }
 
-                buildTypes.forEach { it.versionNameSuffix = getVersionName() }
+                buildTypes.forEach {
+                    val isLocalReleaseBuild = !it.isDebuggable && !BuildEnvironment.isCIBuild
+                    if (isLocalReleaseBuild) {
+                        // set signing config to debug so that devs can test release builds locally without signing
+                        it.signingConfig = signingConfigs.getByName("debug")
+                        // prefix apk with indicator that the signing is invalid
+                        archivesName.set("unsigned-${archivesName.get()}")
+                    }
+                }
             }
 
             configureGitHooksCheck()

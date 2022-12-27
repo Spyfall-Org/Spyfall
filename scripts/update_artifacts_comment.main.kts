@@ -26,12 +26,12 @@ if ( isHelpCall || args.size < minArgs) {
     printRed("""
         This script comments a link to the PR of the artifacts generated for that PR
         
-        Usage: ./update_artifcats_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [ARTIFACTS_URL]
+        Usage: ./update_artifacts_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID]
         
         [GITHUB_REPO] - REPO_OWNER/REPO_NAME, provided by github actions as env variable
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
         [PULL_NUMBER] - the number of the pull request
-        [ARTIFACTS_URL] - the url where the artifacts were uploaded
+        [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url. 
         
     """.trimIndent())
 
@@ -44,9 +44,11 @@ fun doWork() {
     val githubRepoInfo = args[0] // in the format: "REPO_OWNER/REPO_NAME"
     val githubToken = args[1]
     val pullNumber = args[2]
-    val artifactsUrl = args[3]
+    val runID = args[3]
 
     val repo = getRepository(githubRepoInfo, githubToken)
+
+    val artifactsUrl = repo.getWorkflowRun(runID.toLong()).artifactsUrl
 
     val baseMessage = "Automated PR Artifacts Links"
 
@@ -56,6 +58,7 @@ fun doWork() {
         .getPullRequest(pullNumber.toInt())
         .comments.firstOrNull { it.body.contains(baseMessage) }
         ?.body
+
 
     val updatedComment = (existingComment ?: baseMessage) + """
         $lastCommitSha : $artifactsUrl

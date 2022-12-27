@@ -50,47 +50,31 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
 
-      - name: Set IS_SPYFALL_RELEASE environment variable
-        run: |
-          if [[ $GITHUB_HEAD_REF =~ release-spyfall ]]; then
-            echo "{IS_SPYFALL_RELEASE}={true}" >> $GITHUB_ENV
-          else
-            echo "{IS_SPYFALL_RELEASE}={false}" >> $GITHUB_ENV
-          fi
-
-      - name: Set IS_WEREWOLF_RELEASE environment variable
-        run: |
-          if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
-            echo "{IS_WEREWOLF_RELEASE}={false}" >> $GITHUB_ENV
-          else
-            echo "{IS_WEREWOLF_RELEASE}={false}" >> $GITHUB_ENV
-          fi
-
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.kts ${{ env.IS_SPYFALL_RELEASE }} ${{ env.IS_WEREWOLF_RELEASE }} $GITHUB_ENV
+        run: ./scripts/create_pr_assets.kts $GITHUB_ENV
 
       - name: Upload spyfall legacy debug apk
         if: contains(env, 'spyfallLegacyDebugApkPath')
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ steps.createassets.outputs.spyfallLegacyDebugApkPath }}
+          path: ${{ env.spyfallLegacyDebugApkPath }}
 
       - name: Upload spyfall refactor debug apk
         if: contains(env, 'spyfallRefactorDebugApkPath')
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ steps.createassets.outputs.spyfallRefactorDebugApkPath }}
+          path: ${{ env.spyfallRefactorDebugApkPath }}
 
       - name: Upload werewolf debug apk
         if: contains(env, 'werewolfDebugApkPath')
         id: uploadlastasset
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ steps.createassets.outputs.werewolfDebugApkPath }}
+          path: ${{ env.werewolfDebugApkPath }}
 
       - name: Update artifacts comment on PR
-        run: ./scripts/update_artifacts_comment.main.kts $GITHUB_REPO $GITHUB_TOKEN ${{ github.event.pull_request.number }} ${{ steps.uploadlastasset.outputs.url }}
+        run: ./scripts/update_artifacts_comment.main.kts $GITHUB_REPO $GITHUB_TOKEN ${{ github.event.pull_request.number }} $GITHUB_RUN_ID
 
   style:
     runs-on: [ ubuntu-latest ]
