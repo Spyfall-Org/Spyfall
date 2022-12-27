@@ -32,7 +32,7 @@ jobs:
         run: ./scripts/get_secret_files.main.kts service_key.json
 
       - name: Set Up Cache
-      - uses: actions/cache@v2
+        uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
@@ -51,7 +51,29 @@ jobs:
 
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.kts false false
+        run: ./scripts/create_pr_assets.kts startsWith(github.head_ref, 'release-spyfall') startsWith(github.head_ref, 'release-werewolf')
+
+      - name: Upload spyfall legacy debug apk
+        if: github.contains(steps.createassets.outputs, 'spyfallLegacyDebugApkPath')
+        uses: actions/upload-artifact@v2
+        with:
+          path: ${{ steps.createassets.outputs.spyfallLegacyDebugApkPath }}
+
+      - name: Upload spyfall refactor debug apk
+        if: github.contains(steps.createassets.outputs, 'spyfallRefactorDebugApkPath')
+        uses: actions/upload-artifact@v2
+        with:
+          path: ${{ steps.createassets.outputs.spyfallRefactorDebugApkPath }}
+
+      - name: Upload werewolf debug apk
+        if: github.contains(steps.createassets.outputs, 'werewolfDebugApkPath')
+        id: uploadlastasset
+        uses: actions/upload-artifact@v2
+        with:
+          path: ${{ steps.createassets.outputs.werewolfDebugApkPath }}
+
+      - name: Update artifacts comment on PR
+        run: ./scripts/update_artifacts_comment.main.kts $GITHUB_REPO $GITHUB_TOKEN ${{ github.event.pull_request.number }} ${{ steps.uploadlastasset.outputs.url }}
 
   style:
     runs-on: [ ubuntu-latest ]
