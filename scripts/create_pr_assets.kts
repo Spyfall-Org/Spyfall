@@ -1,13 +1,13 @@
 #!/usr/bin/env kotlin
 
+@file:Repository("https://dl.bintray.com/actions/actions-kotlin")
+@file:DependsOn("om.github.actions:actions-toolkit:1.8.1")
+
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.util.Properties
 import com.github.actions.exec.Exec
-
-@file:Repository("https://dl.bintray.com/actions/actions-kotlin")
-@file:DependsOn("om.github.actions:actions-toolkit:1.8.1")
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -22,7 +22,7 @@ fun printGreen(text: String) {
 }
 
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
-if (isHelpCall || ) {
+if (isHelpCall) {
     @Suppress("MaxLineLength")
     printGreen(
         """
