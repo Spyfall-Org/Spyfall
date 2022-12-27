@@ -57,7 +57,7 @@ jobs:
             echo "::set-env name=IS_SPYFALL_RELEASE::false"
           fi
 
-     - name: Set IS_WEREWOLF_RELEASE environment variable
+      - name: Set IS_WEREWOLF_RELEASE environment variable
         run: |
           if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
             echo "::set-env name=IS_WEREWOLF_RELEASE::true"
