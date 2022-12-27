@@ -23,7 +23,7 @@ jobs:
 
       - name: Create Service Key Json
         id: create-json
-        uses: jsdaniell/create-json@1.2.2
+        uses: jsdaniell/create-json@v1.2.2
         with:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
@@ -102,7 +102,7 @@ jobs:
 
       - name: Create service key json
         id: create-json
-        uses: jsdaniell/create-json@1.2.2
+        uses: jsdaniell/create-json@v1.2.2
         with:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
@@ -128,7 +128,7 @@ jobs:
 
       - name: Create service key json
         id: create-json
-        uses: jsdaniell/create-json@1.2.2
+        uses: jsdaniell/create-json@v1.2.2
         with:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
