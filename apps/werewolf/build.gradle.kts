@@ -17,9 +17,14 @@ android {
     }
 
     buildTypes {
-        release {
+        named("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            setProguardFiles(
+                listOf(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            )
         }
     }
 
@@ -37,8 +42,8 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
-    implementation("androidx.core:core-ktx:+")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.0.0")
+    implementation(libs.androidx.core)
+    implementation(libs.kotlin.std)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso.core)

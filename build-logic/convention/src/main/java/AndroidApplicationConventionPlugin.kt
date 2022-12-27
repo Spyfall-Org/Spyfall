@@ -20,6 +20,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
+
                 defaultConfig.apply {
                     targetSdk = SharedConstants.targetSdk
                     versionName = getVersionName()
@@ -29,7 +30,13 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     buildConfigField(
                         "CONFIG_COLLECTION_KEY",
                         loadGradleProperty("com.spyfall.configCollectionKey"))
+
+                    // Set signing config to debug so that devs can build release builds locally.
+                    // These builds should never be uploaded.
+                    signingConfig = signingConfigs.getByName("debug")
                 }
+
+                buildTypes.forEach { it.versionNameSuffix = getVersionName() }
             }
 
             configureGitHooksCheck()

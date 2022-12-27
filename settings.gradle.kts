@@ -8,7 +8,7 @@ pluginManagement {
 }
 enableFeaturePreview("VERSION_CATALOGS")
 
-rootProject.name = "spyfall"
+rootProject.name = "Spyfall"
 
 include("apps:spyfall")
 include("apps:werewolf")

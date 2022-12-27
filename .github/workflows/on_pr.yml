@@ -52,13 +52,23 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Build Spyfall Debug Apk
-        if:  startsWith(github.head_ref, 'release-spyfall')
-        id: builddebugapk
-        run: ./gradlew assembleLegacyDebug
+      - name: Build Spyfall Legacy Debug Apk
+        run: ./gradlew :apps:spyfall:assembleLegacyDebug
 
-      - name: Build debug apk
-        run: ./gradlew assembleDebug
+      - name: Rename Spyfall Legacy Debug Apk
+        run: echo "TODO"
+
+      - name: Build Spyfall Refactor Debug Apk
+        run: ./gradlew :apps:spyfall:assembleRefactorDebug
+
+      - name: Rename Spyfall Refactory Debug Apk
+        run: echo "TODO"
+
+      - name: Build Werewolf Debug Apk
+        run: ./gradlew :apps:werewolf:assembleDebug
+
+      - name: Rename Werewolf Debug Apk
+        run: echo "TODO"
 
       - name: Upload apk
         uses: actions/upload-artifact@v2
