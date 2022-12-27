@@ -70,19 +70,19 @@ jobs:
         run: ./scripts/create_pr_assets.kts $IS_WEREWOLF_RELEASE IS_SPYFALL_RELEASE
 
       - name: Upload spyfall legacy debug apk
-        if: github.contains(steps.createassets.outputs, 'spyfallLegacyDebugApkPath')
+        if: contains(steps.createassets.outputs, 'spyfallLegacyDebugApkPath')
         uses: actions/upload-artifact@v2
         with:
           path: ${{ steps.createassets.outputs.spyfallLegacyDebugApkPath }}
 
       - name: Upload spyfall refactor debug apk
-        if: github.contains(steps.createassets.outputs, 'spyfallRefactorDebugApkPath')
+        if: contains(steps.createassets.outputs, 'spyfallRefactorDebugApkPath')
         uses: actions/upload-artifact@v2
         with:
           path: ${{ steps.createassets.outputs.spyfallRefactorDebugApkPath }}
 
       - name: Upload werewolf debug apk
-        if: github.contains(steps.createassets.outputs, 'werewolfDebugApkPath')
+        if: contains(steps.createassets.outputs, 'werewolfDebugApkPath')
         id: uploadlastasset
         uses: actions/upload-artifact@v2
         with:
