@@ -49,9 +49,25 @@ jobs:
         with:
           java-version: 11
 
+      - name: Set IS_SPYFALL_RELEASE environment variable
+        run: |
+          if [[ $GITHUB_HEAD_REF =~ release-spyfall ]]; then
+            echo "::set-env name=IS_SPYFALL_RELEASE::true"
+          else
+            echo "::set-env name=IS_SPYFALL_RELEASE::false"
+          fi
+
+     - name: Set IS_WEREWOLF_RELEASE environment variable
+        run: |
+          if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
+            echo "::set-env name=IS_WEREWOLF_RELEASE::true"
+          else
+            echo "::set-env name=IS_WEREWOLF_RELEASE::false"
+          fi
+
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.kts startsWith(github.head_ref, 'release-spyfall') startsWith(github.head_ref, 'release-werewolf')
+        run: ./scripts/create_pr_assets.kts $IS_WEREWOLF_RELEASE IS_SPYFALL_RELEASE
 
       - name: Upload spyfall legacy debug apk
         if: github.contains(steps.createassets.outputs, 'spyfallLegacyDebugApkPath')
