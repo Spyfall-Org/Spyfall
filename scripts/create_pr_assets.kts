@@ -22,13 +22,14 @@ fun printGreen(text: String) {
 }
 
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
-if (isHelpCall) {
+if (isHelpCall || ) {
     @Suppress("MaxLineLength")
     printGreen(
         """
-               This script creates the apks needed for PRs and sets env variables with their paths
+               This script creates the apks needed for PRs and writes the paths of those assets to the env file passed in
                
-               Usage: ./create_pr_assets.kts [option1] [option2] 
+               Usage: ./create_pr_assets.kts [ENV] [option1] [option2]
+               ENV: The env file to output to
                Option 1: true if you want to build spyfall release
                Option 2: true if you want to build werewolf release
                
@@ -42,19 +43,20 @@ if (isHelpCall) {
 fun main() {
     val shouldBuildSpyfallRelease = args.getOrNull(0)?.let { it.toBoolean() } ?: false
     val shouldBuildWerewolfRelease = args.getOrNull(1)?.let { it.toBoolean() } ?: false
+    val envFile = File(args.get(2))
 
     val spyfallVersionName = getAppVersionName("spyfall")
     val werewolfVersionName = getAppVersionName("werewolf")
 
-    createWerewolfDebugAssets(werewolfVersionName)
-    createSpyfallDebugAssets(spyfallVersionName)
+    createWerewolfDebugAssets(werewolfVersionName, envFile)
+    createSpyfallDebugAssets(spyfallVersionName, envFile)
 
     if (shouldBuildSpyfallRelease) {
-        createSpyfallReleaseAssets(spyfallVersionName)
+        createSpyfallReleaseAssets(spyfallVersionName, envFile)
     }
 
     if (shouldBuildWerewolfRelease) {
-        createWerewolfReleaseAssets(werewolfVersionName)
+        createWerewolfReleaseAssets(werewolfVersionName, envFile)
     }
 }
 
@@ -67,7 +69,7 @@ fun getAppVersionName(app: String): String {
 }
 
 
-fun makeAsset(gradleCommand: String, defaultPath: String, name: String, outputName: String ) {
+fun makeAsset(gradleCommand: String, defaultPath: String, name: String, outputName: String, envFile: File ) {
     val result = ProcessBuilder("./gradlew", gradleCommand)
         .redirectOutput(ProcessBuilder.Redirect.INHERIT)
         .redirectError(ProcessBuilder.Redirect.INHERIT)
@@ -84,78 +86,89 @@ fun makeAsset(gradleCommand: String, defaultPath: String, name: String, outputNa
     apkFile.renameTo(File(apkFile.parent, name))
     val finalPath = apkFile.absolutePath
 
-    Exec.setOutput(outputName, finalPath)
+    envFile.printWriter().use {
+        it.println("$outputName=$finalPath")
+    }
 }
 
 main()
 
-fun Create_pr_assets.createSpyfallReleaseAssets(spyfallVersionName: String) {
+fun Create_pr_assets.createSpyfallReleaseAssets(spyfallVersionName: String, envFile: File) {
     makeAsset(
         gradleCommand = ":apps:spyfall:assembleLegacyRelease",
         defaultPath = "apps/spyfall/build/outputs/apk/legacy/release/spyfall-legacy-release.apk",
         name = "spyfall-legacy-release-v$spyfallVersionName.apk",
-        outputName = "spyfallLegacyReleaseApkPath"
+        outputName = "spyfallLegacyReleaseApkPath",
+        envFile = envFile
     )
 
     makeAsset(
         gradleCommand = ":apps:spyfall:bundleLegacyRelease",
         defaultPath = "apps/spyfall/build/outputs/apk/legacy/release/spyfall-legacy-release.aab",
         name = "spyfall-legacy-release-v$spyfallVersionName.aab",
-        outputName = "spyfallLegacyReleaseAabPath"
+        outputName = "spyfallLegacyReleaseAabPath",
+        envFile = envFile
     )
 
     makeAsset(
         gradleCommand = ":apps:spyfall:assembleRefactorRelease",
         defaultPath = "apps/spyfall/build/outputs/apk/refactor/release/spyfall-refactor-release.apk",
         name = "spyfall-refactor-release-v$spyfallVersionName.apk",
-        outputName = "spyfallRefactorReleaseApkPath"
+        outputName = "spyfallRefactorReleaseApkPath",
+        envFile = envFile
     )
 
     makeAsset(
         gradleCommand = ":apps:spyfall:bundleRefactorRelease",
         defaultPath = "apps/spyfall/build/outputs/bundle/refactor/release/spyfall-refactor-release.aab",
         name = "spyfall-refactor-release-v$spyfallVersionName.aab",
-        outputName = "spyfallRefactorReleaseAabPath"
+        outputName = "spyfallRefactorReleaseAabPath",
+        envFile = envFile
     )
 }
 
-fun Create_pr_assets.createWerewolfDebugAssets(werewolfVersionName: String) {
+fun Create_pr_assets.createWerewolfDebugAssets(werewolfVersionName: String, envFile: File ) {
     makeAsset(
         gradleCommand = ":apps:werewolf:assembleDebug",
         defaultPath = "apps/werewolf/build/outputs/apk/debug/werewolf-debug.apk",
         name = "werewolf-debug-v$werewolfVersionName.apk",
-        outputName = "werewolfDebugApkPath"
+        outputName = "werewolfDebugApkPath",
+        envFile = envFile
     )
 }
 
-fun Create_pr_assets.createWerewolfReleaseAssets(werewolfVersionName: String) {
+fun Create_pr_assets.createWerewolfReleaseAssets(werewolfVersionName: String, envFile: File ) {
     makeAsset(
         gradleCommand = ":apps:werewolf:assembleRelease",
         defaultPath = "apps/werewolf/build/outputs/apk/release/werewolf-release.apk",
         name = "werewolf-release-v$werewolfVersionName.apk",
-        outputName = "werewolfReleaseApkPath"
+        outputName = "werewolfReleaseApkPath",
+        envFile = envFile
     )
 
     makeAsset(
         gradleCommand = ":apps:werewolf:bundleRelease",
         defaultPath = "apps/werewolf/build/outputs/apk/release/werewolf-release.aab",
         name = "werewolf-release-v$werewolfVersionName.aab",
-        outputName = "werewolfReleaseAabPath"
+        outputName = "werewolfReleaseAabPath",
+        envFile = envFile
     )
 }
 
-fun Create_pr_assets.createSpyfallDebugAssets(spyfallVersionName: String) {
+fun Create_pr_assets.createSpyfallDebugAssets(spyfallVersionName: String, envFile: File ) {
     makeAsset(
         gradleCommand = ":apps:spyfall:assembleLegacyDebug",
         defaultPath = "apps/spyfall/build/outputs/apk/legacy/debug/spyfall-legacy-debug.apk",
         name = "spyfall-legacy-debug-v$spyfallVersionName.apk",
-        outputName = "spyfallLegacyDebugApkPath"
+        outputName = "spyfallLegacyDebugApkPath",
+        envFile = envFile
     )
 
     makeAsset(
         gradleCommand = ":apps:spyfall:assembleRefactorDebug",
         defaultPath = "apps/spyfall/build/outputs/apk/refactor/debug/spyfall-refactor-debug.apk",
         name = "spyfall-refactor-debug-v$spyfallVersionName.apk",
-        outputName = "spyfallRefactorDebugApkPath"
+        outputName = "spyfallRefactorDebugApkPath",
+        envFile = envFile
     )
 }

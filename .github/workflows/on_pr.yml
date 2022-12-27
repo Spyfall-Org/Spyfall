@@ -23,7 +23,7 @@ jobs:
 
       - name: Create Service Key Json
         id: create-json
-        uses: jsdaniell/create-json@1.1.2
+        uses: jsdaniell/create-json@1.2.2
         with:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
@@ -32,7 +32,7 @@ jobs:
         run: ./scripts/get_secret_files.main.kts service_key.json
 
       - name: Set Up Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -45,46 +45,46 @@ jobs:
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: Set Up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
 
       - name: Set IS_SPYFALL_RELEASE environment variable
         run: |
           if [[ $GITHUB_HEAD_REF =~ release-spyfall ]]; then
-            echo "::set-env name=IS_SPYFALL_RELEASE::true"
+            echo "{IS_SPYFALL_RELEASE}={true}" >> $GITHUB_ENV
           else
-            echo "::set-env name=IS_SPYFALL_RELEASE::false"
+            echo "{IS_SPYFALL_RELEASE}={false}" >> $GITHUB_ENV
           fi
 
       - name: Set IS_WEREWOLF_RELEASE environment variable
         run: |
           if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
-            echo "::set-env name=IS_WEREWOLF_RELEASE::true"
+            echo "{IS_WEREWOLF_RELEASE}={false}" >> $GITHUB_ENV
           else
-            echo "::set-env name=IS_WEREWOLF_RELEASE::false"
+            echo "{IS_WEREWOLF_RELEASE}={false}" >> $GITHUB_ENV
           fi
 
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.kts $IS_WEREWOLF_RELEASE IS_SPYFALL_RELEASE
+        run: ./scripts/create_pr_assets.kts ${{ env.IS_SPYFALL_RELEASE }} ${{ env.IS_WEREWOLF_RELEASE }} $GITHUB_ENV
 
       - name: Upload spyfall legacy debug apk
-        if: contains(steps.createassets.outputs, 'spyfallLegacyDebugApkPath')
-        uses: actions/upload-artifact@v2
+        if: contains(env, 'spyfallLegacyDebugApkPath')
+        uses: actions/upload-artifact@v3
         with:
           path: ${{ steps.createassets.outputs.spyfallLegacyDebugApkPath }}
 
       - name: Upload spyfall refactor debug apk
-        if: contains(steps.createassets.outputs, 'spyfallRefactorDebugApkPath')
-        uses: actions/upload-artifact@v2
+        if: contains(env, 'spyfallRefactorDebugApkPath')
+        uses: actions/upload-artifact@v3
         with:
           path: ${{ steps.createassets.outputs.spyfallRefactorDebugApkPath }}
 
       - name: Upload werewolf debug apk
-        if: contains(steps.createassets.outputs, 'werewolfDebugApkPath')
+        if: contains(env, 'werewolfDebugApkPath')
         id: uploadlastasset
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ${{ steps.createassets.outputs.werewolfDebugApkPath }}
 
@@ -102,7 +102,7 @@ jobs:
 
       - name: Create service key json
         id: create-json
-        uses: jsdaniell/create-json@1.1.2
+        uses: jsdaniell/create-json@1.2.2
         with:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
@@ -128,7 +128,7 @@ jobs:
 
       - name: Create service key json
         id: create-json
-        uses: jsdaniell/create-json@1.1.2
+        uses: jsdaniell/create-json@1.2.2
         with:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
@@ -136,7 +136,7 @@ jobs:
       - name: Download secret files
         run: ./scripts/get_secret_files.main.kts service_key.json
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -149,7 +149,7 @@ jobs:
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
 
