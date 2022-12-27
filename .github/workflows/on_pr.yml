@@ -51,7 +51,7 @@ jobs:
 
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.kts startsWith(github.head_ref, 'release-spyfall') startsWith(github.head_ref, 'release-werewolf')
+        run: ./scripts/create_pr_assets.kts false false
 
   style:
     runs-on: [ ubuntu-latest ]
