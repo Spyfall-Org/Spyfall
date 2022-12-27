@@ -1,13 +1,9 @@
 #!/usr/bin/env kotlin
 
-@file:Repository("https://dl.bintray.com/actions/actions-kotlin")
-@file:DependsOn("om.github.actions:actions-toolkit:1.8.1")
-
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.util.Properties
-import com.github.actions.exec.Exec
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
