@@ -81,7 +81,6 @@ fun makeAsset(gradleCommand: String, defaultPath: String, name: String, outputNa
     }
 
     val apkFile = File(defaultPath)
-    val test = File("")
     apkFile.renameTo(File(apkFile.parent, name))
     val finalPath = apkFile.absolutePath
 
