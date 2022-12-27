@@ -28,10 +28,6 @@ android {
                 )
             )
         }
-
-        debug {
-            versionNameSuffix = "-DEBUG"
-        }
     }
 
     configureSpyfallFlavors(this)

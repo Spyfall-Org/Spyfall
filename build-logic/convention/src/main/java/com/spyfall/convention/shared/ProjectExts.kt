@@ -1,5 +1,9 @@
 package com.spyfall.convention.shared
 
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType

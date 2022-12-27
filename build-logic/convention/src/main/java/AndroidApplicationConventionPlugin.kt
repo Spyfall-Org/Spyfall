@@ -9,6 +9,7 @@ import com.spyfall.convention.shared.loadGradleProperty
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -19,6 +20,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<ApplicationExtension> {
+
                 configureKotlinAndroid(this)
 
                 defaultConfig.apply {
@@ -27,13 +29,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     versionCode = getVersionCode()
                     buildConfigField("VERSION_CODE", versionCode)
                     buildConfigField("VERSION_NAME", versionName)
-                    buildConfigField(
-                        "CONFIG_COLLECTION_KEY",
-                        loadGradleProperty("com.spyfall.configCollectionKey"))
-
-                    // Set signing config to debug so that devs can build release builds locally.
+                    buildConfigField("CONFIG_COLLECTION_KEY", loadGradleProperty("com.spyfall.configCollectionKey"))
+                            // Set signing config to debug so that devs can build release builds locally.
                     // These builds should never be uploaded.
                     signingConfig = signingConfigs.getByName("debug")
+
                 }
 
                 buildTypes.forEach { it.versionNameSuffix = getVersionName() }
