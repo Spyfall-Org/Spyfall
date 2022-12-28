@@ -87,10 +87,6 @@ jobs:
         if: ${{ env.isWerewolfReleasePR }} == "true"
         run: echo "SKIP LOGIC DOES NOT WORK"
 
-      - name: Test skip logic 6
-        if: ${{ env.isWerewolfReleasePR == "true" }}
-        run: echo "SKIP LOGIC DOES NOT WORK"
-
       - name: Test skip logic 7
         if: ${{ env.isWerewolfReleasePR == 'true' }}
         run: echo "SKIP LOGIC DOES NOT WORK"
