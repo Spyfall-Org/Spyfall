@@ -46,7 +46,8 @@ fun main() {
     val envFile = File(args[6])
 
     val assetFile = File(assetPath).also { if (!it.isFile) throw  FileDoesNoteExistError(it.absolutePath) }
-    val keystoreFile = File(keystorePath).also { if (!it.isFile) throw  FileDoesNoteExistError(it.absolutePath) }
+    val keystoreFile = File(keystorePath)
+    keystoreFile.createNewFile()
 
     @Suppress("MaxLineLength")
     val signingCommand = when (assetFile.extension) {
