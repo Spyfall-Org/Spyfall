@@ -92,8 +92,14 @@ jobs:
           name: Werewolf Debug Apk
           path: ${{ env.werewolfDebugApkPath }}
 
-      - name: Update artifacts comment on PR
+      - name: Update artifacts comment on PR using
         run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.REPO_SCOPED_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
+
+      - name: Update artifacts comment on PR using secrets.GITHUB_TOKEN
+        run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
+
+      - name: Update artifacts comment on PR using GITHUB_TOKEN
+        run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" "${GITHUB_TOKEN}" ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
 
   style:
     runs-on: [ ubuntu-latest ]
@@ -141,7 +147,8 @@ jobs:
       - name: Download secret files
         run: ./scripts/get_secret_files.main.kts service_key.json
 
-      - uses: actions/cache@v3
+      - name: Set Up Cache
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches

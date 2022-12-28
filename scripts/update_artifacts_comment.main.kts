@@ -52,7 +52,11 @@ fun doWork() {
 
     val htmlUrl = repo.getWorkflowRun(runID.toLong()).htmlUrl
 
-    val baseMessage = "## Automated PR Artifacts Links: "
+    val baseMessage = """
+        ## Automated PR Artifacts Links: 
+        ### These artifacts will become available when all jobs in the workflow finish
+        
+        """.trimIndent()
 
     val lastCommitSha = repo.getPullRequest(pullNumber.toInt()).head.sha.take(7)
 
