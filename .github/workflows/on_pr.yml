@@ -78,6 +78,11 @@ jobs:
         if: ${{ env.isSpyfallReleasePR }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseApkPath" $GITHUB_ENV
 
+      - name: Echoing paths so I can see what they are
+        run: |
+          echo ${{ env.signedSpyfallLegacyReleaseApkPath }}
+          echo ${{ env.spyfallLegacyDebugApkPath }}
+
       - name: Upload spyfall legacy release signed apk
         if: ${{ env.isSpyfallReleasePR }}
         uses: actions/upload-artifact@v3
