@@ -1,5 +1,9 @@
 package com.spyfall.convention.shared
 
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
@@ -61,8 +65,28 @@ fun Project.loadAppVersionProperty(property: String): String = Properties().let 
     }
 }
 
+@Suppress("TooGenericExceptionCaught")
+fun Project.loadGradleProperty(property: String): Any = Properties().let {
+    val file = File(gradlePropertyPath)
+    it.load(file.inputStream())
+    @Suppress("SwallowedException")
+    try {
+        it.getProperty(property)
+    } catch (e: NullPointerException) {
+        @Suppress("TooGenericExceptionThrown")
+        throw Error(
+            """No property found named: $property. 
+                Please make sure this property is listed exactly as \"$property\" 
+                in $gradlePropertyPath""".trimMargin()
+        )
+    }
+}
+
 val Project.appVersionsPath: String
     get() = "$rootDir/app_versions.properties"
+
+val Project.gradlePropertyPath: String
+    get() = "$rootDir/gradle.properties"
 
 fun Project.getProjectType(): ProjectType? = when (project.name) {
     "spyfall" -> ProjectType.Spyfall

@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall.legacy.di
 
+import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
 import com.dangerfield.spyfall.MainActivityViewModel
@@ -55,7 +56,8 @@ val mainModule = module {
         BuildInfo(
             targetApp = TargetApp.Spyfall(isLegacyBuild()),
             versionCode = VERSION_CODE,
-            versionName = VERSION_NAME
+            versionName = VERSION_NAME,
+            configKey = BuildConfig.CONFIG_COLLECTION_KEY
         )
     }
 

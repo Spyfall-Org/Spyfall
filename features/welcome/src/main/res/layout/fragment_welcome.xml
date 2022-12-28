@@ -51,16 +51,16 @@
                 android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_spyfall"
+                android:id="@+id/tv_app_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="none"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="@string/app_name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/welcome_text_large"
                 android:textStyle="bold"
+                tools:text="INSERT APP"
                 app:autoSizeTextType="uniform" />
     </LinearLayout>
 

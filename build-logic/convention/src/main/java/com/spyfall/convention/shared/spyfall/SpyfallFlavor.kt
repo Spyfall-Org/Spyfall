@@ -8,9 +8,10 @@ enum class SpyfallFlavorDimension {
     ProjectStatus
 }
 
+@Suppress("EnumNaming")
 enum class SpyfallFlavor(val dimension: SpyfallFlavorDimension, val orientation: String) {
-    Legacy(SpyfallFlavorDimension.ProjectStatus, "portrait"),
-    Refactor(SpyfallFlavorDimension.ProjectStatus, "unspecified")
+    legacy(SpyfallFlavorDimension.ProjectStatus, "portrait"),
+    refactor(SpyfallFlavorDimension.ProjectStatus, "unspecified")
 }
 
 fun configureSpyfallFlavors(

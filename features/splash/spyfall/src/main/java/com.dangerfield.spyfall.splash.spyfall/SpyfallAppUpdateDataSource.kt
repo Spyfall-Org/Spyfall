@@ -15,7 +15,7 @@ class SpyfallAppUpdateDataSource @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     override suspend fun getMinimumVersionCode(): Int? {
         val result = try {
-            firebaseFirestore.collection(AppUpdateConstants.configCollection)
+            firebaseFirestore.collection(buildInfo.configKey)
                 .document(buildInfo.versionName)
                 .get()
                 .await()

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.dangerfield.spyfall.splash.forcedupdate.AppUpdateDataSource
 import com.dangerfield.spyfall.splash.werewolf.WerewolfAppUpdateDataSource
+import com.dangerfield.werewolf.BuildConfig.CONFIG_COLLECTION_KEY
 import com.dangerfield.werewolf.BuildConfig.VERSION_CODE
 import com.dangerfield.werewolf.BuildConfig.VERSION_NAME
 import com.dangerfield.werewolf.R
@@ -32,7 +33,12 @@ object CoreModule {
     }
 
     @Provides
-    fun provideBuildInfo(): BuildInfo = BuildInfo(TargetApp.Werewolf, VERSION_CODE, VERSION_NAME)
+    fun provideBuildInfo(): BuildInfo = BuildInfo(
+        TargetApp.Werewolf,
+        VERSION_CODE,
+        VERSION_NAME,
+        CONFIG_COLLECTION_KEY
+    )
 
     @Provides
     @Singleton

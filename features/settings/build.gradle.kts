@@ -7,6 +7,6 @@ plugins {
 
 dependencies {
     implementation(getModule("features:settingsApi"))
-    implementation("androidx.core:core-ktx:+")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.0.0")
+    implementation(libs.androidx.core)
+    implementation(libs.kotlin.std)
 }

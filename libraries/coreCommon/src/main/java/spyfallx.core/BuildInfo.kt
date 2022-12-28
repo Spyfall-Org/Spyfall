@@ -9,8 +9,8 @@ data class BuildInfo(
     val targetApp: TargetApp,
     val versionCode: Int,
     val versionName: String,
+    val configKey: String
 ) {
-
     val isDebug: Boolean = BuildConfig.DEBUG
     val isLegacySpyfall = targetApp is TargetApp.Spyfall && targetApp.isLegacyBuild
 }
@@ -18,7 +18,7 @@ data class BuildInfo(
 /**
  * All applications build from the Spyfall codebase
  */
-sealed class TargetApp {
-    class Spyfall(val isLegacyBuild: Boolean) : TargetApp()
-    object Werewolf : TargetApp()
+sealed class TargetApp(val appName: String) {
+    class Spyfall(val isLegacyBuild: Boolean) : TargetApp("Spyfall")
+    object Werewolf : TargetApp("Werewolf")
 }
