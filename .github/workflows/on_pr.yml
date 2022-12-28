@@ -71,17 +71,9 @@ jobs:
         id: createassets
         run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
 
-      - name: Print files after having made the assets
-        run: ./scripts/print-file-tree.sh
-
       - name: Sign spyfall legacy release apk
         if: ${{ env.isSpyfallReleasePR }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseApkPath" $GITHUB_ENV
-
-      - name: Echoing paths so I can see what they are
-        run: |
-          echo ${{ env.signedSpyfallLegacyReleaseApkPath }}
-          echo ${{ env.spyfallLegacyDebugApkPath }}
 
       - name: Upload spyfall legacy release signed apk
         if: ${{ env.isSpyfallReleasePR }}
@@ -90,8 +82,38 @@ jobs:
           name: Spyfall Legacy Release Apk
           path: ${{ env.signedSpyfallLegacyReleaseApkPath }}
 
-      - name: Print files after having signed stuff
-        run: ./scripts/print-file-tree.sh
+      - name: Sign spyfall refactor release apk
+        if: ${{ env.isSpyfallReleasePR }}
+        run: ./scripts/sign_app.main.kts ${{ env.spyfallRefactorReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallRefactorReleaseApkPath" $GITHUB_ENV
+
+      - name: Upload spyfall refactor release signed apk
+        if: ${{ env.isSpyfallReleasePR }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: Spyfall Refactor Release Apk
+          path: ${{ env.signedSpyfallRefactorReleaseApkPath }}
+
+      - name: Sign spyfall legacy release aab
+        if: ${{ env.isSpyfallReleasePR }}
+        run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseAabPath" $GITHUB_ENV
+
+      - name: Upload spyfall legacy release signed aab
+        if: ${{ env.isSpyfallReleasePR }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: Spyfall Legacy Release aab
+          path: ${{ env.signedSpyfallLegacyReleaseAabPath }}
+
+      - name: Sign spyfall refactor release aab
+        if: ${{ env.isSpyfallReleasePR }}
+        run: ./scripts/sign_app.main.kts ${{ env.spyfallRefactorReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallRefactorReleaseAabPath" $GITHUB_ENV
+
+      - name: Upload spyfall refactor release signed aab
+        if: ${{ env.isSpyfallReleasePR }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: Spyfall Refactor Release aab
+          path: ${{ env.signedSpyfallRefactorReleaseAabPath }}
 
       - name: Upload spyfall legacy debug apk
         uses: actions/upload-artifact@v3
@@ -111,6 +133,28 @@ jobs:
         with:
           name: Werewolf Debug Apk
           path: ${{ env.werewolfDebugApkPath }}
+
+      - name: Sign Werewolf release apk
+        if: ${{ env.isWerewolfReleasePR }}
+        run: ./scripts/sign_app.main.kts ${{ env.werwolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" $GITHUB_ENV
+
+      - name: Upload werewolf release signed apk
+        if: ${{ env.isWerewolfReleasePR }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: Werewolf Release Apk
+          path: ${{ env.signedWerewolfReleaseApkPath }}
+
+      - name: Sign Werewolf release aab
+        if: ${{ env.isWerewolfReleasePR }}
+        run: ./scripts/sign_app.main.kts ${{ env.werwolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" $GITHUB_ENV
+
+      - name: Upload werewolf release signed aab
+        if: ${{ env.isWerewolfReleasePR }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: Werewolf Release Aab
+          path: ${{ env.signedSWerewolfReleaseAabPath }}
 
       - name: Update artifacts comment on PR
         run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
