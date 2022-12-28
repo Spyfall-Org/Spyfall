@@ -74,13 +74,11 @@ jobs:
         run: ./scripts/print-file-tree.sh
 
       - name: Upload spyfall legacy debug apk
-        if: contains(env, 'spyfallLegacyDebugApkPath')
         uses: actions/upload-artifact@v3
         with:
           path: ${{ env.spyfallLegacyDebugApkPath }}
 
       - name: Upload spyfall refactor debug apk
-        if: contains(env, 'spyfallRefactorDebugApkPath')
         uses: actions/upload-artifact@v3
         with:
           path: ${{ env.spyfallRefactorDebugApkPath }}
