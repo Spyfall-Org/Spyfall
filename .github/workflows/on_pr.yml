@@ -73,6 +73,17 @@ jobs:
       - name: Print files after having made the assets
         run: ./scripts/print-file-tree.sh
 
+      - name: Sign spyfall legacy release apk
+        if: ${{ env.isSpyfallReleasePR }}
+        run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseApkPath" $GITHUB_ENV
+
+      - name: Upload spyfall legacy release signed apk
+        if: ${{ env.isSpyfallReleasePR }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: Spyfall Legacy Debug Apk
+          path: ${{ env.signedSpyfallLegacyReleaseApkPath }}
+
       - name: Upload spyfall legacy debug apk
         uses: actions/upload-artifact@v3
         with:
