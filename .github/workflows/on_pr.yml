@@ -67,18 +67,6 @@ jobs:
             echo "isWerewolfReleasePR=false" >> $GITHUB_ENV
           fi
 
-      - name: Test skip logic 7
-        if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: echo "SKIP LOGIC DOES NOT WORK"
-
-      - name: Test skip logic 7 (SHOULD NOT SKIP IF IT WORKS)
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: echo "SKIP LOGIC DOES WORK"
-
-      - name: Test skip logic 9
-        if: contains(github.head_ref, 'release-werwolf')
-        run: echo "SKIP LOGIC DOES NOT WORK"
-
       - name: Create Assets
         id: createassets
         run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
