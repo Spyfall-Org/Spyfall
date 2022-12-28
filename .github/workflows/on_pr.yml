@@ -15,6 +15,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
+  printheadref:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print head ref
+        run: echo $GITHUB_HEAD_REF
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -53,9 +60,9 @@ jobs:
       - name: Set spyfall release environment variable
         run: |
           if [[ $GITHUB_HEAD_REF =~ release-spyfall ]]; then
-            echo "{isSpyfallReleasePR}={true}" >> $GITHUB_ENV
+            echo "isSpyfallReleasePR=true" >> $GITHUB_ENV
           else
-            echo "{isSpyfallReleasePR}={false}" >> $GITHUB_ENV
+            echo "isSpyfallReleasePR=false" >> $GITHUB_ENV
           fi
 
       - name: Set werewolf release environment variable
@@ -83,6 +90,9 @@ jobs:
         with:
           name: Spyfall Legacy Debug Apk
           path: ${{ env.signedSpyfallLegacyReleaseApkPath }}
+
+      - name: Print files after having signed stuff
+        run: ./scripts/print-file-tree.sh
 
       - name: Upload spyfall legacy debug apk
         uses: actions/upload-artifact@v3
