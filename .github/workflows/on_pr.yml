@@ -71,71 +71,57 @@ jobs:
         if: ${{ env.isWerewolfReleasePR == 'true' }}
         run: echo "SKIP LOGIC DOES NOT WORK"
 
-      - name: Test skip logic 8
-        if: ${{ env.isWerewolfReleasePR == true }}
-        run: echo "SKIP LOGIC DOES NOT WORK"
-
       - name: Test skip logic 7 (SHOULD NOT SKIP IF IT WORKS)
         if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: echo "SKIP LOGIC DOES WORK"
-
-      - name: Test skip logic 8 (SHOULD NOT SKIP IF IT WORKS)
-        if: ${{ env.isSpyfallReleasePR == true }}
         run: echo "SKIP LOGIC DOES WORK"
 
       - name: Test skip logic 9
         if: contains(github.head_ref, 'release-werwolf')
         run: echo "SKIP LOGIC DOES NOT WORK"
 
-      - name: Echo werewolf release
-        run: echo ${{ env.isWerewolfReleasePR }}
-
-      - name: Echo spyfall release
-        run: echo ${{ env.isSpyfallReleasePR }}
-
       - name: Create Assets
         id: createassets
         run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
 
       - name: Sign spyfall legacy release apk
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseApkPath" $GITHUB_ENV
 
       - name: Upload spyfall legacy release signed apk
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Spyfall Legacy Release Apk
           path: ${{ env.signedSpyfallLegacyReleaseApkPath }}
 
       - name: Sign spyfall refactor release apk
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallRefactorReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallRefactorReleaseApkPath" $GITHUB_ENV
 
       - name: Upload spyfall refactor release signed apk
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Spyfall Refactor Release Apk
           path: ${{ env.signedSpyfallRefactorReleaseApkPath }}
 
       - name: Sign spyfall legacy release aab
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseAabPath" $GITHUB_ENV
 
       - name: Upload spyfall legacy release signed aab
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Spyfall Legacy Release aab
           path: ${{ env.signedSpyfallLegacyReleaseAabPath }}
 
       - name: Sign spyfall refactor release aab
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallRefactorReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallRefactorReleaseAabPath" $GITHUB_ENV
 
       - name: Upload spyfall refactor release signed aab
-        if: ${{ env.isSpyfallReleasePR }}
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Spyfall Refactor Release aab
@@ -161,22 +147,22 @@ jobs:
           path: ${{ env.werewolfDebugApkPath }}
 
       - name: Sign Werewolf release apk
-        if: fromJSON( ( ${{ env.isWerewolfReleasePR }} ) )
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed apk
-        if: fromJSON(${{ env.isWerewolfReleasePR }})
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Werewolf Release Apk
           path: ${{ env.signedWerewolfReleaseApkPath }}
 
       - name: Sign Werewolf release aab
-        if: ${{ env.isWerewolfReleasePR }} == 'true'
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed aab
-        if: ${{ env.isWerewolfReleasePR }} == 'true'
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Werewolf Release Aab
