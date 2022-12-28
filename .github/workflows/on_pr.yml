@@ -83,14 +83,13 @@ jobs:
           path: ${{ env.spyfallRefactorDebugApkPath }}
 
       - name: Upload werewolf debug apk
-        if: contains(env, 'werewolfDebugApkPath')
         id: uploadlastasset
         uses: actions/upload-artifact@v3
         with:
           path: ${{ env.werewolfDebugApkPath }}
 
       - name: Update artifacts comment on PR
-        run: ./scripts/update_artifacts_comment.main.kts $GITHUB_REPO $GITHUB_TOKEN ${{ github.event.pull_request.number }} $GITHUB_RUN_ID
+        run: ./scripts/update_artifacts_comment.main.kts ${{ env.GITHUB_REPO }} ${{ env.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} ${{ env.GITHUB_RUN_ID }}
 
   style:
     runs-on: [ ubuntu-latest ]
