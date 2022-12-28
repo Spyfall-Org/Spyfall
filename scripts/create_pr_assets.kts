@@ -167,8 +167,9 @@ fun getAppVersionName(app: String): String {
 
 fun renameAsset(defaultPath: String, name: String, outputName: String, envFile: File ) {
     val apkFile = File(defaultPath)
-    apkFile.renameTo(File(apkFile.parent, name))
-    val finalPath = apkFile.absolutePath
+    val renamedFile = File(apkFile.parent, name)
+    val didRename = apkFile.renameTo(renamedFile)
+    val finalPath = if(didRename) renamedFile.absolutePath else apkFile.absolutePath
 
     val writer = FileWriter(envFile, true)
     writer.write("$outputName=$finalPath")
