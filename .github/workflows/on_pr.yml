@@ -16,12 +16,6 @@ concurrency:
 
 jobs:
 
-  printheadref:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print head ref
-        run: echo $GITHUB_HEAD_REF
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -88,7 +82,7 @@ jobs:
         if: ${{ env.isSpyfallReleasePR }}
         uses: actions/upload-artifact@v3
         with:
-          name: Spyfall Legacy Debug Apk
+          name: Spyfall Legacy Release Apk
           path: ${{ env.signedSpyfallLegacyReleaseApkPath }}
 
       - name: Print files after having signed stuff
