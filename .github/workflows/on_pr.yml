@@ -67,6 +67,12 @@ jobs:
             echo "isWerewolfReleasePR=false" >> $GITHUB_ENV
           fi
 
+      - name: Echo werewolf release
+        run: echo ${{ env.isWerewolfReleasePR }}
+
+      - name: Echo spyfall release
+        run: echo ${{ env.isSpyfallReleasePR }}
+
       - name: Create Assets
         id: createassets
         run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
@@ -136,7 +142,7 @@ jobs:
 
       - name: Sign Werewolf release apk
         if: ${{ env.isWerewolfReleasePR }}
-        run: ./scripts/sign_app.main.kts ${{ env.werwolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" $GITHUB_ENV
+        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed apk
         if: ${{ env.isWerewolfReleasePR }}
@@ -147,7 +153,7 @@ jobs:
 
       - name: Sign Werewolf release aab
         if: ${{ env.isWerewolfReleasePR }}
-        run: ./scripts/sign_app.main.kts ${{ env.werwolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" $GITHUB_ENV
+        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed aab
         if: ${{ env.isWerewolfReleasePR }}
