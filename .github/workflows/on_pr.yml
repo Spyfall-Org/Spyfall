@@ -68,7 +68,7 @@ jobs:
       - name: Set werewolf release environment variable
         run: |
           if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
-            echo "isWerewolfReleasePR}=true" >> $GITHUB_ENV
+            echo "isWerewolfReleasePR=true" >> $GITHUB_ENV
           else
             echo "isWerewolfReleasePR=false" >> $GITHUB_ENV
           fi

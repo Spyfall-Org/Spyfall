@@ -2,6 +2,7 @@
 
 import java.io.File
 import java.io.FileWriter
+import java.util.Base64
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -23,7 +24,7 @@ if ( isHelpCall ) {
         
         Usage: ./sign_app.main.kts [assetPath] [keystorePath] [keyStorePassword] [keystoreAlias] [signingKey] [outputName] [envFile]
         [assetPath] - path to apk or aab to sign
-        [keystorePath] - path to they keystore
+        [signingKeyBase64] - the keystore in base 64 format
         [keyStorePassword] - password for keystore
         [keystoreAlias] - alias for keystore
         [signingKey] - signing key
@@ -38,24 +39,29 @@ if ( isHelpCall ) {
 @Suppress("ThrowsCount", "MagicNumber")
 fun main() {
     val assetPath = args[0]
-    val keystorePath = args[1]
+    val signingKeyBase64 = args[1]
     val keystorePassword = args[3]
     val keystoreAlias = args[2]
     val signingKey = args[4]
     val outputName = args[5]
     val envFile = File(args[6])
-
     val assetFile = File(assetPath).also { if (!it.isFile) throw  FileDoesNoteExistError(it.absolutePath) }
-    val keystoreFile = File(keystorePath)
-    keystoreFile.createNewFile()
+
+    val decodedSigningKey = Base64.getDecoder().decode(signingKeyBase64).toString()
+    val keystore = File("signingKey.jks")
+    keystore.createNewFile()
+    keystore.writer().let {
+        it.write(decodedSigningKey)
+        it.close()
+    }
 
     @Suppress("MaxLineLength")
     val signingCommand = when (assetFile.extension) {
         "apk" -> {
-            "jarsigner -keystore $keystoreFile $assetFile $keystoreAlias -storepass $keystorePassword -keypass $signingKey"
+            "jarsigner -keystore $keystore $assetFile $keystoreAlias -storepass $keystorePassword -keypass $signingKey"
         }
         "aab" -> {
-            "java -jar bundletool.jar build-apks --bundle $assetFile --output signed.apks --ks $keystoreFile --ks-key-alias $keystoreAlias --ks-pass pass:$keystorePassword --key-pass pass:$signingKey"
+            "java -jar bundletool.jar build-apks --bundle $assetFile --output signed.apks --ks $keystore --ks-key-alias $keystoreAlias --ks-pass pass:$keystorePassword --key-pass pass:$signingKey"
         }
         else -> throw FileExtensionError(assetFile.extension)
     }
