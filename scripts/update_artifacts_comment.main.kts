@@ -50,16 +50,11 @@ fun doWork() {
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
-    val artifactsUrl = repo.getWorkflowRun(runID.toLong()).artifactsUrl
-    val url = repo.getWorkflowRun(runID.toLong()).url
-    val workflowUrl = repo.getWorkflowRun(runID.toLong()).workflowUrl
-    val jobsUrl = repo.getWorkflowRun(runID.toLong()).jobsUrl
     val htmlUrl = repo.getWorkflowRun(runID.toLong()).htmlUrl
 
+    val baseMessage = "## Automated PR Artifacts Links: "
 
-    val baseMessage = "Automated PR Artifacts Links"
-
-    val lastCommitSha = repo.getPullRequest(pullNumber.toInt()).head.sha.take(6)
+    val lastCommitSha = repo.getPullRequest(pullNumber.toInt()).head.sha.take(7)
 
     val existingComment = repo
         .getPullRequest(pullNumber.toInt())
@@ -68,14 +63,8 @@ fun doWork() {
 
     val updatedComment = (existingComment ?: baseMessage) + """
         
-        $lastCommitSha : $artifactsUrl
-        $lastCommitSha : $url
-        $lastCommitSha : $workflowUrl
-        $lastCommitSha : $jobsUrl
-        $lastCommitSha : $htmlUrl
-
-        
-        
+        $lastCommitSha : $htmlUrl#artifacts
+   
     """.trimIndent()
 
     repo.getPullRequest(pullNumber.toInt()).let { pr ->
