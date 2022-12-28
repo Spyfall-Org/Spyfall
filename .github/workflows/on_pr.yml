@@ -152,7 +152,7 @@ jobs:
           path: ${{ env.signedWerewolfReleaseApkPath }}
 
       - name: Sign Werewolf release aab
-        if: ${{ env.isWerewolfReleasePR }}
+        if: env.isWerewolfReleasePR
         run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed aab
