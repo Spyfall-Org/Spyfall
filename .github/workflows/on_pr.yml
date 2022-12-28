@@ -141,7 +141,7 @@ jobs:
           path: ${{ env.werewolfDebugApkPath }}
 
       - name: Sign Werewolf release apk
-        if: ${{ env.isWerewolfReleasePR }} == 'true'
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed apk
