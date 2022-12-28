@@ -98,9 +98,6 @@ jobs:
       - name: Update artifacts comment on PR using secrets.GITHUB_TOKEN
         run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
 
-      - name: Update artifacts comment on PR using GITHUB_TOKEN
-        run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" "${GITHUB_TOKEN}" ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
-
   style:
     runs-on: [ ubuntu-latest ]
     steps:
