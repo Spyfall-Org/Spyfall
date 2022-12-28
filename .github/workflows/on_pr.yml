@@ -70,6 +70,9 @@ jobs:
         id: createassets
         run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
 
+      - name: Print files after having made the assets
+        run: ./scripts/print-file-tree.sh
+
       - name: Upload spyfall legacy debug apk
         if: contains(env, 'spyfallLegacyDebugApkPath')
         uses: actions/upload-artifact@v3
