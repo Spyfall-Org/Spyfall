@@ -67,6 +67,42 @@ jobs:
             echo "isWerewolfReleasePR=false" >> $GITHUB_ENV
           fi
 
+      - name: Test skip logic 1
+        if: fromJSON(${{ env.isWerewolfReleasePR }})
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 2
+        if: toBoolean(${{ env.isWerewolfReleasePR }})
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 3
+        if: ${{ env.isWerewolfReleasePR }}
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 4
+        if: ${{ env.isWerewolfReleasePR }} == 'true'
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 5
+        if: ${{ env.isWerewolfReleasePR }} == "true"
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 6
+        if: ${{ env.isWerewolfReleasePR == "true" }}
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 7
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 8
+        if: ${{ env.isWerewolfReleasePR == true }}
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
+      - name: Test skip logic 9
+        if: contains(github.head_ref, 'release-werwolf')
+        run: echo "SKIP LOGIC DOES NOT WORK"
+
       - name: Echo werewolf release
         run: echo ${{ env.isWerewolfReleasePR }}
 
