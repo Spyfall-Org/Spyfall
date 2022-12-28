@@ -21,9 +21,10 @@ fun printGreen(text: String) {
 }
 
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
-if ( isHelpCall || args.size < minArgs) {
+if (isHelpCall || args.size < minArgs) {
     @Suppress("MaxLineLength")
-    printRed("""
+    printRed(
+        """
         This script comments a link to the PR of the artifacts generated for that PR
         
         Usage: ./update_artifacts_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID]
@@ -33,7 +34,8 @@ if ( isHelpCall || args.size < minArgs) {
         [PULL_NUMBER] - the number of the pull request
         [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url. 
         
-    """.trimIndent())
+    """.trimIndent()
+    )
 
     @Suppress("TooGenericExceptionThrown")
     throw Exception("See Message Above")
@@ -59,16 +61,15 @@ fun doWork() {
         .comments.firstOrNull { it.body.contains(baseMessage) }
         ?.body
 
-
     val updatedComment = (existingComment ?: baseMessage) + """
         $lastCommitSha : $artifactsUrl
     """.trimIndent()
 
-    repo
-        .getPullRequest(pullNumber.toInt())
-        .comments.firstOrNull { it.body.contains(baseMessage) }
-        ?.update(updatedComment)
+    repo.getPullRequest(pullNumber.toInt()).let { pr ->
+        pr.comments.firstOrNull { it.body.contains(baseMessage) }
+            ?.update(updatedComment) ?: pr.comment(updatedComment)
 
+    }
 }
 
 fun getRepository(githubRepoInfo: String, githubToken: String): GHRepository =

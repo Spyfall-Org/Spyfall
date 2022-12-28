@@ -76,17 +76,20 @@ jobs:
       - name: Upload spyfall legacy debug apk
         uses: actions/upload-artifact@v3
         with:
+          name: Spyfall Legacy Debug Apk
           path: ${{ env.spyfallLegacyDebugApkPath }}
 
       - name: Upload spyfall refactor debug apk
         uses: actions/upload-artifact@v3
         with:
+          name: Spyfall Refactor Debug Apk
           path: ${{ env.spyfallRefactorDebugApkPath }}
 
       - name: Upload werewolf debug apk
         id: uploadlastasset
         uses: actions/upload-artifact@v3
         with:
+          name: Werewolf Debug Apk
           path: ${{ env.werewolfDebugApkPath }}
 
       - name: Update artifacts comment on PR
