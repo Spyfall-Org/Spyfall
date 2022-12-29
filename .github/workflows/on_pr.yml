@@ -19,6 +19,10 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
+      - name: Set Release Env Variables
+        if: contains(github.head_ref, 'release')
+        run: ./scripts/set_env_release_version.main.kts ${{ github.head_ref }} $GITHUB_ENV
+
       - name: Create Service Key Json
         id: create-json
         uses: jsdaniell/create-json@v1.2.2
@@ -47,22 +51,6 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
-
-      - name: Set spyfall release environment variable
-        run: |
-          if [[ $GITHUB_HEAD_REF =~ release-spyfall ]]; then
-            echo "isSpyfallReleasePR=true" >> $GITHUB_ENV
-          else
-            echo "isSpyfallReleasePR=false" >> $GITHUB_ENV
-          fi
-
-      - name: Set werewolf release environment variable
-        run: |
-          if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
-            echo "isWerewolfReleasePR=true" >> $GITHUB_ENV
-          else
-            echo "isWerewolfReleasePR=false" >> $GITHUB_ENV
-          fi
 
       - name: Create Assets
         id: createassets
@@ -153,14 +141,6 @@ jobs:
         with:
           name: Werewolf Release Aab
           path: ${{ env.signedSWerewolfReleaseAabPath }}
-
-      - name: Extract and set version number
-        run: |
-          version=$(echo "${{ github.head_ref }}" | tr '/' '\n' | sed -n 2p)
-          echo "releaseVersion=$version" >> $GITHUB_ENV
-
-      - name: print  version number
-        run: echo ${{ env.releaseVersion}}
 
       - name: Update Spyfall Draft Release
         uses: softprops/action-gh-release@v1
