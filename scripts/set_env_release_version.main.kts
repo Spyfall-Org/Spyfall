@@ -49,13 +49,16 @@ fun main() {
     val branchVersion = (vXyzMatcher.find(branchName) ?: vXyMatcher.find(branchName))?.value ?: throw
     IllegalStateException(" branch detected to be a release but could not extract the version.")
 
-    val appVersionName = when {
-        isSpyfallRelease -> getVersionName("spyfall")
-        isWerewolfRelease -> getVersionName("werewolf")
+
+    val appName = when {
+        isSpyfallRelease -> "spyfall"
+        isWerewolfRelease -> "werewolf"
         else -> throw IllegalStateException("""
             Got a release branch that does not match spyfall or werewolf
         """.trimIndent())
     }
+
+    val appVersionName = getVersionName(appName)
 
     if ( !branchVersion.contains(appVersionName) ) {
         throw IllegalStateException("""
@@ -66,7 +69,9 @@ fun main() {
     envFile.writer().let {
         it.write("isWerewolfReleasePR=$isWerewolfRelease")
         it.write("isSpyfallReleasePR=$isSpyfallRelease")
-        it.write("releaseVersion=branchVersion$")
+        it.write("releaseVersion=$branchVersion")
+        it.write("releaseTagName=$appName/$branchVersion")
+
         it.close()
     }
 }

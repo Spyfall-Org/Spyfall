@@ -146,7 +146,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ env.isSpyfallReleasePR == 'true' }}
         with:
-          tag_name: $GITHUB_REF_NAME
+          tag_name: ${{ github.head_ref }}
           draft: true
           name: Spyfall Release ${{ env.releaseVersion}}
           files: |
@@ -161,7 +161,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ env.isWerewolfReleasePR == 'true' }}
         with:
-          tag_name: $GITHUB_REF_NAME
+          tag_name: ${{ github.head_ref }}
           name: Werewolf Release ${{ env.releaseVersion}}
           draft: true
           files: |
@@ -170,7 +170,7 @@ jobs:
             ${{ env.werewolfDebugApkPath }}
 
       - name: Update artifacts comment on PR
-        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
+        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.releaseTagName }}
 
   style:
     runs-on: [ ubuntu-latest ]

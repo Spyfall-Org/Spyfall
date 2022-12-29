@@ -2,6 +2,7 @@
 
 @file:DependsOn("org.kohsuke:github-api:1.125")
 
+import org.kohsuke.github.GHRelease
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
 import java.io.FileNotFoundException
@@ -34,8 +35,8 @@ if (isHelpCall || args.size < minArgs) {
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
         [PULL_NUMBER] - the number of the pull request
         [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url. 
+        [TAG_NAME] - Optional, The name of the tag associated with the draft release created for this PR
 
-       
     """.trimIndent()
     )
 
@@ -49,20 +50,25 @@ fun doWork() {
     val githubToken = args[1]
     val pullNumber = args[2]
     val runID = args[3]
+    val tagName = args.getOrNull(4)
 
     val repo = getRepository(githubRepoInfo, githubToken)
+    val releaseDraft = repo.listReleases().firstOrNull { it.isDraft && it.tagName == tagName }
 
-    updatePRArtifactsComment(repo, runID.toLong(), pullNumber.toInt())
+    updatePRArtifactsComment(repo, runID.toLong(), pullNumber.toInt(), releaseDraft)
 }
 
-fun updatePRArtifactsComment(repo: GHRepository, runID: Long, pullNumber: Int, ) {
+fun updatePRArtifactsComment(repo: GHRepository, runID: Long, pullNumber: Int, releaseDraft: GHRelease?) {
 
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
 
+    val draftMessage = if (releaseDraft != null ) """
+        The draft for this release can be found here: ${releaseDraft.htmlUrl}
+    """.trimIndent() else null
     val baseMessage = """
         ## Automated PR Artifacts Links: 
         ### These artifacts will become available when all jobs in the workflow finish
-        
+        $draftMessage
         """.trimIndent()
 
     @Suppress("MagicNumber")
