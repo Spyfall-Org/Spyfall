@@ -156,7 +156,7 @@ jobs:
 
       - name: Update Spyfall Draft Release
         uses: softprops/action-gh-release@v1
-        if: contains(env.GITHUB_HEAD_REF, 'release-spyfall')
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
         with:
           draft: true
           files: |
@@ -168,7 +168,7 @@ jobs:
             ${{ env.spyfallLegacyDebugApkPath }}
 
       - name: Update artifacts comment on PR
-        run: ./scripts/update_pr_comment.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
+        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
 
   style:
     runs-on: [ ubuntu-latest ]
