@@ -154,16 +154,39 @@ jobs:
           name: Werewolf Release Aab
           path: ${{ env.signedSWerewolfReleaseAabPath }}
 
+      - name: Extract and set version number
+        run: |
+          version=$(echo "${{ github.head_ref }}" | tr '/' '\n' | sed -n 2p)
+          echo "releaseVersion=$version" >> $GITHUB_ENV
+
+      - name: print  version number
+        run: echo ${{ env.releaseVersion}}
+
       - name: Update Spyfall Draft Release
         uses: softprops/action-gh-release@v1
         if: ${{ env.isSpyfallReleasePR == 'true' }}
         with:
           draft: true
+          name: ${{ env.releaseVersion}}
           files: |
-            ${{ env.spyfallRefactorReleaseAabPath }}
-            ${{ env.spyfallLegacyReleaseAabPath }}
-            ${{ env.spyfallRefactorReleaseApkPath }}
-            ${{ env.spyfallLegacyReleaseApkPath }}
+            ${{ env.signedSpyfallRefactorReleaseAabPath }}
+            ${{ env.signedSpyfallLegacyReleaseAabPath }}
+            ${{ env.signedSpyfallRefactorReleaseApkPath }}
+            ${{ env.signedSpyfallLegacyReleaseApkPath }}
+            ${{ env.spyfallRefactorDebugApkPath }}
+            ${{ env.spyfallLegacyDebugApkPath }}
+
+      - name: Update Werewolf Draft Release
+        uses: softprops/action-gh-release@v1
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
+        with:
+          name:
+          draft: true
+          files: |
+            ${{ env.signedSpyfallRefactorReleaseAabPath }}
+            ${{ env.signedSpyfallLegacyReleaseAabPath }}
+            ${{ env.signedSpyfallRefactorReleaseApkPath }}
+            ${{ env.signedSpyfallLegacyReleaseApkPath }}
             ${{ env.spyfallRefactorDebugApkPath }}
             ${{ env.spyfallLegacyDebugApkPath }}
 
