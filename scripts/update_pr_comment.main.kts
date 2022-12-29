@@ -65,11 +65,14 @@ fun updatePRArtifactsComment(repo: GHRepository, runID: Long, pullNumber: Int, r
     val draftMessage = if (releaseDraft != null ) """
         The draft for this release can be found here: ${releaseDraft.htmlUrl}
     """.trimIndent() else null
+
     val baseMessage = """
         ## Automated PR Artifacts Links: 
         ### These artifacts will become available when all jobs in the workflow finish
-        $draftMessage
-        """.trimIndent()
+
+        """.trimIndent().let { base ->
+            if (draftMessage != null) base + draftMessage else base
+    }
 
     @Suppress("MagicNumber")
     val lastCommitSha = repo.getPullRequest(pullNumber).head.sha.take(7)

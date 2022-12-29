@@ -68,10 +68,13 @@ fun main() {
 
     envFile.writer().let {
         it.write("isWerewolfReleasePR=$isWerewolfRelease")
+        it.write("\n")
         it.write("isSpyfallReleasePR=$isSpyfallRelease")
+        it.write("\n")
         it.write("releaseVersion=$branchVersion")
+        it.write("\n")
         it.write("releaseTagName=$appName/$branchVersion")
-
+        it.write("\n")
         it.close()
     }
 }
