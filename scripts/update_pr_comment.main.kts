@@ -53,6 +53,7 @@ fun doWork() {
     val tagName = args.getOrNull(4)
 
     val repo = getRepository(githubRepoInfo, githubToken)
+
     val releaseDraft = repo.listReleases().firstOrNull { it.isDraft && it.tagName == tagName }
 
     updatePRArtifactsComment(repo, runID.toLong(), pullNumber.toInt(), releaseDraft)
