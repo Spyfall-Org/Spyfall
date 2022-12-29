@@ -6,9 +6,6 @@ on:
     branches:
       - "**"
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 # ensures only 1 of these workflows can exist on a PR at a time. Cancels old ones when new ones are triggered
 concurrency:
   group: pr-workflow-${{ github.head_ref }}
@@ -71,6 +68,7 @@ jobs:
         id: createassets
         run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
 
+      # TODO exit the create_pr_assets to sign and upload assets as well.
       - name: Sign spyfall legacy release apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseApkPath" $GITHUB_ENV
@@ -156,8 +154,21 @@ jobs:
           name: Werewolf Release Aab
           path: ${{ env.signedSWerewolfReleaseAabPath }}
 
+      - name: Update Spyfall Draft Release
+        uses: softprops/action-gh-release@v1
+        if: contains(env.GITHUB_HEAD_REF, 'release-spyfall')
+        with:
+          draft: true
+          files: |
+            ${{ env.spyfallRefactorReleaseAabPath }}
+            ${{ env.spyfallLegacyReleaseAabPath }}
+            ${{ env.spyfallRefactorReleaseApkPath }}
+            ${{ env.spyfallLegacyReleaseApkPath }}
+            ${{ env.spyfallRefactorDebugApkPath }}
+            ${{ env.spyfallLegacyDebugApkPath }}
+
       - name: Update artifacts comment on PR
-        run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
+        run: ./scripts/update_pr_comment.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
 
   style:
     runs-on: [ ubuntu-latest ]
