@@ -28,7 +28,7 @@ if (isHelpCall || args.size < minArgs) {
         """
         This script comments a link to the PR of the artifacts generated for that PR
         
-        Usage: ./update_pr_comment.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID]
+        Usage: ./update_pr_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID]
         
         [GITHUB_REPO] - REPO_OWNER/REPO_NAME, provided by github actions as env variable
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
