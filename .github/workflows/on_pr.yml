@@ -166,8 +166,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ env.isSpyfallReleasePR == 'true' }}
         with:
+          tag_name: $GITHUB_REF_NAME
           draft: true
-          name: ${{ env.releaseVersion}}
+          name: Spyfall Release ${{ env.releaseVersion}}
           files: |
             ${{ env.signedSpyfallRefactorReleaseAabPath }}
             ${{ env.signedSpyfallLegacyReleaseAabPath }}
@@ -178,17 +179,15 @@ jobs:
 
       - name: Update Werewolf Draft Release
         uses: softprops/action-gh-release@v1
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
         with:
-          name:
+          tag_name: $GITHUB_REF_NAME
+          name: Werewolf Release ${{ env.releaseVersion}}
           draft: true
           files: |
-            ${{ env.signedSpyfallRefactorReleaseAabPath }}
-            ${{ env.signedSpyfallLegacyReleaseAabPath }}
-            ${{ env.signedSpyfallRefactorReleaseApkPath }}
-            ${{ env.signedSpyfallLegacyReleaseApkPath }}
-            ${{ env.spyfallRefactorDebugApkPath }}
-            ${{ env.spyfallLegacyDebugApkPath }}
+            ${{ env.signedWerewolfReleaseAabPath }}
+            ${{ env.signedWerewolfReleaseApkPath }}
+            ${{ env.werewolfDebugApkPath }}
 
       - name: Update artifacts comment on PR
         run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
