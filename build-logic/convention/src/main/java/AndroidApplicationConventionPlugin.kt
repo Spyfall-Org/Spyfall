@@ -4,6 +4,7 @@ import com.spyfall.convention.shared.SharedConstants
 import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.configureGitHooksCheck
 import com.spyfall.convention.shared.configureKotlinAndroid
+import com.spyfall.convention.shared.checkForAppModuleSecretFiles
 import com.spyfall.convention.shared.getVersionCode
 import com.spyfall.convention.shared.getVersionName
 import com.spyfall.convention.shared.loadGradleProperty
@@ -45,6 +46,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
 
             configureGitHooksCheck()
+            checkForAppModuleSecretFiles()
         }
     }
 }

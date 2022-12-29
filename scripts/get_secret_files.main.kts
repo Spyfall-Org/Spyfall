@@ -13,6 +13,7 @@ import com.google.api.services.drive.DriveScopes
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.ServiceAccountCredentials
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
@@ -63,23 +64,38 @@ fun printGreen(text: String) {
 }
 
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
-if ( isHelpCall || args.isEmpty()) {
+if ( isHelpCall ) {
     printRed("""
-        This script collects every required google-services.json file 
-        from google drive using a service account key passed in
+        This script collects every required google service.json file 
+        from google drive using a service account key file. You must either pass in the path to the service_key.json
+        file or have it installed in the root directory. 
         
-        Usage: ./create_google_json_files.main.kts [serviceAccountKey]
+        You can download the service-key.json file from the following link: 
+        https://drive.google.com/file/d/1t456fo07BN9NF0a3e1Ds9KNBccV1X1AQ/view?usp=share_link
+        
+        Usage: ./create_google_json_files.main.kts [optional serviceAccountKeyPath]
     """.trimIndent())
 
     @Suppress("TooGenericExceptionThrown")
     throw Exception("See Message Above")
 }
 
-val serviceAccountKeyString = args[0]
+val serviceAccountKeyPath = args.getOrNull(0) ?: run {
+    if ( File("service_key.json").isFile) return@run "service_key.json"
+    printRed("""
+        You must either pass in the path to the service_key.json
+        file or have it installed in the root directory. 
+        
+        You can download the service_key.json file from the following link: 
+        https://drive.google.com/file/d/1t456fo07BN9NF0a3e1Ds9KNBccV1X1AQ/view?usp=share_link
+    """.trimIndent())
+    @Suppress("TooGenericExceptionThrown")
+    throw Exception("No service_key.json file found")
+}
 
 fun getFiles() {
-    val inputStream = FileInputStream(serviceAccountKeyString)
-    val credentials = ServiceAccountCredentials.fromStream(inputStream)
+    val file = File(serviceAccountKeyPath)
+    val credentials = ServiceAccountCredentials.fromStream(file.inputStream())
     val scopedCredentials = credentials.createScoped(listOf(DriveScopes.DRIVE))
 
     val transport: HttpTransport = NetHttpTransport()
