@@ -65,6 +65,7 @@ fun updatePRArtifactsComment(repo: GHRepository, runID: Long, pullNumber: Int, )
         
         """.trimIndent()
 
+    @Suppress("MagicNumber")
     val lastCommitSha = repo.getPullRequest(pullNumber).head.sha.take(7)
 
     val existingComment = repo
