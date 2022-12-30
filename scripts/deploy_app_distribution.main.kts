@@ -129,6 +129,7 @@ fun getNodeInstallCommand() = when {
     )
 }
 
+@Suppress("SpreadOperator")
 fun runCommandLine(command: String): String {
     val process = ProcessBuilder(*command.split("\\s".toRegex()).toTypedArray())
         .redirectOutput(ProcessBuilder.Redirect.PIPE)

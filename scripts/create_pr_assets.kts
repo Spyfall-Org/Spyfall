@@ -57,13 +57,13 @@ fun main() {
     if (isSpyfallRelease) {
         runGradleCommand(":apps:spyfall:bundleRelease")
         runGradleCommand(":apps:spyfall:assembleRelease")
-        renameSpyfallReleaseAssets(spyfallVersionName, envFile, isSpyfallRelease, isCIBuild)
+        renameSpyfallReleaseAssets(spyfallVersionName, envFile, isCIBuild)
     }
 
     if (isWerewolfRelease) {
         runGradleCommand(":apps:werewolf:bundleRelease")
         runGradleCommand(":apps:werewolf:assembleRelease")
-        renameWerewolfReleaseAssets(werewolfVersionName, envFile, isWerewolfRelease, isCIBuild)
+        renameWerewolfReleaseAssets(werewolfVersionName, envFile, isCIBuild)
 
     }
 }
@@ -71,7 +71,6 @@ fun main() {
 fun renameSpyfallReleaseAssets(
     spyfallVersionName: String,
     envFile: File,
-    isSpyfallRelease: Boolean,
     isCIBuild: Boolean
 ) {
     val signingSuffix = if (isCIBuild) "unsigned" else "debugSigned"
@@ -94,7 +93,6 @@ fun renameSpyfallReleaseAssets(
 fun renameWerewolfReleaseAssets(
     werewolfVersionName: String,
     envFile: File,
-    isWerewolfRelease: Boolean,
     isCIBuild: Boolean
 ) {
     val signingSuffix = if (isCIBuild) "unsigned" else "debugSigned"

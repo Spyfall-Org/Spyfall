@@ -1,3 +1,4 @@
+@Suppress("ConstructorParameterNaming")
 data class Client(
     val api_key: List<ApiKey>,
     val client_info: ClientInfo,

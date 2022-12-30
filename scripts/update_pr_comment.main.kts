@@ -81,6 +81,7 @@ fun updatePRArtifactsComment(
         }
     }.fold("") { linkA: String, linkB: String -> "$linkA $linkB" }
 
+    @Suppress("MaxLineLength")
     val baseMessage = """
         # Automated PR Assets Links
         These assets are automatically generated on pull requests. Some links may not work until all jobs in the pull request workflow have finished. Every update to this PR will generate a new row in the assets table. 
