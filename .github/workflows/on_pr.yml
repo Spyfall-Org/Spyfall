@@ -76,7 +76,7 @@ jobs:
 
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.main.kts ${{ github.env }}
+        run: ./scripts/create_pr_assets.main.kts ${{ github.env }} $GITHUB_ENV ${{ env }} ${{ env.isSpyfallReleasePR }}
 
       # TODO exit the create_pr_assets to sign and upload assets as well.
       - name: Sign spyfall release apk

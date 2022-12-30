@@ -39,8 +39,13 @@ if (isHelpCall) {
     throw Exception("See Message Above")
 }
 
+@Suppress("UnusedPrivateMember", "MagicNumber")
 fun main() {
     val envFile = File(args.get(0))
+    val envFile2 = File(args.get(1))
+    val envFile3 = File(args.get(2))
+    val isSpyfallReleaseArg = args[3]
+
     val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR")?.toBoolean() ?: false
     printRed("\n\nPRINTING ENV VALUES FROM FILE")
     envFile.readLines().forEach {
