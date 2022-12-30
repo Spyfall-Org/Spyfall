@@ -69,6 +69,7 @@ fun main() {
     writer.close()
 }
 
+@Suppress("MaxLineLength")
 fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
     val releaseNotes = """
         :warning: :warning: :warning: 
