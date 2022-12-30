@@ -136,6 +136,11 @@ jobs:
           name: Werewolf Release Aab
           path: ${{ env.signedSWerewolfReleaseAabPath }}
 
+      - name: Export Firebase Tokens
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS="apps/spyfall/service-account-key.json"
+          export FIREBASE_TOKEN=${{ secrets.FIREBASE_TOKEN }}
+
       - name: Deploy Spyfall Assets to Firebase
         run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ env.spyfallDebugApkPath }}
 
