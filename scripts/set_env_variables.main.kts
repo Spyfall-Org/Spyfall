@@ -71,7 +71,7 @@ fun main() {
 
 @Suppress("MaxLineLength")
 fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
-    val releaseNotes = ":warning: :warning: :warning: \n```diff\n- You must edit this before publishing\n```\n:warning: :warning: :warning:\n\nPlease update this release draft with notes about the included changes before publishing.\nWhen you publish, please merge [this](https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber) Pull Request back into main.\nSee the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info."
+    val releaseNotes = ":warning: :warning: :warning: \n## You must edit this before publishing\n:warning: :warning: :warning:\n\nPlease update this release draft with notes about the included changes before publishing.\nWhen you publish, please merge [this](https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber) Pull Request back into main.\nSee the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info."
     writer.writeEnvValue("releaseNotes", releaseNotes)
 }
 
