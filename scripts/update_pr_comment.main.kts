@@ -56,23 +56,11 @@ fun doWork() {
     val runID = args[3]
     val spyfallFirebaseLink = args[4]
     val werewolfFirebaseLink = args[5]
-    val tagName = args.getOrNull(5)
+    val tagName = args.getOrNull(6)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
-    printGreen("Going to look for release with the tag name: $tagName")
-    val releaseDraft = repo.listReleases()
-        .map {
-            printGreen("Found release with tag name ${it.tagName}")
-            it
-        }
-        .firstOrNull { it.isDraft && it.tagName == tagName }
-
-
-    if (tagName != null) {
-        printGreen("Creating a release using this library")
-        repo.createRelease("$tagName+testing").name("Release $tagName").draft(true).create()
-    }
+    val releaseDraft = repo.listReleases().firstOrNull { it.isDraft && it.tagName == tagName }
 
     updatePRArtifactsComment(
         repo,

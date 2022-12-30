@@ -75,7 +75,7 @@ fun uploadToFirebaseAppDistribution(appId: String, apkPath: String, pullRequestL
     val releaseNotes = "Pull Request: $pullRequestLink. \n\n $releaseClarification"
 
     @Suppress("MaxLineLength")
-    val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes $releaseNotes $apkPath"
+    val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes \"$releaseNotes\" $apkPath"
     printGreen("Running Command\n\n$uploadCommand")
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess { printGreen("Successfully uploaded apk to firebase app distribution") }
