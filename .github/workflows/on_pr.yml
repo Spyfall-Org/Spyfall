@@ -13,6 +13,26 @@ concurrency:
 
 jobs:
   build:
+    env:
+      isWerewolfReleasePR: ""
+      isSpyfallReleasePR: ""
+      releaseVersion: ""
+      releaseTagName: ""
+      spyfallAppId: ""
+      werewolfAppId: ""
+      spyfallFirebaseDistributionLink: ""
+      werewolfFirebaseDistributionLink: ""
+      releaseNotesFile: ""
+      spyfallDebugApkPath: ""
+      werewolfDebugApkPath: ""
+      spyfallReleaseApkPath: ""
+      werewolfReleaseApkPath: ""
+      spyfallReleaseAabPath: ""
+      werewolfReleaseAabPath: ""
+      signedSpyfallReleaseApkPath: ""
+      signedWerewolfReleaseApkPath: ""
+      signedSpyfallReleaseAabPath: ""
+      signedWerewolfReleaseAabPath: ""
 
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +53,7 @@ jobs:
         run: ./scripts/get_secret_files.main.kts service_key.json
 
       - name: Set Env Variables
-        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} "local.env" ${{ github.event.pull_request.number }}
+        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
 
       - name: Set Up Cache
         uses: actions/cache@v3
