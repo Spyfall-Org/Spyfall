@@ -12,7 +12,6 @@ android {
     namespace = "com.dangerfield.werewolf"
 
     defaultConfig {
-        applicationId = "com.dangerfield.werewolf"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

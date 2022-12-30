@@ -2,6 +2,7 @@
 
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.util.Properties
@@ -21,10 +22,10 @@ fun printGreen(text: String) {
 @Suppress("ComplexCondition")
 if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
     printRed("""
-        This script sets the version code for the supplied application name by either taking input to set it
-        or automatically incrementing the version code by 1
+        This script sets the version code for all of the apps. 
+        Ci uses to distinguish app builds per workflow run
         
-        Usage: ./set_version_code.main.kts [appName] [versionCode] 
+        Usage: ./set_version_code.main.kts [versionCode] 
         appName: "spyfall" ,"werewolf", ...
         versionCode: 500, 543, ...
     """.trimIndent())
@@ -33,47 +34,28 @@ if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains
     throw Exception("See Message Above")
 }
 
-val appName = args[0].trim()
-val inputVersionCode = args.getOrNull(1)?.trim()
-
-if (inputVersionCode == null) {
-    printGreen("Incrementing the version code for $appName")
-} else {
-    printGreen("setting the version code for $appName to inputted version of $inputVersionCode")
-}
+val inputVersionCode = args[0]
 
 // Load the .properties file
 val properties = Properties()
-val reader = BufferedReader(FileReader("app_versions.properties"))
+val reader = BufferedReader(FileReader("app.properties"))
 properties.load(reader)
 reader.close()
 
-// Update the value of the "versionCode" property
-val currentVersion = properties.getProperty("$appName.versionCode").toInt()
-val newVersionCode = inputVersionCode ?: (currentVersion + 1)
+val appDirectories: Array<File> = File("apps").listFiles { child -> child.isDirectory } ?: arrayOf()
 
-printGreen("""
-    current version code for $appName is $currentVersion. 
-    New version will be $newVersionCode""".trimIndent()
-)
-
-properties.setProperty("$appName.versionCode", "$newVersionCode")
+appDirectories.forEach { appName ->
+    properties.setProperty("$appName.versionCode", inputVersionCode)
+}
 
 // Save the .properties file
-val writer = BufferedWriter(FileWriter("app_versions.properties"))
+val writer = BufferedWriter(FileWriter("app.properties"))
 writer.write("""
     # These properties are referenced in: \n
     # build-logic/convention/AndroidApplicationConventionPlugin.kt  \n
     # .github/workflows/create-release..
-    # This is to make updating the app versions with ci much easier
+    # This is to make finding.updating the app properties with ci much easier
 """.trimIndent())
 writer.newLine()
 properties.store(writer, null)
 writer.close()
-
-
-if (inputVersionCode == null) {
-    printGreen("$appName version code successfully incremented to $newVersionCode")
-} else {
-    printGreen("$appName version code successfully set to $newVersionCode")
-}

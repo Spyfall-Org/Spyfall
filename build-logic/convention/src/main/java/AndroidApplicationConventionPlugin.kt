@@ -5,6 +5,7 @@ import com.spyfall.convention.shared.buildConfigField
 import com.spyfall.convention.shared.configureGitHooksCheck
 import com.spyfall.convention.shared.configureKotlinAndroid
 import com.spyfall.convention.shared.checkForAppModuleSecretFiles
+import com.spyfall.convention.shared.getPackageName
 import com.spyfall.convention.shared.getVersionCode
 import com.spyfall.convention.shared.getVersionName
 import com.spyfall.convention.shared.loadGradleProperty
@@ -29,6 +30,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     targetSdk = SharedConstants.targetSdk
                     versionName = getVersionName()
                     versionCode = getVersionCode()
+                    applicationId = getPackageName()
                     buildConfigField("VERSION_CODE", versionCode)
                     buildConfigField("VERSION_NAME", versionName)
                     buildConfigField("CONFIG_COLLECTION_KEY", loadGradleProperty("com.spyfall.configCollectionKey"))

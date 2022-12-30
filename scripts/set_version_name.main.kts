@@ -38,7 +38,7 @@ printGreen("Setting the version name for $appName")
 
 // Load the .properties file
 val properties = Properties()
-val reader = BufferedReader(FileReader("app_versions.properties"))
+val reader = BufferedReader(FileReader("app.properties"))
 properties.load(reader)
 reader.close()
 
@@ -49,12 +49,12 @@ printGreen("current version name for $appName is $currentVersionName")
 properties.setProperty("$appName.versionName", newVersionName)
 
 // Save the .properties file
-val writer = BufferedWriter(FileWriter("app_versions.properties"))
+val writer = BufferedWriter(FileWriter("app.properties"))
 writer.write("""
     # These properties are referenced in: \n
     # build-logic/convention/AndroidApplicationConventionPlugin.kt  \n
     # .github/workflows/create-release..
-    # This is to make updating the app versions with ci much easier
+    # This is to make finding/updating the app properties with ci much easier
 """.trimIndent())
 writer.newLine()
 properties.store(writer, null)

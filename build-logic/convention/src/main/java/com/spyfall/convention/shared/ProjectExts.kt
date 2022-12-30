@@ -1,9 +1,5 @@
 package com.spyfall.convention.shared
 
-import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.api.ApplicationVariant
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
@@ -34,22 +30,29 @@ fun Project.getModuleSources(vararg excludeModules: String = emptyArray()): Arra
 
 fun Project.getVersionName(): String? =
     when (project.getProjectType()) {
-        ProjectType.Spyfall -> loadAppVersionProperty("spyfall.versionName")
-        ProjectType.Werewolf -> loadAppVersionProperty("werewolf.versionName")
+        ProjectType.Spyfall -> loadAppProperty("spyfall.versionName")
+        ProjectType.Werewolf -> loadAppProperty("werewolf.versionName")
         null -> null
     }
 
 
 fun Project.getVersionCode(): Int? =
     when (project.getProjectType()) {
-        ProjectType.Spyfall -> loadAppVersionProperty("spyfall.versionCode").toInt()
-        ProjectType.Werewolf -> loadAppVersionProperty("werewolf.versionCode").toInt()
+        ProjectType.Spyfall -> loadAppProperty("spyfall.versionCode").toInt()
+        ProjectType.Werewolf -> loadAppProperty("werewolf.versionCode").toInt()
+        null -> null
+    }
+
+fun Project.getPackageName(): String? =
+    when (project.getProjectType()) {
+        ProjectType.Spyfall -> loadAppProperty("spyfall.packageName")
+        ProjectType.Werewolf -> loadAppProperty("werewolf.packageName")
         null -> null
     }
 
 
 @Suppress("TooGenericExceptionCaught")
-fun Project.loadAppVersionProperty(property: String): String = Properties().let {
+fun Project.loadAppProperty(property: String): String = Properties().let {
     val file = File(appVersionsPath)
     it.load(file.inputStream())
     @Suppress("SwallowedException")
@@ -58,7 +61,7 @@ fun Project.loadAppVersionProperty(property: String): String = Properties().let 
     } catch (e: NullPointerException) {
         @Suppress("TooGenericExceptionThrown")
         throw Error(
-            """No app version property found named: $property. 
+            """No app property found named: $property. 
                 Please make sure this property is listed exactly as \"$property\" 
                 in $appVersionsPath""".trimMargin()
         )
@@ -83,7 +86,7 @@ fun Project.loadGradleProperty(property: String): Any = Properties().let {
 }
 
 val Project.appVersionsPath: String
-    get() = "$rootDir/app_versions.properties"
+    get() = "$rootDir/app.properties"
 
 val Project.gradlePropertyPath: String
     get() = "$rootDir/gradle.properties"

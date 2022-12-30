@@ -49,7 +49,7 @@ fun doWork() {
     val inputAppVersionName = args.getOrNull(1)
     val serviceAccountJsonFile = getServiceAccountJsonFile(inputAppName)
     val configCollectionKey = loadConfigKey()
-    val appVersion = inputAppVersionName ?: loadAppVersionProperty("$inputAppName.versionName")
+    val appVersion = inputAppVersionName ?: loadAppProperty("$inputAppName.versionName")
     printGreen("Creating the app config for $inputAppName. Version: $appVersion")
 
     if (!serviceAccountJsonFile.isFile) {
@@ -74,7 +74,7 @@ fun doWork() {
                 """
                     The app config version name found was $appVersion.
                     This config already exists. Please make sure you input a new app version. or that the
-                    new version name exists in "app_versions.properties"
+                    new version name exists in "app.properties"
                     """.trimIndent()
             )
         }
@@ -84,7 +84,7 @@ fun doWork() {
                 """
                      The app config version name found was $appVersion.
                      This version is an invalid format. Please make sure the
-                    correct format it input or exists in version name exists in "app_versions.properties"
+                    correct format it input or exists in version name exists in "app.properties"
                     """.trimIndent()
             )
         }
@@ -123,8 +123,8 @@ enum class AppConfigValidation {
 fun getServiceAccountJsonFile(inputAppName: String) = File("apps/$inputAppName/service-account-key.json")
 
 @Suppress("TooGenericExceptionCaught")
-fun loadAppVersionProperty(property: String): String = Properties().let {
-    val file = File("app_versions.properties")
+fun loadAppProperty(property: String): String = Properties().let {
+    val file = File("app.properties")
     it.load(file.inputStream())
     @Suppress("SwallowedException")
     try {
@@ -132,9 +132,9 @@ fun loadAppVersionProperty(property: String): String = Properties().let {
     } catch (e: NullPointerException) {
         @Suppress("TooGenericExceptionThrown")
         throw Error(
-            """No app version property found named: $property. 
+            """No app property found named: $property. 
                 Please make sure this property is listed exactly as \"$property\" 
-                in "app_versions.properties """"".trimMargin()
+                in "app.properties """"".trimMargin()
         )
     }
 }
