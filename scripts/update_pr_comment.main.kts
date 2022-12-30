@@ -31,16 +31,16 @@ if (isHelpCall || args.size < minArgs) {
         """
         This script comments a link to the PR of the artifacts generated for that PR
         
-        Usage: ./update_pr_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID]
+        Usage: ./update_pr_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID] [SPYFALL_FIREBASE_LINK] [WEREWOLF_FIREBASE_LINK]
         
         [GITHUB_REPO] - REPO_OWNER/REPO_NAME, provided by github actions as env variable
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
         [PULL_NUMBER] - the number of the pull request
         [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url.
-        [ENVFILE] - File with env variables to be carried across scripts
+        [SPYFALL_FIREBASE_LINK] - Link to the firebase release for this build
+        [WEREWOLF_FIREBASE_LINK] - Link to the firebase release for this build
         [TAG_NAME] - Optional, The name of the tag associated with the draft release created for this PR
         
-
     """.trimIndent()
     )
 
@@ -54,32 +54,41 @@ fun doWork() {
     val githubToken = args[1]
     val pullNumber = args[2]
     val runID = args[3]
-    val envFile = File(args[4])
+    val spyfallFirebaseLink = args[4]
+    val werewolfFirebaseLink = args[5]
     val tagName = args.getOrNull(5)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
     val releaseDraft = repo.listReleases().firstOrNull { it.isDraft && it.tagName == tagName }
 
-    updatePRArtifactsComment(repo, runID.toLong(), pullNumber.toInt(), releaseDraft, envFile)
+    updatePRArtifactsComment(
+        repo,
+        runID.toLong(),
+        pullNumber.toInt(),
+        releaseDraft,
+        spyfallFirebaseLink,
+        werewolfFirebaseLink
+    )
 }
 
+@Suppress("LongParameterList")
 fun updatePRArtifactsComment(
     repo: GHRepository,
     runID: Long,
     pullNumber: Int,
     releaseDraft: GHRelease?,
-    envFile: File
-) {
+    spyfallFirebaseDistributionLink: String,
+    werewolfFirebaseDistributionLink: String,
+    ) {
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
 
-    val appNames = File("apps").listFiles { child -> child.isDirectory }?.map { it.name } ?: listOf()
-
-    val firebaseLinksMd = appNames.mapNotNull { appName ->
-        envFile.getEnvValue("${appName}FirebaseDistributionLink")?.let { link: String ->
-            "[${appName.apply { replaceFirstChar { it.uppercase() } }} Firebase Distribution]($link)"
-        }
-    }.fold("") { linkA: String, linkB: String -> "$linkA $linkB" }
+    val firebaseLinksMd = listOf(
+        "Spyfall Firebase Distribution Link" to spyfallFirebaseDistributionLink,
+        "Werewolf Firebase Distribution Link" to werewolfFirebaseDistributionLink
+    )
+        .map { (linkText, linkValue) -> "[$linkText]($linkValue)" }
+        .fold("") { linkA: String, linkB: String -> "$linkA $linkB" }
 
     @Suppress("MaxLineLength")
     val baseMessage = """
@@ -123,6 +132,5 @@ fun updatePRArtifactsComment(
 
 fun getRepository(githubRepoInfo: String, githubToken: String): GHRepository =
     GitHub.connectUsingOAuth(githubToken).getRepository(githubRepoInfo)
-
 
 doWork()

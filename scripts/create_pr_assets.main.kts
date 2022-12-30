@@ -1,13 +1,10 @@
 #!/usr/bin/env kotlin
 
-@file:Import("util/GithubActionsUtil.main.kts")
-
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.util.Properties
-
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -21,8 +18,10 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
+const val argCount = 3
+
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
-if (isHelpCall) {
+if (isHelpCall || args.size < argCount) {
     @Suppress("MaxLineLength")
     printGreen(
         """
@@ -30,8 +29,12 @@ if (isHelpCall) {
                in. Release assets are unsigned unless this is being ran locally. In which case they are signed
                with a debug signing config. 
                
-               Usage: ./create_pr_assets.main.kts [ENV_FILE]
-               ENV_FILE: The env file to read from and output to           
+               Usage: ./create_pr_assets.main.kts <is-spyfall-release> <is-werewolf-release> <env-file-path>
+               
+                <is-spyfall-release> - true if this script is being called from a spyfall release pr
+                <is-werewolf-release> - true if this script is being called from a werewolf release pr
+                <env-file-path> - The env file path output to    
+                
     """.trimIndent()
     )
 
@@ -41,22 +44,14 @@ if (isHelpCall) {
 
 @Suppress("UnusedPrivateMember", "MagicNumber")
 fun main() {
-    val envFile = File(args.get(0))
-
-    val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR")?.toBoolean() ?: false
-    val isWerewolfRelease = envFile.getEnvValue("isWerewolfReleasePR")?.toBoolean() ?: false
+    val isSpyfallRelease = args[0]
+    val isWerewolfRelease = args[1]
+    val outputEnvFile = File(args[2])
 
     val isCIBuild = System.getenv("CI") == "true"
     val isSPyfallAccoringToSystemEnv = System.getenv("isSpyfallReleasePR") == "true"
 
     println("isSPyfallAccoringToSystemEnv = ${isSPyfallAccoringToSystemEnv}")
-    println("isSpyfallRelease = ${isSPyfallAccoringToLocalEnv}")
-
-    println("\n\n Printing env passed in")
-    envFile.readLines().forEach {
-        println(it)
-    }
-
 
     val spyfallVersionName = getAppVersionName("spyfall")
     val werewolfVersionName = getAppVersionName("werewolf")
@@ -64,19 +59,19 @@ fun main() {
     printGreen("Assembling the entire project")
     runGradleCommand("assembleDebug")
 
-    renameSpyfallDebugAssets(spyfallVersionName, envFile)
-    renameWerewolfDebugAssets(werewolfVersionName, envFile)
+    renameSpyfallDebugAssets(spyfallVersionName, outputEnvFile)
+    renameWerewolfDebugAssets(werewolfVersionName, outputEnvFile)
 
     if (isSpyfallRelease) {
         runGradleCommand(":apps:spyfall:bundleRelease")
         runGradleCommand(":apps:spyfall:assembleRelease")
-        renameSpyfallReleaseAssets(spyfallVersionName, envFile, isCIBuild)
+        renameSpyfallReleaseAssets(spyfallVersionName, outputEnvFile, isCIBuild)
     }
 
     if (isWerewolfRelease) {
         runGradleCommand(":apps:werewolf:bundleRelease")
         runGradleCommand(":apps:werewolf:assembleRelease")
-        renameWerewolfReleaseAssets(werewolfVersionName, envFile, isCIBuild)
+        renameWerewolfReleaseAssets(werewolfVersionName, outputEnvFile, isCIBuild)
 
     }
 }
