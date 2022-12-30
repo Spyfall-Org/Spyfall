@@ -44,7 +44,7 @@ reader.close()
 
 val appDirectories: Array<File> = File("apps").listFiles { child -> child.isDirectory } ?: arrayOf()
 
-appDirectories.forEach { appName ->
+appDirectories.map { it.name }.forEach { appName ->
     properties.setProperty("$appName.versionCode", inputVersionCode)
 }
 
@@ -55,6 +55,12 @@ writer.write("""
     # build-logic/convention/AndroidApplicationConventionPlugin.kt  \n
     # .github/workflows/create-release..
     # This is to make finding.updating the app properties with ci much easier
+    # These values are set by our CI exclusively
+    # The version code matches the CI build number, this helps us distinguish between multiple builds of the same
+    # version name
+    # The version name is set by the set_version_name script which is triggered by a github action
+    # To learn more you can read the documentation here: https://spyfall-org.github.io/how-to/release/
+    
 """.trimIndent())
 writer.newLine()
 properties.store(writer, null)

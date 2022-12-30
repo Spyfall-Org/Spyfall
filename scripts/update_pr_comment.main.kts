@@ -88,7 +88,7 @@ fun updatePRArtifactsComment(
         "Werewolf Firebase Distribution Link" to werewolfFirebaseDistributionLink
     )
         .map { (linkText, linkValue) -> "[$linkText]($linkValue)" }
-        .fold("") { linkA: String, linkB: String -> "$linkA $linkB" }
+        .fold("") { linkA: String, linkB: String -> "$linkA | $linkB" }
 
     @Suppress("MaxLineLength")
     val baseMessage = """

@@ -65,8 +65,13 @@ fun main() {
     setAppIds(writer)
     setAppFirebaseLinks(writer)
     setReleaseNotes(writer, pullNumber)
+    setPullRequestLink(writer, pullNumber)
 
     writer.close()
+}
+
+fun setPullRequestLink(writer: OutputStreamWriter, pullNumber: String) {
+    writer.writeEnvValue("pullRequestLink", "https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber")
 }
 
 @Suppress("MaxLineLength")

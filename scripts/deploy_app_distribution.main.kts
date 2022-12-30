@@ -41,7 +41,9 @@ fun main() {
     val appId = args[1]
     val firebaseToken = args[2]
     val envFile = File(args[3])
-    val assetPaths = args.slice(4.until(args.size))
+    val pullRequestLink = args[4]
+    val isRelease = args[5].toBoolean()
+    val assetPaths = args.slice(6.until(args.size))
 
     val serviceAccountPath = "apps/$appName/service-account-key.json"
 
@@ -60,15 +62,20 @@ fun main() {
 
     assetPaths.forEach { path ->
         println("Uploading asset ${File(path).name} to firebase distribution")
-        uploadToFirebaseAppDistribution(appId, path)
+        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease)
         println("Finished Uploading asset ${File(path).name} to firebase distribution")
     }
 }
 
 
-fun uploadToFirebaseAppDistribution(appId: String, apkPath: String) {
+fun uploadToFirebaseAppDistribution(appId: String, apkPath: String, pullRequestLink: String, isRelease: Boolean) {
+
+    val releaseClarification = if (isRelease) "This is a release build" else "This is a debug build"
+
+    val releaseNotes = "Pull Request: $pullRequestLink. \n\n $releaseClarification"
+
     @Suppress("MaxLineLength")
-    val uploadCommand = "firebase appdistribution:distribute --app $appId $apkPath"
+    val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes $releaseNotes $apkPath"
     printGreen("Running Command\n\n$uploadCommand")
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess { printGreen("Successfully uploaded apk to firebase app distribution") }
