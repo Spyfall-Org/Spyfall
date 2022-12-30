@@ -19,9 +19,6 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
-      - name: Set Env Variables
-        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
-
       - name: Update Version Codes
         run: ./scripts/set_version_code.main.kts ${{ github.run_number }}
 
@@ -34,6 +31,9 @@ jobs:
 
       - name: Download Secret Files
         run: ./scripts/get_secret_files.main.kts service_key.json
+
+      - name: Set Env Variables
+        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
 
       - name: Set Up Cache
         uses: actions/cache@v3
