@@ -78,6 +78,12 @@ jobs:
         id: createassets
         run: ./scripts/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }}
 
+      - name: Manual Firebase Deploy
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS="apps/spyfall/service-account-key.json"
+          export FIREBASE_TOKEN=${{ secrets.FIREBASE_TOKEN }}
+          firebase appdistribution:distribute ${{ env.spyfallDebugApkPath }} --app ${{ env.spyfallAppId }}
+
       # TODO exit the create_pr_assets to sign and upload assets as well.
       - name: Sign spyfall release apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
@@ -135,11 +141,6 @@ jobs:
         with:
           name: Werewolf Release Aab
           path: ${{ env.signedSWerewolfReleaseAabPath }}
-
-      - name: Export Firebase Tokens
-        run: |
-          export GOOGLE_APPLICATION_CREDENTIALS="apps/spyfall/service-account-key.json"
-          export FIREBASE_TOKEN=${{ secrets.FIREBASE_TOKEN }}
 
       - name: Deploy Spyfall Assets to Firebase
         run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ env.spyfallDebugApkPath }}

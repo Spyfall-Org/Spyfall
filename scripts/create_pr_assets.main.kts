@@ -50,9 +50,6 @@ fun main() {
     val outputEnvFile = File(args[2])
 
     val isCIBuild = System.getenv("CI") == "true"
-    val isSPyfallAccoringToSystemEnv = System.getenv("isSpyfallReleasePR") == "true"
-
-    println("isSPyfallAccoringToSystemEnv = ${isSPyfallAccoringToSystemEnv}")
 
     val spyfallVersionName = getAppVersionName("spyfall")
     val werewolfVersionName = getAppVersionName("werewolf")
