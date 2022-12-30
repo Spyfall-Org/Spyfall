@@ -137,11 +137,11 @@ jobs:
           path: ${{ env.signedSWerewolfReleaseAabPath }}
 
       - name: Deploy Spyfall Assets to Firebase
-        run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ env.spyfallDebugApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ env.spyfallDebugApkPath }}
 
       - name: Deploy Spyfall Release Asset to Firebase
         if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ env.spyfallReleaseApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ env.spyfallReleaseApkPath }}
 
       - name: Update Spyfall Draft Release
         uses: softprops/action-gh-release@v1
@@ -170,11 +170,11 @@ jobs:
             ${{ env.werewolfDebugApkPath }}
 
       - name: Deploy Werewolf Debug Asset to Firebase
-        run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ env.werewolfDebugApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ env.werewolfDebugApkPath }}
 
       - name: Deploy Werewolf Release Asset to Firebase
         if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ env.werewolfReleaseApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ env.werewolfReleaseApkPath }}
 
       - name: Update artifacts comment on PR
         run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.spyfallFirebaseDistributionLink }} ${{ env.werewolfFirebaseDistributionLink }} ${{ env.releaseTagName }}
