@@ -33,6 +33,8 @@ jobs:
       signedWerewolfReleaseApkPath: ""
       signedSpyfallReleaseAabPath: ""
       signedWerewolfReleaseAabPath: ""
+      GOOGLE_APPLICATION_CREDENTIALS: "apps/spyfall/service-account-key.json"
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
     runs-on: ubuntu-latest
     steps:
@@ -77,11 +79,6 @@ jobs:
       - name: Create Assets
         id: createassets
         run: ./scripts/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }}
-
-      - name: Export Firebase Keys
-        run: |
-          export GOOGLE_APPLICATION_CREDENTIALS="apps/spyfall/service-account-key.json"
-          export FIREBASE_TOKEN=${{ secrets.FIREBASE_TOKEN }}
 
       # TODO exit the create_pr_assets to sign and upload assets as well.
       - name: Sign spyfall release apk
