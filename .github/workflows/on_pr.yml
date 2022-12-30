@@ -31,8 +31,11 @@ jobs:
       - name: Download Secret Files
         run: ./scripts/get_secret_files.main.kts service_key.json
 
+      - name: Create Local Env File
+        run:  touch local.env
+
       - name: Set Env Variables
-        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
+        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} "local.env" ${{ github.event.pull_request.number }}
 
       - name: Set Up Cache
         uses: actions/cache@v3
@@ -55,11 +58,11 @@ jobs:
 
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.main.kts ${{ github.env }} $GITHUB_ENV ${{ env }} ${{ env.isSpyfallReleasePR }}
+        run: ./scripts/create_pr_assets.main.kts "local.env"
 
       # TODO exit the create_pr_assets to sign and upload assets as well.
       - name: Sign spyfall release apk
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
+        if: ${{ local.env.isSpyfallReleasePR == 'true' }}
         run: ./scripts/sign_app.main.kts ${{ env.spyfallReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallReleaseApkPath" ${{ github.env }}
 
       - name: Upload spyfall release signed apk

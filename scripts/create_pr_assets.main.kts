@@ -42,29 +42,21 @@ if (isHelpCall) {
 @Suppress("UnusedPrivateMember", "MagicNumber")
 fun main() {
     val envFile = File(args.get(0))
-    val envFile2 = File(args.get(1))
-    val envFile3 = File(args.get(2))
-    val isSpyfallReleaseArg = args[3]
-
-    printRed("\n\nPRINTING ENV 1 VALUES FROM FILE")
-    envFile.readLines().forEach {
-        println(it)
-    }
-
-    printRed("\n\nPRINTING ENV 2 VALUES FROM FILE")
-    envFile2.readLines().forEach {
-        println(it)
-    }
-
-    printRed("\n\nPRINTING ENV 3 VALUES FROM FILE")
-    envFile3.readLines().forEach {
-        println(it)
-    }
 
     val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR")?.toBoolean() ?: false
     val isWerewolfRelease = envFile.getEnvValue("isWerewolfReleasePR")?.toBoolean() ?: false
 
     val isCIBuild = System.getenv("CI") == "true"
+    val isSPyfallAccoringToSystemEnv = System.getenv("isSpyfallReleasePR") == "true"
+
+    println("isSPyfallAccoringToSystemEnv = ${isSPyfallAccoringToSystemEnv}")
+    println("isSpyfallRelease = ${isSPyfallAccoringToLocalEnv}")
+
+    println("\n\n Printing env passed in")
+    envFile.readLines().forEach {
+        println(it)
+    }
+
 
     val spyfallVersionName = getAppVersionName("spyfall")
     val werewolfVersionName = getAppVersionName("werewolf")
