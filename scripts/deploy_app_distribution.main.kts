@@ -36,7 +36,7 @@ if (isHelpCall || args.size < 3) {
 fun main() {
     val appName = args[0]
     val appId = args[1]
-    val assetPaths = args.slice(2..args.size)
+    val assetPaths = args.slice(2.until(args.size))
 
     val serviceAccountPath = "apps/$appName/service-account-key.json"
 
