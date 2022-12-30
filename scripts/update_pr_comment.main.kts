@@ -80,7 +80,7 @@ fun updatePRArtifactsComment(
     releaseDraft: GHRelease?,
     spyfallFirebaseDistributionLink: String,
     werewolfFirebaseDistributionLink: String,
-    ) {
+) {
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
 
     val firebaseLinksMd = listOf(
@@ -92,19 +92,19 @@ fun updatePRArtifactsComment(
 
     @Suppress("MaxLineLength")
     val baseMessage = """
-        # Automated PR Assets Links
-        These assets are automatically generated on pull requests. Some links may not work until all jobs in the pull request workflow have finished. Every update to this PR will generate a new row in the assets table. 
+# Automated PR Assets Links
+These assets are automatically generated on pull requests. Some links may not work until all jobs in the pull request workflow have finished. Every update to this PR will generate a new row in the assets table. 
         
-        ${
+${
         (if (releaseDraft != null) """
-            The draft for this release can be found [here](${releaseDraft.htmlUrl}). When it is time to release, publish
-            the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
-        """.trimIndent() else null) ?: ""
-        }
+The draft for this release can be found [here](${releaseDraft.htmlUrl}). When it is time to release, publish
+the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
+""".trimIndent() else null) ?: ""
+    }
 
-        | Commit | Assets  | 
-        |---|---|
-        """.trimIndent()
+| Commit | Assets  | 
+|---|---|
+""".trimIndent()
 
     @Suppress("MagicNumber")
     val lastCommitSha = repo.getPullRequest(pullNumber).head.sha.take(7)

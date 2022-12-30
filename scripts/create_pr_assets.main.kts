@@ -53,44 +53,46 @@ fun main() {
 
     val spyfallVersionName = getAppVersionName("spyfall")
     val werewolfVersionName = getAppVersionName("werewolf")
+    val spyfallVersionCode = getAppVersionCode("spyfall")
+    val werewolfVersionCode = getAppVersionCode("werewolf")
 
     printGreen("Assembling the entire project")
     runGradleCommand("assembleDebug")
 
-    renameSpyfallDebugAssets(spyfallVersionName, outputEnvFile)
-    renameWerewolfDebugAssets(werewolfVersionName, outputEnvFile)
+    renameSpyfallDebugAssets(spyfallVersionName, outputEnvFile, spyfallVersionCode)
+    renameWerewolfDebugAssets(werewolfVersionName, outputEnvFile, werewolfVersionCode)
 
     if (isSpyfallRelease) {
         runGradleCommand(":apps:spyfall:bundleRelease")
         runGradleCommand(":apps:spyfall:assembleRelease")
-        renameSpyfallReleaseAssets(spyfallVersionName, outputEnvFile, isCIBuild)
+        renameSpyfallReleaseAssets(spyfallVersionName, outputEnvFile, isCIBuild, spyfallVersionCode)
     }
 
     if (isWerewolfRelease) {
         runGradleCommand(":apps:werewolf:bundleRelease")
         runGradleCommand(":apps:werewolf:assembleRelease")
-        renameWerewolfReleaseAssets(werewolfVersionName, outputEnvFile, isCIBuild)
-
+        renameWerewolfReleaseAssets(werewolfVersionName, outputEnvFile, isCIBuild, werewolfVersionCode)
     }
 }
 
 fun renameSpyfallReleaseAssets(
     spyfallVersionName: String,
     envFile: File,
-    isCIBuild: Boolean
+    isCIBuild: Boolean,
+    buildNumber: String
 ) {
     val signingSuffix = if (isCIBuild) "unsigned" else "debugSigned"
 
     renameAsset(
         defaultPath = findApkFile("apps/spyfall/build/outputs/apk/release"),
-        name = "spyfall-release-v$spyfallVersionName-$signingSuffix.apk",
+        name = "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.apk",
         outputName = "spyfallReleaseApkPath",
         envFile = envFile
     )
 
     renameAsset(
         defaultPath = findAabFile("apps/spyfall/build/outputs/bundle/release"),
-        name = "spyfall-release-v$spyfallVersionName-$signingSuffix.aab",
+        name = "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.aab",
         outputName = "spyfallReleaseAabPath",
         envFile = envFile
     )
@@ -99,40 +101,41 @@ fun renameSpyfallReleaseAssets(
 fun renameWerewolfReleaseAssets(
     werewolfVersionName: String,
     envFile: File,
-    isCIBuild: Boolean
+    isCIBuild: Boolean,
+    buildNumber: String
 ) {
     val signingSuffix = if (isCIBuild) "unsigned" else "debugSigned"
 
     renameAsset(
         defaultPath = findApkFile("apps/werewolf/build/outputs/apk/release"),
-        name = "werewolf-release-v$werewolfVersionName-$signingSuffix.apk",
+        name = "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.apk",
         outputName = "werewolfReleaseApkPath",
         envFile = envFile
     )
 
     renameAsset(
         defaultPath = findAabFile("apps/werewolf/build/outputs/bundle/release"),
-        name = "werewolf-release-v$werewolfVersionName-$signingSuffix.aab",
+        name = "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.aab",
         outputName = "werewolfReleaseAabPath",
         envFile = envFile
     )
 
 }
 
-fun renameWerewolfDebugAssets(werewolfVersionName: String, envFile: File) {
+fun renameWerewolfDebugAssets(werewolfVersionName: String, envFile: File, buildNumber: String) {
     renameAsset(
         defaultPath = findApkFile("apps/werewolf/build/outputs/apk/debug"),
-        name = "werewolf-debug-v$werewolfVersionName.apk",
+        name = "werewolf-debug-v$werewolfVersionName-$buildNumber.apk",
         outputName = "werewolfDebugApkPath",
         envFile = envFile
     )
 }
 
-fun renameSpyfallDebugAssets(spyfallVersionName: String, envFile: File) {
+fun renameSpyfallDebugAssets(spyfallVersionName: String, envFile: File, buildNumber: String) {
 
     renameAsset(
         defaultPath = findApkFile("apps/spyfall/build/outputs/apk/debug"),
-        name = "spyfall-debug-v$spyfallVersionName.apk",
+        name = "spyfall-debug-v$spyfallVersionName-$buildNumber.apk",
         outputName = "spyfallDebugApkPath",
         envFile = envFile
     )
@@ -144,6 +147,14 @@ fun getAppVersionName(app: String): String {
     properties.load(reader)
     reader.close()
     return properties.getProperty("$app.versionName").toString()
+}
+
+fun getAppVersionCode(app: String): String {
+    val properties = Properties()
+    val reader = BufferedReader(FileReader("app.properties"))
+    properties.load(reader)
+    reader.close()
+    return properties.getProperty("$app.versionCode").toString()
 }
 
 
