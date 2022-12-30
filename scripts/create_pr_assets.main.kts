@@ -46,12 +46,22 @@ fun main() {
     val envFile3 = File(args.get(2))
     val isSpyfallReleaseArg = args[3]
 
-    val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR")?.toBoolean() ?: false
-    printRed("\n\nPRINTING ENV VALUES FROM FILE")
+    printRed("\n\nPRINTING ENV 1 VALUES FROM FILE")
     envFile.readLines().forEach {
         println(it)
     }
-    printRed("\n\nENV IS SPYALL RELEASE = ${envFile.getEnvValue("isSpyfallReleasePR")}\n\n")
+
+    printRed("\n\nPRINTING ENV 2 VALUES FROM FILE")
+    envFile2.readLines().forEach {
+        println(it)
+    }
+
+    printRed("\n\nPRINTING ENV 3 VALUES FROM FILE")
+    envFile3.readLines().forEach {
+        println(it)
+    }
+
+    val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR")?.toBoolean() ?: false
     val isWerewolfRelease = envFile.getEnvValue("isWerewolfReleasePR")?.toBoolean() ?: false
 
     val isCIBuild = System.getenv("CI") == "true"
