@@ -33,7 +33,7 @@ jobs:
         run: ./scripts/get_secret_files.main.kts service_key.json
 
       - name: Set Env Variables
-        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
+        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} $GITHUB_ENV ${{ github.event.pull_request.number }}
 
       - name: Set Up Cache
         uses: actions/cache@v3
@@ -56,12 +56,12 @@ jobs:
 
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.main.kts ${{ github.env }}
+        run: ./scripts/create_pr_assets.main.kts $GITHUB_ENV
 
       # TODO exit the create_pr_assets to sign and upload assets as well.
       - name: Sign spyfall release apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.spyfallReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallReleaseApkPath" ${{ github.env }}
+        run: ./scripts/sign_app.main.kts ${{ env.spyfallReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallReleaseApkPath" $GITHUB_ENV
 
       - name: Upload spyfall release signed apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
@@ -72,7 +72,7 @@ jobs:
 
       - name: Sign spyfall release aab
         if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.spyfallReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallReleaseAabPath" ${{ github.env }}
+        run: ./scripts/sign_app.main.kts ${{ env.spyfallReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallReleaseAabPath" $GITHUB_ENV
 
       - name: Upload spyfall release signed aab
         if: ${{ env.isSpyfallReleasePR == 'true' }}
@@ -96,7 +96,7 @@ jobs:
 
       - name: Sign Werewolf release apk
         if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" ${{ github.env }}
+        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed apk
         if: ${{ env.isWerewolfReleasePR == 'true' }}
@@ -107,7 +107,7 @@ jobs:
 
       - name: Sign Werewolf release aab
         if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" ${{ github.env }}
+        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" $GITHUB_ENV
 
       - name: Upload werewolf release signed aab
         if: ${{ env.isWerewolfReleasePR == 'true' }}
@@ -117,11 +117,11 @@ jobs:
           path: ${{ env.signedSWerewolfReleaseAabPath }}
 
       - name: Deploy Spyfall Assets to Firebase
-        run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ github.env }} ${{ env.spyfallDebugApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "spyfall" $GITHUB_ENV ${{ env.spyfallDebugApkPath }}
 
       - name: Deploy Spyfall Release Asset to Firebase
         if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/deploy_app_distribution.main.kts "spyfall" ${{ github.env }} ${{ env.spyfallReleaseApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "spyfall" $GITHUB_ENV ${{ env.spyfallReleaseApkPath }}
 
       - name: Update Spyfall Draft Release
         uses: softprops/action-gh-release@v1
@@ -150,14 +150,14 @@ jobs:
             ${{ env.werewolfDebugApkPath }}
 
       - name: Deploy Werewolf Debug Asset to Firebase
-        run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ github.env }} ${{ env.werewolfDebugApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "werewolf" $GITHUB_ENV ${{ env.werewolfDebugApkPath }}
 
       - name: Deploy Werewolf Release Asset to Firebase
         if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ github.env }} ${{ env.werewolfReleaseApkPath }}
+        run: ./scripts/deploy_app_distribution.main.kts "werewolf" $GITHUB_ENV ${{ env.werewolfReleaseApkPath }}
 
       - name: Update artifacts comment on PR
-        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ github.env }} ${{ env.releaseTagName }}
+        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" $GITHUB_ENV ${{ env.releaseTagName }}
 
   style:
     runs-on: [ ubuntu-latest ]
