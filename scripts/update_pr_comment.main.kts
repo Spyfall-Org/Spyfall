@@ -60,7 +60,19 @@ fun doWork() {
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
-    val releaseDraft = repo.listReleases().firstOrNull { it.isDraft && it.tagName == tagName }
+    printGreen("Going to look for release with the tag name: $tagName")
+    val releaseDraft = repo.listReleases()
+        .map {
+            printGreen("Found release with tag name ${it.tagName}")
+            it
+        }
+        .firstOrNull { it.isDraft && it.tagName == tagName }
+
+
+    if (tagName != null) {
+        printGreen("Creating a release using this library")
+        repo.createRelease("$tagName+testing").name("Release $tagName").draft(true).create()
+    }
 
     updatePRArtifactsComment(
         repo,
@@ -88,7 +100,7 @@ fun updatePRArtifactsComment(
         "Werewolf Firebase Distribution Link" to werewolfFirebaseDistributionLink
     )
         .map { (linkText, linkValue) -> "[$linkText]($linkValue)" }
-        .fold("") { linkA: String, linkB: String -> "$linkA | $linkB" }
+        .fold("") { linkA: String, linkB: String -> "$linkA, $linkB" }
 
     @Suppress("MaxLineLength")
     val baseMessage = """
