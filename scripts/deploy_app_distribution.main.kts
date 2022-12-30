@@ -1,6 +1,7 @@
 #!/usr/bin/env kotlin
 
 import java.io.File
+import java.io.FileWriter
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -33,11 +34,14 @@ if (isHelpCall || args.size < 3) {
     """.trimIndent()
     )
 }
+
+@Suppress("MagicNumber")
 fun main() {
     val appName = args[0]
     val appId = args[1]
     val firebaseToken = args[2]
-    val assetPaths = args.slice(3.until(args.size))
+    val envFile = File(args[3])
+    val assetPaths = args.slice(4.until(args.size))
 
     val serviceAccountPath = "apps/$appName/service-account-key.json"
 
@@ -47,6 +51,13 @@ fun main() {
     System.setProperty("GOOGLE_APPLICATION_CREDENTIALS", serviceAccountPath)
     System.setProperty("FIREBASE_TOKEN", firebaseToken)
 
+    val writer = FileWriter(envFile, true)
+    writer.write("GOOGLE_APPLICATION_CREDENTIALS=$serviceAccountPath")
+    writer.appendLine()
+    writer.write("FIREBASE_TOKEN=$firebaseToken")
+    writer.appendLine()
+    writer.close()
+
     assetPaths.forEach { path ->
         println("Uploading asset ${File(path).name} to firebase distribution")
         uploadToFirebaseAppDistribution(appId, path)
@@ -55,10 +66,9 @@ fun main() {
 }
 
 
-
 fun uploadToFirebaseAppDistribution(appId: String, apkPath: String) {
     @Suppress("MaxLineLength")
-    val uploadCommand = "firebase appdistribution:distribute --app $appId --groups default $apkPath"
+    val uploadCommand = "firebase appdistribution:distribute --app $appId $apkPath"
     printGreen("Running Command\n\n$uploadCommand")
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess { printGreen("Successfully uploaded apk to firebase app distribution") }
