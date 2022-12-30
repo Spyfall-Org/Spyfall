@@ -18,7 +18,8 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
-const val argCount = 3
+@Suppress("MagicNumber")
+val argCount = 3
 
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
 if (isHelpCall || args.size < argCount) {
@@ -44,8 +45,8 @@ if (isHelpCall || args.size < argCount) {
 
 @Suppress("UnusedPrivateMember", "MagicNumber")
 fun main() {
-    val isSpyfallRelease = args[0]
-    val isWerewolfRelease = args[1]
+    val isSpyfallRelease = args[0].toBoolean()
+    val isWerewolfRelease = args[1].toBoolean()
     val outputEnvFile = File(args[2])
 
     val isCIBuild = System.getenv("CI") == "true"
