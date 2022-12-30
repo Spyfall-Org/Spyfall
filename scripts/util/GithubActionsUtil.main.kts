@@ -3,6 +3,10 @@ import java.io.OutputStreamWriter
 
 fun File.getEnvValue(key: String): String? {
     val envMap = this.readLines().associate { Pair(it.split("=")[0], it.split("=")[1]) }
+    println("PRINTING ENV MAP")
+    envMap.forEach { s, s2 ->
+        println("$s -> $s2")
+    }
     return envMap[key]
 }
 

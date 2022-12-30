@@ -42,7 +42,11 @@ if (isHelpCall) {
 fun main() {
     val envFile = File(args.get(0))
     val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR")?.toBoolean() ?: false
-    printRed("EVN IS SPYALL RELEASE = ${envFile.getEnvValue("isSpyfallReleasePR")}")
+    printRed("\n\nPRINTING ENV VALUES FROM FILE")
+    envFile.readLines().forEach {
+        println(it)
+    }
+    printRed("\n\nENV IS SPYALL RELEASE = ${envFile.getEnvValue("isSpyfallReleasePR")}\n\n")
     val isWerewolfRelease = envFile.getEnvValue("isWerewolfReleasePR")?.toBoolean() ?: false
 
     val isCIBuild = System.getenv("CI") == "true"
