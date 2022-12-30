@@ -44,6 +44,7 @@ if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains(
         usage: ./set_env_variables.main.kts [branch_name] [env_file]
         [branch_name] - branch that triggered the workflow using this script
         [env_file] - env file used to store output of this script 
+        [pull_number] - the number of the pull request that triggered this 
         
     """.trimIndent()
     )
@@ -56,14 +57,32 @@ if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains(
 fun main() {
     val branchName = args[0]
     val envFile = File(args[1])
+    val pullNumber = args[2]
 
     val writer = envFile.writer()
 
     setReleaseVariables(writer, branchName)
     setAppIds(writer)
     setAppFirebaseLinks(writer)
+    setReleaseNotes(writer, pullNumber)
 
     writer.close()
+}
+
+fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
+    val releaseNotes = """
+        :warning: :warning: :warning: 
+        ```diff
+        - You must edit this before publishing
+        ```
+        :warning: :warning: :warning:
+        
+        Please update this release draft with notes about the included changes before publishing. 
+        When you publish, please merge [this](https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber) Pull Request back into main. 
+        See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
+        
+    """.trimIndent()
+    writer.writeEnvValue("releaseNotes", releaseNotes)
 }
 
 fun setAppIds(writer: OutputStreamWriter) {
