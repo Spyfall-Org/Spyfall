@@ -129,7 +129,7 @@ jobs:
         with:
           tag_name: ${{ env.releaseTagName }}
           draft: true
-          release_notes: ${{ env.releaseNotes }}
+          body_path: ${{ env.releaseNotesFile }}
           name: Spyfall Release ${{ env.releaseVersion}}
           files: |
             ${{ env.signedSpyfallReleaseAabPath }}
@@ -141,7 +141,7 @@ jobs:
         if: ${{ env.isWerewolfReleasePR == 'true' }}
         with:
           tag_name: ${{ env.releaseTagName }}
-          release_notes: ${{ env.releaseNotes }}
+          body_path: ${{ env.releaseNotesFile }}
           name: Werewolf Release ${{ env.releaseVersion}}
           draft: true
           files: |
