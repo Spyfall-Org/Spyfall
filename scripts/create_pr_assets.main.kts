@@ -41,8 +41,8 @@ if (isHelpCall) {
 
 fun main() {
     val envFile = File(args.get(0))
-    val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR") ?: false
-    val isWerewolfRelease = envFile.getEnvValue("isWerewolfReleasePR") ?: false
+    val isSpyfallRelease = envFile.getEnvValue("isSpyfallReleasePR")?.toBoolean ?: false
+    val isWerewolfRelease = envFile.getEnvValue("isWerewolfReleasePR")?.toBoolean ?: false
 
     val isCIBuild = System.getenv("CI") == "true"
 
