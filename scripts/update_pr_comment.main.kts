@@ -1,11 +1,13 @@
 #!/usr/bin/env kotlin
 
+@file:Import("util/GithubActionsUtil.main.kts")
+
 @file:DependsOn("org.kohsuke:github-api:1.125")
 
 import org.kohsuke.github.GHRelease
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
-import java.io.FileNotFoundException
+import java.io.File
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -34,8 +36,10 @@ if (isHelpCall || args.size < minArgs) {
         [GITHUB_REPO] - REPO_OWNER/REPO_NAME, provided by github actions as env variable
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
         [PULL_NUMBER] - the number of the pull request
-        [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url. 
+        [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url.
+        [ENVFILE] - File with env variables to be carried across scripts
         [TAG_NAME] - Optional, The name of the tag associated with the draft release created for this PR
+        
 
     """.trimIndent()
     )
@@ -50,30 +54,47 @@ fun doWork() {
     val githubToken = args[1]
     val pullNumber = args[2]
     val runID = args[3]
-    val tagName = args.getOrNull(4)
+    val envFile = File(args[4])
+    val tagName = args.getOrNull(5)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
     val releaseDraft = repo.listReleases().firstOrNull { it.isDraft && it.tagName == tagName }
 
-    updatePRArtifactsComment(repo, runID.toLong(), pullNumber.toInt(), releaseDraft)
+    updatePRArtifactsComment(repo, runID.toLong(), pullNumber.toInt(), releaseDraft, envFile)
 }
 
-fun updatePRArtifactsComment(repo: GHRepository, runID: Long, pullNumber: Int, releaseDraft: GHRelease?) {
-
+fun updatePRArtifactsComment(
+    repo: GHRepository,
+    runID: Long,
+    pullNumber: Int,
+    releaseDraft: GHRelease?,
+    envFile: File
+) {
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
 
-    val draftMessage = if (releaseDraft != null ) """
-        The draft for this release can be found here: ${releaseDraft.htmlUrl}
-    """.trimIndent() else null
+    val appNames = File("apps").listFiles { child -> child.isDirectory }?.map { it.name } ?: listOf()
+
+    val firebaseLinksMd = appNames.mapNotNull { appName ->
+        envFile.getEnvValue("${appName}FirebaseDistributionLink")?.let { link: String ->
+            "[${appName.apply { replaceFirstChar { it.uppercase() } }} Firebase Distribution]($link)"
+        }
+    }.fold("") { linkA: String, linkB: String -> "$linkA $linkB" }
 
     val baseMessage = """
-        ## Automated PR Artifacts Links: 
-        ### These artifacts will become available when all jobs in the workflow finish
+        # Automated PR Assets Links
+        These assets are automatically generated on pull requests. Some links may not work until all jobs in the pull request workflow have finished. Every update to this PR will generate a new row in the assets table. 
+        
+        ${
+        (if (releaseDraft != null) """
+            The draft for this release can be found [here](${releaseDraft.htmlUrl}). When it is time to release, publish
+            the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
+        """.trimIndent() else null) ?: ""
+        }
 
-        """.trimIndent().let { base ->
-            if (draftMessage != null) base + draftMessage else base
-    }
+        | Commit | Assets  | 
+        |---|---|
+        """.trimIndent()
 
     @Suppress("MagicNumber")
     val lastCommitSha = repo.getPullRequest(pullNumber).head.sha.take(7)
@@ -83,15 +104,19 @@ fun updatePRArtifactsComment(repo: GHRepository, runID: Long, pullNumber: Int, r
         .comments.firstOrNull { it.body.contains(baseMessage) }
         ?.body
 
-    val updatedComment = (existingComment ?: baseMessage) + """
-        
-        $lastCommitSha : $htmlUrl#artifacts
-   
+    val assetsTableEntry = """
+        |$lastCommitSha |  [Github Action Artifacts]($htmlUrl#artifacts) $firebaseLinksMd |
     """.trimIndent()
+
+    val stringToComment = if (existingComment != null) {
+        "$existingComment\n$assetsTableEntry"
+    } else {
+        "$baseMessage\n$assetsTableEntry"
+    }
 
     repo.getPullRequest(pullNumber).let { pr ->
         pr.comments.firstOrNull { it.body.contains(baseMessage) }
-            ?.update(updatedComment) ?: pr.comment(updatedComment)
+            ?.update(stringToComment) ?: pr.comment(stringToComment)
     }
 }
 
