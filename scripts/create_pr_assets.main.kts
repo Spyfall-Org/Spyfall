@@ -8,6 +8,7 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.util.Properties
 
+
 val red = "\u001b[31m"
 val green = "\u001b[32m"
 val reset = "\u001b[0m"
@@ -29,7 +30,7 @@ if (isHelpCall) {
                in. Release assets are unsigned unless this is being ran locally. In which case they are signed
                with a debug signing config. 
                
-               Usage: ./create_pr_assets.kts [ENV_FILE]
+               Usage: ./create_pr_assets.main.kts [ENV_FILE]
                ENV_FILE: The env file to read from and output to           
     """.trimIndent()
     )
