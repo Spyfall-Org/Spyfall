@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set Env Variables
-        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }}
+        run: ./scripts/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
 
       - name: Update Version Codes
         run: ./scripts/set_version_code.main.kts ${{ github.run_number }}
@@ -129,6 +129,7 @@ jobs:
         with:
           tag_name: ${{ env.releaseTagName }}
           draft: true
+          release_notes: ${{ env.releaseNotes }}
           name: Spyfall Release ${{ env.releaseVersion}}
           files: |
             ${{ env.signedSpyfallReleaseAabPath }}
@@ -140,6 +141,7 @@ jobs:
         if: ${{ env.isWerewolfReleasePR == 'true' }}
         with:
           tag_name: ${{ env.releaseTagName }}
+          release_notes: ${{ env.releaseNotes }}
           name: Werewolf Release ${{ env.releaseVersion}}
           draft: true
           files: |
@@ -155,7 +157,7 @@ jobs:
         run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ github.env }} ${{ env.werewolfReleaseApkPath }}
 
       - name: Update artifacts comment on PR
-        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.releaseTagName }}
+        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ github.env }} ${{ env.releaseTagName }}
 
   style:
     runs-on: [ ubuntu-latest ]

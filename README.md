@@ -11,4 +11,3 @@ This project on its own will not run as a google-services.json file is needed fo
 
 
 ## This code base is currently under construction
-
