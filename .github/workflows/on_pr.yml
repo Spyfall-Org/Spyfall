@@ -13,26 +13,6 @@ concurrency:
 
 jobs:
   build:
-    env:
-      isWerewolfReleasePR: ""
-      isSpyfallReleasePR: ""
-      releaseVersion: ""
-      releaseTagName: ""
-      spyfallAppId: ""
-      werewolfAppId: ""
-      spyfallFirebaseDistributionLink: ""
-      werewolfFirebaseDistributionLink: ""
-      releaseNotesFile: ""
-      spyfallDebugApkPath: ""
-      werewolfDebugApkPath: ""
-      spyfallReleaseApkPath: ""
-      werewolfReleaseApkPath: ""
-      spyfallReleaseAabPath: ""
-      werewolfReleaseAabPath: ""
-      signedSpyfallReleaseApkPath: ""
-      signedWerewolfReleaseApkPath: ""
-      signedSpyfallReleaseAabPath: ""
-      signedWerewolfReleaseAabPath: ""
 
     runs-on: ubuntu-latest
     steps:
