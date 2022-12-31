@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set Env Variables
-        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }} ${{ github.event.release.name }}
+        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }} "${{ github.event.release.name }}"
 
       - name: Create Service Key Json
         id: create-json
