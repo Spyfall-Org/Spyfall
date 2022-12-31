@@ -1,0 +1,13 @@
+name: Publish To Play Store
+on:
+  release:
+    types: [published]
+    draft: true
+
+jobs:
+  uploadrelease:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Testing
+        run: echo Testing

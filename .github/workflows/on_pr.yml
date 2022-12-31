@@ -127,11 +127,11 @@ jobs:
 
       - name: Update Spyfall Draft Release
         if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ releaseTagName }} ${{ releaseNotesFile }} ${{ env.spyfallReleaseAabPath }} ${{ env.spyfallReleaseApkPath }} ${{ env.spyfallDebugApkPath }}
+        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ env.releaseNotesFile }} ${{ env.spyfallReleaseAabPath }} ${{ env.spyfallReleaseApkPath }} ${{ env.spyfallDebugApkPath }}
 
       - name: Update Werewolf Draft Release
         if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ releaseTagName }} ${{ releaseNotesFile }} ${{ env.werewolfReleaseAabPath }} ${{ env.werewolfReleaseApkPath }} ${{ env.werewolfDebugApkPath }}
+        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ env.releaseNotesFile }} ${{ env.werewolfReleaseAabPath }} ${{ env.werewolfReleaseApkPath }} ${{ env.werewolfDebugApkPath }}
 
       - name: Deploy Werewolf Debug Asset to Firebase
         run: ./scripts/ci/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false ${{ env.werewolfDebugApkPath }}
