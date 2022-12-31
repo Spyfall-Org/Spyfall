@@ -152,7 +152,10 @@ fun getPackageName(appName: String): String {
 
 @Suppress("UseCheckOrError", "ThrowsCount")
 fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
-    val isRelease = branchName.contains("release")
+    // matches "release-words-dashes_underscores-and-num6ers/vx.y.z
+    val releaseBranchPattern = Regex("release-[\\w-]+/v\\d+\\.\\d+\\.\\d+")
+
+    val isRelease = releaseBranchPattern.matches(branchName)
 
     if (!isRelease) {
         writer.writeEnvValue("isWerewolfReleasePR", "false")
