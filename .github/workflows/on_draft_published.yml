@@ -25,7 +25,7 @@ jobs:
       - name: Set Tag Name
         run: |
           if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
-            echo "releaseTagName=${{ github.event.release.name }}" >> $GITHUB_ENV
+            echo "releaseTagName=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           else
             echo "releaseTagName=${{ github.event.inputs.tagName }}" >> $GITHUB_ENV
           fi
