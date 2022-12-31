@@ -99,7 +99,7 @@ fun uploadToFirebaseAppDistribution(
         val writer = writer()
         writer.write(releaseNotes)
         writer.close()
-    }
+    }.path
 
     @Suppress("MaxLineLength")
     val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes-file $releaseNotesPath $apkPath"
