@@ -28,12 +28,13 @@ jobs:
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: release-${{ github.event.inputs.appName }}/v${{ github.event.inputs.versionName }}
           commit-message: Prepare ${{ github.event.inputs.appName }} release ${{ github.event.inputs.versionName }}
           title: ${{ github.event.inputs.appName }} v${{ github.event.inputs.versionName }} into main
           body: |
-            This PR was created automatically via a workflow running.
-            Every change to this PR re runs the checks and uploads new builds.
-            Merging this PR will make a final build and use that build to create a release on Github, and the Google Play Store. 
+            ## :rocket: This PR was created using the "Create Release Branch" workflow :rocket:
+            After the checks run, a release draft will be built and linked in a comment. Publishing the release draft will send the app bundle to the play store for distribution. 
+            After publishing the release draft, this PR should be merged.   
+            
             To learn more about our release process you can read our [release documentation](https://spyfall-org.github.io/how-to/release/)
