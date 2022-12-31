@@ -28,7 +28,7 @@ jobs:
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.REPO_SCOPED_TOKEN }}
           branch: release-${{ github.event.inputs.appName }}/v${{ github.event.inputs.versionName }}
           commit-message: Prepare ${{ github.event.inputs.appName }} release ${{ github.event.inputs.versionName }}
           title: ${{ github.event.inputs.appName }} v${{ github.event.inputs.versionName }} into main
