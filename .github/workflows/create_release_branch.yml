@@ -8,9 +8,6 @@ on:
       versionName:
         description: 'Version being released (ie 5.5.0)'
         required: true
-      versionCode:
-        description: 'Version Code (ie 550). Automatically increments if not provided.'
-        required: false
 
 jobs:
   createrelease:
@@ -23,13 +20,10 @@ jobs:
           ref: main
 
       - name: Validate inputs
-        run: ./scripts/validate_release_inputs.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }} ${{ github.event.inputs.versionCode }}
-
-      - name: Set the version code
-        run: ./scripts/set_version_code.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionCode }}
+        run: ./scripts/ci/validate_release_inputs.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }}
 
       - name: Change version name
-        run: ./scripts/set_version_name.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }}
+        run: ./scripts/ci/set_version_name.main.kts ${{ github.event.inputs.appName }} ${{ github.event.inputs.versionName }}
 
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v4

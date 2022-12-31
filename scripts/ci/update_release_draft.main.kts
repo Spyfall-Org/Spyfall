@@ -4,6 +4,7 @@
 
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
+import java.io.File
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -25,15 +26,16 @@ if (isHelpCall || args.size < minArgs) {
     @Suppress("MaxLineLength")
     printRed(
         """
-        This script comments a link to the PR of the artifacts generated for that PR
+        This script either creates or updates a draft PR for a release 
         
-        Usage: ./update_artifacts_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID]
+        Usage: ./update_release_draft.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [TAG_NAME] [BODY] [ASSET_PATHS]
         
         [GITHUB_REPO] - REPO_OWNER/REPO_NAME, provided by github actions as env variable
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
-        [PULL_NUMBER] - the number of the pull request
-        [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url. 
-        
+        [TAG_NAME] - The name of the tag associated with the draft release created for this PR
+        [BODY] - The file path to the release notes
+        [Asset Paths] - comma separated list of assets to upload to release draft "example1.apk, example2.apk"
+       
     """.trimIndent()
     )
 
@@ -42,44 +44,36 @@ if (isHelpCall || args.size < minArgs) {
 }
 
 @Suppress("MagicNumber")
-fun doWork() {
+fun main() {
     val githubRepoInfo = args[0] // in the format: "REPO_OWNER/REPO_NAME"
     val githubToken = args[1]
-    val pullNumber = args[2]
-    val runID = args[3]
+    val tagName = args[2]
+    val body = File(args[3]).readText()
+    val assetPaths = args.slice(4.until(args.size))
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
-    val htmlUrl = repo.getWorkflowRun(runID.toLong()).htmlUrl
+    val releaseDraft = repo
+        .listReleases()
+        .firstOrNull { it.tagName == tagName && it.isDraft }
+        ?: repo
+            .createRelease(tagName)
+            .draft(true)
+            .body(body)
+            .name("Release $tagName")
+            .create()
 
-    val baseMessage = """
-        ## Automated PR Artifacts Links: 
-        ### These artifacts will become available when all jobs in the workflow finish
-        
-        """.trimIndent()
+    releaseDraft.listAssets().forEach { it.delete() }
 
-    val lastCommitSha = repo.getPullRequest(pullNumber.toInt()).head.sha.take(7)
-
-    val existingComment = repo
-        .getPullRequest(pullNumber.toInt())
-        .comments.firstOrNull { it.body.contains(baseMessage) }
-        ?.body
-
-    val updatedComment = (existingComment ?: baseMessage) + """
-        
-        $lastCommitSha : $htmlUrl#artifacts
-   
-    """.trimIndent()
-
-    repo.getPullRequest(pullNumber.toInt()).let { pr ->
-        pr.comments.firstOrNull { it.body.contains(baseMessage) }
-            ?.update(updatedComment) ?: pr.comment(updatedComment)
-
+    assetPaths.forEach { path ->
+        val asset = File(path)
+        releaseDraft.uploadAsset(asset, asset.getContentType())
     }
 }
+
+fun File.getContentType() = toURI().toURL().openConnection().contentType
 
 fun getRepository(githubRepoInfo: String, githubToken: String): GHRepository =
     GitHub.connectUsingOAuth(githubToken).getRepository(githubRepoInfo)
 
-
-doWork()
+main()

@@ -6,21 +6,40 @@ on:
     branches:
       - "**"
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 # ensures only 1 of these workflows can exist on a PR at a time. Cancels old ones when new ones are triggered
 concurrency:
   group: pr-workflow-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
-
   build:
+    env:
+      isWerewolfReleasePR: ""
+      isSpyfallReleasePR: ""
+      releaseVersion: ""
+      releaseTagName: ""
+      spyfallAppId: ""
+      werewolfAppId: ""
+      spyfallFirebaseDistributionLink: ""
+      werewolfFirebaseDistributionLink: ""
+      releaseNotesFile: ""
+      spyfallDebugApkPath: ""
+      werewolfDebugApkPath: ""
+      spyfallReleaseApkPath: ""
+      werewolfReleaseApkPath: ""
+      spyfallReleaseAabPath: ""
+      werewolfReleaseAabPath: ""
+      pullRequestLink: ""
+      GOOGLE_APPLICATION_CREDENTIALS: "apps/spyfall/service-account-key.json"
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
+
+      - name: Update Version Codes
+        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
 
       - name: Create Service Key Json
         id: create-json
@@ -32,6 +51,9 @@ jobs:
       - name: Download Secret Files
         run: ./scripts/get_secret_files.main.kts service_key.json
 
+      - name: Set Env Variables
+        run: ./scripts/ci/set_pr_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
+
       - name: Set Up Cache
         uses: actions/cache@v3
         with:
@@ -42,7 +64,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Copy gradle properties file
+      - name: Copy Gradle Properties File
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: Set Up JDK 11
@@ -51,113 +73,75 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
 
-      - name: Set spyfall release environment variable
-        run: |
-          if [[ $GITHUB_HEAD_REF =~ release-spyfall ]]; then
-            echo "isSpyfallReleasePR=true" >> $GITHUB_ENV
-          else
-            echo "isSpyfallReleasePR=false" >> $GITHUB_ENV
-          fi
-
-      - name: Set werewolf release environment variable
-        run: |
-          if [[ $GITHUB_HEAD_REF =~ release-werewolf ]]; then
-            echo "isWerewolfReleasePR=true" >> $GITHUB_ENV
-          else
-            echo "isWerewolfReleasePR=false" >> $GITHUB_ENV
-          fi
-
       - name: Create Assets
         id: createassets
-        run: ./scripts/create_pr_assets.kts $GITHUB_ENV ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }}
+        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }}  ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
 
-      - name: Sign spyfall legacy release apk
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseApkPath" $GITHUB_ENV
-
-      - name: Upload spyfall legacy release signed apk
+      - name: Upload Spyfall Release Signed Apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: Spyfall Legacy Release Apk
-          path: ${{ env.signedSpyfallLegacyReleaseApkPath }}
+          name: Spyfall Release Apk
+          path: ${{ env.spyfallReleaseApkPath }}
 
-      - name: Sign spyfall refactor release apk
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.spyfallRefactorReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallRefactorReleaseApkPath" $GITHUB_ENV
-
-      - name: Upload spyfall refactor release signed apk
+      - name: Upload Spyfall Release Signed Aab
         if: ${{ env.isSpyfallReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: Spyfall Refactor Release Apk
-          path: ${{ env.signedSpyfallRefactorReleaseApkPath }}
+          name: Spyfall Release aab
+          path: ${{ env.spyfallReleaseAabPath }}
 
-      - name: Sign spyfall legacy release aab
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.spyfallLegacyReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallLegacyReleaseAabPath" $GITHUB_ENV
-
-      - name: Upload spyfall legacy release signed aab
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
+      - name: Upload Spyfall Debug Apk
         uses: actions/upload-artifact@v3
         with:
-          name: Spyfall Legacy Release aab
-          path: ${{ env.signedSpyfallLegacyReleaseAabPath }}
+          name: Spyfall Debug Apk
+          path: ${{ env.spyfallDebugApkPath }}
 
-      - name: Sign spyfall refactor release aab
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.spyfallRefactorReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSpyfallRefactorReleaseAabPath" $GITHUB_ENV
-
-      - name: Upload spyfall refactor release signed aab
-        if: ${{ env.isSpyfallReleasePR == 'true' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: Spyfall Refactor Release aab
-          path: ${{ env.signedSpyfallRefactorReleaseAabPath }}
-
-      - name: Upload spyfall legacy debug apk
-        uses: actions/upload-artifact@v3
-        with:
-          name: Spyfall Legacy Debug Apk
-          path: ${{ env.spyfallLegacyDebugApkPath }}
-
-      - name: Upload spyfall refactor debug apk
-        uses: actions/upload-artifact@v3
-        with:
-          name: Spyfall Refactor Debug Apk
-          path: ${{ env.spyfallRefactorDebugApkPath }}
-
-      - name: Upload werewolf debug apk
+      - name: Upload Werewolf Debug Apk
         id: uploadlastasset
         uses: actions/upload-artifact@v3
         with:
           name: Werewolf Debug Apk
           path: ${{ env.werewolfDebugApkPath }}
 
-      - name: Sign Werewolf release apk
-        if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseApkPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedWerewolfReleaseApkPath" $GITHUB_ENV
-
-      - name: Upload werewolf release signed apk
+      - name: Upload Werewolf Release Signed Apk
         if: ${{ env.isWerewolfReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Werewolf Release Apk
-          path: ${{ env.signedWerewolfReleaseApkPath }}
+          path: ${{ env.werewolfReleaseApkPath }}
 
-      - name: Sign Werewolf release aab
-        if: ${{ env.isWerewolfReleasePR == 'true' }}
-        run: ./scripts/sign_app.main.kts ${{ env.werewolfReleaseAabPath }} ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }} "signedSWerewolfReleaseAabPath" $GITHUB_ENV
-
-      - name: Upload werewolf release signed aab
+      - name: Upload Werewolf Release Signed Aab
         if: ${{ env.isWerewolfReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Werewolf Release Aab
-          path: ${{ env.signedSWerewolfReleaseAabPath }}
+          path: ${{ env.werewolfReleaseAabPath }}
 
-      - name: Update artifacts comment on PR
-        run: ./scripts/update_artifacts_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}"
+      - name: Deploy Spyfall Debug Asset to Firebase
+        run: ./scripts/ci/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false ${{ env.spyfallDebugApkPath }}
+
+      - name: Deploy Spyfall Release Asset to Firebase
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true ${{ env.spyfallReleaseApkPath }}
+
+      - name: Update Spyfall Draft Release
+        if: ${{ env.isSpyfallReleasePR == 'true' }}
+        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ env.releaseNotesFile }} ${{ env.spyfallReleaseAabPath }} ${{ env.spyfallReleaseApkPath }} ${{ env.spyfallDebugApkPath }}
+
+      - name: Update Werewolf Draft Release
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
+        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ env.releaseNotesFile }} ${{ env.werewolfReleaseAabPath }} ${{ env.werewolfReleaseApkPath }} ${{ env.werewolfDebugApkPath }}
+
+      - name: Deploy Werewolf Debug Asset to Firebase
+        run: ./scripts/ci/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false ${{ env.werewolfDebugApkPath }}
+
+      - name: Deploy Werewolf Release Asset to Firebase
+        if: ${{ env.isWerewolfReleasePR == 'true' }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true ${{ env.werewolfReleaseApkPath }}
+
+      - name: Update PR Comment
+        run: ./scripts/ci/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.spyfallFirebaseDistributionLink }} ${{ env.werewolfFirebaseDistributionLink }} ${{ github.run_number }} ${{ env.releaseTagName }}
 
   style:
     runs-on: [ ubuntu-latest ]

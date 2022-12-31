@@ -28,7 +28,6 @@
         <activity
                 android:name=".MainActivity"
                 android:configChanges="uiMode"
-                android:screenOrientation="${screenOrientation}"
                 android:theme="@style/SpyfallAppTheme"
                 android:windowSoftInputMode="adjustResize"
                 android:exported="true">

@@ -1,4 +1,3 @@
-import com.spyfall.convention.shared.configureSpyfallFlavors
 import com.spyfall.convention.shared.getModule
 
 plugins {
@@ -13,9 +12,7 @@ plugins {
 android {
 
     defaultConfig {
-        applicationId = "com.dangerfield.spyfall.free"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders["screenOrientation"] = "unspecified"
     }
 
     buildTypes {
@@ -29,8 +26,6 @@ android {
             )
         }
     }
-
-    configureSpyfallFlavors(this)
 
     androidExtensions {
         isExperimental = true

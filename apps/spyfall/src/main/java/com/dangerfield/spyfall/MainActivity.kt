@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.commit
@@ -30,6 +31,12 @@ class MainActivity : ThemeChangeableActivity() {
             setContentView(R.layout.activity_main_legacy)
         } else {
             setContentView(R.layout.activity_main)
+        }
+
+        this.requestedOrientation = if (buildInfo.isLegacySpyfall) {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
         mainActivityViewModel.state.collectWhileStarted(this) { state ->
