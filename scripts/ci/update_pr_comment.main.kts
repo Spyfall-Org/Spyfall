@@ -92,12 +92,12 @@ fun updatePRArtifactsComment(
     @Suppress("MaxLineLength")
     val baseMessage = """
 # Automated PR Assets Links
+- ##### [Spyfall Firebase Distribution]($spyfallFirebaseDistributionLink) 
+- ##### [Werewolf Firebase Distribution]($werewolfFirebaseDistributionLink) 
 ${
         (if (releaseDraft != null) """
 - ##### [Release Draft](${releaseDraft.htmlUrl}) 
 - ##### [Release (once published)]($publishedReleaseUrl)
-- ##### [Spyfall Firebase Distribution]($spyfallFirebaseDistributionLink) 
-- ##### [Werewolf Firebase Distribution]($werewolfFirebaseDistributionLink) 
 When it is time to release, publish the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
 """.trimIndent() else null) ?: ""
     }
