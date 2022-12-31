@@ -52,7 +52,7 @@ jobs:
         run: ./scripts/get_secret_files.main.kts service_key.json
 
       - name: Set Env Variables
-        run: ./scripts/ci/set_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
+        run: ./scripts/ci/set_pr_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
 
       - name: Set Up Cache
         uses: actions/cache@v3

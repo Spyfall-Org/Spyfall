@@ -6,8 +6,32 @@ on:
 
 jobs:
   uploadrelease:
+    env:
+      releaseAssetPath: ""
+      packageName: ""
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Testing
-        run: echo Testing
+      - name: Set Env Variables
+        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }} ${{ github.event.release.name }}
+
+      - name: Create Service Key Json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "google-play-service_key.json"
+          json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+
+      - name: Download Release Asset
+        run: ./scripts/ci/download_release_asset.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.tag_name }} ${{ github.env }} "releaseAssetPath"
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-to-playstore@v1
+        with:
+          status: completed
+          track: beta
+          serviceAccountJson: "google-play-service_key.json"
+          packageName: ${{ env.packageName }}
+          release_files: ${{ env.releaseAssetPath }}

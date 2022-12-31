@@ -85,21 +85,15 @@ fun updatePRArtifactsComment(
 ) {
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
 
-    val firebaseLinksMd = listOf(
-        "Spyfall Firebase Distribution Link" to spyfallFirebaseDistributionLink,
-        "Werewolf Firebase Distribution Link" to werewolfFirebaseDistributionLink
-    )
-        .map { (linkText, linkValue) -> "[$linkText]($linkValue)" }
-        .fold("") { linkA: String, linkB: String -> "$linkA, $linkB" }
-
     @Suppress("MaxLineLength")
     val baseMessage = """
 # Automated PR Assets Links
 ${
         (if (releaseDraft != null) """
-## [Release Draft](${releaseDraft.htmlUrl})
-The draft for this release can be found above. When it is time to release, publish
-the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
+- #### [Release Draft](${releaseDraft.htmlUrl}) 
+- #### [Spyfall Firebase Distribution]($spyfallFirebaseDistributionLink) 
+- #### [Werewolf Firebase Distribution]($werewolfFirebaseDistributionLink) 
+When it is time to release, publish the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
 """.trimIndent() else null) ?: ""
     }
     
@@ -118,7 +112,7 @@ These assets are automatically generated on pull requests. Some links may not wo
         ?.body
 
     val assetsTableEntry = """
-        |$lastCommitSha | $buildNumber | [Github Action Artifacts]($htmlUrl#artifacts) $firebaseLinksMd |
+        |$lastCommitSha | $buildNumber | [Github Action Artifacts]($htmlUrl#artifacts) |
     """.trimIndent()
 
     val stringToComment = if (existingComment != null) {

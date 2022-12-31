@@ -41,7 +41,7 @@ if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains(
         """
         This script sets env variables for a pr workflow run
         
-        usage: ./set_env_variables.main.kts [branch_name] [env_file]
+        usage: ./set_pr_env_variables.main.kts [branch_name] [env_file]
         [branch_name] - branch that triggered the workflow using this script
         [env_file] - env file used to store output of this script 
         [pull_number] - the number of the pull request that triggered this 
