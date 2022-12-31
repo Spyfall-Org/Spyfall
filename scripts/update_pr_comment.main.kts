@@ -56,7 +56,8 @@ fun doWork() {
     val runID = args[3]
     val spyfallFirebaseLink = args[4]
     val werewolfFirebaseLink = args[5]
-    val tagName = args.getOrNull(6)
+    val buildNumber = args[6]
+    val tagName = args.getOrNull(7)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
@@ -68,7 +69,8 @@ fun doWork() {
         pullNumber.toInt(),
         releaseDraft,
         spyfallFirebaseLink,
-        werewolfFirebaseLink
+        werewolfFirebaseLink,
+        buildNumber
     )
 }
 
@@ -80,6 +82,7 @@ fun updatePRArtifactsComment(
     releaseDraft: GHRelease?,
     spyfallFirebaseDistributionLink: String,
     werewolfFirebaseDistributionLink: String,
+    buildNumber: String
 ) {
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
 
@@ -102,8 +105,8 @@ the draft release and merge this PR. See the [release documentation](https://spy
 """.trimIndent() else null) ?: ""
     }
 
-| Commit | Assets  | 
-|---|---|
+| Commit | Build Number | Assets | 
+|---|---|---|
 """.trimIndent()
 
     @Suppress("MagicNumber")
@@ -115,7 +118,7 @@ the draft release and merge this PR. See the [release documentation](https://spy
         ?.body
 
     val assetsTableEntry = """
-        |$lastCommitSha |  [Github Action Artifacts]($htmlUrl#artifacts) $firebaseLinksMd |
+        |$lastCommitSha | $buildNumber | [Github Action Artifacts]($htmlUrl#artifacts) $firebaseLinksMd |
     """.trimIndent()
 
     val stringToComment = if (existingComment != null) {

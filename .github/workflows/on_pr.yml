@@ -180,7 +180,7 @@ jobs:
         run: ./scripts/deploy_app_distribution.main.kts "werewolf" ${{ env.werewolfAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true ${{ env.signedWerewolfReleaseApkPath }}
 
       - name: Update artifacts comment on PR
-        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.spyfallFirebaseDistributionLink }} ${{ env.werewolfFirebaseDistributionLink }} ${{ env.releaseTagName }}
+        run: ./scripts/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.spyfallFirebaseDistributionLink }} ${{ env.werewolfFirebaseDistributionLink }} ${{ github.run_number }} ${{ env.releaseTagName }}
 
   style:
     runs-on: [ ubuntu-latest ]

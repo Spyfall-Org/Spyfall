@@ -1,7 +1,10 @@
 #!/usr/bin/env kotlin
 
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileReader
 import java.io.FileWriter
+import java.util.Properties
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -44,6 +47,8 @@ fun main() {
     val pullRequestLink = args[4]
     val isRelease = args[5].toBoolean()
     val assetPaths = args.slice(6.until(args.size))
+    val versionCode = getAppVersionCode(appName)
+    val versionName = getAppVersionName(appName)
 
     val serviceAccountPath = "apps/$appName/service-account-key.json"
 
@@ -62,20 +67,42 @@ fun main() {
 
     assetPaths.forEach { path ->
         println("Uploading asset ${File(path).name} to firebase distribution")
-        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease)
+        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease, appName, versionName, versionCode)
         println("Finished Uploading asset ${File(path).name} to firebase distribution")
     }
 }
 
+@Suppress("LongParameterList")
+fun uploadToFirebaseAppDistribution(
+    appId: String,
+    apkPath: String,
+    pullRequestLink: String,
+    isRelease: Boolean,
+    appName: String,
+    versionName: String,
+    versionCode: String,
+) {
 
-fun uploadToFirebaseAppDistribution(appId: String, apkPath: String, pullRequestLink: String, isRelease: Boolean) {
+    val releaseNotes = """
+        This asset was generated based off the following pull request: 
+        $pullRequestLink
+        
+        App Name: $appName
+        App Version: $versionName
+        Version Code (Build Number): $versionCode
+        Build Type: ${if (isRelease) "RELEASE" else "DEBUG"}
+        
+    """.trimIndent()
 
-    val releaseClarification = if (isRelease) "This is a release build" else "This is a debug build"
-
-    val releaseNotes = "Pull Request: $pullRequestLink. \n\n $releaseClarification"
+    val releaseNotesPath = File("firebase_release_notes.txt").apply {
+        createNewFile()
+        val writer = writer()
+        writer.write(releaseNotes)
+        writer.close()
+    }
 
     @Suppress("MaxLineLength")
-    val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes \"$releaseNotes\" $apkPath"
+    val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes-file $releaseNotesPath $apkPath"
     printGreen("Running Command\n\n$uploadCommand")
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess { printGreen("Successfully uploaded apk to firebase app distribution") }
@@ -152,6 +179,22 @@ fun runCommandLine(command: String): String {
     process.waitFor()
 
     return output
+}
+
+fun getAppVersionName(app: String): String {
+    val properties = Properties()
+    val reader = BufferedReader(FileReader("app.properties"))
+    properties.load(reader)
+    reader.close()
+    return properties.getProperty("$app.versionName").toString()
+}
+
+fun getAppVersionCode(app: String): String {
+    val properties = Properties()
+    val reader = BufferedReader(FileReader("app.properties"))
+    properties.load(reader)
+    reader.close()
+    return properties.getProperty("$app.versionCode").toString()
 }
 
 main()
