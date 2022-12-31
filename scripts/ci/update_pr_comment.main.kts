@@ -69,7 +69,8 @@ fun doWork() {
         releaseDraft,
         spyfallFirebaseLink,
         werewolfFirebaseLink,
-        buildNumber
+        buildNumber,
+        tagName
     )
 }
 
@@ -81,18 +82,22 @@ fun updatePRArtifactsComment(
     releaseDraft: GHRelease?,
     spyfallFirebaseDistributionLink: String,
     werewolfFirebaseDistributionLink: String,
-    buildNumber: String
+    buildNumber: String,
+    tagName: String?
 ) {
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
+
+    val publishedReleaseUrl = "https://github.com/Spyfall-Org/Spyfall/releases/tag/${tagName?.replace("/","%2F")}"
 
     @Suppress("MaxLineLength")
     val baseMessage = """
 # Automated PR Assets Links
 ${
         (if (releaseDraft != null) """
-- #### [Release Draft](${releaseDraft.htmlUrl}) 
-- #### [Spyfall Firebase Distribution]($spyfallFirebaseDistributionLink) 
-- #### [Werewolf Firebase Distribution]($werewolfFirebaseDistributionLink) 
+- ##### [Release Draft](${releaseDraft.htmlUrl}) 
+- ##### [Release (once published)]($publishedReleaseUrl)
+- ##### [Spyfall Firebase Distribution]($spyfallFirebaseDistributionLink) 
+- ##### [Werewolf Firebase Distribution]($werewolfFirebaseDistributionLink) 
 When it is time to release, publish the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
 """.trimIndent() else null) ?: ""
     }

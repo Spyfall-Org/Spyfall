@@ -2,14 +2,15 @@ name: Publish To Play Store
 on:
   release:
     types: [published]
-    draft: true
 
 jobs:
   uploadrelease:
     env:
       releaseAssetPath: ""
       packageName: ""
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

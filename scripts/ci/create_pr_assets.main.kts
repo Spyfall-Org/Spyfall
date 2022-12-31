@@ -28,7 +28,7 @@ if (isHelpCall || args.size < argCount) {
     printGreen(
         """
                This script creates the apks needed for PRs and writes the paths of those assets to the env file passed 
-               in. Release assets are unsigned unless this is being ran locally. In which case they are signed
+               in. Release assets are signed unless this is being ran locally. In which case they are signed
                with a debug signing config. 
                
                Usage: ./create_pr_assets.main.kts <is-spyfall-release> <is-werewolf-release> <env-file-path> <signingKeyBase64> <keystorePassword> <keystoreAlias> <signingKey>
@@ -124,7 +124,8 @@ fun signAndRenameSpyfallReleaseAssets(
     keystorePassword: String,
     signingKey: String
 ) {
-    val signingSuffix = if (isCIBuild) "unsigned" else "debugSigned"
+    val signingSuffix = if (isCIBuild) "signed" else "debugSigned"
+
     val apkAsset = File(findApkFile("apps/spyfall/build/outputs/apk/release"))
     val aabAsset = File(findAabFile("apps/spyfall/build/outputs/bundle/release"))
 
@@ -163,7 +164,7 @@ fun signAndRenameWerewolfReleaseAssets(
     signAsset(apkAsset, keystore, keystoreAlias, keystorePassword, signingKey)
     signAsset(aabAsset, keystore, keystoreAlias, keystorePassword, signingKey)
 
-    val signingSuffix = if (isCIBuild) "unsigned" else "debugSigned"
+    val signingSuffix = if (isCIBuild) "signed" else "debugSigned"
 
     setOutputAssetName(
         defaultPath = apkAsset.path,
