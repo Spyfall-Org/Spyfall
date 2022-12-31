@@ -7,13 +7,20 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.util.Properties
 
+@Suppress("MagicNumber")
 fun main() {
     val envFile = File(args[0])
     val releaseName = args[1]
+    val manualInputTagName = args[2]
+    val triggeredTagName = args[3]
     val packageName = getPackageName(getAppName(releaseName))
+
+    val tagName = triggeredTagName.ifEmpty { manualInputTagName }
 
     FileWriter(envFile, true).apply {
         write("packageName=$packageName")
+        appendLine()
+        write("releaseTagName=$tagName")
         appendLine()
         close()
      }
