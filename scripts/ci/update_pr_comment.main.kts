@@ -1,7 +1,6 @@
 #!/usr/bin/env kotlin
 
 @file:Import("util/GithubActionsUtil.main.kts")
-
 @file:DependsOn("org.kohsuke:github-api:1.125")
 
 import org.kohsuke.github.GHRelease
@@ -96,15 +95,16 @@ fun updatePRArtifactsComment(
     @Suppress("MaxLineLength")
     val baseMessage = """
 # Automated PR Assets Links
-These assets are automatically generated on pull requests. Some links may not work until all jobs in the pull request workflow have finished. Every update to this PR will generate a new row in the assets table. 
-        
 ${
         (if (releaseDraft != null) """
-The draft for this release can be found [here](${releaseDraft.htmlUrl}). When it is time to release, publish
+## [Release Draft](${releaseDraft.htmlUrl})
+The draft for this release can be found above. When it is time to release, publish
 the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
 """.trimIndent() else null) ?: ""
     }
-
+    
+These assets are automatically generated on pull requests. Some links may not work until all jobs in the pull request workflow have finished. Every update to this PR will generate a new row in the assets table. 
+        
 | Commit | Build Number | Assets | 
 |---|---|---|
 """.trimIndent()

@@ -79,12 +79,13 @@ fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
     val releaseNotes = """
         :warning: :warning: :warning: 
         ```diff
-        - You must edit this before publishing
+        - Please update this release draft with notes about the included changes before publishing.
         ```
         :warning: :warning: :warning:
         
-        Please update this release draft with notes about the included changes before publishing. 
-        When you publish, please merge [this](https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber) Pull Request back into main. 
+        ## [PR that triggered draft](https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber)
+        When you publish, please merge the above Pull Request back into main.
+         
         See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
         
     """.trimIndent()

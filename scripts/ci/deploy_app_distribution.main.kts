@@ -84,6 +84,8 @@ fun uploadToFirebaseAppDistribution(
 ) {
 
     val releaseNotes = """
+        ${if (isRelease) "RELEASE" else "DEBUG"}
+        
         This asset was generated based off the following pull request: 
         $pullRequestLink
         
