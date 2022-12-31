@@ -1,6 +1,5 @@
 #!/usr/bin/env kotlin
 
-
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -11,16 +10,11 @@ import java.util.Properties
 fun main() {
     val envFile = File(args[0])
     val releaseName = args[1]
-    val manualInputTagName = args[2]
-    val triggeredTagName = args[3]
-    val packageName = getPackageName(getAppName(releaseName))
 
-    val tagName = triggeredTagName.ifEmpty { manualInputTagName }
+    val packageName = getPackageName(getAppName(releaseName))
 
     FileWriter(envFile, true).apply {
         write("packageName=$packageName")
-        appendLine()
-        write("releaseTagName=$tagName")
         appendLine()
         close()
      }
