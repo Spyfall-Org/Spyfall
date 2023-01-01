@@ -50,4 +50,4 @@ jobs:
           track: beta
           serviceAccountJson: "google-play-service_key.json"
           packageName: ${{ env.packageName }}
-          release_files: ${{ env.releaseAssetPath }}
+          releaseFiles: ${{ env.releaseAssetPath }}
