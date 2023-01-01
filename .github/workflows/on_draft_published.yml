@@ -37,7 +37,7 @@ jobs:
         id: create-json
         uses: jsdaniell/create-json@v1.2.2
         with:
-          name: "google-play-service_key.json"
+          name: "google-play-service-key.json"
           json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
 
       - name: Download Release Asset
@@ -48,6 +48,6 @@ jobs:
         with:
           status: completed
           track: beta
-          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+          serviceAccountJson: "google-play-service-key.json"
           packageName: ${{ env.packageName }}
           releaseFiles: ${{ env.releaseAssetPath }}
