@@ -2,7 +2,9 @@
 
 import java.io.File
 import java.io.FileWriter
-import java.util.Base64
+import java.security.KeyStore
+import java.security.PrivateKey
+import java.security.cert.X509Certificate
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -21,21 +23,31 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
+val minAndroidToolsVersion = 28.0
+
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
 @Suppress("MaxLineLength")
-if ( isHelpCall ) {
-    printRed("""
+if (isHelpCall) {
+    printGreen(
+        """
         This script signs the app based on the apk or aab with a given path. This is mainly used by our CI. 
         
-        Usage: ./sign_app.main.kts [assetPath] [keystorePath] [keyStorePassword] [keystoreAlias] [signingKey] [outputName] [envFile]
+        If you are running this locally you will need to get the key store info from our google drive
+        https://drive.google.com/drive/folders/1EtwJrbEPPOlhpdFh7yNHwOv20HMrF8KJ 
+        
+        and make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false
+        
+        Usage: ./sign_app.main.kts [assetPath] [keyStoreFile] [storePassword] [keyAlias] [keyPassword] [outputFileName] [outputKey*] [envFile*]
         [assetPath] - path to apk or aab to sign
-        [signingKeyBase64] - the keystore in base 64 format
-        [keyStorePassword] - password for keystore
-        [keystoreAlias] - alias for keystore
-        [signingKey] - signing key
-        [outputName] - the key in the key value pairing for output to the ENV file
-        [envFile] - the env file to output the final path to the signed apk. 
-    """.trimIndent())
+        [keyStoreFile] - the path to the key store file
+        [storePassword] - password for keystore
+        [keyAlias] - alias for keystore
+        [keyPassword] - the signing key
+        [outputFileName] - the name of the resulting signed asset
+        [outputKey*] - OPTIONAL, if using env output the key in the key value pairing for output to the ENV file
+        [envFile*] - OPTIONAL. the env file to output the final path to the signed apk. 
+    """.trimIndent()
+    )
 
     @Suppress("TooGenericExceptionThrown")
     throw Exception("See Message Above")
@@ -44,44 +56,169 @@ if ( isHelpCall ) {
 @Suppress("ThrowsCount", "MagicNumber")
 fun main() {
     val assetPath = args[0]
-    val signingKeyBase64 = args[1]
-    val keystorePassword = args[3]
-    val keystoreAlias = args[2]
-    val signingKey = args[4]
-    val outputName = args[5]
-    val envFile = File(args[6])
-    val assetFile = File(assetPath).also { if (!it.isFile) throw  FileDoesNoteExistError(it.absolutePath) }
+    val keyStoreFile = File(args[1])
+    val storePassword = args[2]
+    val keyAlias = args[3]
+    val keyPassword = args[4]
+    val outputFileName = args[5]
+    val outputKeyName = args.getOrNull(6)
+    val envFile = args.getOrNull(7)?.let { File(it) }
 
-    val decodedSigningKey = Base64.getDecoder().decode(signingKeyBase64).toString()
-    val keystore = File("signingKey.jks")
-    keystore.createNewFile()
-    keystore.writer().let {
-        it.write(decodedSigningKey)
-        it.close()
+    check(!assetPath.contains("debugsigned")) {
+        """
+            This asset is already signed by a debug signing config. 
+            
+            Please make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false BEFORE
+            assembling the release. 
+            
+            Otherwise all release builds will automatically be signed with the debug signing config
+        """.trimIndent()
     }
 
-    @Suppress("MaxLineLength")
-    val signingCommand = when (assetFile.extension) {
-        "apk" -> {
-            "jarsigner -keystore $keystore $assetFile $keystoreAlias -storepass $keystorePassword -keypass $signingKey"
-        }
-        "aab" -> {
-            "java -jar bundletool.jar build-apks --bundle $assetFile --output signed.apks --ks $keystore --ks-key-alias $keystoreAlias --ks-pass pass:$keystorePassword --key-pass pass:$signingKey"
-        }
+    val assetFile = File(assetPath).also { if (!it.isFile) throw  FileDoesNotExistError(it.absolutePath) }
+
+    val signedFilePath = when (assetFile.extension) {
+        "apk" -> signApk(keyStoreFile, storePassword, keyAlias, keyPassword, assetFile, outputFileName)
+        "aab" -> signAab(keyStoreFile, storePassword, keyAlias, keyPassword, assetFile, outputFileName)
         else -> throw FileExtensionError(assetFile.extension)
     }
 
-    runCommandLine(signingCommand)
-    renameAndWriteToOutput(assetPath, outputName, envFile)
+    if( outputKeyName != null && envFile != null) {
+        writePathToEnv(signedFilePath, outputKeyName, envFile)
+    }
 }
 
-class FileDoesNoteExistError(path: String) : Exception("The file $path does not exist.")
+@Suppress("LongParameterList")
+fun signApk(
+    keystoreFile: File,
+    keystorePassword: String,
+    keyAlias: String,
+    keyPassword: String,
+    inputFile: File,
+    outputFileName: String
+) : String {
 
-class FileExtensionError(ext: String): Exception("File ext $ext does not match aab or apk. ")
+    val outputFile = File(inputFile.parent, outputFileName)
+
+    val alignedApkFile = File(inputFile.parent, inputFile.name.replace(".apk", "-aligned.apk"))
+
+    val buildToolsPath = getBuildToolsPath()
+
+    // zip apk first, makes resulting app more efficient
+    // https://developer.android.com/topic/performance/reduce-apk-size
+    runCommandLine("$buildToolsPath/zipalign", "-f", "-v", "4", inputFile.path, alignedApkFile.path)
+
+    printGreen("Signing APK")
+
+    val command = listOf(
+        "$buildToolsPath/apkSigner",
+        "sign",
+        "--ks", keystoreFile.path,
+        "--ks-key-alias", keyAlias,
+        "--ks-pass", "pass:$keystorePassword",
+        "--key-pass", "pass:$keyPassword",
+        "--out", outputFile.path,
+        alignedApkFile.path
+    )
+
+    val output = runCommandLine(command)
+
+    if (output.contains("Error") || output.contains("Exception")) {
+        printRed("""
+            README: The signing of the APK did not succeed. 
+            Please make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false BEFORE
+            assembling the release. 
+            Otherwise all release builds will automatically be signed with the debug signing config
+        """.trimIndent())
+    } else {
+        printGreen("APK Signed. You will find it under ${inputFile.parent}")
+    }
+
+    return outputFile.path
+}
+
+@Suppress("LongParameterList")
+fun signAab(
+    keystoreFile: File,
+    keystorePassword: String,
+    keyAlias: String,
+    keyPassword: String,
+    inputFile: File,
+    outputFileName: String
+) : String {
+
+    printGreen("Signing AAB")
+
+    val command = listOf(
+        "jarsigner",
+        "-keystore", keystoreFile.path,
+        "-storepass", keystorePassword,
+        "-keypass", keyPassword,
+        inputFile.absolutePath,
+        keyAlias
+    )
+
+    val output = runCommandLine(command)
+
+    if (output.contains("Error") || output.contains("Exception")) {
+        printRed("""
+            README: The signing of the AAB did not succeed. 
+            Please make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false BEFORE
+            building the release. 
+            Otherwise all release builds will automatically be signed with the debug signing config
+        """.trimIndent())
+    } else {
+        printGreen("AAB Signed. You will find it under ${inputFile.parent}")
+    }
+
+    val renamedFile = File(inputFile.parent, outputFileName)
+    inputFile.renameTo(renamedFile)
+    return renamedFile.path
+}
+
+fun getBuildToolsPath() : String {
+    if (System.getenv("ANDROID_HOME").isEmpty()) {
+        installAndroidTools()
+    }
+
+    val androidHome = System.getenv("ANDROID_HOME")
+
+    val buildToolVersion = File("$androidHome/build-tools")
+        .listFiles { child -> child.isDirectory }
+        ?.map { it.name }
+        ?.maxByOrNull { it }
+
+    printGreen("Found build tools version of $buildToolVersion")
+
+    check(buildToolVersion != null) { "No build tools version could be found" }
+
+    return "$androidHome/build-tools/$buildToolVersion"
+}
+
+
+fun installAndroidTools() = when {
+    runCatching { runCommandLine("apt-get") }.isSuccess -> "apt-get -y install android-sdk-build-tools"
+    runCatching { runCommandLine("yum") }.isSuccess -> "yum install android-tools"
+    runCatching { runCommandLine("brew") }.isSuccess -> "brew install androidtool"
+    else -> throw IllegalStateException(
+        """
+        No package manager could be found on this system to install android tools
+    """.trimIndent()
+    )
+}.let { command -> runCommandLine(command) }
+
+class FileDoesNotExistError(path: String) : Exception("The file $path does not exist.")
+
+class FileExtensionError(ext: String) : Exception("File ext $ext does not match aab or apk. ")
+
+fun runCommandLine(vararg commands: String) = runCommandLine(commands.toList())
 
 @Suppress("SpreadOperator")
-fun runCommandLine(command: String): String {
-    val process = ProcessBuilder(*command.split("\\s".toRegex()).toTypedArray())
+fun runCommandLine(command: String) = runCommandLine(command.split("\\s".toRegex()).toTypedArray().toList())
+
+@Suppress("SpreadOperator")
+fun runCommandLine(command: List<String>): String {
+    val process = ProcessBuilder(command)
         .redirectOutput(ProcessBuilder.Redirect.PIPE)
         .redirectError(ProcessBuilder.Redirect.PIPE)
         .start()
@@ -90,7 +227,7 @@ fun runCommandLine(command: String): String {
     val error = process.errorStream.bufferedReader().readText()
 
     if (error.isNotEmpty()) {
-        printYellow("\n\n$error\n\n")
+        printRed ("\n\n$error\n\n")
         if (error.contains("Error:") || error.contains("error:")) {
             throw IllegalStateException(error)
         }
@@ -105,18 +242,12 @@ fun runCommandLine(command: String): String {
 
     process.waitFor()
 
-    return output
+    return output + error
 }
 
-fun renameAndWriteToOutput(defaultPath: String, outputName: String, envFile: File ) {
-    val apkFile = File(defaultPath)
-    val newName = apkFile.name.removePrefix("devSigned-").replace("unsigned", "signed")
-    val newFile = File(apkFile.parent, newName)
-    val didRename = apkFile.renameTo(newFile)
-    val finalPath = if(didRename) newFile.absolutePath else apkFile.absolutePath
-
+fun writePathToEnv(path: String, outPutName: String, envFile: File) {
     val writer = FileWriter(envFile, true)
-    writer.write("$outputName=$finalPath")
+    writer.write("$outPutName=$path")
     writer.write("\n")
     writer.close()
 }

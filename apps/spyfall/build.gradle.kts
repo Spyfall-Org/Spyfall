@@ -1,4 +1,5 @@
 import com.spyfall.convention.shared.getModule
+import com.spyfall.convention.shared.printRed
 
 plugins {
     id("spyfall.android.application")
