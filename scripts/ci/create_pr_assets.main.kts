@@ -60,8 +60,13 @@ fun main() {
     val signingKey = args[6]
 
     val decodedSigningKey = Base64.getDecoder().decode(signingKeyBase64).toString()
-    val keystore = File("signingKey.jks")
+    val keystore = File("keystore.jks")
     keystore.createNewFile()
+    printGreen("is signingkeybase64 empty? ${signingKeyBase64.isEmpty()}")
+    printGreen("value is ${signingKeyBase64.toString()}")
+
+    printGreen("is decoded empty? ${decodedSigningKey.isEmpty()}")
+
     keystore.writer().let {
         it.write(decodedSigningKey)
         it.close()
@@ -271,7 +276,7 @@ fun signAsset(
     @Suppress("MaxLineLength")
     val signingCommand = when (assetFile.extension) {
         "apk" -> {
-            "jarsigner -keystore $keystore $assetFile $keystoreAlias -storepass $keystorePassword -keypass $signingKey"
+            "jarsigner -keystore ${keystore.path} $assetFile $keystoreAlias -storepass $keystorePassword -keypass $signingKey"
         }
         "aab" -> {
             "java -jar bundletool.jar build-apks --bundle $assetFile --output signed.apks --ks $keystore --ks-key-alias $keystoreAlias --ks-pass pass:$keystorePassword --key-pass pass:$signingKey"
