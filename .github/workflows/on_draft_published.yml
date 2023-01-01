@@ -48,6 +48,6 @@ jobs:
         with:
           status: completed
           track: beta
-          serviceAccountJson: "google-play-service_key.json"
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
           packageName: ${{ env.packageName }}
           releaseFiles: ${{ env.releaseAssetPath }}
