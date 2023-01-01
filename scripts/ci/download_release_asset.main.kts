@@ -21,11 +21,19 @@ fun main() {
     val repo = getRepository(githubRepoInfo, githubToken)
     val release = repo.getReleaseByTagName(tagName)
 
-    val releaseAsset = release.listAssets().firstOrNull {
-        it.contentType == aabContentType && it.name.contains("release")
+    val aabReleaseAsset = release.listAssets().firstOrNull {
+        it.contentType == aabContentType && it.name.contains("release") && it.name.contains("aab")
     }
 
-    check(releaseAsset != null) { "No aab asset could found in release with tag name $tagName" }
+    val apkReleaseAsset = release.listAssets().firstOrNull {
+        it.contentType == aabContentType && it.name.contains("release") && it.name.contains("apk")
+    }
+
+    val releaseAsset = aabReleaseAsset ?: apkReleaseAsset
+
+    check(releaseAsset != null) {
+        "No release asset could found in release with tag name $tagName"
+    }
 
     val url = URL(releaseAsset.browserDownloadUrl)
     val inputStream = url.openStream()

@@ -279,8 +279,36 @@ fun signAsset(
         else -> throw FileExtensionError(assetFile.extension)
     }
 
-    val signingProcess = Runtime.getRuntime().exec(signingCommand)
-    signingProcess.waitFor()
+    runCommandLine(signingCommand)
+}
+
+@Suppress("SpreadOperator")
+fun runCommandLine(command: String): String {
+    val process = ProcessBuilder(*command.split("\\s".toRegex()).toTypedArray())
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+
+    val output = process.inputStream.bufferedReader().readText()
+    val error = process.errorStream.bufferedReader().readText()
+
+    if (error.isNotEmpty()) {
+        printRed("\n\n$error\n\n")
+        if (error.contains("Error:") || error.contains("error:")) {
+            throw IllegalStateException(error)
+        }
+    }
+
+    if (output.isNotEmpty()) {
+        println("\n\n$output\n\n")
+        if (output.contains("Error:") || output.contains("error:")) {
+            throw IllegalStateException(error)
+        }
+    }
+
+    process.waitFor()
+
+    return output
 }
 
 class FileDoesNoteExistError(path: String) : Exception("The file $path does not exist.")

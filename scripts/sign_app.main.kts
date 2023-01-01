@@ -7,6 +7,11 @@ import java.util.Base64
 val red = "\u001b[31m"
 val green = "\u001b[32m"
 val reset = "\u001b[0m"
+val yellow = "\u001b[33m"
+
+fun printYellow(text: String) {
+    println(yellow + text + reset)
+}
 
 fun printRed(text: String) {
     println(red + text + reset)
@@ -66,14 +71,42 @@ fun main() {
         else -> throw FileExtensionError(assetFile.extension)
     }
 
-    val signingProcess = Runtime.getRuntime().exec(signingCommand)
-    signingProcess.waitFor()
+    runCommandLine(signingCommand)
     renameAndWriteToOutput(assetPath, outputName, envFile)
 }
 
 class FileDoesNoteExistError(path: String) : Exception("The file $path does not exist.")
 
 class FileExtensionError(ext: String): Exception("File ext $ext does not match aab or apk. ")
+
+@Suppress("SpreadOperator")
+fun runCommandLine(command: String): String {
+    val process = ProcessBuilder(*command.split("\\s".toRegex()).toTypedArray())
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+
+    val output = process.inputStream.bufferedReader().readText()
+    val error = process.errorStream.bufferedReader().readText()
+
+    if (error.isNotEmpty()) {
+        printYellow("\n\n$error\n\n")
+        if (error.contains("Error:") || error.contains("error:")) {
+            throw IllegalStateException(error)
+        }
+    }
+
+    if (output.isNotEmpty()) {
+        printYellow("\n\n$output\n\n")
+        if (output.contains("Error:") || output.contains("error:")) {
+            throw IllegalStateException(error)
+        }
+    }
+
+    process.waitFor()
+
+    return output
+}
 
 fun renameAndWriteToOutput(defaultPath: String, outputName: String, envFile: File ) {
     val apkFile = File(defaultPath)
