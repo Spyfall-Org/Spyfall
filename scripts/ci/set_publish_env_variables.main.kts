@@ -9,9 +9,9 @@ import java.util.Properties
 @Suppress("MagicNumber")
 fun main() {
     val envFile = File(args[0])
-    val releaseName = args[1]
+    val tagName = args[1]
 
-    val packageName = getPackageName(getAppName(releaseName))
+    val packageName = getPackageName(getAppName(tagName))
 
     FileWriter(envFile, true).apply {
         write("packageName=$packageName")
@@ -21,10 +21,12 @@ fun main() {
 }
 
 @Suppress("UseCheckOrError")
-fun getAppName(releaseName: String) = when {
-    releaseName.contains("spyfall") -> "spyfall"
-    releaseName.contains("werewolf") -> "werewolf"
-    else -> throw IllegalStateException("Could not extract app name from release $releaseName")
+fun getAppName(tagName: String) = when {
+    tagName.contains("spyfall") -> "spyfall"
+    tagName.contains("werewolf") -> "werewolf"
+    else -> throw IllegalStateException(
+        "Could not extract app name from tag $tagName. Please make sure tag name are formatted correctly."
+    )
 }
 
 fun getPackageName(appName: String): String {
