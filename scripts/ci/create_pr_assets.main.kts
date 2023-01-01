@@ -68,7 +68,7 @@ fun main() {
     printGreen("is decoded empty? ${decodedSigningKey.isEmpty()}")
 
     keystore.writer().let {
-        it.write(decodedSigningKey)
+        it.write(signingKeyBase64)
         it.close()
     }
 
