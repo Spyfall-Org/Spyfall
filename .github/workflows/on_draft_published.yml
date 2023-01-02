@@ -46,7 +46,7 @@ jobs:
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
-          status: inProgress
+          status: draft
           track: production
           serviceAccountJson: "google-play-service-key.json"
           packageName: ${{ env.packageName }}
