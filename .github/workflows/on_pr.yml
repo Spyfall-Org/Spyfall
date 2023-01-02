@@ -77,7 +77,7 @@ jobs:
 
       - name: Create Assets
         id: createassets
-        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }}  spyfall.keystore ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
+        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }} spyfall.keystore ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload Spyfall Release Signed Apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
