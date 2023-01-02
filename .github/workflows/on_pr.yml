@@ -16,6 +16,7 @@ jobs:
     env:
       isWerewolfReleasePR: ""
       isSpyfallReleasePR: ""
+      isRelease: ""
       releaseVersion: ""
       releaseTagName: ""
       spyfallAppId: ""
@@ -68,9 +69,15 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
 
+      - name: Create Keystore
+        if: ${{ env.isRelease == 'true' }}
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > release.keystore.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > spyfall.keystore
+
       - name: Create Assets
         id: createassets
-        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }}  ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
+        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }}  spyfall.keystore ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload Spyfall Release Signed Apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
