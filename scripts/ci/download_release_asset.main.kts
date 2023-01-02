@@ -9,6 +9,18 @@ import java.io.FileOutputStream
 import java.io.FileWriter
 import java.net.URL
 
+val red = "\u001b[31m"
+val green = "\u001b[32m"
+val reset = "\u001b[0m"
+
+fun printRed(text: String) {
+    println(red + text + reset)
+}
+
+fun printGreen(text: String) {
+    println(green + text + reset)
+}
+
 @Suppress("MagicNumber")
 fun main() {
     val githubRepoInfo = args[0] // in the format: "REPO_OWNER/REPO_NAME"
@@ -35,12 +47,15 @@ fun main() {
         "No release asset could found in release with tag name $tagName"
     }
 
+
     val url = URL(releaseAsset.browserDownloadUrl)
     val inputStream = url.openStream()
     val file = File(releaseAsset.name)
     val outputStream = FileOutputStream(file)
     inputStream.use { it.copyTo(outputStream) }
     outputStream.close()
+
+    printGreen("release asset downloaded: ${file.name}")
 
     FileWriter(outPutEnvFile, true).let {
         it.write("$outKey=${file.path}")
