@@ -55,7 +55,7 @@ if (isHelpCall) {
 @Suppress("ThrowsCount", "MagicNumber")
 fun main() {
     val assetPath = args[0]
-    val keyStoreContent = args[1]
+    val keyStorePath = args[1]
     val storePassword = args[2]
     val keyAlias = args[3]
     val keyPassword = args[4]
@@ -63,13 +63,7 @@ fun main() {
     val outputKeyName = args.getOrNull(6)
     val envFile = args.getOrNull(7)?.let { File(it) }
 
-    val decodedSigningKey = Base64.getDecoder().decode(keyStoreContent).toString()
-    val keystoreFile = File("signingKey.jks")
-    keystoreFile.createNewFile()
-    keystoreFile.writer().let {
-        it.write(decodedSigningKey)
-        it.close()
-    }
+    val keystoreFile = File(keyStorePath)
 
     check(!assetPath.contains("debugsigned")) {
         """

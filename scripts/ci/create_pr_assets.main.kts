@@ -54,21 +54,17 @@ fun main() {
     val isSpyfallRelease = args[0].toBoolean()
     val isWerewolfRelease = args[1].toBoolean()
     val outputEnvFile = File(args[2])
-    val signingKeyBase64 = args[3]
+    val keystoreBase64 = args[3]
     val keystorePassword = args[4]
     val keystoreAlias = args[5]
-    val signingKey = args[6]
+    val keyPassword = args[6]
 
-    val decodedSigningKey = Base64.getDecoder().decode(signingKeyBase64).toString()
+    val decodedKeystore = Base64.getDecoder().decode(keystoreBase64).toString()
     val keystore = File("keystore.jks")
     keystore.createNewFile()
-    printGreen("is signingkeybase64 empty? ${signingKeyBase64.isEmpty()}")
-    printGreen("value is ${signingKeyBase64.toString()}")
-
-    printGreen("is decoded empty? ${decodedSigningKey.isEmpty()}")
 
     keystore.writer().let {
-        it.write(signingKeyBase64)
+        it.write(decodedKeystore)
         it.close()
     }
 
@@ -97,7 +93,7 @@ fun main() {
             keystore,
             keystoreAlias,
             keystorePassword,
-            signingKey
+            keyPassword
         )
     }
 
@@ -113,7 +109,7 @@ fun main() {
             keystore,
             keystoreAlias,
             keystorePassword,
-            signingKey
+            keyPassword
         )
     }
 }
