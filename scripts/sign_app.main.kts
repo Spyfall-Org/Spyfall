@@ -109,7 +109,7 @@ fun signApk(
     printGreen("Signing APK")
 
     val command = listOf(
-        "$buildToolsPath/apkSigner",
+        "$buildToolsPath/apksigner",
         "sign",
         "--ks", keystoreFile.path,
         "--ks-key-alias", keyAlias,
