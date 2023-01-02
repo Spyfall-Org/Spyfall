@@ -65,6 +65,17 @@ fun main() {
 
     val keystoreFile = File(keyStorePath)
 
+    printRed("KEYSTORE PATH GIVEN: $keyStorePath")
+    printRed("Is keystore file at that path file? : ${keystoreFile.isFile}")
+    printRed("Amount of lines in the keystore file? ? : ${keystoreFile.readLines().size}")
+
+    printRed("storePassword: $storePassword")
+
+    printRed("keyAlias: $keyAlias")
+
+    printRed("keyPassword: $keyPassword")
+
+
     check(!assetPath.contains("debugsigned")) {
         """
             This asset is already signed by a debug signing config. 
