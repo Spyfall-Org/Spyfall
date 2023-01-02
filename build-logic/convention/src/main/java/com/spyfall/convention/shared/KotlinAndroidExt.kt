@@ -67,3 +67,25 @@ internal fun Project.configureKotlinAndroid(
 fun CommonExtension<*, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }
+
+fun Project.printDebugSigningWarningIfNeeded() {
+    val isCi = BuildEnvironment.isCIBuild
+    val isLocalReleaseDebugSigningEnabled =
+        loadGradleProperty("com.spyfall.releaseDebugSigningEnabled").toBoolean()
+
+    if (!isCi && isLocalReleaseDebugSigningEnabled) {
+        printRed("""
+            This release was signed with a debug signing config.
+             
+            If you need a genuine signed build then you will need to make sure that the
+            gradle.property com.spyfall.releaseDebugSigningEnabled is set to false and then use 
+            ./script/sign_app.main.kts to sign the app
+
+            Otherwise all local release builds will default to a debug signing
+            
+            To locate our keystore info please visit: 
+            https://drive.google.com/drive/folders/1EtwJrbEPPOlhpdFh7yNHwOv20HMrF8KJ
+            
+        """.trimIndent())
+    }
+}

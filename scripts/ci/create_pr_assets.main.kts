@@ -54,18 +54,12 @@ fun main() {
     val isSpyfallRelease = args[0].toBoolean()
     val isWerewolfRelease = args[1].toBoolean()
     val outputEnvFile = File(args[2])
-    val signingKeyBase64 = args[3]
+    val keystorePath = args[3]
     val keystorePassword = args[4]
     val keystoreAlias = args[5]
-    val signingKey = args[6]
+    val keyPassword = args[6]
 
-    val decodedSigningKey = Base64.getDecoder().decode(signingKeyBase64).toString()
-    val keystore = File("signingKey.jks")
-    keystore.createNewFile()
-    keystore.writer().let {
-        it.write(decodedSigningKey)
-        it.close()
-    }
+    val keystore = File(keystorePath)
 
     val isCIBuild = System.getenv("CI") == "true"
 
@@ -92,7 +86,7 @@ fun main() {
             keystore,
             keystoreAlias,
             keystorePassword,
-            signingKey
+            keyPassword
         )
     }
 
@@ -108,7 +102,7 @@ fun main() {
             keystore,
             keystoreAlias,
             keystorePassword,
-            signingKey
+            keyPassword
         )
     }
 }
@@ -119,31 +113,38 @@ fun signAndRenameSpyfallReleaseAssets(
     envFile: File,
     isCIBuild: Boolean,
     buildNumber: String,
-    keystore: File,
-    keystoreAlias: String,
+    keystoreFile: File,
+    storeAlias: String,
     keystorePassword: String,
-    signingKey: String
+    keyPassword: String
 ) {
     val signingSuffix = if (isCIBuild) "signed" else "debugSigned"
 
     val apkAsset = File(findApkFile("apps/spyfall/build/outputs/apk/release"))
     val aabAsset = File(findAabFile("apps/spyfall/build/outputs/bundle/release"))
 
-    signAsset(apkAsset, keystore, keystoreAlias, keystorePassword, signingKey)
-    signAsset(aabAsset, keystore, keystoreAlias, keystorePassword, signingKey)
-
-    setOutputAssetName(
-        defaultPath = apkAsset.path,
-        name = "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.apk",
-        outputName = "spyfallReleaseApkPath",
-        envFile = envFile
+    runCommandLine(
+        "./scripts/sign_app.main.kts",
+        apkAsset.path,
+        keystoreFile.path,
+        keystorePassword,
+        storeAlias,
+        keyPassword,
+        "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.apk",
+        "spyfallReleaseApkPath",
+        envFile.path
     )
 
-    setOutputAssetName(
-        defaultPath = aabAsset.path,
-        name = "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.aab",
-        outputName = "spyfallReleaseAabPath",
-        envFile = envFile
+    runCommandLine(
+        "./scripts/sign_app.main.kts",
+        aabAsset.path,
+        keystoreFile.path,
+        keystorePassword,
+        storeAlias,
+        keyPassword,
+        "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.aab",
+        "spyfallReleaseAabPath",
+        envFile.path
     )
 }
 
@@ -153,31 +154,38 @@ fun signAndRenameWerewolfReleaseAssets(
     envFile: File,
     isCIBuild: Boolean,
     buildNumber: String,
-    keystore: File,
-    keystoreAlias: String,
+    keystoreFile: File,
+    storeAlias: String,
     keystorePassword: String,
-    signingKey: String
+    keyPassword: String
 ) {
     val apkAsset = File(findApkFile("apps/werewolf/build/outputs/apk/release"))
     val aabAsset = File(findAabFile("apps/werewolf/build/outputs/bundle/release"))
 
-    signAsset(apkAsset, keystore, keystoreAlias, keystorePassword, signingKey)
-    signAsset(aabAsset, keystore, keystoreAlias, keystorePassword, signingKey)
-
     val signingSuffix = if (isCIBuild) "signed" else "debugSigned"
 
-    setOutputAssetName(
-        defaultPath = apkAsset.path,
-        name = "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.apk",
-        outputName = "werewolfReleaseApkPath",
-        envFile = envFile
+    runCommandLine(
+        "./scripts/sign_app.main.kts",
+        apkAsset.path,
+        keystoreFile.path,
+        keystorePassword,
+        storeAlias,
+        keyPassword,
+        "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.apk",
+        "werewolfReleaseApkPath",
+        envFile.path
     )
 
-    setOutputAssetName(
-        defaultPath = aabAsset.path,
-        name = "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.aab",
-        outputName = "werewolfReleaseAabPath",
-        envFile = envFile
+    runCommandLine(
+        "./scripts/sign_app.main.kts",
+        aabAsset.path,
+        keystoreFile.path,
+        keystorePassword,
+        storeAlias,
+        keyPassword,
+        "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.aab",
+        "werewolfReleaseAabPath",
+        envFile.path
     )
 }
 
@@ -246,41 +254,39 @@ fun findAabFile(parentDirectoryPath: String): String {
         ?.absolutePath ?: throw Exception("No aab file found in directory $parentDirectoryPath")
 }
 
-fun runGradleCommand(command: String) {
-    val result = ProcessBuilder("./gradlew", "$command")
-        .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-        .redirectError(ProcessBuilder.Redirect.INHERIT)
+fun runGradleCommand(command: String) = runCommandLine("./gradlew",command)
+
+@Suppress("SpreadOperator")
+fun runCommandLine(command: String) = runCommandLine(command.split("\\s".toRegex()).toTypedArray().toList())
+
+fun runCommandLine(vararg commands: String) = runCommandLine(commands.toList())
+
+fun runCommandLine(command: List<String>): String {
+    val process = ProcessBuilder(command)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
         .start()
-        .waitFor()
 
-    @Suppress("TooGenericExceptionThrown")
-    if (result != 0) {
-        printRed("Failed to run $command")
-        @Suppress("TooGenericExceptionThrown")
-        throw Exception("See Message Above")
-    }
-}
+    val output = process.inputStream.bufferedReader().readText()
+    val error = process.errorStream.bufferedReader().readText()
 
-fun signAsset(
-    assetFile: File,
-    keystore: File,
-    keystoreAlias: String,
-    keystorePassword: String,
-    signingKey: String
-) {
-    @Suppress("MaxLineLength")
-    val signingCommand = when (assetFile.extension) {
-        "apk" -> {
-            "jarsigner -keystore $keystore $assetFile $keystoreAlias -storepass $keystorePassword -keypass $signingKey"
+    if (error.isNotEmpty()) {
+        printRed("\n\n$error\n\n")
+        if (error.contains("Error:") || error.contains("error:")) {
+            throw IllegalStateException(error)
         }
-        "aab" -> {
-            "java -jar bundletool.jar build-apks --bundle $assetFile --output signed.apks --ks $keystore --ks-key-alias $keystoreAlias --ks-pass pass:$keystorePassword --key-pass pass:$signingKey"
-        }
-        else -> throw FileExtensionError(assetFile.extension)
     }
 
-    val signingProcess = Runtime.getRuntime().exec(signingCommand)
-    signingProcess.waitFor()
+    if (output.isNotEmpty()) {
+        println("\n\n$output\n\n")
+        if (output.contains("Error:") || output.contains("error:")) {
+            throw IllegalStateException(error)
+        }
+    }
+
+    process.waitFor()
+
+    return output
 }
 
 class FileDoesNoteExistError(path: String) : Exception("The file $path does not exist.")

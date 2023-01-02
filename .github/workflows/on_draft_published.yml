@@ -25,19 +25,19 @@ jobs:
       - name: Set Tag Name
         run: |
           if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
-            echo "releaseTagName=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-          else
             echo "releaseTagName=${{ github.event.inputs.tagName }}" >> $GITHUB_ENV
+          else
+            echo "releaseTagName=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           fi
 
       - name: Set Env Variables
-        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }} ${{ github.event.release.name }}
+        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }} ${{ env.releaseTagName }}
 
       - name: Create Service Key Json
         id: create-json
         uses: jsdaniell/create-json@v1.2.2
         with:
-          name: "google-play-service_key.json"
+          name: "google-play-service-key.json"
           json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
 
       - name: Download Release Asset
@@ -46,8 +46,8 @@ jobs:
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
-          status: completed
-          track: beta
-          serviceAccountJson: "google-play-service_key.json"
+          status: inProgress
+          track: production
+          serviceAccountJson: "google-play-service-key.json"
           packageName: ${{ env.packageName }}
-          release_files: ${{ env.releaseAssetPath }}
+          releaseFiles: ${{ env.releaseAssetPath }}

@@ -53,7 +53,7 @@ fun Project.getPackageName(): String? =
 
 @Suppress("TooGenericExceptionCaught")
 fun Project.loadAppProperty(property: String): String = Properties().let {
-    val file = File(appVersionsPath)
+    val file = File(appPropertiesPath)
     it.load(file.inputStream())
     @Suppress("SwallowedException")
     try {
@@ -63,29 +63,19 @@ fun Project.loadAppProperty(property: String): String = Properties().let {
         throw Error(
             """No app property found named: $property. 
                 Please make sure this property is listed exactly as \"$property\" 
-                in $appVersionsPath""".trimMargin()
+                in $appPropertiesPath""".trimMargin()
         )
     }
 }
 
 @Suppress("TooGenericExceptionCaught")
-fun Project.loadGradleProperty(property: String): Any = Properties().let {
+fun Project.loadGradleProperty(property: String): String? = Properties().let {
     val file = File(gradlePropertyPath)
     it.load(file.inputStream())
-    @Suppress("SwallowedException")
-    try {
-        it.getProperty(property)
-    } catch (e: NullPointerException) {
-        @Suppress("TooGenericExceptionThrown")
-        throw Error(
-            """No property found named: $property. 
-                Please make sure this property is listed exactly as \"$property\" 
-                in $gradlePropertyPath""".trimMargin()
-        )
-    }
+    runCatching { it.getProperty(property) }.getOrNull()
 }
 
-val Project.appVersionsPath: String
+val Project.appPropertiesPath: String
     get() = "$rootDir/app.properties"
 
 val Project.gradlePropertyPath: String

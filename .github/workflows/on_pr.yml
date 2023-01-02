@@ -16,6 +16,7 @@ jobs:
     env:
       isWerewolfReleasePR: ""
       isSpyfallReleasePR: ""
+      isRelease: ""
       releaseVersion: ""
       releaseTagName: ""
       spyfallAppId: ""
@@ -54,15 +55,10 @@ jobs:
       - name: Set Env Variables
         run: ./scripts/ci/set_pr_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
 
-      - name: Set Up Cache
-        uses: actions/cache@v3
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          gradle-home-cache-cleanup: true
 
       - name: Copy Gradle Properties File
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
@@ -73,9 +69,15 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
 
+      - name: Create Keystore
+        if: ${{ env.isRelease == 'true' }}
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > release.keystore.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > spyfall.keystore
+
       - name: Create Assets
         id: createassets
-        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }}  ${{ secrets.KEYSTORE }} ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
+        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isSpyfallReleasePR }} ${{ env.isWerewolfReleasePR }} ${{ github.env }} spyfall.keystore ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload Spyfall Release Signed Apk
         if: ${{ env.isSpyfallReleasePR == 'true' }}
@@ -146,12 +148,19 @@ jobs:
   style:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
       - name: set up JDK 11
         uses: actions/setup-java@v1
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '11'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
 
       - name: Create service key json
         id: create-json
@@ -189,15 +198,10 @@ jobs:
       - name: Download secret files
         run: ./scripts/get_secret_files.main.kts service_key.json
 
-      - name: Set Up Cache
-        uses: actions/cache@v3
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          gradle-home-cache-cleanup: true
 
       - name: Copy  gradle properties file
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties

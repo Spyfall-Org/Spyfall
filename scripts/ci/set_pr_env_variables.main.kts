@@ -157,6 +157,8 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
 
     val isRelease = releaseBranchPattern.matches(branchName)
 
+    writer.writeEnvValue("isRelease", "$isRelease")
+
     if (!isRelease) {
         writer.writeEnvValue("isWerewolfReleasePR", "false")
         writer.writeEnvValue("isSpyfallReleasePR", "false")
