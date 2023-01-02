@@ -59,8 +59,9 @@ fun main() {
     val keystoreAlias = args[5]
     val keyPassword = args[6]
 
+    printGreen("Decoding keystore content from base 64")
     val decodedKeystore = Base64.getDecoder().decode(keystoreBase64).toString()
-    val keystore = File("keystore.jks")
+    val keystore = File("spyfall_keystore")
     keystore.createNewFile()
 
     keystore.writer().let {
