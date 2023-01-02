@@ -5,6 +5,7 @@ import java.io.FileWriter
 import java.security.KeyStore
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
+import java.util.Base64
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -54,13 +55,21 @@ if (isHelpCall) {
 @Suppress("ThrowsCount", "MagicNumber")
 fun main() {
     val assetPath = args[0]
-    val keyStoreFile = File(args[1])
+    val keyStoreContent = args[1]
     val storePassword = args[2]
     val keyAlias = args[3]
     val keyPassword = args[4]
     val outputFileName = args[5]
     val outputKeyName = args.getOrNull(6)
     val envFile = args.getOrNull(7)?.let { File(it) }
+
+    val decodedSigningKey = Base64.getDecoder().decode(keyStoreContent).toString()
+    val keystoreFile = File("signingKey.jks")
+    keystoreFile.createNewFile()
+    keystoreFile.writer().let {
+        it.write(decodedSigningKey)
+        it.close()
+    }
 
     check(!assetPath.contains("debugsigned")) {
         """
@@ -76,8 +85,8 @@ fun main() {
     val assetFile = File(assetPath).also { if (!it.isFile) throw  FileDoesNotExistError(it.absolutePath) }
 
     val signedFilePath = when (assetFile.extension) {
-        "apk" -> signApk(keyStoreFile, storePassword, keyAlias, keyPassword, assetFile, outputFileName)
-        "aab" -> signAab(keyStoreFile, storePassword, keyAlias, keyPassword, assetFile, outputFileName)
+        "apk" -> signApk(keystoreFile, storePassword, keyAlias, keyPassword, assetFile, outputFileName)
+        "aab" -> signAab(keystoreFile, storePassword, keyAlias, keyPassword, assetFile, outputFileName)
         else -> throw FileExtensionError(assetFile.extension)
     }
 
