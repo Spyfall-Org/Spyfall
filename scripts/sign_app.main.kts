@@ -23,8 +23,6 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
-val minAndroidToolsVersion = 28.0
-
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
 @Suppress("MaxLineLength")
 if (isHelpCall) {
