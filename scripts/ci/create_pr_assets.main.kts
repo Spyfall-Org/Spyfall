@@ -61,11 +61,12 @@ fun main() {
 
     printGreen("Decoding keystore content from base 64")
     val decodedKeystore = Base64.getDecoder().decode(keystoreBase64).toString()
-    val keystore = File("spyfall_keystore")
+    val keystore = File("spyfall.keystore")
     keystore.createNewFile()
 
     keystore.writer().let {
         it.write(decodedKeystore)
+        it.appendLine()
         it.close()
     }
 
