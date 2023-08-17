@@ -20,5 +20,4 @@ data class BuildInfo(
  */
 sealed class TargetApp(val appName: String) {
     class Spyfall(val isLegacyBuild: Boolean) : TargetApp("Spyfall")
-    object Werewolf : TargetApp("Werewolf")
 }

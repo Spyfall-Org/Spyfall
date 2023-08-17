@@ -10,8 +10,7 @@ enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = "Spyfall"
 
-include("apps:spyfall")
-include("apps:werewolf")
+include("app")
 include("libraries:coreUi")
 include("libraries:coreWerewolfGame")
 include("libraries:coreSpyfallGame")

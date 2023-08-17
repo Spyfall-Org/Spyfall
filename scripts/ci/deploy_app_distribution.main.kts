@@ -31,7 +31,6 @@ if (isHelpCall || args.size < 3) {
         This script uploads assets to firebase distribution
         
         usage: ./deploy_app_distribution.main.kts <app_name> <app_id> <assets>
-        app_name: The name of the app we are uploading assets for [spyfall, werewolf...]
         app_id: The firebase app id for the app
         assets: a comma separated list of asset keys used in the env file
     """.trimIndent()
@@ -40,17 +39,16 @@ if (isHelpCall || args.size < 3) {
 
 @Suppress("MagicNumber")
 fun main() {
-    val appName = args[0]
-    val appId = args[1]
-    val firebaseToken = args[2]
-    val envFile = File(args[3])
-    val pullRequestLink = args[4]
-    val isRelease = args[5].toBoolean()
-    val assetPaths = args.slice(6.until(args.size))
-    val versionCode = getAppVersionCode(appName)
-    val versionName = getAppVersionName(appName)
+    val appId = args[0]
+    val firebaseToken = args[1]
+    val envFile = File(args[2])
+    val pullRequestLink = args[3]
+    val isRelease = args[4].toBoolean()
+    val assetPaths = args.slice(5.until(args.size))
+    val versionCode = getAppVersionCode()
+    val versionName = getAppVersionName()
 
-    val serviceAccountPath = "apps/$appName/service-account-key.json"
+    val serviceAccountPath = "app/service-account-key.json"
 
     installNode()
     installFirebase()
@@ -67,7 +65,7 @@ fun main() {
 
     assetPaths.forEach { path ->
         println("Uploading asset ${File(path).name} to firebase distribution")
-        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease, appName, versionName, versionCode)
+        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease, versionName, versionCode)
         println("Finished Uploading asset ${File(path).name} to firebase distribution")
     }
 }
@@ -78,7 +76,6 @@ fun uploadToFirebaseAppDistribution(
     apkPath: String,
     pullRequestLink: String,
     isRelease: Boolean,
-    appName: String,
     versionName: String,
     versionCode: String,
 ) {
@@ -89,7 +86,6 @@ fun uploadToFirebaseAppDistribution(
         This asset was generated based off the following pull request: 
         $pullRequestLink
         
-        App Name: $appName
         App Version: $versionName
         Version Code (Build Number): $versionCode
         Build Type: ${if (isRelease) "RELEASE" else "DEBUG"}
@@ -183,20 +179,20 @@ fun runCommandLine(command: String): String {
     return output
 }
 
-fun getAppVersionName(app: String): String {
+fun getAppVersionName(): String {
     val properties = Properties()
     val reader = BufferedReader(FileReader("app.properties"))
     properties.load(reader)
     reader.close()
-    return properties.getProperty("$app.versionName").toString()
+    return properties.getProperty("versionName").toString()
 }
 
-fun getAppVersionCode(app: String): String {
+fun getAppVersionCode(): String {
     val properties = Properties()
     val reader = BufferedReader(FileReader("app.properties"))
     properties.load(reader)
     reader.close()
-    return properties.getProperty("$app.versionCode").toString()
+    return properties.getProperty("versionCode").toString()
 }
 
 main()

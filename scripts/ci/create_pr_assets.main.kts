@@ -31,10 +31,9 @@ if (isHelpCall || args.size < argCount) {
                in. Release assets are signed unless this is being ran locally. In which case they are signed
                with a debug signing config. 
                
-               Usage: ./create_pr_assets.main.kts <is-spyfall-release> <is-werewolf-release> <env-file-path> <signingKeyBase64> <keystorePassword> <keystoreAlias> <signingKey>
+               Usage: ./create_pr_assets.main.kts <is-release> <env-file-path> <signingKeyBase64> <keystorePassword> <keystoreAlias> <signingKey>
                
-                <is-spyfall-release> - true if this script is being called from a spyfall release pr
-                <is-werewolf-release> - true if this script is being called from a werewolf release pr
+                <is-release> - true if this script is being called from a spyfall release pr
                 <env-file-path> - The env file path output to  
                 <signingKeyBase64> - the keystore in base 64 format
                 <keyStorePassword> - password for keystore
@@ -51,8 +50,7 @@ if (isHelpCall || args.size < argCount) {
 
 @Suppress("UnusedPrivateMember", "MagicNumber")
 fun main() {
-    val isSpyfallRelease = args[0].toBoolean()
-    val isWerewolfRelease = args[1].toBoolean()
+    val isRelease = args[0].toBoolean()
     val outputEnvFile = File(args[2])
     val keystorePath = args[3]
     val keystorePassword = args[4]
@@ -63,42 +61,23 @@ fun main() {
 
     val isCIBuild = System.getenv("CI") == "true"
 
-    val spyfallVersionName = getAppVersionName("spyfall")
-    val werewolfVersionName = getAppVersionName("werewolf")
-    val spyfallVersionCode = getAppVersionCode("spyfall")
-    val werewolfVersionCode = getAppVersionCode("werewolf")
+    val spyfallVersionName = getAppVersionName()
+    val spyfallVersionCode = getAppVersionCode()
 
     printGreen("Assembling all debug assets")
     runGradleCommand("assembleDebug")
 
     renameSpyfallDebugAssets(spyfallVersionName, outputEnvFile, spyfallVersionCode)
-    renameWerewolfDebugAssets(werewolfVersionName, outputEnvFile, werewolfVersionCode)
 
-    if (isSpyfallRelease) {
+    if (isRelease) {
         printGreen("Assembling all spyfall release assets")
-        runGradleCommand(":apps:spyfall:bundleRelease")
-        runGradleCommand(":apps:spyfall:assembleRelease")
+        runGradleCommand(":app:bundleRelease")
+        runGradleCommand(":app:assembleRelease")
         signAndRenameSpyfallReleaseAssets(
             spyfallVersionName,
             outputEnvFile,
             isCIBuild,
             spyfallVersionCode,
-            keystore,
-            keystoreAlias,
-            keystorePassword,
-            keyPassword
-        )
-    }
-
-    if (isWerewolfRelease) {
-        printGreen("Assembling all werewolf release assets")
-        runGradleCommand(":apps:werewolf:bundleRelease")
-        runGradleCommand(":apps:werewolf:assembleRelease")
-        signAndRenameWerewolfReleaseAssets(
-            werewolfVersionName,
-            outputEnvFile,
-            isCIBuild,
-            werewolfVersionCode,
             keystore,
             keystoreAlias,
             keystorePassword,
@@ -120,8 +99,8 @@ fun signAndRenameSpyfallReleaseAssets(
 ) {
     val signingSuffix = if (isCIBuild) "signed" else "debugSigned"
 
-    val apkAsset = File(findApkFile("apps/spyfall/build/outputs/apk/release"))
-    val aabAsset = File(findAabFile("apps/spyfall/build/outputs/bundle/release"))
+    val apkAsset = File(findApkFile("app/build/outputs/apk/release"))
+    val aabAsset = File(findAabFile("app/build/outputs/bundle/release"))
 
     runCommandLine(
         "./scripts/sign_app.main.kts",
@@ -148,79 +127,29 @@ fun signAndRenameSpyfallReleaseAssets(
     )
 }
 
-@Suppress("LongParameterList")
-fun signAndRenameWerewolfReleaseAssets(
-    werewolfVersionName: String,
-    envFile: File,
-    isCIBuild: Boolean,
-    buildNumber: String,
-    keystoreFile: File,
-    storeAlias: String,
-    keystorePassword: String,
-    keyPassword: String
-) {
-    val apkAsset = File(findApkFile("apps/werewolf/build/outputs/apk/release"))
-    val aabAsset = File(findAabFile("apps/werewolf/build/outputs/bundle/release"))
-
-    val signingSuffix = if (isCIBuild) "signed" else "debugSigned"
-
-    runCommandLine(
-        "./scripts/sign_app.main.kts",
-        apkAsset.path,
-        keystoreFile.path,
-        keystorePassword,
-        storeAlias,
-        keyPassword,
-        "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.apk",
-        "werewolfReleaseApkPath",
-        envFile.path
-    )
-
-    runCommandLine(
-        "./scripts/sign_app.main.kts",
-        aabAsset.path,
-        keystoreFile.path,
-        keystorePassword,
-        storeAlias,
-        keyPassword,
-        "werewolf-release-v$werewolfVersionName-$signingSuffix-$buildNumber.aab",
-        "werewolfReleaseAabPath",
-        envFile.path
-    )
-}
-
-fun renameWerewolfDebugAssets(werewolfVersionName: String, envFile: File, buildNumber: String) {
-    setOutputAssetName(
-        defaultPath = findApkFile("apps/werewolf/build/outputs/apk/debug"),
-        name = "werewolf-debug-v$werewolfVersionName-$buildNumber.apk",
-        outputName = "werewolfDebugApkPath",
-        envFile = envFile
-    )
-}
-
 fun renameSpyfallDebugAssets(spyfallVersionName: String, envFile: File, buildNumber: String) {
     setOutputAssetName(
-        defaultPath = findApkFile("apps/spyfall/build/outputs/apk/debug"),
+        defaultPath = findApkFile("app/build/outputs/apk/debug"),
         name = "spyfall-debug-v$spyfallVersionName-$buildNumber.apk",
         outputName = "spyfallDebugApkPath",
         envFile = envFile
     )
 }
 
-fun getAppVersionName(app: String): String {
+fun getAppVersionName(): String {
     val properties = Properties()
     val reader = BufferedReader(FileReader("app.properties"))
     properties.load(reader)
     reader.close()
-    return properties.getProperty("$app.versionName").toString()
+    return properties.getProperty("versionName").toString()
 }
 
-fun getAppVersionCode(app: String): String {
+fun getAppVersionCode(): String {
     val properties = Properties()
     val reader = BufferedReader(FileReader("app.properties"))
     properties.load(reader)
     reader.close()
-    return properties.getProperty("$app.versionCode").toString()
+    return properties.getProperty("versionCode").toString()
 }
 
 

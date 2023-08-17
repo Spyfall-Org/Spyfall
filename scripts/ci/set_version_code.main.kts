@@ -22,11 +22,10 @@ fun printGreen(text: String) {
 @Suppress("ComplexCondition")
 if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
     printRed("""
-        This script sets the version code for all of the apps. 
+        This script sets the version code. 
         Ci uses to distinguish app builds per workflow run
         
         Usage: ./set_version_code.main.kts [versionCode] 
-        appName: "spyfall" ,"werewolf", ...
         versionCode: 500, 543, ...
     """.trimIndent())
 
@@ -42,11 +41,8 @@ val reader = BufferedReader(FileReader("app.properties"))
 properties.load(reader)
 reader.close()
 
-val appDirectories: Array<File> = File("apps").listFiles { child -> child.isDirectory } ?: arrayOf()
+properties.setProperty("versionCode", inputVersionCode)
 
-appDirectories.map { it.name }.forEach { appName ->
-    properties.setProperty("$appName.versionCode", inputVersionCode)
-}
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app.properties"))

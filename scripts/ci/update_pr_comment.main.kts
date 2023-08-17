@@ -30,14 +30,13 @@ if (isHelpCall || args.size < minArgs) {
         """
         This script comments a link to the PR of the artifacts generated for that PR
         
-        Usage: ./update_pr_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID] [SPYFALL_FIREBASE_LINK] [WEREWOLF_FIREBASE_LINK]
+        Usage: ./update_pr_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID] [SPYFALL_FIREBASE_LINK]
         
         [GITHUB_REPO] - REPO_OWNER/REPO_NAME, provided by github actions as env variable
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
         [PULL_NUMBER] - the number of the pull request
         [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url.
         [SPYFALL_FIREBASE_LINK] - Link to the firebase release for this build
-        [WEREWOLF_FIREBASE_LINK] - Link to the firebase release for this build
         [TAG_NAME] - Optional, The name of the tag associated with the draft release created for this PR
         
     """.trimIndent()
@@ -54,9 +53,8 @@ fun doWork() {
     val pullNumber = args[2]
     val runID = args[3]
     val spyfallFirebaseLink = args[4]
-    val werewolfFirebaseLink = args[5]
-    val buildNumber = args[6]
-    val tagName = args.getOrNull(7)
+    val buildNumber = args[5]
+    val tagName = args.getOrNull(6)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
@@ -68,7 +66,6 @@ fun doWork() {
         pullNumber.toInt(),
         releaseDraft,
         spyfallFirebaseLink,
-        werewolfFirebaseLink,
         buildNumber,
         tagName
     )
@@ -81,7 +78,6 @@ fun updatePRArtifactsComment(
     pullNumber: Int,
     releaseDraft: GHRelease?,
     spyfallFirebaseDistributionLink: String,
-    werewolfFirebaseDistributionLink: String,
     buildNumber: String,
     tagName: String?
 ) {
@@ -93,7 +89,6 @@ fun updatePRArtifactsComment(
     val baseMessage = """
 # Automated PR Assets Links
 - ##### [Spyfall Firebase Distribution]($spyfallFirebaseDistributionLink) 
-- ##### [Werewolf Firebase Distribution]($werewolfFirebaseDistributionLink) 
 ${
         (if (releaseDraft != null) """
 - ##### [Release Draft](${releaseDraft.htmlUrl}) 

@@ -1,4 +1,4 @@
-import com.spyfall.convention.shared.getModule
+import com.spyfall.convention.util.getModule
 
 plugins {
     id("spyfall.android.library")
