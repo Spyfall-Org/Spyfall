@@ -1,4 +1,0 @@
-<resources>
-    <string name="app_name">Werewolf</string>
-    <string name="shared_preferences">werewolf_shared_prefs</string>
-</resources>

@@ -36,7 +36,7 @@ if (isHelpCall || args.isEmpty()) {
                This script creates a new app config of the provided version for the provided app. It copies the most 
                recent app config for that app. 
                
-               Usage: ./create_app_config.main.kts [APP_NAME] [CONFIG_VERSION] 
+               Usage: ./create_app_config.main.kts [CONFIG_VERSION] 
     """.trimIndent()
     )
 
@@ -45,12 +45,11 @@ if (isHelpCall || args.isEmpty()) {
 }
 
 fun doWork() {
-    val inputAppName = args[0]
-    val inputAppVersionName = args.getOrNull(1)
-    val serviceAccountJsonFile = getServiceAccountJsonFile(inputAppName)
+    val inputAppVersionName = args.getOrNull(0)
+    val serviceAccountJsonFile = getServiceAccountJsonFile()
     val configCollectionKey = loadConfigKey()
-    val appVersion = inputAppVersionName ?: loadAppProperty("$inputAppName.versionName")
-    printGreen("Creating the app config for $inputAppName. Version: $appVersion")
+    val appVersion = inputAppVersionName ?: loadAppProperty("versionName")
+    printGreen("Creating the app config for $ Version: $appVersion")
 
     if (!serviceAccountJsonFile.isFile) {
         printRed(
@@ -65,7 +64,7 @@ fun doWork() {
         throw Exception("see message above")
     }
 
-    val db = getDb(serviceAccountJsonFile.path, inputAppName)
+    val db = getDb(serviceAccountJsonFile.path)
     val mostRecentAppConfig = db.getMostPreviousAppConfigDocument(appVersion, configCollectionKey)
 
     when (classifyAppConfigValidation(appVersion, db, configCollectionKey)) {
@@ -120,7 +119,7 @@ enum class AppConfigValidation {
     Valid, AlreadyExists, InvalidFormat
 }
 
-fun getServiceAccountJsonFile(inputAppName: String) = File("apps/$inputAppName/service-account-key.json")
+fun getServiceAccountJsonFile() = File("app/service-account-key.json")
 
 @Suppress("TooGenericExceptionCaught")
 fun loadAppProperty(property: String): String = Properties().let {
@@ -155,7 +154,7 @@ fun loadConfigKey(): String = Properties().let {
 }
 
 @Suppress("TooGenericExceptionCaught")
-fun getDb(serviceAccountJsonPath: String, appName: String): Firestore {
+fun getDb(serviceAccountJsonPath: String): Firestore {
     val serviceAccount = FileInputStream(serviceAccountJsonPath)
     val credentials = GoogleCredentials.fromStream(serviceAccount)
 
@@ -163,7 +162,7 @@ fun getDb(serviceAccountJsonPath: String, appName: String): Firestore {
 
     val app = try {
         println("Initializing Firebase app")
-        FirebaseApp.initializeApp(options, appName)
+        FirebaseApp.initializeApp(options, "spyfall")
     } catch (e: IllegalStateException) {
         println("Firebase app already initialized. $e")
         null

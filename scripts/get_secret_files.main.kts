@@ -22,33 +22,21 @@ data class FileInfo(val id: String, val pathToStore: String)
 
 val spyfallGoogleServicesFileInfo =
     FileInfo(
-        id ="1uieO42nwfDV6E1_EIFoBgDMRy0A5cBcy",
+        id ="1UIP-nsDLazFCo-OIU3OzFjiBNTeyAjRc",
         pathToStore = "apps/spyfall/google-services.json"
     )
 
 val spyfallServiceAccountKeyFileInfo =
     FileInfo(
-        id ="1uSnJx6Xr4nx4alpNHsAtv57gvgeb34cZ",
+        id ="13Q-z85mO3-5JVFhXmQ9191-N465-18PH",
         pathToStore = "apps/spyfall/service-account-key.json".toString()
     )
 
-val werewolfGoogleServicesFileInfo =
-    FileInfo(
-        id ="1DCmIFGyqAzwd79CvOFi72Gf7rcksmW8B",
-        pathToStore = "apps/werewolf/google-services.json"
-    )
 
-val werewolfServiceAccountKeyFileInfo =
-    FileInfo(
-        id ="1dP6c2fjc5BPecvyOKRk08ZZv8yxrIRnC",
-        pathToStore = "apps/werewolf/service-account-key.json"
-    )
 
 val fileInfoList = listOf(
     spyfallGoogleServicesFileInfo,
-    spyfallServiceAccountKeyFileInfo,
-    werewolfGoogleServicesFileInfo,
-    werewolfServiceAccountKeyFileInfo
+    spyfallServiceAccountKeyFileInfo
 )
 
 val red = "\u001b[31m"

@@ -22,34 +22,34 @@ gradlePlugin {
     plugins {
         register("androidApplication") {
             id = "spyfall.android.application"
-            implementationClass = "AndroidApplicationConventionPlugin"
+            implementationClass = "com.spyfall.convention.plugin.AndroidApplicationConventionPlugin"
         }
         register("androidLibrary") {
             id = "spyfall.android.library"
-            implementationClass = "AndroidLibraryConventionPlugin"
+            implementationClass = "com.spyfall.convention.plugin.AndroidLibraryConventionPlugin"
         }
         register("androidFeature") {
             id = "spyfall.android.feature"
-            implementationClass = "AndroidFeatureConventionPlugin"
+            implementationClass = "com.spyfall.convention.plugin.AndroidFeatureConventionPlugin"
         }
 
         register("androidTest") {
             id = "spyfall.android.test"
-            implementationClass = "AndroidTestConventionPlugin"
+            implementationClass = "com.spyfall.convention.plugin.AndroidTestConventionPlugin"
         }
         register("androidHilt") {
             id = "spyfall.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
+            implementationClass = "com.spyfall.convention.plugin.AndroidHiltConventionPlugin"
         }
 
         register("androidDetekt") {
             id = "spyfall.android.detekt"
-            implementationClass = "AndroidDetektConventionPlugin"
+            implementationClass = "com.spyfall.convention.plugin.AndroidDetektConventionPlugin"
         }
 
         register("androidCheckstyle") {
             id = "spyfall.android.checkstyle"
-            implementationClass = "AndroidCheckstyleConventionPlugin"
+            implementationClass = "com.spyfall.convention.plugin.AndroidCheckstyleConventionPlugin"
         }
     }
 }

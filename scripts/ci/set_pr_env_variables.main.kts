@@ -100,28 +100,22 @@ fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
     writer.writeEnvValue("releaseNotesFile", releaseNotesFile.path)
 }
 
-fun setAppIds(writer: OutputStreamWriter) {
-    val appNames = File("apps").listFiles { child -> child.isDirectory }?.map { it.name } ?: listOf()
-    appNames.forEach { appName ->
-        writer.writeEnvValue("${appName}AppId", getAppId(appName))
-    }
+fun setAppId(writer: OutputStreamWriter) {
+    writer.writeEnvValue("spyfallAppId", getAppId())
 }
 
 fun setAppFirebaseLinks(writer: OutputStreamWriter) {
-    val appNames = File("apps").listFiles { child -> child.isDirectory }?.map { it.name } ?: listOf()
-    appNames.forEach { appName ->
-        val projectId = getFirebaseProjectId(appName)
-        val packageName = getPackageName(appName)
+    val projectId = getFirebaseProjectId()
+    val packageName = getPackageName()
 
-        @Suppress ("MaxLineLength")
-        val link = "https://console.firebase.google.com/u/0/project/${projectId}/appdistribution/app/android:${packageName}/releases"
+    @Suppress ("MaxLineLength")
+    val link = "https://console.firebase.google.com/u/0/project/${projectId}/appdistribution/app/android:${packageName}/releases"
 
-        writer.writeEnvValue("${appName}FirebaseDistributionLink", link)
-    }
+    writer.writeEnvValue("spyfallFirebaseDistributionLink", link)
 }
 
-fun getAppId(appName: String): String {
-    val googleServicesPath = "apps/$appName/google-services.json"
+fun getAppId(): String {
+    val googleServicesPath = "app/google-services.json"
     val googleServicesObject = Gson().fromJson(FileReader(googleServicesPath), GoogleServices::class.java)
     val appPackageName = getPackageName(appName)
     val appId = googleServicesObject
@@ -135,18 +129,18 @@ fun getAppId(appName: String): String {
     return appId
 }
 
-fun getFirebaseProjectId(appName: String): String {
-    val googleServicesPath = "apps/$appName/google-services.json"
+fun getFirebaseProjectId(): String {
+    val googleServicesPath = "app/google-services.json"
     val googleServicesObject = Gson().fromJson(FileReader(googleServicesPath), GoogleServices::class.java)
     return googleServicesObject.project_info.project_id
 }
 
-fun getPackageName(appName: String): String {
+fun getPackageName(): String {
     val properties = Properties()
     val reader = BufferedReader(FileReader("app.properties"))
     properties.load(reader)
     reader.close()
-    return properties.getProperty("$appName.packageName")
+    return properties.getProperty("packageName")
 }
 
 
@@ -159,31 +153,13 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
 
     writer.writeEnvValue("isRelease", "$isRelease")
 
-    if (!isRelease) {
-        writer.writeEnvValue("isWerewolfReleasePR", "false")
-        writer.writeEnvValue("isSpyfallReleasePR", "false")
-        return
-    }
-    val isWerewolfRelease = branchName.contains("werewolf")
-    val isSpyfallRelease = branchName.contains("spyfall")
-
     val vXyzMatcher = "v\\d+\\.\\d+\\.\\d+".toRegex()
     val vXyMatcher = "v\\d+\\.\\d+".toRegex()
 
     val branchVersion = (vXyzMatcher.find(branchName) ?: vXyMatcher.find(branchName))?.value ?: throw
     IllegalStateException(" branch detected to be a release but could not extract the version.")
 
-    val appName = when {
-        isSpyfallRelease -> "spyfall"
-        isWerewolfRelease -> "werewolf"
-        else -> throw IllegalStateException(
-            """
-            Got a release branch that does not match spyfall or werewolf
-        """.trimIndent()
-        )
-    }
-
-    val appVersionName = getVersionName(appName)
+    val appVersionName = getVersionName()
 
     if (!branchVersion.contains(appVersionName)) {
         throw IllegalStateException(
@@ -193,10 +169,8 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
         )
     }
 
-    writer.writeEnvValue("isWerewolfReleasePR", "$isWerewolfRelease")
-    writer.writeEnvValue("isSpyfallReleasePR", "$isSpyfallRelease")
     writer.writeEnvValue("releaseVersion", "$branchVersion")
-    writer.writeEnvValue("releaseTagName", "$appName/$branchVersion")
+    writer.writeEnvValue("releaseTagName", "spyfall/$branchVersion")
 }
 
 fun getVersionName(appName: String): String {
@@ -205,7 +179,7 @@ fun getVersionName(appName: String): String {
     properties.load(reader)
     reader.close()
 
-    return properties.getProperty("$appName.versionName").toString()
+    return properties.getProperty("versionName").toString()
 }
 
 main()
