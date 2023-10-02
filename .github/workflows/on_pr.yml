@@ -94,11 +94,11 @@ jobs:
 
       - name: Deploy Spyfall Debug Asset to Firebase
         if: ${{ env.isRelease == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false ${{ env.spyfallDebugApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false ${{ env.spyfallDebugApkPath }}
 
       - name: Deploy Spyfall Release Asset to Firebase
         if: ${{ env.isRelease == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts "spyfall" ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true ${{ env.spyfallReleaseApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true ${{ env.spyfallReleaseApkPath }}
 
       - name: Update Spyfall Draft Release
         if: ${{ env.isRelease == 'true' }}
