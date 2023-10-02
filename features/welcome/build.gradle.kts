@@ -11,7 +11,6 @@ dependencies {
     implementation(getModule("libraries:coreCommon"))
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreUi"))
-    implementation(getModule("features:settingsApi"))
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
 }
