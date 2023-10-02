@@ -18,12 +18,11 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
-if (args.size < 2 || args[0] == "-h" || args[0].contains("help")) {
+if (args.isEmpty()|| args[0] == "-h" || args[0].contains("help")) {
     printRed("""
-        This script sets the version name for the supplied application name 
+        This script sets the version name
         
-        Usage: ./set_version_name.main.kts [appName] [versionName] 
-        appName: "spyfall" ,"werewolf", ...
+        Usage: ./set_version_name.main.kts [versionName] 
         versionName: "1.2.4", "1.5.19", ...
     """.trimIndent())
 
@@ -31,10 +30,7 @@ if (args.size < 2 || args[0] == "-h" || args[0].contains("help")) {
     throw Exception("See Message Above")
 }
 
-val appName = args[0].trim()
-val newVersionName = args[1].trim()
-
-printGreen("Setting the version name for $appName")
+val newVersionName = args[0].trim()
 
 // Load the .properties file
 val properties = Properties()
@@ -43,10 +39,10 @@ properties.load(reader)
 reader.close()
 
 // Update the value of the "versionName" property
-val currentVersionName = properties.getProperty("$appName.versionName").toString()
-printGreen("current version name for $appName is $currentVersionName")
+val currentVersionName = properties.getProperty("versionName").toString()
+printGreen("current version name for spyfall is $currentVersionName")
 
-properties.setProperty("$appName.versionName", newVersionName)
+properties.setProperty("versionName", newVersionName)
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app.properties"))
@@ -66,5 +62,5 @@ writer.newLine()
 properties.store(writer, null)
 writer.close()
 
-printGreen("$appName version name successfully set to $newVersionName")
+printGreen("Spyfall version name successfully set to $newVersionName")
 
