@@ -173,7 +173,7 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
     writer.writeEnvValue("releaseTagName", "spyfall/$branchVersion")
 }
 
-fun getVersionName(appName: String): String {
+fun getVersionName(): String {
     val properties = Properties()
     val reader = BufferedReader(FileReader("app.properties"))
     properties.load(reader)
