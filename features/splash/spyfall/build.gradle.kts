@@ -10,8 +10,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.coroutines.play.services)
     
-    implementation(getModule("libraries:coreCommon"))
-    implementation(getModule("libraries:coreGameApi"))
-    implementation(getModule("libraries:coreSpyfallGame"))
-    implementation(getModule("features:splash"))
+    implementation(projects.libraries.coreCommon)
+    implementation(projects.libraries.coreGameApi)
+    implementation(projects.libraries.coreSpyfallGame)
+    implementation(projects.features.splash)
 }
