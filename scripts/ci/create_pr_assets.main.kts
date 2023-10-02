@@ -51,11 +51,11 @@ if (isHelpCall || args.size < argCount) {
 @Suppress("UnusedPrivateMember", "MagicNumber")
 fun main() {
     val isRelease = args[0].toBoolean()
-    val outputEnvFile = File(args[2])
-    val keystorePath = args[3]
-    val keystorePassword = args[4]
-    val keystoreAlias = args[5]
-    val keyPassword = args[6]
+    val outputEnvFile = File(args[1])
+    val keystorePath = args[2]
+    val keystorePassword = args[3]
+    val keystoreAlias = args[4]
+    val keyPassword = args[5]
 
     val keystore = File(keystorePath)
 
