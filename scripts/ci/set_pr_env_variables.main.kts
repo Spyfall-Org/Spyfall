@@ -62,7 +62,6 @@ fun main() {
     val writer = envFile.writer()
 
     setReleaseVariables(writer, branchName)
-    setAppIds(writer)
     setAppFirebaseLinks(writer)
     setReleaseNotes(writer, pullNumber)
     setPullRequestLink(writer, pullNumber)
@@ -117,14 +116,14 @@ fun setAppFirebaseLinks(writer: OutputStreamWriter) {
 fun getAppId(): String {
     val googleServicesPath = "app/google-services.json"
     val googleServicesObject = Gson().fromJson(FileReader(googleServicesPath), GoogleServices::class.java)
-    val appPackageName = getPackageName(appName)
+    val appPackageName = getPackageName()
     val appId = googleServicesObject
         .client
         .firstOrNull { it.client_info.android_client_info.package_name == appPackageName }
         ?.client_info
         ?.mobilesdk_app_id
 
-    check(appId != null) { "Could not find the app id from the google services file for the project $appName" }
+    check(appId != null) { "Could not find the app id from the google services file for the project" }
 
     return appId
 }
