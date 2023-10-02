@@ -152,6 +152,8 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
 
     writer.writeEnvValue("isRelease", "$isRelease")
 
+    if (!isRelease) return
+
     val vXyzMatcher = "v\\d+\\.\\d+\\.\\d+".toRegex()
     val vXyMatcher = "v\\d+\\.\\d+".toRegex()
 
