@@ -23,13 +23,13 @@ data class FileInfo(val id: String, val pathToStore: String)
 val spyfallGoogleServicesFileInfo =
     FileInfo(
         id ="1UIP-nsDLazFCo-OIU3OzFjiBNTeyAjRc",
-        pathToStore = "apps/spyfall/google-services.json"
+        pathToStore = "app/google-services.json"
     )
 
 val spyfallServiceAccountKeyFileInfo =
     FileInfo(
         id ="13Q-z85mO3-5JVFhXmQ9191-N465-18PH",
-        pathToStore = "apps/spyfall/service-account-key.json".toString()
+        pathToStore = "app/service-account-key.json".toString()
     )
 
 
