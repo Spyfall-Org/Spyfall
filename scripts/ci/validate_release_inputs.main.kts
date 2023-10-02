@@ -17,7 +17,6 @@ if (args.isEmpty() || args[0] == "-h" || args[0].contains("help")) {
         This script validates the inputs to the create_release_branch.yml script 
         
         Usage: ./validate_release_inputs.main.kts  [versionName]
-        versionName (required): "1.2.4", "1.5.19", ...
     """.trimIndent())
 
     @Suppress("TooGenericExceptionThrown")
