@@ -99,7 +99,6 @@ dependencies {
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreSpyfallGame"))
     implementation(getModule("libraries:coreCommon"))
-    implementation(getModule("features:settingsApi"))
     implementation(getModule("features:settings"))
     implementation(getModule("features:welcome"))
     implementation(getModule("features:createGame"))

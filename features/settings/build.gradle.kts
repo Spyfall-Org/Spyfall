@@ -6,7 +6,6 @@ plugins {
 }
 
 dependencies {
-    implementation(getModule("features:settingsApi"))
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
 }
