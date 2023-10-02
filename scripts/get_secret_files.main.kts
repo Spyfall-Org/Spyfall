@@ -29,7 +29,7 @@ val spyfallGoogleServicesFileInfo =
 val spyfallServiceAccountKeyFileInfo =
     FileInfo(
         id ="13Q-z85mO3-5JVFhXmQ9191-N465-18PH",
-        pathToStore = "app/service-account-key.json".toString()
+        pathToStore = "app/service-account-key.json"
     )
 
 
