@@ -4,6 +4,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import java.io.OutputStreamWriter
 import java.util.Properties
 
 val red = "\u001b[31m"
@@ -44,7 +45,8 @@ fun main() {
     val envFile = File(args[2])
     val pullRequestLink = args[3]
     val isRelease = args[4].toBoolean()
-    val assetPaths = args.slice(5.until(args.size))
+    val linkKey = args[5]
+    val assetPaths = args.slice(6.until(args.size))
     val versionCode = getAppVersionCode()
     val versionName = getAppVersionName()
 
@@ -65,7 +67,7 @@ fun main() {
 
     assetPaths.forEach { path ->
         println("Uploading asset ${File(path).name} to firebase distribution")
-        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease, versionName, versionCode)
+        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease, versionName, versionCode, envFile, linkKey)
         println("Finished Uploading asset ${File(path).name} to firebase distribution")
     }
 }
@@ -78,6 +80,8 @@ fun uploadToFirebaseAppDistribution(
     isRelease: Boolean,
     versionName: String,
     versionCode: String,
+    file: File,
+    linkKey: String
 ) {
 
     val releaseNotes = """
@@ -94,9 +98,9 @@ fun uploadToFirebaseAppDistribution(
 
     val releaseNotesPath = File("firebase_release_notes.txt").apply {
         createNewFile()
-        val writer = writer()
-        writer.write(releaseNotes)
-        writer.close()
+        val releaseNotesWriter = writer()
+        releaseNotesWriter.write(releaseNotes)
+        releaseNotesWriter.close()
     }.path
 
     @Suppress("MaxLineLength")
@@ -105,26 +109,34 @@ fun uploadToFirebaseAppDistribution(
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess {
             printGreen("Successfully uploaded apk to firebase app distribution")
-            printYellow("Output found: $it")
-            val testingUri = """testing_uri - (.+?)\s""".toRegex().find(it)?.groupValues?.get(1)
-            val binaryDownloadUri = """binary_download_uri - (.+?)\s""".toRegex().find(it)?.groupValues?.get(1)
+            val consoleLink = """https://console\\.firebase\\.google\\.com/[^\s]+"""
+                .toRegex()
+                .find(it)
+                ?.groupValues
+                ?.firstOrNull()
 
-            if (testingUri != null) {
-                printGreen("Testing URI: $testingUri")
-            } else {
-                printRed("testing URI was null")
-            }
-            if (binaryDownloadUri != null) {
-                printGreen("Binary Download URI: $binaryDownloadUri")
-            } else {
-                printRed("Binary Download URI was null")
-
+            consoleLink?.let { link ->
+                printGreen("adding link for $linkKey\n\n$link")
+                file.deleteKey(linkKey)
+                val writer = FileWriter(file, true)
+                writer.writeEnvValue(linkKey, link)
             }
         }
         .onFailure {
             printRed("Failed to upload to firebase app distribution")
             throw it
         }
+}
+
+fun File.deleteKey(key: String) {
+    val lines = readLines().filter { !it.contains("$key=") }
+    writeText(lines.joinToString("\n"))
+}
+
+fun OutputStreamWriter.writeEnvValue(key: String, value: String): OutputStreamWriter {
+    write("$key=$value")
+    write("\n")
+    return this
 }
 
 fun installFirebase() {

@@ -65,7 +65,7 @@ fun main() {
     setAppFirebaseLinks(writer)
     setReleaseNotes(writer, pullNumber)
     setPullRequestLink(writer, pullNumber)
-    setAppId(writer)
+
     writer.close()
 }
 
@@ -150,7 +150,7 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
 
     val isRelease = releaseBranchPattern.matches(branchName)
 
-    writer.writeEnvValue("isReleasePR", "$isRelease")
+    writer.writeEnvValue("isRelease", "$isRelease")
 
     if (!isRelease) return
 
