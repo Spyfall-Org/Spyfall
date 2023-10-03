@@ -150,7 +150,7 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
 
     val isRelease = releaseBranchPattern.matches(branchName)
 
-    writer.writeEnvValue("isRelease", "$isRelease")
+    writer.writeEnvValue("isReleasePR", "$isRelease")
 
     if (!isRelease) return
 

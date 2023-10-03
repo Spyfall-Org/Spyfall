@@ -103,7 +103,18 @@ fun uploadToFirebaseAppDistribution(
     val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes-file $releaseNotesPath $apkPath"
     printGreen("Running Command\n\n$uploadCommand")
     runCatching { runCommandLine(uploadCommand) }
-        .onSuccess { printGreen("Successfully uploaded apk to firebase app distribution") }
+        .onSuccess {
+            printGreen("Successfully uploaded apk to firebase app distribution")
+            val testingUri = """testing_uri - (.+?)\s""".toRegex().find(it)?.groupValues?.get(1)
+            val binaryDownloadUri = """binary_download_uri - (.+?)\s""".toRegex().find(it)?.groupValues?.get(1)
+
+            if (testingUri != null) {
+                printGreen("Testing URI: $testingUri")
+            }
+            if (binaryDownloadUri != null) {
+                printGreen("Binary Download URI: $binaryDownloadUri")
+            }
+        }
         .onFailure {
             printRed("Failed to upload to firebase app distribution")
             throw it
