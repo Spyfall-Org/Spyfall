@@ -105,14 +105,20 @@ fun uploadToFirebaseAppDistribution(
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess {
             printGreen("Successfully uploaded apk to firebase app distribution")
+            printYellow("Output found: $it")
             val testingUri = """testing_uri - (.+?)\s""".toRegex().find(it)?.groupValues?.get(1)
             val binaryDownloadUri = """binary_download_uri - (.+?)\s""".toRegex().find(it)?.groupValues?.get(1)
 
             if (testingUri != null) {
                 printGreen("Testing URI: $testingUri")
+            } else {
+                printRed("testing URI was null")
             }
             if (binaryDownloadUri != null) {
                 printGreen("Binary Download URI: $binaryDownloadUri")
+            } else {
+                printRed("Binary Download URI was null")
+
             }
         }
         .onFailure {
@@ -164,7 +170,6 @@ fun getNodeInstallCommand() = when {
 fun runCommandLine(command: String): String {
     val process = ProcessBuilder(*command.split("\\s".toRegex()).toTypedArray())
         .redirectOutput(ProcessBuilder.Redirect.PIPE)
-
         .redirectError(ProcessBuilder.Redirect.PIPE)
         .start()
 
@@ -172,6 +177,7 @@ fun runCommandLine(command: String): String {
     val error = process.errorStream.bufferedReader().readText()
 
     if (error.isNotEmpty()) {
+        printRed("ERROR")
         printYellow("\n\n$error\n\n")
         if (error.contains("Error:") || error.contains("error:")) {
             throw IllegalStateException(error)
@@ -179,6 +185,7 @@ fun runCommandLine(command: String): String {
     }
 
     if (output.isNotEmpty()) {
+        printYellow("OUTPUT")
         printYellow("\n\n$output\n\n")
         if (output.contains("Error:") || output.contains("error:")) {
             throw IllegalStateException(error)
