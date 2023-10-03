@@ -69,6 +69,7 @@ jobs:
           gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > spyfall.keystore
 
       - name: Create Assets
+        if: ${{ env.isRelease == 'true' }}
         id: createassets
         run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isRelease }} ${{ github.env }} spyfall.keystore ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
 
@@ -87,6 +88,7 @@ jobs:
           path: ${{ env.spyfallReleaseAabPath }}
 
       - name: Upload Spyfall Debug Apk
+        if: ${{ env.isRelease == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: Spyfall Debug Apk
@@ -94,11 +96,11 @@ jobs:
 
       - name: Deploy Spyfall Debug Asset to Firebase
         if: ${{ env.isRelease == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false ${{ env.spyfallDebugApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} ${{ env.isRelease }} ${{ env.spyfallDebugApkPath }}
 
       - name: Deploy Spyfall Release Asset to Firebase
         if: ${{ env.isRelease == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true ${{ env.spyfallReleaseApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} ${{ env.isRelease }} ${{ env.spyfallReleaseApkPath }}
 
       - name: Update Spyfall Draft Release
         if: ${{ env.isRelease == 'true' }}
