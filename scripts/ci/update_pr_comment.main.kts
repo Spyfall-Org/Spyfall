@@ -95,7 +95,7 @@ fun updatePRArtifactsComment(
     val publishedReleaseUrl = "https://github.com/Spyfall-Org/Spyfall/releases/tag/${tagName?.replace("/","%2F")}"
 
     @Suppress("MaxLineLength")
-    val baseMessage = """
+    val fullMessage = """
 # Automated PR Assets Links  
 ${
         (if (appTesterDebugLink != "null") """
@@ -128,6 +128,7 @@ These assets are automatically generated on pull requests. Some links may not wo
 
     @Suppress("MagicNumber")
     val lastCommitSha = repo.getPullRequest(pullNumber).head.sha.take(7)
+    val baseMessage = "These assets are automatically generated on pull requests"
 
     val existingComment = repo
         .getPullRequest(pullNumber)
@@ -141,7 +142,7 @@ These assets are automatically generated on pull requests. Some links may not wo
     val stringToComment = if (existingComment != null) {
         "$existingComment\n$assetsTableEntry"
     } else {
-        "$baseMessage\n$assetsTableEntry"
+        "$fullMessage\n$assetsTableEntry"
     }
 
     repo.getPullRequest(pullNumber).let { pr ->

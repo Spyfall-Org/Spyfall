@@ -115,11 +115,13 @@ fun uploadToFirebaseAppDistribution(
                 ?.groupValues
                 ?.firstOrNull()
 
-            consoleLink?.let { link ->
-                printGreen("adding link for $linkKey\n\n$link")
-                file.deleteKey(linkKey)
-                val writer = FileWriter(file, true)
-                writer.writeEnvValue(linkKey, link)
+            val writer = FileWriter(file, true)
+
+            if (consoleLink!= null) {
+                printGreen("adding link for $linkKey\n\n$consoleLink")
+                writer.writeEnvValue(linkKey, consoleLink)
+            } else {
+                writer.writeEnvValue(linkKey, "null")
             }
         }
         .onFailure {
