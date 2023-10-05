@@ -65,6 +65,7 @@ fun main() {
     setAppFirebaseLinks(writer)
     setReleaseNotes(writer, pullNumber)
     setPullRequestLink(writer, pullNumber)
+    setAppId(writer)
 
     writer.close()
 }
