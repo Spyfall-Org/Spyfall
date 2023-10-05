@@ -64,15 +64,18 @@ fun main() {
     val spyfallVersionName = getAppVersionName()
     val spyfallVersionCode = getAppVersionCode()
 
-    printGreen("Assembling all debug assets")
-    runGradleCommand("assembleDebug")
-
-    renameSpyfallDebugAssets(spyfallVersionName, outputEnvFile, spyfallVersionCode)
 
     if (isRelease) {
+
+        printGreen("Assembling all debug assets")
+        runGradleCommand("assembleDebug")
+
+        renameSpyfallDebugAssets(spyfallVersionName, outputEnvFile, spyfallVersionCode)
+
         printGreen("Assembling all spyfall release assets")
         runGradleCommand(":app:bundleRelease")
         runGradleCommand(":app:assembleRelease")
+
         signAndRenameSpyfallReleaseAssets(
             spyfallVersionName,
             outputEnvFile,

@@ -4,6 +4,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import java.io.OutputStreamWriter
 import java.util.Properties
 
 val red = "\u001b[31m"
@@ -44,7 +45,8 @@ fun main() {
     val envFile = File(args[2])
     val pullRequestLink = args[3]
     val isRelease = args[4].toBoolean()
-    val assetPaths = args.slice(5.until(args.size))
+    val linkKey = args[5]
+    val assetPaths = args.slice(6.until(args.size))
     val versionCode = getAppVersionCode()
     val versionName = getAppVersionName()
 
@@ -65,7 +67,16 @@ fun main() {
 
     assetPaths.forEach { path ->
         println("Uploading asset ${File(path).name} to firebase distribution")
-        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease, versionName, versionCode)
+        uploadToFirebaseAppDistribution(
+            appId,
+            path,
+            pullRequestLink,
+            isRelease,
+            versionName,
+            versionCode,
+            envFile,
+            linkKey
+        )
         println("Finished Uploading asset ${File(path).name} to firebase distribution")
     }
 }
@@ -78,6 +89,8 @@ fun uploadToFirebaseAppDistribution(
     isRelease: Boolean,
     versionName: String,
     versionCode: String,
+    file: File,
+    linkKey: String
 ) {
 
     val releaseNotes = """
@@ -94,20 +107,47 @@ fun uploadToFirebaseAppDistribution(
 
     val releaseNotesPath = File("firebase_release_notes.txt").apply {
         createNewFile()
-        val writer = writer()
-        writer.write(releaseNotes)
-        writer.close()
+        val releaseNotesWriter = writer()
+        releaseNotesWriter.write(releaseNotes)
+        releaseNotesWriter.close()
     }.path
 
     @Suppress("MaxLineLength")
     val uploadCommand = "firebase appdistribution:distribute --app $appId --release-notes-file $releaseNotesPath $apkPath"
     printGreen("Running Command\n\n$uploadCommand")
     runCatching { runCommandLine(uploadCommand) }
-        .onSuccess { printGreen("Successfully uploaded apk to firebase app distribution") }
+        .onSuccess {
+            printGreen("Successfully uploaded apk to firebase app distribution")
+            val consoleLink = """https://console\\.firebase\\.google\\.com/[^\s]+"""
+                .toRegex()
+                .find(it)
+                ?.groupValues
+                ?.firstOrNull()
+
+            val writer = FileWriter(file, true)
+
+            if (consoleLink!= null) {
+                printGreen("adding link for $linkKey\n\n$consoleLink")
+                writer.writeEnvValue(linkKey, consoleLink)
+            } else {
+                writer.writeEnvValue(linkKey, "null")
+            }
+        }
         .onFailure {
             printRed("Failed to upload to firebase app distribution")
             throw it
         }
+}
+
+fun File.deleteKey(key: String) {
+    val lines = readLines().filter { !it.contains("$key=") }
+    writeText(lines.joinToString("\n"))
+}
+
+fun OutputStreamWriter.writeEnvValue(key: String, value: String): OutputStreamWriter {
+    write("$key=$value")
+    write("\n")
+    return this
 }
 
 fun installFirebase() {
@@ -153,7 +193,6 @@ fun getNodeInstallCommand() = when {
 fun runCommandLine(command: String): String {
     val process = ProcessBuilder(*command.split("\\s".toRegex()).toTypedArray())
         .redirectOutput(ProcessBuilder.Redirect.PIPE)
-
         .redirectError(ProcessBuilder.Redirect.PIPE)
         .start()
 
@@ -161,6 +200,7 @@ fun runCommandLine(command: String): String {
     val error = process.errorStream.bufferedReader().readText()
 
     if (error.isNotEmpty()) {
+        printRed("ERROR")
         printYellow("\n\n$error\n\n")
         if (error.contains("Error:") || error.contains("error:")) {
             throw IllegalStateException(error)
@@ -168,6 +208,7 @@ fun runCommandLine(command: String): String {
     }
 
     if (output.isNotEmpty()) {
+        printYellow("OUTPUT")
         printYellow("\n\n$output\n\n")
         if (output.contains("Error:") || output.contains("error:")) {
             throw IllegalStateException(error)

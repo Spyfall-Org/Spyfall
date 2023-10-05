@@ -30,13 +30,16 @@ if (isHelpCall || args.size < minArgs) {
         """
         This script comments a link to the PR of the artifacts generated for that PR
         
-        Usage: ./update_pr_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID] [SPYFALL_FIREBASE_LINK]
+        Usage: ./update_pr_comment.main.kts [GITHUB_REPO] [GITHUB_TOKEN] [PULL_NUMBER] [RUN_ID] [RELEASE_LINK] [DEBUG_LINK] [RUN_NUMBER] [TAG_NAME]
         
         [GITHUB_REPO] - REPO_OWNER/REPO_NAME, provided by github actions as env variable
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
         [PULL_NUMBER] - the number of the pull request
         [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url.
-        [SPYFALL_FIREBASE_LINK] - Link to the firebase release for this build
+        [APP_TESTER_DEBUG_LINK] - Link to the firebase app test for the debug build
+        [APP_TESTER_RELEASE_LINK] - Link to the firebase app test for the release build
+        [APP_TESTER_FALLBACK_LINK] - Link to the firebase app tester general
+        [RUN NUMBER] - the github run number
         [TAG_NAME] - Optional, The name of the tag associated with the draft release created for this PR
         
     """.trimIndent()
@@ -52,9 +55,11 @@ fun doWork() {
     val githubToken = args[1]
     val pullNumber = args[2]
     val runID = args[3]
-    val spyfallFirebaseLink = args[4]
-    val buildNumber = args[5]
-    val tagName = args.getOrNull(6)
+    val appTesterReleaseLink = args[4]
+    val appTesterDebugLink = args[5]
+    val appTesterFallBackLink = args[6]
+    val runNumber = args[7]
+    val tagName = args.getOrNull(8)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
@@ -65,8 +70,10 @@ fun doWork() {
         runID.toLong(),
         pullNumber.toInt(),
         releaseDraft,
-        spyfallFirebaseLink,
-        buildNumber,
+        appTesterReleaseLink,
+        appTesterDebugLink,
+        appTesterFallBackLink,
+        runNumber,
         tagName
     )
 }
@@ -77,7 +84,9 @@ fun updatePRArtifactsComment(
     runID: Long,
     pullNumber: Int,
     releaseDraft: GHRelease?,
-    spyfallFirebaseDistributionLink: String,
+    appTesterReleaseLink: String,
+    appTesterDebugLink: String,
+    appTesterFallbackLink: String,
     buildNumber: String,
     tagName: String?
 ) {
@@ -86,9 +95,23 @@ fun updatePRArtifactsComment(
     val publishedReleaseUrl = "https://github.com/Spyfall-Org/Spyfall/releases/tag/${tagName?.replace("/","%2F")}"
 
     @Suppress("MaxLineLength")
-    val baseMessage = """
-# Automated PR Assets Links
-- ##### [Spyfall Firebase Distribution]($spyfallFirebaseDistributionLink) 
+    val fullMessage = """
+# Automated PR Assets Links  
+${
+        (if (appTesterDebugLink != "null") """
+- ##### [App Tester Debug Build](${appTesterDebugLink}) 
+""".trimIndent() else null) ?: ""
+    }  
+${
+        (if (appTesterReleaseLink != "null") """
+- ##### [App Tester Release Build](${appTesterReleaseLink}) 
+""".trimIndent() else null) ?: ""
+    }
+${
+        (if (appTesterReleaseLink == "null" && appTesterDebugLink == "null") """
+- ##### [App Tester](${appTesterFallbackLink}) 
+""".trimIndent() else null) ?: ""
+    }
 ${
         (if (releaseDraft != null) """
 - ##### [Release Draft](${releaseDraft.htmlUrl}) 
@@ -105,6 +128,7 @@ These assets are automatically generated on pull requests. Some links may not wo
 
     @Suppress("MagicNumber")
     val lastCommitSha = repo.getPullRequest(pullNumber).head.sha.take(7)
+    val baseMessage = "These assets are automatically generated on pull requests"
 
     val existingComment = repo
         .getPullRequest(pullNumber)
@@ -118,7 +142,7 @@ These assets are automatically generated on pull requests. Some links may not wo
     val stringToComment = if (existingComment != null) {
         "$existingComment\n$assetsTableEntry"
     } else {
-        "$baseMessage\n$assetsTableEntry"
+        "$fullMessage\n$assetsTableEntry"
     }
 
     repo.getPullRequest(pullNumber).let { pr ->

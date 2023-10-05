@@ -27,16 +27,11 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/createGame" />
             <option value="$PROJECT_DIR$/features/createGame/spyfall" />
-            <option value="$PROJECT_DIR$/features/createGameApi" />
             <option value="$PROJECT_DIR$/features/joinGame" />
-            <option value="$PROJECT_DIR$/features/joinGameApi" />
             <option value="$PROJECT_DIR$/features/settings" />
-            <option value="$PROJECT_DIR$/features/settingsApi" />
             <option value="$PROJECT_DIR$/features/splash" />
             <option value="$PROJECT_DIR$/features/splash/spyfall" />
-            <option value="$PROJECT_DIR$/features/splash/werewolf" />
             <option value="$PROJECT_DIR$/features/waiting" />
-            <option value="$PROJECT_DIR$/features/waitingApi" />
             <option value="$PROJECT_DIR$/features/welcome" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/configApi" />
