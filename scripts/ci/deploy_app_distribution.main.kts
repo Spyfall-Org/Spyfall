@@ -67,7 +67,16 @@ fun main() {
 
     assetPaths.forEach { path ->
         println("Uploading asset ${File(path).name} to firebase distribution")
-        uploadToFirebaseAppDistribution(appId, path, pullRequestLink, isRelease, versionName, versionCode, envFile, linkKey)
+        uploadToFirebaseAppDistribution(
+            appId,
+            path,
+            pullRequestLink,
+            isRelease,
+            versionName,
+            versionCode,
+            envFile,
+            linkKey
+        )
         println("Finished Uploading asset ${File(path).name} to firebase distribution")
     }
 }
