@@ -11,7 +11,7 @@ inline fun <reified T> Throwable.removeClassFromStackTrace() = removeClassFromSt
  * For example, given this stack trace:
  * ```
  * Fatal Exception: java.lang.IllegalStateException
- *   at co.hinge.core.android.ui.view.ManagedViewPropertyDelegate.getValue(ManagedViewPropertyDelegate.kt:57)
+ *   at co.hinge.core.android.ui.view.ManagedViewPropertyDelegate.getValue(FragmentViewBindingDelegate.kt:57)
  *   at co.hinge.discover.ui.DiscoverFragment.getUi(DiscoverFragment.kt:7)
  * ```
  *

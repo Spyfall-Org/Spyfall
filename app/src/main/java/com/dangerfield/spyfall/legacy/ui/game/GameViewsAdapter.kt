@@ -49,19 +49,19 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlaye
 
         if(first != null && items[position].trim() == first?.trim()){
             //then we are dealing with players
-            holder.first_icon.background.setTint(UIHelper.accentColor)
-            holder.first_text.visibility = View.VISIBLE
-            holder.first_icon.visibility = View.VISIBLE
+            holder.firstIcon.background.setTint(UIHelper.accentColor)
+            holder.firstText.visibility = View.VISIBLE
+            holder.firstIcon.visibility = View.VISIBLE
         }else {
-            holder.first_text.visibility = View.INVISIBLE
-            holder.first_icon.visibility = View.INVISIBLE
+            holder.firstText.visibility = View.INVISIBLE
+            holder.firstIcon.visibility = View.INVISIBLE
         }
     }
 
     class ViewHolder(binding: ItemSimpleCardBinding): RecyclerView.ViewHolder(binding.root) {
         val text = binding.tvSimpleCardText
-        val first_icon = binding.icFirst
-        val first_text = binding.tvFirst
+        val firstIcon = binding.icFirst
+        val firstText = binding.tvFirst
 
         init {
             binding.root.setOnClickListener {
