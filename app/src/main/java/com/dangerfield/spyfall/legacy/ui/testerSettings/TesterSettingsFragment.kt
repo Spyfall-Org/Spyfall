@@ -4,31 +4,33 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.FragmentTesterSettingsBinding
 import com.dangerfield.spyfall.legacy.api.Resource
 import com.dangerfield.spyfall.legacy.util.DBCleaner
 import com.dangerfield.spyfall.legacy.util.PreferencesService
-import kotlinx.android.synthetic.main.fragment_tester_settings.*
+import com.dangerfield.spyfall.legacy.util.viewBinding
 import org.koin.android.ext.android.inject
 
 class TesterSettingsFragment : Fragment(R.layout.fragment_tester_settings) {
 
     private val preferencesHelper: PreferencesService by inject()
     private val dbCleaner: DBCleaner by inject()
+    private val binding by viewBinding(FragmentTesterSettingsBinding::bind)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rg_test_db.check(if (preferencesHelper.getUseTestDbState()) R.id.rb_on else R.id.rb_off)
+        binding.rgTestDb.check(if (preferencesHelper.getUseTestDbState()) R.id.rb_on else R.id.rb_off)
 
-        rg_test_db.setOnCheckedChangeListener { _, checkedId ->
+        binding.rgTestDb.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rb_off -> preferencesHelper.setUseTestDbState(false)
                 R.id.rb_on -> preferencesHelper.setUseTestDbState(true)
             }
         }
 
-        btn_clean_db.setOnClickListener {
+        binding.btnCleanDb.setOnClickListener {
             showDbCleanLoading()
             dbCleaner.cleandb()
                 .observe(viewLifecycleOwner) {
@@ -46,14 +48,18 @@ class TesterSettingsFragment : Fragment(R.layout.fragment_tester_settings) {
     }
 
     private fun showDbCleanLoading() {
-        btn_clean_db.isClickable = false
-        btn_clean_db.visibility = View.INVISIBLE
-        pb_clean_db.visibility = View.VISIBLE
+        binding.apply {
+            btnCleanDb.isClickable = false
+            btnCleanDb.visibility = View.INVISIBLE
+            pbCleanDb.visibility = View.VISIBLE
+        }
     }
 
     private fun stopDbCleanLoading() {
-        btn_clean_db.isClickable = true
-        btn_clean_db.visibility = View.VISIBLE
-        pb_clean_db.visibility = View.INVISIBLE
+        binding.apply {
+            btnCleanDb.isClickable = true
+            btnCleanDb.visibility = View.VISIBLE
+            pbCleanDb.visibility = View.INVISIBLE
+        }
     }
 }

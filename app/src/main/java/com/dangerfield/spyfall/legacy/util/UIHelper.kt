@@ -7,17 +7,16 @@ import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import kotlinx.android.synthetic.main.dialog_custom.view.*
-import kotlinx.android.synthetic.main.dialog_packs.view.*
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.R
-import kotlinx.android.synthetic.main.dialog_review.view.*
+import com.dangerfield.spyfall.databinding.DialogCustomBinding
+import com.dangerfield.spyfall.databinding.DialogPacksBinding
+import com.dangerfield.spyfall.databinding.DialogReviewBinding
 
 
 class UIHelper {
@@ -56,11 +55,10 @@ class UIHelper {
             {})
 
         fun packsDialog(context: Context, packsList: MutableList<List<String>>): AlertDialog {
-
             val dialogBuilder = AlertDialog.Builder(context)
             Log.d("Custom alerts", "Setting packs view")
-            val view = LayoutInflater.from(context).inflate(R.layout.dialog_packs, null)
-            dialogBuilder.setView(view)
+            val viewBinding = DialogPacksBinding.inflate(LayoutInflater.from(context))
+            dialogBuilder.setView(viewBinding.root)
             val dialog = dialogBuilder.create()
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true)
@@ -69,29 +67,28 @@ class UIHelper {
             //function would need to accept an array of lists, and cycle through them
             //TOD DO THIS WE MIGHT HAVE TO MAKE THE PARENT VIEW A LINEAR LAYOUT
 
-            view.apply {
-                tv_dialog_pack1_header.text = packsList[0][0]
-                rv_dialog_pack1.adapter =
+            viewBinding.apply {
+                tvDialogPack1Header.text = packsList[0][0]
+                rvDialogPack1.adapter =
                     SimpleTextAdapter(packsList[0].subList(1, packsList[0].size), context)
-                rv_dialog_pack1.layoutManager = GridLayoutManager(context, 2)
-                rv_dialog_pack1.setHasFixedSize(true)
+                rvDialogPack1.layoutManager = GridLayoutManager(context, 2)
+                rvDialogPack1.setHasFixedSize(true)
 
-                tv_dialog_pack2_header.text = packsList[1][0]
-                rv_dialog_pack2.adapter =
+                tvDialogPack2Header.text = packsList[1][0]
+                rvDialogPack2.adapter =
                     SimpleTextAdapter(packsList[1].subList(1, packsList[1].size), context)
-                rv_dialog_pack2.layoutManager = GridLayoutManager(context, 2)
-                rv_dialog_pack2.setHasFixedSize(true)
+                rvDialogPack2.layoutManager = GridLayoutManager(context, 2)
+                rvDialogPack2.setHasFixedSize(true)
 
-                tv_dialog_pack3_header.text = packsList[2][0]
-                rv_dialog_pack3.adapter =
+                tvDialogPack3Header.text = packsList[2][0]
+                rvDialogPack3.adapter =
                     SimpleTextAdapter(packsList[2].subList(1, packsList[2].size), context)
-                rv_dialog_pack3.layoutManager = GridLayoutManager(context, 2)
-                rv_dialog_pack3.setHasFixedSize(true)
+                rvDialogPack3.layoutManager = GridLayoutManager(context, 2)
+                rvDialogPack3.setHasFixedSize(true)
 
-                btn_dialog_packs_positive.background.setTint(accentColor)
+                btnDialogPacksPositive.background.setTint(accentColor)
+                btnDialogPacksPositive.setOnClickListener { dialog.dismiss() }
             }
-
-            view.btn_dialog_packs_positive.setOnClickListener { dialog.dismiss() }
 
             return dialog
         }
@@ -109,22 +106,22 @@ class UIHelper {
         ): Dialog {
 
             val dialogBuilder = AlertDialog.Builder(context)
-            val view = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
-            dialogBuilder.setView(view)
+            val viewBinding = DialogCustomBinding.inflate(LayoutInflater.from(context))
+            dialogBuilder.setView(viewBinding.root)
             val dialog = dialogBuilder.create()
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true)
 
-            view.apply {
+            viewBinding.apply {
                 if (leftAlignText) {
-                    tv_custom_alert.textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
+                    tvCustomAlert.textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
                 }
                 if (negativeText.isNullOrEmpty()) {
                     //remove the negative button
-                    btn_custom_alert_negative.visibility = View.GONE
+                    btnCustomAlertNegative.visibility = View.GONE
 
                     val set = ConstraintSet()
-                    val layout = custom_alert_view as ConstraintLayout
+                    val layout = customAlertView
                     set.clone(layout)
                     // remove all connections.
                     set.clear(R.id.btn_custom_alert_positive, ConstraintSet.END)
@@ -146,19 +143,19 @@ class UIHelper {
                 }
 
                 if (title.trim() == context.resources.getString(R.string.about_title)) {
-                    btn_email.visibility = View.VISIBLE
-                    btn_email.setLinkTextColor(accentColor)
+                    btnEmail.visibility = View.VISIBLE
+                    btnEmail.setLinkTextColor(accentColor)
                 }
 
-                btn_custom_alert_negative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
-                btn_custom_alert_positive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
-                btn_custom_alert_negative.text = negativeText
-                btn_custom_alert_positive.text = positiveText
+                btnCustomAlertNegative.setOnClickListener { negativeAction.invoke(); dialog.cancel() }
+                btnCustomAlertPositive.setOnClickListener { positiveAction.invoke(); dialog.dismiss() }
+                btnCustomAlertNegative.text = negativeText
+                btnCustomAlertPositive.text = positiveText
                 //for theme changing
-                btn_custom_alert_positive.background.setTint(accentColor)
-                tv_custom_alert.text = message
+                btnCustomAlertPositive.background.setTint(accentColor)
+                tvCustomAlert.text = message
 
-                tv_custom_alert_title.text = title
+                tvCustomAlertTitle.text = title
             }
             return dialog
         }
@@ -169,17 +166,17 @@ class UIHelper {
             negativeAction: (() -> Unit) = {}
         ): AlertDialog {
             val dialogBuilder = AlertDialog.Builder(context)
-            val view = LayoutInflater.from(context).inflate(R.layout.dialog_review, null)
-            dialogBuilder.setView(view)
+            val viewBinding = DialogReviewBinding.inflate(LayoutInflater.from(dialogBuilder.context))
+            dialogBuilder.setView(viewBinding.root)
             val dialog = dialogBuilder.create()
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true)
 
-            view?.apply {
-                btn_positive.setOnClickListener { positiveAction.invoke(); dialog.cancel() }
-                btn_negative.setOnClickListener { negativeAction.invoke(); dialog.dismiss() }
+            viewBinding.apply {
+                btnPositive.setOnClickListener { positiveAction.invoke(); dialog.cancel() }
+                btnNegative.setOnClickListener { negativeAction.invoke(); dialog.dismiss() }
                 //for theme changing
-                btn_positive.background.setTint(accentColor)
+                btnPositive.background.setTint(accentColor)
             }
             return dialog
         }

@@ -14,3 +14,6 @@ dependencies {
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreSpyfallGame"))
 }
+android {
+    namespace = "com.dangerfield.spyfall.splash"
+}

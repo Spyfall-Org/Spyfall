@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.FragmentGameLegacyBinding
 import com.dangerfield.spyfall.legacy.api.Constants
 import com.dangerfield.spyfall.legacy.api.Resource
 import com.dangerfield.spyfall.legacy.models.Game
@@ -22,8 +23,8 @@ import com.dangerfield.spyfall.legacy.util.EventObserver
 import com.dangerfield.spyfall.legacy.util.LogHelper
 import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.getViewModelFactory
+import com.dangerfield.spyfall.legacy.util.viewBinding
 import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.fragment_game_legacy.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -36,6 +37,7 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
         NavHostFragment.findNavController(this)
     }
     private val gameViewModel: GameViewModel by viewModels { getViewModelFactory(requireArguments()) }
+    private val binding by viewBinding(FragmentGameLegacyBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,13 +139,12 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
     private fun observeTimeLeft() {
         gameViewModel.getTimeLeft()
             .observe(
-                viewLifecycleOwner,
-                androidx.lifecycle.Observer { time ->
-                    tv_game_timer.text = time
-                    btn_play_again.visibility =
-                        if (time == GameViewModel.timeOver) View.VISIBLE else View.GONE
-                }
-            )
+                viewLifecycleOwner
+            ) { time ->
+                binding.tvGameTimer.text = time
+                binding.btnPlayAgain.visibility =
+                    if (time == GameViewModel.timeOver) View.VISIBLE else View.GONE
+            }
     }
 
     private fun observeRemovedInactiveUserEvent() {
@@ -237,15 +238,15 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
     }
 
     private fun setupView() {
-        tv_game_role.maxTextSize = 96.0f
+        binding.tvGameRole.maxTextSize = 96.0f
 
         val adRequest = AdRequest.Builder().build()
-        adView2.loadAd(adRequest)
+        binding.adView2.loadAd(adRequest)
 
         changeAccent()
 
-        btn_end_game.setOnClickListener {
-            if (tv_game_timer.text.toString() == GameViewModel.timeOver) triggerEndGame()
+        binding.btnEndGame.setOnClickListener {
+            if (binding.tvGameTimer.text.toString() == GameViewModel.timeOver) triggerEndGame()
             else {
                 UIHelper.customSimpleAlert(
                     requireContext(),
@@ -257,16 +258,16 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
             }
         }
 
-        btn_play_again.setOnClickListener { triggerPlayAgain() }
-        btn_hide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        btn_hide.setOnClickListener { hide() }
+        binding.btnPlayAgain.setOnClickListener { triggerPlayAgain() }
+        binding.btnHide.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        binding.btnHide.setOnClickListener { hide() }
 
-        tv_game_timer.text = String.format(
+        binding.tvGameTimer.text = String.format(
             Locale.getDefault(), "%d:%02d",
             gameViewModel.currentSession.game.timeLimit, 0
         )
 
-        tv_game_timer.visibility =
+        binding.tvGameTimer.visibility =
             arguments?.getBoolean(LegacyWaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME)
                 ?.let {
                     if ((it)) {
@@ -276,16 +277,18 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
     }
 
     private fun hide() {
-        if (tv_game_role.visibility == View.VISIBLE) {
-            tv_game_role.visibility = View.GONE
-            tv_game_location.visibility = View.GONE
-            view_role_card.visibility = View.GONE
-            btn_hide.text = resources.getString(R.string.string_show)
-        } else {
-            tv_game_role.visibility = View.VISIBLE
-            view_role_card.visibility = View.VISIBLE
-            tv_game_location.visibility = View.VISIBLE
-            btn_hide.text = resources.getString(R.string.string_hide)
+        with(binding) {
+            if (tvGameRole.visibility == View.VISIBLE) {
+                tvGameRole.visibility = View.GONE
+                tvGameLocation.visibility = View.GONE
+                viewRoleCard.visibility = View.GONE
+                btnHide.text = resources.getString(R.string.string_show)
+            } else {
+                tvGameRole.visibility = View.VISIBLE
+                viewRoleCard.visibility = View.VISIBLE
+                tvGameLocation.visibility = View.VISIBLE
+                btnHide.text = resources.getString(R.string.string_hide)
+            }
         }
     }
 
@@ -301,7 +304,7 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
 
     private fun configureLocationsAdapter(locations: ArrayList<String>) {
         locationsAdapter = GameViewsAdapter(requireContext(), ArrayList(), null)
-        rv_locations.apply {
+        binding.rvLocations.apply {
             adapter = locationsAdapter
             layoutManager = GridLayoutManager(context, 2)
         }
@@ -310,7 +313,7 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
 
     private fun configurePlayersAdapter(playerObjects: List<Player>, players: ArrayList<String>) {
         val firstPlayer = findFirstPlayer(playerObjects, players)
-        rv_players.apply {
+        binding.rvPlayers.apply {
             layoutManager = GridLayoutManager(context, 2)
             playersAdapter = GameViewsAdapter(context, players, firstPlayer)
             adapter = playersAdapter
@@ -332,19 +335,19 @@ class LegacyGameFragment : Fragment(R.layout.fragment_game_legacy) {
         }
 
         currentPlayer.let {
-            tv_game_location.text = if (it.role == Constants.GameFields.theSpyRole) {
+            binding.tvGameLocation.text = if (it.role == Constants.GameFields.theSpyRole) {
                 "Figure out the location!"
             } else {
                 "Location: ${game.chosenLocation}"
             }
 
-            tv_game_role.text = "Role: ${it.role}"
+            binding.tvGameRole.text = "Role: ${it.role}"
         }
     }
 
     private fun changeAccent() {
-        btn_end_game.background.setTint(UIHelper.accentColor)
-        btn_hide.background.setTint(UIHelper.accentColor)
+        binding.btnEndGame.background.setTint(UIHelper.accentColor)
+        binding.btnHide.background.setTint(UIHelper.accentColor)
     }
 
     private fun noop() = Unit

@@ -1,20 +1,16 @@
 package com.dangerfield.spyfall.legacy.ui.start
 
 import android.app.Dialog
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.FragmentStartLegacyBinding
 import com.dangerfield.spyfall.legacy.api.Resource
 import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.ui.waiting.LeaveGameError
@@ -23,12 +19,13 @@ import com.dangerfield.spyfall.legacy.util.EventObserver
 import com.dangerfield.spyfall.legacy.util.LogHelper
 import com.dangerfield.spyfall.legacy.util.ReviewHelper
 import com.dangerfield.spyfall.legacy.util.UIHelper
-import kotlinx.android.synthetic.main.fragment_start_legacy.*
+import com.dangerfield.spyfall.legacy.util.viewBinding
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
 
+    private val binding by viewBinding(FragmentStartLegacyBinding::bind)
     private val reviewHelper: ReviewHelper by inject()
     private val startViewModel: StartViewModel by viewModel()
     private val navController by lazy {
@@ -53,10 +50,10 @@ class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
 
     private fun showReviewDialog() {
         UIHelper.getReviewDialog(requireContext(),
-        positiveAction = {
-            reviewHelper.setHasClickedToReview()
-            reviewHelper.openStoreForReview()
-        }).show()
+            positiveAction = {
+                reviewHelper.setHasClickedToReview()
+                reviewHelper.openStoreForReview()
+            }).show()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,6 +68,7 @@ class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
             when (it) {
                 is Resource.Success -> {/*noop*/
                 }
+
                 is Resource.Error -> {
                     handleLeaveGameError(it)
                 }
@@ -100,31 +98,33 @@ class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
     }
 
     private fun getPreviousGameDialog(savedSession: SavedSession): Dialog {
-       return UIHelper.customSimpleAlert(requireContext(),
+        return UIHelper.customSimpleAlert(requireContext(),
             getString(R.string.enter_previous_game),
             getString(R.string.enter_previous_game_message),
             getString(R.string.yes),
             { navigateToWaitingScreen(savedSession.session, savedSession.started) },
             getString(R.string.no),
-            { triggerLeaveGame(savedSession)}
+            { triggerLeaveGame(savedSession) }
         )
     }
 
     private fun setupView() {
-        welcome_message.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
+        binding.apply {
+            welcomeMessage.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
 
-        btn_new_game.setOnClickListener {
-            navController.navigate(R.id.action_startFragment_to_newGameFragment)
-        }
+            btnNewGame.setOnClickListener {
+                navController.navigate(R.id.action_startFragment_to_newGameFragment)
+            }
 
-        btn_join_game.setOnClickListener {
-            navController.navigate(R.id.action_startFragment_to_joinGameFragment)
-        }
+            btnJoinGame.setOnClickListener {
+                navController.navigate(R.id.action_startFragment_to_joinGameFragment)
+            }
 
-        btn_rules.setOnClickListener { showRulesDialog() }
+            btnRules.setOnClickListener { showRulesDialog() }
 
-        btn_settings.setOnClickListener {
-            navController.navigate(R.id.action_startFragment_to_settingsFragment)
+            btnSettings.setOnClickListener {
+                navController.navigate(R.id.action_startFragment_to_settingsFragment)
+            }
         }
     }
 
@@ -132,30 +132,34 @@ class LegacyStartFragment : Fragment(R.layout.fragment_start_legacy) {
         UIHelper.customSimpleAlert(requireContext(),
             resources.getString(R.string.rules_title),
             resources.getString(R.string.rules_message),
-            resources.getString(R.string.positive_action_standard)
-            , {}, "", {}, true
+            resources.getString(R.string.positive_action_standard), {}, "", {}, true
         ).show()
     }
 
     private fun navigateToWaitingScreen(currentSession: Session, started: Boolean) {
         val bundle = Bundle()
-        bundle.putBoolean(LegacyWaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME, started)
+        bundle.putBoolean(
+            LegacyWaitingFragment.NAVIGATED_USING_SAVED_SESSION_TO_STARTED_GAME,
+            started
+        )
         bundle.putParcelable(LegacyWaitingFragment.SESSION_KEY, currentSession)
         navController.navigate(R.id.action_startFragment_to_waitingFragment, bundle)
     }
 
     private fun updateTheme() {
-        btn_join_game.background.setTint(UIHelper.accentColor)
-        btn_rules.setTextColor(UIHelper.accentColor)
+        binding.apply {
+            btnJoinGame.background.setTint(UIHelper.accentColor)
+            btnRules.setTextColor(UIHelper.accentColor)
 
-        DrawableCompat.setTint(
-            DrawableCompat.wrap(btn_settings.drawable),
-            ContextCompat.getColor(requireContext(), R.color.black)
-        )
+            DrawableCompat.setTint(
+                DrawableCompat.wrap(btnSettings.drawable),
+                ContextCompat.getColor(requireContext(), R.color.black)
+            )
 
-        DrawableCompat.setTint(
-            DrawableCompat.wrap(iv_rules.drawable),
-            UIHelper.accentColor
-        )
+            DrawableCompat.setTint(
+                DrawableCompat.wrap(ivRules.drawable),
+                UIHelper.accentColor
+            )
+        }
     }
 }

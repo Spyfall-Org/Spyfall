@@ -8,3 +8,6 @@ dependencies {
     implementation(getModule("libraries:coreCommon"))
     implementation(getModule("libraries:coreApi"))
 }
+android {
+    namespace = "spyfallx.corespyfall"
+}

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.FragmentJoinGameLegacyBinding
 import com.dangerfield.spyfall.legacy.api.Resource
 import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.ui.waiting.LegacyWaitingFragment
@@ -19,11 +20,12 @@ import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.addCharacterMax
 import com.dangerfield.spyfall.legacy.util.goneIf
 import com.dangerfield.spyfall.legacy.util.setHideKeyBoardOnPressAway
-import kotlinx.android.synthetic.main.fragment_join_game_legacy.*
+import com.dangerfield.spyfall.legacy.util.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
 
+    private val binding by viewBinding(FragmentJoinGameLegacyBinding::bind)
     private val joinGameViewModel: JoinGameViewModel by viewModel()
     private val navController: NavController by lazy { NavHostFragment.findNavController(this) }
 
@@ -52,11 +54,13 @@ class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
 
     private fun setupView() {
         updateTheme()
-        btn_join_game_action.setOnClickListener { triggerJoinGame() }
-        tv_access_code.setHideKeyBoardOnPressAway()
-        tv_username.setHideKeyBoardOnPressAway()
-        tv_access_code.addCharacterMax(8)
-        tv_username.addCharacterMax(25)
+        with(binding) {
+            btnJoinGameAction.setOnClickListener { triggerJoinGame() }
+            tvAccessCode.setHideKeyBoardOnPressAway()
+            tvUsername.setHideKeyBoardOnPressAway()
+            tvAccessCode.addCharacterMax(8)
+            tvUsername.addCharacterMax(25)
+        }
     }
 
     private fun observeJoinGameEvent() {
@@ -73,8 +77,8 @@ class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
 
     private fun triggerJoinGame() {
         showLoading(true)
-        val accessCode = tv_access_code.text.toString().toLowerCase().trim()
-        val userName = tv_username.text.toString().trim()
+        val accessCode = binding.tvAccessCode.text.toString().toLowerCase().trim()
+        val userName = binding.tvUsername.text.toString().trim()
         joinGameViewModel.triggerJoinGame(accessCode, userName)
     }
 
@@ -101,14 +105,16 @@ class LegacyJoinGameFragment : Fragment(R.layout.fragment_join_game_legacy) {
     }
 
     private fun updateTheme() {
-        btn_join_game_action.background.setTint(UIHelper.accentColor)
+        binding.btnJoinGameAction.background.setTint(UIHelper.accentColor)
         UIHelper.updateDrawableToTheme(requireContext(), R.drawable.edit_text_custom_cursor)
-        pb_join_game.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+        binding.pbJoinGame.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
     }
 
     private fun showLoading(loading: Boolean) {
-        btn_join_game_action.text = if (loading) "" else getString(R.string.string_join_game)
-        btn_join_game_action.isClickable = !loading
-        pb_join_game.goneIf(!loading)
+        with(binding) {
+            btnJoinGameAction.text = if (loading) "" else getString(R.string.string_join_game)
+            btnJoinGameAction.isClickable = !loading
+            pbJoinGame.goneIf(!loading)
+        }
     }
 }

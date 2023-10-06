@@ -11,3 +11,6 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
 }
+android {
+    namespace = "spyfallx.coregameapi"
+}

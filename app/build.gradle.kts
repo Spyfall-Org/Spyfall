@@ -4,7 +4,7 @@ plugins {
     id("spyfall.android.application")
     id("spyfall.android.hilt")
     id("com.google.firebase.crashlytics")
-    id("kotlin-android-extensions")
+    id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.android")
 }
@@ -27,13 +27,14 @@ android {
         }
     }
 
-    androidExtensions {
-        isExperimental = true
+    buildFeatures {
+        viewBinding = true
     }
-
+    
     packagingOptions {
         resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
     }
+    namespace = "com.dangerfield.spyfall"
 
     hilt {
         enableAggregatingTask = true

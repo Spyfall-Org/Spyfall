@@ -1,14 +1,12 @@
 package com.dangerfield.spyfall.legacy.ui.waiting
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.ItemPlayerCardBinding
 import com.dangerfield.spyfall.legacy.util.goneIf
-import kotlinx.android.synthetic.main.item_player_card.view.*
 
 interface CurrentUserHelper {
     fun getCurrentUser() : String
@@ -27,14 +25,20 @@ class WaitingPlayersAdapter(username: String, private val nameHelper: ChangeName
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val number: TextView = view.tv_player_number
-        val name: TextView = view.tv_new_game_name
-        val pencil: ImageView = view.iv_pencil
+    inner class ViewHolder(binding: ItemPlayerCardBinding): RecyclerView.ViewHolder(binding.root) {
+        val number: TextView = binding.tvPlayerNumber
+        val name: TextView = binding.tvNewGameName
+        val pencil: ImageView = binding.ivPencil
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_player_card, parent, false))
+        return ViewHolder(
+            ItemPlayerCardBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

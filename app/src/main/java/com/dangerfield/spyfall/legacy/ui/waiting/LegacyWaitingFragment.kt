@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.FragmentWaitingLegacyBinding
 import com.dangerfield.spyfall.legacy.api.Resource
 import com.dangerfield.spyfall.legacy.ui.game.StartGameError
 import com.dangerfield.spyfall.legacy.util.EventObserver
@@ -21,13 +22,15 @@ import com.dangerfield.spyfall.legacy.util.LogHelper
 import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.getViewModelFactory
 import com.dangerfield.spyfall.legacy.util.goneIf
+import com.dangerfield.spyfall.legacy.util.viewBinding
 import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.fragment_waiting_legacy.*
 
 class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameChangeEventFirer {
 
     private val changeNameHelper by lazy { ChangeNameHelper(this) }
     private val navigationBundle = Bundle()
+    private val binding by viewBinding(FragmentWaitingLegacyBinding::bind)
+
     private val adapter by lazy {
         WaitingPlayersAdapter(
             waitingViewModel.currentSession.currentUser,
@@ -75,13 +78,15 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
 
     private fun setupView() {
         changeAccent()
-        btn_start_game.setOnClickListener { triggerStartGameEvent() }
-        btn_leave_game.setOnClickListener { showLeaveGameDialog() }
-        configureLayoutManagerAndRecyclerView()
+        binding.apply {
+            btnStartGame.setOnClickListener { triggerStartGameEvent() }
+            btnLeaveGame.setOnClickListener { showLeaveGameDialog() }
+            configureLayoutManagerAndRecyclerView()
 
-        adView.visibility = View.VISIBLE
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+            adView.visibility = View.VISIBLE
+            val adRequest = AdRequest.Builder().build()
+            adView.loadAd(adRequest)
+        }
     }
 
     private fun observeCurrentUserStartsGame() {
@@ -104,7 +109,7 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
 
                 waitingViewModel.currentSession.game = it
                 adapter.players = it.playerList
-                tv_acess_code.text = waitingViewModel.currentSession.accessCode
+                binding.tvAcessCode.text = waitingViewModel.currentSession.accessCode
 
                 showLoading(it.started)
 
@@ -210,6 +215,7 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
                 NameChangeError.GAME_STARTED,
                 NameChangeError.UNKNOWN_ERROR,
                 NameChangeError.NETWORK_ERROR -> changeNameHelper.dismissNameChangeDialog()
+
                 else -> {
                     // stop loading so user can fix error
                     changeNameHelper.updateLoadingState(false)
@@ -251,20 +257,26 @@ class LegacyWaitingFragment : Fragment(R.layout.fragment_waiting_legacy), NameCh
     }
 
     private fun configureLayoutManagerAndRecyclerView() {
-        rv_player_list_waiting.layoutManager = LinearLayoutManager(requireContext())
-        rv_player_list_waiting.adapter = adapter
+        binding.apply {
+            rvPlayerListWaiting.layoutManager = LinearLayoutManager(requireContext())
+            rvPlayerListWaiting.adapter = adapter
+        }
     }
 
     private fun changeAccent() {
-        btn_start_game.background.setTint(UIHelper.accentColor)
-        pb_waiting.indeterminateDrawable
-            .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+        binding.apply {
+            btnStartGame.background.setTint(UIHelper.accentColor)
+            pbWaiting.indeterminateDrawable
+                .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+        }
     }
 
     private fun showLoading(loading: Boolean) {
-        btn_start_game.isClickable = !loading
-        btn_start_game.text = if (loading) "" else getString(R.string.string_btn_start_game)
-        pb_waiting.goneIf(!loading)
+        binding.apply {
+            btnStartGame.isClickable = !loading
+            btnStartGame.text = if (loading) "" else getString(R.string.string_btn_start_game)
+            pbWaiting.goneIf(!loading)
+        }
     }
 
     private fun showLeaveGameDialog() {

@@ -6,10 +6,10 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.TransitionManager
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.DialogChangeNameBinding
 import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.addCharacterMax
 import com.dangerfield.spyfall.legacy.util.clear
@@ -18,7 +18,6 @@ import com.dangerfield.spyfall.legacy.util.hideKeyboard
 import com.dangerfield.spyfall.legacy.util.invisibleIf
 import com.dangerfield.spyfall.legacy.util.openKeyboard
 import com.dangerfield.spyfall.legacy.util.visibleIf
-import kotlinx.android.synthetic.main.dialog_change_name.view.*
 
 interface NameChangeEventFirer {
     fun triggerNameChangeEvent(newName: String)
@@ -28,12 +27,12 @@ interface NameChangeEventFirer {
 class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
 
     private var nameChangeDialog: AlertDialog? = null
-    private var dialogView: View? = null
+    private var dialogViewBinding: DialogChangeNameBinding? = null
 
     fun showNameChangeDialog(context: Context) {
         nameChangeDialog = buildDialog(context)
         nameChangeDialog?.show()
-        dialogView?.tv_alert_change_name?.openKeyboard()
+        dialogViewBinding?.tvAlertChangeName?.openKeyboard()
     }
 
     private fun handleNameChange(newName: String) {
@@ -41,15 +40,15 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
     }
 
     fun updateLoadingState(loading: Boolean) {
-        dialogView?.let { dialog ->
-            dialog.tv_alert_change_name.invisibleIf(loading)
-            dialog.progressBar.visibleIf(loading)
-            dialog.btn_change_name_alert_okay.goneIf(loading)
+        dialogViewBinding?.let { binding ->
+            binding.tvAlertChangeName.invisibleIf(loading)
+            binding.progressBar.visibleIf(loading)
+            binding.btnChangeNameAlertOkay.goneIf(loading)
 
             val loadingSet = ConstraintSet()
             val origionalSet = ConstraintSet()
-            loadingSet.clone(dialog.change_name_layout)
-            origionalSet.clone(dialog.change_name_layout)
+            loadingSet.clone(binding.changeNameLayout)
+            origionalSet.clone(binding.changeNameLayout)
 
             loadingSet.clear(R.id.btn_alert_change_name_canel, ConstraintSet.END)
             loadingSet.connect(
@@ -59,36 +58,36 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
                 ConstraintSet.END
             )
 
-            TransitionManager.beginDelayedTransition(dialog.change_name_layout)
+            TransitionManager.beginDelayedTransition(binding.changeNameLayout)
             if (loading) {
-                loadingSet.applyTo(dialog.change_name_layout)
+                loadingSet.applyTo(binding.changeNameLayout)
             } else {
-                origionalSet.applyTo(dialog.change_name_layout)
+                origionalSet.applyTo(binding.changeNameLayout)
             }
         }
     }
 
     private fun buildDialog(context: Context): AlertDialog {
         val dialogBuilder = AlertDialog.Builder(context)
-        dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_change_name, null)
-        dialogBuilder.setView(dialogView)
+        dialogViewBinding = DialogChangeNameBinding.inflate(LayoutInflater.from(context))
+        dialogBuilder.setView(dialogViewBinding?.root)
         val dialog = dialogBuilder.create()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogView?.apply {
+        dialogViewBinding?.apply {
 
             UIHelper.updateDrawableToTheme(context, R.drawable.edit_text_custom_cursor)
-            tv_alert_change_name.addCharacterMax(25)
-            btn_change_name_alert_okay.background.setTint(UIHelper.accentColor)
+            tvAlertChangeName.addCharacterMax(25)
+            btnChangeNameAlertOkay.background.setTint(UIHelper.accentColor)
             progressBar.indeterminateDrawable
                 .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN)
-            btn_change_name_alert_okay.setOnClickListener {
-                val newName = tv_alert_change_name.text.toString().trim()
+            btnChangeNameAlertOkay.setOnClickListener {
+                val newName = tvAlertChangeName.text.toString().trim()
                 handleNameChange(newName)
             }
-            btn_alert_change_name_canel.setOnClickListener {
+            btnAlertChangeNameCanel.setOnClickListener {
                 eventFirer.cancelNameChangeEvent()
-                this.tv_alert_change_name.hideKeyboard()
+                this.tvAlertChangeName.hideKeyboard()
                 dialog.dismiss()
             }
         }
@@ -97,8 +96,8 @@ class ChangeNameHelper(private val eventFirer: NameChangeEventFirer) {
     }
 
     fun dismissNameChangeDialog() {
-        dialogView?.tv_alert_change_name?.clear()
-        dialogView?.tv_alert_change_name?.hideKeyboard()
+        dialogViewBinding?.tvAlertChangeName?.clear()
+        dialogViewBinding?.tvAlertChangeName?.hideKeyboard()
         nameChangeDialog?.dismiss()
     }
 }

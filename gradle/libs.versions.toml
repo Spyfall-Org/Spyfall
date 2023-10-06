@@ -1,13 +1,14 @@
 [versions]
 fragment = "1.5.0"
-androidGradlePlugin = "7.3.1"
-kotlin = "1.7.20"
-androidDesugarJdkLibs = "1.2.0"
-hilt = "2.44.1"
+androidGradlePlugin = "8.1.2"
+kotlin = "1.9.10"
+androidDesugarJdkLibs = "2.0.3"
+hilt = "2.47"
 coroutines = "1.6.4"
 
 #plugins
 detekt = "1.21.0"
+ksp = "1.9.10-1.0.13"
 
 [libraries]
 # AndroidX
@@ -36,7 +37,6 @@ arch-navigation-ui = "android.arch.navigation:navigation-ui:1.0.0"
 google-play-services-ads = "com.google.android.gms:play-services-ads:21.0.0"
 google-services = "com.google.gms:google-services:4.3.14"
 
-
 koin-core = "io.insert-koin:koin-core:3.1.6"
 koin-android = "io.insert-koin:koin-android:3.1.6"
 koin-testing = "io.insert-koin:koin-test:3.1.6"
@@ -64,7 +64,6 @@ mockito-kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 # KotlinX Coroutines
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-kotlinx-coroutines-rx3 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 #UI
@@ -73,14 +72,15 @@ lottie = "com.airbnb.android:lottie:3.7.0"
 # Lint
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
-
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

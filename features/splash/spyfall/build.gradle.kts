@@ -1,5 +1,3 @@
-import com.spyfall.convention.util.getModule
-
 plugins {
     id("spyfall.android.feature")
 }
@@ -14,4 +12,7 @@ dependencies {
     implementation(projects.libraries.coreGameApi)
     implementation(projects.libraries.coreSpyfallGame)
     implementation(projects.features.splash)
+}
+android {
+    namespace = "com.dangerfield.spyfall.splash.spyfall"
 }

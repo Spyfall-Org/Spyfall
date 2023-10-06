@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.FragmentNewGameLegacyBinding
 import com.dangerfield.spyfall.legacy.api.Resource
 import com.dangerfield.spyfall.legacy.models.Session
 import com.dangerfield.spyfall.legacy.ui.waiting.LegacyWaitingFragment
@@ -19,8 +20,8 @@ import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.addCharacterMax
 import com.dangerfield.spyfall.legacy.util.goneIf
 import com.dangerfield.spyfall.legacy.util.setHideKeyBoardOnPressAway
+import com.dangerfield.spyfall.legacy.util.viewBinding
 import com.dangerfield.spyfall.legacy.util.visibleIf
-import kotlinx.android.synthetic.main.fragment_new_game_legacy.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
@@ -28,6 +29,7 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
     private val newGameViewModel: NewGameViewModel by viewModel()
     private val packsAdapter: PacksAdapter by lazy { PacksAdapter(newGameViewModel.getPacks()) }
     private val navController by lazy { NavHostFragment.findNavController(this) }
+    private val binding by viewBinding(FragmentNewGameLegacyBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,12 +57,14 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
 
     private fun setupView() {
         changeAccent()
-        tv_new_game_name.setHideKeyBoardOnPressAway()
-        tv_new_game_time.setHideKeyBoardOnPressAway()
-        tv_new_game_time.addCharacterMax(2)
-        tv_new_game_name.addCharacterMax(25)
-        btn_create.setOnClickListener { triggerCreateGameEvent() }
-        btn_packs.setOnClickListener { triggerGetPackDetailsEvent() }
+        with(binding) {
+            tvNewGameName.setHideKeyBoardOnPressAway()
+            tvNewGameTime.setHideKeyBoardOnPressAway()
+            tvNewGameTime.addCharacterMax(2)
+            tvNewGameTime.addCharacterMax(25)
+            btnCreate.setOnClickListener { triggerCreateGameEvent() }
+            btnPacks.setOnClickListener { triggerGetPackDetailsEvent() }
+        }
         configurePacksAdapter()
     }
 
@@ -84,7 +88,12 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
             EventObserver {
                 if (!this.isAdded) return@EventObserver
                 when (it) {
-                    is Resource.Success -> it.data?.let { session -> handleSucessfulGameCreation(session) }
+                    is Resource.Success -> it.data?.let { session ->
+                        handleSucessfulGameCreation(
+                            session
+                        )
+                    }
+
                     is Resource.Error -> handleErrorCreatingGame(it)
                 }
             }
@@ -93,8 +102,8 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
 
     private fun triggerCreateGameEvent() {
         showLoadingForCreateGame(true)
-        val timeLimit = tv_new_game_time.text.toString().trim()
-        val playerName = tv_new_game_name.text.toString().trim()
+        val timeLimit = binding.tvNewGameTime.text.toString().trim()
+        val playerName = binding.tvNewGameName.text.toString().trim()
         val chosenPacks =
             packsAdapter.packs.filter { it.isSelected }.map { it.queryString } as ArrayList<String>
         newGameViewModel.triggerCreateGameEvent(playerName, timeLimit, chosenPacks)
@@ -147,20 +156,24 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
     }
 
     private fun showLoadingForCreateGame(loading: Boolean) {
-        pb_new_game.goneIf(!loading)
-        btn_create.text = if (loading) "" else getString(R.string.string_btn_create)
-        btn_create.isClickable = !loading
-        btn_packs.isClickable = !loading
+        with(binding) {
+            pbNewGame.goneIf(!loading)
+            btnCreate.text = if (loading) "" else getString(R.string.string_btn_create)
+            btnCreate.isClickable = !loading
+            btnPacks.isClickable = !loading
+        }
     }
 
     private fun showLoadingForGettingPacks(loading: Boolean) {
-        pb_packs.visibleIf(loading)
-        btn_packs.visibleIf(!loading)
-        btn_packs.isClickable = !loading
+        with(binding) {
+            pbPacks.visibleIf(loading)
+            btnPacks.visibleIf(!loading)
+            btnPacks.isClickable = !loading
+        }
     }
 
     private fun configurePacksAdapter() {
-        rv_packs.apply {
+        binding.rvPacks.apply {
             layoutManager = GridLayoutManager(context, 3)
             adapter = packsAdapter
             setHasFixedSize(true)
@@ -168,18 +181,18 @@ class LegacyNewGameFragment : Fragment(R.layout.fragment_new_game_legacy) {
     }
 
     private fun changeAccent() {
-        btn_create.background.setTint(UIHelper.accentColor)
+        binding.btnCreate.background.setTint(UIHelper.accentColor)
 
         val drawable = resources.getDrawable(R.drawable.ic_info).mutate()
         drawable.setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_ATOP)
-        btn_packs.setImageDrawable(drawable)
+        binding.btnPacks.setImageDrawable(drawable)
 
         UIHelper.updateDrawableToTheme(requireContext(), R.drawable.edit_text_custom_cursor)
 
-        pb_packs.indeterminateDrawable
+        binding.pbPacks.indeterminateDrawable
             .setColorFilter(UIHelper.accentColor, PorterDuff.Mode.SRC_IN)
 
-        pb_new_game.indeterminateDrawable
+        binding.pbNewGame.indeterminateDrawable
             .setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
     }
 }

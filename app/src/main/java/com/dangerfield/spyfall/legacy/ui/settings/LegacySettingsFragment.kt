@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -19,12 +20,12 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.DialogCustomBinding
+import com.dangerfield.spyfall.databinding.FragmentSettingsLegacyBinding
 import com.dangerfield.spyfall.legacy.util.FeedbackHelper
 import com.dangerfield.spyfall.legacy.util.UIHelper
 import com.dangerfield.spyfall.legacy.util.goneIf
-import kotlinx.android.synthetic.main.dialog_custom.*
-import kotlinx.android.synthetic.main.dialog_custom.view.*
-import kotlinx.android.synthetic.main.fragment_settings_legacy.*
+import com.dangerfield.spyfall.legacy.util.viewBinding
 import org.koin.android.ext.android.inject
 
 class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
@@ -32,7 +33,9 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     override fun onColorChange(colorButton: ColorButton) {
         val anim = ValueAnimator.ofArgb(UIHelper.accentColor, colorButton.color)
         anim.addUpdateListener {
-            colorChanger.btn_custom_alert_positive.background.setTint(it.animatedValue as Int)
+            colorChanger.findViewById<Button>(R.id.btn_custom_alert_positive)
+                .background
+                .setTint(it.animatedValue as Int)
         }
         anim.duration = 300
         anim.start()
@@ -46,11 +49,17 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
 
     private var newMode: Int? = null
 
+    private val binding by viewBinding(FragmentSettingsLegacyBinding::bind)
+
     lateinit var colors: MutableList<ColorButton>
     lateinit var colorChangeAdapter: ColorChangeAdapter
     lateinit var navController: NavController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         colors = mutableListOf()
         UIHelper.accentColors.forEach { colors.add(ColorButton(it, false)) }
         // this is a flag for random colors
@@ -64,9 +73,9 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
         super.onViewCreated(view, savedInstanceState)
 
         navController = Navigation.findNavController(requireParentFragment().requireView())
-        btn_theme_change.setOnClickListener { colorChanger.show() }
+        binding.btnThemeChange.setOnClickListener { colorChanger.show() }
 
-        btn_about.setOnClickListener {
+        binding.btnAbout.setOnClickListener {
             UIHelper.customSimpleAlert(
                 requireContext(),
                 resources.getString(R.string.about_title),
@@ -75,11 +84,11 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
             ).show()
         }
 
-        btn_tester_settings.setOnClickListener {
+        binding.btnTesterSettings.setOnClickListener {
             navController.navigate(R.id.action_settingsFragment_to_testerSettingsFragment)
         }
 
-        btn_feedback.setOnClickListener {
+        binding.btnFeedback.setOnClickListener {
             feedbackHelper.showFeedbackDialog(requireContext())
         }
 
@@ -87,9 +96,9 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
 
     private fun showTesterSettings(debug: Boolean) {
-        btn_tester_settings.goneIf(!debug)
-        iv_tester_settings.goneIf(!debug)
-        tv_tester_settings.goneIf(!debug)
+        binding.btnTesterSettings.goneIf(!debug)
+        binding.tvTesterSettings.goneIf(!debug)
+        binding.tvTesterSettings.goneIf(!debug)
     }
 
     override fun onResume() {
@@ -99,24 +108,24 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
 
     private fun getColorChangeDialog(): AlertDialog {
         val dialogBuilder = AlertDialog.Builder(requireContext())
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
-        dialogBuilder.setView(view)
+        val dialogBinding = DialogCustomBinding.inflate(LayoutInflater.from(dialogBuilder.context))
+        dialogBuilder.setView(dialogBinding.root)
         val dialog = dialogBuilder.create()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCanceledOnTouchOutside(true)
 
-        view.apply {
+        dialogBinding.apply {
 
-            rv_color_change.visibility = View.VISIBLE
+            rvColorChange.visibility = View.VISIBLE
 
             if (Integer.valueOf(android.os.Build.VERSION.SDK) < 29) { // below api 29 does not have system dark mode
-                mode_toggle.visibility = View.VISIBLE
+                modeToggle.visibility = View.VISIBLE
                 if (currentMode == Configuration.UI_MODE_NIGHT_YES) {
-                    mode_toggle.check(R.id.tgl_dark_mode)
+                    modeToggle.check(R.id.tgl_dark_mode)
                 } else {
-                    mode_toggle.check(R.id.tgl_light_mode)
+                    modeToggle.check(R.id.tgl_light_mode)
                 }
-                mode_toggle.setOnCheckedChangeListener { _, checkedId ->
+                modeToggle.setOnCheckedChangeListener { _, checkedId ->
                     when (checkedId) {
                         R.id.tgl_light_mode -> newMode = AppCompatDelegate.MODE_NIGHT_NO
                         R.id.tgl_dark_mode -> newMode = AppCompatDelegate.MODE_NIGHT_YES
@@ -124,15 +133,16 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
                 }
             }
 
-            rv_color_change.adapter = colorChangeAdapter
-            rv_color_change.layoutManager = GridLayoutManager(context, 4)
-            rv_color_change.setHasFixedSize(true)
+            rvColorChange.adapter = colorChangeAdapter
+            rvColorChange.layoutManager = GridLayoutManager(context, 4)
+            rvColorChange.setHasFixedSize(true)
 
-            btn_custom_alert_negative.setOnClickListener { dialog.cancel() }
+            btnCustomAlertNegative.setOnClickListener { dialog.cancel() }
 
-            btn_custom_alert_positive.setOnClickListener {
+            btnCustomAlertPositive.setOnClickListener {
                 if (colorChangeAdapter.selectedPosition != -1) {
-                    val chosenColor = colorChangeAdapter.colors[colorChangeAdapter.selectedPosition].color
+                    val chosenColor =
+                        colorChangeAdapter.colors[colorChangeAdapter.selectedPosition].color
                     // color white is the flag for random colors
                     UIHelper.accentColor = if (chosenColor == Color.WHITE) {
                         UIHelper.accentColors.random()
@@ -144,12 +154,14 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
                 newMode?.let { AppCompatDelegate.setDefaultNightMode(it) }
                 dialog.dismiss()
             }
-            btn_custom_alert_negative.text = resources.getString(R.string.negative_action_standard)
-            btn_custom_alert_positive.text = resources.getString(R.string.theme_change_positive)
+            btnCustomAlertNegative.text =
+                resources.getString(R.string.negative_action_standard)
+            btnCustomAlertPositive.text =
+                resources.getString(R.string.theme_change_positive)
             // for theme changing
-            btn_custom_alert_positive.background.setTint(UIHelper.accentColor)
-            tv_custom_alert.text = resources.getString(R.string.theme_change_message)
-            tv_custom_alert_title.text = resources.getString(R.string.theme_change_title)
+            btnCustomAlertPositive.background.setTint(UIHelper.accentColor)
+            tvCustomAlert.text = resources.getString(R.string.theme_change_message)
+            tvCustomAlertTitle.text = resources.getString(R.string.theme_change_title)
         }
         return dialog
     }
@@ -164,7 +176,12 @@ class LegacySettingsFragment : Fragment(), ColorChangeAdapter.ColorChanger {
     }
 
     private fun setTheme() {
-        listOf(iv_theme, ic_about, iv_tester_settings, iv_feedback).forEach {
+        listOf(
+            binding.ivTheme,
+            binding.icAbout,
+            binding.ivTesterSettings,
+            binding.ivFeedback
+        ).forEach {
             DrawableCompat.setTint(
                 DrawableCompat.wrap(it.drawable),
                 ContextCompat.getColor(requireContext(), R.color.black)

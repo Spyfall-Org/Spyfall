@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.dangerfield.spyfall.R
-import kotlinx.android.synthetic.main.item_change_color.view.*
+import com.dangerfield.spyfall.databinding.ItemChangeColorBinding
 
 class ColorChangeAdapter(
     var colors: List<ColorButton>,
@@ -18,14 +19,16 @@ class ColorChangeAdapter(
 
     var selectedPosition = -1
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var background: View = view.findViewById(R.id.change_color_background)
-        var hiddenText: TextView = view.findViewById(R.id.tv_change_color_type)
+    inner class ViewHolder(binding: ItemChangeColorBinding) : RecyclerView.ViewHolder(binding.root) {
+        var background: View = binding.changeColorBackground
+        var hiddenText: TextView = binding.tvChangeColorType
+        var colorChangeFilter: View = binding.colorChangeFilter
+        var colorChangeCheckAnimation: LottieAnimationView = binding.colorChangeCheckAnimation
 
         init {
-            context = view.context
+            context = binding.root.context
 
-            view.setOnClickListener {
+            binding.root.setOnClickListener {
                 // first, unselect the previous
                 if (selectedPosition != -1) { colors[selectedPosition].isSelected = false }
                 // now select this one
@@ -39,9 +42,13 @@ class ColorChangeAdapter(
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val singleButton = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_change_color, parent, false)
-        return ViewHolder(singleButton)
+        return ViewHolder(
+            ItemChangeColorBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,9 +60,9 @@ class ColorChangeAdapter(
             holder.hiddenText.visibility = View.INVISIBLE
         }
         if (colors[position].isSelected) {
-            select(holder.itemView)
+            select(holder)
         } else {
-            unselect(holder.itemView)
+            unselect(holder)
         }
     }
 
@@ -63,17 +70,18 @@ class ColorChangeAdapter(
         return colors.size
     }
 
-    private fun unselect(view: View) {
+    private fun unselect(holder: ViewHolder) {
         // unselect
-        view.color_change_filter.visibility = View.INVISIBLE
-        view.color_change_check_animation.visibility = View.INVISIBLE
+        holder.colorChangeFilter.visibility = View.INVISIBLE
+        holder.colorChangeCheckAnimation.visibility = View.INVISIBLE
     }
-    private fun select(view: View) {
+
+    private fun select(holder: ViewHolder) {
         // select
-        view.color_change_filter.visibility = View.VISIBLE
-        view.color_change_check_animation.speed = 2.0f
-        view.color_change_check_animation.visibility = View.VISIBLE
-        view.color_change_check_animation.playAnimation()
+        holder.colorChangeFilter.visibility = View.VISIBLE
+        holder.colorChangeCheckAnimation.speed = 2.0f
+        holder.colorChangeCheckAnimation.visibility = View.VISIBLE
+        holder.colorChangeCheckAnimation.playAnimation()
     }
 
     interface ColorChanger { fun onColorChange(colorButton: ColorButton) }

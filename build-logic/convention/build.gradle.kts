@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
@@ -5,15 +6,24 @@ plugins {
 
 group = "com.dangerfield.spyfall.buildlogic"
 
+// Configure the build-logic plugins to target JDK 17
+// This matches the JDK used to build the project, and is not related to what is running on device.
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
 }
 
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
-    implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${libs.versions.detekt.get()}")
+    implementation(libs.detekt.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.google.gms:google-services:4.3.14")
 }

@@ -6,14 +6,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Toast
 import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.DialogFeedbackBinding
 import com.dangerfield.spyfall.legacy.api.Constants
 import com.dangerfield.spyfall.legacy.models.Feedback
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.dialog_feedback.view.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,51 +22,51 @@ class FeedbackHelper(
     private val constants: Constants
 ) {
 
-    private var dialogView: View? = null
+    private var dialogViewBinding: DialogFeedbackBinding? = null
 
     fun showFeedbackDialog(context: Context) {
         val dialog = getNewFeedbackDialog(context)
         dialog.show()
-        dialogView?.tv_feedback?.openKeyboard()
+        dialogViewBinding?.tvFeedback?.openKeyboard()
     }
 
     private fun getNewFeedbackDialog(context: Context): AlertDialog {
         val dialogBuilder = AlertDialog.Builder(context)
-        dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_feedback, null)
-        dialogBuilder.setView(dialogView)
+        dialogViewBinding = DialogFeedbackBinding.inflate(LayoutInflater.from(context))
+        dialogBuilder.setView(dialogViewBinding?.root)
         val dialog = dialogBuilder.create()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogView?.apply {
-            btn_feedback_submit.background.setTint(UIHelper.accentColor)
+        dialogViewBinding?.apply {
+            btnFeedbackSubmit.background.setTint(UIHelper.accentColor)
             UIHelper.updateDrawableToTheme(context, R.drawable.edit_text_custom_cursor)
-            btn_feedback_submit.setOnClickListener {
-                val feedbackText = tv_feedback.text.toString().trim()
+            btnFeedbackSubmit.setOnClickListener {
+                val feedbackText = tvFeedback.text.toString().trim()
                 if (feedbackText.isNullOrEmpty()) {
                     Toast.makeText(
                         context,
                         "Looks like your feedback was empty. We would appreciate any feedback you have to give :)",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else if (!tv_email.containsValidOrEmptyEmail()) {
+                } else if (!tvEmail.containsValidOrEmptyEmail()) {
                     Toast.makeText(
                         context,
                         "Looks like your email was not formatted properly. Please try again :)",
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    submitFeedback(feedbackText, tv_email.text.trim().toString())
+                    submitFeedback(feedbackText, tvEmail.text.trim().toString())
                     Toast.makeText(
                         context,
                         "Thank you for your feedback! We rely on it to bring you a good experience",
                         Toast.LENGTH_LONG
                     ).show()
-                    this.tv_feedback.hideKeyboard()
+                    this.tvFeedback.hideKeyboard()
                     dialog.dismiss()
                 }
             }
-            btn_feedback_cancel.setOnClickListener {
-                this.tv_feedback.hideKeyboard()
+            btnFeedbackCancel.setOnClickListener {
+                this.tvFeedback.hideKeyboard()
                 dialog.dismiss()
             }
         }

@@ -7,9 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.spyfall.R
+import com.dangerfield.spyfall.databinding.ItemSimpleCardBinding
 import com.dangerfield.spyfall.legacy.util.UIHelper
-import kotlinx.android.synthetic.main.item_simple_card.view.*
-import kotlinx.android.synthetic.main.item_simple_card.view.ic_first
 
 class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlayer: String?) : RecyclerView.Adapter<GameViewsAdapter.ViewHolder>() {
 
@@ -32,7 +31,13 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlaye
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_simple_card, parent, false))
+        return ViewHolder(
+            ItemSimpleCardBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {
@@ -53,26 +58,23 @@ class GameViewsAdapter(val context: Context, list: ArrayList<String>, firstPlaye
         }
     }
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val text = view.tv_simple_card_text
-        val first_icon = view.ic_first
-        val first_text = view.tv_first
+    class ViewHolder(binding: ItemSimpleCardBinding): RecyclerView.ViewHolder(binding.root) {
+        val text = binding.tvSimpleCardText
+        val first_icon = binding.icFirst
+        val first_text = binding.tvFirst
 
         init {
-            view.setOnClickListener {
+            binding.root.setOnClickListener {
 
                 if(text.paintFlags != Paint.STRIKE_THRU_TEXT_FLAG){
-                    text.setTextColor(view.context.resources.getColor(R.color.grey100))
+                    text.setTextColor(binding.root.context.resources.getColor(R.color.grey100))
                     text.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 }else{
-                    text.setTextColor(view.context.resources.getColor(R.color.colorLightText))
+                    text.setTextColor(binding.root.context.resources.getColor(R.color.colorLightText))
                     text.paintFlags = 0
                 }
             }
         }
 
     }
-
-
-
 }

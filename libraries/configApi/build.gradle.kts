@@ -7,3 +7,6 @@ plugins {
 dependencies {
     implementation(getModule("libraries:coreCommon"))
 }
+android {
+    namespace = "spyfallx.configapi"
+}
