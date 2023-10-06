@@ -1,6 +1,5 @@
 plugins {
     id("spyfall.android.library")
-    id("spyfall.android.hilt")
     id("org.jetbrains.kotlin.android")
 }
 

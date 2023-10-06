@@ -17,7 +17,7 @@
           </compositeBuild>
         </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+        <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -25,14 +25,8 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/features" />
-            <option value="$PROJECT_DIR$/features/createGame" />
-            <option value="$PROJECT_DIR$/features/createGame/spyfall" />
-            <option value="$PROJECT_DIR$/features/joinGame" />
-            <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/splash" />
             <option value="$PROJECT_DIR$/features/splash/spyfall" />
-            <option value="$PROJECT_DIR$/features/waiting" />
-            <option value="$PROJECT_DIR$/features/welcome" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/configApi" />
             <option value="$PROJECT_DIR$/libraries/coreApi" />

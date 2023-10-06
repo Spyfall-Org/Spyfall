@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="content_description_settings">Open App Settings</string>
-    <string name="welcome_to">Welcome To</string>
-    <string name="join_game">Join Game</string>
-    <string name="rules">Rules</string>
-    <string name="new_game">New Game</string>
-
-</resources>

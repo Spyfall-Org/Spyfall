@@ -2,11 +2,16 @@ import com.spyfall.convention.util.getModule
 
 plugins {
     id("spyfall.android.application")
-    id("spyfall.android.hilt")
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.android")
+}
+
+spyfall {
+    daggerHilt(true)
+    daggerAndroid()
 }
 
 android {
@@ -36,9 +41,9 @@ android {
     }
     namespace = "com.dangerfield.spyfall"
 
-    hilt {
-        enableAggregatingTask = true
-    }
+//    hilt {
+//        enableAggregatingTask = true
+//    }
 }
 
 dependencies {
@@ -100,9 +105,6 @@ dependencies {
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreSpyfallGame"))
     implementation(getModule("libraries:coreCommon"))
-    implementation(getModule("features:settings"))
-    implementation(getModule("features:welcome"))
-    implementation(getModule("features:createGame"))
     implementation(getModule("features:splash"))
     implementation(getModule("features:splash:spyfall"))
 }

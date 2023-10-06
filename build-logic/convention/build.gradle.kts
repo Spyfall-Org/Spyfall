@@ -2,7 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
+    `java-gradle-plugin`
 }
+
 
 group = "com.dangerfield.spyfall.buildlogic"
 
@@ -19,6 +21,11 @@ tasks.withType<KotlinCompile>().configureEach {
     }
 }
 
+repositories {
+    gradlePluginPortal()
+    google()
+    maven { url = uri("https://repo.maven.apache.org/maven2/") }
+}
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
@@ -26,6 +33,7 @@ dependencies {
     compileOnly(libs.ksp.gradlePlugin)
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.google.gms:google-services:4.3.14")
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
 gradlePlugin {
@@ -41,15 +49,6 @@ gradlePlugin {
         register("androidFeature") {
             id = "spyfall.android.feature"
             implementationClass = "com.spyfall.convention.plugin.AndroidFeatureConventionPlugin"
-        }
-
-        register("androidTest") {
-            id = "spyfall.android.test"
-            implementationClass = "com.spyfall.convention.plugin.AndroidTestConventionPlugin"
-        }
-        register("androidHilt") {
-            id = "spyfall.android.hilt"
-            implementationClass = "com.spyfall.convention.plugin.AndroidHiltConventionPlugin"
         }
 
         register("androidDetekt") {

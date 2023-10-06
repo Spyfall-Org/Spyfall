@@ -4,7 +4,9 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 open class ThemeChangeableActivity : AppCompatActivity() {
     private var themeChanged = false
     private var uiTheme = Configuration.UI_MODE_NIGHT_YES

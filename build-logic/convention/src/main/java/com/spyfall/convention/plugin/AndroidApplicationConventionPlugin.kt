@@ -1,6 +1,7 @@
 package com.spyfall.convention.plugin
 
 import com.android.build.api.dsl.ApplicationExtension
+import com.spyfall.convention.extension.SpyfallExtension
 import com.spyfall.convention.util.BuildEnvironment
 import com.spyfall.convention.util.SharedConstants
 import com.spyfall.convention.util.buildConfigField
@@ -25,6 +26,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
             }
+
+            extensions.create("spyfall", SpyfallExtension::class.java)
 
             extensions.configure<ApplicationExtension> {
 

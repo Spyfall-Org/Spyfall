@@ -5,6 +5,8 @@ kotlin = "1.9.10"
 androidDesugarJdkLibs = "2.0.3"
 hilt = "2.47"
 coroutines = "1.6.4"
+cacheFixGradlePlugin = "2.7.2"
+androidxComposeCompiler = "1.5.3"
 
 #plugins
 detekt = "1.21.0"
@@ -25,6 +27,8 @@ androidx-test-arch-core = "androidx.arch.core:core-testing:2.1.0"
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0-alpha07"
 androidx-test-runner = "androidx.test:runner:1.5.0-alpha04"
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
+android-gradle-build-cache-fix-gradlePlugin = { module = "org.gradle.android.cache-fix:org.gradle.android.cache-fix.gradle.plugin", version.ref = "cacheFixGradlePlugin" }
+android-gradlePluginApi = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 
 androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }

@@ -2,6 +2,9 @@ plugins {
     id("spyfall.android.feature")
 }
 
+spyfall {
+    daggerHilt(withProcessors = false)
+}
 dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
