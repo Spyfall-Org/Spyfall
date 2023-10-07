@@ -115,6 +115,7 @@ complexity:
     threshold: 600
   LongMethod:
     active: true
+    ignoreAnnotated: ['Preview', 'Composable']
     threshold: 60
   LongParameterList:
     active: true
@@ -311,6 +312,7 @@ naming:
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
     functionPattern: '[a-z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
+    ignoreAnnotated: ['Composable']
     ignoreOverridden: true
   FunctionParameterNaming:
     active: true
