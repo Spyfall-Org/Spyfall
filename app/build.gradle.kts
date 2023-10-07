@@ -6,12 +6,12 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("com.google.gms.google-services")
-    id("org.jetbrains.kotlin.android")
 }
 
 spyfall {
     daggerHilt(true)
     daggerAndroid()
+    compose()
 }
 
 android {
@@ -40,10 +40,6 @@ android {
         resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
     }
     namespace = "com.dangerfield.spyfall"
-
-//    hilt {
-//        enableAggregatingTask = true
-//    }
 }
 
 dependencies {
@@ -56,7 +52,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.core)
-    implementation(libs.kotlin.std)
     implementation(libs.kotlin.std)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)
@@ -88,6 +83,8 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
+
+    implementation(libs.androidx.activity.compose)
     // testing
     // Koin testing tools
     testImplementation(libs.koin.testing)
@@ -105,6 +102,4 @@ dependencies {
     implementation(getModule("libraries:coreGameApi"))
     implementation(getModule("libraries:coreSpyfallGame"))
     implementation(getModule("libraries:coreCommon"))
-    implementation(getModule("features:splash"))
-    implementation(getModule("features:splash:spyfall"))
 }

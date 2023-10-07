@@ -1,9 +1,18 @@
 package com.spyfall.convention.extension
 
 
+import com.android.build.api.dsl.AndroidResources
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.BuildFeatures
+import com.android.build.api.dsl.BuildType
+import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.DefaultConfig
+import com.android.build.api.dsl.ProductFlavor
+import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestExtension
 import com.google.devtools.ksp.gradle.KspExtension
 import com.spyfall.convention.util.SharedConstants
+import com.spyfall.convention.util.configureAndroidCompose
 import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.optInKotlinMarkers
 import com.spyfall.convention.util.useKspDagger
@@ -11,6 +20,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 @SpyfallExtensionDsl
@@ -59,6 +69,19 @@ abstract class SpyfallExtension {
 
     fun compose() {
 
+        val projectExt = project.extensions.findByType(LibraryExtension::class.java)
+            ?: project.extensions.findByType(ApplicationExtension::class.java)
+            ?: error("""
+                Attempted to use compose outside of Application or Library project
+                make sure you've applied one of the following plugin to the calling projects build.gradle:
+                
+                id("spyfall.android.application")
+                id("spyfall.android.library")
+                id("spyfall.android.feature")
+
+            """.trimIndent())
+
+        project.configureAndroidCompose(projectExt)
     }
 
     fun flowroutines() {

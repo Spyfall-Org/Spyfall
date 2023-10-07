@@ -1,23 +1,21 @@
 package com.dangerfield.spyfall
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.commit
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
-import com.dangerfield.spyfall.MainActivityViewModel.Step.ForceUpdateDecision
-import com.dangerfield.spyfall.MainActivityViewModel.Step.SplashDecision
-import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.isLegacyBuild
-import com.dangerfield.spyfall.splash.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import spyfallx.core.BuildInfo
-import spyfallx.coreui.collectWhileStarted
+import com.dangerfield.spyfall.legacy.util.collectWhileStarted
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ThemeChangeableActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val mainActivityViewModel: MainActivityViewModel by viewModel()
 
@@ -28,30 +26,44 @@ class MainActivity : ThemeChangeableActivity() {
         super.onCreate(savedInstanceState)
 
         if (buildInfo.isLegacySpyfall) {
-            setContentView(R.layout.activity_main_legacy)
+           legacyOnCreate()
         } else {
-            setContentView(R.layout.activity_main)
+            refactorOnCreate()
         }
+    }
 
-        this.requestedOrientation = if (buildInfo.isLegacySpyfall) {
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        } else {
-            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        }
-
+    @SuppressLint("SourceLockedOrientationActivity")
+    private fun legacyOnCreate() {
+        setContentView(R.layout.activity_main_legacy)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         mainActivityViewModel.state.collectWhileStarted(this) { state ->
-            when (state.step) {
-                is ForceUpdateDecision -> if (state.step.shouldShowForceUpdate) {
-                    Log.d("Elijah", "forcing update")
-                    showBlockingUpdateLegacy()
-                }
-                is SplashDecision -> if (state.step.shouldShowSplash) {
-                    Log.d("Elijah", "showing splash")
-                    supportFragmentManager.commit { add(R.id.content, SplashFragment()) }
-                }
+            if (state == MainActivityViewModel.State.UpdateRequired) {
+                Log.d("Elijah", "showing splash")
+                showBlockingUpdateLegacy()
             }
         }
     }
+
+    private fun refactorOnCreate() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        setContent {
+            SpyfallApp()
+        }
+    }
+
+    /*
+    so ill make a litte ext fun called rememberHiltInjected<T> that uses entry points
+    to get the T and remember it
+
+    ill just need to make a little annotation
+    @ComposeInjectable that will generate the little entry point using kotlin poet
+    ill make this its own little library on github called
+
+    ill need to work for more than just class targets
+    itll need to work for @provides fun targets as well. Ill get chat gpts help.
+    
+    Compose Hilt Injection
+     */
 
     override fun onSupportNavigateUp(): Boolean {
         return if (isLegacyBuild()) {

@@ -12,6 +12,10 @@
     <string name="email" translatable="false">spyfallmobile@gmail.com</string>
     <string name="string_btn_rules">Rules</string>
 
+    <string name="okay">Okay</string>
+    <string name="update_message">Please update to the newest version to keep the fun going.</string>
+    <string name="update_title">We\'ve made some changes</string>
+
     <!--Dialogs-->
     <string name="positive_action_standard">Okay</string>
     <string name="negative_action_standard">Cancel</string>

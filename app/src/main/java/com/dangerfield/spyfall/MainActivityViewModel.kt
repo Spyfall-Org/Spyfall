@@ -2,9 +2,7 @@ package com.dangerfield.spyfall
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dangerfield.spyfall.MainActivityViewModel.Step.ForceUpdateDecision
-import com.dangerfield.spyfall.MainActivityViewModel.Step.SplashDecision
-import com.dangerfield.spyfall.splash.forcedupdate.IsUpdateRequired
+import com.dangerfield.spyfall.legacy.ui.forcedupdate.IsUpdateRequired
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
@@ -19,23 +17,18 @@ class MainActivityViewModel(
     val state: StateFlow<State> = flow {
         val shouldRequireUpdate = buildInfo.isLegacySpyfall && isUpdateRequired()
         emit(
-            State(step = ForceUpdateDecision(shouldRequireUpdate))
+            if (shouldRequireUpdate) State.UpdateRequired else State.Idle
         )
     }
         .stateIn(
             viewModelScope,
             SharingStarted.Lazily,
-            initialValue = State(
-                step = SplashDecision(shouldShowSplash = !buildInfo.isLegacySpyfall)
-            )
+            initialValue = State.Loading
         )
 
-    sealed class Step {
-        class SplashDecision(val shouldShowSplash: Boolean) : Step()
-        class ForceUpdateDecision(val shouldShowForceUpdate: Boolean) : Step()
+    sealed class State {
+        data object Idle: State()
+        data object Loading: State()
+        data object UpdateRequired: State()
     }
-
-    data class State(
-        val step: Step,
-    )
 }

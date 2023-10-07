@@ -74,7 +74,7 @@
             tools:layout="@layout/fragment_tester_settings" />
     <fragment
             android:id="@+id/requireUpdateFragment"
-            android:name="com.dangerfield.spyfall.splash.forcedupdate.ForcedUpdateFragment"
+            android:name="com.dangerfield.spyfall.legacy.ui.forcedupdate.ForcedUpdateFragment"
             android:label="fragment_require_update"
             tools:layout="@layout/fragment_forced_update" />
 

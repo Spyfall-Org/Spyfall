@@ -25,9 +25,9 @@ import com.dangerfield.spyfall.legacy.util.SavedSessionHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerService
 import com.dangerfield.spyfall.legacy.util.isLegacyBuild
-import com.dangerfield.spyfall.splash.forcedupdate.AppUpdateDataSource
-import com.dangerfield.spyfall.splash.forcedupdate.IsUpdateRequired
-import com.dangerfield.spyfall.splash.spyfall.SpyfallAppUpdateDataSource
+import com.dangerfield.spyfall.legacy.ui.forcedupdate.AppUpdateDataSource
+import com.dangerfield.spyfall.legacy.ui.forcedupdate.IsUpdateRequired
+import com.dangerfield.spyfall.legacy.api.SpyfallAppUpdateDataSource
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
