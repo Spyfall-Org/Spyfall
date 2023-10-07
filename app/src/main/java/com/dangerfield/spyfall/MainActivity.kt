@@ -6,12 +6,18 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.Navigation.findNavController
+import com.dangerfield.spyfall.MainActivityViewModel.State
+import com.dangerfield.spyfall.legacy.util.collectWhileStarted
 import com.dangerfield.spyfall.legacy.util.isLegacyBuild
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import spyfallx.core.BuildInfo
-import com.dangerfield.spyfall.legacy.util.collectWhileStarted
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (buildInfo.isLegacySpyfall) {
-           legacyOnCreate()
+            legacyOnCreate()
         } else {
             refactorOnCreate()
         }
@@ -37,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main_legacy)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         mainActivityViewModel.state.collectWhileStarted(this) { state ->
-            if (state == MainActivityViewModel.State.UpdateRequired) {
+            if (state == State.UpdateRequired) {
                 Log.d("Elijah", "showing splash")
                 showBlockingUpdateLegacy()
             }
@@ -45,25 +51,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refactorOnCreate() {
+        val splashScreen = installSplashScreen()
+
+        var isLoading: Boolean by mutableStateOf(value = false)
+
+        collectWhileStarted(mainActivityViewModel.state) {
+            isLoading = it == State.Loading
+        }
+
+        // Keeps the splash screen up while the state is loading
+        splashScreen.setKeepOnScreenCondition { isLoading }
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         setContent {
             SpyfallApp()
         }
     }
-
-    /*
-    so ill make a litte ext fun called rememberHiltInjected<T> that uses entry points
-    to get the T and remember it
-
-    ill just need to make a little annotation
-    @ComposeInjectable that will generate the little entry point using kotlin poet
-    ill make this its own little library on github called
-
-    ill need to work for more than just class targets
-    itll need to work for @provides fun targets as well. Ill get chat gpts help.
-    
-    Compose Hilt Injection
-     */
 
     override fun onSupportNavigateUp(): Boolean {
         return if (isLegacyBuild()) {

@@ -3,6 +3,7 @@ package com.dangerfield.spyfall
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.spyfall.legacy.ui.forcedupdate.IsUpdateRequired
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow

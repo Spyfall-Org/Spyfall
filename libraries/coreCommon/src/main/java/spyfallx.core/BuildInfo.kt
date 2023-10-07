@@ -12,7 +12,7 @@ data class BuildInfo(
     val configKey: String
 ) {
     val isDebug: Boolean = BuildConfig.DEBUG
-    val isLegacySpyfall = targetApp is TargetApp.Spyfall && targetApp.isLegacyBuild
+    val isLegacySpyfall = false//targetApp is TargetApp.Spyfall && targetApp.isLegacyBuild
 }
 
 /**

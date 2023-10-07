@@ -48,7 +48,6 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.legacy.support)
-
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.core)
@@ -60,6 +59,7 @@ dependencies {
     implementation(libs.arch.fragment.navigation)
     implementation(libs.arch.navigation.ui)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.core.splashscreen)
 
     // ad mob
     implementation(libs.google.play.services.ads)

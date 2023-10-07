@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.javax.inject)
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
+    implementation(libs.androidx.core.splashscreen)
 }
 android {
     namespace = "spyfallx.coreui"
