@@ -26,6 +26,11 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 extensions.create("spyfall", SpyfallExtension::class.java)
             }
 
+            /*
+            TODO
+            not all libraries should automatically get the android stuff, lets consider
+            making things different
+             */
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")

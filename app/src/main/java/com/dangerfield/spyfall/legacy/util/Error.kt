@@ -11,14 +11,14 @@ inline fun <reified T> Throwable.removeClassFromStackTrace() = removeClassFromSt
  * For example, given this stack trace:
  * ```
  * Fatal Exception: java.lang.IllegalStateException
- *   at co.hinge.core.android.ui.view.ManagedViewPropertyDelegate.getValue(FragmentViewBindingDelegate.kt:57)
- *   at co.hinge.discover.ui.DiscoverFragment.getUi(DiscoverFragment.kt:7)
+ *   at co.Spyfall.core.android.ui.view.ManagedViewPropertyDelegate.getValue(FragmentViewBindingDelegate.kt:57)
+ *   at co.Spyfall.discover.ui.DiscoverFragment.getUi(DiscoverFragment.kt:7)
  * ```
  *
  * Calling this function with `ManagedViewPropertyDelegate` as the class will update the stacktrace to be:
  * ```
  * Fatal Exception: java.lang.IllegalStateException
- *   at co.hinge.discover.ui.DiscoverFragment.getUi(DiscoverFragment.kt:7)
+ *   at co.Spyfall.discover.ui.DiscoverFragment.getUi(DiscoverFragment.kt:7)
  * ```
  *
  * This function can remove multiple lines from the stack trace, but it will only remove the first lines. If the

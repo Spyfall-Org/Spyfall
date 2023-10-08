@@ -1,6 +1,12 @@
+
 plugins {
     id("spyfall.android.library")
     id("org.jetbrains.kotlin.android")
+}
+
+spyfall {
+    compose()
+    optIn("androidx.compose.material3.ExperimentalMaterial3Api")
 }
 
 dependencies {
@@ -15,6 +21,11 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
     implementation(libs.androidx.core.splashscreen)
+    implementation(projects.libraries.coreUi.internal)
+    implementation(libs.androidx.browser)
+    implementation(libs.androidx.customview.poolingcontainer)
+    implementation(libs.androidx.compose.material.iconsExtended)
+    implementation(libs.androidx.compose.material3)
 }
 android {
     namespace = "spyfallx.coreui"

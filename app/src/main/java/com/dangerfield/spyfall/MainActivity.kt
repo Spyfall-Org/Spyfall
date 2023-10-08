@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,8 +18,12 @@ import com.dangerfield.spyfall.MainActivityViewModel.State
 import com.dangerfield.spyfall.legacy.util.collectWhileStarted
 import com.dangerfield.spyfall.legacy.util.isLegacyBuild
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.map
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import spyfallx.core.BuildInfo
+import spyfallx.core.doNothing
+import spyfallx.coreui.color.ColorPrimitive
+import spyfallx.coreui.setContent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,7 +35,20 @@ class MainActivity : AppCompatActivity() {
     lateinit var buildInfo: BuildInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        var isLoading: Boolean by mutableStateOf(value = false)
+
+        collectWhileStarted(mainActivityViewModel.state) {
+            isLoading = it == State.Loading
+
+            if (buildInfo.isLegacySpyfall && it is State.Loaded && it.isUpdateRequired) {
+                showBlockingUpdateLegacy()
+            }
+        }
+
+        splashScreen.setKeepOnScreenCondition { isLoading }
 
         if (buildInfo.isLegacySpyfall) {
             legacyOnCreate()
@@ -42,28 +61,24 @@ class MainActivity : AppCompatActivity() {
     private fun legacyOnCreate() {
         setContentView(R.layout.activity_main_legacy)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        mainActivityViewModel.state.collectWhileStarted(this) { state ->
-            if (state == State.UpdateRequired) {
-                Log.d("Elijah", "showing splash")
-                showBlockingUpdateLegacy()
-            }
-        }
     }
 
     private fun refactorOnCreate() {
-        val splashScreen = installSplashScreen()
-
-        var isLoading: Boolean by mutableStateOf(value = false)
-
-        collectWhileStarted(mainActivityViewModel.state) {
-            isLoading = it == State.Loading
-        }
-
-        // Keeps the splash screen up while the state is loading
-        splashScreen.setKeepOnScreenCondition { isLoading }
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        setContent {
-            SpyfallApp()
+
+        applicationContext.setContent(
+            accentColor = ColorPrimitive.CherryPop700,
+        ) {
+            val appState by mainActivityViewModel.state.collectAsState()
+
+            when(val smartState = appState) {
+                is State.Loaded -> {
+                    SpyfallApp(
+                        isUpdateRequired = smartState.isUpdateRequired,
+                    )
+                }
+                State.Loading -> doNothing()
+            }
         }
     }
 

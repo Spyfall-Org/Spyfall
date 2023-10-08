@@ -28,14 +28,13 @@ internal fun Project.configureAndroidCompose(
             add("androidTestImplementation", platform(bom))
             // Add ComponentActivity to debug manifest
             add("debugImplementation", libs.androidx.compose.ui.testManifest)
+            add("debugImplementation",libs.androidx.compose.ui.tooling)
             // Screenshot Tests on JVM
             add("testImplementation", libs.robolectric)
             add("testImplementation", libs.roborazzi)
 
             add("implementation", libs.androidx.compose.foundation)
             add("implementation", libs.androidx.compose.foundation.layout)
-            add("implementation", libs.androidx.compose.material.iconsExtended)
-            add("implementation", libs.androidx.compose.material3)
             add("implementation", libs.androidx.compose.runtime.livedata)
             add("implementation", libs.androidx.compose.ui.tooling.preview)
             add("implementation", libs.androidx.compose.ui.util)

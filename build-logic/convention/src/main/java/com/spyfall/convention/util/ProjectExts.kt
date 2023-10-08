@@ -1,5 +1,6 @@
 package com.spyfall.convention.util
 
+import com.android.build.api.dsl.CommonExtension
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -37,6 +38,9 @@ fun Project.getVersionName(): String = loadAppProperty("versionName")
 fun Project.getVersionCode(): Int =loadAppProperty("versionCode").toInt()
 
 fun Project.getPackageName(): String = loadAppProperty("packageName")
+
+val Project.commonExt: CommonExtension<*, *, *, *, *>
+    get() = extensions.getByType(CommonExtension::class.java)
 
 @Suppress("TooGenericExceptionCaught")
 fun Project.loadAppProperty(property: String): String = Properties().let {
