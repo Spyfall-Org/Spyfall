@@ -203,13 +203,13 @@ private fun NumericalValuesPreviewContent(
             Row {
                 Text(
                     text = "System value",
-                    style = Typography.Body.B600.style,
+                    style = SpyfallTheme.typography.Body.B600.style,
                     color = ColorPrimitive.Black800.color,
                     modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = "DP value",
-                    style = Typography.Body.B600.style,
+                    style = SpyfallTheme.typography.Body.B600.style,
                     color = ColorPrimitive.Black600.color,
                     modifier = Modifier.weight(1f)
                 )
@@ -248,13 +248,13 @@ private fun NumericalValueText(
     ) {
         Text(
             text = value.name.removePrefix("value"),
-            style = Typography.Heading.H800.style,
+            style = SpyfallTheme.typography.Heading.H800.style,
             color = ColorPrimitive.Black800.color,
             modifier = Modifier.weight(1f)
         )
         Text(
             text = "${value.get().value.roundToInt()}dp",
-            style = Typography.Heading.H800.style,
+            style = SpyfallTheme.typography.Heading.H800.style,
             color = ColorPrimitive.Black600.color,
             modifier = Modifier.weight(1f)
         )

@@ -15,19 +15,6 @@ class MainActivityViewModel(
     private val isUpdateRequired: IsUpdateRequired,
 ) : ViewModel() {
 
-    /*
-    okay so where do I get this color settings? core something? just in main
-    no one needs it except main right?
-    it should probably be something others can access
-
-    on coreUI? cause its UI releated?
-    coreUser, which exposes a use case to coreUser objects?
-    colorPreference being one of those?
-
-    should it be specific to color?
-    coreColor?
-    does it make sense in coreUi?
-     */
     val state: StateFlow<State> = flow {
         emit(
             State.Loaded(

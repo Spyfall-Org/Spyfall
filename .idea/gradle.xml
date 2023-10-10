@@ -25,17 +25,21 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/colorPicker" />
+            <option value="$PROJECT_DIR$/features/colorPicker/internal" />
             <option value="$PROJECT_DIR$/features/splash" />
-            <option value="$PROJECT_DIR$/features/splash/spyfall" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/configApi" />
             <option value="$PROJECT_DIR$/libraries/coreApi" />
             <option value="$PROJECT_DIR$/libraries/coreCommon" />
             <option value="$PROJECT_DIR$/libraries/coreConfig" />
+            <option value="$PROJECT_DIR$/libraries/coreDataStore" />
+            <option value="$PROJECT_DIR$/libraries/coreFlowroutines" />
             <option value="$PROJECT_DIR$/libraries/coreGameApi" />
             <option value="$PROJECT_DIR$/libraries/coreSpyfall" />
             <option value="$PROJECT_DIR$/libraries/coreSpyfallGame" />
             <option value="$PROJECT_DIR$/libraries/coreUi" />
+            <option value="$PROJECT_DIR$/libraries/coreUi/internal" />
             <option value="$PROJECT_DIR$/libraries/coreWerewolfGame" />
           </set>
         </option>

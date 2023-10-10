@@ -1,9 +1,11 @@
-import com.spyfall.convention.util.getModule
-
 plugins {
     id("spyfall.android.library")
 }
 
+android {
+    namespace = "com.dangerfield.example"
+}
+
 dependencies {
-    implementation(getModule("libraries:coreCommon"))
+    implementation(projects.libraries.coreCommon)
 }

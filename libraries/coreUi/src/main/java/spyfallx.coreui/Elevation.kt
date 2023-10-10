@@ -39,6 +39,8 @@ value class Elevation internal constructor(val dp: Dp) : Comparable<Elevation> {
         val None = Elevation(0.dp)
         val Inline = Elevation(1.dp)
         val Fixed = Elevation(6.dp)
+        val AppBar = Elevation(4.dp)
+
 
         internal val VectorConverter: TwoWayConverter<Elevation, AnimationVector1D> = TwoWayConverter(
             convertToVector = { AnimationVector1D(it.dp.value) },
@@ -145,7 +147,7 @@ private fun ElevationPreview() {
                     Box(Modifier.weight(1f)) {
                         Text(
                             "elevation-${elevation.name.lowercase()}",
-                            style = Typography.Heading.H800.style,
+                            style = SpyfallTheme.typography.Heading.H800.style,
                             color = SpyfallTheme.colorScheme.textPrimary.color
                         )
                     }

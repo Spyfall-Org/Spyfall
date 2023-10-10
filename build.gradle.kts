@@ -9,7 +9,7 @@ buildscript {
         classpath(libs.kotlin.gradlePlugin)
         classpath(libs.google.services)
         classpath(libs.firebase.crashlytics)
-        classpath(libs.hilt.gradle)
+        classpath(libs.dagger.hilt.gradle.plugin)
     }
 }
 

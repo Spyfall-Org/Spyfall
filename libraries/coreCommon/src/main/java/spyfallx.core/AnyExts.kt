@@ -21,3 +21,5 @@ fun <A, B, C, D, T> allOrNone(one: A?, two: B?, three: C?, four: D?, block: (A, 
  * Convenience Method to make it more readable when do logic needs to be executed
  */
 fun Any.doNothing() = Unit
+fun doNothing() = Unit
+

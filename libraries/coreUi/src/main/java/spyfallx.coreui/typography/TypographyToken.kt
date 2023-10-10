@@ -36,6 +36,7 @@ open class TypographyToken internal constructor(
     internal val lineHeight: TextUnit,
     internal val lineBreak: LineBreak,
     internal val fontStyle: FontStyle = FontStyle.Normal,
+    internal val identifier: String
 ) {
 
     val style: TextStyle = TextStyle(
@@ -46,179 +47,188 @@ open class TypographyToken internal constructor(
         fontStyle = fontStyle,
         lineBreak = lineBreak
     )
+
+    val Italic: TypographyToken
+        get() = TypographyToken(
+            fontFamily = fontFamily,
+            fontWeight = fontWeight,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+            lineBreak = lineBreak,
+            fontStyle = FontStyle.Italic,
+            identifier = "${identifier}-italic"
+        )
 }
 
-object Typography {
+class Typography {
+    val Display = DisplayTypography()
+    val Heading = HeadingTypography()
+    val Body = BodyTypography()
+    val Label = LabelTypography()
 
-    object Display {
-        object D1100 : TypographyToken(
+    val Default = Label.L600
+
+    class DisplayTypography {
+        val D1100 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.SemiBold,
             fontSize = FontSize.S1100,
             lineHeight = LineHeight.H1200,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "display-1100"
         )
 
-        object D1000 : TypographyToken(
+        val D1000 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.SemiBold,
             fontSize = FontSize.S1000,
             lineHeight = LineHeight.H1100,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "display-1000"
         )
 
-        object D900 : TypographyToken(
+        val D900 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.SemiBold,
             fontSize = FontSize.S900,
             lineHeight = LineHeight.H1000,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "display-900"
         )
 
-        object D800 : TypographyToken(
+        val D800 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.SemiBold,
             fontSize = FontSize.S800,
             lineHeight = LineHeight.H900,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "display-800"
         )
     }
 
-    object Heading {
-        object H1000 : TypographyToken(
+    class HeadingTypography {
+        val H1000 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Bold,
             fontSize = FontSize.S1000,
             lineHeight = LineHeight.H1100,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "heading-1000"
         )
 
-        object H900 : TypographyToken(
+        val H900 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Bold,
             fontSize = FontSize.S900,
             lineHeight = LineHeight.H1000,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "heading-900"
         )
 
-        object H800 : TypographyToken(
+        val H800 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Bold,
             fontSize = FontSize.S800,
             lineHeight = LineHeight.H900,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "heading-800"
         )
 
-        object H700 : TypographyToken(
+        val H700 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Bold,
             fontSize = FontSize.S700,
             lineHeight = LineHeight.H800,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "heading-700"
         )
 
-        object H600 : TypographyToken(
+        val H600 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Bold,
             fontSize = FontSize.S600,
             lineHeight = LineHeight.H700,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "heading-600"
         )
 
-        object H500 : TypographyToken(
+        val H500 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Bold,
             fontSize = FontSize.S500,
             lineHeight = LineHeight.H700,
-            lineBreak = LineBreak.Heading
+            lineBreak = LineBreak.Heading,
+            identifier = "heading-500"
         )
     }
 
-    object Label {
-        object L700 : TypographyToken(
+    class LabelTypography {
+        val L700 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Medium,
             fontSize = FontSize.S700,
             lineHeight = LineHeight.H900,
-            lineBreak = LineBreak.Paragraph
+            lineBreak = LineBreak.Paragraph,
+            identifier = "label-700"
         )
 
-        object L600 : TypographyToken(
+        val L600 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Medium,
             fontSize = FontSize.S600,
             lineHeight = LineHeight.H800,
-            lineBreak = LineBreak.Paragraph
+            lineBreak = LineBreak.Paragraph,
+            identifier = "label-600"
         )
 
-        object L500 : TypographyToken(
+        val L500 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Medium,
             fontSize = FontSize.S500,
             lineHeight = LineHeight.H600,
-            lineBreak = LineBreak.Paragraph
+            lineBreak = LineBreak.Paragraph,
+            identifier = "label-500"
         )
 
-        object L400 : TypographyToken(
+        val L400 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Medium,
             fontSize = FontSize.S400,
             lineHeight = LineHeight.H500,
-            lineBreak = LineBreak.Paragraph
+            lineBreak = LineBreak.Paragraph,
+            identifier = "label-400"
         )
     }
 
-    object Body {
-        object B700 : TypographyToken(
+    class BodyTypography {
+
+        val B700 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Medium,
             fontSize = FontSize.S700,
             lineHeight = LineHeight.H900,
-            lineBreak = LineBreak.Paragraph
-        ) {
-            object Italic : TypographyToken(
-                fontFamily = B700.fontFamily,
-                fontWeight = B700.fontWeight,
-                fontSize = B700.fontSize,
-                lineHeight = B700.lineHeight,
-                lineBreak = B700.lineBreak,
-                fontStyle = FontStyle.Italic
-            )
-        }
+            lineBreak = LineBreak.Paragraph,
+            identifier = "body-700"
+        )
 
-        object B600 : TypographyToken(
+
+        val B600 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Medium,
             fontSize = FontSize.S600,
             lineHeight = LineHeight.H800,
-            lineBreak = LineBreak.Paragraph
-        ) {
-            object Italic : TypographyToken(
-                fontFamily = B600.fontFamily,
-                fontWeight = B600.fontWeight,
-                fontSize = B600.fontSize,
-                lineHeight = B600.lineHeight,
-                lineBreak = B600.lineBreak,
-                fontStyle = FontStyle.Italic
-            )
-        }
+            lineBreak = LineBreak.Paragraph,
+            identifier = "body-600"
+        )
 
-        object B500 : TypographyToken(
+        val B500 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Medium,
             fontSize = FontSize.S500,
             lineHeight = LineHeight.H700,
-            lineBreak = LineBreak.Paragraph
-        ) {
-            object Italic : TypographyToken(
-                fontFamily = B500.fontFamily,
-                fontWeight = B500.fontWeight,
-                fontSize = B500.fontSize,
-                lineHeight = B500.lineHeight,
-                lineBreak = B500.lineBreak,
-                fontStyle = FontStyle.Italic
-            )
-        }
+            lineBreak = LineBreak.Paragraph,
+            identifier = "body-500"
+        )
     }
 }
 
@@ -244,19 +254,19 @@ private fun TokensPreview(
                 Divider(color = ColorPrimitive.Black800.color, modifier = Modifier.fillMaxWidth())
                 PreviewRow(
                     token = {
-                        Text("Token", style = Typography.Heading.H600.style)
+                        Text("Token", style = SpyfallTheme.typography.Heading.H600.style)
                     },
                     specs = {
                         Text(
                             "Specs",
-                            style = Typography.Heading.H600.style,
+                            style = SpyfallTheme.typography.Heading.H600.style,
                             color = ColorPrimitive.Black600.color
                         )
                     },
                     example = {
                         Text(
                             "Example",
-                            style = Typography.Heading.H600.style,
+                            style = SpyfallTheme.typography.Heading.H600.style,
                             color = ColorPrimitive.Black600.color
                         )
                     }
@@ -270,32 +280,9 @@ private fun TokensPreview(
                     )
                     PreviewRow(
                         token = {
-                            val tokenName: String = when (token) {
-                                Typography.Display.D1100 -> "disp-1100"
-                                Typography.Display.D1000 -> "disp-1000"
-                                Typography.Display.D900 -> "disp-900"
-                                Typography.Display.D800 -> "disp-800"
-                                Typography.Heading.H1000 -> "hed-1000"
-                                Typography.Heading.H900 -> "hed-900"
-                                Typography.Heading.H800 -> "hed-800"
-                                Typography.Heading.H700 -> "hed-700"
-                                Typography.Heading.H600 -> "hed-600"
-                                Typography.Heading.H500 -> "hed-500"
-                                Typography.Label.L700 -> "label-700"
-                                Typography.Label.L600 -> "label-600"
-                                Typography.Label.L500 -> "label-500"
-                                Typography.Label.L400 -> "label-400"
-                                Typography.Body.B700 -> "body-700"
-                                Typography.Body.B700.Italic -> "body-700-italic"
-                                Typography.Body.B600 -> "body-600"
-                                Typography.Body.B600.Italic -> "body-600-italic"
-                                Typography.Body.B500 -> "body-500"
-                                Typography.Body.B500.Italic -> "body-500-italic"
-                                else -> "unknown"
-                            }
                             Text(
-                                text = tokenName,
-                                style = Typography.Heading.H700.style
+                                text = token.identifier,
+                                style = SpyfallTheme.typography.Heading.H700.style
                             )
                         },
                         specs = {
@@ -315,7 +302,7 @@ private fun TokensPreview(
                                 Size: ${NumericalValues.getValue(token.fontSize.value.dp)} (${token.fontSize.value.roundToInt()}sp)  
                                 Line: ${NumericalValues.getValue(token.lineHeight.value.dp)} (${token.lineHeight.value.roundToInt()}sp)  
                                 """.trimIndent(),
-                                style = Typography.Body.B600.style,
+                                style = SpyfallTheme.typography.Body.B600.style,
                                 color = ColorPrimitive.Black600.color
                             )
                         },
@@ -358,10 +345,6 @@ private data class PreviewGroup(
     val name: String,
     val tokens: List<Token>,
 ) {
-    constructor(
-        groupName: String,
-        vararg tokens: Pair<TypographyToken, String>,
-    ) : this(groupName, tokens.map { (token, sampleText) -> Token(token, sampleText) })
 
     data class Token(
         val typographyToken: TypographyToken,
@@ -372,39 +355,48 @@ private data class PreviewGroup(
 private class PreviewGroupPreviewParameterProvider : PreviewParameterProvider<PreviewGroup> {
     override val values: Sequence<PreviewGroup> = sequenceOf(
         PreviewGroup(
-            groupName = "Display",
-            Typography.Display.D1100 to "Welcome to Spyfall",
-            Typography.Display.D1000 to "Welcome to Spyfall",
-            Typography.Display.D900 to "Welcome to Spyfall",
-            Typography.Display.D800 to "Welcome to Spyfall"
+            name = "Display",
+            listOf(
+                PreviewGroup.Token(SpyfallTheme.typography.Display.D1100, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Display.D1000, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Display.D900, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Display.D800, "Welcome to Spyfall")
+            )
         ),
 
         PreviewGroup(
-            groupName = "Heading",
-            Typography.Heading.H1000 to "",
-            Typography.Heading.H900 to "Welcome to Spyfall",
-            Typography.Heading.H800 to "Welcome to Spyfall",
-            Typography.Heading.H700 to "Welcome to Spyfall",
-            Typography.Heading.H600 to "Welcome to Spyfall",
-            Typography.Heading.H500 to "Welcome to Spyfall"
+            name = "Heading",
+            listOf(
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H1000, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H900, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H800, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H700, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H600, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H500, "Welcome to Spyfall")
+            )
         ),
 
         PreviewGroup(
-            groupName = "Label",
-            Typography.Label.L700 to "Welcome to Spyfall",
-            Typography.Label.L600 to "Welcome to Spyfall",
-            Typography.Label.L500 to "Welcome to Spyfall",
-            Typography.Label.L400 to "Welcome to Spyfall"
+            name = "Label",
+            listOf(
+                PreviewGroup.Token(SpyfallTheme.typography.Label.L700, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Label.L600, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Label.L500, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Label.L400, "Welcome to Spyfall")
+
+            )
         ),
 
         PreviewGroup(
-            groupName = "Body",
-            Typography.Body.B700 to "Welcome to Spyfall",
-            Typography.Body.B700.Italic to "Welcome to Spyfall",
-            Typography.Body.B600 to "Welcome to Spyfall",
-            Typography.Body.B600.Italic to "Welcome to Spyfall",
-            Typography.Body.B500 to "Welcome to Spyfall",
-            Typography.Body.B500.Italic to "Welcome to Spyfall"
+            name = "Body",
+            listOf(
+                PreviewGroup.Token(SpyfallTheme.typography.Body.B700, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Body.B700.Italic, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Body.B600, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Body.B600.Italic, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Body.B500, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Body.B500.Italic, "Welcome to Spyfall")
+            )
         )
     )
 }

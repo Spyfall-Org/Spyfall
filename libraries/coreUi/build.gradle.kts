@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.androidx.customview.poolingcontainer)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.navigation.compose)
 }
 android {
     namespace = "spyfallx.coreui"

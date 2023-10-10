@@ -25,7 +25,7 @@ fun main() {
 
     val moduleType = args.getOrNull(0) ?: run {
         print("Enter module type (\"feature\" or \"library\"): ")
-        readLine()!!.lowercase()
+        readln().lowercase()
     }
 
     if (moduleType != "feature" && moduleType != "library") {
@@ -33,37 +33,24 @@ fun main() {
         return
     }
 
-    val moduleNameLine = args.getOrNull(1) ?: run {
+    val fullModuleName = args.getOrNull(1) ?: run {
         print(
             """
-            Enter the module name in camelCase. 
+            Enter the module name in camelCase. or "q" to quite
             If this module is a sub module enter the name in the form "parentModule:subModule": 
             """.trimIndent()
         )
         readln()
     }
 
-    val (parentModule, moduleName) = moduleNameLine.split(":").let {
-        if (it.size > 1) Pair(it[0], it[1]) else Pair(null, it[0])
+    if (fullModuleName == "q") return
+
+    generateModule(fullModuleName, moduleType)
+
+    val isSubModule = fullModuleName.contains(":")
+    if (moduleType == "feature" && !isSubModule) {
+        generateModule("$fullModuleName:internal", moduleType, isInternal = true)
     }
-
-    val baseDir = if (moduleType == "library") "libraries" else "features"
-
-    val newDir = createDirectory(baseDir, moduleName, parentModule)
-
-    createPackage(newDir)
-
-    updateSettingGradleFile(baseDir, moduleName, parentModule)
-
-    updateGradleBuildFile(moduleType, newDir)
-
-    printGreen(
-        """
-       Success! 
-       The $moduleType module "$moduleName" was created. 
-       Please make sure to update the readme.
-        """.trimIndent()
-    )
 }
 
 fun updateSettingGradleFile(baseDir: String, moduleName: String, parentModule: String?) {
@@ -108,23 +95,36 @@ fun createDirectory(baseDir: String, moduleName: String, parentModule: String?):
     return newDir
 }
 
-fun updateGradleBuildFile(moduleType: String, newDir: String) {
-    val buildFile = if (moduleType == "library") {
-        val currentBuildFile = File("$newDir/librarybuild.gradle.kts")
-        val newBuildFile = File("$newDir/build.gradle.kts")
-        val fileToDelete = File("$newDir/featurebuild.gradle.kts")
+fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolean, parentModule: String?) {
 
-        currentBuildFile.renameTo(newBuildFile)
-        fileToDelete.delete()
-        newBuildFile
-    } else {
-        val currentBuildFile = File("$newDir/featurebuild.gradle.kts")
-        val newBuildFile = File("$newDir/build.gradle.kts")
-        val fileToDelete = File("$newDir/library.gradle.kts")
+    val buildFile = when {
+        isInternal -> {
+            val currentBuildFile = File("$newDir/internalbuild.gradle.kts")
+            val newBuildFile = File("$newDir/build.gradle.kts")
+            val filesToDelete = listOf( File("$newDir/librarybuild.gradle.kts"),File("$newDir/featurebuild.gradle.kts") )
 
-        currentBuildFile.renameTo(newBuildFile)
-        fileToDelete.delete()
-        newBuildFile
+            currentBuildFile.renameTo(newBuildFile)
+            filesToDelete.forEach { it.delete() }
+            newBuildFile
+        }
+        moduleType == "library" -> {
+            val currentBuildFile = File("$newDir/librarybuild.gradle.kts")
+            val newBuildFile = File("$newDir/build.gradle.kts")
+            val filesToDelete = listOf( File("$newDir/featurebuild.gradle.kts"),File("$newDir/internalbuild.gradle.kts") )
+
+            currentBuildFile.renameTo(newBuildFile)
+            filesToDelete.forEach { it.delete() }
+            newBuildFile
+        }
+        else -> {
+            val currentBuildFile = File("$newDir/featurebuild.gradle.kts")
+            val newBuildFile = File("$newDir/build.gradle.kts")
+            val filesToDelete = listOf( File("$newDir/librarybuild.gradle.kts"),File("$newDir/internalbuild.gradle.kts") )
+
+            currentBuildFile.renameTo(newBuildFile)
+            filesToDelete.forEach { it.delete() }
+            newBuildFile
+        }
     }
 
     val reader = BufferedReader(FileReader(buildFile))
@@ -132,6 +132,9 @@ fun updateGradleBuildFile(moduleType: String, newDir: String) {
 
     var line = reader.readLine()
     while (line != null) {
+        if (line.contains("implementation(projects.features.example)")) {
+            line = if (parentModule == null) "" else line.replace("example", parentModule)
+        }
         if (line.contains("namespace = \"com.dangerfield.example\"")) {
             val newNamespace = "com.dangerfield.spyfall.${newDir.replace("/",".").lowercase()}"
             line = line.replace("com.dangerfield.example", newNamespace)
@@ -170,4 +173,34 @@ fun checkForHelpCall(): Boolean {
     return isHelpCall
 }
 
+fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boolean = false) {
+    val (parentModule, moduleName) = moduleNameLine.split(":").let {
+        if (it.size > 1) Pair(it[0], it[1]) else Pair(null, it[0])
+    }
+
+    val baseDir = if (moduleType == "library") "libraries" else "features"
+
+    val newDir = createDirectory(baseDir, moduleName, parentModule)
+
+    createPackage(newDir)
+
+    updateSettingGradleFile(baseDir, moduleName, parentModule)
+
+    updateGradleBuildFile(
+        moduleType = moduleType,
+        newDir = newDir,
+        isInternal = isInternal,
+        parentModule = parentModule
+    )
+
+    printGreen(
+        """
+       Success! 
+       The $moduleType module "$moduleName" was created. 
+       Please make sure to update the readme.
+        """.trimIndent()
+    )
+}
+
 main()
+

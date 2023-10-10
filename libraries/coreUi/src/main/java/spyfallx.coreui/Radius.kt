@@ -101,7 +101,7 @@ private fun PreviewRadii() {
                 ) {
                     Text(
                         text = name,
-                        style = Typography.Heading.H800.style,
+                        style = SpyfallTheme.typography.Heading.H800.style,
                         color = ColorPrimitive.Black800.color
                     )
                     Spacer(modifier = Modifier.height(Spacing.S800))

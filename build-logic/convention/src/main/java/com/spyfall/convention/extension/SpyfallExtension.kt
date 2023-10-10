@@ -8,6 +8,7 @@ import com.google.devtools.ksp.gradle.KspExtension
 import com.spyfall.convention.util.SharedConstants
 import com.spyfall.convention.util.commonExt
 import com.spyfall.convention.util.configureAndroidCompose
+import com.spyfall.convention.util.getModule
 import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.optInKotlinMarkers
 import com.spyfall.convention.util.useKspDagger
@@ -28,13 +29,9 @@ abstract class SpyfallExtension {
         project.optInKotlinMarkers(*markerClasses)
     }
 
-    fun daggerAndroid() {
-        project.pluginManager.apply("com.google.dagger.hilt.android")
-    }
-
-    fun daggerHilt(withProcessors: Boolean) {
-
+    fun daggerHilt(withProcessors: Boolean = true) {
         if (withProcessors) {
+            project.pluginManager.apply("dagger.hilt.android.plugin")
             if (project.useKspDagger) {
                 ksp {
                     arg("dagger.fastInit", "enabled")
@@ -49,16 +46,19 @@ abstract class SpyfallExtension {
         }
 
         project.dependencies {
-            "implementation"(project.libs.hilt.android)
-
+            "implementation"(project.libs.dagger)
+            "implementation"(project.libs.dagger.hilt.android)
+            "implementation"(project.libs.dagger.hilt.core)
+            "implementation"(project.libs.autoDagger.core)
             if (withProcessors) {
                 val configuration = if (project.useKspDagger) {
                     "ksp"
                 } else {
                     "kapt"
                 }
-
-                configuration(project.libs.hilt.compiler)
+                configuration(project.libs.dagger.compiler)
+                configuration(project.libs.dagger.hilt.compiler)
+                configuration(project.libs.autoDagger.compiler)
             }
         }
     }
@@ -82,7 +82,18 @@ abstract class SpyfallExtension {
 
     fun flowroutines() {
         project.dependencies {
-            add("implementation", project.libs.kotlinx.coroutines)
+            add("implementation", getModule("libraries:coreFlowroutines"))
+        }
+    }
+
+    fun firebase() {
+        project.dependencies {
+            add("implementation", project.libs.firebase.database)
+            add("implementation", project.libs.firebase.firestore)
+            add("implementation", project.libs.firebase.storage)
+            add("implementation", project.libs.firebase.database)
+            add("implementation", project.libs.kotlinx.coroutines.play.services)
+
         }
     }
 

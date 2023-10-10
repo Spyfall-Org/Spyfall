@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import spyfallx.coreui.color.ColorPrimitive
+import spyfallx.coreui.theme.SpyfallTheme
 import spyfallx.coreui.typography.Typography
 import kotlin.math.roundToInt
 
@@ -115,8 +116,8 @@ private fun SpacingPreview() {
                     )
                 ) {
                     SpacingPreviewRow(
-                        start = { Text("Token", style = Typography.Body.B600.style) },
-                        center = { Text("Value", style = Typography.Body.B600.style) },
+                        start = { Text("Token", style = SpyfallTheme.typography.Body.B600.style) },
+                        center = { Text("Value", style = SpyfallTheme.typography.Body.B600.style) },
                         end = {}
                     )
                 }
@@ -130,11 +131,11 @@ private fun SpacingPreview() {
                         start = {
                             Text(
                                 text = spacer.name.replace("spacer", "spacer-"),
-                                style = Typography.Heading.H800.style
+                                style = SpyfallTheme.typography.Heading.H800.style
                             )
                         },
                         center = {
-                            Text("${spacer().value.roundToInt()}dp", style = Typography.Heading.H800.style)
+                            Text("${spacer().value.roundToInt()}dp", style = SpyfallTheme.typography.Heading.H800.style)
                         },
                         end = {
                             Box(

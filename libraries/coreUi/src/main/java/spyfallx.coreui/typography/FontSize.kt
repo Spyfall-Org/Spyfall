@@ -14,6 +14,7 @@ import spyfallx.coreui.Spacing
 import spyfallx.coreui.asSp
 import spyfallx.coreui.PreviewContent
 import spyfallx.coreui.color.ColorPrimitive
+import spyfallx.coreui.theme.SpyfallTheme
 import kotlin.math.roundToInt
 import kotlin.reflect.KProperty0
 
@@ -71,13 +72,13 @@ private fun FontSizePreview() {
         Column {
             PreviewRow(
                 token = {
-                    Text("Token", style = Typography.Body.B600.style, color = ColorPrimitive.Black800.color)
+                    Text("Token", style = SpyfallTheme.typography.Body.B600.style, color = ColorPrimitive.Black800.color)
                 },
                 value = {
-                    Text("SP Value", style = Typography.Body.B600.style, color = ColorPrimitive.Black600.color)
+                    Text("SP Value", style = SpyfallTheme.typography.Body.B600.style, color = ColorPrimitive.Black600.color)
                 },
                 poppins = {
-                    Text("Poppins Example", style = Typography.Body.B600.style, color = ColorPrimitive.Black600.color)
+                    Text("Poppins Example", style = SpyfallTheme.typography.Body.B600.style, color = ColorPrimitive.Black600.color)
                 },
             )
             for ((value, size) in sizes) {
@@ -101,14 +102,14 @@ private fun PreviewRow(
         token = {
             Text(
                 text = "font-size-${value.name.removePrefix("value")}",
-                style = Typography.Heading.H600.style,
+                style = SpyfallTheme.typography.Heading.H600.style,
                 color = color
             )
         },
         value = {
             Text(
                 text = "${value.get().value.roundToInt()}sp",
-                style = Typography.Body.B700.style,
+                style = SpyfallTheme.typography.Body.B700.style,
                 color = color
             )
         },

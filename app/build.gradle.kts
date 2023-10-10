@@ -9,8 +9,7 @@ plugins {
 }
 
 spyfall {
-    daggerHilt(true)
-    daggerAndroid()
+    daggerHilt()
     compose()
 }
 
@@ -73,16 +72,23 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    implementation(getModule("libraries:coreUi"))
+    implementation(getModule("libraries:coreGameApi"))
+    implementation(getModule("libraries:coreSpyfallGame"))
+    implementation(getModule("libraries:coreCommon"))
+
+    implementation(libs.androidx.navigation.compose)
+    implementation(projects.features.forcedUpdate)
+    implementation(projects.features.forcedUpdate.internal)
+    implementation(projects.features.welcome)
+    implementation(projects.features.welcome.internal)
+
     // lottie for animations
     implementation(libs.lottie)
 
     // Dependency Injection
     implementation(libs.koin.core)
     implementation(libs.koin.android)
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-
 
     implementation(libs.androidx.activity.compose)
     // testing
@@ -98,8 +104,4 @@ dependencies {
     testImplementation(libs.androidx.test.arch.core)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.kotlinx.coroutines.test)
-    implementation(getModule("libraries:coreUi"))
-    implementation(getModule("libraries:coreGameApi"))
-    implementation(getModule("libraries:coreSpyfallGame"))
-    implementation(getModule("libraries:coreCommon"))
 }

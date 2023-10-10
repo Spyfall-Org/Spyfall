@@ -203,7 +203,7 @@ private fun ColorTokenPreview(
                     Spacer(Modifier.height(12.dp))
                 }
                 ColorRow(
-                    name = { Text(color.tokenName, style = Typography.Heading.H700.style) },
+                    name = { Text(color.tokenName, style = SpyfallTheme.typography.Heading.H700.style) },
                     content = { ColorCard(color(SpyfallTheme.colorScheme)) }
                 )
             }
@@ -213,7 +213,7 @@ private fun ColorTokenPreview(
     PreviewContent(showBackground = true) {
         CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides LocalContentColor.current.color) {
             Column(Modifier.padding(Spacing.S500)) {
-                Text(parameter.name, style = Typography.Heading.H900.style)
+                Text(parameter.name, style = SpyfallTheme.typography.Heading.H900.style)
                 Spacer(Modifier.height(Spacing.S500))
                 Row(Modifier.fillMaxWidth()) {
                     Box(Modifier.weight(1f), propagateMinConstraints = true) {
@@ -322,10 +322,10 @@ private fun ColorRow(
         Column(Modifier.weight(1f)) {
             Divider(color = (if (SpyfallTheme.isDarkMode) ColorPrimitive.Black700 else ColorPrimitive.Black400).color)
             Spacer(Modifier.height(12.dp))
-            ProvideTextStyle(Typography.Heading.H700.style, name)
+            ProvideTextStyle(SpyfallTheme.typography.Heading.H700.style, name)
         }
         Spacer(Modifier.width(24.dp))
-        ProvideTextStyle(Typography.Heading.H500.style, content)
+        ProvideTextStyle(SpyfallTheme.typography.Heading.H500.style, content)
     }
 }
 

@@ -48,7 +48,7 @@ val mainModule = module {
     single { (currentSession: Session) -> GameViewModel(get(), currentSession) }
     viewModel { JoinGameViewModel(get()) }
     viewModel { NewGameViewModel(get()) }
-    viewModel { MainActivityViewModel(get(), get()) }
+    viewModel { MainActivityViewModel(get()) }
     viewModel { StartViewModel(get(), get()) }
 
     factory { SessionListenerHelper(get(), get()) as SessionListenerService }

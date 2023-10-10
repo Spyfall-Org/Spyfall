@@ -3,7 +3,6 @@ package spyfallx.coreui.theme
 
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
@@ -11,12 +10,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.color.ColorScheme
-import spyfallx.coreui.color.ColorToken
 import spyfallx.coreui.color.LocalColorScheme
 import spyfallx.coreui.color.LocalContentColor
 import spyfallx.coreui.color.LocalTypography
+import spyfallx.coreui.typography.Typography
 
 //TODO hide colors & typography into the internal module so that people must go through the theme
+// I could make this an interface? idk man
 object SpyfallTheme {
     val isDarkMode: Boolean
         @ReadOnlyComposable
@@ -28,11 +28,7 @@ object SpyfallTheme {
         @Composable
         get() = LocalColorScheme.current
 
-    val typography: spyfallx.coreui.typography.Typography
-        @ReadOnlyComposable
-        @Composable
-        get() = LocalTypography.current
-
+    val typography = Typography()
 }
 
 @Composable
@@ -51,7 +47,7 @@ fun SpyfallTheme(
         CompositionLocalProvider(
             LocalColorScheme provides colorScheme,
             LocalContentColor provides colorScheme.textPrimary,
-            LocalTypography provides spyfallx.coreui.typography.Typography,
+            LocalTypography provides Typography(),
             LocalMinimumInteractiveComponentEnforcement provides false,
             androidx.compose.material3.LocalContentColor provides Color.Magenta,
             content = content
@@ -70,7 +66,7 @@ fun SpyfallTheme(
 private fun SetupMaterialTheme(content: @Composable () -> Unit) {
     val invalidTextStyle = TextStyle(color = Color.Magenta)
     MaterialTheme(
-        typography = Typography(
+        typography = androidx.compose.material3.Typography(
             displayLarge = invalidTextStyle,
             displayMedium = invalidTextStyle,
             displaySmall = invalidTextStyle,
