@@ -15,7 +15,7 @@ data class Border(val color: ColorToken.Color, val width: Dp = StandardBorderWid
         val Standard: Border
             @ReadOnlyComposable
             @Composable
-            get() = Border(SpyfallTheme.colorScheme.borderPrimary)
+            get() = Border(SpyfallTheme.colorScheme.border)
     }
 }
 

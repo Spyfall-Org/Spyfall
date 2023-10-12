@@ -69,6 +69,26 @@ class Typography {
     val Default = Label.L600
 
     class DisplayTypography {
+
+        val D1300 = TypographyToken(
+            fontFamily = FontFamilyToken.Poppins,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = FontSize.S1300,
+            lineHeight = LineHeight.H1200,
+            lineBreak = LineBreak.Heading,
+            identifier = "display-1300"
+        )
+
+        val D1200 = TypographyToken(
+            fontFamily = FontFamilyToken.Poppins,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = FontSize.S1200,
+            lineHeight = LineHeight.H1200,
+            lineBreak = LineBreak.Heading,
+            identifier = "display-1100"
+        )
+
+
         val D1100 = TypographyToken(
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.SemiBold,
@@ -242,7 +262,7 @@ private fun TokensPreview(
         contentPadding = PaddingValues(Spacing.S900),
         showBackground = true
     ) {
-        CompositionLocalProvider(LocalContentColor provides SpyfallTheme.colorScheme.textPrimary.color) {
+        CompositionLocalProvider(LocalContentColor provides SpyfallTheme.colorScheme.text.color) {
             Column(verticalArrangement = Arrangement.spacedBy(Spacing.S500)) {
                 Text(
                     text = group.name,
@@ -357,6 +377,8 @@ private class PreviewGroupPreviewParameterProvider : PreviewParameterProvider<Pr
         PreviewGroup(
             name = "Display",
             listOf(
+                PreviewGroup.Token(SpyfallTheme.typography.Display.D1300, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Display.D1200, "Welcome to Spyfall"),
                 PreviewGroup.Token(SpyfallTheme.typography.Display.D1100, "Welcome to Spyfall"),
                 PreviewGroup.Token(SpyfallTheme.typography.Display.D1000, "Welcome to Spyfall"),
                 PreviewGroup.Token(SpyfallTheme.typography.Display.D900, "Welcome to Spyfall"),

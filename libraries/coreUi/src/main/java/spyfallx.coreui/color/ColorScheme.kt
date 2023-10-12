@@ -30,131 +30,67 @@ import kotlin.reflect.KProperty1
 @Immutable
 class ColorScheme internal constructor(
 
-    val accentColor: ColorToken.Color,
+    val accent: ColorToken.Color,
+    val onAccent: ColorToken.Color,
 
     /* Backgrounds */
-
     val shadow: ColorToken.Color,
-
-    val backgroundGradient: ColorToken.Gradient,
-
-    val backgroundPrimary: ColorToken.Color,
-
-    val backgroundSecondary: ColorToken.Color,
-
-    val backgroundAccent: ColorToken.Color,
-
-    val backgroundOverlay: ColorToken.Color,
-
-    val borderPrimary: ColorToken.Color,
+    val background: ColorToken.Color,
+    val onBackground: ColorToken.Color,
+    val border: ColorToken.Color,
 
     /* Texts */
-
-    val textPrimary: ColorToken.Color,
-
-    val textAccentPrimary: ColorToken.Color,
-
-    val textSecondary: ColorToken.Color,
-
-    val textTertiary: ColorToken.Color,
-
+    val text: ColorToken.Color,
     val textDisabled: ColorToken.Color,
-
     val textWarning: ColorToken.Color,
 
     /* Surface */
 
     val surfacePrimary: ColorToken.Color,
-
     val onSurfacePrimary: ColorToken.Color,
-
     val surfaceSecondary: ColorToken.Color,
-
     val onSurfaceSecondary: ColorToken.Color,
 
-    val surfaceAccentPrimary: ColorToken.Color,
-
-    val surfaceAccentSecondary: ColorToken.Color,
-
-    val surfaceTertiary: ColorToken.Color,
-
-    val onSurfaceTertiary: ColorToken.Color,
-
     val surfaceDisabled: ColorToken.Color,
-
     val onSurfaceDisabled: ColorToken.Color,
 
-    val surfacePositive: ColorToken.Color,
-
-    val surfaceRecent: ColorToken.Color,
-
-    val surfaceNegative: ColorToken.Color,
-
-    val surfaceWarning: ColorToken.Color,
-) {
+    ) {
     internal companion object {
         fun lightMode(accentColor: ColorPrimitive = ColorPrimitive.CherryPop700) = ColorScheme(
-            accentColor = ColorToken.Color("accent", accentColor),
+            accent = ColorToken.Color("accent", accentColor),
+            onAccent = ColorToken.Color("accent", accentColor.onColorPrimitive),
             shadow = ColorToken.Color("shadow", ColorPrimitive.Black800),
-            backgroundGradient = ColorToken.Gradient("background-gradient", ColorGradientPrimitive.Light),
-            backgroundPrimary = ColorToken.Color("background-primary", ColorPrimitive.White900),
-            backgroundSecondary = ColorToken.Color("background-secondary", ColorPrimitive.Black100),
-            backgroundAccent = ColorToken.Color("background-accent", ColorPrimitive.GrapeJelly500),
-            backgroundOverlay = ColorToken.Color("background-overlay", ColorPrimitive.Black300, alpha = 0.8f),
-            borderPrimary = ColorToken.Color("border-primary", ColorPrimitive.Black200),
-            textPrimary = ColorToken.Color("text-primary", ColorPrimitive.Black900),
-            textAccentPrimary = ColorToken.Color("text-accent-primary", ColorPrimitive.MintyFresh300),
-            textSecondary = ColorToken.Color("text-secondary", ColorPrimitive.Black700),
-            textTertiary = ColorToken.Color("text-tertiary", ColorPrimitive.Black500),
             textDisabled = ColorToken.Color("text-disabled", ColorPrimitive.Black400),
             textWarning = ColorToken.Color("text-warning", ColorPrimitive.CherryPop700),
-            surfacePrimary = ColorToken.Color("surface-primary", ColorPrimitive.Black200),
-            onSurfacePrimary = ColorToken.Color("onsurface-primary", ColorPrimitive.Black900),
-            surfaceSecondary = ColorToken.Color("surface-secondary", ColorPrimitive.Black300),
-            onSurfaceSecondary = ColorToken.Color("onsurface-secondary", ColorPrimitive.Black900),
-            surfaceAccentPrimary = ColorToken.Color("surface-accent-primary", ColorPrimitive.GrapeJelly500),
-            surfaceAccentSecondary = ColorToken.Color("surface-accent-secondary", ColorPrimitive.SkyDive400),
-            surfaceTertiary = ColorToken.Color("surface-tertiary", ColorPrimitive.Black100),
-            onSurfaceTertiary = ColorToken.Color("onsurface-tertiary", ColorPrimitive.Black900),
+            surfacePrimary = ColorToken.Color("surface-primary", ColorPrimitive.White900),
+            onSurfacePrimary = ColorToken.Color("onsurface-primary", ColorPrimitive.Black600),
+            surfaceSecondary = ColorToken.Color("surface-secondary", ColorPrimitive.Black400),
+            onSurfaceSecondary = ColorToken.Color("onsurface-secondary", ColorPrimitive.Black300),
             surfaceDisabled = ColorToken.Color("surface-disabled", ColorPrimitive.Black200),
             onSurfaceDisabled = ColorToken.Color("onsurface-disabled", ColorPrimitive.Black600),
-            surfacePositive = ColorToken.Color("surface-positive", ColorPrimitive.MintyFresh300),
-            surfaceRecent = ColorToken.Color("surface-recent", ColorPrimitive.Black200),
-            surfaceNegative = ColorToken.Color("surface-negative", ColorPrimitive.CherryPop700),
-            surfaceWarning = ColorToken.Color("surface-warning", ColorPrimitive.TangerineTwist600)
+            background = ColorToken.Color("background", ColorPrimitive.White900),
+            onBackground = ColorToken.Color("onBackground", ColorPrimitive.Black900),
+            border = ColorToken.Color("border", ColorPrimitive.Black900),
+            text = ColorToken.Color("text", ColorPrimitive.Black900),
         )
 
         fun darkMode(accentColor: ColorPrimitive = ColorPrimitive.CherryPop700) = ColorScheme(
-            accentColor = ColorToken.Color("accent", accentColor),
-            shadow = ColorToken.Color("shadow-inverse", ColorPrimitive.White900),
-            backgroundGradient = ColorToken.Gradient("background-gradient-inverse", ColorGradientPrimitive.Dark),
-            backgroundPrimary = ColorToken.Color("background-primary-inverse", ColorPrimitive.Black900),
-            backgroundSecondary = ColorToken.Color("background-secondary-inverse", ColorPrimitive.Black800),
-            backgroundAccent = ColorToken.Color("background-accent-inverse", ColorPrimitive.GrapeJelly500),
-            backgroundOverlay = ColorToken.Color("background-overlay-inverse", ColorPrimitive.Black600, alpha = 0.8f),
-            borderPrimary = ColorToken.Color("border-primary-inverse", ColorPrimitive.Black700),
-            textPrimary = ColorToken.Color("text-primary-inverse", ColorPrimitive.White900),
-            textAccentPrimary = ColorToken.Color("text-accent-primary-inverse", ColorPrimitive.MintyFresh300),
-            textSecondary = ColorToken.Color("text-secondary-inverse", ColorPrimitive.Black300),
-            textTertiary = ColorToken.Color("text-tertiary-inverse", ColorPrimitive.Black400),
-            textDisabled = ColorToken.Color("text-disabled-inverse", ColorPrimitive.Black500),
-            textWarning = ColorToken.Color("text-warning-inverse", ColorPrimitive.CherryPop700),
-            surfacePrimary = ColorToken.Color("surface-primary-inverse", ColorPrimitive.Black800),
-            onSurfacePrimary = ColorToken.Color("onsurface-primary-inverse", ColorPrimitive.White900),
-            surfaceSecondary = ColorToken.Color("surface-secondary-inverse", ColorPrimitive.Black700),
-            onSurfaceSecondary = ColorToken.Color("onsurface-secondary-inverse", ColorPrimitive.White900),
-            surfaceAccentPrimary = ColorToken.Color("surface-accent-primary-inverse", ColorPrimitive.GrapeJelly500),
-            surfaceAccentSecondary = ColorToken.Color("surface-accent-secondary-inverse", ColorPrimitive.SkyDive400),
-            surfaceTertiary = ColorToken.Color("surface-tertiary-inverse", ColorPrimitive.Black900),
-            onSurfaceTertiary = ColorToken.Color("onsurface-tertiary-inverse", ColorPrimitive.White900),
-            surfaceDisabled = ColorToken.Color("surface-disabled-inverse", ColorPrimitive.Black800),
-            onSurfaceDisabled = ColorToken.Color("onsurface-disabled-inverse", ColorPrimitive.Black600),
-            surfacePositive = ColorToken.Color("surface-positive-inverse", ColorPrimitive.MintyFresh300),
-            surfaceRecent = ColorToken.Color("surface-recent-inverse", ColorPrimitive.Black800),
-            surfaceNegative = ColorToken.Color("surface-negative-inverse", ColorPrimitive.CherryPop700),
-            surfaceWarning = ColorToken.Color("surface-warning-inverse", ColorPrimitive.TangerineTwist600)
+            accent = ColorToken.Color("accent", accentColor),
+            onAccent = ColorToken.Color("accent", accentColor.onColorPrimitive),
+            shadow = ColorToken.Color("shadow", ColorPrimitive.Black800),
+            textDisabled = ColorToken.Color("text-disabled", ColorPrimitive.Black400),
+            textWarning = ColorToken.Color("text-warning", ColorPrimitive.CherryPop700),
+            surfacePrimary = ColorToken.Color("surface-primary", ColorPrimitive.Black800),
+            onSurfacePrimary = ColorToken.Color("onsurface-primary", ColorPrimitive.White900),
+            surfaceSecondary = ColorToken.Color("surface-secondary", ColorPrimitive.Black600),
+            onSurfaceSecondary = ColorToken.Color("onsurface-secondary", ColorPrimitive.White900),
+            surfaceDisabled = ColorToken.Color("surface-disabled", ColorPrimitive.Black200),
+            onSurfaceDisabled = ColorToken.Color("onsurface-disabled", ColorPrimitive.Black600),
+            background = ColorToken.Color("background", ColorPrimitive.Black700),
+            onBackground = ColorToken.Color("onBackground", ColorPrimitive.White900),
+            border = ColorToken.Color("border", ColorPrimitive.White900),
+            text = ColorToken.Color("text", ColorPrimitive.White900),
         )
-
     }
 }
 
@@ -203,7 +139,12 @@ private fun ColorTokenPreview(
                     Spacer(Modifier.height(12.dp))
                 }
                 ColorRow(
-                    name = { Text(color.tokenName, style = SpyfallTheme.typography.Heading.H700.style) },
+                    name = {
+                        Text(
+                            color.tokenName,
+                            style = SpyfallTheme.typography.Heading.H700.style
+                        )
+                    },
                     content = { ColorCard(color(SpyfallTheme.colorScheme)) }
                 )
             }
@@ -240,21 +181,15 @@ private class ColorPreviewParameterProvider : PreviewParameterProvider<ColorPrev
             ColorPreviewParameter(
                 name = "Background",
                 colors = listOf(
-                    ColorScheme::backgroundGradient,
-                    ColorScheme::backgroundPrimary,
-                    ColorScheme::backgroundSecondary,
-                    ColorScheme::backgroundAccent,
-                    ColorScheme::backgroundOverlay,
-                    ColorScheme::borderPrimary
+                    ColorScheme::background,
+                    ColorScheme::onBackground
                 )
             ),
             ColorPreviewParameter(
                 name = "Text",
                 colors = listOf(
-                    ColorScheme::textPrimary,
-                    ColorScheme::textAccentPrimary,
-                    ColorScheme::textSecondary,
-                    ColorScheme::textTertiary,
+                    ColorScheme::text,
+                    ColorScheme::textWarning,
                     ColorScheme::textDisabled
                 )
             ),
@@ -265,21 +200,16 @@ private class ColorPreviewParameterProvider : PreviewParameterProvider<ColorPrev
                     ColorScheme::onSurfacePrimary,
                     ColorScheme::surfaceSecondary,
                     ColorScheme::onSurfaceSecondary,
-                    ColorScheme::surfaceAccentPrimary,
-                    ColorScheme::surfaceAccentSecondary,
-                    ColorScheme::surfaceTertiary,
                     ColorScheme::surfaceDisabled,
                     ColorScheme::onSurfaceDisabled,
-                    ColorScheme::surfacePositive,
-                    ColorScheme::surfaceRecent,
-                    ColorScheme::surfaceNegative,
-                    ColorScheme::surfaceWarning
                 )
             ),
             ColorPreviewParameter(
                 name = "Other",
                 colors = listOf(
-                    ColorScheme::accentColor,
+                    ColorScheme::accent,
+                    ColorScheme::onAccent,
+                    ColorScheme::border
                 )
             ),
         )
@@ -371,7 +301,7 @@ private fun ColorCard(
         },
         background = token.brush,
         textColor = when (token) {
-            is ColorToken.Color -> token.primitive.colorOn
+            is ColorToken.Color -> token.primitive.onColorPrimitive.color
             is ColorToken.Gradient -> token.primitive.colorOn
         }
     )
@@ -393,7 +323,11 @@ private fun ColorCard(
                 .size(150.dp, 140.dp)
                 .background(background, shape)
                 .thenIf(showBorder) {
-                    border(1.dp, (if (SpyfallTheme.isDarkMode) ColorPrimitive.Black600 else ColorPrimitive.Black400).color, shape)
+                    border(
+                        1.dp,
+                        (if (SpyfallTheme.isDarkMode) ColorPrimitive.Black600 else ColorPrimitive.Black400).color,
+                        shape
+                    )
                 }
                 .padding(12.dp)
         ) {

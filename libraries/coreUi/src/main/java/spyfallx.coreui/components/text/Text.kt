@@ -1,9 +1,10 @@
-package spyfallx.coreui.components
+package spyfallx.coreui.components.text
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
@@ -21,7 +22,6 @@ import spyfallx.coreui.color.ColorToken
 import spyfallx.coreui.color.LocalContentColor
 import spyfallx.coreui.color.takeOrElse
 import spyfallx.coreui.theme.SpyfallTheme
-import spyfallx.coreui.typography.Typography
 import spyfallx.coreui.typography.TypographyToken
 
 @NonRestartableComposable
@@ -48,6 +48,41 @@ fun Text(
         softWrap = softWrap,
         maxLines = maxLines,
         minLines = minLines
+    )
+}
+
+@Composable
+internal fun ProvideTextConfig(
+    config: TextConfig,
+    content: @Composable () -> Unit,
+) {
+    CompositionLocalProvider(LocalTextConfig provides LocalTextConfig.current.merge(config), content = content)
+}
+
+@Composable
+fun ProvideTextConfig(
+    typographyToken: TypographyToken? = null,
+    color: ColorToken.Color? = null,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    overflow: TextOverflow? = null,
+    softWrap: Boolean? = null,
+    maxLines: Int? = null,
+    minLines: Int? = null,
+    content: @Composable () -> Unit,
+) {
+    ProvideTextConfig(
+        config = LocalTextConfig.current.merge(
+            color = color,
+            typographyToken = typographyToken,
+            textDecoration = textDecoration,
+            textAlign = textAlign,
+            overflow = overflow,
+            softWrap = softWrap,
+            maxLines = maxLines,
+            minLines = minLines
+        ),
+        content = content
     )
 }
 
@@ -133,7 +168,7 @@ internal data class TextConfig(
             this == Default -> other
             else ->
                 merge(
-                    typography = other.typographyToken,
+                    typographyToken = other.typographyToken,
                     color = other.color,
                     textDecoration = other.textDecoration,
                     textAlign = other.textAlign,
@@ -145,7 +180,7 @@ internal data class TextConfig(
         }
 
     fun merge(
-        typography: TypographyToken?,
+        typographyToken: TypographyToken?,
         color: ColorToken.Color? = null,
         textDecoration: TextDecoration?,
         textAlign: TextAlign?,
@@ -155,7 +190,7 @@ internal data class TextConfig(
         minLines: Int?,
     ): TextConfig =
         TextConfig(
-            typographyToken = typography ?: this.typographyToken,
+            typographyToken = typographyToken ?: this.typographyToken,
             color = color ?: this.color,
             textDecoration = textDecoration ?: this.textDecoration,
             textAlign = textAlign ?: this.textAlign,

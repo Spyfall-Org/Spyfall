@@ -46,10 +46,10 @@ fun SpyfallTheme(
     SetupMaterialTheme {
         CompositionLocalProvider(
             LocalColorScheme provides colorScheme,
-            LocalContentColor provides colorScheme.textPrimary,
-            LocalTypography provides Typography(),
+            LocalContentColor provides colorScheme.text,
+            LocalTypography provides SpyfallTheme.typography,
             LocalMinimumInteractiveComponentEnforcement provides false,
-            androidx.compose.material3.LocalContentColor provides Color.Magenta,
+            androidx.compose.material3.LocalContentColor provides colorScheme.text.color,
             content = content
         )
     }

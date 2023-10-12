@@ -217,7 +217,7 @@ private fun NumericalValuesPreviewContent(
             Spacer(Modifier.height(Spacing.S500))
             for (value in values.reversed()) {
                 val alignmentLine = textAlignmentLines.getValue(value)
-                Divider(Modifier.fillMaxWidth(), color = SpyfallTheme.colorScheme.borderPrimary.color)
+                Divider(Modifier.fillMaxWidth(), color = SpyfallTheme.colorScheme.border.color)
                 NumericalValueText(value, alignmentLine)
             }
         }

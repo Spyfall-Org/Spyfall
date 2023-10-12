@@ -15,17 +15,17 @@ import spyfallx.coreui.theme.SpyfallTheme
 @Composable
 fun Screen(
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = {},
+    header: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
-    containerColor: Color = SpyfallTheme.colorScheme.backgroundPrimary.color,
+    containerColor: Color = SpyfallTheme.colorScheme.background.color,
     contentColor: Color = contentColorFor(containerColor),
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = topBar,
+        topBar = header,
         bottomBar = bottomBar,
         snackbarHost = snackbarHost,
         containerColor = containerColor,

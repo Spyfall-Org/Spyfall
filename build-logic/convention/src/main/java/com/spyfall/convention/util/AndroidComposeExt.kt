@@ -25,6 +25,8 @@ internal fun Project.configureAndroidCompose(
             val bom = libs.androidx.compose.bom
             add("implementation", platform(bom))
             add("implementation", libs.androidx.compose.runtime)
+            add("implementation",libs.androidx.navigation.runtime.ktx)
+            add("implementation",libs.androidx.navigation.compose)
             add("androidTestImplementation", platform(bom))
             // Add ComponentActivity to debug manifest
             add("debugImplementation", libs.androidx.compose.ui.testManifest)

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import spyfallx.coreui.components.Screen
-import spyfallx.coreui.components.Text
+import spyfallx.coreui.components.text.Text
 
 @Composable
 fun ForcedUpdateScreen() {

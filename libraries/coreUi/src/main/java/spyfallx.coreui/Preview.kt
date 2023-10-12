@@ -11,6 +11,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.color.background
 import spyfallx.coreui.theme.SpyfallTheme
 
@@ -25,6 +26,7 @@ fun PreviewContent(
     isDarkMode: Boolean = isSystemInDarkTheme(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     showBackground: Boolean = false,
+    accentColor: ColorPrimitive = ColorPrimitive.CherryPop700,
     content: @Composable BoxScope.() -> Unit,
 ) {
     var context = LocalContext.current
@@ -35,10 +37,10 @@ fun PreviewContent(
         )
     }
     CompositionLocalProvider(LocalContext provides context) {
-        SpyfallTheme(isDarkMode = isDarkMode) {
+        SpyfallTheme(isDarkMode = isDarkMode, accentColor = accentColor) {
             Box(
                 modifier = modifier
-                    .thenIf(showBackground) { background(SpyfallTheme.colorScheme.backgroundPrimary) }
+                    .thenIf(showBackground) { background(SpyfallTheme.colorScheme.background) }
                     .padding(contentPadding)
             ) {
                 content()

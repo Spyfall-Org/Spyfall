@@ -131,7 +131,7 @@ private fun RoundPreview(radius: Radius) {
             .padding(52.dp)
             .aspectRatio(1f)
             .fillMaxSize()
-            .background(SpyfallTheme.colorScheme.textAccentPrimary, radius)
+            .background(SpyfallTheme.colorScheme.text, radius)
     )
 }
 
@@ -146,7 +146,7 @@ private fun RoundedPreview(radius: Radius) {
             Modifier
                 .fillMaxSize()
                 .background(
-                    color = SpyfallTheme.colorScheme.textAccentPrimary,
+                    color = SpyfallTheme.colorScheme.text,
                     radius = radius.withSides(topStart = true)
                 )
         )

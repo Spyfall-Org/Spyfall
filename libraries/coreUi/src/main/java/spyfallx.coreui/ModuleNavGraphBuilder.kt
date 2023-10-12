@@ -1,6 +1,8 @@
 package spyfallx.coreui
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHost
 
 
 /**
@@ -11,5 +13,5 @@ import androidx.navigation.NavGraphBuilder
  */
 interface ModuleNavBuilder {
 
-    fun NavGraphBuilder.buildNavGraph()
+    fun NavGraphBuilder.buildNavGraph(navController: NavController)
 }

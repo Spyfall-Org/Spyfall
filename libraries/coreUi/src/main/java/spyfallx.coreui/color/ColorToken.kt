@@ -62,7 +62,16 @@ sealed class ColorToken {
         ) : this(
             name = name,
             primitive = primitive,
-            color = primitive.color.copy(alpha = alpha)
+            color = primitive.color.copy(alpha = alpha),
+        )
+
+        internal constructor(
+            name: String,
+            primitive: ColorPrimitive,
+        ) : this(
+            name = name,
+            primitive = primitive,
+            color = primitive.color,
         )
 
         override fun hashCode(): Int = color.hashCode()
@@ -71,7 +80,10 @@ sealed class ColorToken {
 
         companion object {
             /** Serves as a "default" color token. Is not meant to be used externally. */
-            val Unspecified = Color("unspecified", ColorPrimitive.Unspecified)
+            val Unspecified = Color(
+                name = "unspecified",
+                primitive = ColorPrimitive.Unspecified,
+            )
         }
     }
 
@@ -79,8 +91,8 @@ sealed class ColorToken {
     class Gradient internal constructor(
         override val name: String,
         internal val primitive: ColorGradientPrimitive,
-        val from: ComposeColor = primitive.from,
-        val to: ComposeColor = primitive.to,
+        val from: ComposeColor = primitive.from.color,
+        val to: ComposeColor = primitive.to.color,
     ) : ColorToken() {
         private var _brush: Brush? = null
         override val brush: Brush get() = _brush ?: Brush.verticalGradient(listOf(from, to)).also { _brush = it }
@@ -154,7 +166,7 @@ fun ColorToken.Color.withAlpha(alpha: Float): ColorToken.Color =
     ColorToken.Color(
         name = name,
         primitive = primitive,
-        color = color.copy(alpha = alpha)
+        color = color.copy(alpha = alpha),
     )
 
 fun ColorToken.Gradient.withAlpha(alpha: Float): ColorToken.Gradient =
@@ -171,7 +183,7 @@ fun lerp(start: ColorToken.Color, stop: ColorToken.Color, fraction: Float): Colo
     return ColorToken.Color(
         name = base.name,
         primitive = base.primitive,
-        color = lerp(start.color, stop.color, fraction)
+        color = lerp(start.color, stop.color, fraction),
     )
 }
 
@@ -203,7 +215,7 @@ fun animateColorTokenAsState(
                 ColorToken.Color(
                     name = targetValue.name,
                     primitive = targetValue.primitive,
-                    color = colorConverter.convertFromVector(vector)
+                    color = colorConverter.convertFromVector(vector),
                 )
             }
         )
@@ -320,7 +332,7 @@ private inline fun <ShapeToken : Any> Modifier.border(
     color: ColorToken.Color = ColorToken.Color.Unspecified,
     width: Dp = StandardBorderWidth,
 ): Modifier = composed {
-    val resolvedColor = color.takeOrElse { SpyfallTheme.colorScheme.borderPrimary }
+    val resolvedColor = color.takeOrElse { SpyfallTheme.colorScheme.border }
     inspectable(
         debugInspectorInfo {
             name = "border"

@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import spyfallx.coreui.NumericalValues
 import spyfallx.coreui.Spacing
@@ -42,9 +43,24 @@ object FontSize {
 
     /** 34dp */
     val S1100 = NumericalValues.V1100.asSp()
+
+    /** 40dp */
+    val S1200 = NumericalValues.V1200.asSp()
+
+    /** 48dp */
+    val S1300 = NumericalValues.V1300.asSp()
+
+    /** 58dp */
+    val S1400 = NumericalValues.V1400.asSp()
+
+    /** 70dp */
+    val S1500 = NumericalValues.V1500.asSp()
+
+    /** 84dp */
+    val S1600 = NumericalValues.V1600.asSp()
 }
 
-@Preview(device = "spec:id=reference_phone,shape=Normal,width=1200,height=2000,unit=dp,dpi=200")
+@Preview(device = "spec:id=reference_phone,shape=Normal,width=1600,height=2000,unit=dp,dpi=200")
 @Composable
 private fun FontSizePreview() {
     PreviewContent(
@@ -63,11 +79,11 @@ private fun FontSizePreview() {
             NumericalValues::V900 to FontSize.S900,
             NumericalValues::V1000 to FontSize.S1000,
             NumericalValues::V1100 to FontSize.S1100,
-            NumericalValues::V1200 to null,
-            NumericalValues::V1300 to null,
-            NumericalValues::V1400 to null,
-            NumericalValues::V1500 to null,
-            NumericalValues::V1600 to null
+            NumericalValues::V1200 to FontSize.S1200,
+            NumericalValues::V1300 to FontSize.S1300,
+            NumericalValues::V1400 to FontSize.S1400,
+            NumericalValues::V1500 to FontSize.S1500,
+            NumericalValues::V1600 to FontSize.S1600
         ).reversed()
         Column {
             PreviewRow(

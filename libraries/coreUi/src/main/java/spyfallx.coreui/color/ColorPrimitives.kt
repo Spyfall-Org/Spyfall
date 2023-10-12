@@ -1,9 +1,19 @@
 package spyfallx.coreui.color
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.foundation.shape.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,41 +30,90 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import spyfallx.coreui.PreviewContent
+import spyfallx.coreui.icon.LargeIcon
+import spyfallx.coreui.icon.SmallIcon
+import spyfallx.coreui.icon.SpyfallIcon
 import spyfallx.coreui.thenIf
-import java.util.*
+import java.util.Locale
 
-enum class ColorPrimitive(val color: Color, val colorOn: Color) {
-    Unspecified(Color.Unspecified, Color.Unspecified),
+sealed class ColorPrimitive(val color: Color) {
+    data object Unspecified: ColorPrimitive(Color.Unspecified)
+    data object Black900: ColorPrimitive(Color(0xFF000000))
+    data object Black800: ColorPrimitive(Color(0xFF1A1A1A))
+    data object Black700: ColorPrimitive(Color(0xFF313131))
+    data object Black600: ColorPrimitive(Color(0xFF767676))
+    data object Black500: ColorPrimitive(Color(0xFFAAAAAA))
+    data object Black400: ColorPrimitive(Color(0xFFCCCCCC))
+    data object Black300: ColorPrimitive(Color(0xFFEEEEEE))
+    data object Black200: ColorPrimitive(Color(0xFFF6F6F6))
+    data object Black100: ColorPrimitive(Color(0xFFFBFBFB))
+    data object White900: ColorPrimitive(Color(0xFFFFFFFF))
 
-    Black900(Color(0xFF000000), Color(0xFFFFFFFF)),
-    Black800(Color(0xFF1A1A1A), Color(0xFFFFFFFF)),
-    Black700(Color(0xFF313131), Color(0xFFFFFFFF)),
-    Black600(Color(0xFF767676), Color(0xFFFFFFFF)),
-    Black500(Color(0xFFAAAAAA), Color(0xFF1A1A1A)),
-    Black400(Color(0xFFCCCCCC), Color(0xFF1A1A1A)),
-    Black300(Color(0xFFEEEEEE), Color(0xFF1A1A1A)),
-    Black200(Color(0xFFF6F6F6), Color(0xFF1A1A1A)),
-    Black100(Color(0xFFFBFBFB), Color(0xFF1A1A1A)),
-    White900(Color(0xFFFFFFFF), Color(0xFF1A1A1A)),
+    data object GrapeJelly500: ColorPrimitive(Color(0xFF9533C7))
+    data object SkyDive400: ColorPrimitive(Color(0xFF00A0EF))
+    data object MintyFresh300: ColorPrimitive(Color(0xFF2FD566))
+    data object TangerineTwist600: ColorPrimitive(Color(0xFFFF5800))
+    data object CherryPop700: ColorPrimitive(Color(0xFFE3212F))
+    class FromColor(color: Color): ColorPrimitive(color)
 
-    GrapeJelly500(Color(0xFF9533C7), Color(0xFFFFFFFF)),
-    SkyDive400(Color(0xFF00A0EF), Color(0xFF1A1A1A)),
-    MintyFresh300(Color(0xFF2FD566), Color(0xFF1A1A1A)),
-    TangerineTwist600(Color(0xFFFF5800), Color(0xFFFFFFFF)),
-    CherryPop700(Color(0xFFE3212F), Color(0xFFFFFFFF)),
+    val onColorPrimitive: ColorPrimitive
+        get() {
+            return if (color.luminance() > 0.4) Black900 else White900
+        }
+
+}
+
+fun getColorPrimitive(family: String, weight: Int): ColorPrimitive? {
+    return when (family) {
+        "Black" -> when (weight) {
+            900 -> ColorPrimitive.Black900
+            800 -> ColorPrimitive.Black800
+            700 -> ColorPrimitive.Black700
+            600 -> ColorPrimitive.Black600
+            500 -> ColorPrimitive.Black500
+            400 -> ColorPrimitive.Black400
+            300 -> ColorPrimitive.Black300
+            200 -> ColorPrimitive.Black200
+            100 -> ColorPrimitive.Black100
+            else -> null
+        }
+        "White" -> when (weight) {
+            900 -> ColorPrimitive.White900
+            else -> null
+        }
+        "GrapeJelly" -> when (weight) {
+            500 -> ColorPrimitive.GrapeJelly500
+            else -> null
+        }
+        "SkyDive" -> when (weight) {
+            400 -> ColorPrimitive.SkyDive400
+            else -> null
+        }
+        "MintyFresh" -> when (weight) {
+            300 -> ColorPrimitive.MintyFresh300
+            else -> null
+        }
+        "TangerineTwist" -> when (weight) {
+            600 -> ColorPrimitive.TangerineTwist600
+            else -> null
+        }
+        "CherryPop" -> when (weight) {
+            700 -> ColorPrimitive.CherryPop700
+            else -> null
+        }
+        else -> null
+    }
 }
 
 val ColorPrimitive.designSystemName: String
-    get() = name.lowercase()
+    get() = this.toString().lowercase()
         .replace(Regex("""([A-Za-z]+)(\d+)"""), """color-$1-$2""")
 
-enum class ColorGradientPrimitive(val from: Color, val to: Color) {
-    Dark(Color.Black, ColorPrimitive.Black800.color),
-    Light(ColorPrimitive.Black100.color, ColorPrimitive.Black200.color);
+enum class ColorGradientPrimitive(val from: ColorPrimitive, val to: ColorPrimitive) {
+    Dark(ColorPrimitive.FromColor(Color.Black), ColorPrimitive.Black800),
+    Light(ColorPrimitive.Black100, ColorPrimitive.Black200);
 
-    val colorOn: Color = ColorPrimitive.values()
-        .first { it.color == from || it.color == to }
-        .colorOn
+    val colorOn: Color = from.onColorPrimitive.color
 }
 
 val ColorGradientPrimitive.designSystemName: String
@@ -121,21 +180,18 @@ private fun ColorCard(
     weight: Int,
     modifier: Modifier = Modifier,
 ) {
-    val color = try {
-        ColorPrimitive.valueOf("$family$weight")
-    } catch (ignored: IllegalArgumentException) {
-        null
-    }
+
+    val colorPrimitive = getColorPrimitive(family, weight)
     val shape = RoundedCornerShape(4.dp)
     val border = Modifier.border(1.dp, ColorPrimitive.Black400.color, shape)
-    val background = if (color == null) {
+    val background = if (colorPrimitive == null) {
         border
     } else {
         Modifier
-            .background(color.color, shape)
-            .thenIf(color.color.luminance() > 0.8f) { border }
+            .background(colorPrimitive.color, shape)
+            .thenIf(colorPrimitive.color.luminance() > 0.8f) { border }
     }
-
+    
     Column(
         modifier = modifier
             .aspectRatio(144f / 190f)
@@ -144,27 +200,23 @@ private fun ColorCard(
     ) {
         val textStyle = TextStyle(
             fontSize = 14.sp,
-            color = color?.colorOn ?: ColorPrimitive.Black500.color
+            color = colorPrimitive?.onColorPrimitive?.color ?: ColorPrimitive.Black500.color
         )
-        if (color == null) {
+        if (colorPrimitive == null) {
+            LargeIcon(imageVector = SpyfallIcon.Close.imageVector, contentDescription = null)
             Text(
-                text = "X",
-                style = textStyle.copy(fontSize = 48.sp, fontWeight = FontWeight.Bold),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = "DNE",
+                text = "Does not Exist",
                 style = textStyle.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         } else {
             Text(
-                text = color.designSystemName,
+                text = colorPrimitive.designSystemName,
                 style = textStyle.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(Modifier.weight(1f))
             Text(
-                text = color.color.toHexString(),
+                text = colorPrimitive.color.toHexString(),
                 style = textStyle.copy(fontWeight = FontWeight.Medium)
             )
         }
@@ -182,9 +234,9 @@ private fun GradientCard(
             .height(190.dp)
             .background(
                 brush = Brush.verticalGradient(
-                    0f to gradientPrimitive.from,
-                    0.5f to gradientPrimitive.from,
-                    1f to gradientPrimitive.to
+                    0f to gradientPrimitive.from.color,
+                    0.5f to gradientPrimitive.from.color,
+                    1f to gradientPrimitive.to.color
                 ),
                 shape = shape
             )
@@ -202,10 +254,10 @@ private fun GradientCard(
         )
         Spacer(Modifier.weight(1f))
         Text("Color1", style = textStyle)
-        Text(gradientPrimitive.from.toHexString(), style = textStyle)
+        Text(gradientPrimitive.from.color.toHexString(), style = textStyle)
         Spacer(Modifier.height(8.dp))
         Text("Color2", style = textStyle)
-        Text(gradientPrimitive.to.toHexString(), style = textStyle)
+        Text(gradientPrimitive.to.color.toHexString(), style = textStyle)
     }
 }
 

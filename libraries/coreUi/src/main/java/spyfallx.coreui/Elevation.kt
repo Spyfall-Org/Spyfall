@@ -148,7 +148,7 @@ private fun ElevationPreview() {
                         Text(
                             "elevation-${elevation.name.lowercase()}",
                             style = SpyfallTheme.typography.Heading.H800.style,
-                            color = SpyfallTheme.colorScheme.textPrimary.color
+                            color = SpyfallTheme.colorScheme.text.color
                         )
                     }
                 }
@@ -183,7 +183,7 @@ private fun ElevationPreview() {
                         Box(
                             modifier = Modifier
                                 .background(
-                                    SpyfallTheme.colorScheme.surfaceAccentPrimary,
+                                    SpyfallTheme.colorScheme.surfacePrimary,
                                     radius = radius,
                                     elevation = elevation()
                                 )

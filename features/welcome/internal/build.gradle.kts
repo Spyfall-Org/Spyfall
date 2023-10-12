@@ -14,4 +14,6 @@ dependencies {
     implementation(projects.features.welcome)
     implementation(libs.androidx.navigation.compose)
     implementation(projects.libraries.coreUi)
+    implementation(projects.libraries.coreCommon)
+    implementation(projects.features.joinGame)
 }

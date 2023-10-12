@@ -33,6 +33,7 @@ browser = "1.6.0"
 customviewPoolingcontainer = "1.0.0"
 uiTooling = "1.5.3"
 uiToolingPreviewAndroid = "1.5.3"
+navigationRuntimeKtx = "2.7.4"
 
 [libraries]
 # AndroidX
@@ -158,6 +159,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 androidx-customview-poolingcontainer = { group = "androidx.customview", name = "customview-poolingcontainer", version.ref = "customviewPoolingcontainer" }
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

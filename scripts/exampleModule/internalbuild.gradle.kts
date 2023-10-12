@@ -7,4 +7,5 @@ android {
 }
 dependencies {
     implementation(projects.features.example)
+    implementation(projects.libraries.coreCommon)
 }

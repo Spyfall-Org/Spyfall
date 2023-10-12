@@ -5,6 +5,6 @@ import androidx.navigation.NavOptions
 
 const val welcomeNavigationRoute = "welcome"
 
-fun NavController.navigateToForcedUpdate(navOptions: NavOptions? = null) {
+fun NavController.navigateToWelcome(navOptions: NavOptions? = null) {
     this.navigate(welcomeNavigationRoute, navOptions)
 }

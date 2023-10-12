@@ -63,10 +63,7 @@ class MainActivity : ThemeChangeableActivity() {
     }
 
     private fun refactorOnCreate() {
-        Log.d("Elijah", "on create")
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-
-
         setContent {
             val uiState by mainActivityViewModel.state.collectAsState()
 
