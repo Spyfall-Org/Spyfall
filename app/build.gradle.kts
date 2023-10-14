@@ -84,6 +84,8 @@ dependencies {
     implementation(projects.features.welcome.internal)
     implementation(projects.features.joinGame)
     implementation(projects.features.joinGame.internal)
+    implementation(projects.features.newGame)
+    implementation(projects.features.newGame.internal)
 
     // lottie for animations
     implementation(libs.lottie)

@@ -17,8 +17,8 @@ import androidx.compose.material3.TopAppBar as MaterialTopAppBar
 fun Header(
     title: String,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = SpyfallTheme.colorScheme.surfacePrimary.color,
-    navigationIcon: SpyfallIcon,
+    backgroundColor: Color = SpyfallTheme.colorScheme.background.color,
+    navigationIconButton: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
 ) {
@@ -28,7 +28,6 @@ fun Header(
         },
         modifier = modifier,
         navigationIcon = {
-            LargeIcon(imageVector = navigationIcon.imageVector, contentDescription = "")
         },
         actions = actions,
         windowInsets = windowInsets,
@@ -49,7 +48,7 @@ private fun PreviewHeader() {
     PreviewContent {
         Header(
             title = "Heading Title",
-            navigationIcon = SpyfallIcon.ArrowBack
+            navigationIconButton = {},
         )
     }
 }

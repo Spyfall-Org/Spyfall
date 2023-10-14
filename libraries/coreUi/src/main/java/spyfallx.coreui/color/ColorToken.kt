@@ -269,6 +269,24 @@ fun Modifier.border(shape: Shape, border: Border) =
     border(shape, border.color, border.width)
 
 fun Modifier.background(
+    color: ColorPrimitive,
+    radius: Radius = Radii.Default,
+    elevation: Elevation = Elevation.None,
+    shadowColor: ColorToken.Color = ColorToken.Color.Unspecified,
+    clip: Boolean = elevation > Elevation.None,
+    alpha: Float = 1f,
+    border: Border? = null,
+) = background(
+    color = ColorToken.Color("color", color),
+    radius = radius,
+    elevation = elevation,
+    shadowColor = shadowColor,
+    clip = clip,
+    alpha = alpha,
+    border = border,
+
+)
+fun Modifier.background(
     color: ColorToken,
     radius: Radius = Radii.Default,
     elevation: Elevation = Elevation.None,

@@ -20,6 +20,7 @@ import androidx.compose.ui.window.Dialog
 import spyfallx.coreui.PreviewContent
 import spyfallx.coreui.Radii
 import spyfallx.coreui.Spacing
+import spyfallx.coreui.color.AccentColor
 import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.color.background
 import spyfallx.coreui.color.border
@@ -42,7 +43,7 @@ fun ColorPickerDialog(
             Column(
                 modifier
                     .background(
-                        color = SpyfallTheme.colorScheme.backgroundPrimary.color,
+                        color = SpyfallTheme.colorScheme.background.color,
                         shape = Radii.Card.shape
                     )
                     .padding(Spacing.S500)

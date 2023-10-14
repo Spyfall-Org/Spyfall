@@ -1,6 +1,4 @@
-package com.dangerfield.features.colorpicker
-
-import spyfallx.coreui.color.ColorPrimitive
+package spyfallx.coreui.color
 
 enum class AccentColor(val colorPrimitive: ColorPrimitive) {
     GrapeJelly500(ColorPrimitive.GrapeJelly500),

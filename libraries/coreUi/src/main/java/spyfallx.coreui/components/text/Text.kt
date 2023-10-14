@@ -18,11 +18,42 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import spyfallx.coreui.PreviewContent
 import spyfallx.coreui.Spacing
+import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.color.ColorToken
 import spyfallx.coreui.color.LocalContentColor
 import spyfallx.coreui.color.takeOrElse
 import spyfallx.coreui.theme.SpyfallTheme
 import spyfallx.coreui.typography.TypographyToken
+
+@NonRestartableComposable
+@Composable
+fun Text(
+    text: String,
+    modifier: Modifier = Modifier,
+    colorPrimitive: ColorPrimitive,
+    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: SpyfallTheme.typography.Default,
+    textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
+    textAlign: TextAlign? = LocalTextConfig.current.textAlign,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    overflow: TextOverflow = LocalTextConfig.current.overflow ?: DefaultTextOverflow,
+    softWrap: Boolean = LocalTextConfig.current.softWrap ?: true,
+    maxLines: Int = LocalTextConfig.current.maxLines ?: Int.MAX_VALUE,
+    minLines: Int = LocalTextConfig.current.minLines ?: 1,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        typographyToken = typographyToken,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        color = ColorToken.Color("color", colorPrimitive),
+        overflow = overflow,
+        onTextLayout = onTextLayout,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines
+    )
+}
 
 @NonRestartableComposable
 @Composable

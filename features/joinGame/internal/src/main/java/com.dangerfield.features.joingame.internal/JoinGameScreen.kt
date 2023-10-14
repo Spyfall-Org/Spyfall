@@ -22,7 +22,7 @@ import spyfallx.coreui.theme.SpyfallTheme
 fun JoinGameScreen() {
     Screen(
         header = {
-            Header(title = "Join Game", navigationIcon = SpyfallIcon.ArrowBack)
+            Header(title = "Join Game")
         }
     ) {
         Column(
@@ -67,11 +67,19 @@ fun JoinGameScreen() {
     }
 }
 
-
 @Preview
 @Composable
 fun PreviewJoinGameScreen() {
-    PreviewContent {
+    PreviewContent() {
         JoinGameScreen()
     }
 }
+
+@Preview
+@Composable
+fun PreviewJoinGameScreenDark() {
+    PreviewContent(isDarkMode = true) {
+        JoinGameScreen()
+    }
+}
+

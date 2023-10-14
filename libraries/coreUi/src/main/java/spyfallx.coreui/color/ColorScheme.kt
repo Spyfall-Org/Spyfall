@@ -36,6 +36,7 @@ class ColorScheme internal constructor(
     /* Backgrounds */
     val shadow: ColorToken.Color,
     val background: ColorToken.Color,
+    val backgroundOverlay: ColorToken.Color,
     val onBackground: ColorToken.Color,
     val border: ColorToken.Color,
 
@@ -69,6 +70,7 @@ class ColorScheme internal constructor(
             surfaceDisabled = ColorToken.Color("surface-disabled", ColorPrimitive.Black200),
             onSurfaceDisabled = ColorToken.Color("onsurface-disabled", ColorPrimitive.Black600),
             background = ColorToken.Color("background", ColorPrimitive.White900),
+            backgroundOverlay = ColorToken.Color("background-overlay", ColorPrimitive.Black400, alpha = 0.8f),
             onBackground = ColorToken.Color("onBackground", ColorPrimitive.Black900),
             border = ColorToken.Color("border", ColorPrimitive.Black900),
             text = ColorToken.Color("text", ColorPrimitive.Black900),
@@ -90,7 +92,8 @@ class ColorScheme internal constructor(
             onBackground = ColorToken.Color("onBackground", ColorPrimitive.White900),
             border = ColorToken.Color("border", ColorPrimitive.White900),
             text = ColorToken.Color("text", ColorPrimitive.White900),
-        )
+            backgroundOverlay = ColorToken.Color("background-overlay", ColorPrimitive.Black400, alpha = 0.8f),
+            )
     }
 }
 
@@ -144,6 +147,18 @@ private fun ColorTokenPreview(
                             color.tokenName,
                             style = SpyfallTheme.typography.Heading.H700.style
                         )
+                        when (val token = color(SpyfallTheme.colorScheme)) {
+                            is ColorToken.Color -> {
+                                if (token.color.alpha < 1f) {
+                                    Text(
+                                        text = "alpha: ${token.color.alpha}",
+                                        style = SpyfallTheme.typography.Label.L500.style
+                                    )
+                                }
+                            }
+                            else -> {}
+                        }
+
                     },
                     content = { ColorCard(color(SpyfallTheme.colorScheme)) }
                 )
@@ -182,7 +197,8 @@ private class ColorPreviewParameterProvider : PreviewParameterProvider<ColorPrev
                 name = "Background",
                 colors = listOf(
                     ColorScheme::background,
-                    ColorScheme::onBackground
+                    ColorScheme::onBackground,
+                    ColorScheme::backgroundOverlay
                 )
             ),
             ColorPreviewParameter(

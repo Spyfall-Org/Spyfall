@@ -16,6 +16,7 @@ hilt = "2.48.1"
 hilt-navigation = "1.1.0-beta01"
 kotlin = "1.9.10"
 kotlinxSerializationJson = "1.5.1"
+lottie = "6.1.0"
 robolectric = "4.10.3"
 roborazzi = "1.5.0-alpha-2"
 
@@ -140,7 +141,9 @@ kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core",
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 #UI
-lottie = "com.airbnb.android:lottie:3.7.0"
+
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 # Lint
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }

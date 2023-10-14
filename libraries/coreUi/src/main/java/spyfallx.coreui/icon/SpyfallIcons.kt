@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Bookmarks
@@ -59,7 +61,9 @@ enum class SpyfallIcon(val imageVector: ImageVector) {
     ShortText(Icons.Rounded.ShortText),
     Upcoming(Icons.Rounded.Upcoming),
     UpcomingBorder(Icons.Outlined.Upcoming),
-    ViewDay(Icons.Rounded.ViewDay);
+    ViewDay(Icons.Rounded.ViewDay),
+    ChevronLeft(Icons.Default.ChevronLeft),
+    ChevronRight(Icons.Default.ChevronRight);
 }
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=800,height=600,unit=dp,dpi=200")

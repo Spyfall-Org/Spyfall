@@ -43,12 +43,12 @@ fun BasicTextField(
     decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit =
         @Composable { innerTextField -> innerTextField() },
 ) {
-    val hingeThemeTextSelectionColors = TextSelectionColors(
+    val textSelectionColors = TextSelectionColors(
         handleColor = SpyfallTheme.colorScheme.accent.color,
         backgroundColor = SpyfallTheme.colorScheme.accent.color.copy(alpha = 0.4F)
     )
 
-    CompositionLocalProvider(LocalTextSelectionColors provides hingeThemeTextSelectionColors) {
+    CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
         SelectionContainer {
             androidx.compose.foundation.text.BasicTextField(
                 value = value,

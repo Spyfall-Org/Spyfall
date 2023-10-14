@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -21,9 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import spyfallx.coreui.PreviewContent
 import spyfallx.coreui.Radii
-import spyfallx.coreui.color.ProvideContentColor
 import spyfallx.coreui.theme.SpyfallTheme
-import spyfallx.coreui.typography.TypographyToken
 
 @Composable
 fun OutlinedTextField(
@@ -32,7 +29,7 @@ fun OutlinedTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = TextStyle.Default,
+    textStyle: TextStyle = LocalTextConfig.current.typographyToken?.style ?: SpyfallTheme.typography.Body.B500.style,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -92,7 +89,7 @@ fun OutlinedTextField(
                 trailingIcon = trailingIcon,
                 supportingText = supportingText,
                 colors = outlinedTextFieldColors,
-                contentPadding = OutlinedTextFieldDefaults.contentPadding(),
+                contentPadding = outlineTextFieldPadding,
                 container = {
                     OutlinedTextFieldDefaults.ContainerBox(
                         enabled = enabled,
@@ -108,6 +105,10 @@ fun OutlinedTextField(
         }
     )
 }
+
+private val outlineTextFieldPadding
+    @Composable
+    get() = OutlinedTextFieldDefaults.contentPadding()
 
 private val outlinedTextFieldColors
     @Composable
