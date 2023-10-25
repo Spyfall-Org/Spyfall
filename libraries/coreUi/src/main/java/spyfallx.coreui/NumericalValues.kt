@@ -85,6 +85,7 @@ internal object NumericalValues {
         getValue(value)
     }
 
+    @Suppress("ComplexMethod")
     internal fun getValue(dimension: Dp): Int =
         when (dimension) {
             V50 -> 50

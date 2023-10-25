@@ -63,6 +63,7 @@ sealed class ColorPrimitive(val color: Color) {
 
 }
 
+@Suppress("ComplexMethod")
 fun getColorPrimitive(family: String, weight: Int): ColorPrimitive? {
     return when (family) {
         "Black" -> when (weight) {

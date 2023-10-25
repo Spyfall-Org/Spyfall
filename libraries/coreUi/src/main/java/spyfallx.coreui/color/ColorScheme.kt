@@ -27,6 +27,7 @@ import spyfallx.coreui.thenIf
 import spyfallx.coreui.typography.Typography
 import kotlin.reflect.KProperty1
 
+@Suppress("LongParameterList")
 @Immutable
 class ColorScheme internal constructor(
 
