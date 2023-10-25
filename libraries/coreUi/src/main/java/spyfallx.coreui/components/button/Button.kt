@@ -150,7 +150,7 @@ private fun ButtonType.filledBackgroundColorToken(enabled: Boolean) = when {
     !enabled -> SpyfallTheme.colorScheme.surfaceDisabled
     else -> when (this) {
         ButtonType.Accent -> SpyfallTheme.colorScheme.accent
-        ButtonType.Regular -> SpyfallTheme.colorScheme.surfacePrimary
+        ButtonType.Regular -> SpyfallTheme.colorScheme.surfaceSecondary
     }
 }
 

@@ -40,6 +40,7 @@ import spyfallx.coreui.clip
 import spyfallx.coreui.color.AccentColor
 import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.color.background
+import spyfallx.coreui.components.Grid
 import spyfallx.coreui.components.text.Text
 import spyfallx.coreui.elevation
 import spyfallx.coreui.theme.SpyfallTheme
@@ -99,7 +100,7 @@ private fun GamePackItem(
                 modifier = Modifier
                     .weight(0.4f)
                     .fillMaxWidth()
-                    .background(SpyfallTheme.colorScheme.surfacePrimary)
+                    .background(SpyfallTheme.colorScheme.surfaceSecondary)
                     .padding(horizontal = Spacing.S300)
                 ,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -136,43 +137,17 @@ fun GamePackGrid(gamePacks: List<GamePack>) {
         columns = 3,
         items = gamePacks.size,
         modifier = Modifier.fillMaxWidth(),
-        layoutItem = { modifier, index ->
+        layoutItem = {  index ->
             GamePackItem(
                 colorPrimitive = AccentColor.values()
                     .let { it[index % it.size] }.colorPrimitive,
-                modifier = modifier.padding(8.dp),
+                modifier = Modifier.padding(8.dp),
                 type = gamePacks[index].type,
                 number = gamePacks[index].number,
                 onClick = {},
             )
         }
     )
-}
-
-@Composable
-fun Grid(
-    columns: Int,
-    items: Int,
-    layoutItem: @Composable (Modifier, Int)-> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    val rows = (items / columns) + if (items % columns != 0) 1 else 0
-
-    Column(modifier) {
-        for (rowIndex in 0 until rows) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                for (colIndex in 0 until columns) {
-                    val itemIndex = rowIndex * columns + colIndex
-                    if (itemIndex < items) {
-                        layoutItem(Modifier.weight(1f), itemIndex)
-                    } else {
-                        Spacer(modifier = Modifier.weight(1f)) // Empty space for missing items
-                    }
-                }
-            }
-        }
-    }
 }
 
 @Composable
@@ -184,6 +159,24 @@ private fun PreviewGamePackItem() {
             number = "1",
             type = "Standard Pack",
             onClick = {},
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewGamePackGridDark() {
+    PreviewContent(showBackground = true, isDarkMode = true) {
+        GamePackGrid(
+            gamePacks = listOf(
+                GamePack(number = "1", type = "Standard Pack"),
+                GamePack(number = "1", type = "Standard Pack"),
+                GamePack(number = "1", type = "Standard Pack"),
+                GamePack(number = "1", type = "Standard Pack"),
+                GamePack(number = "1", type = "Standard Pack"),
+                GamePack(number = "1", type = "Standard Pack"),
+                GamePack(number = "1", type = "Standard Pack"),
+            )
         )
     }
 }

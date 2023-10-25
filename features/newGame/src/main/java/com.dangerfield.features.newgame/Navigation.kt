@@ -6,5 +6,5 @@ import androidx.navigation.NavOptions
 const val newGameNavigationRoute = "newGame"
 
 fun NavController.navigateToNewGame(navOptions: NavOptions? = null) {
-    navigate(newGameNavigationRoute, navOptions)
+    navigate(com.dangerfield.features.newgame.newGameNavigationRoute, navOptions)
 }

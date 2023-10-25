@@ -58,6 +58,17 @@ open class TypographyToken internal constructor(
             fontStyle = FontStyle.Italic,
             identifier = "${identifier}-italic"
         )
+
+    val Bold: TypographyToken
+        get() = TypographyToken(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+            lineBreak = lineBreak,
+            fontStyle = fontStyle,
+            identifier = "${identifier}-bold"
+        )
 }
 
 class Typography {
