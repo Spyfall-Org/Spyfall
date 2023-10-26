@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package spyfallx.coreui.color
 
 import android.annotation.SuppressLint

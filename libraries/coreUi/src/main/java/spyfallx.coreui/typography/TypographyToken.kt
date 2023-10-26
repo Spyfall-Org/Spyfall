@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber", "VariableNaming")
 package spyfallx.coreui.typography
 
 import androidx.compose.foundation.*
@@ -28,7 +29,7 @@ import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.theme.SpyfallTheme
 import kotlin.math.roundToInt
 
-@Suppress("ComplexMethod", "VariableNaming")
+@Suppress("ComplexMethod")
 open class TypographyToken internal constructor(
     internal val fontFamily: FontFamilyToken,
     internal val fontWeight: FontWeight,

@@ -19,7 +19,6 @@ fun Header(
     title: String,
     modifier: Modifier = Modifier,
     backgroundColor: Color = SpyfallTheme.colorScheme.background.color,
-    navigationIconButton: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
 ) {
@@ -49,7 +48,6 @@ private fun PreviewHeader() {
     PreviewContent {
         Header(
             title = "Heading Title",
-            navigationIconButton = {},
         )
     }
 }

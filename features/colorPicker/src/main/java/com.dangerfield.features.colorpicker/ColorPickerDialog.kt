@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package com.dangerfield.features.colorpicker
 
 import androidx.compose.foundation.background

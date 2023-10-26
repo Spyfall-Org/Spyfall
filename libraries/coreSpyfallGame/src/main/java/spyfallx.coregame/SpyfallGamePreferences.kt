@@ -6,12 +6,6 @@ import spyfallx.core.allOrNone
 import spyfallx.coregameapi.GamePreferences
 import javax.inject.Inject
 
-const val KEY_USERNAME = "SPYFALL_USERNAME"
-const val KEY_USER_ID = "SPYFALL_USER_ID"
-const val KEY_ROLE = "SPYFALL_ROLE"
-const val KEY_HOST = "SPYFALL_HOST"
-const val KEY_ACCESS_CODE = "SPYFALL_ACESSCODE"
-
 class SpyfallGamePreferences @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : GamePreferences<SpyfallSession> {
@@ -43,3 +37,9 @@ class SpyfallGamePreferences @Inject constructor(
         SpyfallPlayer(role = role, id = userId, username = username, isHost = isHost)
     }
 }
+
+const val KEY_USERNAME = "SPYFALL_USERNAME"
+const val KEY_USER_ID = "SPYFALL_USER_ID"
+const val KEY_ROLE = "SPYFALL_ROLE"
+const val KEY_HOST = "SPYFALL_HOST"
+const val KEY_ACCESS_CODE = "SPYFALL_ACESSCODE"
