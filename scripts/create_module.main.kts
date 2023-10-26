@@ -101,7 +101,10 @@ fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolea
         isInternal -> {
             val currentBuildFile = File("$newDir/internalbuild.gradle.kts")
             val newBuildFile = File("$newDir/build.gradle.kts")
-            val filesToDelete = listOf( File("$newDir/librarybuild.gradle.kts"),File("$newDir/featurebuild.gradle.kts") )
+            val filesToDelete = listOf(
+                File("$newDir/librarybuild.gradle.kts"),
+                File("$newDir/featurebuild.gradle.kts")
+            )
 
             currentBuildFile.renameTo(newBuildFile)
             filesToDelete.forEach { it.delete() }
@@ -110,7 +113,10 @@ fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolea
         moduleType == "library" -> {
             val currentBuildFile = File("$newDir/librarybuild.gradle.kts")
             val newBuildFile = File("$newDir/build.gradle.kts")
-            val filesToDelete = listOf( File("$newDir/featurebuild.gradle.kts"),File("$newDir/internalbuild.gradle.kts") )
+            val filesToDelete = listOf(
+                File("$newDir/featurebuild.gradle.kts"),
+                File("$newDir/internalbuild.gradle.kts")
+            )
 
             currentBuildFile.renameTo(newBuildFile)
             filesToDelete.forEach { it.delete() }
