@@ -577,7 +577,7 @@ style:
     active: false
   NestedClassesVisibility:
     active: true
-  NewLineAtEndOfFile:
+  FinalNewline:
     active: true
   NoTabs:
     active: false
