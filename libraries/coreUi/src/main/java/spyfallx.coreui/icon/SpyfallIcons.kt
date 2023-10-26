@@ -68,6 +68,7 @@ enum class SpyfallIcon(val imageVector: ImageVector) {
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=800,height=600,unit=dp,dpi=200")
 @Composable
+@Suppress("MagicNumber")
 private fun IconGridPreview() {
     PreviewContent(showBackground = true) {
         LazyVerticalGrid(

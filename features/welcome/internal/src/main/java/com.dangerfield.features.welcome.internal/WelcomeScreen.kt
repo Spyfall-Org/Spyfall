@@ -22,6 +22,7 @@ import spyfallx.coreui.icon.SpyfallIcon
 import spyfallx.coreui.theme.SpyfallTheme
 
 @Composable
+@Suppress("MagicNumber")
 fun WelcomeScreen(
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit

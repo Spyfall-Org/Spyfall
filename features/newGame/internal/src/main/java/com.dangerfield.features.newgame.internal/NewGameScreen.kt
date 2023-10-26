@@ -26,10 +26,10 @@ import spyfallx.coreui.theme.SpyfallTheme
 @Composable
 fun NewGameScreen(
     modifier: Modifier = Modifier,
-    onBackPressed: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     Screen(
+        modifier = modifier,
         header = {
             Header(title = "New Game")
         }

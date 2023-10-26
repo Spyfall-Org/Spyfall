@@ -28,7 +28,7 @@ import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.theme.SpyfallTheme
 import kotlin.math.roundToInt
 
-@Suppress("ComplexMethod")
+@Suppress("ComplexMethod", "VariableNaming")
 open class TypographyToken internal constructor(
     internal val fontFamily: FontFamilyToken,
     internal val fontWeight: FontWeight,

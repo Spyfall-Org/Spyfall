@@ -21,15 +21,6 @@ import spyfallx.coreui.NumericalValues.V900
 import spyfallx.coreui.PreviewContent
 import spyfallx.coreui.components.text.Text
 
-
-enum class IconSize(val dp: Dp) {
-    Smallest(V300),
-    Small(V700),
-    Medium(V900),
-    Large(V1100),
-    Largest(V1300),
-}
-
 @Composable
 fun Icon(
     imageVector: ImageVector,
@@ -89,6 +80,14 @@ fun LargeIcon(
         modifier = modifier.size(IconSize.Large.dp),
         tint = tint
     )
+}
+
+enum class IconSize(val dp: Dp) {
+    Smallest(V300),
+    Small(V700),
+    Medium(V900),
+    Large(V1100),
+    Largest(V1300),
 }
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=1000,height=600,unit=dp,dpi=500")

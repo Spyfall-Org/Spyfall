@@ -57,13 +57,12 @@ private object DynamicViewCompositionStrategy : ViewCompositionStrategy {
                 view.addPoolingContainerListener(listener)
                 return { view.removePoolingContainerListener(listener) }
             }
-            val lifecycleOwner = view.findViewTreeLifecycleOwner()
-            if (lifecycleOwner != null) {
-                return ViewCompositionStrategy.DisposeOnLifecycleDestroyed(lifecycleOwner)
-                    .installFor(view)
-            }
 
-            return ViewCompositionStrategy.DisposeOnDetachedFromWindow.installFor(view)
+            val lifecycleOwner = view.findViewTreeLifecycleOwner()
+
+            return if (lifecycleOwner != null) {
+                 ViewCompositionStrategy.DisposeOnLifecycleDestroyed(lifecycleOwner).installFor(view)
+            } else ViewCompositionStrategy.DisposeOnDetachedFromWindow.installFor(view)
         }
 
         if (view.isAttachedToWindow) {

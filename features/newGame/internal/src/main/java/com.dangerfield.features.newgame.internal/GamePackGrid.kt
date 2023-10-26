@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package com.dangerfield.features.newgame.internal
 
 import androidx.compose.foundation.background

@@ -21,7 +21,7 @@ import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.theme.SpyfallTheme
 
-
+@Suppress("MagicNumber")
 @Composable
 fun SpyfallApp(
     isUpdateRequired: Boolean,

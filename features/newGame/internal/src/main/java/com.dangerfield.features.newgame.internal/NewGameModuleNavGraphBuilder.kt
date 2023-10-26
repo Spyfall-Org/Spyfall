@@ -15,7 +15,7 @@ class NewGameModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
         composable(
             route = newGameNavigationRoute,
         ) {
-            NewGameScreen(onBackPressed = navController::popBackStack)
+            NewGameScreen()
         }
     }
 }

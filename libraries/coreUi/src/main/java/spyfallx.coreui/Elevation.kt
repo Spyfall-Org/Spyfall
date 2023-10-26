@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package spyfallx.coreui
 
 import androidx.compose.animation.core.AnimationSpec
