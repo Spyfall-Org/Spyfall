@@ -29,6 +29,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.reflect.KProperty0
 
+@Suppress("MagicNumber")
 internal object NumericalValues {
     /** 2dp */
     val V50 = 2.dp

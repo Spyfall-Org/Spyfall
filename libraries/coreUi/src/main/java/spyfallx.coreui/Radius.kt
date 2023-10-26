@@ -53,6 +53,7 @@ class Radius private constructor(val shape: RoundedCornerShape) {
     override fun toString(): String = "Radius(cornerSize=$cornerSize)"
 }
 
+@Suppress("MagicNumber")
 object Radii {
     val Round = Radius(CornerSize(percent = 50))
     val R400 = Radius(CornerSize(Sizes.S400))

@@ -36,6 +36,7 @@ import spyfallx.coreui.icon.SpyfallIcon
 import spyfallx.coreui.thenIf
 import java.util.Locale
 
+@Suppress("MagicNumber")
 sealed class ColorPrimitive(val color: Color) {
     data object Unspecified: ColorPrimitive(Color.Unspecified)
     data object Black900: ColorPrimitive(Color(0xFF000000))

@@ -19,8 +19,8 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
+@Suppress("ReturnCount")
 fun main() {
-
     if (checkForHelpCall()) return
 
     val moduleType = args.getOrNull(0) ?: run {
@@ -119,7 +119,10 @@ fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolea
         else -> {
             val currentBuildFile = File("$newDir/featurebuild.gradle.kts")
             val newBuildFile = File("$newDir/build.gradle.kts")
-            val filesToDelete = listOf( File("$newDir/librarybuild.gradle.kts"),File("$newDir/internalbuild.gradle.kts") )
+            val filesToDelete = listOf(
+                File("$newDir/librarybuild.gradle.kts"),
+                File("$newDir/internalbuild.gradle.kts")
+            )
 
             currentBuildFile.renameTo(newBuildFile)
             filesToDelete.forEach { it.delete() }
