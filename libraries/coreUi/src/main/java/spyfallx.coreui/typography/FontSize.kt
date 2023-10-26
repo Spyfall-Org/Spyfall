@@ -8,7 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import spyfallx.coreui.NumericalValues
 import spyfallx.coreui.Spacing
@@ -19,6 +18,7 @@ import spyfallx.coreui.theme.SpyfallTheme
 import kotlin.math.roundToInt
 import kotlin.reflect.KProperty0
 
+@Suppress("MagicNumber")
 object FontSize {
     /** 10dp */
     val S400 = NumericalValues.V400.asSp()
@@ -60,6 +60,7 @@ object FontSize {
     val S1600 = NumericalValues.V1600.asSp()
 }
 
+@Suppress("MagicNumber")
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=1600,height=2000,unit=dp,dpi=200")
 @Composable
 private fun FontSizePreview() {
@@ -108,6 +109,7 @@ private fun FontSizePreview() {
     }
 }
 
+@Suppress("MagicNumber")
 @Composable
 private fun PreviewRow(
     value: KProperty0<Dp>,
@@ -142,6 +144,7 @@ private fun PreviewRow(
     )
 }
 
+@Suppress("MagicNumber")
 @Composable
 private fun PreviewRow(
     token: @Composable () -> Unit,
