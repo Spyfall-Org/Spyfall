@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package spyfallx.coreui.color
 
 import androidx.compose.foundation.background
@@ -31,12 +32,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import spyfallx.coreui.PreviewContent
 import spyfallx.coreui.icon.LargeIcon
-import spyfallx.coreui.icon.SmallIcon
 import spyfallx.coreui.icon.SpyfallIcon
 import spyfallx.coreui.thenIf
 import java.util.Locale
 
-@Suppress("MagicNumber")
+
 sealed class ColorPrimitive(val color: Color) {
     data object Unspecified: ColorPrimitive(Color.Unspecified)
     data object Black900: ColorPrimitive(Color(0xFF000000))

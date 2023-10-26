@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package spyfallx.coreui.color
 
 import androidx.compose.foundation.*
