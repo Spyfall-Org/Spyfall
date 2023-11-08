@@ -6,7 +6,6 @@ import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestExtension
 import com.google.devtools.ksp.gradle.KspExtension
 import com.spyfall.convention.util.SharedConstants
-import com.spyfall.convention.util.commonExt
 import com.spyfall.convention.util.configureAndroidCompose
 import com.spyfall.convention.util.getModule
 import com.spyfall.convention.util.libs
@@ -19,11 +18,9 @@ import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import javax.inject.Inject
 
 @SpyfallExtensionDsl
-abstract class SpyfallExtension {
+abstract class SpyfallFeatureExtension {
     @get:Inject
     internal abstract val project: Project
-
-    //var namespace: String? by project.commonExt::namespace
 
     fun optIn(vararg markerClasses: String) {
         project.optInKotlinMarkers(*markerClasses)
@@ -33,6 +30,7 @@ abstract class SpyfallExtension {
         if (withProcessors) {
             project.pluginManager.apply("dagger.hilt.android.plugin")
             if (project.useKspDagger) {
+
                 ksp {
                     arg("dagger.fastInit", "enabled")
                 }
@@ -64,7 +62,6 @@ abstract class SpyfallExtension {
     }
 
     fun compose() {
-
         val projectExt = project.extensions.findByType(LibraryExtension::class.java)
             ?: project.extensions.findByType(ApplicationExtension::class.java)
             ?: error("""
@@ -103,6 +100,7 @@ abstract class SpyfallExtension {
     }
 
     fun ksp(configure: KspExtension.() -> Unit = {}) {
+        println("ADDING KSP TO PROJECT ${project.name}")
         project.pluginManager.apply("com.google.devtools.ksp")
         project.extensions.configure(configure)
     }

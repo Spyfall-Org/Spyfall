@@ -15,7 +15,6 @@ import spyfallx.coreui.components.button.Button
 import spyfallx.coreui.components.text.Text
 import spyfallx.coreui.components.header.Header
 import spyfallx.coreui.components.text.OutlinedTextField
-import spyfallx.coreui.icon.SpyfallIcon
 import spyfallx.coreui.theme.SpyfallTheme
 
 @Composable
@@ -71,7 +70,8 @@ fun JoinGameScreen() {
 @Composable
 fun PreviewJoinGameScreen() {
     PreviewContent() {
-        JoinGameScreen()
+        JoinGameScreen(
+        )
     }
 }
 
@@ -79,7 +79,8 @@ fun PreviewJoinGameScreen() {
 @Composable
 fun PreviewJoinGameScreenDark() {
     PreviewContent(isDarkMode = true) {
-        JoinGameScreen()
+        JoinGameScreen(
+        )
     }
 }
 

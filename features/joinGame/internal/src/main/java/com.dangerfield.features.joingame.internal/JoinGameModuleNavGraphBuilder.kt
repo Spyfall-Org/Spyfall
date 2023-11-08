@@ -9,7 +9,7 @@ import spyfallx.coreui.ModuleNavBuilder
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class JoinGameModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
+class JoinGameModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(navController: NavController) {
         composable(

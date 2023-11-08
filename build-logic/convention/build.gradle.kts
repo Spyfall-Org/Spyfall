@@ -30,10 +30,10 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     implementation(libs.detekt.gradlePlugin)
-    compileOnly(libs.ksp.gradlePlugin)
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.google.gms:google-services:4.3.14")
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+    api(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {
@@ -49,6 +49,11 @@ gradlePlugin {
         register("androidFeature") {
             id = "spyfall.android.feature"
             implementationClass = "com.spyfall.convention.plugin.AndroidFeatureConventionPlugin"
+        }
+
+        register("javaLibrary") {
+            id = "spyfall.java.library"
+            implementationClass = "com.spyfall.convention.plugin.JavaLibraryConventionPlugin"
         }
 
         register("androidDetekt") {

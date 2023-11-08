@@ -111,7 +111,8 @@ private fun GamePackItem(
                     text = type,
                     typographyToken = SpyfallTheme.typography.Heading.H500,
                     textAlign = TextAlign.Center,
-                    color = SpyfallTheme.colorScheme.text
+                    color = SpyfallTheme.colorScheme.text,
+                    maxLines = 2
                 )
             }
         }
@@ -188,7 +189,7 @@ private fun PreviewGamePackGrid() {
     PreviewContent(showBackground = true) {
         GamePackGrid(
             gamePacks = listOf(
-                GamePack(number = "1", type = "Standard Pack"),
+                GamePack(number = "1", type = "Standard Pack But longer"),
                 GamePack(number = "1", type = "Standard Pack"),
                 GamePack(number = "1", type = "Standard Pack"),
                 GamePack(number = "1", type = "Standard Pack"),

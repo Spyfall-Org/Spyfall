@@ -8,6 +8,7 @@ buildscript {
         classpath(libs.android.gradlePlugin)
         classpath(libs.kotlin.gradlePlugin)
         classpath(libs.google.services)
+        classpath(libs.kotlinpoet)
         classpath(libs.firebase.crashlytics)
         classpath(libs.dagger.hilt.gradle.plugin)
     }
@@ -33,4 +34,5 @@ allprojects {
 tasks.register<Delete>("clean").configure {
     delete(rootProject.buildDir)
 }
+
 

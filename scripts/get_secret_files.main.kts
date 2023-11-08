@@ -20,10 +20,16 @@ import java.io.FileOutputStream
 // These file ids can be found in the url of the sharable google drive links to these files
 data class FileInfo(val id: String, val pathToStore: String)
 
-val spyfallGoogleServicesFileInfo =
+val spyfallReleaseGoogleServicesFileInfo =
     FileInfo(
         id ="1UIP-nsDLazFCo-OIU3OzFjiBNTeyAjRc",
-        pathToStore = "app/google-services.json"
+        pathToStore = "app/src/release/google-services.json"
+    )
+
+val spyfallDebugGoogleServicesFileInfo =
+    FileInfo(
+        id ="12rbE9BCp8UkQ38_eE465tjI8O3VbYAzL",
+        pathToStore = "app/src/debug/google-services.json"
     )
 
 val spyfallServiceAccountKeyFileInfo =
@@ -32,10 +38,9 @@ val spyfallServiceAccountKeyFileInfo =
         pathToStore = "app/service-account-key.json"
     )
 
-
-
 val fileInfoList = listOf(
-    spyfallGoogleServicesFileInfo,
+    spyfallReleaseGoogleServicesFileInfo,
+    spyfallDebugGoogleServicesFileInfo,
     spyfallServiceAccountKeyFileInfo
 )
 

@@ -6,11 +6,13 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
 }
 
 spyfall {
     daggerHilt()
     compose()
+    ksp()
 }
 
 android {
@@ -95,6 +97,7 @@ dependencies {
     implementation(libs.koin.android)
 
     implementation(libs.androidx.activity.compose)
+
     // testing
     // Koin testing tools
     testImplementation(libs.koin.testing)

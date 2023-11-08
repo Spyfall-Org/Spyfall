@@ -1,7 +1,7 @@
 package com.spyfall.convention.plugin
 
 import com.android.build.gradle.LibraryExtension
-import com.spyfall.convention.extension.SpyfallExtension
+import com.spyfall.convention.extension.SpyfallFeatureExtension
 import com.spyfall.convention.util.SharedConstants
 import com.spyfall.convention.util.configureKotlinAndroid
 import org.gradle.api.Plugin
@@ -23,7 +23,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         with(target) {
 
             if (extensions.findByName("spyfall") == null) {
-                extensions.create("spyfall", SpyfallExtension::class.java)
+                extensions.create("spyfall", SpyfallFeatureExtension::class.java)
             }
 
             /*

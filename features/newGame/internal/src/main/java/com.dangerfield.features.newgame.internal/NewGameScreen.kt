@@ -95,6 +95,7 @@ fun NewGameScreen(
                 Text(text = "Create Game")
             }
 
+            Spacer(modifier = Modifier.height(Spacing.S1200))
         }
     }
 }
@@ -103,7 +104,7 @@ fun NewGameScreen(
 @Composable
 fun PreviewNewGameScreen() {
     PreviewContent() {
-        NewGameScreen(onBackPressed = {})
+        NewGameScreen()
     }
 }
 
@@ -111,6 +112,6 @@ fun PreviewNewGameScreen() {
 @Composable
 fun PreviewNewGameScreenDark() {
     PreviewContent(isDarkMode = true, accentColor = ColorPrimitive.MintyFresh300) {
-        NewGameScreen(onBackPressed = {})
+        NewGameScreen()
     }
 }

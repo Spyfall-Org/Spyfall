@@ -8,7 +8,7 @@ import java.lang.System.getenv
 internal fun Project.checkForAppModuleSecretFiles() {
 
     val secretFiledNeeded = listOf(
-        File("${project.projectDir}/google-services.json"),
+        File("${project.projectDir}/src/release/google-services.json"),
         File("${project.projectDir}/service-account-key.json")
     )
 

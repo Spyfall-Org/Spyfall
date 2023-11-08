@@ -192,6 +192,15 @@ class Typography {
             lineBreak = LineBreak.Heading,
             identifier = "heading-500"
         )
+
+        val H400 = TypographyToken(
+            fontFamily = FontFamilyToken.Poppins,
+            fontWeight = FontWeight.Bold,
+            fontSize = FontSize.S400,
+            lineHeight = LineHeight.H700,
+            lineBreak = LineBreak.Heading,
+            identifier = "heading-400"
+        )
     }
 
     class LabelTypography {
@@ -406,7 +415,8 @@ private class PreviewGroupPreviewParameterProvider : PreviewParameterProvider<Pr
                 PreviewGroup.Token(SpyfallTheme.typography.Heading.H800, "Welcome to Spyfall"),
                 PreviewGroup.Token(SpyfallTheme.typography.Heading.H700, "Welcome to Spyfall"),
                 PreviewGroup.Token(SpyfallTheme.typography.Heading.H600, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H500, "Welcome to Spyfall")
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H500, "Welcome to Spyfall"),
+                PreviewGroup.Token(SpyfallTheme.typography.Heading.H400, "Welcome to Spyfall")
             )
         ),
 

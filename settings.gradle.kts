@@ -5,6 +5,10 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    plugins {
+        id("com.google.devtools.ksp") version "1.9.10-1.0.13"
+    }
 }
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -24,6 +28,7 @@ include("features:joinGame:internal")
 include("features:newGame")
 include("features:newGame:internal")
 include("features:settings")
+include("features:settings:internal")
 include("features:splash")
 include("features:waitingRoom")
 include("features:waitingRoom:internal")
@@ -41,4 +46,3 @@ include("libraries:coreSpyfallGame")
 include("libraries:coreUi")
 include("libraries:coreUi:internal")
 include("libraries:coreWerewolfGame")
-include("features:settings:internal")

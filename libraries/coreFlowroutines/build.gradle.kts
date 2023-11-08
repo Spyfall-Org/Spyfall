@@ -3,7 +3,7 @@ plugins {
 }
 
 spyfall {
-    daggerHilt(withProcessors = false)
+    daggerHilt()
 }
 android {
     namespace = "com.dangerfield.spyfall.libraries.coreflowroutines"

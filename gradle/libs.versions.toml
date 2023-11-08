@@ -12,17 +12,18 @@ coroutines = "1.7.3"
 cacheFixGradlePlugin = "2.7.2"
 dagger = "2.48.1"
 fragment = "1.6.1"
+gradlePlugin = "1.6.0-1.0.0-beta10"
 hilt = "2.48.1"
 hilt-navigation = "1.1.0-beta01"
 kotlin = "1.9.10"
 kotlinxSerializationJson = "1.5.1"
+ksp = "1.9.10-1.0.13" # This must match the Kotlin version above
 lottie = "6.1.0"
 robolectric = "4.10.3"
 roborazzi = "1.5.0-alpha-2"
 
 #plugins
 detekt = "1.21.0"
-ksp = "1.9.10-1.0.13"
 kotlin1910 = "1.9.10"
 core-ktx = "1.12.0"
 junit = "4.13.2"
@@ -110,6 +111,8 @@ roboelectric = "org.robolectric:robolectric:4.6.1"
 mockito = "org.mockito:mockito-core:3.9.0"
 mockito-kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 
+kotlinpoet = "com.squareup:kotlinpoet:1.14.2"
+
 # Auto Dagger
 autoDagger-core = { module = "se.ansman.dagger.auto:core", version.ref = "autoDagger" }
 autoDagger-android = { module = "se.ansman.dagger.auto:android", version.ref = "autoDagger" }
@@ -152,7 +155,6 @@ detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -164,9 +166,13 @@ androidx-customview-poolingcontainer = { group = "androidx.customview", name = "
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
+# KSP
+ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

@@ -1,6 +1,6 @@
 package com.spyfall.convention.plugin
 
-import com.spyfall.convention.extension.SpyfallExtension
+import com.spyfall.convention.extension.SpyfallFeatureExtension
 import com.spyfall.convention.util.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -22,7 +22,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
         with(target) {
 
             if (extensions.findByName("spyfall") == null) {
-                extensions.create("spyfall", SpyfallExtension::class.java)
+                extensions.create("spyfall", SpyfallFeatureExtension::class.java)
             }
 
             pluginManager.apply {
