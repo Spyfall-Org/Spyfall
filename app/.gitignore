@@ -1,6 +1,6 @@
 /build
 
-service-account-key.json
+src/release/service-account-key.json
 src/google-services.json
 src/debug/google-services.json
 src/release/google-services.json

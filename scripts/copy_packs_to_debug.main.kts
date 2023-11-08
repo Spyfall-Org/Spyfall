@@ -41,8 +41,8 @@ if (isHelpCall) {
 }
 
 fun doWork() {
-    val releaseServiceAccountJsonFile = File("../app/src/release/service-account-key.json")
-    val debugServiceAccountJsonFile = File("../app/src/debug/service-account-key.json")
+    val releaseServiceAccountJsonFile = File("app/src/release/service-account-key.json")
+    val debugServiceAccountJsonFile = File("app/src/debug/service-account-key.json")
 
     if (!debugServiceAccountJsonFile.isFile || !releaseServiceAccountJsonFile.isFile) {
         printRed(

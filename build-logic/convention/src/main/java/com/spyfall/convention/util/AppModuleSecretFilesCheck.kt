@@ -9,7 +9,9 @@ internal fun Project.checkForAppModuleSecretFiles() {
 
     val secretFiledNeeded = listOf(
         File("${project.projectDir}/src/release/google-services.json"),
-        File("${project.projectDir}/service-account-key.json")
+        File("${project.projectDir}/src/release/service-account-key.json"),
+        File("${project.projectDir}/src/debug/google-services.json"),
+        File("${project.projectDir}/src/debug/service-account-key.json")
     )
 
     fun isAppMissingSecretFiles(): Boolean = secretFiledNeeded.any { !it.isFile }

@@ -26,7 +26,7 @@ jobs:
       spyfallReleaseApkPath: ""
       spyfallReleaseAabPath: ""
       pullRequestLink: ""
-      GOOGLE_APPLICATION_CREDENTIALS: "app/service-account-key.json"
+      GOOGLE_APPLICATION_CREDENTIALS: "app/src/release/service-account-key.json"
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
     runs-on: ubuntu-latest
