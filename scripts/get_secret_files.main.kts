@@ -32,16 +32,23 @@ val spyfallDebugGoogleServicesFileInfo =
         pathToStore = "app/src/debug/google-services.json"
     )
 
-val spyfallServiceAccountKeyFileInfo =
+val spyfallDebugServiceAccountKeyFileInfo =
+    FileInfo(
+        id ="1wEDOUOW3-ULVAyWe3NRmIiF5s3K_E6Lq",
+        pathToStore = "app/src/debug/service-account-key.json"
+    )
+
+val spyfallReleaseServiceAccountKeyFileInfo =
     FileInfo(
         id ="13Q-z85mO3-5JVFhXmQ9191-N465-18PH",
-        pathToStore = "app/service-account-key.json"
+        pathToStore = "app/src/release/service-account-key.json"
     )
 
 val fileInfoList = listOf(
     spyfallReleaseGoogleServicesFileInfo,
+    spyfallReleaseServiceAccountKeyFileInfo,
     spyfallDebugGoogleServicesFileInfo,
-    spyfallServiceAccountKeyFileInfo
+    spyfallDebugServiceAccountKeyFileInfo,
 )
 
 val red = "\u001b[31m"

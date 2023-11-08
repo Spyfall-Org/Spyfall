@@ -50,7 +50,7 @@ fun main() {
     val versionCode = getAppVersionCode()
     val versionName = getAppVersionName()
 
-    val serviceAccountPath = "app/service-account-key.json"
+    val serviceAccountPath = "app/src/release/service-account-key.json"
 
     installNode()
     installFirebase()

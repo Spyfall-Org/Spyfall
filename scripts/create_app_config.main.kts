@@ -36,6 +36,9 @@ if (isHelpCall || args.isEmpty()) {
                This script creates a new app config of the provided version for the provided app. It copies the most 
                recent app config for that app. 
                
+               our app configs are stored in a firestore /config collection were each document is a version of the app.
+               and each document contains a map of values representing the configuration to be used. 
+               
                Usage: ./create_app_config.main.kts [CONFIG_VERSION] 
     """.trimIndent()
     )
@@ -55,7 +58,7 @@ fun doWork() {
         printRed(
             """
                 No service-account-key.json file was found.
-                Please make sure you have added the file to the app project root.
+                Please make sure you have added the file to the src/debug and src/release folders
                 To get the file follow the instructions here: 
                 https://firebase.google.com/docs/firestore/quickstart#initialize
                 """.trimIndent()
@@ -119,7 +122,7 @@ enum class AppConfigValidation {
     Valid, AlreadyExists, InvalidFormat
 }
 
-fun getServiceAccountJsonFile() = File("app/service-account-key.json")
+fun getServiceAccountJsonFile() = File("app/src/release/service-account-key.json")
 
 @Suppress("TooGenericExceptionCaught")
 fun loadAppProperty(property: String): String = Properties().let {
