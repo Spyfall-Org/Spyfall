@@ -30,7 +30,6 @@ abstract class SpyfallFeatureExtension {
         if (withProcessors) {
             project.pluginManager.apply("dagger.hilt.android.plugin")
             if (project.useKspDagger) {
-
                 ksp {
                     arg("dagger.fastInit", "enabled")
                 }
