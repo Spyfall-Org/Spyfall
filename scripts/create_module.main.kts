@@ -36,19 +36,22 @@ fun main() {
     val fullModuleName = args.getOrNull(1) ?: run {
         print(
             """
-            Enter the module name in camelCase. or "q" to quite
+            Enter the module name in camelCase. or "q" to quit
             If this module is a sub module enter the name in the form "parentModule:subModule": 
             """.trimIndent()
         )
         readln()
     }
 
-    if (fullModuleName == "q") return
+    if (fullModuleName == "q") {
+        printGreen("Quitting...")
+        return
+    }
 
     generateModule(fullModuleName, moduleType)
 
     val isSubModule = fullModuleName.contains(":")
-    if (moduleType == "feature" && !isSubModule) {
+    if (!isSubModule) {
         generateModule("$fullModuleName:internal", moduleType, isInternal = true)
     }
 }

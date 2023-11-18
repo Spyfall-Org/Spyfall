@@ -6,13 +6,11 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("com.google.gms.google-services")
-    id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
 }
 
 spyfall {
-    daggerHilt()
     compose()
-    ksp()
 }
 
 android {
@@ -61,6 +59,10 @@ dependencies {
     implementation(libs.arch.navigation.ui)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(project.libs.dagger)
+    implementation(project.libs.dagger.hilt.android)
+    kapt(project.libs.dagger.hilt.android.compiler)
 
     // ad mob
     implementation(libs.google.play.services.ads)

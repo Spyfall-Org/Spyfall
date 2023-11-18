@@ -4,13 +4,11 @@ package com.spyfall.convention.extension
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestExtension
-import com.google.devtools.ksp.gradle.KspExtension
 import com.spyfall.convention.util.SharedConstants
 import com.spyfall.convention.util.configureAndroidCompose
 import com.spyfall.convention.util.getModule
 import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.optInKotlinMarkers
-import com.spyfall.convention.util.useKspDagger
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
@@ -29,15 +27,9 @@ abstract class SpyfallFeatureExtension {
     fun daggerHilt(withProcessors: Boolean = true) {
         if (withProcessors) {
             project.pluginManager.apply("dagger.hilt.android.plugin")
-            if (project.useKspDagger) {
-                ksp {
+            kapt {
+                arguments {
                     arg("dagger.fastInit", "enabled")
-                }
-            } else {
-                kapt {
-                    arguments {
-                        arg("dagger.fastInit", "enabled")
-                    }
                 }
             }
         }
@@ -48,11 +40,7 @@ abstract class SpyfallFeatureExtension {
             "implementation"(project.libs.dagger.hilt.core)
             "implementation"(project.libs.autoDagger.core)
             if (withProcessors) {
-                val configuration = if (project.useKspDagger) {
-                    "ksp"
-                } else {
-                    "kapt"
-                }
+                val configuration = "kapt"
                 configuration(project.libs.dagger.compiler)
                 configuration(project.libs.dagger.hilt.compiler)
                 configuration(project.libs.autoDagger.compiler)
@@ -63,7 +51,8 @@ abstract class SpyfallFeatureExtension {
     fun compose() {
         val projectExt = project.extensions.findByType(LibraryExtension::class.java)
             ?: project.extensions.findByType(ApplicationExtension::class.java)
-            ?: error("""
+            ?: error(
+                """
                 Attempted to use compose outside of Application or Library project
                 make sure you've applied one of the following plugin to the calling projects build.gradle:
                 
@@ -71,7 +60,8 @@ abstract class SpyfallFeatureExtension {
                 id("spyfall.android.library")
                 id("spyfall.android.feature")
 
-            """.trimIndent())
+            """.trimIndent()
+            )
 
         project.configureAndroidCompose(projectExt)
     }
@@ -95,12 +85,6 @@ abstract class SpyfallFeatureExtension {
 
     fun kapt(configure: KaptExtension.() -> Unit = {}) {
         project.pluginManager.apply("kotlin-kapt")
-        project.extensions.configure(configure)
-    }
-
-    fun ksp(configure: KspExtension.() -> Unit = {}) {
-        println("ADDING KSP TO PROJECT ${project.name}")
-        project.pluginManager.apply("com.google.devtools.ksp")
         project.extensions.configure(configure)
     }
 

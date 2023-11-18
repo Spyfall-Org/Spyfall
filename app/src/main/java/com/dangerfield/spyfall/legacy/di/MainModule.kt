@@ -24,7 +24,6 @@ import com.dangerfield.spyfall.legacy.util.ReviewHelper
 import com.dangerfield.spyfall.legacy.util.SavedSessionHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerService
-import com.dangerfield.spyfall.legacy.util.isLegacyBuild
 import com.dangerfield.spyfall.legacy.ui.forcedupdate.AppUpdateDataSource
 import com.dangerfield.spyfall.legacy.ui.forcedupdate.IsUpdateRequired
 import com.dangerfield.spyfall.legacy.api.SpyfallAppUpdateDataSource
@@ -34,7 +33,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import spyfallx.core.BuildInfo
-import spyfallx.core.TargetApp
 
 val mainModule = module {
 
@@ -54,7 +52,6 @@ val mainModule = module {
     factory { SessionListenerHelper(get(), get()) as SessionListenerService }
     factory {
         BuildInfo(
-            targetApp = TargetApp.Spyfall(isLegacyBuild()),
             versionCode = VERSION_CODE,
             versionName = VERSION_NAME,
             configKey = BuildConfig.CONFIG_COLLECTION_KEY

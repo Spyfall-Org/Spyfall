@@ -5,10 +5,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-
-    plugins {
-        id("com.google.devtools.ksp") version "1.9.10-1.0.13"
-    }
 }
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -40,9 +36,10 @@ include("libraries:coreCommon")
 include("libraries:coreConfig")
 include("libraries:coreDataStore")
 include("libraries:coreFlowroutines")
+include("libraries:coreGame")
 include("libraries:coreGameApi")
 include("libraries:coreSpyfall")
 include("libraries:coreSpyfallGame")
 include("libraries:coreUi")
 include("libraries:coreUi:internal")
-include("libraries:coreWerewolfGame")
+include("libraries:coreGame:internal")

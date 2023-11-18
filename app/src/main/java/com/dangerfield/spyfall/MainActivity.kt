@@ -14,7 +14,6 @@ import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.MainActivityViewModel.State
 import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.collectWhileStarted
-import com.dangerfield.spyfall.legacy.util.isLegacyBuild
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,14 +41,14 @@ class MainActivity : ThemeChangeableActivity() {
         collectWhileStarted(mainActivityViewModel.state) {
             isLoading = it == State.Loading
 
-            if (buildInfo.isLegacySpyfall && it is State.Loaded && it.isUpdateRequired) {
+            if (buildInfo.isLegacyBuild && it is State.Loaded && it.isUpdateRequired) {
                 showBlockingUpdateLegacy()
             }
         }
 
         splashScreen.setKeepOnScreenCondition { isLoading }
 
-        if (buildInfo.isLegacySpyfall) {
+        if (buildInfo.isLegacyBuild) {
             legacyOnCreate()
         } else {
             refactorOnCreate()
@@ -63,12 +62,15 @@ class MainActivity : ThemeChangeableActivity() {
     }
 
     private fun refactorOnCreate() {
+        Log.d("Elijah", "refactorOnCreate")
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         setContent {
             val uiState by mainActivityViewModel.state.collectAsState()
 
             when(val smartState = uiState) {
                 is State.Loaded -> {
+                    Log.d("Elijah", "Loading compose app, isUpdateRequired: ${smartState.isUpdateRequired}")
+
                     SpyfallApp(
                         navBuilderRegistry = navBuilderRegistry,
                         isUpdateRequired = smartState.isUpdateRequired,
@@ -82,7 +84,7 @@ class MainActivity : ThemeChangeableActivity() {
 
 
     override fun onSupportNavigateUp(): Boolean {
-        return if (isLegacyBuild()) {
+        return if (buildInfo.isLegacyBuild) {
             findNavController(this, R.id.nav_host_fragment).navigateUp()
         } else {
             super.onSupportNavigateUp()

@@ -5,6 +5,7 @@ plugins {
 spyfall {
     compose()
     daggerHilt()
+    flowroutines()
 }
 
 android {
@@ -17,4 +18,6 @@ dependencies {
     implementation(projects.libraries.coreCommon)
     implementation(projects.features.joinGame)
     implementation(projects.features.newGame)
+    implementation(projects.features.forcedUpdate)
+
 }

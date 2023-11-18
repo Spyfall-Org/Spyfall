@@ -33,7 +33,6 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.google.gms:google-services:4.3.14")
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-    api(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {

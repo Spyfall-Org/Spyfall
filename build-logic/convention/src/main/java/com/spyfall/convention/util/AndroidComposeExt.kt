@@ -26,6 +26,7 @@ internal fun Project.configureAndroidCompose(
             add("implementation", platform(bom))
             add("implementation", libs.androidx.compose.runtime)
             add("implementation",libs.androidx.navigation.runtime.ktx)
+            add("implementation",libs.hilt.navigation.compose)
             add("implementation",libs.androidx.navigation.compose)
             add("androidTestImplementation", platform(bom))
             // Add ComponentActivity to debug manifest

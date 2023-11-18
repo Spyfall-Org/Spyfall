@@ -6,7 +6,6 @@ import com.dangerfield.spyfall.BuildConfig.CONFIG_COLLECTION_KEY
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
 import com.dangerfield.spyfall.R
-import com.dangerfield.spyfall.legacy.util.isLegacyBuild
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -14,7 +13,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import spyfallx.core.BuildInfo
-import spyfallx.core.TargetApp
 import javax.inject.Singleton
 
 @Module
@@ -39,7 +37,6 @@ object CoreModule {
     @Provides
     fun provideBuildInfo(): BuildInfo =
         BuildInfo(
-            targetApp = TargetApp.Spyfall(isLegacyBuild = isLegacyBuild()),
             versionCode = VERSION_CODE,
             versionName = VERSION_NAME,
             configKey = CONFIG_COLLECTION_KEY

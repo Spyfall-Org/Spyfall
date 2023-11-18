@@ -14,10 +14,9 @@ dagger = "2.48.1"
 fragment = "1.6.1"
 gradlePlugin = "1.6.0-1.0.0-beta10"
 hilt = "2.48.1"
-hilt-navigation = "1.1.0-beta01"
+hilt-navigation = "1.1.0"
 kotlin = "1.9.10"
 kotlinxSerializationJson = "1.5.1"
-ksp = "1.9.10-1.0.13" # This must match the Kotlin version above
 lottie = "6.1.0"
 robolectric = "4.10.3"
 roborazzi = "1.5.0-alpha-2"
@@ -94,6 +93,7 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation" }
 
 #Datastore
 androidx-datastore = "androidx.datastore:datastore-preferences:1.0.0"
@@ -165,10 +165,6 @@ androidx-browser = { group = "androidx.browser", name = "browser", version.ref =
 androidx-customview-poolingcontainer = { group = "androidx.customview", name = "customview-poolingcontainer", version.ref = "customviewPoolingcontainer" }
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
-
-# KSP
-ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 
 
 [plugins]

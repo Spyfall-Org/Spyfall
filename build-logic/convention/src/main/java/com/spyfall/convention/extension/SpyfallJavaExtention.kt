@@ -1,7 +1,6 @@
 package com.spyfall.convention.extension
 
 
-import com.google.devtools.ksp.gradle.KspExtension
 import com.spyfall.convention.util.getModule
 import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.optInKotlinMarkers
@@ -23,17 +22,13 @@ abstract class SpyfallJavaExtention {
 
     fun daggerHilt(withProcessors: Boolean = true) {
         if (withProcessors) {
-            if (project.useKspDagger) {
-                ksp {
-                    arg("dagger.fastInit", "enabled")
-                }
-            } else {
+
                 kapt {
                     arguments {
                         arg("dagger.fastInit", "enabled")
                     }
                 }
-            }
+
         }
 
         project.dependencies {
@@ -41,11 +36,9 @@ abstract class SpyfallJavaExtention {
             "implementation"(project.libs.dagger.hilt.core)
             "implementation"(project.libs.autoDagger.core)
             if (withProcessors) {
-                val configuration = if (project.useKspDagger) {
-                    "ksp"
-                } else {
+                val configuration =
                     "kapt"
-                }
+
                 configuration(project.libs.dagger.compiler)
                 configuration(project.libs.dagger.hilt.compiler)
                 configuration(project.libs.autoDagger.compiler)
@@ -72,12 +65,6 @@ abstract class SpyfallJavaExtention {
 
     fun kapt(configure: KaptExtension.() -> Unit = {}) {
         project.pluginManager.apply("kotlin-kapt")
-        project.extensions.configure(configure)
-    }
-
-    fun ksp(configure: KspExtension.() -> Unit = {}) {
-        println("ADDING KSP TO PROJECT ${project.name}")
-        project.pluginManager.apply("com.google.devtools.ksp")
         project.extensions.configure(configure)
     }
 }

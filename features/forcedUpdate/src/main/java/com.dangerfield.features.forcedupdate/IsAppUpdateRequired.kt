@@ -1,5 +1,6 @@
 package com.dangerfield.features.forcedupdate
 
-fun interface IsAppUpdateRequired {
+
+interface IsAppUpdateRequired {
     suspend operator fun invoke(): Boolean
 }

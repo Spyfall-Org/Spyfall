@@ -2,10 +2,12 @@ package com.dangerfield.features.forcedupdate.internal
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import se.ansman.dagger.auto.AutoBind
 import spyfallx.core.BuildInfo
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
+@AutoBind
 class SpyfallAppUpdateDataSource @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val buildInfo: BuildInfo
@@ -13,6 +15,7 @@ class SpyfallAppUpdateDataSource @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     override suspend fun getMinimumVersionCode(): Int? {
+
         val result = try {
             firebaseFirestore.collection(buildInfo.configKey)
                 .document(buildInfo.versionName)
