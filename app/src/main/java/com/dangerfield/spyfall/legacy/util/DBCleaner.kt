@@ -16,12 +16,12 @@ class DBCleaner(private val db: FirebaseFirestore, private val constants: Consta
     fun cleandb(): LiveData<Resource<String, String>> {
         val result = MutableLiveData<Resource<String, String>>()
         val now = System.currentTimeMillis() / 1000
-        db.collection(constants.games_prod)
+        db.collection(constants.games)
             .whereLessThanOrEqualTo(Constants.GameFields.expiration, now).get()
             .addOnSuccessListener {
                 CoroutineScope(IO).launch {
                     it.documents.toList().pmap { game ->
-                        db.collection(constants.games_prod).document(game.id).delete()
+                        db.collection(constants.games).document(game.id).delete()
                     }
                     val message = "Deleted ${it.documents.size} expired games"
                     result.postValue(Resource.Success(message))
@@ -37,7 +37,7 @@ class DBCleaner(private val db: FirebaseFirestore, private val constants: Consta
         val now = System.currentTimeMillis() / 1000
         var count = 0
         try {
-            val it = db.collection(constants.games_prod).get().await()
+            val it = db.collection(constants.games).get().await()
             val list = it.documents.toList().filter {
                 val exp = (it.get("expiration") as Long?)
                 exp == null || exp.minus(now) <= 0
@@ -45,7 +45,7 @@ class DBCleaner(private val db: FirebaseFirestore, private val constants: Consta
             Log.d("Elijah", "Attempting to clean ${list.size} games")
             list.forEach { game ->
                 count++
-                db.collection(constants.games_prod).document(game.id).delete().await()
+                db.collection(constants.games).document(game.id).delete().await()
                 Log.d("Elijah", "cleaned $count games")
             }
 

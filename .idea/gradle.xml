@@ -57,6 +57,8 @@
             <option value="$PROJECT_DIR$/libraries/coreGame" />
             <option value="$PROJECT_DIR$/libraries/coreGame/internal" />
             <option value="$PROJECT_DIR$/libraries/coreGameApi" />
+            <option value="$PROJECT_DIR$/libraries/coreSession" />
+            <option value="$PROJECT_DIR$/libraries/coreSession/internal" />
             <option value="$PROJECT_DIR$/libraries/coreSpyfall" />
             <option value="$PROJECT_DIR$/libraries/coreSpyfallGame" />
             <option value="$PROJECT_DIR$/libraries/coreUi" />

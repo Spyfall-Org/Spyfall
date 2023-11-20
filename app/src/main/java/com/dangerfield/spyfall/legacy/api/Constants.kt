@@ -5,19 +5,12 @@ import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.legacy.util.PreferencesService
 
 class Constants(val context: Context, private val preferencesHelper: PreferencesService) {
-    val games: String
-        get() = if (BuildConfig.DEBUG && preferencesHelper.getUseTestDbState()) games_test else games_prod
-
-    val games_test = "games_test"
-    val games_prod = "games"
-
+    val games: String = "games"
     val packs = "packs"
-
     val configCollection = "config"
     val requiredVersionCodeDocument = "required_version_code"
     val requiredVersionCodeField = "code"
-
-    val feedback = if (BuildConfig.DEBUG) "feedback_test" else "feedback"
+    val feedback = "feedback"
 
     object StatisticsConstants {
         const val collection = "stats"
@@ -33,7 +26,6 @@ class Constants(val context: Context, private val preferencesHelper: Preferences
         const val started = "started"
         const val expiration = "expiration"
         const val chosenLocation = "chosenLocation"
-
     }
 }
 

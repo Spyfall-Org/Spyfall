@@ -6,6 +6,7 @@ import com.dangerfield.spyfall.legacy.models.Session
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.dataObjects
 
 class SessionListenerHelper(
     private val constants: Constants,
