@@ -63,6 +63,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
 ) : AppConfigRepository {
 
     private var refreshPollingJob: Job? = null
+    private var refreshJob: Job? = null
 
     init {
         Timber.d("Initializing AppConfigRepository")
@@ -77,9 +78,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
 
     private val configStream: SharedFlow<AppConfigMap> = flow {
         withContext(dispatcherProvider.io) {
-            //TODO I dont really need to refresh, I just need to wait for th current
-            // refresh to finish. I want to say awaitRefresh() but that doesnt exist
-            refreshConfig() // before emitting whats cached, make sure its up to date
+            refreshConfig().join() // before emitting whats cached, make sure its up to date
         }
         emitAll(cachedConfigDataSource.getConfigFlow())
     }.shareIn(
@@ -107,7 +106,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
         refreshPollingJob = applicationScope.childSupervisorScope(dispatcherProvider.io).launch {
             while (isActive) {
                 Timber.d("Refreshing app config")
-                refreshConfig()
+                refreshConfig().join()
                 delay(ConfigRefreshRate)
             }
         }
@@ -123,29 +122,37 @@ class OfflineFirstAppConfigRepository @Inject constructor(
     }
 
     /**
-     * refreshes the app config stored in datastore from the backend
+     * return the job responsible for refreshing the app config stored in datastore from the backend
      * if fails, will use the cached config if available, otherwise will use the fallback config
      */
-    private suspend fun refreshConfig(): Try<Unit> =
-        tryWithTimeout(ConfigRefreshTimeout) {
-            withBackoffRetry(2) {
-                Timber.d("Refreshing app config. Attempt: $it")
-                configDataSource.getConfig()
-            }
-        }
-            .onSuccess { config ->
-                cachedConfigDataSource.updateConfig(config)
-            }.onFailure { throwable ->
-                if (cachedConfigDataSource.getConfig().isFailure) {
-                    Timber.d(
-                        throwable,
-                        "Failed to refresh app config, no cached config, using fallback"
-                    )
-                    cachedConfigDataSource.updateConfig(fallbackConfig)
-                } else {
-                    Timber.d(throwable, "Failed to refresh app config, using cached config")
+    private suspend fun refreshConfig(): Job {
+        val immutableRefreshJob = refreshJob
+        return if (immutableRefreshJob != null && immutableRefreshJob.isActive) {
+            immutableRefreshJob
+        } else {
+            applicationScope.childSupervisorScope(dispatcherProvider.io).launch {
+                tryWithTimeout(ConfigRefreshTimeout) {
+                    withBackoffRetry(2) {
+                        Timber.d("Refreshing app config. Attempt: $it")
+                        configDataSource.getConfig()
+                    }
                 }
-            }.ignoreValue()
+                    .onSuccess { config ->
+                        cachedConfigDataSource.updateConfig(config)
+                    }.onFailure { throwable ->
+                        if (cachedConfigDataSource.getConfig().isFailure) {
+                            Timber.d(
+                                throwable,
+                                "Failed to refresh app config, no cached config, using fallback"
+                            )
+                            cachedConfigDataSource.updateConfig(fallbackConfig)
+                        } else {
+                            Timber.d(throwable, "Failed to refresh app config, using cached config")
+                        }
+                    }.ignoreValue()
+            }.also { refreshJob = it }
+        }
+    }
 
     /**
      * Implementation that will lazily load the [Map]. The [Map] will not be retrieved until [value] gets invoked.

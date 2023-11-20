@@ -44,10 +44,11 @@ object CoreModule {
     }
 
     @Provides
-    fun provideBuildInfo(): BuildInfo =
+    fun provideBuildInfo(@ApplicationContext context: Context): BuildInfo =
         BuildInfo(
             versionCode = VERSION_CODE,
-            versionName = VERSION_NAME
+            versionName = VERSION_NAME,
+            packageName = context.packageName
         )
 
     @Provides

@@ -8,8 +8,13 @@ import spyfallx.core.common.BuildConfig
  */
 data class BuildInfo(
     val versionCode: Int,
-    val versionName: String)
-{
+    val versionName: String,
+    val packageName: String,
+) {
+    val playStorePackageName = packageName
+        .split(".")
+        .filter { it != "debug" }
+        .joinToString(".")
+
     val isDebug: Boolean = BuildConfig.DEBUG
-    val isLegacyBuild = false
 }

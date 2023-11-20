@@ -1,9 +1,7 @@
 package com.dangerfield.spyfall.legacy.di
 
-import com.dangerfield.spyfall.BuildConfig
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
-import com.dangerfield.spyfall.MainActivityViewModel
 import com.dangerfield.spyfall.legacy.api.Constants
 import com.dangerfield.spyfall.legacy.api.FireStoreService
 import com.dangerfield.spyfall.legacy.api.GameRepository
@@ -50,6 +48,7 @@ val mainModule = module {
         BuildInfo(
             versionCode = VERSION_CODE,
             versionName = VERSION_NAME,
+            packageName = androidContext().packageName
         )
     }
 

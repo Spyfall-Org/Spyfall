@@ -6,15 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,25 +18,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dangerfield.spyfall.features.newgame.internal.R
 import spyfallx.coreui.Elevation
 import spyfallx.coreui.PreviewContent
 import spyfallx.coreui.Radii
 import spyfallx.coreui.Spacing
-import spyfallx.coreui.clip
 import spyfallx.coreui.color.AccentColor
 import spyfallx.coreui.color.ColorPrimitive
 import spyfallx.coreui.color.background
-import spyfallx.coreui.components.Grid
+import spyfallx.coreui.components.NonLazyVerticalGrid
 import spyfallx.coreui.components.text.Text
 import spyfallx.coreui.elevation
 import spyfallx.coreui.theme.SpyfallTheme
@@ -109,7 +100,7 @@ private fun GamePackItem(
             ) {
                 Text(
                     text = type,
-                    typographyToken = SpyfallTheme.typography.Heading.H500,
+                    typographyToken = SpyfallTheme.typography.Heading.H400,
                     textAlign = TextAlign.Center,
                     color = SpyfallTheme.colorScheme.text,
                     maxLines = 2
@@ -135,17 +126,18 @@ private fun GamePackItem(
 
 @Composable
 fun GamePackGrid(gamePacks: List<GamePack>) {
-    Grid(
-        columns = 3,
-        items = gamePacks.size,
+    NonLazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
-        layoutItem = {  index ->
+        columns = 3,
+        data = gamePacks,
+        verticalSpacing = Spacing.S300,
+        horizontalSpacing = Spacing.S300,
+        itemContent = { index, gamePack ->
             GamePackItem(
-                colorPrimitive = AccentColor.values()
+                colorPrimitive = AccentColor.entries.toTypedArray()
                     .let { it[index % it.size] }.colorPrimitive,
-                modifier = Modifier.padding(8.dp),
-                type = gamePacks[index].type,
-                number = gamePacks[index].number,
+                type = gamePack.type,
+                number = gamePack.number,
                 onClick = {},
             )
         }

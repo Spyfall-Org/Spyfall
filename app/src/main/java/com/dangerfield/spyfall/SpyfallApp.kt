@@ -1,20 +1,17 @@
 package com.dangerfield.spyfall
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.dangerfield.features.blockingerror.blockingErrorBaseRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
@@ -25,10 +22,15 @@ import spyfallx.coreui.theme.SpyfallTheme
 @Composable
 fun SpyfallApp(
     isUpdateRequired: Boolean,
+    hadErrorLoadingApp: Boolean,
     navBuilderRegistry: NavBuilderRegistry
 ) {
-
     val navController = rememberNavController()
+    val startingRoute = when {
+        isUpdateRequired -> forcedUpdateNavigationRoute
+        hadErrorLoadingApp -> blockingErrorBaseRoute
+        else -> welcomeNavigationRoute
+    }
 
     SpyfallTheme(
         isDarkMode = isSystemInDarkTheme(),
@@ -36,7 +38,7 @@ fun SpyfallApp(
     ) {
         NavHost(
             navController = navController,
-            startDestination = if (isUpdateRequired) forcedUpdateNavigationRoute else welcomeNavigationRoute,
+            startDestination = startingRoute,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(

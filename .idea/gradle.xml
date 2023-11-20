@@ -25,6 +25,8 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/blockingError" />
+            <option value="$PROJECT_DIR$/features/blockingError/internal" />
             <option value="$PROJECT_DIR$/features/colorPicker" />
             <option value="$PROJECT_DIR$/features/colorPicker/internal" />
             <option value="$PROJECT_DIR$/features/forcedUpdate" />

@@ -15,9 +15,9 @@ class DefaultIsUpdateRequired @Inject constructor(
 
     private val minVersionCode = appConfigMap.value("min_version_code") ?: 0
 
-    override suspend operator fun invoke(): Boolean {
-        return (buildInfo.versionCode < minVersionCode).also {
+    override suspend operator fun invoke(): Boolean = (buildInfo.versionCode < minVersionCode)
+        .also {
             Timber.d("Min Version Code Received: $minVersionCode | build version: ${buildInfo.versionCode} | Is update required: $it")
         }
-    }
+
 }

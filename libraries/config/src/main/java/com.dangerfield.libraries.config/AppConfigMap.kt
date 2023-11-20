@@ -38,7 +38,11 @@ abstract class AppConfigMap {
      * or `appConfigMap.value<List<String>>("promoLabels", "enabled")`
      *
      * ## Note:
-     * only primitive values can be pulled from the map.
+     * only primitives and collections of primatives can be pulled from the map.
+     */
+    /*
+    TODO consider backing this with Map<String, Json> instead of Map<String, Any>
+    then you can pull complex types and try to parse them into the type you want
      */
     inline fun <reified T : Any> value(rootPath: String, vararg path: String): T? {
         return map.getValueForPath<T>(rootPath, *path)

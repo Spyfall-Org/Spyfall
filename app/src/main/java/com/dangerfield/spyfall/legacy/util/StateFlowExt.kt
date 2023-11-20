@@ -11,10 +11,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 fun <T> StateFlow<T>.collectWhileStarted(lifecycleOwner: LifecycleOwner, block: (T) -> Unit) {
     lifecycleOwner.lifecycleScope.launch {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            Timber.d("got created state")
             collectLatest {
                 block(it)
             }
@@ -36,6 +38,26 @@ inline fun <T> LifecycleOwner.collectWhileStarted(
 ): Job =
     lifecycleScope.launch {
         flow.flowWithLifecycle(lifecycle)
+            .catch { onError(it) }
+            .collectLatest { onSuccess(it) }
+    }
+
+/**
+ * utility function to being collecting a flow when the base LifecycleOwner
+ * reaches the started state and stop when it reaches the stopped state
+ *
+ * catches and logs errors by default
+ */
+inline fun <T> LifecycleOwner.collectWhenInitialized(
+    flow: Flow<T>,
+    crossinline onError: (Throwable) -> Unit = {},
+    crossinline onSuccess: suspend (T) -> Unit
+): Job =
+    lifecycleScope.launch {
+        flow.flowWithLifecycle(
+            lifecycle,
+            minActiveState = Lifecycle.State.INITIALIZED
+        )
             .catch { onError(it) }
             .collectLatest { onSuccess(it) }
     }

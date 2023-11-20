@@ -17,6 +17,7 @@ fun <T : Any> Map<String, *>.getValueRecursive(path: List<String>, clazz: Class<
         return when (clazz) {
             String::class.java -> rawValue.toString() as? T
             Boolean::class.java -> rawValue.toString().toBoolean() as? T
+            // all numbers come back as doubles. First cast to double, then to requested type
             Int::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
             Number::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
             Integer::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T

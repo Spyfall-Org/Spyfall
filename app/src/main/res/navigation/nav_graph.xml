@@ -30,6 +30,13 @@
                 app:destination="@id/requireUpdateFragment"
                 app:popUpTo="@id/startFragment"
                 app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_startFragment_to_restartFragment"
+            app:destination="@id/restartFragment"
+            app:popUpTo="@id/startFragment"
+            app:popUpToInclusive="true" />
+
     </fragment>
 
     <fragment android:id="@+id/newGameFragment" android:name="com.dangerfield.spyfall.legacy.ui.newGame.LegacyNewGameFragment"
@@ -78,4 +85,9 @@
             android:label="fragment_require_update"
             tools:layout="@layout/fragment_forced_update" />
 
+    <fragment
+        android:id="@+id/restartFragment"
+        android:name="com.dangerfield.spyfall.legacy.ui.restart.RestartFragment"
+        android:label="fragment_restart"
+        tools:layout="@layout/fragment_restart" />
 </navigation>
