@@ -48,10 +48,13 @@ fun main() {
         return
     }
 
-    generateModule(fullModuleName, moduleType)
+    val isManualInternal = fullModuleName.split(":").getOrNull(1) == "internal"
+
+    generateModule(fullModuleName, moduleType, isInternal = isManualInternal)
 
     val isSubModule = fullModuleName.contains(":")
-    if (!isSubModule) {
+
+    if (!isSubModule && !isManualInternal) {
         generateModule("$fullModuleName:internal", moduleType, isInternal = true)
     }
 }
@@ -98,27 +101,43 @@ fun createDirectory(baseDir: String, moduleName: String, parentModule: String?):
     return newDir
 }
 
+@Suppress("LongMethod")
 fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolean, parentModule: String?) {
-
     val buildFile = when {
         isInternal -> {
-            val currentBuildFile = File("$newDir/internalbuild.gradle.kts")
-            val newBuildFile = File("$newDir/build.gradle.kts")
-            val filesToDelete = listOf(
-                File("$newDir/librarybuild.gradle.kts"),
-                File("$newDir/featurebuild.gradle.kts")
-            )
+            if (moduleType == "library") {
+                val currentBuildFile = File("$newDir/internalLibrarybuild.gradle.kts")
+                val newBuildFile = File("$newDir/build.gradle.kts")
+                val filesToDelete = listOf(
+                    File("$newDir/librarybuild.gradle.kts"),
+                    File("$newDir/featurebuild.gradle.kts"),
+                    File("$newDir/internalFeaturebuild.gradle.kts")
+                )
 
-            currentBuildFile.renameTo(newBuildFile)
-            filesToDelete.forEach { it.delete() }
-            newBuildFile
+                currentBuildFile.renameTo(newBuildFile)
+                filesToDelete.forEach { it.delete() }
+                newBuildFile
+            } else {
+                val currentBuildFile = File("$newDir/internalFeaturebuild.gradle.kts")
+                val newBuildFile = File("$newDir/build.gradle.kts")
+                val filesToDelete = listOf(
+                    File("$newDir/librarybuild.gradle.kts"),
+                    File("$newDir/featurebuild.gradle.kts"),
+                    File("$newDir/internalLibrarybuild.gradle.kts")
+                )
+
+                currentBuildFile.renameTo(newBuildFile)
+                filesToDelete.forEach { it.delete() }
+                newBuildFile
+            }
         }
         moduleType == "library" -> {
             val currentBuildFile = File("$newDir/librarybuild.gradle.kts")
             val newBuildFile = File("$newDir/build.gradle.kts")
             val filesToDelete = listOf(
                 File("$newDir/featurebuild.gradle.kts"),
-                File("$newDir/internalbuild.gradle.kts")
+                File("$newDir/internalFeaturebuild.gradle.kts"),
+                File("$newDir/internalLibrarybuild.gradle.kts")
             )
 
             currentBuildFile.renameTo(newBuildFile)
@@ -130,7 +149,9 @@ fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolea
             val newBuildFile = File("$newDir/build.gradle.kts")
             val filesToDelete = listOf(
                 File("$newDir/librarybuild.gradle.kts"),
-                File("$newDir/internalbuild.gradle.kts")
+                File("$newDir/internalbuild.gradle.kts"),
+                File("$newDir/internalFeaturebuild.gradle.kts"),
+                File("$newDir/internalLibrarybuild.gradle.kts")
             )
 
             currentBuildFile.renameTo(newBuildFile)
@@ -144,7 +165,7 @@ fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolea
 
     var line = reader.readLine()
     while (line != null) {
-        if (line.contains("implementation(projects.features.example)")) {
+        if (line.contains("implementation") && line.contains("example")) {
             line = if (parentModule == null) "" else line.replace("example", parentModule)
         }
         if (line.contains("namespace = \"com.dangerfield.example\"")) {

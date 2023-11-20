@@ -43,9 +43,12 @@
             <option value="$PROJECT_DIR$/features/welcome" />
             <option value="$PROJECT_DIR$/features/welcome/internal" />
             <option value="$PROJECT_DIR$/libraries" />
+            <option value="$PROJECT_DIR$/libraries/config" />
+            <option value="$PROJECT_DIR$/libraries/config/internal" />
             <option value="$PROJECT_DIR$/libraries/configApi" />
             <option value="$PROJECT_DIR$/libraries/coreApi" />
             <option value="$PROJECT_DIR$/libraries/coreCommon" />
+            <option value="$PROJECT_DIR$/libraries/coreCommon/internal" />
             <option value="$PROJECT_DIR$/libraries/coreConfig" />
             <option value="$PROJECT_DIR$/libraries/coreDataStore" />
             <option value="$PROJECT_DIR$/libraries/coreFlowroutines" />
@@ -56,6 +59,8 @@
             <option value="$PROJECT_DIR$/libraries/coreSpyfallGame" />
             <option value="$PROJECT_DIR$/libraries/coreUi" />
             <option value="$PROJECT_DIR$/libraries/coreUi/internal" />
+            <option value="$PROJECT_DIR$/libraries/logging" />
+            <option value="$PROJECT_DIR$/libraries/logging/internal" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

@@ -5,10 +5,10 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
+    implementation(libs.kotlinx.coroutines)
 }
 
 android {
-    namespace = "spyfallx.core"
+    namespace = "spyfallx.core.common"
 }

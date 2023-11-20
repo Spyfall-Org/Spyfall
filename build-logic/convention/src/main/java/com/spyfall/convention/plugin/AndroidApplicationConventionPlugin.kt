@@ -11,12 +11,14 @@ import com.spyfall.convention.util.checkForAppModuleSecretFiles
 import com.spyfall.convention.util.getPackageName
 import com.spyfall.convention.util.getVersionCode
 import com.spyfall.convention.util.getVersionName
+import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.loadAppProperty
 import com.spyfall.convention.util.loadGradleProperty
 import com.spyfall.convention.util.printDebugSigningWarningIfNeeded
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
@@ -40,7 +42,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     applicationId = getPackageName()
                     buildConfigField("VERSION_CODE", versionCode)
                     buildConfigField("VERSION_NAME", versionName)
-                    buildConfigField("CONFIG_COLLECTION_KEY", loadAppProperty("configCollectionKey"))
                 }
 
                 project.afterEvaluate {
@@ -71,6 +72,10 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         // prefix apk with indicator that the signing is invalid
                         archivesName.set("debugsigned-${archivesName.get()}")
                     }
+                }
+
+                dependencies {
+                    add("implementation", libs.timber)
                 }
             }
 

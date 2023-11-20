@@ -50,7 +50,6 @@ if (isHelpCall || args.isEmpty()) {
 fun doWork() {
     val inputAppVersionName = args.getOrNull(0)
     val serviceAccountJsonFile = getServiceAccountJsonFile()
-    val configCollectionKey = loadConfigKey()
     val appVersion = inputAppVersionName ?: loadAppProperty("versionName")
     printGreen("Creating the app config for $ Version: $appVersion")
 
@@ -68,9 +67,9 @@ fun doWork() {
     }
 
     val db = getDb(serviceAccountJsonFile.path)
-    val mostRecentAppConfig = db.getMostPreviousAppConfigDocument(appVersion, configCollectionKey)
+    val mostRecentAppConfig = db.getMostPreviousAppConfigDocument(appVersion, "config-android")
 
-    when (classifyAppConfigValidation(appVersion, db, configCollectionKey)) {
+    when (classifyAppConfigValidation(appVersion, db, "config-android")) {
         AppConfigValidation.AlreadyExists -> {
             printRed(
                 """
@@ -93,7 +92,7 @@ fun doWork() {
 
         AppConfigValidation.Valid -> {
             val mostRecentConfigFields = mostRecentAppConfig?.get()?.get()?.data ?: mapOf()
-            db.collection(configCollectionKey).document(appVersion).set(mostRecentConfigFields)
+            db.collection("config-android").document(appVersion).set(mostRecentConfigFields)
             printGreen("Config creation has finished.")
         }
     }

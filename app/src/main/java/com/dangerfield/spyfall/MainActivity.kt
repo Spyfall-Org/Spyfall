@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,15 +17,15 @@ import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.collectWhileStarted
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import spyfallx.core.BuildInfo
 import spyfallx.core.doNothing
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ThemeChangeableActivity() {
 
-    private val mainActivityViewModel: MainActivityViewModel by viewModel()
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
 
     @Inject
     lateinit var buildInfo: BuildInfo
@@ -62,15 +63,13 @@ class MainActivity : ThemeChangeableActivity() {
     }
 
     private fun refactorOnCreate() {
-        Log.d("Elijah", "refactorOnCreate")
+        Timber.d("refactorOnCreate")
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         setContent {
             val uiState by mainActivityViewModel.state.collectAsState()
 
             when(val smartState = uiState) {
                 is State.Loaded -> {
-                    Log.d("Elijah", "Loading compose app, isUpdateRequired: ${smartState.isUpdateRequired}")
-
                     SpyfallApp(
                         navBuilderRegistry = navBuilderRegistry,
                         isUpdateRequired = smartState.isUpdateRequired,

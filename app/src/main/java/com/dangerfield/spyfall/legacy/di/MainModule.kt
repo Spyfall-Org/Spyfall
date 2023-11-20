@@ -24,9 +24,6 @@ import com.dangerfield.spyfall.legacy.util.ReviewHelper
 import com.dangerfield.spyfall.legacy.util.SavedSessionHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerHelper
 import com.dangerfield.spyfall.legacy.util.SessionListenerService
-import com.dangerfield.spyfall.legacy.ui.forcedupdate.AppUpdateDataSource
-import com.dangerfield.spyfall.legacy.ui.forcedupdate.IsUpdateRequired
-import com.dangerfield.spyfall.legacy.api.SpyfallAppUpdateDataSource
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -46,7 +43,6 @@ val mainModule = module {
     single { (currentSession: Session) -> GameViewModel(get(), currentSession) }
     viewModel { JoinGameViewModel(get()) }
     viewModel { NewGameViewModel(get()) }
-    viewModel { MainActivityViewModel(get()) }
     viewModel { StartViewModel(get(), get()) }
 
     factory { SessionListenerHelper(get(), get()) as SessionListenerService }
@@ -54,12 +50,8 @@ val mainModule = module {
         BuildInfo(
             versionCode = VERSION_CODE,
             versionName = VERSION_NAME,
-            configKey = BuildConfig.CONFIG_COLLECTION_KEY
         )
     }
-
-    factory { SpyfallAppUpdateDataSource(get(), get()) as AppUpdateDataSource }
-    factory { IsUpdateRequired(get(), get()) }
 
     factory { FireStoreService(get(), get()) as GameService }
     factory { Constants(androidApplication(), get()) }

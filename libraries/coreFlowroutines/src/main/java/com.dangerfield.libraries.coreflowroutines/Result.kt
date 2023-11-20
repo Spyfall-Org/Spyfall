@@ -26,10 +26,9 @@ inline fun <T> withRetry(retries: Int, block: () -> Result<T>): Result<T> {
         if (result.isSuccess) {
             return result
         } else {
-        // continue
+            // continue
         }
     }
-
     // Try to execute the operation one more time
     return block()
 }
@@ -41,8 +40,8 @@ inline fun <T> withRetry(retries: Int, block: () -> Result<T>): Result<T> {
  * does not catch [CancellationException] other than [TimeoutCancellationException]
  */
 @Suppress("TooGenericExceptionCaught")
-suspend fun <R> runCancellableCatching(block: suspend () -> R): Result<R> {
-    return try {
+suspend fun <R> runCancellableCatching(block: suspend () -> R): Result<R> =
+    try {
         Result.success(block())
     } catch (t: TimeoutCancellationException) {
         Result.failure(t)
@@ -51,4 +50,4 @@ suspend fun <R> runCancellableCatching(block: suspend () -> R): Result<R> {
     } catch (e: Throwable) {
         Result.failure(e)
     }
-}
+

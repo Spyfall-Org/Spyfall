@@ -11,4 +11,5 @@ android {
 
 dependencies {
     api(project.libs.kotlinx.coroutines)
+    implementation(projects.libraries.coreCommon)
 }

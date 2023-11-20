@@ -1,5 +1,7 @@
 package spyfallx.core
 
+import kotlin.reflect.KClass
+
 /**
  * Convenience method for only executing logic if the parameters are not null
  */
@@ -18,8 +20,24 @@ fun <A, B, C, D, T> allOrNone(one: A?, two: B?, three: C?, four: D?, block: (A, 
     if (one != null && two != null && three != null && four != null) block(one, two, three, four) else null
 
 /**
- * Convenience Method to make it more readable when do logic needs to be executed
+ * Convenience Method to make it more readable when no logic needs to be executed
  */
 fun Any.doNothing() = Unit
 fun doNothing() = Unit
 
+/**
+ * Convenience method for converting Any to a specific type
+ */
+@Suppress("UNCHECKED_CAST")
+fun Any?.convertTo(clazz: Class<*>): Any? {
+    return when (clazz) {
+        Boolean::class.java -> this?.toString()?.toBoolean()
+        Int::class.java -> this?.toString()?.toIntOrNull()
+        Double::class.java -> this?.toString()?.toDoubleOrNull()
+        Float::class.java -> this?.toString()?.toFloatOrNull()
+        Byte::class.java -> this?.toString()?.toByteOrNull()
+        Short::class.java -> this?.toString()?.toShortOrNull()
+        Long::class.java -> this?.toString()?.toLongOrNull()
+        else -> this
+    }
+}

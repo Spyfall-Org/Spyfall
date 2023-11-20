@@ -14,6 +14,7 @@ android {
 dependencies {
     implementation(projects.libraries.coreCommon)
     implementation(projects.libraries.coreUi)
+    implementation(projects.libraries.config)
     implementation(libs.androidx.navigation.compose)
     implementation(projects.features.forcedUpdate)
 }

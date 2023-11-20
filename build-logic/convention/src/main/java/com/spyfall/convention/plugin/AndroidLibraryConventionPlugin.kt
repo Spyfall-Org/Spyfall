@@ -4,9 +4,11 @@ import com.android.build.gradle.LibraryExtension
 import com.spyfall.convention.extension.SpyfallFeatureExtension
 import com.spyfall.convention.util.SharedConstants
 import com.spyfall.convention.util.configureKotlinAndroid
+import com.spyfall.convention.util.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
 
 /**
  * This plugin can be applied in a library module in the build.gradle.kts file
@@ -39,6 +41,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
                 defaultConfig.targetSdk = SharedConstants.targetSdk
+            }
+
+            dependencies {
+                add("implementation", libs.timber)
             }
         }
     }

@@ -74,12 +74,12 @@ abstract class SpyfallFeatureExtension {
 
     fun firebase() {
         project.dependencies {
+            "implementation"(platform(project.libs.firebase.bom))
             add("implementation", project.libs.firebase.database)
             add("implementation", project.libs.firebase.firestore)
             add("implementation", project.libs.firebase.storage)
             add("implementation", project.libs.firebase.database)
             add("implementation", project.libs.kotlinx.coroutines.play.services)
-
         }
     }
 

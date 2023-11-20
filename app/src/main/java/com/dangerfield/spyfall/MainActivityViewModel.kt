@@ -2,17 +2,20 @@ package com.dangerfield.spyfall
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dangerfield.spyfall.legacy.ui.forcedupdate.IsUpdateRequired
-import kotlinx.coroutines.delay
+import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import spyfallx.core.BuildInfo
 import spyfallx.coreui.color.ColorPrimitive
+import timber.log.Timber
+import javax.inject.Inject
 
-class MainActivityViewModel(
-    private val isUpdateRequired: IsUpdateRequired,
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(
+    private val isUpdateRequired: IsAppUpdateRequired,
 ) : ViewModel() {
 
     val state: StateFlow<State> = flow {

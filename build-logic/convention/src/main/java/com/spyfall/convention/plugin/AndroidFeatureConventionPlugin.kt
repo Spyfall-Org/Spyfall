@@ -31,6 +31,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
             // Libraries Shared Between All Features
             dependencies {
+                add("implementation", libs.timber)
                 add("implementation", libs.androidx.core)
                 add("implementation",libs.androidx.lifecycle.ext)
                 add("implementation",libs.androidx.lifecycle.vm)

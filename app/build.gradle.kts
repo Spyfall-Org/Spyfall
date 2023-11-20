@@ -11,6 +11,7 @@ plugins {
 
 spyfall {
     compose()
+    flowroutines()
 }
 
 android {
@@ -70,18 +71,16 @@ dependencies {
     // firebase libraries
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.crashlytics)
 
     //  that sweet sweet kotlin coroutines library
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.coroutines.play.services)
-
-    implementation(getModule("libraries:coreUi"))
-    implementation(getModule("libraries:coreGameApi"))
-    implementation(getModule("libraries:coreSpyfallGame"))
-    implementation(getModule("libraries:coreCommon"))
-
     implementation(libs.androidx.navigation.compose)
+
+    // features
     implementation(projects.features.forcedUpdate)
     implementation(projects.features.forcedUpdate.internal)
     implementation(projects.features.welcome)
@@ -90,6 +89,13 @@ dependencies {
     implementation(projects.features.joinGame.internal)
     implementation(projects.features.newGame)
     implementation(projects.features.newGame.internal)
+    implementation(projects.libraries.config.internal)
+    implementation(projects.libraries.logging)
+    implementation(projects.libraries.coreCommon)
+    implementation(projects.libraries.coreCommon.internal)
+    implementation(projects.libraries.coreSpyfallGame)
+    implementation(projects.libraries.coreGameApi)
+    implementation(projects.libraries.coreUi)
 
     // lottie for animations
     implementation(libs.lottie)
@@ -99,6 +105,8 @@ dependencies {
     implementation(libs.koin.android)
 
     implementation(libs.androidx.activity.compose)
+
+    implementation(libs.moshi)
 
     // testing
     // Koin testing tools

@@ -3,6 +3,7 @@ package com.dangerfield.libraries.coreflowroutines
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import se.ansman.dagger.auto.AutoBind
+import javax.inject.Inject
 
 interface DispatcherProvider {
     val io: CoroutineDispatcher
@@ -15,7 +16,7 @@ interface DispatcherProvider {
 }
 
 @AutoBind
-class DefaultDispatcherProvider : DispatcherProvider {
+class DefaultDispatcherProvider @Inject constructor() : DispatcherProvider {
     override val io: CoroutineDispatcher
         get() = Dispatchers.IO
 

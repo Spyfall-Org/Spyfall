@@ -2,7 +2,7 @@ package com.dangerfield.spyfall.legacy.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dangerfield.spyfall.legacy.ui.forcedupdate.IsUpdateRequired
+import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
 import com.dangerfield.spyfall.legacy.ui.splash.SplashViewModel.GameStatus.FoundInGame
 import com.dangerfield.spyfall.legacy.ui.splash.SplashViewModel.GameStatus.NotFoundInGame
 import com.dangerfield.spyfall.legacy.ui.splash.SplashViewModel.GameStatus.SearchingForGame
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val isUpdateRequired: IsUpdateRequired,
+    private val isUpdateRequired: IsAppUpdateRequired,
     private val getGameInProgress: GetGameInProgress
 ) : ViewModel() {
 
