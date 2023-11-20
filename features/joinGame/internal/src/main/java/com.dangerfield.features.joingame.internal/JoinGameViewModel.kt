@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JoinGameViewModel @Inject constructor(
-    private val sessionStateRepository: SessionStateRepository
+   // private val sessionStateRepository: SessionStateRepository
 ): ViewModel() {
 
     private val actions = Channel<Action>(Channel.UNLIMITED)

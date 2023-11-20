@@ -1,10 +1,8 @@
 package com.dangerfield.spyfall.legacy.api
 
 import android.content.Context
-import com.dangerfield.spyfall.BuildConfig
-import com.dangerfield.spyfall.legacy.util.PreferencesService
 
-class Constants(val context: Context, private val preferencesHelper: PreferencesService) {
+class Constants(val context: Context) {
     val games: String = "games"
     val packs = "packs"
     val configCollection = "config"

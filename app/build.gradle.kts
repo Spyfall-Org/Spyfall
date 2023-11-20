@@ -96,8 +96,6 @@ dependencies {
     implementation(projects.libraries.logging)
     implementation(projects.libraries.coreCommon)
     implementation(projects.libraries.coreCommon.internal)
-    implementation(projects.libraries.coreSpyfallGame)
-    implementation(projects.libraries.coreGameApi)
     implementation(projects.libraries.coreUi)
 
     // lottie for animations
