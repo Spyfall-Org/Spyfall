@@ -94,9 +94,9 @@ dependencies {
     implementation(projects.features.newGame.internal)
     implementation(projects.libraries.config.internal)
     implementation(projects.libraries.logging)
-    implementation(projects.libraries.coreCommon)
-    implementation(projects.libraries.coreCommon.internal)
-    implementation(projects.libraries.coreUi)
+    implementation(projects.libraries.common)
+    implementation(projects.libraries.common.internal)
+    implementation(projects.libraries.ui)
 
     // lottie for animations
     implementation(libs.lottie)

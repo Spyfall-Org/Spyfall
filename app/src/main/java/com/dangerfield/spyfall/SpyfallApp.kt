@@ -15,8 +15,8 @@ import com.dangerfield.features.blockingerror.blockingErrorBaseRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
-import spyfallx.coreui.color.ColorPrimitive
-import spyfallx.coreui.theme.SpyfallTheme
+import spyfallx.ui.color.ColorPrimitive
+import spyfallx.ui.theme.SpyfallTheme
 
 @Suppress("MagicNumber")
 @Composable

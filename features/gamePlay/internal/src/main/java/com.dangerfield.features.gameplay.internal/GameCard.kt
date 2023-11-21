@@ -15,14 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import spyfallx.coreui.PreviewContent
-import spyfallx.coreui.Radii
-import spyfallx.coreui.Spacing
-import spyfallx.coreui.circleBackground
-import spyfallx.coreui.color.background
-import spyfallx.coreui.components.text.Text
-import spyfallx.coreui.theme.NoRippleTheme
-import spyfallx.coreui.theme.SpyfallTheme
+import spyfallx.ui.PreviewContent
+import spyfallx.ui.Radii
+import spyfallx.ui.Spacing
+import spyfallx.ui.circleBackground
+import spyfallx.ui.color.background
+import spyfallx.ui.components.text.Text
+import spyfallx.ui.theme.NoRippleTheme
+import spyfallx.ui.theme.SpyfallTheme
 
 @Composable
 fun GameCard(

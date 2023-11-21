@@ -2,7 +2,7 @@ package com.dangerfield.spyfall.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import spyfallx.coreui.ModuleNavBuilder
+import spyfallx.ui.ModuleNavBuilder
 import javax.inject.Inject
 
 class NavBuilderRegistry @Inject constructor(

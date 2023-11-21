@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.coreui.PreviewContent
-import spyfallx.coreui.Spacing
-import spyfallx.coreui.components.Screen
-import spyfallx.coreui.components.header.Header
-import spyfallx.coreui.components.text.Text
+import spyfallx.ui.PreviewContent
+import spyfallx.ui.Spacing
+import spyfallx.ui.components.Screen
+import spyfallx.ui.components.header.Header
+import spyfallx.ui.components.text.Text
 
 @Composable
 fun SettingsScreen(

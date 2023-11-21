@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.libraries.coreCommon)
+    implementation(projects.libraries.common)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
 }

@@ -4,17 +4,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.coreui.PreviewContent
-import spyfallx.coreui.Spacing
-import spyfallx.coreui.components.Grid
-import spyfallx.coreui.then
-import spyfallx.coreui.thenIf
+import spyfallx.ui.PreviewContent
+import spyfallx.ui.Spacing
+import spyfallx.ui.components.NonLazyVerticalGrid
+import spyfallx.ui.then
+import spyfallx.ui.thenIf
 
 @Composable
 fun GamePlayGrid(
     items: List<String>
 ) {
-    Grid(columns = 2, items = items.size) { index ->
+    NonLazyVerticalGrid(columns = 2, data = items) { index, item ->
         val text = items[index]
         val shouldPadEnd = index % 2 == 0
         val shouldPadTop = index > 1

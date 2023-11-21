@@ -12,9 +12,9 @@ android {
 }
 dependencies {
     implementation(projects.features.joinGame)
-    implementation(projects.libraries.coreCommon)
-    implementation(projects.libraries.coreSession)
-    implementation(projects.libraries.coreUi)
+    implementation(projects.libraries.common)
+    implementation(projects.libraries.session)
+    implementation(projects.libraries.ui)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
 }

@@ -12,7 +12,7 @@ android {
     namespace = "com.dangerfield.spyfall.features.colorpicker"
 }
 dependencies {
-    implementation(projects.libraries.coreCommon)
-    implementation(projects.libraries.coreUi)
+    implementation(projects.libraries.common)
+    implementation(projects.libraries.ui)
     implementation(libs.kotlinx.serialization.json)
 }

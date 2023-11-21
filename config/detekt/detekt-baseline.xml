@@ -129,7 +129,7 @@
     <ID>NewLineAtEndOfFile:SpyfallApp.kt$SpyfallApp.kt</ID>
     <ID>NewLineAtEndOfFile:SpyfallRepository.kt$SpyfallRepository.kt</ID>
     <ID>NewLineAtEndOfFile:StartViewModel.kt$com.dangerfield.spyfall.ui.start.StartViewModel.kt</ID>
-    <ID>NewLineAtEndOfFile:StateFlowExt.kt$spyfallx.coreui.StateFlowExt.kt</ID>
+    <ID>NewLineAtEndOfFile:StateFlowExt.kt$spyfallx.ui.StateFlowExt.kt</ID>
     <ID>NewLineAtEndOfFile:TesterSettingsFragment.kt$com.dangerfield.spyfall.ui.testerSettings.TesterSettingsFragment.kt</ID>
     <ID>NewLineAtEndOfFile:ViewModelFactories.kt$com.dangerfield.spyfall.util.ViewModelFactories.kt</ID>
     <ID>NewLineAtEndOfFile:WaitingViewModel.kt$com.dangerfield.spyfall.ui.waiting.WaitingViewModel.kt</ID>

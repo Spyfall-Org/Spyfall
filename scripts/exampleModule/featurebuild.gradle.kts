@@ -6,5 +6,5 @@ android {
     namespace = "com.dangerfield.example"
 }
 dependencies {
-    implementation(projects.libraries.coreCommon)
+    implementation(projects.libraries.common)
 }

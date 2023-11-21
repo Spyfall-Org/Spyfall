@@ -25,17 +25,17 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dangerfield.spyfall.features.newgame.internal.R
-import spyfallx.coreui.Elevation
-import spyfallx.coreui.PreviewContent
-import spyfallx.coreui.Radii
-import spyfallx.coreui.Spacing
-import spyfallx.coreui.color.AccentColor
-import spyfallx.coreui.color.ColorPrimitive
-import spyfallx.coreui.color.background
-import spyfallx.coreui.components.NonLazyVerticalGrid
-import spyfallx.coreui.components.text.Text
-import spyfallx.coreui.elevation
-import spyfallx.coreui.theme.SpyfallTheme
+import spyfallx.ui.Elevation
+import spyfallx.ui.PreviewContent
+import spyfallx.ui.Radii
+import spyfallx.ui.Spacing
+import spyfallx.ui.color.AccentColor
+import spyfallx.ui.color.ColorPrimitive
+import spyfallx.ui.color.background
+import spyfallx.ui.components.NonLazyVerticalGrid
+import spyfallx.ui.components.text.Text
+import spyfallx.ui.elevation
+import spyfallx.ui.theme.SpyfallTheme
 
 @Composable
 private fun GamePackItem(

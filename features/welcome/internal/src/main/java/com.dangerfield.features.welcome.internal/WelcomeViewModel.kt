@@ -3,7 +3,7 @@ package com.dangerfield.features.welcome.internal
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
-import com.dangerfield.libraries.coreflowroutines.launchOnStart
+import com.dangerfield.libraries.flowroutines.launchOnStart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

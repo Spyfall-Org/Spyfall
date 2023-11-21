@@ -8,6 +8,6 @@ android {
     namespace = "com.dangerfield.spyfall.features.newgame"
 }
 dependencies {
-    implementation(projects.libraries.coreCommon)
-    implementation(projects.libraries.coreUi)
+    implementation(projects.libraries.common)
+    implementation(projects.libraries.ui)
 }

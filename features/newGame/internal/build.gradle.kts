@@ -12,7 +12,7 @@ android {
 }
 dependencies {
     implementation(projects.features.newGame)
-    implementation(projects.libraries.coreCommon)
-    implementation(projects.libraries.coreUi)
+    implementation(projects.libraries.common)
+    implementation(projects.libraries.ui)
     implementation(libs.lottie.compose)
 }

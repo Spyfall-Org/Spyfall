@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.settings.settingsNavigationRoute
 import se.ansman.dagger.auto.AutoBindIntoSet
-import spyfallx.coreui.ModuleNavBuilder
+import spyfallx.ui.ModuleNavBuilder
 import javax.inject.Inject
 
 @AutoBindIntoSet

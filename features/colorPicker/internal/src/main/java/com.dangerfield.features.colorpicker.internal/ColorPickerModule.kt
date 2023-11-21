@@ -6,7 +6,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.dangerfield.features.colorpicker.ColorConfig
-import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
+import com.dangerfield.libraries.flowroutines.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.serializer
-import spyfallx.coreui.color.ColorPrimitive
+import spyfallx.ui.color.ColorPrimitive
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)

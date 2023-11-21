@@ -2,7 +2,7 @@ package com.dangerfield.features.joingame.internal
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dangerfield.libraries.coresession.SessionStateRepository
+import com.dangerfield.libraries.session.SessionStateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
@@ -49,7 +49,9 @@ class JoinGameViewModel @Inject constructor(
 
     private suspend fun FlowCollector<State>.handleJoinGame() {
         updateState { it.copy(joiningState = JoiningState.JoiningGame) }
-        // use game repo to join game
+        // validate code
+        // use game repo to get game with access code
+        // use Validation Use cases to validate name
         // on success update the session state and update state to joined
         // on failure update state to not joined
     }

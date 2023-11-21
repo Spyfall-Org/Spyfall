@@ -14,8 +14,8 @@ android {
 dependencies {
     implementation(projects.features.welcome)
     implementation(libs.androidx.navigation.compose)
-    implementation(projects.libraries.coreUi)
-    implementation(projects.libraries.coreCommon)
+    implementation(projects.libraries.ui)
+    implementation(projects.libraries.common)
     implementation(projects.features.joinGame)
     implementation(projects.features.newGame)
     implementation(projects.features.forcedUpdate)

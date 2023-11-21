@@ -13,15 +13,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.coreui.PreviewContent
-import spyfallx.coreui.Spacing
-import spyfallx.coreui.color.ColorPrimitive
-import spyfallx.coreui.components.Screen
-import spyfallx.coreui.components.button.Button
-import spyfallx.coreui.components.header.Header
-import spyfallx.coreui.components.text.OutlinedTextField
-import spyfallx.coreui.components.text.Text
-import spyfallx.coreui.theme.SpyfallTheme
+import spyfallx.ui.PreviewContent
+import spyfallx.ui.Spacing
+import spyfallx.ui.color.ColorPrimitive
+import spyfallx.ui.components.Screen
+import spyfallx.ui.components.button.Button
+import spyfallx.ui.components.header.Header
+import spyfallx.ui.components.text.OutlinedTextField
+import spyfallx.ui.components.text.Text
+import spyfallx.ui.theme.SpyfallTheme
 
 @Composable
 fun NewGameScreen(

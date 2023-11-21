@@ -2,8 +2,8 @@ package com.dangerfield.spyfall.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
+import com.dangerfield.libraries.flowroutines.ApplicationScope
+import com.dangerfield.libraries.flowroutines.DispatcherProvider
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
 import com.dangerfield.spyfall.R

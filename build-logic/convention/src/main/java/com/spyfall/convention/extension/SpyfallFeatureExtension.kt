@@ -68,7 +68,7 @@ abstract class SpyfallFeatureExtension {
 
     fun flowroutines() {
         project.dependencies {
-            add("implementation", getModule("libraries:coreFlowroutines"))
+            add("implementation", getModule("libraries:flowroutines"))
         }
     }
 

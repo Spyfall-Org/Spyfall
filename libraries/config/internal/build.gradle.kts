@@ -13,7 +13,7 @@ android {
 }
 dependencies {
     implementation(projects.libraries.config)
-    implementation(projects.libraries.coreCommon)
+    implementation(projects.libraries.common)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.datastore)
     implementation(libs.moshi)

@@ -3,9 +3,9 @@ package com.dangerfield.features.colorpicker.internal
 import androidx.datastore.core.DataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.retry
-import com.dangerfield.libraries.coreflowroutines.mapResult
-import com.dangerfield.libraries.coreflowroutines.runCancellableCatching
-import com.dangerfield.libraries.coreflowroutines.withRetry
+import com.dangerfield.libraries.flowroutines.mapResult
+import com.dangerfield.libraries.flowroutines.runCancellableCatching
+import com.dangerfield.libraries.flowroutines.withRetry
 
 interface CatchingDataStore<T> {
     val data: Flow<Result<T>>

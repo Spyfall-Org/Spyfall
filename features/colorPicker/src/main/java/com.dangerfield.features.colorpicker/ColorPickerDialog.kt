@@ -18,16 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import spyfallx.coreui.PreviewContent
-import spyfallx.coreui.Radii
-import spyfallx.coreui.Spacing
-import spyfallx.coreui.color.AccentColor
-import spyfallx.coreui.color.ColorPrimitive
-import spyfallx.coreui.color.background
-import spyfallx.coreui.color.border
-import spyfallx.coreui.components.text.Text
-import spyfallx.coreui.theme.SpyfallTheme
-import spyfallx.coreui.thenIf
+import spyfallx.ui.PreviewContent
+import spyfallx.ui.Radii
+import spyfallx.ui.Spacing
+import spyfallx.ui.color.AccentColor
+import spyfallx.ui.color.ColorPrimitive
+import spyfallx.ui.color.background
+import spyfallx.ui.color.border
+import spyfallx.ui.components.text.Text
+import spyfallx.ui.theme.SpyfallTheme
+import spyfallx.ui.thenIf
 
 @Composable
 fun ColorPickerDialog(

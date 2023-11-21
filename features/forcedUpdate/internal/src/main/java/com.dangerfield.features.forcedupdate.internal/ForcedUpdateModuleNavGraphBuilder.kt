@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.BuildInfo
-import spyfallx.coreui.ModuleNavBuilder
+import spyfallx.ui.ModuleNavBuilder
 import javax.inject.Inject
 
 @AutoBindIntoSet

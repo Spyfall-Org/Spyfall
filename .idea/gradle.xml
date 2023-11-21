@@ -45,18 +45,18 @@
             <option value="$PROJECT_DIR$/features/welcome" />
             <option value="$PROJECT_DIR$/features/welcome/internal" />
             <option value="$PROJECT_DIR$/libraries" />
+            <option value="$PROJECT_DIR$/libraries/common" />
+            <option value="$PROJECT_DIR$/libraries/common/internal" />
             <option value="$PROJECT_DIR$/libraries/config" />
             <option value="$PROJECT_DIR$/libraries/config/internal" />
-            <option value="$PROJECT_DIR$/libraries/coreCommon" />
-            <option value="$PROJECT_DIR$/libraries/coreCommon/internal" />
-            <option value="$PROJECT_DIR$/libraries/coreDataStore" />
-            <option value="$PROJECT_DIR$/libraries/coreFlowroutines" />
-            <option value="$PROJECT_DIR$/libraries/coreSession" />
-            <option value="$PROJECT_DIR$/libraries/coreSession/internal" />
-            <option value="$PROJECT_DIR$/libraries/coreUi" />
-            <option value="$PROJECT_DIR$/libraries/coreUi/internal" />
+            <option value="$PROJECT_DIR$/libraries/datastore" />
+            <option value="$PROJECT_DIR$/libraries/flowroutines" />
             <option value="$PROJECT_DIR$/libraries/logging" />
             <option value="$PROJECT_DIR$/libraries/logging/internal" />
+            <option value="$PROJECT_DIR$/libraries/session" />
+            <option value="$PROJECT_DIR$/libraries/session/internal" />
+            <option value="$PROJECT_DIR$/libraries/ui" />
+            <option value="$PROJECT_DIR$/libraries/ui/internal" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

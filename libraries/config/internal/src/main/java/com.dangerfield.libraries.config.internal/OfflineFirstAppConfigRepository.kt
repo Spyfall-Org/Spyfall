@@ -3,10 +3,10 @@ package com.dangerfield.libraries.config.internal
 import androidx.annotation.VisibleForTesting
 import com.dangerfield.libraries.config.AppConfigMap
 import com.dangerfield.libraries.config.getValueForPath
-import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
-import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
-import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
+import com.dangerfield.libraries.flowroutines.ApplicationScope
+import com.dangerfield.libraries.flowroutines.DispatcherProvider
+import com.dangerfield.libraries.flowroutines.childSupervisorScope
+import com.dangerfield.libraries.flowroutines.tryWithTimeout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

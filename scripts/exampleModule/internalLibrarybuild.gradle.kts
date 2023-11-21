@@ -7,5 +7,5 @@ android {
 }
 dependencies {
     implementation(projects.libraries.example)
-    implementation(projects.libraries.coreCommon)
+    implementation(projects.libraries.common)
 }
