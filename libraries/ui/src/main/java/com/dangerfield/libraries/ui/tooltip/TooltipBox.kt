@@ -168,6 +168,7 @@ private fun TooltipContent(
     }
 }
 
+@Suppress("MagicNumber")
 private fun Modifier.animateTooltip(
     transition: Transition<Boolean>,
 ): Modifier = composed(

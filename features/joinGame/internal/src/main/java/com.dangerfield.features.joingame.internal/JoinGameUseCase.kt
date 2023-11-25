@@ -35,27 +35,25 @@ class JoinGameUseCase @Inject constructor(
 
         val id = UUID.randomUUID().toString()
 
-        if (accessCode.length < gameConfig.accessCodeLength || accessCode.length > gameConfig.accessCodeLength) {
-            return JoinGameError.InvalidAccessCodeLength(requiredLength = gameConfig.accessCodeLength)
+        return if (accessCode.length < gameConfig.accessCodeLength || accessCode.length > gameConfig.accessCodeLength) {
+            JoinGameError.InvalidAccessCodeLength(requiredLength = gameConfig.accessCodeLength)
                 .failure()
-        }
-
-        if (userName.length > gameConfig.maxNameLength || userName.length < gameConfig.minNameLength) {
-            return JoinGameError.InvalidNameLength(
+        } else if (userName.length > gameConfig.maxNameLength || userName.length < gameConfig.minNameLength) {
+            JoinGameError.InvalidNameLength(
                 min = gameConfig.minNameLength, max = gameConfig.maxNameLength
             ).failure()
-        }
+        } else {
+            gameRepository.getGame(accessCode).fold(ifSuccess = { game ->
+                val joinGameError = getGameStateError(accessCode, game, userName)
 
-        return gameRepository.getGame(accessCode).fold(ifSuccess = { game ->
-            val joinGameError = getGameStateError(accessCode, game, userName)
-
-            joinGameError?.failure() ?: joinGame(
-                accessCode = accessCode, userName = userName, game = game, id = id
-            )
-        }, ifFailure = {
-            it.toJoinGameFailure()
-        }).onSuccess {
-            updateSession(userName, accessCode)
+                joinGameError?.failure() ?: joinGame(
+                    accessCode = accessCode, userName = userName, game = game, id = id
+                )
+            }, ifFailure = {
+                it.toJoinGameFailure()
+            }).onSuccess {
+                updateSession(userName, accessCode)
+            }
         }
     }
 

@@ -174,7 +174,7 @@ private fun TextWithScrollbarPreview() {
                 .drawVerticalScrollbar(state = scrollState, color = SpyfallTheme.colorScheme.border.color, reverseScrolling = false)
         ) {
             Text(
-                text = "This is a very long sentence to test the scrollbar. Very very long. We are still going... Wow how long of a paragraph. Let's keep scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and scrolling, and done.",
+                text = "This is a very long sentence".repeat(50),
                 modifier = Modifier
                     .heightIn(50.dp)
                     .verticalScroll(
