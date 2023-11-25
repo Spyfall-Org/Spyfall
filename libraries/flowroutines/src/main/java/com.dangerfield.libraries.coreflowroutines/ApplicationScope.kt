@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.flowroutines
+package com.dangerfield.libraries.coreflowroutines
 
 import javax.inject.Qualifier
 

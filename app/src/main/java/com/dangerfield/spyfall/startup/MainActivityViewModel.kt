@@ -3,14 +3,14 @@ package com.dangerfield.spyfall.startup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
-import com.dangerfield.libraries.flowroutines.tryWithTimeout
+import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import spyfallx.core.logOnError
-import spyfallx.ui.color.ColorPrimitive
+import com.dangerfield.libraries.ui.color.ColorPrimitive
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 

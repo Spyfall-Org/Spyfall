@@ -1,10 +1,9 @@
-package com.dangerfield.libraries.flowroutines
+package com.dangerfield.libraries.coreflowroutines
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.time.withTimeout
 import kotlinx.coroutines.withTimeout
 import spyfallx.core.Try
 import kotlin.contracts.ExperimentalContracts
@@ -13,6 +12,9 @@ import kotlin.contracts.contract
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
+
+val cancelledJob: Job = Job().apply { cancel() }
+val cancelledScope = CoroutineScope(cancelledJob)
 
 /**
  * Creates a new [CoroutineScope] that is a "child" of the receiver.

@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.joingame.navigateToJoinGame
 import com.dangerfield.features.newgame.navigateToNewGame
+import com.dangerfield.features.settings.navigateToSettings
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.ui.ModuleNavBuilder
@@ -19,7 +20,8 @@ class WelcomeModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
         ) {
             WelcomeScreen(
                 onJoinGameClicked = navController::navigateToJoinGame,
-                onNewGameClicked = navController::navigateToNewGame
+                onNewGameClicked = navController::navigateToNewGame,
+                onSettingsClicked = navController::navigateToSettings
             )
         }
     }

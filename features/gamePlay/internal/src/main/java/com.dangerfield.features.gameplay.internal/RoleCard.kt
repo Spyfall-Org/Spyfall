@@ -14,12 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.ui.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.background
-import spyfallx.ui.components.button.Button
-import spyfallx.ui.components.text.Text
+import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.theme.SpyfallTheme
 
 @Composable

@@ -13,14 +13,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.ui.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
-import spyfallx.ui.color.ColorPrimitive
+import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.components.Screen
-import spyfallx.ui.components.button.Button
-import spyfallx.ui.components.header.Header
-import spyfallx.ui.components.text.OutlinedTextField
-import spyfallx.ui.components.text.Text
+import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.header.Header
+import com.dangerfield.libraries.ui.components.text.OutlinedTextField
+import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.theme.SpyfallTheme
 
 @Composable

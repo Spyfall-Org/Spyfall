@@ -8,23 +8,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.ui.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.background
 import spyfallx.ui.components.Screen
-import spyfallx.ui.components.button.Button
-import spyfallx.ui.components.button.ButtonType
-import spyfallx.ui.components.header.Header
-import spyfallx.ui.components.text.Text
+import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.button.ButtonType
+import com.dangerfield.libraries.ui.components.header.Header
+import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.theme.SpyfallTheme
-import spyfallx.ui.typography.TypographyToken
 
 @Composable
 fun WaitingRoomScreen(

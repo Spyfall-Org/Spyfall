@@ -1,6 +1,7 @@
 package com.dangerfield.features.welcome.internal
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,16 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dangerfield.features.welcome.internal.WelcomeViewModel.WelcomeEvent.ForcedUpdateRequired
-import spyfallx.ui.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
-import spyfallx.ui.components.button.Button
-import spyfallx.ui.components.button.ButtonStyle
-import spyfallx.ui.components.button.ButtonType
+import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.button.ButtonStyle
+import com.dangerfield.libraries.ui.components.button.ButtonType
+import com.dangerfield.libraries.ui.icon.IconButton
+import com.dangerfield.libraries.ui.icon.IconButton.Size.Medium
 import spyfallx.ui.components.Screen
-import spyfallx.ui.components.text.Text
-import spyfallx.ui.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import spyfallx.ui.theme.SpyfallTheme
 
 @Composable
@@ -31,6 +33,7 @@ fun WelcomeScreen(
     onForcedUpdateRequired: () -> Unit = {},
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
+    onSettingsClicked: () -> Unit,
     viewModel: WelcomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState()
@@ -44,28 +47,44 @@ fun WelcomeScreen(
 
     WelcomeScreenContent(
         onNewGameClicked = onNewGameClicked,
-        onJoinGameClicked = onJoinGameClicked
+        onJoinGameClicked = onJoinGameClicked,
+        onSettingsClicked = onSettingsClicked
     )
 }
 
 @Composable
 @Suppress("MagicNumber")
-fun WelcomeScreenContent(
+private fun WelcomeScreenContent(
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
+    onSettingsClicked: () -> Unit,
 ) {
     Screen { paddingValues ->
-        Column(Modifier.padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.fillMaxHeight(0.10f))
+        Column(
+            Modifier.padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.1f)) {
+                Spacer(modifier = Modifier.weight(1f))
+
+                IconButton(
+                    icon = SpyfallIcon.Settings("settings"),
+                    onClick = onSettingsClicked,
+                    size = Medium,
+                    modifier = Modifier.padding(Spacing.S800),
+                )
+            }
             Text(
                 text = "Welcome to",
-                typographyToken = SpyfallTheme.typography.Display.D1100,
+                typographyToken = SpyfallTheme.typography.Display.D1200,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Spyfall",
-                typographyToken = SpyfallTheme.typography.Display.D1300,
+                typographyToken = SpyfallTheme.typography.Display.D1400,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )
@@ -96,8 +115,8 @@ fun WelcomeScreenContent(
                 Spacer(modifier = Modifier.height(Spacing.S1000))
 
                 Button(
-                    icon = SpyfallIcon.Info,
-                    onClick = {  },
+                    icon = SpyfallIcon.Info("Open Rules"),
+                    onClick = { },
                     style = ButtonStyle.NoBackground
                 ) {
                     Text(text = "Rules")
@@ -115,7 +134,20 @@ private fun PreviewWelcomeScreen() {
     PreviewContent {
         WelcomeScreenContent(
             onNewGameClicked = {},
-            onJoinGameClicked = {}
+            onJoinGameClicked = {},
+            onSettingsClicked = {}
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewWelcomeScreenDark() {
+    PreviewContent(isDarkMode = true) {
+        WelcomeScreenContent(
+            onNewGameClicked = {},
+            onJoinGameClicked = {},
+            onSettingsClicked = {}
         )
     }
 }

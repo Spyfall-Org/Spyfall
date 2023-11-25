@@ -1,5 +1,7 @@
 package com.dangerfield.libraries.config
 
+import android.annotation.SuppressLint
+
 /**
  *
  * # App configuration back by a simple map.
@@ -25,6 +27,27 @@ abstract class AppConfigMap {
     abstract val map: Map<String, *>
 
     /**
+     * Method to obtain int values since numbers are parsed into doubles by default
+     */
+    @SuppressLint("ConfigDocs")
+    fun intValue(rootPath: String, vararg path: String): Int? =
+        value<Number>(rootPath, *path)?.toInt()
+
+    /**
+     * Method to obtain long values since numbers are parsed into doubles by default
+     */
+    @SuppressLint("ConfigDocs")
+    fun longValue(rootPath: String, vararg path: String): Long? =
+        value<Number>(rootPath, *path)?.toLong()
+
+    /**
+     * Method to obtain double values.
+     */
+    @SuppressLint("ConfigDocs")
+    fun doubleValue(rootPath: String, vararg path: String): Double? =
+        value<Number>(rootPath, *path)?.toDouble()
+
+    /**
      * Get the value aat [rootPath] + path.
      * For example, with a json like this:
      * {
@@ -39,10 +62,6 @@ abstract class AppConfigMap {
      *
      * ## Note:
      * only primitives and collections of primatives can be pulled from the map.
-     */
-    /*
-    TODO consider backing this with Map<String, Json> instead of Map<String, Any>
-    then you can pull complex types and try to parse them into the type you want
      */
     inline fun <reified T : Any> value(rootPath: String, vararg path: String): T? {
         return map.getValueForPath<T>(rootPath, *path)

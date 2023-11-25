@@ -1,19 +1,24 @@
 package com.dangerfield.features.settings.internal
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.ui.PreviewContent
+import androidx.compose.ui.text.style.TextAlign
+import com.dangerfield.libraries.ui.components.header.Header
+import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import spyfallx.ui.components.Screen
-import spyfallx.ui.components.header.Header
-import spyfallx.ui.components.text.Text
+import com.dangerfield.libraries.ui.components.text.Text
+import spyfallx.ui.theme.SpyfallTheme
 
 @Composable
 fun SettingsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    versionName: String,
 ) {
     Screen(
         modifier = modifier,
@@ -22,23 +27,53 @@ fun SettingsScreen(
         }
     ) {
         Column(
-            modifier = Modifier.padding(it).padding(horizontal = Spacing.S1000)
+            modifier = Modifier
+                .padding(it)
+                .padding(horizontal = Spacing.S800)
         ) {
-            Text(text = "Option 1")
-            Text(text = "Option 2")
-            Text(text = "Option 3")
-            Text(text = "Option 4")
 
+            SettingsOption(
+                text = "Theme",
+                onClick = { },
+                leadingIcon = SpyfallIcon.Theme("Change Theme"),
+            )
+
+            SettingsOption(
+                leadingIcon = SpyfallIcon.Info("About Spyfall"),
+                text = "About",
+                onClick = { }
+            )
+
+            SettingsOption(
+                text = "Feedback",
+                onClick = { },
+                leadingIcon = SpyfallIcon.Chat("Feedback"),
+            )
+
+            SettingsOption(
+                text = "QA Menu",
+                onClick = { },
+                leadingIcon = SpyfallIcon.Android("Feedback"),
+            )
+
+            Text(
+                text = "Spyfall Version: $versionName",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Spacing.S1000),
+                textAlign = TextAlign.Center,
+                color = SpyfallTheme.colorScheme.textDisabled
+            )
         }
     }
 }
 
-
-
 @Composable
-@Preview
+@ThemePreviews
 private fun PreviewSettingsScreen() {
     PreviewContent {
-        SettingsScreen()
+        SettingsScreen(
+            versionName = "X.Y.Z"
+        )
     }
 }

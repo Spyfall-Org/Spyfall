@@ -2,7 +2,7 @@ package com.dangerfield.spyfall.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.dangerfield.libraries.flowroutines.ApplicationScope
+import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.flowroutines.DispatcherProvider
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.BuildConfig.VERSION_NAME
@@ -17,6 +17,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import spyfallx.core.BuildInfo
+import java.time.Clock
 import javax.inject.Singleton
 
 @Module
@@ -50,6 +51,10 @@ object CoreModule {
             versionName = VERSION_NAME,
             packageName = context.packageName
         )
+
+    @Provides
+    @Singleton
+    fun provideClock(): Clock = Clock.systemDefaultZone()
 
     @Provides
     @ApplicationScope

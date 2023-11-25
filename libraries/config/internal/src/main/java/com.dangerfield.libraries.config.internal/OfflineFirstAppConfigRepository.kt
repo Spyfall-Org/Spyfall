@@ -2,11 +2,10 @@ package com.dangerfield.libraries.config.internal
 
 import androidx.annotation.VisibleForTesting
 import com.dangerfield.libraries.config.AppConfigMap
-import com.dangerfield.libraries.config.getValueForPath
-import com.dangerfield.libraries.flowroutines.ApplicationScope
+import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.flowroutines.DispatcherProvider
-import com.dangerfield.libraries.flowroutines.childSupervisorScope
-import com.dangerfield.libraries.flowroutines.tryWithTimeout
+import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
+import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -27,7 +26,6 @@ import se.ansman.dagger.auto.AutoBind
 import se.ansman.dagger.auto.AutoInitialize
 import spyfallx.core.AppState
 import spyfallx.core.ApplicationStateRepository
-import spyfallx.core.Try
 import spyfallx.core.withBackoffRetry
 import timber.log.Timber
 import javax.inject.Inject

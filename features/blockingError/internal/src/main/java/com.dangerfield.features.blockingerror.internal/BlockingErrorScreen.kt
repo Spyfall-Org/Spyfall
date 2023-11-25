@@ -9,10 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.ui.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
 import spyfallx.ui.components.Screen
-import spyfallx.ui.components.text.Text
+import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.theme.SpyfallTheme
 
 @Composable
@@ -31,7 +31,7 @@ fun BlockingErrorScreen() {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Something went wrong. Please restart the app to try again.",
+                text = "Something went terribly wrong. We are sooooooooo sorry. Please restart the app to try again.",
                 typographyToken = SpyfallTheme.typography.Body.B700,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center

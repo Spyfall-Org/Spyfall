@@ -4,7 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.onStart
@@ -43,14 +45,15 @@ suspend fun <T : Any> Flow<T>.collect(collector: suspend (previous: T?, current:
  *
  *
  */
-fun <T> Flow<T>.launchOnStart(job: suspend kotlinx.coroutines.channels.ProducerScope<T>.() -> Unit): Flow<T> = channelFlow {
-    launch {
-        // This is wrapped so that the coroutine scope is the launched scope while the send channel is from the
-        // channelFlow
-        ProducerScope<T>(this, this@channelFlow.channel).job()
-    }
-    collect(::send)
-}.buffer(Channel.RENDEZVOUS)
+fun <T> Flow<T>.launchOnStart(job: suspend kotlinx.coroutines.channels.ProducerScope<T>.() -> Unit): Flow<T> =
+    channelFlow {
+        launch {
+            // This is wrapped so that the coroutine scope is the launched scope while the send channel is from the
+            // channelFlow
+            ProducerScope<T>(this, this@channelFlow.channel).job()
+        }
+        collect(::send)
+    }.buffer(Channel.RENDEZVOUS)
 
 private class ProducerScope<E>(
     scope: CoroutineScope,

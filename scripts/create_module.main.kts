@@ -51,10 +51,12 @@ fun main() {
     val isManualInternal = fullModuleName.split(":").getOrNull(1) == "internal"
 
     generateModule(fullModuleName, moduleType, isInternal = isManualInternal)
+    updateAppGradleFile(moduleType = moduleType, isInternal = isManualInternal, moduleName = fullModuleName)
 
     val isSubModule = fullModuleName.contains(":")
 
     if (!isSubModule && !isManualInternal) {
+        updateAppGradleFile(moduleType = moduleType, isInternal = true, moduleName = fullModuleName)
         generateModule("$fullModuleName:internal", moduleType, isInternal = true)
     }
 }
@@ -99,6 +101,24 @@ fun createDirectory(baseDir: String, moduleName: String, parentModule: String?):
     File(exampleDir).copyRecursively(newDirFinal, overwrite = true)
 
     return newDir
+}
+
+fun updateAppGradleFile(moduleType: String, moduleName: String, isInternal: Boolean) {
+    val appBuildGradleFile = File("app/build.gradle.kts")
+
+    val internalAddition = if (isInternal) ".internal" else ""
+    val moduleParentName = if (moduleType == "library") "libraries" else "features"
+    val moduleNameCleaned = moduleName.replace(":", ".").lowercase()
+    val lineToAdd =  "implementation(projects.$moduleParentName.$moduleNameCleaned$internalAddition)"
+    
+    val lines = appBuildGradleFile.readLines().toMutableList()
+
+    val indexToAdd = lines.indexOfFirst { it.contains("STOP PROJECT MODULES") }
+
+    lines.add(indexToAdd, lineToAdd)
+
+    appBuildGradleFile.writeText(lines.joinToString("\n"))
+
 }
 
 @Suppress("LongMethod")

@@ -17,6 +17,7 @@ dependencies {
     implementation(projects.libraries.ui)
     implementation(projects.libraries.common)
     implementation(projects.features.joinGame)
+    implementation(projects.features.settings)
     implementation(projects.features.newGame)
     implementation(projects.features.forcedUpdate)
 

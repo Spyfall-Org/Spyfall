@@ -18,14 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import spyfallx.ui.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.AccentColor
-import spyfallx.ui.color.ColorPrimitive
+import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.background
 import spyfallx.ui.color.border
-import spyfallx.ui.components.text.Text
+import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.theme.SpyfallTheme
 import spyfallx.ui.thenIf
 

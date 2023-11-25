@@ -3,6 +3,7 @@
 package spyfallx.core
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -95,6 +96,14 @@ sealed class Try<out T> {
             callsInPlace(action, InvocationKind.AT_MOST_ONCE)
         }
         return also { if (it is Failure) action(it.exception) }
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    inline fun onTimeOut(action: (left: Throwable) -> Unit): Try<T> {
+        contract {
+            callsInPlace(action, InvocationKind.AT_MOST_ONCE)
+        }
+        return also { if (it is Failure && it.exception is TimeoutCancellationException) action(it.exception) }
     }
 
     @OptIn(ExperimentalContracts::class)

@@ -7,6 +7,7 @@ plugins {
 dependencies {
     implementation(libs.kotlin.std)
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.core)
 }
 
 android {

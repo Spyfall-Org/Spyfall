@@ -2,31 +2,37 @@ package com.dangerfield.features.joingame.internal
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dangerfield.libraries.session.SessionStateRepository
+import com.dangerfield.features.joingame.internal.JoinGameUseCase.JoinGameError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import spyfallx.core.logOnError
 import javax.inject.Inject
 
 @HiltViewModel
 class JoinGameViewModel @Inject constructor(
-   // private val sessionStateRepository: SessionStateRepository
-): ViewModel() {
+    private val joinGame: JoinGameUseCase
+) : ViewModel() {
 
     private val actions = Channel<Action>(Channel.UNLIMITED)
+    private val _events = Channel<Event>()
 
-    val state = flow<State> {
+    val events = _events.receiveAsFlow()
+
+    val state = flow {
         for (action in actions) handleAction(action)
     }.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
         State(
-            accessCode = "",
-            userName = "",
-            joiningState = JoiningState.CollectingInput
+            accessCodeState = AccessCodeState(value = ""),
+            userNameState = UserNameState(value = ""),
+            isLoading = false,
+            unresolvableError = null
         )
     )
 
@@ -34,38 +40,98 @@ class JoinGameViewModel @Inject constructor(
 
     fun updateAccessCode(accessCode: String) = actions.trySend(Action.UpdateAccessCode(accessCode))
 
+    fun onSomethingWentWrongDismissed() = actions.trySend(Action.RemoveSomethingWentWrong)
+
     fun joinGame() = actions.trySend(Action.JoinGame)
 
-    fun resolveNotJoined() = actions.trySend(Action.ResolveJoinGameError)
-
     private suspend fun FlowCollector<State>.handleAction(action: Action) {
-        when(action) {
-            Action.JoinGame -> handleJoinGame()
-            Action.ResolveJoinGameError -> handleResolveJoinGameError()
+        updateState { it.withNoErrors() }
+        when (action) {
+            is Action.RemoveSomethingWentWrong -> updateState { it.copy(unresolvableError = null) }
+            is Action.JoinGame -> handleJoinGame()
             is Action.UpdateAccessCode -> handleUpdateAccessCode(action.accessCode)
             is Action.UpdateUserName -> handleUpdateUserName(action.userName)
         }
     }
 
     private suspend fun FlowCollector<State>.handleJoinGame() {
-        updateState { it.copy(joiningState = JoiningState.JoiningGame) }
-        // validate code
-        // use game repo to get game with access code
-        // use Validation Use cases to validate name
-        // on success update the session state and update state to joined
-        // on failure update state to not joined
+        updateState { it.copy(isLoading = true) }
+
+        joinGame(
+            accessCode = state.value.accessCodeState.value,
+            userName = state.value.userNameState.value
+        )
+            .onSuccess { _events.trySend(Event.GameJoined) }
+            .logOnError()
+            .onFailure { throwable ->
+                if (throwable is JoinGameError) {
+                    handleJoinGameError(throwable)
+                } else {
+                    updateState { it.copy(unresolvableError = UnresolvableError.UnknownError) }
+                }
+            }
+            .eitherWay {
+                updateState { it.copy(isLoading = false) }
+            }
     }
 
-    private suspend fun FlowCollector<State>.handleResolveJoinGameError() = updateState {
-        it.copy(joiningState = JoiningState.CollectingInput)
-    }
+    private suspend fun FlowCollector<State>.handleJoinGameError(joinGameError: JoinGameError) =
+        updateState {
+            when (joinGameError) {
+                is JoinGameError.GameNotFound -> it.copy(
+                    accessCodeState = it.accessCodeState.copy(gameDoesNotExist = true)
+                )
 
-    private suspend fun FlowCollector<State>.handleUpdateAccessCode(accessCode: String) = updateState {
-        it.copy(accessCode = accessCode)
-    }
+                is JoinGameError.GameAlreadyStarted -> it.copy(
+                    accessCodeState = it.accessCodeState.copy(gameAlreadyStarted = true)
+                )
+
+                is JoinGameError.GameHasMaxPlayers -> it.copy(
+                    accessCodeState = it.accessCodeState.copy(
+                        maxPlayersError = MaxPlayersError(
+                            max = joinGameError.max
+                        )
+                    )
+                )
+
+                is JoinGameError.InvalidAccessCodeLength -> it.copy(
+                    accessCodeState = it.accessCodeState.copy(
+                        invalidLengthError = InvalidAccessCodeLengthError(
+                            requiredLength = joinGameError.requiredLength
+                        )
+                    )
+                )
+
+                is JoinGameError.InvalidNameLength -> it.copy(
+                    userNameState = it.userNameState.copy(
+                        invalidNameLengthError = InvalidNameLengthError(
+                            min = joinGameError.min,
+                            max = joinGameError.max
+                        )
+                    )
+                )
+
+                is JoinGameError.UsernameTaken -> it.copy(
+                    userNameState = it.userNameState.copy(isTaken = true)
+                )
+
+                is JoinGameError.UnknownError -> {
+                    it.copy(unresolvableError = UnresolvableError.UnknownError)
+                }
+
+                is JoinGameError.IncompatibleVersion -> {
+                    it.copy(unresolvableError = UnresolvableError.IncompatibleError(joinGameError.isCurrentLower))
+                }
+            }
+        }
+
+    private suspend fun FlowCollector<State>.handleUpdateAccessCode(accessCode: String) =
+        updateState {
+            it.copy(accessCodeState = it.accessCodeState.copy(value = accessCode))
+        }
 
     private suspend fun FlowCollector<State>.handleUpdateUserName(userName: String) = updateState {
-        it.copy(userName = userName)
+        it.copy(userNameState = it.userNameState.copy(value = userName))
     }
 
     private suspend inline fun FlowCollector<State>.updateState(function: (State) -> State) {
@@ -74,32 +140,6 @@ class JoinGameViewModel @Inject constructor(
         emit(nextValue)
     }
 
-    sealed class Action {
-        data class UpdateUserName(val userName: String): Action()
-        data class UpdateAccessCode(val accessCode: String): Action()
-        data object JoinGame: Action()
-        data object ResolveJoinGameError: Action()
-    }
-
-    data class State(
-        val accessCode: String,
-        val userName: String,
-        val joiningState: JoiningState,
-    )
-
-    sealed class JoiningState {
-        data object CollectingInput: JoiningState()
-        data object JoiningGame: JoiningState()
-        data object JoinedGame: JoiningState()
-
-        sealed class CouldNotJoin: JoiningState() {
-            data object InvalidName: CouldNotJoin()
-            data object InvalidAccessCode: CouldNotJoin()
-            data object AccessCodeNotFound: CouldNotJoin()
-            data object GameAlreadyStarted: CouldNotJoin()
-            data object GameHasMaxPlayers: CouldNotJoin()
-            data object UsernameTaken: CouldNotJoin()
-            data object JoinTimedOut: CouldNotJoin()
-        }
-    }
+    // TODO create an option for players that have already started to go back to waiting room
+    // and let more players join
 }

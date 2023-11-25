@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.BuildInfo
+import spyfallx.core.openStoreLinkToApp
 import spyfallx.ui.ModuleNavBuilder
 import javax.inject.Inject
 
@@ -28,24 +29,9 @@ class ForcedUpdateModuleNavGraphBuilder @Inject constructor(
             val context = LocalContext.current
             ForcedUpdateScreen(
                 onOpenAppStoreClicked = {
-                    context.openStoreForReview()
+                    context.openStoreLinkToApp(buildInfo)
                 }
             )
-        }
-    }
-
-    @Suppress("SwallowedException")
-    private fun Context.openStoreForReview() {
-        try {
-            val uri = Uri.parse("market://details?id=" + buildInfo.playStorePackageName)
-            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            ContextCompat.startActivity(this, goToMarket, Bundle())
-        } catch (e: ActivityNotFoundException) {
-            val uri = Uri.parse("http://play.google.com/store/apps/details?id=" + buildInfo.playStorePackageName)
-            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            ContextCompat.startActivity(this, goToMarket, Bundle())
         }
     }
 }

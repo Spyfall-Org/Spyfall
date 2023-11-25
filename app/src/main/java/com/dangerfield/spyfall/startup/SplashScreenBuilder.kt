@@ -12,10 +12,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SplashScreenBuilder(private val activity: Activity) {
-    private var keepOnScreenCondition: () -> Boolean = { false }
-    private var showLoadingCondition: () -> Boolean = { false }
+    private var keepOnScreenCondition: () -> Boolean = { true }
+    private var showLoadingCondition: () -> Boolean = { true }
     private lateinit var internalSplashScreen: androidx.core.splashscreen.SplashScreen
 
     fun keepOnScreenWhile(condition: () -> Boolean): SplashScreenBuilder {
@@ -32,31 +33,27 @@ class SplashScreenBuilder(private val activity: Activity) {
     fun build() {
         internalSplashScreen = activity.installSplashScreen()
 
-        internalSplashScreen.setKeepOnScreenCondition {
-            keepOnScreenCondition() && !showLoadingCondition()
-        }
+        // relies onsetOnExitAnimationListener to keep on screen
+        internalSplashScreen.setKeepOnScreenCondition { false }
 
         internalSplashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
-            if (showLoadingCondition()) {
-                val loadingView = splashScreenViewProvider.addLoadingIndicator()
-                (activity as? LifecycleOwner)?.lifecycleScope?.launch {
-                    var shouldShowLoading = showLoadingCondition()
-                    var isSplashScreenUp = keepOnScreenCondition()
-                    while (shouldShowLoading && isSplashScreenUp) {
-                        delay(500)
-                        shouldShowLoading = showLoadingCondition()
-                        isSplashScreenUp = keepOnScreenCondition()
-                    }
+            val loadingView = splashScreenViewProvider.addLoadingIndicator()
+            (activity as? LifecycleOwner)?.lifecycleScope?.launch {
+                var shouldShowLoading = showLoadingCondition()
+                var isSplashScreenUp = keepOnScreenCondition()
+                while (isSplashScreenUp) {
+                    delay(500)
+                    shouldShowLoading = showLoadingCondition()
+                    isSplashScreenUp = keepOnScreenCondition()
                     if (!shouldShowLoading) {
                         splashScreenViewProvider.removeView(loadingView)
                     }
-                    if (!keepOnScreenCondition()) {
-                        splashScreenViewProvider.remove()
-                    }
+                }
 
-                } ?: error("Activity must be a LifecycleOwner")
-            } else {
                 splashScreenViewProvider.remove()
+            } ?: run {
+                splashScreenViewProvider.remove()
+                Timber.d("SplashScreenBuilder: Activity is not a lifecycle owner, splash screen will be removed")
             }
         }
     }

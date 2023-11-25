@@ -45,16 +45,9 @@ class MainActivity : ThemeChangeableActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         var isLoading: Boolean by mutableStateOf(value = true)
-        var shouldShowLoadingIndicator: Boolean by mutableStateOf(value = false)
-
-        lifecycleScope.launch {
-            delay(2.seconds)
-            shouldShowLoadingIndicator = true
-        }
 
         SplashScreenBuilder(this)
             .keepOnScreenWhile { isLoading }
-            .showLoadingWhen { shouldShowLoadingIndicator }
             .build()
 
         super.onCreate(savedInstanceState) // should be called after splash screen builder

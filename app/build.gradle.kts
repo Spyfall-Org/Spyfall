@@ -81,13 +81,20 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.navigation.compose)
 
-    // features
+
+    /**
+     * Project Modules
+     * Both internal and external should be included here to make sure all objects
+     * are added to the dependency graph
+     */
     implementation(projects.features.forcedUpdate)
     implementation(projects.features.forcedUpdate.internal)
     implementation(projects.features.welcome)
     implementation(projects.features.welcome.internal)
     implementation(projects.features.joinGame)
     implementation(projects.features.joinGame.internal)
+    implementation(projects.features.settings)
+    implementation(projects.features.settings.internal)
     implementation(projects.features.blockingError)
     implementation(projects.features.blockingError.internal)
     implementation(projects.features.newGame)
@@ -97,6 +104,12 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.common.internal)
     implementation(projects.libraries.ui)
+    implementation(projects.libraries.ui.internal)
+    implementation(projects.libraries.session)
+    implementation(projects.libraries.session.internal)
+    implementation(projects.libraries.game)
+    implementation(projects.libraries.game.internal)
+    // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations
     implementation(libs.lottie)

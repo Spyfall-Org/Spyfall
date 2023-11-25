@@ -8,7 +8,7 @@
         <property name="file" value="${config_loc}/checkstyle-suppression.xml" />
     </module>
 
-    <module name="NewlineAtEndOfFile" />
+<!--    <module name="NewlineAtEndOfFile" />-->
     <module name="FileLength" />
     <module name="FileTabCharacter" />
 

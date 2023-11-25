@@ -51,6 +51,8 @@
             <option value="$PROJECT_DIR$/libraries/config/internal" />
             <option value="$PROJECT_DIR$/libraries/datastore" />
             <option value="$PROJECT_DIR$/libraries/flowroutines" />
+            <option value="$PROJECT_DIR$/libraries/game" />
+            <option value="$PROJECT_DIR$/libraries/game/internal" />
             <option value="$PROJECT_DIR$/libraries/logging" />
             <option value="$PROJECT_DIR$/libraries/logging/internal" />
             <option value="$PROJECT_DIR$/libraries/session" />

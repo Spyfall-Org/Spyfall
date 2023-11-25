@@ -1,7 +1,5 @@
 package spyfallx.core
 
-import kotlin.reflect.KClass
-
 /**
  * Convenience method for only executing logic if the parameters are not null
  */

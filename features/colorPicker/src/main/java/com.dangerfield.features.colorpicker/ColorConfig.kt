@@ -1,6 +1,6 @@
 package com.dangerfield.features.colorpicker
 
-import spyfallx.ui.color.ColorPrimitive
+import com.dangerfield.libraries.ui.color.ColorPrimitive
 
 sealed class ColorConfig {
     data object Random: ColorConfig()
