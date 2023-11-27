@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.config.AppConfigMap
+import com.dangerfield.libraries.config.internal.model.BasicMapBasedAppConfigMapMap
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.flow.Flow
@@ -59,7 +60,7 @@ class DataStoreConfigDataSource @Inject constructor(
                 val map = jsonAdapter.fromJson(storedConfigString)
                 checkNotNull(map) { "Map parsed to null: \n $storedConfigString" }
                 Timber.d("Emitting config from data store: \n $storedConfigString")
-                BasicAppConfigMapMap(map)
+                BasicMapBasedAppConfigMapMap(map)
             }
                 .logOnError()
                 .getOrNull()

@@ -1,27 +1,7 @@
 package com.dangerfield.libraries.config
 
-import android.annotation.SuppressLint
+import spyfallx.core.common.BuildConfig
 
-/**
- *
- * # App configuration back by a simple map.
- *
- * -  It is not recommended to use the config directly but rather to create a class that wraps the config and exposes
- * the values you need especially if the config value may be used in more than one place.
- * This class should be used as your ***source of truth*** for config values.
- *
- * - The config should only be used to determine if the default defined in this source of truth is being overriden either via backend or a local config.
- *
- * - The app config can be injected into any class either as `AppConfig` or `Flow<AppConfig>` if needed
- *
- * example:
- *  ```kotlin
- *  class MyFeatureConfig(appConfig: AppConfig) {
- *    val myFeature = appConfig.value<String>(KEY) ?: DEFAULT
- *  }
- *  ```
- *
- */
 abstract class AppConfigMap {
 
     abstract val map: Map<String, *>
@@ -29,26 +9,23 @@ abstract class AppConfigMap {
     /**
      * Method to obtain int values since numbers are parsed into doubles by default
      */
-    @SuppressLint("ConfigDocs")
-    fun intValue(rootPath: String, vararg path: String): Int? =
-        value<Number>(rootPath, *path)?.toInt()
+    fun intValue(value: ConfiguredValue<Int>): Int =
+        value<Number>(value).toInt()
 
     /**
      * Method to obtain long values since numbers are parsed into doubles by default
      */
-    @SuppressLint("ConfigDocs")
-    fun longValue(rootPath: String, vararg path: String): Long? =
-        value<Number>(rootPath, *path)?.toLong()
+    fun longValue(value: ConfiguredValue<Long>): Long =
+        value<Number>(value).toLong()
 
     /**
      * Method to obtain double values.
      */
-    @SuppressLint("ConfigDocs")
-    fun doubleValue(rootPath: String, vararg path: String): Double? =
-        value<Number>(rootPath, *path)?.toDouble()
+    fun doubleValue(value: ConfiguredValue<Double>): Double =
+        value<Number>(value).toDouble()
 
     /**
-     * Get the value aat [rootPath] + path.
+     * Get the value at [rootPath] + path.
      * For example, with a json like this:
      * {
      *   "minAppVersion": 4,
@@ -57,13 +34,19 @@ abstract class AppConfigMap {
      *   }
      * }
      *
-     * you can do `appConfigMap.value<Int>("minAppVersion")`
-     * or `appConfigMap.value<List<String>>("promoLabels", "enabled")`
+     * and a configued value like this:
+     * class MyConfiguedValue(): ConfiguredValue<List<String>> {
+     *      override val path: String,
+     *      override val default: T,
+     * }
      *
-     * ## Note:
-     * only primitives and collections of primatives can be pulled from the map.
+     * you can do `appConfigMap.value>(MyExperiment())` to get the value of the configured value
+     *
      */
-    inline fun <reified T : Any> value(rootPath: String, vararg path: String): T? {
-        return map.getValueForPath<T>(rootPath, *path)
-    }
+    inline fun <reified T : Any> value(value: ConfiguredValue<T>): T =
+        map.getValueForPath<T>(fullPath = value.path) ?: value.default
+
+    inline fun <reified T : Any> experiment(experiment: Experiment<T>): T =
+        if (experiment.isDebugOnly && !BuildConfig.DEBUG) experiment.control
+        else map.getValueForPath<T>(fullPath = experiment.path) ?: experiment.default
 }

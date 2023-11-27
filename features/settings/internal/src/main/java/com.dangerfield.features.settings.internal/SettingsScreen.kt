@@ -19,6 +19,8 @@ import spyfallx.ui.theme.SpyfallTheme
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     versionName: String,
+    isDebug: Boolean = false,
+    onQaOptionClicked: () -> Unit = { }
 ) {
     Screen(
         modifier = modifier,
@@ -50,11 +52,13 @@ fun SettingsScreen(
                 leadingIcon = SpyfallIcon.Chat("Feedback"),
             )
 
-            SettingsOption(
-                text = "QA Menu",
-                onClick = { },
-                leadingIcon = SpyfallIcon.Android("Feedback"),
-            )
+            if (isDebug) {
+                SettingsOption(
+                    text = "QA Menu",
+                    onClick = onQaOptionClicked,
+                    leadingIcon = SpyfallIcon.Android("Feedback"),
+                )
+            }
 
             Text(
                 text = "Spyfall Version: $versionName",
@@ -73,7 +77,8 @@ fun SettingsScreen(
 private fun PreviewSettingsScreen() {
     PreviewContent {
         SettingsScreen(
-            versionName = "X.Y.Z"
+            versionName = "X.Y.Z",
+            isDebug = true
         )
     }
 }

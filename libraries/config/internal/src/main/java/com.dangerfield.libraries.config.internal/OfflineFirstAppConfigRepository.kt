@@ -2,16 +2,19 @@ package com.dangerfield.libraries.config.internal
 
 import androidx.annotation.VisibleForTesting
 import com.dangerfield.libraries.config.AppConfigMap
+import com.dangerfield.libraries.config.ConfigOverrideRepository
+import com.dangerfield.libraries.config.internal.model.FallbackConfigMapMapBased
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.flowroutines.DispatcherProvider
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
+import com.dangerfield.libraries.flowroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -55,9 +58,10 @@ class OfflineFirstAppConfigRepository @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val configDataSource: ConfigDataSource,
     private val cachedConfigDataSource: CachedConfigDataSource,
-    private val fallbackConfig: FallbackConfigMap,
+    private val fallbackConfig: FallbackConfigMapMapBased,
+    private val configOverrideRepository: ConfigOverrideRepository,
     @ApplicationScope private val applicationScope: CoroutineScope,
-    applicationStateRepository: ApplicationStateRepository
+    applicationStateRepository: ApplicationStateRepository,
 ) : AppConfigRepository {
 
     private var refreshPollingJob: Job? = null
@@ -78,7 +82,15 @@ class OfflineFirstAppConfigRepository @Inject constructor(
         withContext(dispatcherProvider.io) {
             refreshConfig().join() // before emitting whats cached, make sure its up to date
         }
-        emitAll(cachedConfigDataSource.getConfigFlow())
+        val configFlow = combine(
+            configOverrideRepository.getOverridesFlow(),
+            cachedConfigDataSource.getConfigFlow()
+        ) { overrides, config ->
+            config.applyOverrides(overrides)
+        }
+
+        // TODO apply targeted overrides (starting with version overrides)
+        emitAll(configFlow)
     }.shareIn(
         scope = applicationScope,
         started = SharingStarted.Eagerly,
@@ -88,7 +100,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
     /**
      * Supplies the app config value
      */
-    override fun config(): AppConfigMap = LazyAppConfigMapMap()
+    override fun config(): AppConfigMap = LazyMapBasedAppConfigMapMap()
 
     /**
      * Supplies the app config stream, updates on a set cadence (short polling)
@@ -158,7 +170,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
      * If the [configStream] already has a value, that will be returned directly. otherwise
      * the value will be retrieved from the stream.
      */
-    inner class LazyAppConfigMapMap : AppConfigMap() {
+    inner class LazyMapBasedAppConfigMapMap : AppConfigMap() {
 
         override val map: Map<String, *>
             get() = configStream.replayCache.firstOrNull()?.map ?: runBlocking {

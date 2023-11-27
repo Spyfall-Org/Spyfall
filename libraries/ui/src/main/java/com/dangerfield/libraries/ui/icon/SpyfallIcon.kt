@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -136,6 +138,16 @@ sealed class SpyfallIcon(
         imageVector = Icons.Default.Android,
         contentDescription = contentDescription
     )
+
+    class DropDown(contentDescription: String) : SpyfallIcon(
+        imageVector = Icons.Default.ArrowDropDown,
+        contentDescription = contentDescription
+    )
+
+    class Bug(contentDescription: String) : SpyfallIcon(
+        imageVector = Icons.Default.BugReport,
+        contentDescription = contentDescription
+    )
 }
 
 private val allIcons = listOf(
@@ -163,6 +175,8 @@ private val allIcons = listOf(
     SpyfallIcon.ChevronRight(""),
     SpyfallIcon.Theme(""),
     SpyfallIcon.Android(""),
+    SpyfallIcon.DropDown(""),
+    SpyfallIcon.Bug(""),
     )
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=1000,height=1200,unit=dp,dpi=200")

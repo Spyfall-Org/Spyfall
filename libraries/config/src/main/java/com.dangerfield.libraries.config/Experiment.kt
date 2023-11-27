@@ -1,0 +1,64 @@
+package com.dangerfield.libraries.config
+
+import se.ansman.dagger.auto.BindGenericAs
+import java.util.Locale
+
+@BindGenericAs.Default(BindGenericAs.Wildcard)
+abstract class Experiment<out T : Any> {
+    /**
+     * The name displayed for the experiment in the QA screen.
+     */
+    abstract val displayName: String
+
+    /**
+     * The description displayed for the experiment in the QA screen.
+     */
+    open val description: String? = null
+
+    /**
+     * The unique identifier for the experiment. Should be human readable.
+     * ex:
+     * ```kotlin
+     * MyExperiment : Experiment<Int>() {
+     *  override val id: String = "my_experiment"
+     *  ...
+     * }
+     * ```
+     */
+    open val id: String
+        get() = javaClass.name.replaceFirstChar { it.lowercase(Locale.getDefault()) }
+
+    /**
+     * The value for the experiment when the experiment is OFF
+     */
+    abstract val control: T
+
+    /**
+     * The value for the experiment when the experiment is ON
+     */
+    abstract val test: T
+
+    /**
+     * The value for the experiment when no value is found
+     */
+    open val default: T
+        get() = control
+
+    /**
+     * Flag used to ensure experiment is only active in debug builds
+     * This allows for releases of builds with experiments that are still in development
+     */
+    abstract val isDebugOnly: Boolean
+
+    val path : String
+        get() = "experiments.$id"
+
+    open val showInQADashboard: Boolean = true
+
+    val value: T
+        get() = resolveValue()
+
+    abstract fun resolveValue(): T
+
+    operator fun invoke(): T = this.value
+}

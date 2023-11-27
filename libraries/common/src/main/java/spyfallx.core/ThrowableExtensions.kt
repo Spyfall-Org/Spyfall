@@ -1,5 +1,7 @@
 package spyfallx.core
 
+import spyfallx.core.common.BuildConfig
+import timber.log.Timber
 import kotlin.coroutines.cancellation.CancellationException
 
 fun Throwable.failure(): Try<Nothing> = Failure(this)
@@ -14,3 +16,7 @@ val Throwable.isFatal: Boolean
         is VirtualMachineError, is ThreadDeath, is InterruptedException, is LinkageError, is CancellationException -> true
         else -> false
     }
+
+fun throwIfDebug(throwable: Throwable) {
+    if (BuildConfig.DEBUG) throw throwable
+}

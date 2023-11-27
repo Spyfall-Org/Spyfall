@@ -6,6 +6,7 @@ import spyfallx.core.Try.Failure
 import spyfallx.core.Try.Success
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
+import spyfallx.core.common.BuildConfig
 import timber.log.Timber
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -45,6 +46,9 @@ inline fun <T> Try<T>.flatMapIf(predicate: Boolean, mapper: (T) -> Try<T>): Try<
 
 fun <T> Try<T>.logOnError(message: String? = null): Try<T> = onFailure { Timber.e(it, message) }
 
+fun <T> Try<T>.throwIfDebug(): Try<T> = onFailure {
+    if (BuildConfig.DEBUG) throw it
+}
 /**
  * Retry an operation a certain number of times with an exponential backoff by default
  */

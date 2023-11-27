@@ -81,7 +81,7 @@ fun updateSettingGradleFile(baseDir: String, moduleName: String, parentModule: S
     settingsFile.writeText(settingsLines.joinToString("\n"))
 }
 
-fun createPackage(directory: String) {
+fun createPackage(directory: String, featureName: String?) {
     val packageString = directory.replace("/", ".").lowercase()
     val packageName = "com.dangerfield.$packageString"
 
@@ -90,6 +90,17 @@ fun createPackage(directory: String) {
 
     val testDir = File("$directory/src/test/java/$packageName")
     testDir.mkdirs()
+
+    val navigationFile = File("$directory/src/main/Navigation.kt")
+
+    if (featureName == null) {
+        navigationFile.delete()
+    } else {
+        val lines = navigationFile.readLines()
+        val newLines = lines.map { it.replace("example", featureName ) }
+        navigationFile.writeText(newLines.joinToString("\n"))
+        navigationFile.renameTo(File("$mainDir/Navigation.kt"))
+    }
 }
 
 fun createDirectory(baseDir: String, moduleName: String, parentModule: String?): String {
@@ -100,6 +111,7 @@ fun createDirectory(baseDir: String, moduleName: String, parentModule: String?):
 
     File(exampleDir).copyRecursively(newDirFinal, overwrite = true)
 
+
     return newDir
 }
 
@@ -109,8 +121,8 @@ fun updateAppGradleFile(moduleType: String, moduleName: String, isInternal: Bool
     val internalAddition = if (isInternal) ".internal" else ""
     val moduleParentName = if (moduleType == "library") "libraries" else "features"
     val moduleNameCleaned = moduleName.replace(":", ".").lowercase()
-    val lineToAdd =  "implementation(projects.$moduleParentName.$moduleNameCleaned$internalAddition)"
-    
+    val lineToAdd = "\timplementation(projects.$moduleParentName.$moduleNameCleaned$internalAddition)"
+
     val lines = appBuildGradleFile.readLines().toMutableList()
 
     val indexToAdd = lines.indexOfFirst { it.contains("STOP PROJECT MODULES") }
@@ -235,7 +247,7 @@ fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boole
 
     val newDir = createDirectory(baseDir, moduleName, parentModule)
 
-    createPackage(newDir)
+    createPackage(newDir, moduleName)
 
     updateSettingGradleFile(baseDir, moduleName, parentModule)
 

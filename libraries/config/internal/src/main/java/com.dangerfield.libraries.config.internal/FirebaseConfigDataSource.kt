@@ -1,5 +1,6 @@
 package com.dangerfield.libraries.config.internal
 
+import com.dangerfield.libraries.config.internal.model.BasicMapBasedAppConfigMapMap
 import com.dangerfield.libraries.config.AppConfigMap
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -37,7 +38,7 @@ class FirebaseConfigDataSource
             }
             .orEmpty()
 
-        BasicAppConfigMapMap(configMap)
+        BasicMapBasedAppConfigMapMap(configMap)
     }
 
     companion object {

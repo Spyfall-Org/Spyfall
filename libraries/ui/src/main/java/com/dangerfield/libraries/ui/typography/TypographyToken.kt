@@ -91,7 +91,7 @@ class Typography {
     val Body = BodyTypography()
     val Label = LabelTypography()
 
-    val Default = Label.L600
+    val Default = Heading.H700
 
     class DisplayTypography {
 

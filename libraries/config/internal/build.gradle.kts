@@ -18,4 +18,5 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.moshi)
     implementation(libs.androidx.datastore.core)
+    implementation(projects.features.qa)
 }

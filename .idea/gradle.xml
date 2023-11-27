@@ -37,6 +37,8 @@
             <option value="$PROJECT_DIR$/features/joinGame/internal" />
             <option value="$PROJECT_DIR$/features/newGame" />
             <option value="$PROJECT_DIR$/features/newGame/internal" />
+            <option value="$PROJECT_DIR$/features/qa" />
+            <option value="$PROJECT_DIR$/features/qa/internal" />
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/settings/internal" />
             <option value="$PROJECT_DIR$/features/splash" />

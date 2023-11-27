@@ -33,12 +33,12 @@ fun SettingsOption(
         verticalAlignment = Alignment.CenterVertically
     ) {
         leadingIcon?.let {
-            Icon(spyfallIcon = it, iconSize = IconSize.Medium)
+            Icon(spyfallIcon = it, iconSize = IconSize.Large)
             Spacer(modifier = Modifier.width(Spacing.S500))
         }
         text()
         Spacer(modifier = Modifier.weight(1f))
-        trailingIcon?.let { Icon(spyfallIcon = it, iconSize = IconSize.Medium) }
+        trailingIcon?.let { Icon(spyfallIcon = it, iconSize = IconSize.Large) }
     }
 }
 

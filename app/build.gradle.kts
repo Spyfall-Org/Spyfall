@@ -12,6 +12,7 @@ plugins {
 spyfall {
     compose()
     flowroutines()
+    daggerHilt()
 }
 
 android {
@@ -109,6 +110,8 @@ dependencies {
     implementation(projects.libraries.session.internal)
     implementation(projects.libraries.game)
     implementation(projects.libraries.game.internal)
+    implementation(projects.features.qa)
+    implementation(projects.features.qa.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations

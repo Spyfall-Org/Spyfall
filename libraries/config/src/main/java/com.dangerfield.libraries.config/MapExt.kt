@@ -1,11 +1,21 @@
 package com.dangerfield.libraries.config
 
+import spyfallx.core.Try
+import spyfallx.core.logOnError
+import spyfallx.core.throwIfDebug
+
 /**
  * Find a value of type [T] in the given [root] with optional appended [path].
  * This is a convenience accessor to [getValueRecursive] to allow to pass the path as a vararg instead of a list.
  */
 inline fun <reified T : Any> Map<String, *>.getValueForPath(root: String, vararg path: String) =
     getValueRecursive<T>(listOf(root) + path.toList(), T::class.java)
+
+inline fun <reified T : Any> Map<String, *>.getValueForPath(root: String, path: List<String>) =
+    getValueRecursive<T>(listOf(root) + path.toList(), T::class.java)
+
+inline fun <reified T : Any> Map<String, *>.getValueForPath(fullPath: String) =
+    getValueRecursive<T>(fullPath.split("."), T::class.java)
 
 /**
  * Recursive implementation for [getValueForPath].
@@ -14,20 +24,26 @@ inline fun <reified T : Any> Map<String, *>.getValueForPath(root: String, vararg
 fun <T : Any> Map<String, *>.getValueRecursive(path: List<String>, clazz: Class<*> ): T? {
     if (path.size == 1) {
         val rawValue = this[path.first()] ?: return null
-        return when (clazz) {
-            String::class.java -> rawValue.toString() as? T
-            Boolean::class.java -> rawValue.toString().toBoolean() as? T
-            // all numbers come back as doubles. First cast to double, then to requested type
-            Int::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
-            Number::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
-            Integer::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
-            Double::class.java -> rawValue.toString().toDoubleOrNull() as? T
-            Float::class.java -> rawValue.toString().toDoubleOrNull()?.toFloat() as? T
-            Byte::class.java -> rawValue.toString().toByteOrNull() as? T
-            Short::class.java -> rawValue.toString().toShortOrNull() as? T
-            Long::class.java -> rawValue.toString().toDoubleOrNull()?.toLong() as? T
-            else -> rawValue as? T
+        return Try {
+            when (clazz) {
+                String::class.java -> rawValue.toString() as? T
+                Boolean::class.java -> rawValue.toString().toBoolean() as? T
+                // all numbers come back as doubles. First cast to double, then to requested type
+                Int::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
+                Number::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
+                Integer::class.java -> rawValue.toString().toDoubleOrNull()?.toInt() as? T
+                Double::class.java -> rawValue.toString().toDoubleOrNull() as? T
+                Float::class.java -> rawValue.toString().toDoubleOrNull()?.toFloat() as? T
+                Byte::class.java -> rawValue.toString().toByteOrNull() as? T
+                Short::class.java -> rawValue.toString().toShortOrNull() as? T
+                Long::class.java -> rawValue.toString().toDoubleOrNull()?.toLong() as? T
+                else -> rawValue as? T
+            }
         }
+            .logOnError()
+            .throwIfDebug()
+            .getOrNull()
+        //TODO test if the throw if debug works
     }
     val subMap = this[path.first()] as? Map<String, *> ?: return null
     return subMap.getValueRecursive(path.drop(1), clazz)

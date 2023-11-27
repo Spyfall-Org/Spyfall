@@ -3,6 +3,8 @@ package com.dangerfield.features.settings.internal
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dangerfield.features.qa.navigateToQa
+import com.dangerfield.features.settings.navigateToSettings
 import com.dangerfield.features.settings.settingsNavigationRoute
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.BuildInfo
@@ -19,7 +21,9 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
             route = settingsNavigationRoute,
         ) {
             SettingsScreen(
-                versionName = buildInfo.versionName
+                versionName = buildInfo.versionName,
+                isDebug = buildInfo.isDebug,
+                onQaOptionClicked = navController::navigateToQa
             )
         }
     }

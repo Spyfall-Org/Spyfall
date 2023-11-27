@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.config.internal
+package com.dangerfield.libraries.config.internal.model
 
 import android.content.Context
 import com.dangerfield.libraries.config.AppConfigMap
@@ -11,7 +11,7 @@ import javax.inject.Inject
  * Fallback config implementation of [AppConfigMap] packaged and shipped with the app
  * This is used when the app is unable to fetch the config from the server and no config is already cached
  */
-class FallbackConfigMap @Inject constructor(
+class FallbackConfigMapMapBased @Inject constructor(
     @ApplicationContext context: Context,
 ) : AppConfigMap() {
 

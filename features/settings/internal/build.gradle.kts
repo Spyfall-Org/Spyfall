@@ -12,6 +12,7 @@ android {
 }
 dependencies {
     implementation(projects.features.settings)
+    implementation(projects.features.qa)
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
 }
