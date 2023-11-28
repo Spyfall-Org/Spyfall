@@ -32,7 +32,7 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

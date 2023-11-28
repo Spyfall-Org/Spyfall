@@ -7,7 +7,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import spyfallx.ui.color.ColorToken
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Immutable
 data class Border(val color: ColorToken.Color, val width: Dp = StandardBorderWidth) {

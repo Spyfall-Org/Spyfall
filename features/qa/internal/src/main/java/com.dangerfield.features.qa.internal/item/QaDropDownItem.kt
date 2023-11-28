@@ -17,7 +17,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.icon.Icon
 import com.dangerfield.libraries.ui.icon.IconButton
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun QaDropDownItem(

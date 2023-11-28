@@ -5,6 +5,7 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import java.util.Locale
 import java.util.regex.Pattern
 
 val red = "\u001b[31m"
@@ -81,7 +82,7 @@ fun updateSettingGradleFile(baseDir: String, moduleName: String, parentModule: S
     settingsFile.writeText(settingsLines.joinToString("\n"))
 }
 
-fun createPackage(directory: String, featureName: String?) {
+fun createPackage(directory: String, moduleName: String, isFeature: Boolean) {
     val packageString = directory.replace("/", ".").lowercase()
     val packageName = "com.dangerfield.$packageString"
 
@@ -93,17 +94,27 @@ fun createPackage(directory: String, featureName: String?) {
 
     val navigationFile = File("$directory/src/main/Navigation.kt")
 
-    if (featureName == null) {
+    if (!isFeature) {
         navigationFile.delete()
     } else {
         val lines = navigationFile.readLines()
-        val newLines = lines.map { it.replace("example", featureName ) }
+        val newLines = lines.map {
+            it.replace("example", moduleName )
+            val capitalFeatureName = it.replaceFirstChar { char ->
+                if (char.isLowerCase()) {
+                    char.titlecase(Locale.getDefault())
+                } else {
+                    char.toString()
+                }
+            }
+            it.replace("Example", capitalFeatureName)
+        }
         navigationFile.writeText(newLines.joinToString("\n"))
         navigationFile.renameTo(File("$mainDir/Navigation.kt"))
     }
 }
 
-fun createDirectory(baseDir: String, moduleName: String, parentModule: String?): String {
+fun createDirectory(baseDir: String, moduleName: String, parentModule: String?, isInternal: Boolean): String {
     val exampleDir = "scripts/exampleModule"
     val newDir = "$baseDir/${if (parentModule != null) "$parentModule/" else ""}$moduleName"
 
@@ -238,16 +249,16 @@ fun checkForHelpCall(): Boolean {
     return isHelpCall
 }
 
-fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boolean = false) {
+fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boolean) {
     val (parentModule, moduleName) = moduleNameLine.split(":").let {
         if (it.size > 1) Pair(it[0], it[1]) else Pair(null, it[0])
     }
 
     val baseDir = if (moduleType == "library") "libraries" else "features"
 
-    val newDir = createDirectory(baseDir, moduleName, parentModule)
+    val newDir = createDirectory(baseDir, moduleName, parentModule, isInternal)
 
-    createPackage(newDir, moduleName)
+    createPackage(newDir, moduleName, moduleType == "feature")
 
     updateSettingGradleFile(baseDir, moduleName, parentModule)
 

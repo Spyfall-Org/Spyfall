@@ -20,7 +20,7 @@ import spyfallx.ui.Spacing
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun RoleCard(

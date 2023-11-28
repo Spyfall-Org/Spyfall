@@ -27,7 +27,7 @@ import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Radii
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import com.dangerfield.libraries.ui.typography.FontFamilyToken
 import com.dangerfield.libraries.ui.typography.LineHeight
 import kotlin.math.roundToInt

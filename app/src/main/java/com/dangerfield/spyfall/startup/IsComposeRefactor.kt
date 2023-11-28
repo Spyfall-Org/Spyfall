@@ -6,13 +6,13 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class IsSpyfallV2 @Inject constructor(
+class IsComposeRefactor @Inject constructor(
     private val mapBasedAppConfigMap: AppConfigMap,
 ): Experiment<Boolean>() {
 
-    override val displayName: String = "Spyfall V2"
+    override val displayName: String = "Compose Refactor"
     override val description: String = "Changes will take effect on next app launch"
-    override val id: String = "isSpyfallV2"
+    override val id: String = "is_compose_refactor"
 
     override val control = false
     override val test =  true

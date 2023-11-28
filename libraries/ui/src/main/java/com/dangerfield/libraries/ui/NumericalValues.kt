@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min

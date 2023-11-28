@@ -1,6 +1,6 @@
-package spyfallx.ui.theme
+package com.dangerfield.libraries.ui.theme
 
-
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -34,7 +34,7 @@ object SpyfallTheme {
 @Composable
 fun SpyfallTheme(
     accentColor: ColorPrimitive = ColorPrimitive.CherryPop700,
-    isDarkMode: Boolean = false,
+    isDarkMode: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (isDarkMode) {

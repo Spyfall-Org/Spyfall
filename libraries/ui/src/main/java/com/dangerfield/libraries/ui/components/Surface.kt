@@ -28,7 +28,7 @@ import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.ProvideContentColor
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 @NonRestartableComposable

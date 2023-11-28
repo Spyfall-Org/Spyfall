@@ -7,7 +7,7 @@ import spyfallx.ui.Spacing
 import spyfallx.ui.StandardBorderWidth
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement

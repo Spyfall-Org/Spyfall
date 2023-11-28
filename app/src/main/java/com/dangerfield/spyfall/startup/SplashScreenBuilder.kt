@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import spyfallx.core.Try
 import timber.log.Timber
 
 class SplashScreenBuilder(private val activity: Activity) {
@@ -45,7 +46,7 @@ class SplashScreenBuilder(private val activity: Activity) {
                     delay(500)
                     shouldShowLoading = showLoadingCondition()
                     isSplashScreenUp = keepOnScreenCondition()
-                    if (!shouldShowLoading) {
+                    if (!showLoadingCondition()) {
                         splashScreenViewProvider.removeView(loadingView)
                     }
                 }
@@ -64,7 +65,7 @@ class SplashScreenBuilder(private val activity: Activity) {
     }
 
     @Suppress("MagicNumber")
-    private fun SplashScreenViewProvider.addLoadingIndicator(): View? {
+    private fun SplashScreenViewProvider.addLoadingIndicator(): View? = Try {
         val viewGroup = this.view as? ViewGroup ?: return null
         val iconView = this.iconView
 
@@ -89,6 +90,6 @@ class SplashScreenBuilder(private val activity: Activity) {
         progressBar.z = 10f
 
         viewGroup.addView(progressBar)
-        return progressBar
-    }
+        progressBar
+    }.getOrNull()
 }

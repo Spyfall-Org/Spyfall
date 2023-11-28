@@ -38,7 +38,7 @@ import spyfallx.ui.Radii
 import spyfallx.ui.Radius
 import spyfallx.ui.StandardBorderWidth
 import spyfallx.ui.inset
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import spyfallx.ui.thenIf
 import spyfallx.ui.thenIfNotNull
 import androidx.compose.ui.graphics.Color as ComposeColor

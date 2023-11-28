@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.PreviewContent
@@ -13,7 +14,8 @@ import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import spyfallx.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.spyfall.libraries.resources.R
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun SettingsScreen(
@@ -61,7 +63,7 @@ fun SettingsScreen(
             }
 
             Text(
-                text = "Spyfall Version: $versionName",
+                text = stringResource(id = R.string.app_name)+ " Version: $versionName",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = Spacing.S1000),

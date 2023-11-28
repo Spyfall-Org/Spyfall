@@ -14,7 +14,7 @@ import spyfallx.ui.Spacing
 import spyfallx.ui.asSp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import kotlin.math.roundToInt
 import kotlin.reflect.KProperty0
 

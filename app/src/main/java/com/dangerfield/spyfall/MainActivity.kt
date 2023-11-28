@@ -8,23 +8,19 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation.findNavController
-import com.dangerfield.libraries.config.internal.AppConfigRepository
-import com.dangerfield.libraries.coreflowroutines.collect
 import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.collectWhileStarted
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
-import com.dangerfield.spyfall.startup.IsSpyfallV2
+import com.dangerfield.spyfall.startup.IsComposeRefactor
 import com.dangerfield.spyfall.startup.MainActivityViewModel
 import com.dangerfield.spyfall.startup.MainActivityViewModel.State.Error
 import com.dangerfield.spyfall.startup.MainActivityViewModel.State.Loaded
 import com.dangerfield.spyfall.startup.MainActivityViewModel.State.Loading
 import com.dangerfield.spyfall.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import spyfallx.core.doNothing
+import spyfallx.ui.color.AccentColor
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,7 +32,7 @@ class MainActivity : ThemeChangeableActivity() {
     lateinit var navBuilderRegistry: NavBuilderRegistry
 
     @Inject
-    lateinit var isSpyfallV2: IsSpyfallV2
+    lateinit var isSpyfallV2: IsComposeRefactor
 
     private var hasCreated: Boolean = false
 
@@ -96,7 +92,8 @@ class MainActivity : ThemeChangeableActivity() {
             SpyfallApp(
                 navBuilderRegistry = navBuilderRegistry,
                 isUpdateRequired = isUpdateRequired,
-                hadErrorLoadingApp = hadErrorLoadingApp
+                hadErrorLoadingApp = hadErrorLoadingApp,
+                accentColor = AccentColor.entries.random()
             )
         }
     }

@@ -14,7 +14,7 @@ import com.dangerfield.libraries.ui.icon.Icon
 import com.dangerfield.libraries.ui.icon.IconSize
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.icon.SpyfallIcon.ChevronRight
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun QANavigationItem(

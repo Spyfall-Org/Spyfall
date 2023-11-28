@@ -26,7 +26,7 @@ import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.background
 import spyfallx.ui.color.border
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import spyfallx.ui.thenIf
 
 @Composable

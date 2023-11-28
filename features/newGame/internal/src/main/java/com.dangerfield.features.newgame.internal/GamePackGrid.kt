@@ -37,7 +37,7 @@ import spyfallx.ui.color.background
 import spyfallx.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.elevation
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 private fun GamePackItem(

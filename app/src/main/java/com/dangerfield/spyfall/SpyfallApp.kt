@@ -15,13 +15,14 @@ import com.dangerfield.features.blockingerror.blockingErrorBaseRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
-import com.dangerfield.libraries.ui.color.ColorPrimitive
-import spyfallx.ui.theme.SpyfallTheme
+import spyfallx.ui.color.AccentColor
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Suppress("MagicNumber")
 @Composable
 fun SpyfallApp(
     isUpdateRequired: Boolean,
+    accentColor: AccentColor,
     hadErrorLoadingApp: Boolean,
     navBuilderRegistry: NavBuilderRegistry
 ) {
@@ -34,7 +35,7 @@ fun SpyfallApp(
 
     SpyfallTheme(
         isDarkMode = isSystemInDarkTheme(),
-        accentColor = ColorPrimitive.CherryPop700
+        accentColor = accentColor.colorPrimitive
     ) {
         NavHost(
             navController = navController,

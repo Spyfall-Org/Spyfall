@@ -27,7 +27,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.background
 import spyfallx.ui.color.takeOrElse
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 
 @Immutable

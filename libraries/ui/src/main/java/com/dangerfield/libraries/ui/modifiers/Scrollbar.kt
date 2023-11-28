@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 fun Modifier.drawVerticalScrollbar(
     state: ScrollState,

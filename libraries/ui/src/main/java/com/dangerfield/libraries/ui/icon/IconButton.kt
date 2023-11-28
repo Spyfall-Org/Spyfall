@@ -28,7 +28,7 @@ import spyfallx.ui.Spacing
 import spyfallx.ui.color.ColorToken
 import spyfallx.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @NonRestartableComposable
 @Composable

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.ui.components.Divider
 import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.Spacing
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun QaSection(

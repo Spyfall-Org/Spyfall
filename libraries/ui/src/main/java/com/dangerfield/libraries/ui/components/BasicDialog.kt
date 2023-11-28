@@ -16,7 +16,7 @@ import com.dangerfield.libraries.ui.modifiers.drawVerticalScrollbar
 import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun BasicDialog(

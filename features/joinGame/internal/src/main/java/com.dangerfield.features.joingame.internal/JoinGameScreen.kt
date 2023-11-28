@@ -1,6 +1,5 @@
 package com.dangerfield.features.joingame.internal
 
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +35,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
 import spyfallx.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun JoinGameScreen(

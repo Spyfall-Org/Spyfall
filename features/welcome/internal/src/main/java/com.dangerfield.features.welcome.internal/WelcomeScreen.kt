@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,7 +26,8 @@ import com.dangerfield.libraries.ui.icon.IconButton.Size.Medium
 import spyfallx.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.spyfall.libraries.resources.R
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 @Suppress("MagicNumber")
@@ -83,8 +85,8 @@ private fun WelcomeScreenContent(
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Spyfall",
-                typographyToken = SpyfallTheme.typography.Display.D1400,
+                text = stringResource(id = R.string.app_name),
+                typographyToken = SpyfallTheme.typography.Display.D1200,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )

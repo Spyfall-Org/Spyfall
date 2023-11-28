@@ -27,7 +27,7 @@ import com.dangerfield.libraries.ui.color.designSystemName
 import com.dangerfield.libraries.ui.color.toHexString
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.PreviewContent
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import spyfallx.ui.thenIf
 import spyfallx.ui.typography.Typography
 import kotlin.reflect.KProperty1

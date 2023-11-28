@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.background
-import spyfallx.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 
 @Immutable
