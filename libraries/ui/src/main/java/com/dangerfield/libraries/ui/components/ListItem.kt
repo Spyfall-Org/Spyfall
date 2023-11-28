@@ -1,12 +1,15 @@
 package com.dangerfield.libraries.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +42,7 @@ fun ListItem(
             it()
             Spacer(modifier = Modifier.width(Spacing.S500))
         }
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             headlineContent()
             ProvideTextConfig(
                 typographyToken = SpyfallTheme.typography.Body.B600
@@ -47,8 +50,12 @@ fun ListItem(
                 supportingContent?.let { it() }
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
-        trailingContent?.let { it() }
+        Spacer(modifier = Modifier.width(Spacing.S500))
+        trailingContent?.let {
+            Box {
+                it()
+            }
+        }
     }
 }
 

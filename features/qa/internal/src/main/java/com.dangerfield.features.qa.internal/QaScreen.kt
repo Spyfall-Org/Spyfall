@@ -30,7 +30,7 @@ fun QaScreen(
     Screen(
         modifier = modifier,
         header = {
-            Header(title = "QA")
+            Header(title = "QA Menu")
         }
     ) {
         Column(
@@ -69,7 +69,7 @@ private fun ConfigurableValuesList(configuredValues: List<DisplayableConfigValue
                         headlineContent = { Text(text = item.name) },
                         supportingText = {
                             item.description?.let { description ->
-                                Text(text = "$description")
+                                Text(text = description)
                             }
                         },
                     )
@@ -80,7 +80,7 @@ private fun ConfigurableValuesList(configuredValues: List<DisplayableConfigValue
                         headlineContent = { Text(text = item.name) },
                         supportingText = {
                             item.description?.let { description ->
-                                Text(text = "$description")
+                                Text(text = description)
                             }
                         },
                         trailingContent = {
@@ -111,7 +111,7 @@ private fun ExperimentsList(
                         headlineContent = { Text(text = item.name) },
                         supportingText = {
                             item.description?.let { description ->
-                                Text(text = "$description")
+                                Text(text = description)
                             }
                         },
                         isDebug = item.isDebugOnly
@@ -123,7 +123,7 @@ private fun ExperimentsList(
                         headlineContent = { Text(text = item.name) },
                         supportingText = {
                             item.description?.let { description ->
-                                Text(text = "$description")
+                                Text(text = description)
                             }
                         },
                         trailingContent = {

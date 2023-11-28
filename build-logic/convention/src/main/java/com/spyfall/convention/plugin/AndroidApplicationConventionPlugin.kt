@@ -5,16 +5,15 @@ import com.spyfall.convention.extension.SpyfallFeatureExtension
 import com.spyfall.convention.util.BuildEnvironment
 import com.spyfall.convention.util.SharedConstants
 import com.spyfall.convention.util.buildConfigField
+import com.spyfall.convention.util.checkForAppModuleSecretFiles
 import com.spyfall.convention.util.configureGitHooksCheck
 import com.spyfall.convention.util.configureKotlinAndroid
-import com.spyfall.convention.util.checkForAppModuleSecretFiles
 import com.spyfall.convention.util.getPackageName
 import com.spyfall.convention.util.getVersionCode
 import com.spyfall.convention.util.getVersionName
 import com.spyfall.convention.util.libs
-import com.spyfall.convention.util.loadAppProperty
 import com.spyfall.convention.util.loadGradleProperty
-import com.spyfall.convention.util.printDebugSigningWarningIfNeeded
+import com.spyfall.convention.util.printDebugSigningWarning
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -44,24 +43,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     buildConfigField("VERSION_NAME", versionName)
                 }
 
-                project.afterEvaluate {
-                    tasks.getByName("assembleRelease") {
-                        doFirst { printDebugSigningWarningIfNeeded() }
-                        doLast { printDebugSigningWarningIfNeeded() }
-                    }
-
-                    tasks.getByName("bundleRelease") {
-                        doFirst { printDebugSigningWarningIfNeeded() }
-                        doLast { printDebugSigningWarningIfNeeded() }
-                    }
-                }
-
                 buildTypes.getByName("debug").apply {
                     applicationIdSuffix = ".debug"
                 }
 
                 buildTypes.forEach {
-
                     val isLocalReleaseBuild = !it.isDebuggable && !BuildEnvironment.isCIBuild
                     val releaseDebugSigningEnabled =
                         loadGradleProperty("com.spyfall.releaseDebugSigningEnabled").toBoolean()

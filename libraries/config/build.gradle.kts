@@ -5,6 +5,7 @@ plugins {
 spyfall {
     flowroutines()
     daggerHilt()
+    moshi()
 }
 
 android {
@@ -13,4 +14,5 @@ android {
 
 dependencies {
     implementation(projects.libraries.common)
+    implementation(libs.moshi)
 }

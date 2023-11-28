@@ -82,7 +82,7 @@ class FirestoreGameDataSource @Inject constructor(
         const val USERNAME_FIELD_KEY = "userName"
         const val ROLE_FIELD_KEY = "role"
         const val IS_SPY_FIELD_KEY = "isSpy"
-        const val USER_ID_FIELD_KEY = "isSpy"
+        const val USER_ID_FIELD_KEY = "id"
         const val VERSION_FIELD_KEY = "version"
     }
 }

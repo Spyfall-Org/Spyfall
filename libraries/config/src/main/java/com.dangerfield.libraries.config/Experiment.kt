@@ -3,6 +3,15 @@ package com.dangerfield.libraries.config
 import se.ansman.dagger.auto.BindGenericAs
 import java.util.Locale
 
+/**
+ * Represents an experiment being conducted.
+ *
+ * Experiments differ from [ConfiguredValue]s in that they are not simple key value mappings but
+ * rather include a choice between a control and test experience.
+ *
+ * In order for an [Experiment] to be view in the QA screen,
+ * it must be bound into a set using the [@AutoBindIntoSet]
+ */
 @BindGenericAs.Default(BindGenericAs.Wildcard)
 abstract class Experiment<out T : Any> {
     /**

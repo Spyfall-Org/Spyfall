@@ -11,11 +11,12 @@ class IsSpyfallV2 @Inject constructor(
 ): Experiment<Boolean>() {
 
     override val displayName: String = "Spyfall V2"
+    override val description: String = "Changes will take effect on next app launch"
     override val id: String = "isSpyfallV2"
 
     override val control = false
     override val test =  true
-    override val isDebugOnly = true
+    override val isDebugOnly = false
     override val default: Boolean = test
 
     override fun resolveValue(): Boolean = mapBasedAppConfigMap.experiment(this)

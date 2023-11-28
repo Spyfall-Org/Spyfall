@@ -4,11 +4,13 @@ package com.spyfall.convention.extension
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestExtension
+import com.google.devtools.ksp.gradle.KspExtension
 import com.spyfall.convention.util.SharedConstants
 import com.spyfall.convention.util.configureAndroidCompose
 import com.spyfall.convention.util.getModule
 import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.optInKotlinMarkers
+import dev.zacsweers.moshix.ir.gradle.MoshiPluginExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
@@ -85,6 +87,21 @@ abstract class SpyfallFeatureExtension {
 
     fun kapt(configure: KaptExtension.() -> Unit = {}) {
         project.pluginManager.apply("kotlin-kapt")
+        project.extensions.configure(configure)
+    }
+
+    open fun ksp(configure: KspExtension.() -> Unit = {}) {
+        project.pluginManager.apply("com.google.devtools.ksp")
+        project.extensions.configure(configure)
+    }
+
+    open fun moshi(configure: MoshiPluginExtension.() -> Unit = {}) {
+        project.plugins.apply("dev.zacsweers.moshix")
+        // Needed for MoshiX
+      //  ksp()
+        project.dependencies {
+            "implementation"(project.libs.moshi)
+        }
         project.extensions.configure(configure)
     }
 

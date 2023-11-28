@@ -1,4 +1,5 @@
 @file:Suppress("MagicNumber")
+
 package com.dangerfield.features.newgame.internal
 
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dangerfield.spyfall.features.newgame.internal.R
 import spyfallx.ui.Elevation
 import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.ThemePreviews
 import spyfallx.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.AccentColor
@@ -39,14 +41,13 @@ import spyfallx.ui.theme.SpyfallTheme
 
 @Composable
 private fun GamePackItem(
+    modifier: Modifier = Modifier,
     number: String,
     type: String,
+    isSelected: Boolean = false,
     onClick: (isSelected: Boolean) -> Unit,
     colorPrimitive: ColorPrimitive,
-    modifier: Modifier = Modifier
 ) {
-    var isSelected by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier
             .elevation(
@@ -58,8 +59,7 @@ private fun GamePackItem(
             .fillMaxWidth()
             .height(100.dp)
             .clickable {
-                isSelected = !isSelected
-                onClick(isSelected)
+                onClick(!isSelected)
             }
     ) {
 
@@ -93,14 +93,13 @@ private fun GamePackItem(
                     .weight(0.4f)
                     .fillMaxWidth()
                     .background(SpyfallTheme.colorScheme.surfaceSecondary)
-                    .padding(horizontal = Spacing.S300)
-                ,
+                    .padding(horizontal = Spacing.S300),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = type,
-                    typographyToken = SpyfallTheme.typography.Heading.H400,
+                    typographyToken = SpyfallTheme.typography.Heading.H500,
                     textAlign = TextAlign.Center,
                     color = SpyfallTheme.colorScheme.text,
                     maxLines = 2
@@ -110,9 +109,11 @@ private fun GamePackItem(
 
         if (isSelected) {
             Box {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(ColorPrimitive.Black900.color.copy(alpha = 0.8f)))
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(ColorPrimitive.Black900.color.copy(alpha = 0.8f))
+                )
                 LottieAnimation(
                     modifier = Modifier.fillMaxSize(),
                     composition = composition,
@@ -125,7 +126,10 @@ private fun GamePackItem(
 }
 
 @Composable
-fun GamePackGrid(gamePacks: List<GamePack>) {
+fun GamePackGrid(
+    gamePacks: List<DisplayPack>,
+    onPackSelected: (DisplayPack, Boolean) -> Unit
+) {
     NonLazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
         columns = 3,
@@ -138,7 +142,10 @@ fun GamePackGrid(gamePacks: List<GamePack>) {
                     .let { it[index % it.size] }.colorPrimitive,
                 type = gamePack.type,
                 number = gamePack.number,
-                onClick = {},
+                isSelected = gamePack.isSelected,
+                onClick = {
+                    onPackSelected(gamePack, it)
+                }
             )
         }
     )
@@ -158,46 +165,59 @@ private fun PreviewGamePackItem() {
 }
 
 @Composable
-@Preview
-private fun PreviewGamePackGridDark() {
-    PreviewContent(showBackground = true, isDarkMode = true) {
-        GamePackGrid(
-            gamePacks = listOf(
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-            )
-        )
-    }
-}
-
-@Composable
-@Preview
+@ThemePreviews
 private fun PreviewGamePackGrid() {
-    PreviewContent(showBackground = true) {
-        GamePackGrid(
-            gamePacks = listOf(
-                GamePack(number = "1", type = "Standard Pack But longer"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack"),
-                GamePack(number = "1", type = "Standard Pack")
+    PreviewContent {
+        var packs by remember {
+            mutableStateOf(
+                listOf(
+                    DisplayPack(
+                        type = "Standard",
+                        number = "1",
+                        key = "789",
+                        isSelected = false
+                    ),
+                    DisplayPack(
+                        type = "Standard",
+                        number = "2",
+                        key = "456",
+                        isSelected = false
+                    ),
+                    DisplayPack(
+                        type = "Special",
+                        number = "1",
+                        key = "123",
+                        isSelected = false
+                    ),
+
+                    DisplayPack(
+                        type = "Special",
+                        number = "1",
+                        key = "1123",
+                        isSelected = false
+                    ),
+
+                    DisplayPack(
+                        type = "Special",
+                        number = "1",
+                        key = "3455",
+                        isSelected = false
+                    ),
+                )
             )
+        }
+
+        GamePackGrid(
+            gamePacks = packs,
+            onPackSelected = { pack, isSelected ->
+                packs = packs.map {
+                    if(it.key == pack.key) {
+                        it.copy(isSelected = isSelected)
+                    } else {
+                        it
+                    }
+                }
+            }
         )
     }
 }

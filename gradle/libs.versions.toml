@@ -1,7 +1,7 @@
 [versions]
 androidxActivity = "1.8.0"
-androidxComposeBom = "2023.10.00"
-androidxComposeCompiler = "1.5.3" # used in [AndroidComposeExt]
+androidxComposeBom = "2023.10.01"
+androidxComposeCompiler = "1.5.4" # used in [AndroidComposeExt]
 androidxCoreSplashscreen = "1.0.1"
 androidDesugarJdkLibs = "2.0.3"
 androidxNavigation = "2.7.4"
@@ -18,9 +18,11 @@ firebase = "32.6.0"
 gradlePlugin = "1.6.0-1.0.0-beta10"
 hilt = "2.48.1"
 hilt-navigation = "1.1.0"
-kotlin = "1.9.10"
-kotlinxSerializationJson = "1.5.1"
+kotlin = "1.9.20"
+ksp = "1.9.20-1.0.14" # This must match the Kotlin version above
+kotlinxSerializationJson = "1.6.0"
 lottie = "6.1.0"
+moshiXGradlePlugin = "0.25.1"
 robolectric = "4.10.3"
 roborazzi = "1.5.0-alpha-2"
 timber = "5.0.1"
@@ -37,7 +39,7 @@ material = "1.9.0"
 browser = "1.6.0"
 customviewPoolingcontainer = "1.0.0"
 uiTooling = "1.5.3"
-uiToolingPreviewAndroid = "1.5.3"
+uiToolingPreviewAndroid = "1.5.4"
 navigationRuntimeKtx = "2.7.4"
 firebaseFirestoreKtx = "24.9.1"
 core = "1.12.0"
@@ -128,6 +130,7 @@ mockito-kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 # code gen / serialization
 kotlinpoet = "com.squareup:kotlinpoet:1.14.2"
 moshi = "com.squareup.moshi:moshi:1.15.0"
+moshix-gradlePlugin = { module = "dev.zacsweers.moshix:moshi-gradle-plugin", version.ref = "moshiXGradlePlugin" }
 
 # Logging
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
@@ -165,6 +168,11 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 #UI
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
+
+# KSP
+ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+
 
 # Lint
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }

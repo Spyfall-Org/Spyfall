@@ -8,7 +8,11 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation.findNavController
+import com.dangerfield.libraries.config.internal.AppConfigRepository
+import com.dangerfield.libraries.coreflowroutines.collect
 import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.collectWhileStarted
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
@@ -19,6 +23,7 @@ import com.dangerfield.spyfall.startup.MainActivityViewModel.State.Loaded
 import com.dangerfield.spyfall.startup.MainActivityViewModel.State.Loading
 import com.dangerfield.spyfall.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import spyfallx.core.doNothing
 import javax.inject.Inject
 
@@ -32,9 +37,6 @@ class MainActivity : ThemeChangeableActivity() {
 
     @Inject
     lateinit var isSpyfallV2: IsSpyfallV2
-
-    // WARNING: using this before the state is loaded will cause a blocking get of the app config
-    private val isLegacyBuild: Boolean get() = !isSpyfallV2()
 
     private var hasCreated: Boolean = false
 
@@ -52,15 +54,18 @@ class MainActivity : ThemeChangeableActivity() {
             when (it) {
                 is Loading -> doNothing()
                 is Error -> create(isUpdateRequired = false, hadErrorLoadingApp = true)
-                is Loaded -> create(isUpdateRequired = it.isUpdateRequired, hadErrorLoadingApp = false)
+                is Loaded -> create(
+                    isUpdateRequired = it.isUpdateRequired,
+                    hadErrorLoadingApp = false
+                )
             }
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean = if (isLegacyBuild) {
-        findNavController(this, R.id.nav_host_fragment).navigateUp()
-    } else {
+    override fun onSupportNavigateUp(): Boolean = if (isSpyfallV2()) {
         super.onSupportNavigateUp()
+    } else {
+        findNavController(this, R.id.nav_host_fragment).navigateUp()
     }
 
     private fun create(
@@ -70,10 +75,10 @@ class MainActivity : ThemeChangeableActivity() {
         if (hasCreated) return
         hasCreated = true
 
-        if (isLegacyBuild) {
-            legacyOnCreate(isUpdateRequired, hadErrorLoadingApp)
-        } else {
+        if (isSpyfallV2()) {
             refactorOnCreate(isUpdateRequired, hadErrorLoadingApp)
+        } else {
+            legacyOnCreate(isUpdateRequired, hadErrorLoadingApp)
         }
     }
 

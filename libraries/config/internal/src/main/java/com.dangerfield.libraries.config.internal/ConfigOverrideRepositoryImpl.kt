@@ -1,20 +1,40 @@
 package com.dangerfield.libraries.config.internal
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.config.ConfigOverride
 import com.dangerfield.libraries.config.ConfigOverrideRepository
+import com.dangerfield.libraries.coreflowroutines.ApplicationScope
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import se.ansman.dagger.auto.AutoBind
+import spyfallx.core.Try
+import spyfallx.core.getOrElse
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @AutoBind
 @Singleton
-class ConfigOverrideRepositoryImpl @Inject constructor() :
-    ConfigOverrideRepository {
-    private val overridesFlow = MutableStateFlow(emptySet<ConfigOverride<Any>>())
+class ConfigOverrideRepositoryImpl @Inject constructor(
+    private val dataStore: DataStore<Preferences>,
+    private val moshi: Moshi,
+    @ApplicationScope private val applicationScope: CoroutineScope
+) : ConfigOverrideRepository {
+
+    private val overridesFlow = dataStore.data.map { preferences ->
+        val jsonString = preferences[ConfigOverrideKey]
+        deserializeConfigOverrides(jsonString).getOrElse { emptySet() }
+    }.stateIn(
+        scope = applicationScope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptySet()
+    )
 
     override fun getOverrides(): List<ConfigOverride<Any>> = overridesFlow.value.toList()
 
@@ -22,9 +42,35 @@ class ConfigOverrideRepositoryImpl @Inject constructor() :
         it.toList()
     }
 
-    override fun addOverride(override: ConfigOverride<Any>) {
-        overridesFlow.update {
-            it + override
+    override suspend fun addOverride(override: ConfigOverride<Any>) {
+        dataStore.updateData { preferences ->
+            val currentJson = preferences[ConfigOverrideKey] ?: "[]"
+            val currentOverrides = deserializeConfigOverrides(currentJson).getOrElse { emptyList() }
+
+            val updatedOverrides = currentOverrides + override
+            val updatedJson = serializeConfigOverrides(updatedOverrides)
+
+            preferences.toMutablePreferences().apply {
+                set(ConfigOverrideKey, updatedJson)
+            }
         }
+    }
+
+    private fun deserializeConfigOverrides(json: String?): Try<List<ConfigOverride<Any>>> = Try {
+        val elementType = Types.newParameterizedType(ConfigOverride::class.java, Any::class.java)
+        val listType = Types.newParameterizedType(List::class.java, elementType)
+        val jsonAdapter = moshi.adapter<List<ConfigOverride<Any>>>(listType)
+        jsonAdapter.fromJson(json!!)!!
+    }
+
+    private fun serializeConfigOverrides(overrides: List<ConfigOverride<Any>>): String {
+        val elementType = Types.newParameterizedType(ConfigOverride::class.java, Any::class.java)
+        val listType = Types.newParameterizedType(List::class.java, elementType)
+        val jsonAdapter = moshi.adapter<List<ConfigOverride<Any>>>(listType)
+        return jsonAdapter.toJson(overrides)
+    }
+
+    companion object {
+        private val ConfigOverrideKey = stringPreferencesKey("config_overrides")
     }
 }

@@ -1,11 +1,13 @@
 package com.dangerfield.libraries.game
 
+import spyfallx.core.Try
+
 interface LocationPackRepository {
-    fun getPacks(): List<Pack>
+    suspend fun getPacks(): Try<List<Pack>>
 
-    fun getPack(packName: String): Pack?
+    suspend fun getPack(packName: String): Try<Pack>
 
-    fun getLocations(packName: String): List<Location>?
+    suspend fun getLocations(packName: String): Try<List<Location>>
 
-    fun getRoles(locationName: String): List<String>?
+    suspend fun getRoles(locationName: String): Try<List<String>>
 }

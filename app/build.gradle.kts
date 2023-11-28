@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.Packaging
 import com.spyfall.convention.util.getModule
 
 plugins {
@@ -36,10 +37,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    
-    packagingOptions {
+
+    packaging {
         resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
     }
+
     namespace = "com.dangerfield.spyfall"
 }
 
@@ -53,7 +55,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
-    implementation(project(":libraries:config"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso.core)
@@ -100,6 +101,7 @@ dependencies {
     implementation(projects.features.blockingError.internal)
     implementation(projects.features.newGame)
     implementation(projects.features.newGame.internal)
+    implementation(projects.libraries.config)
     implementation(projects.libraries.config.internal)
     implementation(projects.libraries.logging)
     implementation(projects.libraries.common)

@@ -40,13 +40,14 @@ class QaViewModel @Inject constructor(
     private suspend fun FlowCollector<State>.handleAction(action: Action) {
         when (action) {
             is Action.AddOverride -> {
+                applyOverrideOptimistically(action)
+
                 configOverrideRepository.addOverride(
                     ConfigOverride(
                         path = action.path,
                         value = action.value
                     )
                 )
-                applyOverrideOptimistically(action)
             }
         }
     }
@@ -65,6 +66,7 @@ class QaViewModel @Inject constructor(
                 },
                 experiments = it.experiments.map { experiment ->
                     if (experiment.path == action.path) {
+
                         experiment.copy(value = action.value)
                     } else {
                         experiment

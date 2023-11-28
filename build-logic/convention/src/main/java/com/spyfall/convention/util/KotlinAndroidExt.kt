@@ -90,7 +90,7 @@ internal fun Project.configureKotlinJvm() {
     configureKotlin()
 }
 
-fun Project.printDebugSigningWarningIfNeeded() {
+fun Project.printDebugSigningWarning() {
     val isCi = BuildEnvironment.isCIBuild
     val isLocalReleaseDebugSigningEnabled =
         loadGradleProperty("com.spyfall.releaseDebugSigningEnabled").toBoolean()

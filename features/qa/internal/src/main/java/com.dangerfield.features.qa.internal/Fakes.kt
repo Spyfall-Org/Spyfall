@@ -1,8 +1,5 @@
 package com.dangerfield.features.qa.internal
 
-import com.dangerfield.libraries.config.ConfiguredValue
-import com.dangerfield.libraries.config.Experiment
-
 object Fakes {
     val displayableConfigValues = listOf(
         QaViewModel.DisplayableConfigValue(
@@ -14,7 +11,7 @@ object Fakes {
         QaViewModel.DisplayableConfigValue(
             name = "Some Other Name",
             path = "some_path",
-            value = false,
+            value = true,
             description = null
         ),
         QaViewModel.DisplayableConfigValue(
