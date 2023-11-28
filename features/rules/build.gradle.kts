@@ -4,13 +4,12 @@ plugins {
 
 spyfall {
     compose()
-    daggerHilt()
 }
+
 android {
-    namespace = "com.dangerfield.example"
+    namespace = "com.dangerfield.spyfall.features.rules"
 }
 dependencies {
-    implementation(projects.features.example)
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
 }

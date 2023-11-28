@@ -10,6 +10,7 @@ import java.util.regex.Pattern
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
+val yellow = "\u001b[33m"
 val reset = "\u001b[0m"
 
 fun printRed(text: String) {
@@ -18,6 +19,10 @@ fun printRed(text: String) {
 
 fun printGreen(text: String) {
     println(green + text + reset)
+}
+
+fun printYellow(text: String) {
+    println(yellow + text + reset)
 }
 
 @Suppress("ReturnCount")
@@ -49,16 +54,19 @@ fun main() {
         return
     }
 
-    val isManualInternal = fullModuleName.split(":").getOrNull(1) == "internal"
+    val isManualInternal = fullModuleName.split(":").last() == "internal"
 
-    generateModule(fullModuleName, moduleType, isInternal = isManualInternal)
+    val featureName = fullModuleName.split(":").last()
+
+    generateModule(fullModuleName, moduleType, isInternal = isManualInternal, featureName)
+
     updateAppGradleFile(moduleType = moduleType, isInternal = isManualInternal, moduleName = fullModuleName)
 
     val isSubModule = fullModuleName.contains(":")
 
     if (!isSubModule && !isManualInternal) {
         updateAppGradleFile(moduleType = moduleType, isInternal = true, moduleName = fullModuleName)
-        generateModule("$fullModuleName:internal", moduleType, isInternal = true)
+        generateModule("$fullModuleName:internal", moduleType, isInternal = true, featureName)
     }
 }
 
@@ -82,7 +90,7 @@ fun updateSettingGradleFile(baseDir: String, moduleName: String, parentModule: S
     settingsFile.writeText(settingsLines.joinToString("\n"))
 }
 
-fun createPackage(directory: String, moduleName: String, isFeature: Boolean, isInternal: Boolean) {
+fun createPackage(directory: String, featureName: String, isFeature: Boolean, isInternal: Boolean) {
     val packageString = directory.replace("/", ".").lowercase()
     val packageName = "com.dangerfield.$packageString"
 
@@ -98,31 +106,33 @@ fun createPackage(directory: String, moduleName: String, isFeature: Boolean, isI
     if (!isFeature || isInternal ) {
         navigationFile.delete()
     } else {
-        renameExampleFile(navigationFile, moduleName)
+        renameExampleFile(navigationFile, featureName)
         navigationFile.renameTo(File("$mainDir/Navigation.kt"))
     }
 
     if (isInternal) {
-        renameExampleFile(navGraphBuilderFile, moduleName)
-        navigationFile.renameTo(File("$mainDir/ModuleNavGraphBuilder.kt"))
+        renameExampleFile(navGraphBuilderFile, featureName)
+        navGraphBuilderFile.renameTo(File("$mainDir/ModuleNavGraphBuilder.kt"))
     } else {
         navGraphBuilderFile.delete()
     }
 }
 
 fun renameExampleFile(file: File, moduleName: String) {
+    val capitalFeatureName = moduleName.replaceFirstChar { char ->
+        if (char.isLowerCase()) {
+            char.uppercase(Locale.getDefault())
+        } else {
+            char.toString()
+        }
+    }
     val lines = file.readLines()
     val newLines = lines.map {
-        it.replace("example", moduleName)
-        val capitalFeatureName = it.replaceFirstChar { char ->
-            if (char.isLowerCase()) {
-                char.titlecase(Locale.getDefault())
-            } else {
-                char.toString()
-            }
-        }
-        it.replace("Example", capitalFeatureName)
+        it
+            .replace("example", moduleName)
+            .replace("Example", capitalFeatureName)
     }
+
     file.writeText(newLines.joinToString("\n"))
 }
 
@@ -261,7 +271,7 @@ fun checkForHelpCall(): Boolean {
     return isHelpCall
 }
 
-fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boolean) {
+fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boolean, featureName: String) {
     val (parentModule, moduleName) = moduleNameLine.split(":").let {
         if (it.size > 1) Pair(it[0], it[1]) else Pair(null, it[0])
     }
@@ -270,7 +280,7 @@ fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boole
 
     val newDir = createDirectory(baseDir, moduleName, parentModule)
 
-    createPackage(newDir, moduleName, moduleType == "feature", isInternal)
+    createPackage(newDir, featureName, moduleType == "feature", isInternal)
 
     updateSettingGradleFile(baseDir, moduleName, parentModule)
 
@@ -285,7 +295,18 @@ fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boole
         """
        Success! 
        The $moduleType module "$moduleName" was created. 
-       Please make sure to update the readme.
+        """.trimIndent()
+    )
+
+    printRed(
+        """
+           Please make sure to update the readme.
+        """.trimIndent()
+    )
+
+    printYellow(
+        """
+            You will need to sync with gradle files for the new module to be recognized.
         """.trimIndent()
     )
 }

@@ -116,6 +116,8 @@ dependencies {
     implementation(projects.features.qa.internal)
 	implementation(projects.libraries.resources)
 	implementation(projects.libraries.resources.internal)
+	implementation(projects.features.rules)
+	implementation(projects.features.rules.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations

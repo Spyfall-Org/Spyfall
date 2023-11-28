@@ -7,10 +7,10 @@ spyfall {
     daggerHilt()
 }
 android {
-    namespace = "com.dangerfield.example"
+    namespace = "com.dangerfield.spyfall.features.rules.internal"
 }
 dependencies {
-    implementation(projects.features.example)
+    implementation(projects.features.rules)
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
 }
