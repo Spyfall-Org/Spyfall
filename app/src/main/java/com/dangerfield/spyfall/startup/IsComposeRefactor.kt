@@ -16,7 +16,7 @@ class IsComposeRefactor @Inject constructor(
 
     override val control = false
     override val test =  true
-    override val isDebugOnly = false
+    override val isDebugOnly = true
     override val default: Boolean = test
 
     override fun resolveValue(): Boolean = mapBasedAppConfigMap.experiment(this)

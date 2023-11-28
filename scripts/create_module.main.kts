@@ -82,7 +82,7 @@ fun updateSettingGradleFile(baseDir: String, moduleName: String, parentModule: S
     settingsFile.writeText(settingsLines.joinToString("\n"))
 }
 
-fun createPackage(directory: String, moduleName: String, isFeature: Boolean) {
+fun createPackage(directory: String, moduleName: String, isFeature: Boolean, isInternal: Boolean) {
     val packageString = directory.replace("/", ".").lowercase()
     val packageName = "com.dangerfield.$packageString"
 
@@ -93,28 +93,40 @@ fun createPackage(directory: String, moduleName: String, isFeature: Boolean) {
     testDir.mkdirs()
 
     val navigationFile = File("$directory/src/main/Navigation.kt")
+    val navGraphBuilderFile = File("$directory/src/main/ModuleNavGraphBuilder.kt")
 
-    if (!isFeature) {
+    if (!isFeature || isInternal ) {
         navigationFile.delete()
     } else {
-        val lines = navigationFile.readLines()
-        val newLines = lines.map {
-            it.replace("example", moduleName )
-            val capitalFeatureName = it.replaceFirstChar { char ->
-                if (char.isLowerCase()) {
-                    char.titlecase(Locale.getDefault())
-                } else {
-                    char.toString()
-                }
-            }
-            it.replace("Example", capitalFeatureName)
-        }
-        navigationFile.writeText(newLines.joinToString("\n"))
+        renameExampleFile(navigationFile, moduleName)
         navigationFile.renameTo(File("$mainDir/Navigation.kt"))
+    }
+
+    if (isInternal) {
+        renameExampleFile(navGraphBuilderFile, moduleName)
+        navigationFile.renameTo(File("$mainDir/ModuleNavGraphBuilder.kt"))
+    } else {
+        navGraphBuilderFile.delete()
     }
 }
 
-fun createDirectory(baseDir: String, moduleName: String, parentModule: String?, isInternal: Boolean): String {
+fun renameExampleFile(file: File, moduleName: String) {
+    val lines = file.readLines()
+    val newLines = lines.map {
+        it.replace("example", moduleName)
+        val capitalFeatureName = it.replaceFirstChar { char ->
+            if (char.isLowerCase()) {
+                char.titlecase(Locale.getDefault())
+            } else {
+                char.toString()
+            }
+        }
+        it.replace("Example", capitalFeatureName)
+    }
+    file.writeText(newLines.joinToString("\n"))
+}
+
+fun createDirectory(baseDir: String, moduleName: String, parentModule: String?): String {
     val exampleDir = "scripts/exampleModule"
     val newDir = "$baseDir/${if (parentModule != null) "$parentModule/" else ""}$moduleName"
 
@@ -256,9 +268,9 @@ fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boole
 
     val baseDir = if (moduleType == "library") "libraries" else "features"
 
-    val newDir = createDirectory(baseDir, moduleName, parentModule, isInternal)
+    val newDir = createDirectory(baseDir, moduleName, parentModule)
 
-    createPackage(newDir, moduleName, moduleType == "feature")
+    createPackage(newDir, moduleName, moduleType == "feature", isInternal)
 
     updateSettingGradleFile(baseDir, moduleName, parentModule)
 
@@ -279,4 +291,3 @@ fun generateModule(moduleNameLine: String, moduleType: String, isInternal: Boole
 }
 
 main()
-
