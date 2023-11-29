@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
+//TODO document
 @Composable
 fun <T> ObserveWithLifecycle(flow: Flow<T>, onItem: (T) -> Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current

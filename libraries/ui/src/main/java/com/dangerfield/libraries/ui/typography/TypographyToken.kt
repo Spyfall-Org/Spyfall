@@ -1,5 +1,5 @@
 @file:Suppress("MagicNumber", "VariableNaming")
-package spyfallx.ui.typography
+package com.dangerfield.libraries.ui.typography
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -28,12 +28,11 @@ import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Radii
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import com.dangerfield.libraries.ui.typography.FontFamilyToken
-import com.dangerfield.libraries.ui.typography.LineHeight
+import spyfallx.ui.typography.FontSize
 import kotlin.math.roundToInt
 
 @Suppress("ComplexMethod")
-open class TypographyToken internal constructor(
+data class TypographyToken internal constructor(
     internal val fontFamily: FontFamilyToken,
     internal val fontWeight: FontWeight,
     internal val fontSize: TextUnit,
@@ -83,6 +82,17 @@ open class TypographyToken internal constructor(
             fontStyle = fontStyle,
             identifier = "${identifier}-bold"
         )
+
+    val SemiBold: TypographyToken
+        get() = TypographyToken(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+            lineBreak = lineBreak,
+            fontStyle = fontStyle,
+            identifier = "${identifier}-semibold"
+        )
 }
 
 class Typography {
@@ -91,7 +101,7 @@ class Typography {
     val Body = BodyTypography()
     val Label = LabelTypography()
 
-    val Default = Heading.H700
+    val Default = Heading.H800
 
     class DisplayTypography {
 
@@ -193,7 +203,7 @@ class Typography {
             fontFamily = FontFamilyToken.Poppins,
             fontWeight = FontWeight.Bold,
             fontSize = FontSize.S1000,
-            lineHeight = LineHeight.H1100,
+            lineHeight = LineHeight.H1000,
             lineBreak = LineBreak.Heading,
             identifier = "heading-1000"
         )

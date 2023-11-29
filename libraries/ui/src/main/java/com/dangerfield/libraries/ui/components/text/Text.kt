@@ -23,7 +23,7 @@ import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.LocalContentColor
 import spyfallx.ui.color.takeOrElse
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.ui.typography.TypographyToken
+import com.dangerfield.libraries.ui.typography.TypographyToken
 
 @NonRestartableComposable
 @Composable

@@ -1,6 +1,6 @@
 @file:Suppress("MagicNumber")
 
-package com.dangerfield.features.newgame.internal
+package com.dangerfield.features.newgame.internal.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
+import com.dangerfield.libraries.game.Pack
 import com.dangerfield.spyfall.features.newgame.internal.R
 import spyfallx.ui.Elevation
 import com.dangerfield.libraries.ui.PreviewContent
@@ -99,7 +101,7 @@ private fun GamePackItem(
             ) {
                 Text(
                     text = type,
-                    typographyToken = SpyfallTheme.typography.Heading.H500,
+                    typographyToken = SpyfallTheme.typography.Heading.H600,
                     textAlign = TextAlign.Center,
                     color = SpyfallTheme.colorScheme.text,
                     maxLines = 2
@@ -127,8 +129,8 @@ private fun GamePackItem(
 
 @Composable
 fun GamePackGrid(
-    gamePacks: List<DisplayPack>,
-    onPackSelected: (DisplayPack, Boolean) -> Unit
+    gamePacks: List<DisplayablePack>,
+    onPackSelected: (DisplayablePack, Boolean) -> Unit
 ) {
     NonLazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
@@ -171,37 +173,21 @@ private fun PreviewGamePackGrid() {
         var packs by remember {
             mutableStateOf(
                 listOf(
-                    DisplayPack(
-                        type = "Standard",
-                        number = "1",
-                        key = "789",
-                        isSelected = false
+                    DisplayablePack(
+                        isSelected = false,
+                        pack = Pack(name = "Special 1", locations = listOf())
                     ),
-                    DisplayPack(
-                        type = "Standard",
-                        number = "2",
-                        key = "456",
-                        isSelected = false
+                    DisplayablePack(
+                        isSelected = false,
+                        pack = Pack(name = "Special 2", locations = listOf())
                     ),
-                    DisplayPack(
-                        type = "Special",
-                        number = "1",
-                        key = "123",
-                        isSelected = false
+                    DisplayablePack(
+                        isSelected = false,
+                        pack = Pack(name = "Special 3", locations = listOf())
                     ),
-
-                    DisplayPack(
-                        type = "Special",
-                        number = "1",
-                        key = "1123",
-                        isSelected = false
-                    ),
-
-                    DisplayPack(
-                        type = "Special",
-                        number = "1",
-                        key = "3455",
-                        isSelected = false
+                    DisplayablePack(
+                        isSelected = false,
+                        pack = Pack(name = "Special 4", locations = listOf())
                     ),
                 )
             )
@@ -209,9 +195,9 @@ private fun PreviewGamePackGrid() {
 
         GamePackGrid(
             gamePacks = packs,
-            onPackSelected = { pack, isSelected ->
+            onPackSelected = { displayablePack, isSelected ->
                 packs = packs.map {
-                    if(it.key == pack.key) {
+                    if(it.pack == displayablePack.pack) {
                         it.copy(isSelected = isSelected)
                     } else {
                         it

@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class GameParser @Inject constructor() {
 
-    fun parseGame(map: Map<String, Any>): Try<Game> {
+    fun parseGame(accessCode: String, map: Map<String, Any>): Try<Game> {
         val version = (map[FirestoreGameDataSource.VERSION_FIELD_KEY] as? Number ?: 0).toInt()
 
         return if (version != CURRENT_GAME_MODEL_VERSION) {
@@ -30,7 +30,9 @@ class GameParser @Inject constructor() {
                     timeLimitMins = (map[FirestoreGameDataSource.TIME_LIMIT_MINS_FIELD_KEY] as Number).toInt(),
                     startedAt = map[FirestoreGameDataSource.STARTED_AT_FIELD_KEY] as Long,
                     locations = map[FirestoreGameDataSource.LOCATIONS_FIELD_KEY] as List<String>,
-                    version = version
+                    version = version,
+                    accessCode = accessCode,
+                    videoCallLink = map[FirestoreGameDataSource.VIDEO_CALL_LINK_FIELD_KEY] as? String?
                 )
             }
         }
@@ -45,6 +47,7 @@ fun PlayerMaps.toPlayers() = this.map {
         userName = it[FirestoreGameDataSource.USERNAME_FIELD_KEY] as String,
         role = it[FirestoreGameDataSource.ROLE_FIELD_KEY] as? String?,
         isSpy = it[FirestoreGameDataSource.IS_SPY_FIELD_KEY] as Boolean,
-        id = it[FirestoreGameDataSource.USER_ID_FIELD_KEY] as String
+        id = it[FirestoreGameDataSource.USER_ID_FIELD_KEY] as String,
+        isHost = it[FirestoreGameDataSource.IS_HOST_FIELD_KEY] as Boolean
     )
 }

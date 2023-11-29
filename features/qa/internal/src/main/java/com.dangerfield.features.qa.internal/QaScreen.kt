@@ -6,31 +6,32 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.qa.internal.QaViewModel.DisplayableConfigValue
 import com.dangerfield.features.qa.internal.QaViewModel.DisplayableExperiment
 import com.dangerfield.features.qa.internal.item.QASwitchItem
 import com.dangerfield.features.qa.internal.item.QaInfoItem
-import com.dangerfield.libraries.config.ConfiguredValue
-import com.dangerfield.libraries.config.Experiment
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.Spacing
-import spyfallx.ui.components.Screen
+import com.dangerfield.libraries.ui.components.Screen
 
 @Composable
 fun QaScreen(
     configuredValues: List<DisplayableConfigValue>,
     experiments: List<DisplayableExperiment>,
     modifier: Modifier = Modifier,
-    onExperimentOverride: (DisplayableExperiment, Any) -> Unit = {_,_ ->}
+    onExperimentOverride: (DisplayableExperiment, Any) -> Unit = {_,_ ->},
+    onNavigateBack: () -> Unit = {}
 ) {
     Screen(
         modifier = modifier,
         header = {
-            Header(title = "QA Menu")
+            Header(
+                title = "QA Menu",
+                onNavigateBack = onNavigateBack
+            )
         }
     ) {
         Column(

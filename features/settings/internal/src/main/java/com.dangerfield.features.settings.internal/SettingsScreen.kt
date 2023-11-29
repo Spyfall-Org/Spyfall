@@ -12,7 +12,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
-import spyfallx.ui.components.Screen
+import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.spyfall.libraries.resources.R
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
@@ -22,12 +22,16 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     versionName: String,
     isDebug: Boolean = false,
-    onQaOptionClicked: () -> Unit = { }
+    onQaOptionClicked: () -> Unit = { },
+    onNavigateBack: () -> Unit = { },
 ) {
     Screen(
         modifier = modifier,
         header = {
-            Header(title = "Settings")
+            Header(
+                title = "Settings",
+                onNavigateBack = onNavigateBack
+            )
         }
     ) {
         Column(
@@ -68,6 +72,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(top = Spacing.S1000),
                 textAlign = TextAlign.Center,
+                typographyToken = SpyfallTheme.typography.Body.B700,
                 color = SpyfallTheme.colorScheme.textDisabled
             )
         }

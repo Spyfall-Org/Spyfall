@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.ui.typography.TypographyToken
+import com.dangerfield.libraries.ui.typography.TypographyToken
 
 @Composable
 fun BasicTextField(
@@ -69,7 +69,6 @@ fun BasicTextField(
                 cursorBrush = cursorBrush,
                 decorationBox = decorationBox
             )
-
         }
     }
 }

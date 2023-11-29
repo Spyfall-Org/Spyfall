@@ -1,5 +1,9 @@
 package spyfallx.core
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+
 /**
  * Convenience method for only executing logic if the parameters are not null
  */
@@ -8,8 +12,13 @@ fun <A, B, T> allOrNone(one: A?, two: B?, block: (A, B) -> T): T? = if (one != n
 /**
  * Convenience method for only executing logic if the parameters are not null
  */
-fun <A, B, C, T> allOrNone(one: A?, two: B?, three: C?, block: (A, B, C) -> T): T? =
-    if (one != null && two != null && three != null) block(one, two, three) else null
+@OptIn(ExperimentalContracts::class)
+inline fun <A, B, C, T> allOrNone(one: A?, two: B?, three: C?, block: (A, B, C) -> T): T? {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+    }
+    return if (one != null && two != null && three != null) block(one, two, three) else null
+}
 
 /**
  * Convenience method for only executing logic if the parameters are not null

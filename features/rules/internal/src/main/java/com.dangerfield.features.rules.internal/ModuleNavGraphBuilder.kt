@@ -15,7 +15,7 @@ class ModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
         composable(
             route = rulesNavigationRoute,
         ) {
-
+            RulesScreen()
         }
     }
 }

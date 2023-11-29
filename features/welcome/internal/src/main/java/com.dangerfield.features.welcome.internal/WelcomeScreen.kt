@@ -23,7 +23,7 @@ import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.icon.IconButton
 import com.dangerfield.libraries.ui.icon.IconButton.Size.Medium
-import spyfallx.ui.components.Screen
+import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import com.dangerfield.spyfall.libraries.resources.R
@@ -80,13 +80,13 @@ private fun WelcomeScreenContent(
             }
             Text(
                 text = "Welcome to",
-                typographyToken = SpyfallTheme.typography.Display.D1200,
+                typographyToken = SpyfallTheme.typography.Display.D1200.Bold,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )
             Text(
                 text = stringResource(id = R.string.app_name),
-                typographyToken = SpyfallTheme.typography.Display.D1200,
+                typographyToken = SpyfallTheme.typography.Display.D1200.Bold,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )

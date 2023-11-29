@@ -39,6 +39,8 @@
             <option value="$PROJECT_DIR$/features/newGame/internal" />
             <option value="$PROJECT_DIR$/features/qa" />
             <option value="$PROJECT_DIR$/features/qa/internal" />
+            <option value="$PROJECT_DIR$/features/rules" />
+            <option value="$PROJECT_DIR$/features/rules/internal" />
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/settings/internal" />
             <option value="$PROJECT_DIR$/features/splash" />
@@ -57,6 +59,8 @@
             <option value="$PROJECT_DIR$/libraries/game/internal" />
             <option value="$PROJECT_DIR$/libraries/logging" />
             <option value="$PROJECT_DIR$/libraries/logging/internal" />
+            <option value="$PROJECT_DIR$/libraries/resources" />
+            <option value="$PROJECT_DIR$/libraries/resources/internal" />
             <option value="$PROJECT_DIR$/libraries/session" />
             <option value="$PROJECT_DIR$/libraries/session/internal" />
             <option value="$PROJECT_DIR$/libraries/ui" />

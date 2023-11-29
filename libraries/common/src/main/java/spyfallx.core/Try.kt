@@ -19,16 +19,16 @@ sealed class Try<out T> {
 
     @OptIn(ExperimentalContracts::class)
     inline fun <Output> fold(
-        ifFailure: (left: Throwable) -> Output,
-        ifSuccess: (right: T) -> Output
+        onFailure: (left: Throwable) -> Output,
+        onSuccess: (right: T) -> Output
     ): Output {
         contract {
-            callsInPlace(ifFailure, InvocationKind.AT_MOST_ONCE)
-            callsInPlace(ifSuccess, InvocationKind.AT_MOST_ONCE)
+            callsInPlace(onFailure, InvocationKind.AT_MOST_ONCE)
+            callsInPlace(onSuccess, InvocationKind.AT_MOST_ONCE)
         }
         return when (this) {
-            is Success -> ifSuccess(value)
-            is Failure -> ifFailure(exception)
+            is Success -> onSuccess(value)
+            is Failure -> onFailure(exception)
         }
     }
 
@@ -59,6 +59,7 @@ sealed class Try<out T> {
         }
     }
 
+    @OptIn(ExperimentalContracts::class)
     inline fun <Output> map(f: (right: T) -> Output): Try<Output> {
         contract {
             callsInPlace(f, InvocationKind.AT_MOST_ONCE)

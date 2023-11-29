@@ -51,7 +51,8 @@ class JoinGameModuleNavGraphBuilder @Inject constructor(
                 onAccessCodeChanged = viewModel::updateAccessCode,
                 onUserNameChanged = viewModel::updateUserName,
                 onSomethingWentWrongDismissed = viewModel::onSomethingWentWrongDismissed,
-                onUpdateAppClicked = { context.openStoreLinkToApp(buildInfo) }
+                onUpdateAppClicked = { context.openStoreLinkToApp(buildInfo) },
+                onNavigateBack = navController::popBackStack,
             )
         }
     }

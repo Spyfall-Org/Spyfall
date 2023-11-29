@@ -23,7 +23,8 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
             SettingsScreen(
                 versionName = buildInfo.versionName,
                 isDebug = buildInfo.isDebug,
-                onQaOptionClicked = navController::navigateToQa
+                onQaOptionClicked = navController::navigateToQa,
+                onNavigateBack = navController::popBackStack
             )
         }
     }

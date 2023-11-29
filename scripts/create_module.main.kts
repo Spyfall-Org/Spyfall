@@ -91,8 +91,7 @@ fun updateSettingGradleFile(baseDir: String, moduleName: String, parentModule: S
 }
 
 fun createPackage(directory: String, featureName: String, isFeature: Boolean, isInternal: Boolean) {
-    val packageString = directory.replace("/", ".").lowercase()
-    val packageName = "com.dangerfield.$packageString"
+    val packageName = "com/dangerfield/$directory"
 
     val mainDir = File("$directory/src/main/java/$packageName")
     mainDir.mkdirs()

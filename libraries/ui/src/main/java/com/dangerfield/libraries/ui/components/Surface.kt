@@ -1,4 +1,4 @@
-package spyfallx.ui.components
+package com.dangerfield.libraries.ui.components
 
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable

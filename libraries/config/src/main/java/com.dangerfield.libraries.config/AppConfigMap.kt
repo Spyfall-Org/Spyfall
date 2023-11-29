@@ -43,8 +43,9 @@ abstract class AppConfigMap {
      * you can do `appConfigMap.value>(MyExperiment())` to get the value of the configured value
      *
      */
-    inline fun <reified T : Any> value(value: ConfiguredValue<T>): T =
-        map.getValueForPath<T>(fullPath = value.path) ?: value.default
+    inline fun <reified T : Any> value(value: ConfiguredValue<T>): T = value.debugOverride
+        ?.takeIf { BuildConfig.DEBUG }
+        ?: map.getValueForPath<T>(fullPath = value.path) ?: value.default
 
     inline fun <reified T : Any> experiment(experiment: Experiment<T>): T =
         if (experiment.isDebugOnly && !BuildConfig.DEBUG) experiment.control

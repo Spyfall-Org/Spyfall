@@ -18,9 +18,9 @@ class FirestoreGameDataSource @Inject constructor(
     private val gameParser: GameParser
 ) : GameDataSource {
 
-    override suspend fun setGame(accessCode: String, game: Game) {
+    override suspend fun setGame(game: Game) {
         db.collection(GAMES_COLLECTION_KEY)
-            .document(accessCode)
+            .document(game.accessCode)
             .set(game)
             .await()
     }
@@ -30,10 +30,10 @@ class FirestoreGameDataSource @Inject constructor(
         .document(accessCode)
         .get()
         .await()
-        .data
-        ?.let {
-            gameParser.parseGame(it).logOnError()
-        } ?: GameError.GameNotFound.failure()
+        .let {
+            val data = it.data ?: return GameError.GameNotFound.failure()
+            gameParser.parseGame(it.id, data).logOnError()
+        }
 
     override suspend fun removePlayer(accessCode: String, player: Player) {
         db.collection(GAMES_COLLECTION_KEY)
@@ -71,6 +71,8 @@ class FirestoreGameDataSource @Inject constructor(
     }
 
     companion object {
+        const val IS_HOST_FIELD_KEY = "isHost"
+        const val VIDEO_CALL_LINK_FIELD_KEY = "videoCallLink"
         const val GAMES_COLLECTION_KEY = "games"
         const val PLAYERS_FIELD_KEY = "players"
         const val LOCATION_FIELD_KEY = "location"

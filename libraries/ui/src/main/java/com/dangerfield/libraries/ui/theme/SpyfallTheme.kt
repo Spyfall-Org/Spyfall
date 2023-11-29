@@ -13,7 +13,7 @@ import spyfallx.ui.color.ColorScheme
 import spyfallx.ui.color.LocalColorScheme
 import spyfallx.ui.color.LocalContentColor
 import spyfallx.ui.color.LocalTypography
-import spyfallx.ui.typography.Typography
+import com.dangerfield.libraries.ui.typography.Typography
 
 //TODO hide colors & typography into the internal module so that people must go through the theme
 // I could make this an interface? idk man

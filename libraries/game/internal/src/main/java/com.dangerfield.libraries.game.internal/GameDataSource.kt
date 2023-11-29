@@ -5,7 +5,7 @@ import com.dangerfield.libraries.game.Player
 import spyfallx.core.Try
 
 interface GameDataSource {
-    suspend fun setGame(accessCode: String, game: Game)
+    suspend fun setGame(game: Game)
     suspend fun getGame(accessCode: String): Try<Game>
     suspend fun removePlayer(accessCode: String, player: Player)
     suspend fun addPlayer(accessCode: String, player: Player)

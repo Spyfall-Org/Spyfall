@@ -5,6 +5,13 @@ package com.dangerfield.libraries.game
  */
 const val CURRENT_GAME_MODEL_VERSION = 1
 data class Game(
+
+    /**
+     * The unique identifier for the game
+     * used to join the game
+     */
+    val accessCode: String,
+
     /**
      * This location is randomly chosen from the list of locations of the chosen packs
      * It is assigned by the creator of the game
@@ -48,6 +55,12 @@ data class Game(
      * This is created by the creator of the game
      */
     val locations: List<String>,
+
+    /**
+     * Optional Link that the creator of the game can enter to be shared with players in the waiting
+     * room.
+     */
+    val videoCallLink: String?,
 
     /**
      * The version of the game being played. Older versions of the app may not be able to play with newer versions

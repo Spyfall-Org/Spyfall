@@ -6,6 +6,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.dangerfield.libraries.logging.RemoteLogger
 import com.dangerfield.spyfall.legacy.di.legacySpyfallModules
 import com.dangerfield.spyfall.legacy.util.RemoveUserTimer
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import dagger.hilt.android.HiltAndroidApp
@@ -25,6 +26,9 @@ class SpyfallApplication : Application() {
     @Inject
     lateinit var applicationStateRepository: ApplicationStateRepository
 
+    @Inject
+    lateinit var firebaseAnalytics: FirebaseAnalytics
+
     private val lifecycle get() = ProcessLifecycleOwner.get().lifecycle
 
     init {
@@ -35,6 +39,9 @@ class SpyfallApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // TODO look into permission requesting for analytics collection
+        firebaseAnalytics.setAnalyticsCollectionEnabled(BuildConfig.DEBUG)
 
         lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: androidx.lifecycle.LifecycleOwner) {

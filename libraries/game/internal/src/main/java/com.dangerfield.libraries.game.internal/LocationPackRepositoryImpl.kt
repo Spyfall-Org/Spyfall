@@ -26,6 +26,7 @@ class LocationPackRepositoryImpl @Inject constructor(
             packs
         }
     }
+        .logOnError()
 
     override suspend fun getPack(packName: String): Try<Pack> {
         return Try.Failure(Exception("Not implemented"))

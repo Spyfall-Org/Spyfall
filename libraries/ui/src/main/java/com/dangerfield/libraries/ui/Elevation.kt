@@ -42,7 +42,6 @@ value class Elevation internal constructor(val dp: Dp) : Comparable<Elevation> {
         val Fixed = Elevation(6.dp)
         val AppBar = Elevation(4.dp)
 
-
         internal val VectorConverter: TwoWayConverter<Elevation, AnimationVector1D> = TwoWayConverter(
             convertToVector = { AnimationVector1D(it.dp.value) },
             convertFromVector = { Elevation(Dp(it.value)) }

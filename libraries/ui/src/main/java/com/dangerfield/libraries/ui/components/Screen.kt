@@ -1,4 +1,4 @@
-package spyfallx.ui.components
+package com.dangerfield.libraries.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,7 +32,9 @@ fun Screen(
         contentColor = contentColor,
         contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
-        Box(Modifier.fillMaxSize(), propagateMinConstraints = true) {
+        Box(
+            Modifier.fillMaxSize(),
+            propagateMinConstraints = true) {
             content(paddingValues)
         }
     }

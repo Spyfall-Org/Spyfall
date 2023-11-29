@@ -29,7 +29,7 @@ import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import spyfallx.ui.thenIf
-import spyfallx.ui.typography.Typography
+import com.dangerfield.libraries.ui.typography.Typography
 import kotlin.reflect.KProperty1
 
 @Suppress("LongParameterList")

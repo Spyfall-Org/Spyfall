@@ -20,6 +20,8 @@ abstract class ConfiguredValue<out T : Any> {
     abstract val default: T
     open val showInQADashboard: Boolean = false
 
+    open val debugOverride: T? = null
+
     val value: T
         get() = resolveValue()
 

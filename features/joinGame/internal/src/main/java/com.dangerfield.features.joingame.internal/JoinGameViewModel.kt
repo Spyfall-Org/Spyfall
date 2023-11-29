@@ -97,7 +97,7 @@ class JoinGameViewModel @Inject constructor(
                 is JoinGameError.InvalidAccessCodeLength -> it.copy(
                     accessCodeState = it.accessCodeState.copy(
                         invalidLengthError = InvalidAccessCodeLengthError(
-                            requiredLength = joinGameError.requiredLength
+                            requiredLength = joinGameError.requiredLength,
                         )
                     )
                 )

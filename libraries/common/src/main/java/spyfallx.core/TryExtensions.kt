@@ -47,8 +47,15 @@ inline fun <T> Try<T>.flatMapIf(predicate: Boolean, mapper: (T) -> Try<T>): Try<
 fun <T> Try<T>.logOnError(message: String? = null): Try<T> = onFailure { Timber.e(it, message) }
 
 fun <T> Try<T>.throwIfDebug(): Try<T> = onFailure {
-    if (BuildConfig.DEBUG) throw it
+    if (BuildConfig.DEBUG && this is Failure) throw it
 }
+
+fun Throwable.failure(): Try<Nothing> = Failure(this)
+
+fun Any.failure(): Try<Nothing> = Failure(IllegalStateException(this.toString()))
+
+fun illegalState(string: String): Failure = Failure(IllegalStateException(string))
+
 /**
  * Retry an operation a certain number of times with an exponential backoff by default
  */

@@ -5,4 +5,8 @@ interface GameConfig {
     val minNameLength: Int
     val maxNameLength: Int
     val maxPlayers: Int
+    val minPlayers: Int
+    val maxTimeLimit: Int
+    val minTimeLimit: Int
+    val locationsPerGame: Int
 }

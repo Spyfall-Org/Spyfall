@@ -6,15 +6,11 @@ import java.lang.Exception
 
 interface GameRepository {
 
-    suspend fun create(
-        username: String,
-        timeLimitMins: Long,
-        packs: List<String>
-    )
+    suspend fun create(game: Game): Try<Unit>
 
     suspend fun join(
         accessCode: String,
-        id: String,
+        userId: String,
         userName: String
     ): Try<Unit>
 
@@ -22,6 +18,8 @@ interface GameRepository {
         accessCode: String,
         username: String
     )
+
+    suspend fun doesGameExist(accessCode: String): Try<Boolean>
 
     suspend fun end(accessCode: String)
     suspend fun start(accessCode: String)

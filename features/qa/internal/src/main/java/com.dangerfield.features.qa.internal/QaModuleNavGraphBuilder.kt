@@ -30,7 +30,8 @@ class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                         path = experiment.path,
                         value = value
                     )
-                }
+                },
+                onNavigateBack = navController::popBackStack
             )
         }
     }

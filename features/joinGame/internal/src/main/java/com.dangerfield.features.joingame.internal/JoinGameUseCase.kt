@@ -43,13 +43,13 @@ class JoinGameUseCase @Inject constructor(
                 min = gameConfig.minNameLength, max = gameConfig.maxNameLength
             ).failure()
         } else {
-            gameRepository.getGame(accessCode).fold(ifSuccess = { game ->
+            gameRepository.getGame(accessCode).fold(onSuccess = { game ->
                 val joinGameError = getGameStateError(accessCode, game, userName)
 
                 joinGameError?.failure() ?: joinGame(
                     accessCode = accessCode, userName = userName, game = game, id = id
                 )
-            }, ifFailure = {
+            }, onFailure = {
                 it.toJoinGameFailure()
             }).onSuccess {
                 updateSession(userName, accessCode)
@@ -84,10 +84,10 @@ class JoinGameUseCase @Inject constructor(
         accessCode: String, userName: String, game: Game, id: String
     ): Try<Game> = tryWithTimeout(10.seconds) {
         gameRepository.join(
-            accessCode = accessCode, userName = userName, id = id
+            accessCode = accessCode, userName = userName, userId = id
         ).fold(
-            ifSuccess = { game.success() },
-            ifFailure = { it.toJoinGameFailure() }
+            onSuccess = { game.success() },
+            onFailure = { it.toJoinGameFailure() }
         )
     }
 

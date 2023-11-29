@@ -32,8 +32,9 @@ import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.components.text.AsteriskText
 import spyfallx.ui.Spacing
-import spyfallx.ui.components.Screen
+import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
@@ -52,7 +53,8 @@ fun JoinGameScreen(
     onAccessCodeChanged: (String) -> Unit,
     onUserNameChanged: (String) -> Unit,
     onSomethingWentWrongDismissed: () -> Unit,
-    onUpdateAppClicked: () -> Unit
+    onUpdateAppClicked: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -71,7 +73,8 @@ fun JoinGameScreen(
                 focusManager.clearFocus()
                 onJoinGameClicked()
             },
-            isLoading = isLoading
+            isLoading = isLoading,
+            onNavigateBack = onNavigateBack
         )
 
         if (unresolvableError != null) {
@@ -97,7 +100,8 @@ private fun JoinGameScreenContent(
     usernameTaken: Boolean,
     invalidNameLengthError: InvalidNameLengthError?,
     onJoinGameClicked: () -> Unit,
-    isLoading: Boolean
+    isLoading: Boolean,
+    onNavigateBack: () -> Unit
 ) {
     val (nameFocusRequester, accessCodeFocusRequester) = remember { FocusRequester.createRefs() }
 
@@ -105,7 +109,10 @@ private fun JoinGameScreenContent(
 
     Screen(
         header = {
-            Header(title = "Join Game")
+            Header(
+                title = "Join Game",
+                onNavigateBack = onNavigateBack
+            )
         }
     ) {
         Column(
@@ -128,6 +135,7 @@ private fun JoinGameScreenContent(
 
             Spacer(modifier = Modifier.height(Spacing.S1200))
 
+            // TODO use username generation an collect analytics around usage
             NameField(
                 nameFocusRequester,
                 userName,
@@ -168,11 +176,14 @@ private fun AccessCodeField(
     gameAlreadyStarted: Boolean,
     invalidAccessCodeLengthError: InvalidAccessCodeLengthError?
 ) {
-    Text(text = "Access Code:", typographyToken = SpyfallTheme.typography.Heading.H900)
+
+    AsteriskText {
+        Text(text = "Access Code:")
+    }
+
     Spacer(modifier = Modifier.height(Spacing.S600))
 
     OutlinedTextField(
-        typographyToken = SpyfallTheme.typography.Label.L700,
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(accessCodeFocusRequester),
@@ -187,7 +198,7 @@ private fun AccessCodeField(
             }
         ),
         placeholder = {
-            Text(text = "Enter the game access code:")
+            Text(text = "6 character game code")
         },
         singleLine = true
     )
@@ -211,8 +222,13 @@ private fun AccessCodeField(
     }
 
     if (invalidAccessCodeLengthError != null) {
+        val text = if (accessCode.isNotEmpty()) {
+            "Access codes are ${invalidAccessCodeLengthError.requiredLength} character long."
+        } else {
+            "Please fill out the access code."
+        }
         Text(
-            text = "Access codes are ${invalidAccessCodeLengthError.requiredLength} characters long.",
+            text = text,
             color = SpyfallTheme.colorScheme.textWarning,
             typographyToken = SpyfallTheme.typography.Label.L700
         )
@@ -228,12 +244,12 @@ private fun NameField(
     usernameTaken: Boolean,
     invalidNameLengthError: InvalidNameLengthError?
 ) {
-    Text(text = "User Name:", typographyToken = SpyfallTheme.typography.Heading.H900)
-
+    AsteriskText {
+        Text(text = "User Name:")
+    }
     Spacer(modifier = Modifier.height(Spacing.S600))
 
     OutlinedTextField(
-        typographyToken = SpyfallTheme.typography.Label.L700,
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(nameFocusRequester),
@@ -297,7 +313,8 @@ fun PreviewJoinGameScreen() {
             usernameTaken = false,
             unresolvableError = null,
             onSomethingWentWrongDismissed = {},
-            onUpdateAppClicked = {}
+            onUpdateAppClicked = {},
+            onNavigateBack = {}
         )
     }
 }
@@ -330,7 +347,8 @@ fun PreviewJoinGameScreenDark() {
             usernameTaken = false,
             unresolvableError = null,
             onSomethingWentWrongDismissed = {},
-            onUpdateAppClicked = {}
+            onUpdateAppClicked = {},
+            onNavigateBack = {}
         )
     }
 }

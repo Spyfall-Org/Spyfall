@@ -31,7 +31,7 @@ class MaxNameLength @Inject constructor(
 ) : ConfiguredValue<Int>() {
     override val displayName: String = "Maximum Name Length Length"
     override val path: String = "game.maxNameLength"
-    override val default: Int = 3
+    override val default: Int = 30
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -42,5 +42,45 @@ class MaxPlayers @Inject constructor(
     override val displayName: String = "Maximum Players"
     override val path: String = "game.maxPlayers"
     override val default: Int = 8
+    override fun resolveValue(): Int = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
+class MinPlayers @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Int>() {
+    override val displayName: String = "Min Players"
+    override val path: String = "game.minPlayers"
+    override val default: Int = 3
+    override fun resolveValue(): Int = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
+class LocationsPerGame @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Int>() {
+    override val displayName: String = "Locations Per Game"
+    override val path: String = "game.locationsPerGame"
+    override val default: Int = 14
+    override fun resolveValue(): Int = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
+class MinTimeLimit @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Int>() {
+    override val displayName: String = "Minimum Game Time Limit"
+    override val path: String = "game.minTimeLimit"
+    override val default: Int = 2
+    override fun resolveValue(): Int = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
+class MaxTimeLimit @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Int>() {
+    override val displayName: String = "Max Game Time Limit"
+    override val path: String = "game.maxTimeLimit"
+    override val default: Int = 10
     override fun resolveValue(): Int = appConfigMap.value(this)
 }

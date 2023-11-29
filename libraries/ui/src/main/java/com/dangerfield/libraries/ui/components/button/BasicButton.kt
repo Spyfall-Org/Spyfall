@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import spyfallx.ui.Elevation
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
-import spyfallx.ui.components.Surface
+import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.text.TextConfig
 import com.dangerfield.libraries.ui.icon.SmallIcon
@@ -102,19 +102,19 @@ private val SmallButtonTextConfig = TextConfig(
 )
 
 private val SmallTextButtonTextConfig = TextConfig(
-    typographyToken = SpyfallTheme.typography.Body.B600,
+    typographyToken = SpyfallTheme.typography.Body.B600.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val LargeButtonTextConfig = TextConfig(
-    typographyToken = SpyfallTheme.typography.Label.L800,
+    typographyToken = SpyfallTheme.typography.Label.L800.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val LargeTextButtonTextConfig = TextConfig(
-    typographyToken = SpyfallTheme.typography.Body.B700,
+    typographyToken = SpyfallTheme.typography.Body.B700.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
@@ -165,8 +165,8 @@ private fun BasicButtonPreview() {
             ButtonRow(
                 size = ButtonSize.Small,
                 style = ButtonStyle.Filled,
-                backgroundColor = SpyfallTheme.colorScheme.surfacePrimary,
-                contentColor = SpyfallTheme.colorScheme.onSurfacePrimary
+                backgroundColor = SpyfallTheme.colorScheme.accent,
+                contentColor = SpyfallTheme.colorScheme.onAccent
             )
             ButtonRow(
                 size = ButtonSize.Large,

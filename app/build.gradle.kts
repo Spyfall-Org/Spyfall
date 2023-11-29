@@ -14,6 +14,7 @@ spyfall {
     compose()
     flowroutines()
     daggerHilt()
+    firebase()
 }
 
 android {

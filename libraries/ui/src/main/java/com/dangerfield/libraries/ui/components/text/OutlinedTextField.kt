@@ -1,7 +1,9 @@
 package com.dangerfield.libraries.ui.components.text
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -12,6 +14,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -20,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Radii
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.ui.typography.TypographyToken
+import com.dangerfield.libraries.ui.typography.TypographyToken
 
 @Composable
 fun OutlinedTextField(
@@ -29,7 +33,8 @@ fun OutlinedTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: SpyfallTheme.typography.Default,
+    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken
+        ?: SpyfallTheme.typography.Default,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -77,7 +82,9 @@ fun OutlinedTextField(
                 placeholder = {
                     ProvideTextConfig(
                         config = TextConfig(
-                            typographyToken = typographyToken,
+                            typographyToken = typographyToken.copy(
+                                fontWeight = FontWeight.Normal
+                            ),
                             color = SpyfallTheme.colorScheme.textDisabled,
                             textDecoration = TextDecoration.Underline,
                             textAlign = TextAlign.Start,
@@ -130,6 +137,20 @@ private val UnfocusedBorderThickness = 2.dp
 private fun PreviewOutlinedTextField() {
     PreviewContent(modifier = Modifier.padding(24.dp)) {
         OutlinedTextField(value = "Hello World", onValueChange = { })
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewOutlinedTextField1() {
+    PreviewContent(modifier = Modifier.padding(24.dp)) {
+        OutlinedTextField(
+            value = "1",
+            onValueChange = { },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            singleLine = true,
+            modifier = Modifier.width(IntrinsicSize.Max)
+        )
     }
 }
 
