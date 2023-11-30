@@ -22,6 +22,7 @@ fun Route.withArguments(vararg arguments: NamedNavArgument) =
 private fun Route.hasArgument(argument: NamedNavArgument) =
     rawRoute.contains("${argument.name}={${argument.name}}")
 
+@Suppress("UnusedPrivateMember")
 private fun Route.hasAnyArguments() = rawRoute.contains("?")
 private fun Route.hasOnlyOneArgument() = rawRoute.contains("?") && !rawRoute.contains("&")
 private fun Route.hasMoreThanOneArgument() = rawRoute.contains("?") && rawRoute.contains("&")

@@ -90,23 +90,27 @@ fun WaitingRoomScreen(
 
             Spacer(modifier = Modifier.height(Spacing.S1200))
 
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { /*TODO*/ },
-                type = ButtonType.Regular
-            ) {
-                Text(text = "Leave Game")
+            if (!isLoadingStart) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { /*TODO*/ },
+                    type = ButtonType.Regular
+                ) {
+                    Text(text = "Leave Game")
+                }
+
+                Spacer(modifier = Modifier.height(Spacing.S1000))
+
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = "Start Game")
+                }
+            } else {
+                CircularProgressIndicator()
             }
-
-            Spacer(modifier = Modifier.height(Spacing.S1000))
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = "Start Game")
-            }
-
         }
     }
 }

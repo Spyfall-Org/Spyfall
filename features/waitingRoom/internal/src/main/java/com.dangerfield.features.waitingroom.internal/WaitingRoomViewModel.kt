@@ -22,12 +22,7 @@ class WaitingRoomViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val actions = Channel<Action>(Channel.UNLIMITED)
-    private val _events = Channel<Event>()
-    val events = _events.receiveAsFlow()
-
     val state = flow {
-
         val accessCode = savedStateHandle.navArgument<String>(accessCodeArgument)
         val videoCallLink = savedStateHandle.navArgument<String>(videoCallLinkArgument)
 
@@ -61,12 +56,4 @@ class WaitingRoomViewModel @Inject constructor(
         val didSomethingGoWrong: Boolean = false,
         val videoCallLink: String?
     )
-
-    sealed class Action {
-
-    }
-
-    sealed class Event {
-
-    }
 }

@@ -4,7 +4,7 @@ import com.dangerfield.libraries.config.AppConfigMap
 import com.dangerfield.libraries.config.Experiment
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
-
+@Suppress("MatchingDeclarationName")
 @AutoBindIntoSet
 class IsSingleDeviceModeEnabled @Inject constructor(
     private val appConfigMap: AppConfigMap
