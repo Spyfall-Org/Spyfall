@@ -35,67 +35,97 @@ fun Dialog(
     content: @Composable () -> Unit = {},
     bottomContent: @Composable () -> Unit = {},
 ) {
-    val scrollState = rememberScrollState()
-
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(SpyfallTheme.colorScheme.backgroundOverlay.color)
+    Dialog(
+        onDismissRequest = onDismiss,
     ) {
-        Dialog(
-            onDismissRequest = onDismiss,
-        ) {
-            Column(
-                modifier = modifier
-                    .background(
-                        SpyfallTheme.colorScheme.surfacePrimary.color,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .padding(
-                        top = Spacing.S800,
-                        start = Spacing.S800,
-                        end = Spacing.S800,
-                        bottom = Spacing.S800
-                    )
-            ) {
-                ProvideTextConfig(SpyfallTheme.typography.Heading.H900) {
-                    topContent()
-                }
-
-                Spacer(modifier = Modifier.height(Spacing.S600))
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f, fill = false)
-                        .drawVerticalScrollbar(
-                            scrollState,
-                            SpyfallTheme.colorScheme.textDisabled.color
-                        )
-                        .verticalScroll(scrollState),
-                ) {
-
-                    ProvideTextConfig(SpyfallTheme.typography.Body.B700) {
-                        content()
-                    }
-                }
-
-
-                Spacer(modifier = Modifier.height(Spacing.S1000))
-
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.S1000),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    ProvideButtonConfig(size = ButtonSize.Small) {
-                        bottomContent()
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(Spacing.S1000))
-        }
+        DialogContent(
+            modifier = modifier,
+            topContent = topContent,
+            content = content,
+            bottomContent = bottomContent
+        )
     }
 }
+
+@Composable
+private fun DialogContent(
+    modifier: Modifier = Modifier,
+    topContent: @Composable () -> Unit = {},
+    content: @Composable () -> Unit = {},
+    bottomContent: @Composable () -> Unit = {},
+) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            .background(
+                SpyfallTheme.colorScheme.surfacePrimary.color,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(
+                top = Spacing.S800,
+                start = Spacing.S800,
+                end = Spacing.S800,
+                bottom = Spacing.S800
+            )
+    ) {
+        ProvideTextConfig(SpyfallTheme.typography.Heading.H900) {
+            topContent()
+        }
+
+        Spacer(modifier = Modifier.height(Spacing.S600))
+
+        Box(
+            modifier = Modifier
+                .weight(1f, fill = false)
+                .drawVerticalScrollbar(
+                    scrollState,
+                    SpyfallTheme.colorScheme.textDisabled.color
+                )
+                .verticalScroll(scrollState),
+        ) {
+
+            ProvideTextConfig(SpyfallTheme.typography.Body.B700) {
+                content()
+            }
+        }
+
+
+        Spacer(modifier = Modifier.height(Spacing.S1000))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing.S1000),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ProvideButtonConfig(size = ButtonSize.Small) {
+                bottomContent()
+            }
+        }
+    }
+
+    Spacer(modifier = Modifier.height(Spacing.S1000))
+}
+
+
+@Composable
+@Preview
+private fun PreviewDialogContent() {
+    PreviewContent {
+        DialogContent(
+            modifier = Modifier,
+            topContent = { Text(text = "Top Content") },
+            content = { Text(text = "context".repeat(50)) },
+            bottomContent = {
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Bottom Content")
+                }
+            },
+        )
+    }
+}
+
 
 @Composable
 @Preview
@@ -105,7 +135,12 @@ private fun PreviewDialog() {
             onDismiss = { -> },
             modifier = Modifier,
             topContent = { Text(text = "Top Content") },
-            content = { Text(text = "context".repeat(50)) },
+            content = {
+                Column {
+                    Text(text = "content".repeat(10))
+                    Text(text = "is good".repeat(10))
+                }
+            },
             bottomContent = {
                 Button(onClick = { /*TODO*/ }) {
                     Text(text = "Bottom Content")

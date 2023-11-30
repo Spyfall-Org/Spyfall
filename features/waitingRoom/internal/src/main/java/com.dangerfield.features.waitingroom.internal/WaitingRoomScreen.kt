@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +26,7 @@ import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.icon.IconButton
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.modifiers.drawVerticalScrollbar
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
@@ -36,15 +39,24 @@ fun WaitingRoomScreen(
     isLoadingStart: Boolean,
     onCallLinkButtonClicked: (String) -> Unit
 ) {
+    val scrollState = rememberScrollState()
 
     Screen(
         modifier = modifier,
         header = {
-            Header(title = "Waiting for players...")
+            Header(
+                title = "Waiting for players...",
+                scrollState = scrollState
+            )
         }
     ) {
         Column(
             modifier = Modifier
+                .verticalScroll(scrollState)
+                .drawVerticalScrollbar(
+                    scrollState,
+                    SpyfallTheme.colorScheme.surfaceDisabled.color
+                )
                 .padding(it)
                 .padding(horizontal = Spacing.S1000)
         ) {
@@ -101,26 +113,24 @@ fun WaitingRoomScreen(
 
 @Composable
 private fun PlayerList(players: List<String>) {
-    LazyColumn {
-        itemsIndexed(players) { index, player ->
-            if (index != 0) {
-                Spacer(modifier = Modifier.height(Spacing.S500))
-            }
+    players.forEachIndexed { index, player ->
+        if (index != 0) {
+            Spacer(modifier = Modifier.height(Spacing.S500))
+        }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        SpyfallTheme.colorScheme.surfacePrimary,
-                        radius = Radii.Card
-                    )
-                    .padding(horizontal = Spacing.S500)
-                    .padding(vertical = Spacing.S400)
-            ) {
-                Text(text = "${index + 1}")
-                Spacer(modifier = Modifier.width(Spacing.S500))
-                Text(text = player)
-            }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    SpyfallTheme.colorScheme.surfacePrimary,
+                    radius = Radii.Card
+                )
+                .padding(horizontal = Spacing.S500)
+                .padding(vertical = Spacing.S400)
+        ) {
+            Text(text = "${index + 1}")
+            Spacer(modifier = Modifier.width(Spacing.S500))
+            Text(text = player)
         }
     }
 }
