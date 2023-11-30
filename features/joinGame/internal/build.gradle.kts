@@ -18,6 +18,5 @@ dependencies {
     implementation(projects.libraries.session)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.config)
-    implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.navigation.compose)
+    implementation(projects.libraries.navigation)
 }

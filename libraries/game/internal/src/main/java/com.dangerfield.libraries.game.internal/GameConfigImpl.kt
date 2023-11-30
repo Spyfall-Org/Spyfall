@@ -2,6 +2,7 @@ package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.internal.config.AccessCodeLength
+import com.dangerfield.libraries.game.internal.config.IsSingleDeviceModeEnabled
 import com.dangerfield.libraries.game.internal.config.LocationsPerGame
 import com.dangerfield.libraries.game.internal.config.MaxNameLength
 import com.dangerfield.libraries.game.internal.config.MaxPlayers
@@ -22,29 +23,33 @@ class GameConfigImpl @Inject constructor(
     private val minTimeLimitValue: MinTimeLimit,
     private val minPlayersValue: MinPlayers,
     private val locationsPerGameValue: LocationsPerGame,
+    private val isSingleDeviceModeEnabledExperiment: IsSingleDeviceModeEnabled
     ): GameConfig {
 
     override val accessCodeLength: Int
-        get() = accessCodeLengthValue.resolveValue()
+        get() = accessCodeLengthValue()
 
     override val minNameLength: Int
-        get() = minNameLengthValue.resolveValue()
+        get() = minNameLengthValue()
 
     override val maxNameLength: Int
-        get() = maxNameLengthValue.resolveValue()
+        get() = maxNameLengthValue()
 
     override val maxPlayers: Int
-        get() = maxPlayersValue.resolveValue()
+        get() = maxPlayersValue()
 
     override val maxTimeLimit: Int
-        get() = maxTimeLimitValue.resolveValue()
+        get() = maxTimeLimitValue()
 
     override val minTimeLimit: Int
-        get() = minTimeLimitValue.resolveValue()
+        get() = minTimeLimitValue()
 
     override val minPlayers: Int
-        get() = minPlayersValue.resolveValue()
+        get() = minPlayersValue()
 
     override val locationsPerGame: Int
-        get() = locationsPerGameValue.resolveValue()
+        get() = locationsPerGameValue()
+
+    override val isSingleDeviceModeEnabled: Boolean
+        get() = isSingleDeviceModeEnabledExperiment()
 }

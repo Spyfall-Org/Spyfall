@@ -10,32 +10,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.features.newgame.internal.presentation.model.FieldState
 import com.dangerfield.libraries.game.Pack
-import com.dangerfield.libraries.ui.HorizontalSpacerS200
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
-import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.Switch
 import com.dangerfield.libraries.ui.components.button.Button
@@ -44,8 +37,10 @@ import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.AsteriskText
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.icon.Icon
+import com.dangerfield.libraries.ui.icon.IconButton
+import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.core.toStringOrEmpty
 import spyfallx.ui.Spacing
 
 @Composable
@@ -62,14 +57,17 @@ fun NewGameScreen(
     minGameLength: Int,
     maxGameLength: Int,
     isFormValid: Boolean,
+    isVideoCallLinkEnabled: Boolean,
     onIsSingleDeviceUpdated: (Boolean) -> Unit,
     numOfPlayersState: FieldState<String>,
+    isSingleDeviceModeEnabled: Boolean,
     onNumOfPlayersUpdated: (String) -> Unit = {},
     packsState: FieldState<List<DisplayablePack>>,
     didSomethingGoWrong: Boolean = false,
-    videoCallLink: String,
+    videoCallLinkState: FieldState<String>,
     onVideoCallLinkUpdated: (String) -> Unit = {},
     onNavigateBack: () -> Unit = {},
+    onVideoCallLinkInfoClicked: () -> Unit = {},
     onCreateGameClicked: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
@@ -95,12 +93,14 @@ fun NewGameScreen(
             ) {
                 Spacer(modifier = Modifier.height(Spacing.S1200))
 
-                SingleDeviceField(
-                    isSingleDevice = isSingleDevice,
-                    onIsSingleDeviceUpdated = onIsSingleDeviceUpdated
-                )
+                if (isSingleDeviceModeEnabled) {
+                    SingleDeviceField(
+                        isSingleDevice = isSingleDevice,
+                        onIsSingleDeviceUpdated = onIsSingleDeviceUpdated
+                    )
 
-                VerticalSpacerS1200()
+                    VerticalSpacerS1200()
+                }
 
                 FormField(
                     formFieldState = nameState,
@@ -149,14 +149,17 @@ fun NewGameScreen(
                     )
                 }
 
-                FormField(
-                    formFieldState = FieldState.Valid(videoCallLink),
-                    isFieldVisible = !isSingleDevice
-                ) {
-                    VideoCallLink(
-                        link = videoCallLink,
-                        onLinkUpdated = onVideoCallLinkUpdated,
-                    )
+                if (isVideoCallLinkEnabled) {
+                    FormField(
+                        formFieldState = videoCallLinkState,
+                        isFieldVisible = !isSingleDevice
+                    ) {
+                        VideoCallLink(
+                            onVideoCallLinkInfoClicked = onVideoCallLinkInfoClicked,
+                            link = videoCallLinkState.backingValue.orEmpty(),
+                            onLinkUpdated = onVideoCallLinkUpdated,
+                        )
+                    }
                 }
 
                 VerticalSpacerS1200()
@@ -350,15 +353,29 @@ private fun UserNameField(
 private fun VideoCallLink(
     link: String,
     onLinkUpdated: (String) -> Unit,
+    onVideoCallLinkInfoClicked: () -> Unit,
 ) {
     Column {
-        Text(
-            text = "Video Call Link:",
-        )
-        Text(
-            text = "Past a video call link if you have one:",
-            typographyToken = SpyfallTheme.typography.Body.B500
-        )
+        Row {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Video Call Link:",
+                )
+                Text(
+                    text = "Past a video call link if you have one:",
+                    typographyToken = SpyfallTheme.typography.Body.B500
+                )
+            }
+
+            HorizontalSpacerS600()
+
+            IconButton(
+                icon = SpyfallIcon.Info("Video Call Link Information"),
+                onClick = onVideoCallLinkInfoClicked
+            )
+        }
 
         Spacer(modifier = Modifier.height(Spacing.S600))
 
@@ -420,7 +437,7 @@ fun PreviewNewGameScreen() {
             onIsSingleDeviceUpdated = { isSingleDevice = it },
             minPlayers = 3,
             maxPlayers = 9,
-            videoCallLink = "",
+            videoCallLinkState = FieldState.Valid(""),
             onVideoCallLinkUpdated = {},
             maxGameLength = 10,
             minGameLength = 1,
@@ -430,7 +447,9 @@ fun PreviewNewGameScreen() {
             onNavigateBack = { },
             onCreateGameClicked = { },
             packsState = FieldState.Valid(packs),
-            isFormValid = false
+            isFormValid = false,
+            isSingleDeviceModeEnabled = true,
+            isVideoCallLinkEnabled = true
         )
     }
 }

@@ -102,6 +102,8 @@ dependencies {
     implementation(projects.features.blockingError.internal)
     implementation(projects.features.newGame)
     implementation(projects.features.newGame.internal)
+    implementation(projects.features.waitingRoom)
+    implementation(projects.features.waitingRoom.internal)
     implementation(projects.libraries.config)
     implementation(projects.libraries.config.internal)
     implementation(projects.libraries.logging)
@@ -119,6 +121,8 @@ dependencies {
 	implementation(projects.libraries.resources.internal)
 	implementation(projects.features.rules)
 	implementation(projects.features.rules.internal)
+	implementation(projects.libraries.navigation)
+	implementation(projects.libraries.navigation.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations

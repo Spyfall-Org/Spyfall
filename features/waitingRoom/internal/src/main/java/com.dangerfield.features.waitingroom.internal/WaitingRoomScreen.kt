@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import spyfallx.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.background
@@ -21,13 +22,20 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.icon.IconButton
+import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun WaitingRoomScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    accessCode: String,
+    players: List<String>,
+    videoCallLink: String?,
+    isLoadingRoom: Boolean,
+    isLoadingStart: Boolean,
+    onCallLinkButtonClicked: (String) -> Unit
 ) {
-    val players: List<String> = listOf("Amy", "Justin", "Ryan", "Bryan")
 
     Screen(
         modifier = modifier,
@@ -35,37 +43,37 @@ fun WaitingRoomScreen(
             Header(title = "Waiting for players...")
         }
     ) {
-        Column(modifier = Modifier
-            .padding(it)
-            .padding(horizontal = Spacing.S1000)) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .padding(horizontal = Spacing.S1000)
+        ) {
             Spacer(modifier = Modifier.height(Spacing.S1000))
             Row {
                 Text(text = "Access Code:", typographyToken = SpyfallTheme.typography.Default.Bold)
                 Spacer(modifier = Modifier.width(Spacing.S500))
-                Text(text = "1234", typographyToken = SpyfallTheme.typography.Default)
-            }
-            Spacer(modifier = Modifier.height(Spacing.S500))
-            LazyColumn {
-                itemsIndexed(players) { index, player ->
-                    if (index != 0) {
-                        Spacer(modifier = Modifier.height(Spacing.S500))
-                    }
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = accessCode,
+                    typographyToken = SpyfallTheme.typography.Default
+                )
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                SpyfallTheme.colorScheme.surfacePrimary,
-                                radius = Radii.Card
-                            )
-                            .padding(horizontal = Spacing.S500)
-                            .padding(vertical = Spacing.S400)
-                    ) {
-                        Text(text = "${index + 1}")
-                        Spacer(modifier = Modifier.width(Spacing.S500))
-                        Text(text = player)
-                    }
+                if (videoCallLink != null) {
+                    IconButton(
+                        icon = SpyfallIcon.VideoCall("Join game video call"),
+                        onClick = {
+                            onCallLinkButtonClicked(videoCallLink)
+                        }
+                    )
                 }
+            }
+
+            Spacer(modifier = Modifier.height(Spacing.S500))
+
+            if (isLoadingRoom) {
+                CircularProgressIndicator()
+            } else {
+                PlayerList(players)
             }
 
             Spacer(modifier = Modifier.height(Spacing.S1200))
@@ -92,9 +100,42 @@ fun WaitingRoomScreen(
 }
 
 @Composable
+private fun PlayerList(players: List<String>) {
+    LazyColumn {
+        itemsIndexed(players) { index, player ->
+            if (index != 0) {
+                Spacer(modifier = Modifier.height(Spacing.S500))
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        SpyfallTheme.colorScheme.surfacePrimary,
+                        radius = Radii.Card
+                    )
+                    .padding(horizontal = Spacing.S500)
+                    .padding(vertical = Spacing.S400)
+            ) {
+                Text(text = "${index + 1}")
+                Spacer(modifier = Modifier.width(Spacing.S500))
+                Text(text = player)
+            }
+        }
+    }
+}
+
+@Composable
 @Preview
 fun PreviewWaitingRoomScreen() {
     PreviewContent {
-        WaitingRoomScreen()
+        WaitingRoomScreen(
+            accessCode = "dsv311",
+            players = listOf("Josiah", "Arif", "Michael", "Eli", "Nibraas", "George"),
+            isLoadingRoom = false,
+            isLoadingStart = false,
+            videoCallLink = "https://meet.google.com/lookup/abc123",
+            onCallLinkButtonClicked = { }
+        )
     }
 }

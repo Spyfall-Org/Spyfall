@@ -13,7 +13,6 @@ android {
 }
 dependencies {
     implementation(projects.features.welcome)
-    implementation(libs.androidx.navigation.compose)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.common)
     implementation(projects.libraries.resources)
@@ -21,5 +20,5 @@ dependencies {
     implementation(projects.features.settings)
     implementation(projects.features.newGame)
     implementation(projects.features.forcedUpdate)
-
+    implementation(projects.libraries.navigation)
 }

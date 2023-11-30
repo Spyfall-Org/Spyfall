@@ -28,7 +28,7 @@ internal fun Project.configureAndroidCompose(
             add("implementation", libs.androidx.lifecycle.runtimeCompose)
             add("implementation", libs.androidx.lifecycle)
             //   add("implementation", libs.androidx.lifecycle.viewModelCompose)
-            add("implementation", libs.androidx.navigation.runtime.ktx)
+           // add("implementation", libs.androidx.navigation.runtime.ktx)
             add("implementation", libs.hilt.navigation.compose)
             add("implementation", libs.androidx.navigation.compose)
             add("androidTestImplementation", platform(bom))

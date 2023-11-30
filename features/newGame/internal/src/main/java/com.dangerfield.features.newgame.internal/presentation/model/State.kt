@@ -26,18 +26,23 @@ sealed class Action {
 }
 
 sealed class Event {
-    data class GameCreated(val isSingleDevice: Boolean) : Event()
+    data class GameCreated(
+        val accessCode: String,
+        val videoCallLink: String?
+    ) : Event()
+
+    data object SingleDeviceGameCreated : Event()
 }
 
 data class State(
     val packsState: FieldState<List<DisplayablePack>>,
     val timeLimitState: FieldState<String>,
     val nameState: FieldState<String>,
-    val videoCallLink: String,
+    val videoCallLinkState: FieldState<String>,
     val isLoadingPacks: Boolean,
     val isLoadingCreation: Boolean,
     val isSingleDevice: Boolean,
-    val numberOfPlayersState: FieldState<String> ,
+    val numberOfPlayersState: FieldState<String>,
     val didSomethingGoWrong: Boolean = false,
     val formState: FormState,
 )
@@ -66,11 +71,19 @@ sealed class FieldState<out T>(val backingValue: T?) {
         FieldState<T>(value)
 
     @OptIn(ExperimentalContracts::class)
-    fun isInvalid(): Boolean  {
+    fun isInvalid(): Boolean {
         contract {
             returns(true) implies (this@FieldState is Invalid<*>)
         }
         return this is Invalid
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    fun isValid(): Boolean {
+        contract {
+            returns(true) implies (this@FieldState is Valid<*>)
+        }
+        return this is Valid
     }
 }
 

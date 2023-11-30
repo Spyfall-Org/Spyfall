@@ -14,4 +14,5 @@ dependencies {
     implementation(projects.features.gamePlay)
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
+    implementation(projects.libraries.navigation)
 }

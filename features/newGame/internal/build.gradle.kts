@@ -13,8 +13,11 @@ android {
 }
 dependencies {
     implementation(projects.features.newGame)
+    implementation(projects.features.waitingRoom)
     implementation(projects.libraries.common)
+    implementation(projects.libraries.config)
     implementation(projects.libraries.game)
     implementation(projects.libraries.ui)
     implementation(libs.lottie.compose)
+    implementation(projects.libraries.navigation)
 }

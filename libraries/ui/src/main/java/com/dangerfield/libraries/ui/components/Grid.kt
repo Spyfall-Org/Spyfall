@@ -1,4 +1,4 @@
-package spyfallx.ui.components
+package com.dangerfield.libraries.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,8 +35,7 @@ fun <T> NonLazyVerticalGrid(
             repeat(numOfRows) { i ->
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)
                 ) {
 

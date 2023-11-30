@@ -10,8 +10,6 @@ import com.dangerfield.features.newgame.internal.presentation.model.FieldState.I
 import com.dangerfield.features.newgame.internal.presentation.model.FieldState.Invalid
 import com.dangerfield.features.newgame.internal.presentation.model.FieldState.Valid
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
-import com.dangerfield.features.newgame.internal.presentation.model.GameType.MultiDevice
-import com.dangerfield.features.newgame.internal.presentation.model.GameType.SingleDevice
 import com.dangerfield.features.newgame.internal.presentation.model.State
 import com.dangerfield.features.newgame.internal.presentation.model.numberOfPlayers
 import com.dangerfield.features.newgame.internal.presentation.model.selectedPacks
@@ -19,17 +17,16 @@ import com.dangerfield.features.newgame.internal.presentation.model.timeLimit
 import com.dangerfield.features.newgame.internal.presentation.model.userName
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
+import com.dangerfield.features.newgame.internal.usecase.IsRecognizedVideoCallingUrl
 import com.dangerfield.libraries.coreflowroutines.launchOnStart
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import spyfallx.core.Try
@@ -38,15 +35,16 @@ import spyfallx.core.checkInDebug
 import spyfallx.core.illegalState
 import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
-import spyfallx.core.withBackoffRetry
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
 class NewGameViewModel @Inject constructor(
     private val locationPackRepository: LocationPackRepository,
     private val createMultiDeviceGameGameUseCase: CreateGame,
     private val createSingleDeviceGameUseCase: CreateSingleDeviceGame,
-    private val gameConfig: GameConfig
+    private val gameConfig: GameConfig,
+    private val isRecognizedVideoCallingUrl: IsRecognizedVideoCallingUrl
 ) : ViewModel() {
 
     private val actions = Channel<Action>(Channel.UNLIMITED)
@@ -66,7 +64,7 @@ class NewGameViewModel @Inject constructor(
                 packsState = Idle(emptyList()),
                 timeLimitState = Valid("8"),
                 nameState = Idle(""),
-                videoCallLink = "",
+                videoCallLinkState = Idle(""),
                 isLoadingPacks = true,
                 isLoadingCreation = false,
                 didSomethingGoWrong = false,
@@ -117,10 +115,19 @@ class NewGameViewModel @Inject constructor(
 
         if (state.isSingleDevice) {
             createSingleDeviceGame(state)
+                .onSuccess {
+                    _events.trySend(Event.SingleDeviceGameCreated)
+                }
         } else {
             createMultiDeviceGame(state)
-        }.onSuccess {
-            _events.trySend(Event.GameCreated(state.isSingleDevice))
+                .onSuccess { accessCode ->
+                    _events.trySend(
+                        Event.GameCreated(
+                            accessCode,
+                            state.videoCallLinkState.takeIf { it.isValid() }?.backingValue
+                        )
+                    )
+                }
         }.onFailure {
             updateState { it.copy(didSomethingGoWrong = true) }
         }
@@ -158,7 +165,7 @@ class NewGameViewModel @Inject constructor(
             userName = userName,
             packs = selectedPacks,
             timeLimit = timeLimit,
-            videoCallLink = state.videoCallLink.takeIf { it.isNotEmpty() }
+            videoCallLink = state.videoCallLinkState.backingValue
         )
     } ?: illegalState(
         """
@@ -182,11 +189,21 @@ class NewGameViewModel @Inject constructor(
         updateState { it.copy(nameState = nameState) }
     }
 
-    private suspend fun FlowCollector<State>.handleUpdateVideoCallLink(link: String) {
-        updateState { it.copy(videoCallLink = link) }
+    private suspend fun FlowCollector<State>.handleUpdateVideoCallLink(link: String) = updateState {
+        val fieldState = if(link.isEmpty()) {
+            Idle(link)
+        } else if (!isRecognizedVideoCallingUrl(link)) {
+            Invalid(link, "This link is not")
+        } else {
+            Valid(link)
+        }
+        it.copy(videoCallLinkState = fieldState)
     }
 
     private suspend fun FlowCollector<State>.handleUpdateGameType(isSingleDevice: Boolean) {
+        checkInDebug(gameConfig.isSingleDeviceModeEnabled) {
+            "Update game type was called but single device mode is not enabled"
+        }
         updateState { it.copy(isSingleDevice = isSingleDevice) }
     }
 
@@ -304,6 +321,7 @@ class NewGameViewModel @Inject constructor(
             timeLimitState is Valid &&
                     packsState is Valid
                     && nameState is Valid
+                    && (videoCallLinkState is Valid || videoCallLinkState is Idle)
         }
         return this.copy(formState = if (isFormValid) FormState.Valid else FormState.Invalid)
     }

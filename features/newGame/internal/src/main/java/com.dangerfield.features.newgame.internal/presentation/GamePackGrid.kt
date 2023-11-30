@@ -36,7 +36,7 @@ import spyfallx.ui.Spacing
 import spyfallx.ui.color.AccentColor
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.background
-import spyfallx.ui.components.NonLazyVerticalGrid
+import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.components.text.Text
 import spyfallx.ui.elevation
 import com.dangerfield.libraries.ui.theme.SpyfallTheme

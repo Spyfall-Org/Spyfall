@@ -1,13 +1,12 @@
 package com.dangerfield.features.newgame.internal.usecase
 
-import com.dangerfield.features.newgame.internal.presentation.model.CreateGameError
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.Pack
 import spyfallx.core.Try
-import spyfallx.core.failure
 import spyfallx.core.success
 import javax.inject.Inject
 
+@Suppress("UnusedPrivateMember")
 class CreateSingleDeviceGame @Inject constructor(
     private val gameConfig: GameConfig,
     private val getGamePlayLocations: GetGamePlayLocations
@@ -28,5 +27,4 @@ class CreateSingleDeviceGame @Inject constructor(
             }
         }
     }
-
 }

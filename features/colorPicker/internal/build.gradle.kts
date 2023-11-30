@@ -17,4 +17,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(projects.libraries.flowroutines)
     implementation(projects.libraries.ui)
+    implementation(projects.libraries.navigation)
 }

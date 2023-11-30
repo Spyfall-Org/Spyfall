@@ -30,7 +30,7 @@ class CreateGame @Inject constructor(
             timeLimit < gameConfig.minTimeLimit -> CreateGameError.TimeLimitTooShort.failure()
             timeLimit > gameConfig.maxTimeLimit -> CreateGameError.TimeLimitTooLong.failure()
             userName.isBlank() -> CreateGameError.NameBlank.failure()
-            else -> createGame(
+            else -> create(
                 userName = userName,
                 packs = packs,
                 timeLimit = timeLimit,
@@ -39,7 +39,7 @@ class CreateGame @Inject constructor(
         }
     }
 
-    private suspend fun createGame(
+    private suspend fun create(
         userName: String,
         packs: List<Pack>,
         timeLimit: Int,

@@ -4,6 +4,7 @@ plugins {
 
 spyfall {
     compose()
+    flowroutines()
     daggerHilt(withProcessors = true)
 }
 
@@ -14,4 +15,5 @@ dependencies {
     implementation(projects.features.waitingRoom)
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
+    implementation(projects.libraries.navigation)
 }

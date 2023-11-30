@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material.icons.outlined.Upcoming
 import androidx.compose.material.icons.rounded.Add
@@ -148,6 +149,11 @@ sealed class SpyfallIcon(
         imageVector = Icons.Default.BugReport,
         contentDescription = contentDescription
     )
+
+    class VideoCall(contentDescription: String) : SpyfallIcon(
+        imageVector = Icons.Default.VideoCall,
+        contentDescription = contentDescription
+    )
 }
 
 private val allIcons = listOf(
@@ -177,6 +183,7 @@ private val allIcons = listOf(
     SpyfallIcon.Android(""),
     SpyfallIcon.DropDown(""),
     SpyfallIcon.Bug(""),
+    SpyfallIcon.VideoCall(""),
     )
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=1000,height=1200,unit=dp,dpi=200")

@@ -12,5 +12,5 @@ android {
 dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
-    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(projects.libraries.navigation)
 }

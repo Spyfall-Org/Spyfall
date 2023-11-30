@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
 import com.dangerfield.libraries.coreflowroutines.launchOnStart
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject

@@ -16,4 +16,5 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.resources)
     implementation(projects.libraries.ui)
+    implementation(projects.libraries.navigation)
 }

@@ -15,6 +15,6 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.config)
-    implementation(libs.androidx.navigation.compose)
     implementation(projects.features.forcedUpdate)
+    implementation(projects.libraries.navigation)
 }

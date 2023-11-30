@@ -1,6 +1,7 @@
 package com.dangerfield.libraries.config
 
 import se.ansman.dagger.auto.BindGenericAs
+import java.util.Locale
 
 /**
  * Represents a value in the app config. These are typically stable, key-value pairs used to set up
@@ -16,7 +17,9 @@ abstract class ConfiguredValue<out T : Any> {
     abstract val displayName: String
     open val description: String? = null
 
-    abstract val path: String
+    open val path: String
+        get() = javaClass.simpleName.replaceFirstChar { it.lowercase(Locale.getDefault()) }
+
     abstract val default: T
     open val showInQADashboard: Boolean = false
 

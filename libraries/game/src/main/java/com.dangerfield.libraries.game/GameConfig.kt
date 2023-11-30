@@ -9,4 +9,5 @@ interface GameConfig {
     val maxTimeLimit: Int
     val minTimeLimit: Int
     val locationsPerGame: Int
+    val isSingleDeviceModeEnabled: Boolean
 }

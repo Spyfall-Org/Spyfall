@@ -7,8 +7,8 @@ import com.dangerfield.features.joingame.navigateToJoinGame
 import com.dangerfield.features.newgame.navigateToNewGame
 import com.dangerfield.features.settings.navigateToSettings
 import com.dangerfield.features.welcome.welcomeNavigationRoute
+import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import se.ansman.dagger.auto.AutoBindIntoSet
-import spyfallx.ui.ModuleNavBuilder
 import javax.inject.Inject
 
 @AutoBindIntoSet

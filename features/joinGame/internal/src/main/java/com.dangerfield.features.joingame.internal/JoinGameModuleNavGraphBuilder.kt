@@ -9,10 +9,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.joingame.joinGameNavigationRoute
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
+import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.BuildInfo
 import spyfallx.core.openStoreLinkToApp
-import spyfallx.ui.ModuleNavBuilder
 import timber.log.Timber
 import javax.inject.Inject
 

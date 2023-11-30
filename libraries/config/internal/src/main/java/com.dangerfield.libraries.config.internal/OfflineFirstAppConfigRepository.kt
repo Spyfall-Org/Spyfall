@@ -91,7 +91,11 @@ class OfflineFirstAppConfigRepository @Inject constructor(
 
         // TODO apply targeted overrides (starting with version overrides)
         emitAll(configFlow)
-    }.shareIn(
+    }
+        .onEach {
+            Timber.d("Config emitted: ${it.map}")
+        }
+        .shareIn(
         scope = applicationScope,
         started = SharingStarted.Eagerly,
         replay = 1

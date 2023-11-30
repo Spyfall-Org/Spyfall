@@ -43,6 +43,7 @@ uiToolingPreviewAndroid = "1.5.4"
 navigationRuntimeKtx = "2.7.4"
 firebaseFirestoreKtx = "24.9.1"
 core = "1.12.0"
+navigationSafeArgsGenerator = "2.7.5"
 
 [libraries]
 # AndroidX
@@ -192,6 +193,7 @@ androidx-customview-poolingcontainer = { group = "androidx.customview", name = "
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 core = { group = "androidx.core", name = "core", version.ref = "core" }
+androidx-navigation-safe-args-generator = { group = "androidx.navigation", name = "navigation-safe-args-generator", version.ref = "navigationSafeArgsGenerator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
