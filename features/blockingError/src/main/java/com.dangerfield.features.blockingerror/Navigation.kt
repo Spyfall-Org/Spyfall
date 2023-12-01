@@ -1,9 +1,10 @@
 package com.dangerfield.features.blockingerror
 
-import androidx.navigation.NavController
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-const val blockingErrorBaseRoute = "blockingError"
+val blockingErrorRoute = route("blockingError")
 
-fun NavController.navigateToBlockingError() {
-    this.navigate(blockingErrorBaseRoute)
+fun Router.navigateToBlockingError() {
+    this.navigate(blockingErrorRoute.build())
 }

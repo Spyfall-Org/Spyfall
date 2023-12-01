@@ -1,10 +1,10 @@
 package com.dangerfield.features.forcedupdate
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-const val forcedUpdateNavigationRoute = "forced_update"
+val forcedUpdateNavigationRoute = route("forced_update")
 
-fun NavController.navigateToForcedUpdate(navOptions: NavOptions? = null) {
-    this.navigate(forcedUpdateNavigationRoute, navOptions)
+fun Router.navigateToForcedUpdate() {
+    this.navigate(forcedUpdateNavigationRoute.build())
 }

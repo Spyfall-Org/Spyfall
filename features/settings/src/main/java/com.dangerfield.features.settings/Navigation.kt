@@ -1,11 +1,11 @@
 package com.dangerfield.features.settings
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
-    navigate(settingsNavigationRoute, navOptions)
+fun Router.navigateToSettings() {
+    navigate(settingsNavigationRoute.build())
 }
 
-const val settingsNavigationRoute = "settings"
+val settingsNavigationRoute = route("settings")
 

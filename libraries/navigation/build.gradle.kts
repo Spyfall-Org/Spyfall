@@ -12,6 +12,6 @@ android {
 
 dependencies {
     implementation(projects.libraries.common)
-    api(libs.androidx.navigation.compose)
-    api(libs.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
 }

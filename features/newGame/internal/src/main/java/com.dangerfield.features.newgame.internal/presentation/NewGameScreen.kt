@@ -29,6 +29,7 @@ import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
+import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.Switch
 import com.dangerfield.libraries.ui.components.button.Button
@@ -37,7 +38,6 @@ import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.AsteriskText
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.icon.Icon
 import com.dangerfield.libraries.ui.icon.IconButton
 import com.dangerfield.libraries.ui.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
@@ -69,6 +69,8 @@ fun NewGameScreen(
     onNavigateBack: () -> Unit = {},
     onVideoCallLinkInfoClicked: () -> Unit = {},
     onCreateGameClicked: () -> Unit = {},
+    isLoadingCreation: Boolean,
+    isLoadingPacks: Boolean,
 ) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
@@ -114,10 +116,11 @@ fun NewGameScreen(
 
                 FormField(formFieldState = packsState) {
                     Column {
-                        if(!isSingleDevice) {
+                        if (!isSingleDevice) {
                             VerticalSpacerS1200()
                         }
                         PacksField(
+                            isLoading = isLoadingPacks,
                             packsState = packsState,
                             onPackSelected = onPackSelected
                         )
@@ -164,16 +167,20 @@ fun NewGameScreen(
 
                 VerticalSpacerS1200()
 
-                Button(
-                    style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
-                    enabled = isFormValid,
-                    onClick = {
-                        focusManager.clearFocus()
-                        onCreateGameClicked()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Create Game")
+                if (isLoadingCreation) {
+                    CircularProgressIndicator()
+                } else {
+                    Button(
+                        style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
+                        enabled = isFormValid,
+                        onClick = {
+                            focusManager.clearFocus()
+                            onCreateGameClicked()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Create Game")
+                    }
                 }
 
                 VerticalSpacerS1200()
@@ -214,7 +221,8 @@ private fun FormField(
 @Composable
 private fun PacksField(
     packsState: FieldState<List<DisplayablePack>>,
-    onPackSelected: (DisplayablePack, Boolean) -> Unit
+    onPackSelected: (DisplayablePack, Boolean) -> Unit,
+    isLoading: Boolean
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -223,13 +231,17 @@ private fun PacksField(
             Text(text = "Packs:")
         }
 
-        GamePackGrid(
-            gamePacks = packsState.backingValue ?: emptyList(),
-            onPackSelected = { pack, isSelected ->
-                focusManager.clearFocus()
-                onPackSelected(pack, isSelected)
-            }
-        )
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            GamePackGrid(
+                gamePacks = packsState.backingValue ?: emptyList(),
+                onPackSelected = { pack, isSelected ->
+                    focusManager.clearFocus()
+                    onPackSelected(pack, isSelected)
+                }
+            )
+        }
     }
 }
 
@@ -434,22 +446,24 @@ fun PreviewNewGameScreen() {
             timeLimitState = FieldState.Valid(""),
             onTimeLimitUpdated = {},
             isSingleDevice = isSingleDevice,
-            onIsSingleDeviceUpdated = { isSingleDevice = it },
             minPlayers = 3,
             maxPlayers = 9,
+            minGameLength = 1,
+            maxGameLength = 10,
+            isFormValid = false,
+            isVideoCallLinkEnabled = true,
+            onIsSingleDeviceUpdated = { isSingleDevice = it },
+            numOfPlayersState = FieldState.Valid(""),
+            isSingleDeviceModeEnabled = true,
+            onNumOfPlayersUpdated = { },
+            packsState = FieldState.Valid(packs),
+            didSomethingGoWrong = false,
             videoCallLinkState = FieldState.Valid(""),
             onVideoCallLinkUpdated = {},
-            maxGameLength = 10,
-            minGameLength = 1,
-            numOfPlayersState = FieldState.Valid(""),
-            onNumOfPlayersUpdated = { },
-            didSomethingGoWrong = false,
             onNavigateBack = { },
             onCreateGameClicked = { },
-            packsState = FieldState.Valid(packs),
-            isFormValid = false,
-            isSingleDeviceModeEnabled = true,
-            isVideoCallLinkEnabled = true
+            isLoadingCreation = false,
+            isLoadingPacks = false
         )
     }
 }

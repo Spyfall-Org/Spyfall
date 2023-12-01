@@ -1,15 +1,10 @@
 package com.dangerfield.features.newgame.internal
 
-import androidx.navigation.NavController
-import com.dangerfield.libraries.navigation.Route
-import com.dangerfield.libraries.navigation.build
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-fun NavController.navigateToVideoCallLinkInfo() {
-    navigate(
-        videoCallLinkInfoRoute.build()
-    ) {
-        launchSingleTop = true
-    }
+fun Router.navigateToVideoCallLinkInfo() {
+    navigate(videoCallLinkInfoRoute.build())
 }
 
-val videoCallLinkInfoRoute = Route("videoCallLinkInfo")
+val videoCallLinkInfoRoute = route("videoCallLinkInfo")

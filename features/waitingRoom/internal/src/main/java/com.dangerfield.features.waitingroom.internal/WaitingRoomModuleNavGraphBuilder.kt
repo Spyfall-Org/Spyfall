@@ -3,24 +3,22 @@ package com.dangerfield.features.waitingroom.internal
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dangerfield.features.waitingroom.accessCodeArgument
 import com.dangerfield.features.waitingroom.waitingRoomRoute
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
-import com.dangerfield.libraries.navigation.rawRoute
+import com.dangerfield.libraries.navigation.Router
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
 class WaitingRoomModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
 
-    override fun NavGraphBuilder.buildNavGraph(navController: NavController) {
+    override fun NavGraphBuilder.buildNavGraph(router: Router) {
 
         composable(
-            route = waitingRoomRoute.rawRoute(),
-            arguments = listOf(accessCodeArgument)
+            route = waitingRoomRoute.navRoute,
+            arguments = waitingRoomRoute.navArguments
         ) {
 
             val viewModel = hiltViewModel<WaitingRoomViewModel>()

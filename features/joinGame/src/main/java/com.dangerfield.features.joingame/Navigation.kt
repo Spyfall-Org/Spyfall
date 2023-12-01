@@ -1,10 +1,10 @@
 package com.dangerfield.features.joingame
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-const val joinGameNavigationRoute = "joinGame"
+val joinGameNavigationRoute = route("joinGame")
 
-fun NavController.navigateToJoinGame(navOptions: NavOptions? = null) {
-    navigate(joinGameNavigationRoute, navOptions)
+fun Router.navigateToJoinGame() {
+    navigate(joinGameNavigationRoute.build())
 }

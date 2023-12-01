@@ -1,12 +1,10 @@
 package com.dangerfield.features.newgame
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
+val newGameNavigationRoute = route("newGame")
 
-fun NavController.navigateToNewGame(navOptions: NavOptions? = null) {
-    navigate(newGameNavigationRoute, navOptions)
+fun Router.navigateToNewGame() {
+    navigate(newGameNavigationRoute.build())
 }
-
-const val newGameNavigationRoute = "newGame"
-

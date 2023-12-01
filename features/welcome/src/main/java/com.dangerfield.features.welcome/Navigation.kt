@@ -1,10 +1,10 @@
 package com.dangerfield.features.welcome
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-const val welcomeNavigationRoute = "welcome"
+val welcomeNavigationRoute = route("welcome")
 
-fun NavController.navigateToWelcome(navOptions: NavOptions? = null) {
-    this.navigate(welcomeNavigationRoute, navOptions)
+fun Router.navigateToWelcome() {
+    this.navigate(welcomeNavigationRoute.build())
 }

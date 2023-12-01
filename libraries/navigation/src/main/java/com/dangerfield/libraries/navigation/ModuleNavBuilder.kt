@@ -1,6 +1,5 @@
 package com.dangerfield.libraries.navigation
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 
 /**
@@ -14,5 +13,5 @@ import androidx.navigation.NavGraphBuilder
  */
 interface ModuleNavBuilder {
 
-    fun NavGraphBuilder.buildNavGraph(navController: NavController)
+    fun NavGraphBuilder.buildNavGraph(router: Router)
 }

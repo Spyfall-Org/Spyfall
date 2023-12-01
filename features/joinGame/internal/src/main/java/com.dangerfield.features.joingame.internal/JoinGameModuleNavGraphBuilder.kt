@@ -4,12 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.joingame.joinGameNavigationRoute
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.Router
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.BuildInfo
 import spyfallx.core.openStoreLinkToApp
@@ -21,9 +21,10 @@ class JoinGameModuleNavGraphBuilder @Inject constructor(
     private val buildInfo: BuildInfo
 ) : ModuleNavBuilder {
 
-    override fun NavGraphBuilder.buildNavGraph(navController: NavController) {
+    override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(
-            route = joinGameNavigationRoute,
+            route = joinGameNavigationRoute.navRoute,
+            arguments = joinGameNavigationRoute.navArguments
         ) {
             val viewModel = hiltViewModel<JoinGameViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
@@ -52,7 +53,7 @@ class JoinGameModuleNavGraphBuilder @Inject constructor(
                 onUserNameChanged = viewModel::updateUserName,
                 onSomethingWentWrongDismissed = viewModel::onSomethingWentWrongDismissed,
                 onUpdateAppClicked = { context.openStoreLinkToApp(buildInfo) },
-                onNavigateBack = navController::popBackStack,
+                onNavigateBack = router::goBack,
             )
         }
     }

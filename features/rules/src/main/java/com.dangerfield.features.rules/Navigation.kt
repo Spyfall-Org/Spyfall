@@ -1,10 +1,10 @@
 package com.dangerfield.features.rules
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-const val rulesNavigationRoute = "rulesNavigationRoute"
+val rulesNavigationRoute = route("rulesNavigationRoute")
 
-fun NavController.navigateToRules(navOptions: NavOptions? = null) {
-    this.navigate(rulesNavigationRoute, navOptions)
+fun Router.navigateToRules() {
+    navigate(rulesNavigationRoute.build())
 }

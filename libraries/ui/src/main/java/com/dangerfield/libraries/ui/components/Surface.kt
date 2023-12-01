@@ -17,18 +17,18 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.throttledCallback
 import spyfallx.ui.Border
 import spyfallx.ui.Elevation
-import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Radii
 import spyfallx.ui.Radius
 import spyfallx.ui.Spacing
-import spyfallx.ui.ThrottledCallback
 import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.ProvideContentColor
 import spyfallx.ui.color.background
-import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 @NonRestartableComposable
@@ -48,8 +48,6 @@ fun Surface(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     content: @Composable () -> Unit,
 ) {
-    val throttledCallback = remember { ThrottledCallback(onClick) }
-
     Box(
         modifier = modifier
             .surface(
@@ -64,7 +62,7 @@ fun Surface(
                 indication = indication,
                 enabled = enabled,
                 role = role,
-                onClick = throttledCallback::invoke
+                onClick = throttledCallback(onClick)
             )
             .padding(contentPadding),
         propagateMinConstraints = true

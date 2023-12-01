@@ -44,6 +44,7 @@ navigationRuntimeKtx = "2.7.4"
 firebaseFirestoreKtx = "24.9.1"
 core = "1.12.0"
 navigationSafeArgsGenerator = "2.7.5"
+navigationCommonKtx = "2.7.5"
 
 [libraries]
 # AndroidX
@@ -194,6 +195,7 @@ androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "u
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 core = { group = "androidx.core", name = "core", version.ref = "core" }
 androidx-navigation-safe-args-generator = { group = "androidx.navigation", name = "navigation-safe-args-generator", version.ref = "navigationSafeArgsGenerator" }
+androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

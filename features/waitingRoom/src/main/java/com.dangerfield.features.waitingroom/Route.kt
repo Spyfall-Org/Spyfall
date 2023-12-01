@@ -1,25 +1,22 @@
 package com.dangerfield.features.waitingroom
 
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.dangerfield.libraries.navigation.Route
-import com.dangerfield.libraries.navigation.build
-import com.dangerfield.libraries.navigation.withArgument
-import com.dangerfield.libraries.navigation.withArguments
+import com.dangerfield.features.welcome.welcomeNavigationRoute
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-fun NavController.navigateToWaitingRoom(
+fun Router.navigateToWaitingRoom(
     accessCode: String,
     videoCallLink: String? = null
 ) {
     navigate(
-        waitingRoomRoute.build(
-            accessCodeArgument to accessCode,
-            videoCallLinkArgument to videoCallLink
-        )
-    ) {
-        launchSingleTop = true
-    }
+        waitingRoomRoute
+            .fill(accessCodeArgument, accessCode)
+            .fill(videoCallLinkArgument, videoCallLink)
+            .popUpTo(welcomeNavigationRoute)
+            .build(),
+    )
 }
 
 val accessCodeArgument = navArgument("accessCode") { type = NavType.StringType }
@@ -29,5 +26,7 @@ val videoCallLinkArgument = navArgument("videoCallLink") {
     nullable = true
 }
 
-val waitingRoomRoute = Route("waitingRoom")
-    .withArguments(accessCodeArgument, videoCallLinkArgument)
+val waitingRoomRoute = route("waitingRoom") {
+    argument(accessCodeArgument)
+    argument(videoCallLinkArgument)
+}

@@ -1,10 +1,10 @@
 package com.dangerfield.features.qa
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.route
 
-const val qaNavigationRoute = "qaNavigationRoute"
+val qaNavigationRoute = route("qaNavigationRoute")
 
-fun NavController.navigateToQa(navOptions: NavOptions? = null) {
-    this.navigate(qaNavigationRoute, navOptions)
+fun Router.navigateToQa() {
+    navigate(qaNavigationRoute.build())
 }

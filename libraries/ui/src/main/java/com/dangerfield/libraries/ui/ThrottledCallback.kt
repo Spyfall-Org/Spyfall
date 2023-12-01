@@ -1,4 +1,4 @@
-package spyfallx.ui
+package com.dangerfield.libraries.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -10,12 +10,15 @@ import spyfallx.core.RateLimiter
  *
  * If multiple callbacks happen in a short period of time, only the first callback will be performed.
  */
+
 @Composable
 fun throttledCallback(callback: () -> Unit): () -> Unit =
     remember { ThrottledCallback(callback) }
         .also { it.delegate = callback }
 
-class ThrottledCallback(var delegate: () -> Unit) : () -> Unit {
+private class ThrottledCallback(var delegate: () -> Unit) : () -> Unit {
     private val throttler = RateLimiter()
+
     override operator fun invoke() = throttler.performAction(delegate)
 }
+
