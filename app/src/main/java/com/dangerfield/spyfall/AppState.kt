@@ -3,6 +3,7 @@ package com.dangerfield.spyfall
 import androidx.compose.runtime.Stable
 import kotlinx.coroutines.CoroutineScope
 
+@Suppress("UnusedPrivateMember")
 @Stable
 class AppState(
     private val coroutineScope: CoroutineScope

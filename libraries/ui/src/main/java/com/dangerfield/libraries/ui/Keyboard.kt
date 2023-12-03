@@ -18,6 +18,7 @@ enum class Keyboard {
 val Keyboard.isOpen: Boolean
     get() = this == Keyboard.Opened
 
+@Suppress("MagicNumber")
 @Composable
 fun rememberKeyboardState(): Keyboard {
     var keyboardState by remember { mutableStateOf(Keyboard.Closed) }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
@@ -49,7 +50,10 @@ fun GameCard(
                 contentColor = SpyfallTheme.colorScheme.onSurfacePrimary,
                 contentPadding = PaddingValues(Spacing.S800),
             ) {
-                Text(text = text)
+                Text(
+                    text = text,
+                    textDecoration = if (isMarkedOff) TextDecoration.LineThrough else TextDecoration.None,
+                )
             }
         }
     )

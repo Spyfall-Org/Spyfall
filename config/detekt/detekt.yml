@@ -540,7 +540,7 @@ style:
     maxJumpCount: 1
   MagicNumber:
     active: true
-    ignoreAnnotated: [ 'Preview', 'ThemePreviews' ]
+    ignoreAnnotated: ['Composable', 'Preview', 'ThemePreviews' ]
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
     ignoreNumbers:
       - '-1'

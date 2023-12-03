@@ -29,7 +29,7 @@ fun dragHandleTopAccessory() = TopAccessory.DragHandle
 @Composable
 fun iconTopAccessory(
     icon: SpyfallIcon,
-    color: Color = SpyfallTheme.colorScheme.onBackground.color,
-    backgroundColor: Color = SpyfallTheme.colorScheme.background.color,
+    color: Color = SpyfallTheme.colorScheme.background.color,
+    backgroundColor: Color = SpyfallTheme.colorScheme.onBackground.color,
     iconSize: IconSize = IconSize.Small
 ) = TopAccessory.Icon(icon, color, backgroundColor, iconSize)

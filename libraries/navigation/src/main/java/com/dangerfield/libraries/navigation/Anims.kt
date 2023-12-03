@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package com.dangerfield.libraries.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope

@@ -13,11 +13,13 @@ import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.modal.ModalContent
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BasicBottomSheet
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheet
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValue
+import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessory
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ fun VideoCallInfoBottomSheet(
     BasicBottomSheet(
         onDismissRequest = { onDismiss(bottomSheetState) },
         state = bottomSheetState,
+        topAccessory = iconTopAccessory(icon = SpyfallIcon.VideoCall("Video")),
         modifier = modifier,
         topContent = {
             Text(text = "Add video calling to your game")

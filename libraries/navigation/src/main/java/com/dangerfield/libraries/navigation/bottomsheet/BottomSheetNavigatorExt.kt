@@ -1,9 +1,5 @@
 package com.dangerfield.libraries.navigation.bottomsheet
 
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
@@ -13,8 +9,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.Navigator
 import androidx.navigation.get
-import com.dangerfield.libraries.navigation.slideDownToExitBottomSheet
-import com.dangerfield.libraries.navigation.slideUpToEnterBottomSheet
 import spyfallx.core.Try
 import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
@@ -38,17 +32,8 @@ fun NavGraphBuilder.bottomSheet(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    enterTransition: (@JvmSuppressWildcards
-    AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = {
-        slideUpToEnterBottomSheet()
-    },
-    exitTransition: (@JvmSuppressWildcards
-    AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = {
-        slideDownToExitBottomSheet()
-    },
-    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+    content: @Composable (NavBackStackEntry) -> Unit
 ) {
-
     addDestination(
         BottomSheetNavigator.Destination(
             provider[BottomSheetNavigator::class],
@@ -61,8 +46,6 @@ fun NavGraphBuilder.bottomSheet(
             deepLinks.forEach { deepLink ->
                 addDeepLink(deepLink)
             }
-            this.enterTransition = enterTransition
-            this.exitTransition = exitTransition
         }
     )
 }
