@@ -22,10 +22,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import spyfallx.ui.NumericalValues
+import com.dangerfield.libraries.ui.NumericalValues
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.PreviewContent
-import spyfallx.ui.Radii
+import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import spyfallx.ui.typography.FontSize

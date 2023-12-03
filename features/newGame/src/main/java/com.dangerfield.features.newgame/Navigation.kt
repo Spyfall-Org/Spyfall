@@ -6,5 +6,5 @@ import com.dangerfield.libraries.navigation.route
 val newGameNavigationRoute = route("newGame")
 
 fun Router.navigateToNewGame() {
-    navigate(newGameNavigationRoute.build())
+    navigate(newGameNavigationRoute.noArgRoute())
 }

@@ -28,17 +28,17 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.spyfall.features.newgame.internal.R
-import spyfallx.ui.Elevation
+import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
-import spyfallx.ui.Radii
+import com.dangerfield.libraries.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.AccentColor
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.elevation
+import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable

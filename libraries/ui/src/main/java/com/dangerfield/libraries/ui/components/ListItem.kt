@@ -15,8 +15,8 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.icon.Icon
-import com.dangerfield.libraries.ui.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.icon.Icon
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 

@@ -35,10 +35,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
-import co.hinge.common.design.system.components.tooltip.TooltipBoxScope
-import co.hinge.common.design.system.components.tooltip.TooltipDuration
-import co.hinge.common.design.system.components.tooltip.TooltipManager
-import co.hinge.common.design.system.components.tooltip.TooltipState
 import com.dangerfield.libraries.coreflowroutines.cancelledJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

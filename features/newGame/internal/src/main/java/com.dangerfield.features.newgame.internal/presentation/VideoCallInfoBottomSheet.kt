@@ -11,21 +11,28 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
-import com.dangerfield.libraries.ui.components.Dialog
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.modal.ModalContent
+import com.dangerfield.libraries.ui.components.modal.bottomsheet.BasicBottomSheet
+import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheet
+import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
+import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValue
+import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
+import kotlinx.coroutines.launch
 import spyfallx.ui.Spacing
 
 @Composable
-fun VideoCallLinkInfoDialog(
+fun VideoCallInfoBottomSheet(
     modifier: Modifier = Modifier,
+    bottomSheetState: BottomSheetState = rememberBottomSheetState(),
     recognizedPlatforms: List<String>,
-    onDismiss: () -> Unit
+    onDismiss: (BottomSheetState) -> Unit
 ) {
-
-    Dialog(
-        onDismiss = onDismiss,
+    BasicBottomSheet(
+        onDismissRequest = { onDismiss(bottomSheetState) },
+        state = bottomSheetState,
         modifier = modifier,
         topContent = {
             Text(text = "Add video calling to your game")
@@ -42,7 +49,7 @@ fun VideoCallLinkInfoDialog(
                     NonLazyVerticalGrid(
                         columns = 2,
                         data = recognizedPlatforms
-                    ) { index, item ->
+                    ) { _, item ->
                         Row(modifier = Modifier.fillMaxWidth()) {
                             Text(text = "•")
                             HorizontalSpacerS600()
@@ -60,7 +67,7 @@ fun VideoCallLinkInfoDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(Spacing.S800),
-                onClick = onDismiss
+                onClick = { onDismiss(bottomSheetState) }
             ) {
                 Text(text = "Okay")
             }
@@ -71,9 +78,11 @@ fun VideoCallLinkInfoDialog(
 @Composable
 @ThemePreviews
 private fun PreviewVideoCallLinkInfoDialog() {
+    val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {
-        VideoCallLinkInfoDialog(
+        VideoCallInfoBottomSheet(
             onDismiss = {},
+            bottomSheetState = bottomSheetState,
             recognizedPlatforms = listOf(
                 "Zoom",
                 "Google Meet",
@@ -89,9 +98,11 @@ private fun PreviewVideoCallLinkInfoDialog() {
 @Composable
 @ThemePreviews
 private fun PreviewVideoCallLinkInfoDialogEmpty() {
+    val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {
-        VideoCallLinkInfoDialog(
+        VideoCallInfoBottomSheet(
             onDismiss = {},
+            bottomSheetState = bottomSheetState,
             recognizedPlatforms = emptyList()
         )
     }

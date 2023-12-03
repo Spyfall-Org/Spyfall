@@ -1,5 +1,5 @@
 @file:Suppress("MagicNumber")
-package spyfallx.ui
+package com.dangerfield.libraries.ui
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationVector1D
@@ -23,11 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
-import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.background
 import spyfallx.ui.color.takeOrElse
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import spyfallx.ui.Spacing
 
 
 @Immutable
@@ -138,7 +138,11 @@ private val elevationDefaultSpring = spring(visibilityThreshold = Elevation(Dp.V
 @Preview(widthDp = 1400)
 @Composable
 private fun ElevationPreview() {
-    val elevations = listOf(Elevation::None, Elevation::Inline, Elevation::Fixed)
+    val elevations = listOf(
+        Elevation.Companion::None,
+        Elevation.Companion::Inline,
+        Elevation.Companion::Fixed
+    )
     PreviewContent(showBackground = true) {
         Column(Modifier.padding(Spacing.S900)) {
             Row {

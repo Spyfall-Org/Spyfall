@@ -59,6 +59,8 @@
             <option value="$PROJECT_DIR$/libraries/game/internal" />
             <option value="$PROJECT_DIR$/libraries/logging" />
             <option value="$PROJECT_DIR$/libraries/logging/internal" />
+            <option value="$PROJECT_DIR$/libraries/navigation" />
+            <option value="$PROJECT_DIR$/libraries/navigation/internal" />
             <option value="$PROJECT_DIR$/libraries/resources" />
             <option value="$PROJECT_DIR$/libraries/resources/internal" />
             <option value="$PROJECT_DIR$/libraries/session" />

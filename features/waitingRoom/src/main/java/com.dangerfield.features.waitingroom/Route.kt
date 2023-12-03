@@ -4,6 +4,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
 
 fun Router.navigateToWaitingRoom(
@@ -11,11 +12,11 @@ fun Router.navigateToWaitingRoom(
     videoCallLink: String? = null
 ) {
     navigate(
-        waitingRoomRoute
-            .fill(accessCodeArgument, accessCode)
-            .fill(videoCallLinkArgument, videoCallLink)
-            .popUpTo(welcomeNavigationRoute)
-            .build(),
+        fillRoute(waitingRoomRoute) {
+            fill(accessCodeArgument, accessCode)
+            fill(videoCallLinkArgument, videoCallLink)
+            popUpTo(welcomeNavigationRoute)
+        }
     )
 }
 

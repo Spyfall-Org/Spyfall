@@ -1,5 +1,4 @@
-package com.dangerfield.libraries.ui.components
-
+package com.dangerfield.libraries.ui.components.modal
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,15 +8,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
 import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.Radii
 import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.clip
+
+@Composable
+fun BasicDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    topContent: @Composable () -> Unit = {},
+    content: @Composable () -> Unit = {},
+    bottomContent: @Composable () -> Unit = {},
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+    ) {
+        ModalContent(
+            modifier = modifier.clip(Radii.Card),
+            topContent = topContent,
+            content = content,
+            bottomContent = bottomContent
+        )
+    }
+}
 
 @Composable fun BasicDialog(
-    onDismiss: () -> Unit,
+    onDismissRequest: () -> Unit,
     title: String,
     description: String,
     primaryButtonText: String,
@@ -26,8 +49,8 @@ import spyfallx.ui.Spacing
     onPrimaryButtonClicked: () -> Unit,
     onSecondaryButtonClicked: (() -> Unit)? = null,
 ) {
-    Dialog(
-        onDismiss = onDismiss,
+    BasicDialog(
+        onDismissRequest = onDismissRequest,
         modifier = modifier,
         topContent = { Text(text = title) },
         content = { Text(text = description) },
@@ -62,11 +85,35 @@ import spyfallx.ui.Spacing
 }
 
 @Composable
+@ThemePreviews
+private fun PreviewDialog() {
+    PreviewContent {
+        BasicDialog(
+            onDismissRequest = { -> },
+            modifier = Modifier,
+            topContent = { Text(text = "Top Content") },
+            content = {
+                Column {
+                    Text(text = "content".repeat(10))
+                    Text(text = "is good".repeat(10))
+                }
+            },
+            bottomContent = {
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Bottom Content")
+                }
+            },
+        )
+    }
+}
+
+
+@Composable
 @Preview
 private fun PreviewBasicDialog() {
     PreviewContent {
         BasicDialog(
-            onDismiss = { -> },
+            onDismissRequest = { -> },
             title = "This is a title",
             description = "this is a description, pretty cool right? ",
             primaryButtonText = "No",
@@ -83,7 +130,7 @@ private fun PreviewBasicDialog() {
 private fun PreviewBasicDialogLongDescription() {
     PreviewContent {
         BasicDialog(
-            onDismiss = { -> },
+            onDismissRequest = { -> },
             title = "This is a title",
             description = "this is a description thats super long.".repeat(50),
             primaryButtonText = "No",

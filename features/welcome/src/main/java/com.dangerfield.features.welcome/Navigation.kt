@@ -6,5 +6,5 @@ import com.dangerfield.libraries.navigation.route
 val welcomeNavigationRoute = route("welcome")
 
 fun Router.navigateToWelcome() {
-    this.navigate(welcomeNavigationRoute.build())
+    this.navigate(welcomeNavigationRoute.noArgRoute())
 }

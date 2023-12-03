@@ -4,8 +4,10 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavArgumentBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import spyfallx.core.Try
 import spyfallx.core.checkInDebug
 import spyfallx.core.doNothing
+import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 import java.lang.StringBuilder
 
@@ -95,83 +97,102 @@ class Route internal constructor() {
         val navRoute: String,
         val navArguments: List<NamedNavArgument>
     ) {
-        private val filledRouteBuilder = StringBuilder(navRoute)
-        private var popUpTo: NavPopUp? = null
-        private var isLaunchSingleTop: Boolean? = null
-        private var restoreState: Boolean? = null
-        private var navAnimBuilder: NavAnimBuilder? = null
 
-        fun fill(argument: NamedNavArgument, value: Any?): Template {
-
-            checkInDebug(navArguments.contains(argument)) {
-                "Tried to fill argument ${argument.name} with value $value, but route $navRoute does not contain this argument."
-            }
-
-            checkInDebug(
-                value != null
-                        || argument.argument.isNullable
-                        || argument.argument.isDefaultValuePresent
-            ) {
-                "Route $navRoute does not support null values for argument ${argument.name}."
-            }
-
-            when {
-                !navArguments.contains(argument) -> doNothing()
-                value == null -> filledRouteBuilder.removeArgument(argument)
-                else -> filledRouteBuilder.fillArgument(argument, value)
-            }
-
-            return this
+        fun noArgRoute(): Filled {
+            return Filler(navRoute, navArguments).build()
         }
 
-        fun anim(block: NavAnimBuilder.() -> Unit): Template {
-            if (navAnimBuilder != null) {
-                navAnimBuilder?.apply(block)
-            } else {
-                navAnimBuilder = NavAnimBuilder().apply(block)
-            }
-            return this
-        }
+        class Filler internal constructor(
+            val navRoute: String,
+            val navArguments: List<NamedNavArgument>
+        ) {
 
-        fun launchSingleTop(value: Boolean = true) {
-            isLaunchSingleTop = value
-        }
+            private val filledRouteBuilder = StringBuilder(navRoute)
+            private var popUpTo: NavPopUp? = null
+            private var isLaunchSingleTop: Boolean? = null
+            private var restoreState: Boolean? = null
+            private var navAnimBuilder: NavAnimBuilder? = null
 
-        fun restoreState(value: Boolean = true) {
-            restoreState = value
-        }
+            fun fill(argument: NamedNavArgument, value: Any?): Filler {
 
-        fun popUpTo(route: Route.Template, inclusive: Boolean = false): Template {
-            popUpTo = NavPopUp(route, inclusive)
-            return this
-        }
-
-        fun fill(vararg args: Pair<NamedNavArgument, Any?>): Template {
-            args.forEach { (argument, value) ->
-                fill(argument, value)
-            }
-            return this
-        }
-
-        fun build(): Filled {
-            navArguments.forEach {
-                val isNotFilled = filledRouteBuilder.isArgumentNotFilled(it)
-                if (isNotFilled) {
-                    throwIfDebug { "Route $navRoute was not filled with argument ${it.name}" }
+                checkInDebug(navArguments.contains(argument)) {
+                    "Tried to fill argument ${argument.name} with value $value, but route $navRoute does not contain this argument."
                 }
 
-                filledRouteBuilder.removeArgument(it)
+                checkInDebug(
+                    value != null
+                            || argument.argument.isNullable
+                            || argument.argument.isDefaultValuePresent
+                ) {
+                    "Route $navRoute does not support null values for argument ${argument.name}."
+                }
+
+                Try {
+                    when {
+                        !navArguments.contains(argument) -> doNothing()
+                        value == null -> filledRouteBuilder.removeArgument(argument)
+                        else -> filledRouteBuilder.fillArgument(argument, value)
+                    }
+                }
+                    .logOnError("Error filling route $navRoute with argument ${argument.name}")
+                    .throwIfDebug()
+
+                return this
             }
-            return Filled(
-                route = filledRouteBuilder.toString(),
-                popUpTo = popUpTo,
-                isLaunchSingleTop = isLaunchSingleTop,
-                navAnimBuilder = navAnimBuilder,
-            )
+
+            fun anim(block: NavAnimBuilder.() -> Unit): Filler {
+                if (navAnimBuilder != null) {
+                    navAnimBuilder?.apply(block)
+                } else {
+                    navAnimBuilder = NavAnimBuilder().apply(block)
+                }
+                return this
+            }
+
+            fun launchSingleTop(value: Boolean = true) {
+                isLaunchSingleTop = value
+            }
+
+            fun restoreState(value: Boolean = true) {
+                restoreState = value
+            }
+
+            fun popUpTo(route: Route.Template, inclusive: Boolean = false): Filler {
+                popUpTo = NavPopUp(route, inclusive)
+                return this
+            }
+
+            fun fill(vararg args: Pair<NamedNavArgument, Any?>): Filler {
+                args.forEach { (argument, value) ->
+                    fill(argument, value)
+                }
+                return this
+            }
+
+            fun build(): Filled {
+                navArguments.forEach {
+                    val isNotFilled = filledRouteBuilder.isArgumentNotFilled(it)
+                    if (isNotFilled) {
+                        throwIfDebug { "Route $navRoute was not filled with argument ${it.name}" }
+                    }
+
+                    Try {
+                        filledRouteBuilder.removeArgument(it)
+                    }
+                        .logOnError()
+                        .throwIfDebug()
+                }
+
+                return Filled(
+                    route = filledRouteBuilder.toString(),
+                    popUpTo = popUpTo,
+                    isLaunchSingleTop = isLaunchSingleTop,
+                    navAnimBuilder = navAnimBuilder,
+                )
+            }
         }
     }
 
-    // TODO add support for transitions and popups and extra nav
     class Filled internal constructor(
         val route: String,
         val popUpTo: NavPopUp? = null,
@@ -181,10 +202,13 @@ class Route internal constructor() {
     )
 }
 
-fun fillRoute(template: Route.Template, block: Route.Template.() -> Unit): Route.Filled {
-    template.block()
-    return template.build()
+fun fillRoute(template: Route.Template, block: Route.Template.Filler.() -> Unit): Route.Filled {
+    val filler = Route.Template.Filler(template.navRoute, template.navArguments)
+    filler.block()
+    return filler.build()
 }
+
+
 
 fun route(block: Route.Builder.() -> Unit): Route.Template {
     val builder = Route.Builder()

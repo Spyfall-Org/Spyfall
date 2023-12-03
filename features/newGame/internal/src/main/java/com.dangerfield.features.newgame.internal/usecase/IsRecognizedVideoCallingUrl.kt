@@ -9,7 +9,7 @@ class IsRecognizedVideoCallingUrl @Inject constructor(
     operator fun invoke(link: String): Boolean {
         val recognizedList = recognizedVideoCallingPlatforms().flatMap { it.value }
 
-        val urlRegex = recognizedList.joinToString(separator = "|") { "(https?://)?(www\\.)?\\w+\\.$it(/\\S*)?" }.toRegex()
+        val urlRegex = recognizedList.joinToString(separator = "|") { "(https?://)?(www\\.)?(\\w+\\.)?$it(/\\S*)?" }.toRegex()
 
         return urlRegex.matches(link)
     }

@@ -9,10 +9,10 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import spyfallx.ui.color.ColorScheme
-import spyfallx.ui.color.LocalColorScheme
-import spyfallx.ui.color.LocalContentColor
-import spyfallx.ui.color.LocalTypography
+import com.dangerfield.libraries.ui.color.ColorScheme
+import com.dangerfield.libraries.ui.color.LocalColorScheme
+import com.dangerfield.libraries.ui.color.LocalContentColor
+import com.dangerfield.libraries.ui.color.LocalTypography
 import com.dangerfield.libraries.ui.typography.Typography
 
 //TODO hide colors & typography into the internal module so that people must go through the theme

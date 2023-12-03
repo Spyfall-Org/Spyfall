@@ -3,21 +3,28 @@ package com.dangerfield.features.newgame.internal.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
@@ -29,6 +36,7 @@ import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
+import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.Switch
@@ -38,9 +46,13 @@ import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.AsteriskText
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.icon.IconButton
-import com.dangerfield.libraries.ui.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.icon.IconButton
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.isOpen
+import com.dangerfield.libraries.ui.rememberKeyboardState
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import spyfallx.ui.Spacing
 
 @Composable
@@ -74,6 +86,14 @@ fun NewGameScreen(
 ) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
+    val keyboardState = rememberKeyboardState()
+    var videoCallFieldHasFocus by remember { mutableStateOf(false) }
+
+    LaunchedEffect(keyboardState, videoCallFieldHasFocus) {
+        if (keyboardState.isOpen && videoCallFieldHasFocus) {
+            scrollState.animateScrollTo(scrollState.maxValue)
+        }
+    }
 
     Box {
         Screen(
@@ -86,11 +106,11 @@ fun NewGameScreen(
                     scrollState = scrollState
                 )
             }
-        ) {
+        ) { screenPadding ->
             Column(
                 Modifier
+                    .padding(screenPadding)
                     .verticalScroll(scrollState)
-                    .padding(it)
                     .padding(horizontal = Spacing.S1000)
             ) {
                 Spacer(modifier = Modifier.height(Spacing.S1200))
@@ -155,7 +175,10 @@ fun NewGameScreen(
                 if (isVideoCallLinkEnabled) {
                     FormField(
                         formFieldState = videoCallLinkState,
-                        isFieldVisible = !isSingleDevice
+                        isFieldVisible = !isSingleDevice,
+                        showErrorWhenNotFocused = true, // last field should show error,
+                        onFocusChanged = { videoCallFieldHasFocus = it }
+
                     ) {
                         VideoCallLink(
                             onVideoCallLinkInfoClicked = onVideoCallLinkInfoClicked,
@@ -168,7 +191,12 @@ fun NewGameScreen(
                 VerticalSpacerS1200()
 
                 if (isLoadingCreation) {
-                    CircularProgressIndicator()
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 } else {
                     Button(
                         style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
@@ -188,7 +216,7 @@ fun NewGameScreen(
         }
 
         if (didSomethingGoWrong) {
-            NewGameErrorDialog(onDismiss = onNavigateBack)
+            NewGameErrorDialog(onDismissRequest = onNavigateBack)
         }
     }
 }
@@ -197,17 +225,24 @@ fun NewGameScreen(
 private fun FormField(
     formFieldState: FieldState<*>,
     isFieldVisible: Boolean = true,
+    showErrorWhenNotFocused: Boolean = false,
+    onFocusChanged: (Boolean) -> Unit = {},
     content: @Composable () -> Unit
 ) {
     var hasFocus by remember { mutableStateOf(false) }
 
     AnimatedVisibility(visible = isFieldVisible) {
         Column {
-            Box(modifier = Modifier.onFocusChanged { hasFocus = it.hasFocus }) {
+            Box(modifier = Modifier.onFocusChanged {
+                hasFocus = it.hasFocus
+                onFocusChanged(it.hasFocus)
+            }) {
                 content()
             }
 
-            if (formFieldState is FieldState.Invalid && !hasFocus) {
+            VerticalSpacerS500()
+
+            if (formFieldState is FieldState.Invalid && (!hasFocus || showErrorWhenNotFocused)) {
                 Text(
                     text = formFieldState.errorMessage,
                     typographyToken = SpyfallTheme.typography.Body.B500,

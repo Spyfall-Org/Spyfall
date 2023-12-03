@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.dangerfield.libraries.ui.PreviewContent
-import spyfallx.ui.Radii
+import com.dangerfield.libraries.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.AccentColor
 import com.dangerfield.libraries.ui.color.ColorPrimitive

@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.ui.icon
+package com.dangerfield.libraries.ui.components.icon
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -12,17 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import spyfallx.ui.NumericalValues.V1100
-import spyfallx.ui.NumericalValues.V1300
-import spyfallx.ui.NumericalValues.V300
-import spyfallx.ui.NumericalValues.V700
-import spyfallx.ui.NumericalValues.V900
+import com.dangerfield.libraries.ui.NumericalValues.V1300
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.NumericalValues.V1000
-import spyfallx.ui.NumericalValues.V1200
-import spyfallx.ui.NumericalValues.V400
-import spyfallx.ui.NumericalValues.V800
+import com.dangerfield.libraries.ui.NumericalValues.V1000
+import com.dangerfield.libraries.ui.NumericalValues.V1200
+import com.dangerfield.libraries.ui.NumericalValues.V400
+import com.dangerfield.libraries.ui.NumericalValues.V800
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable
 fun Icon(
@@ -100,7 +97,8 @@ private fun IconPreview() {
                     spyfallIcon = SpyfallIcon.Check("check")
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "${it.name} Icon")
+                Text(text = "${it.name} Icon", typographyToken = SpyfallTheme.typography.Body.B500
+                )
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }

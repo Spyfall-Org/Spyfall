@@ -6,5 +6,5 @@ import com.dangerfield.libraries.navigation.route
 val rulesNavigationRoute = route("rulesNavigationRoute")
 
 fun Router.navigateToRules() {
-    navigate(rulesNavigationRoute.build())
+    navigate(rulesNavigationRoute.noArgRoute())
 }

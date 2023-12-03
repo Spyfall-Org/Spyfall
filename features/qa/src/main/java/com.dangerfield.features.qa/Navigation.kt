@@ -6,5 +6,5 @@ import com.dangerfield.libraries.navigation.route
 val qaNavigationRoute = route("qaNavigationRoute")
 
 fun Router.navigateToQa() {
-    navigate(qaNavigationRoute.build())
+    navigate(qaNavigationRoute.noArgRoute())
 }

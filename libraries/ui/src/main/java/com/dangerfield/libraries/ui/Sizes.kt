@@ -1,8 +1,12 @@
-package spyfallx.ui
+package com.dangerfield.libraries.ui
 
 import androidx.compose.ui.unit.Dp
 
 object Sizes {
+
+    /** 2dp */
+    val S50 = NumericalValues.V50
+
     /** 4dp */
     val S100 = NumericalValues.V100
 

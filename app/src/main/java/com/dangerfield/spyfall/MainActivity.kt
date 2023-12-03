@@ -92,7 +92,7 @@ class MainActivity : ThemeChangeableActivity() {
             SpyfallApp(
                 navBuilderRegistry = navBuilderRegistry,
                 isUpdateRequired = isUpdateRequired,
-                hadErrorLoadingApp = hadErrorLoadingApp,
+                hasBlockingError = hadErrorLoadingApp,
                 accentColor = AccentColor.entries.random()
             )
         }

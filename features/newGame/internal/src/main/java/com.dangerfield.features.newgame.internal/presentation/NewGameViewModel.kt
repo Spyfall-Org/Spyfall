@@ -18,15 +18,26 @@ import com.dangerfield.features.newgame.internal.presentation.model.userName
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
 import com.dangerfield.features.newgame.internal.usecase.IsRecognizedVideoCallingUrl
+import com.dangerfield.libraries.coreflowroutines.collect
 import com.dangerfield.libraries.coreflowroutines.launchOnStart
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import spyfallx.core.Try
@@ -36,6 +47,7 @@ import spyfallx.core.illegalState
 import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @Suppress("TooManyFunctions")
 @HiltViewModel
@@ -47,9 +59,9 @@ class NewGameViewModel @Inject constructor(
     private val isRecognizedVideoCallingUrl: IsRecognizedVideoCallingUrl
 ) : ViewModel() {
 
+    // TODO rework this to allow for a debounce on the video call link
     private val actions = Channel<Action>(Channel.UNLIMITED)
     private val _events = Channel<Event>()
-
     val events = _events.receiveAsFlow()
 
     val state = flow {
@@ -189,15 +201,20 @@ class NewGameViewModel @Inject constructor(
         updateState { it.copy(nameState = nameState) }
     }
 
-    private suspend fun FlowCollector<State>.handleUpdateVideoCallLink(link: String) = updateState {
-        val fieldState = if(link.isEmpty()) {
-            Idle(link)
-        } else if (!isRecognizedVideoCallingUrl(link)) {
-            Invalid(link, "This link is not")
-        } else {
-            Valid(link)
+    private suspend fun FlowCollector<State>.handleUpdateVideoCallLink(link: String) {
+        updateState {
+            val videoCallLinkState = if (link.isEmpty()) {
+                Idle(link)
+            } else if (isRecognizedVideoCallingUrl(link)) {
+                Valid(link)
+            } else {
+                Invalid(
+                    link,
+                    "This link is not from one our recognized platforms, Click the info button for more info"
+                )
+            }
+            it.copy(videoCallLinkState = videoCallLinkState)
         }
-        it.copy(videoCallLinkState = fieldState)
     }
 
     private suspend fun FlowCollector<State>.handleUpdateGameType(isSingleDevice: Boolean) {

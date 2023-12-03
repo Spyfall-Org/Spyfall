@@ -2,11 +2,16 @@ package com.dangerfield.spyfall
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.dangerfield.features.blockingerror.blockingErrorRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
+import com.dangerfield.libraries.navigation.bottomsheet.BottomSheetHost
+import com.dangerfield.libraries.navigation.bottomsheet.BottomSheetNavigator
+import com.dangerfield.libraries.navigation.bottomsheet.getBottomSheetNavigator
 import com.dangerfield.libraries.navigation.fadeInToEndAnim
 import com.dangerfield.libraries.navigation.fadeInToStartAnim
 import com.dangerfield.libraries.navigation.fadeOutToEndAnim
@@ -19,18 +24,28 @@ import spyfallx.ui.color.AccentColor
 @Suppress("MagicNumber")
 @Composable
 fun SpyfallApp(
-    isUpdateRequired: Boolean,
     accentColor: AccentColor,
-    hadErrorLoadingApp: Boolean,
-    navBuilderRegistry: NavBuilderRegistry
+    navBuilderRegistry: NavBuilderRegistry,
+    isUpdateRequired: Boolean,
+    hasBlockingError: Boolean,
 ) {
-    val navController = rememberNavController()
+    val navController = rememberNavController(BottomSheetNavigator())
+    val coroutineScope = rememberCoroutineScope()
+    val router = remember {
+        NavControllerRouter(
+            navController = navController,
+            coroutineScope = coroutineScope
+        )
+    }
 
     val startingRoute = when {
         isUpdateRequired -> forcedUpdateNavigationRoute
-        hadErrorLoadingApp -> blockingErrorRoute
+        hasBlockingError -> blockingErrorRoute
         else -> welcomeNavigationRoute
     }
+    // TODO add maintainence mode
+    // maybe have main activity view model observe the config and update the app state.
+    // having an app state here would be great
 
     SpyfallTheme(
         isDarkMode = isSystemInDarkTheme(),
@@ -47,8 +62,14 @@ fun SpyfallApp(
 
             navBuilderRegistry.registerNavBuilderForModule(
                 navGraphBuilder = this,
-                router = NavControllerRouter(navController = navController)
+                router = router
             )
+        }
+
+        val bottomSheetNavigator = navController.getBottomSheetNavigator()
+
+        bottomSheetNavigator?.let {
+            BottomSheetHost(bottomSheetNavigator)
         }
     }
 }

@@ -1,5 +1,5 @@
 @file:Suppress("MagicNumber")
-package spyfallx.ui
+package com.dangerfield.libraries.ui
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -12,11 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-
+import spyfallx.ui.Spacing
 
 @Immutable
 class Radius private constructor(val shape: RoundedCornerShape) {
@@ -54,12 +53,13 @@ class Radius private constructor(val shape: RoundedCornerShape) {
     override fun toString(): String = "Radius(cornerSize=$cornerSize)"
 }
 
-@Suppress("MagicNumber")
+
 object Radii {
     val Round = Radius(CornerSize(percent = 50))
     val R400 = Radius(CornerSize(Sizes.S400))
     val R300 = Radius(CornerSize(Sizes.S300))
     val R100 = Radius(CornerSize(Sizes.S100))
+    val R50 = Radius(CornerSize(Sizes.S50))
     val None = Radius(SquareCornerSize)
 
     val Default get() = None
@@ -69,14 +69,20 @@ object Radii {
     val Modal get() = R400
     val Note get() = R300
     val Fab get() = Round
+    val Tooltip get() = R100
     val Navigation get() = None
     val Header get() = None
-    val HalfSheet = R400.withSides(topStart = true, topEnd = true)
+    val BottomSheet = R400.withSides(topStart = true, topEnd = true)
     val Card get() = R400
     val DropDownMenu get() = R300
     val RectangularBadge get() = R100
     val PillBadge get() = Round
+    val IconBadge get() = Round
+    val Checkbox get() = R50
+    val Label = R100.withSides(topStart = true, topEnd = true)
+    val TextChip get() = Round
 }
+
 
 fun Modifier.clip(radius: Radius): Modifier = clip(radius.shape)
 

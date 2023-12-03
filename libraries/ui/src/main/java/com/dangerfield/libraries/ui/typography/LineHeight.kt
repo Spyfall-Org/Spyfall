@@ -1,7 +1,7 @@
 package com.dangerfield.libraries.ui.typography
 
-import spyfallx.ui.NumericalValues
-import spyfallx.ui.asSp
+import com.dangerfield.libraries.ui.NumericalValues
+import com.dangerfield.libraries.ui.asSp
 
 internal object LineHeight {
     /** 12dp */

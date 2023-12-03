@@ -64,9 +64,9 @@ sealed class FormState {
 }
 
 sealed class FieldState<out T>(val backingValue: T?) {
-    class Idle<T>(value: T) : FieldState<T>(value)
-    class Valid<T>(val value: T) : FieldState<T>(value)
-    class Invalid<T>(val value: T?, val errorMessage: String) : FieldState<T>(value)
+    data class Idle<T>(val value: T) : FieldState<T>(value)
+    data class Valid<T>(val value: T) : FieldState<T>(value)
+    data class Invalid<T>(val value: T?, val errorMessage: String) : FieldState<T>(value)
     data class Error<T>(val value: T? = null, val errorMessage: String? = null) :
         FieldState<T>(value)
 

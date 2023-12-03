@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.Dp
-import spyfallx.ui.color.LocalColorScheme
+import com.dangerfield.libraries.ui.color.LocalColorScheme
 import androidx.compose.material3.CircularProgressIndicator as MaterialCircularProgressIndicator
 
 @Composable

@@ -27,7 +27,7 @@ import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.animateColorTokenAsState
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import kotlin.time.Duration.Companion.seconds
 

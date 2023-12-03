@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import com.dangerfield.libraries.ui.color.ColorGradientPrimitive
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.Border
-import spyfallx.ui.Elevation
-import spyfallx.ui.Radii
-import spyfallx.ui.Radius
+import com.dangerfield.libraries.ui.Elevation
+import com.dangerfield.libraries.ui.Radii
+import com.dangerfield.libraries.ui.Radius
 import spyfallx.ui.StandardBorderWidth
 import spyfallx.ui.inset
 import com.dangerfield.libraries.ui.theme.SpyfallTheme

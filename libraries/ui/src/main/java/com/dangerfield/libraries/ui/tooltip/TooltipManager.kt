@@ -1,4 +1,4 @@
-package co.hinge.common.design.system.components.tooltip
+package com.dangerfield.libraries.ui.tooltip
 
 import androidx.compose.foundation.*
 import androidx.compose.runtime.Stable

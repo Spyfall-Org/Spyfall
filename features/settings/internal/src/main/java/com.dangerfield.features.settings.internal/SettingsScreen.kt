@@ -11,7 +11,7 @@ import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.ThemePreviews
-import com.dangerfield.libraries.ui.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.spyfall.libraries.resources.R

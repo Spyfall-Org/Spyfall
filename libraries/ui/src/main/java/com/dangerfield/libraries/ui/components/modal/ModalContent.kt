@@ -1,22 +1,17 @@
-package com.dangerfield.libraries.ui.components
+package com.dangerfield.libraries.ui.components.modal
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonSize
@@ -26,29 +21,10 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.modifiers.drawVerticalScrollbar
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import spyfallx.ui.Spacing
+import spyfallx.ui.color.background
 
 @Composable
-fun Dialog(
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier,
-    topContent: @Composable () -> Unit = {},
-    content: @Composable () -> Unit = {},
-    bottomContent: @Composable () -> Unit = {},
-) {
-    Dialog(
-        onDismissRequest = onDismiss,
-    ) {
-        DialogContent(
-            modifier = modifier,
-            topContent = topContent,
-            content = content,
-            bottomContent = bottomContent
-        )
-    }
-}
-
-@Composable
-private fun DialogContent(
+fun ModalContent(
     modifier: Modifier = Modifier,
     topContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
@@ -58,10 +34,7 @@ private fun DialogContent(
 
     Column(
         modifier = modifier
-            .background(
-                SpyfallTheme.colorScheme.surfacePrimary.color,
-                shape = RoundedCornerShape(16.dp)
-            )
+            .background(SpyfallTheme.colorScheme.background)
             .padding(
                 top = Spacing.S800,
                 start = Spacing.S800,
@@ -108,46 +81,19 @@ private fun DialogContent(
     Spacer(modifier = Modifier.height(Spacing.S1000))
 }
 
-
 @Composable
 @Preview
-private fun PreviewDialogContent() {
+private fun PreviewModalContent() {
     PreviewContent {
-        DialogContent(
+        ModalContent(
             modifier = Modifier,
             topContent = { Text(text = "Top Content") },
             content = { Text(text = "context".repeat(50)) },
             bottomContent = {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = { }) {
                     Text(text = "Bottom Content")
                 }
             },
         )
     }
 }
-
-
-@Composable
-@Preview
-private fun PreviewDialog() {
-    PreviewContent {
-        Dialog(
-            onDismiss = { -> },
-            modifier = Modifier,
-            topContent = { Text(text = "Top Content") },
-            content = {
-                Column {
-                    Text(text = "content".repeat(10))
-                    Text(text = "is good".repeat(10))
-                }
-            },
-            bottomContent = {
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Bottom Content")
-                }
-            },
-        )
-    }
-}
-
-

@@ -4,7 +4,7 @@ import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.route
 
 fun Router.navigateToVideoCallLinkInfo() {
-    navigate(videoCallLinkInfoRoute.build())
+    navigate(videoCallLinkInfoRoute.noArgRoute())
 }
 
 val videoCallLinkInfoRoute = route("videoCallLinkInfo")

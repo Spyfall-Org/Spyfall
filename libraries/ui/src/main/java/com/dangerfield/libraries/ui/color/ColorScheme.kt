@@ -1,6 +1,6 @@
 @file:Suppress("MagicNumber")
 
-package spyfallx.ui.color
+package com.dangerfield.libraries.ui.color
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -22,14 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.color.designSystemName
-import com.dangerfield.libraries.ui.color.toHexString
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import spyfallx.ui.thenIf
 import com.dangerfield.libraries.ui.typography.Typography
+import spyfallx.ui.color.ColorToken
 import kotlin.reflect.KProperty1
 
 @Suppress("LongParameterList")

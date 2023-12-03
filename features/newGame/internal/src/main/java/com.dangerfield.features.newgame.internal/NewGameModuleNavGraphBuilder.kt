@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import com.dangerfield.features.newgame.internal.presentation.NewGameScreen
 import com.dangerfield.features.newgame.internal.presentation.NewGameViewModel
-import com.dangerfield.features.newgame.internal.presentation.VideoCallLinkInfoDialog
+import com.dangerfield.features.newgame.internal.presentation.VideoCallInfoBottomSheet
 import com.dangerfield.features.newgame.internal.presentation.model.Event
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
 import com.dangerfield.features.newgame.internal.usecase.RecognizedVideoCallingPlatforms
@@ -18,6 +18,7 @@ import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.bottomsheet.bottomSheet
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
@@ -81,13 +82,14 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
             )
         }
 
-        dialog(
+        bottomSheet(
             route = videoCallLinkInfoRoute.navRoute,
             arguments = videoCallLinkInfoRoute.navArguments
         ) {
-            VideoCallLinkInfoDialog(
+
+            VideoCallInfoBottomSheet(
                 recognizedPlatforms = recognizedVideoCallingPlatforms().keys.toList(),
-                onDismiss = router::goBack,
+                onDismiss = router::dismissSheet,
             )
         }
     }

@@ -10,10 +10,10 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.ListItem
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.icon.Icon
-import com.dangerfield.libraries.ui.icon.IconSize
-import com.dangerfield.libraries.ui.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.icon.SpyfallIcon.ChevronRight
+import com.dangerfield.libraries.ui.components.icon.Icon
+import com.dangerfield.libraries.ui.components.icon.IconSize
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon.ChevronRight
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable

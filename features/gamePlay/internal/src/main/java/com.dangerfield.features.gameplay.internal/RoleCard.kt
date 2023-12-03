@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.PreviewContent
-import spyfallx.ui.Radii
+import com.dangerfield.libraries.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.button.Button

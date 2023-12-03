@@ -1,9 +1,11 @@
-package co.hinge.common.design.system.components.tooltip
+package com.dangerfield.libraries.ui.tooltip
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.dangerfield.libraries.ui.tooltip.TooltipDuration
+import com.dangerfield.libraries.ui.tooltip.TooltipManager
 import kotlinx.coroutines.withTimeoutOrNull
 
 /**

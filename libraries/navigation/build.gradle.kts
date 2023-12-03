@@ -12,6 +12,7 @@ android {
 
 dependencies {
     implementation(projects.libraries.common)
+    implementation(projects.libraries.ui)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.hilt.navigation.compose)
 }

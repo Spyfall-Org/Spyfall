@@ -6,5 +6,5 @@ import com.dangerfield.libraries.navigation.route
 val joinGameNavigationRoute = route("joinGame")
 
 fun Router.navigateToJoinGame() {
-    navigate(joinGameNavigationRoute.build())
+    navigate(joinGameNavigationRoute.noArgRoute())
 }

@@ -3,7 +3,7 @@ package com.dangerfield.features.joingame.internal
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.joingame.internal.UnresolvableError.IncompatibleError
-import com.dangerfield.libraries.ui.components.BasicDialog
+import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.PreviewContent
 
 @Composable
@@ -41,7 +41,7 @@ fun JoinGameErrorDialog(
         unresolvableError is IncompatibleError && unresolvableError.isCurrentLower
 
     BasicDialog(
-        onDismiss = onDismiss,
+        onDismissRequest = onDismiss,
         title = title,
         description = description,
         primaryButtonText = if (shouldShowUpdateButton) "Update" else "Ok",

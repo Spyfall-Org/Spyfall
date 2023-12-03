@@ -20,7 +20,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.ColorToken
-import spyfallx.ui.color.LocalContentColor
+import com.dangerfield.libraries.ui.color.LocalContentColor
 import spyfallx.ui.color.takeOrElse
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import com.dangerfield.libraries.ui.typography.TypographyToken

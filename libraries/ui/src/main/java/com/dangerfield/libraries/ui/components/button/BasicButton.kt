@@ -2,11 +2,11 @@ package com.dangerfield.libraries.ui.components.button
 
 import spyfallx.ui.Border
 import com.dangerfield.libraries.ui.PreviewContent
-import spyfallx.ui.Radii
+import com.dangerfield.libraries.ui.Radii
 import spyfallx.ui.Spacing
 import spyfallx.ui.StandardBorderWidth
 import spyfallx.ui.color.ColorToken
-import com.dangerfield.libraries.ui.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.*
@@ -21,12 +21,12 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import spyfallx.ui.Elevation
+import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.text.TextConfig
-import com.dangerfield.libraries.ui.icon.SmallIcon
+import com.dangerfield.libraries.ui.components.icon.SmallIcon
 
 @Composable
 internal fun BasicButton(
