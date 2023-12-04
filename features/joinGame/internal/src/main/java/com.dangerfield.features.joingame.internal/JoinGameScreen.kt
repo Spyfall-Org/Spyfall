@@ -32,6 +32,7 @@ import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.components.text.AsteriskText
 import spyfallx.ui.Spacing
 import com.dangerfield.libraries.ui.components.Screen
@@ -108,7 +109,7 @@ private fun JoinGameScreenContent(
     val scrollState = rememberScrollState()
 
     Screen(
-        header = {
+        topBar = {
             Header(
                 title = "Join Game",
                 onNavigateBack = onNavigateBack
@@ -162,6 +163,7 @@ private fun JoinGameScreenContent(
                     Text(text = "Join Game")
                 }
             }
+            VerticalSpacerS1200()
         }
     }
 }

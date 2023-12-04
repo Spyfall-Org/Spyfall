@@ -35,6 +35,7 @@ fun WelcomeScreen(
     onForcedUpdateRequired: () -> Unit = {},
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
+    onRulesClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
     viewModel: WelcomeViewModel = hiltViewModel()
 ) {
@@ -50,7 +51,8 @@ fun WelcomeScreen(
     WelcomeScreenContent(
         onNewGameClicked = onNewGameClicked,
         onJoinGameClicked = onJoinGameClicked,
-        onSettingsClicked = onSettingsClicked
+        onSettingsClicked = onSettingsClicked,
+        onRulesClicked = onRulesClicked
     )
 }
 
@@ -60,7 +62,8 @@ private fun WelcomeScreenContent(
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
-) {
+    onRulesClicked: () -> Unit,
+    ) {
     Screen { paddingValues ->
         Column(
             Modifier.padding(paddingValues),
@@ -118,7 +121,7 @@ private fun WelcomeScreenContent(
 
                 Button(
                     icon = SpyfallIcon.Info("Open Rules"),
-                    onClick = { },
+                    onClick = onRulesClicked,
                     style = ButtonStyle.NoBackground
                 ) {
                     Text(text = "Rules")
@@ -137,7 +140,8 @@ private fun PreviewWelcomeScreen() {
         WelcomeScreenContent(
             onNewGameClicked = {},
             onJoinGameClicked = {},
-            onSettingsClicked = {}
+            onSettingsClicked = {},
+            onRulesClicked = {}
         )
     }
 }
@@ -149,7 +153,8 @@ private fun PreviewWelcomeScreenDark() {
         WelcomeScreenContent(
             onNewGameClicked = {},
             onJoinGameClicked = {},
-            onSettingsClicked = {}
+            onSettingsClicked = {},
+            onRulesClicked = {}
         )
     }
 }

@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.joingame.navigateToJoinGame
 import com.dangerfield.features.newgame.navigateToNewGame
+import com.dangerfield.features.rules.navigateToRules
 import com.dangerfield.features.settings.navigateToSettings
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
@@ -22,7 +23,8 @@ class WelcomeModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
             WelcomeScreen(
                 onJoinGameClicked = router::navigateToJoinGame,
                 onNewGameClicked = router::navigateToNewGame,
-                onSettingsClicked = router::navigateToSettings
+                onSettingsClicked = router::navigateToSettings,
+                onRulesClicked = router::navigateToRules
             )
         }
     }

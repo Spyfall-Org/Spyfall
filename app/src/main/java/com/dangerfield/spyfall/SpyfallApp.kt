@@ -1,9 +1,11 @@
 package com.dangerfield.spyfall
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.dangerfield.features.blockingerror.blockingErrorRoute
@@ -21,6 +23,7 @@ import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import spyfallx.ui.color.AccentColor
 
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
 @Suppress("MagicNumber")
 @Composable
 fun SpyfallApp(
@@ -59,7 +62,6 @@ fun SpyfallApp(
             popEnterTransition = { fadeInToEndAnim() },
             popExitTransition = { fadeOutToEndAnim() }
         ) {
-
             navBuilderRegistry.registerNavBuilderForModule(
                 navGraphBuilder = this,
                 router = router

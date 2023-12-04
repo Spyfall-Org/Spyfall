@@ -3,15 +3,11 @@ package com.dangerfield.features.newgame.internal.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -22,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,8 +46,6 @@ import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.isOpen
 import com.dangerfield.libraries.ui.rememberKeyboardState
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import spyfallx.ui.Spacing
 
 @Composable
@@ -98,7 +91,7 @@ fun NewGameScreen(
     Box {
         Screen(
             modifier = modifier,
-            header = {
+            topBar = {
                 Header(
                     title = "New Game",
                     onNavigateBack = onNavigateBack,
@@ -287,30 +280,30 @@ private fun NumOfPlayersField(
     maxPlayers: Int,
     numOfPlayersState: FieldState<String>,
 ) {
-    Column {
-        Row {
-            Column(modifier = Modifier.weight(1f)) {
-                AsteriskText {
-                    Text(
-                        text = "Number of players",
-                    )
-                }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            AsteriskText {
+                Text(
+                    text = "Number of players",
+                )
             }
 
-            HorizontalSpacerS600()
-
-            OutlinedTextField(
-                modifier = Modifier.width(IntrinsicSize.Max),
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                value = numOfPlayersState.backingValue.orEmpty(),
-                onValueChange = onNumOfPlayersUpdated,
-                placeholder = {
-                    Text(text = "$minPlayers-$maxPlayers")
-                },
-                singleLine = true
-            )
         }
-        Spacer(modifier = Modifier.height(Spacing.S1200))
+
+        HorizontalSpacerS600()
+
+        OutlinedTextField(
+            modifier = Modifier.width(IntrinsicSize.Max),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            value = numOfPlayersState.backingValue.orEmpty(),
+            onValueChange = onNumOfPlayersUpdated,
+            placeholder = {
+                Text(text = "$minPlayers-$maxPlayers")
+            },
+            singleLine = true
+        )
     }
 
 }

@@ -11,10 +11,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.dismiss
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -64,6 +66,8 @@ fun BottomSheet(
     val contentColor = SpyfallTheme.colorScheme.onBackground
     val shape = bottomSheetShape(topAccessory)
 
+    val systemBarVerticalInsets: WindowInsets =  WindowInsets.systemBars.only(WindowInsetsSides.Vertical)
+
     ModalBottomSheet(
         modifier = Modifier
             .offset {
@@ -86,6 +90,7 @@ fun BottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = state.sheetState,
         shape = shape,
+        windowInsets = systemBarVerticalInsets,
         containerColor = backgroundColor.color,
         scrimColor = SpyfallTheme.colorScheme.backgroundOverlay.color,
         tonalElevation = 0.dp,
@@ -102,8 +107,6 @@ fun BottomSheet(
             )
         }
     }
-
-
 }
 
 @Composable
@@ -146,14 +149,17 @@ private fun TopAccessory(
         )
 
         is TopAccessory.Icon -> TopAccessory {
-
             Box(
                 Modifier
                     .background(topAccessory.backgroundColor)
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(spyfallIcon = topAccessory.icon, tint = topAccessory.color)
+                Icon(
+                    spyfallIcon = topAccessory.icon,
+                    tint = topAccessory.color,
+                    iconSize = IconSize.Medium
+                )
             }
         }
     }
@@ -240,6 +246,7 @@ private fun bottomSheetShape(topAccessory: TopAccessory): Shape = rememberWithKe
     topAccessory.size
 ) { accessoryShape, accessorySize ->
     val baseShape = Radii.BottomSheet.shape
+
     if (accessoryShape == null) {
         baseShape
     } else {

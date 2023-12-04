@@ -41,7 +41,7 @@ fun WaitingRoomScreen(
 
     Screen(
         modifier = modifier,
-        header = {
+        topBar = {
             Header(
                 title = "Waiting for players...",
                 scrollState = scrollState

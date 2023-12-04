@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.view.WindowCompat
 import androidx.navigation.Navigation.findNavController
 import com.dangerfield.spyfall.legacy.util.ThemeChangeableActivity
 import com.dangerfield.spyfall.legacy.util.collectWhileStarted
@@ -44,6 +45,10 @@ class MainActivity : ThemeChangeableActivity() {
             .build()
 
         super.onCreate(savedInstanceState) // should be called after splash screen builder
+
+        // Turn off the decor fitting system windows, which allows us to handle insets,
+        // including IME animations
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         collectWhileStarted(mainActivityViewModel.state) {
             isLoading = it is Loading

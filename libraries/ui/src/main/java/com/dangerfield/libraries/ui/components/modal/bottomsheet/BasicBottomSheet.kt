@@ -1,6 +1,7 @@
 package com.dangerfield.libraries.ui.components.modal.bottomsheet
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,10 +18,11 @@ fun BasicBottomSheet(
     modifier: Modifier = Modifier,
     state: BottomSheetState = rememberBottomSheetState(),
     topAccessory: TopAccessory = dragHandleTopAccessory(),
+    windowInsets: WindowInsets = BottomSheetDefaults.windowInsets,
     contentAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     topContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
-    bottomContent: @Composable () -> Unit = {},
+    bottomContent: @Composable (() -> Unit)? = null,
 ) {
     BottomSheet(
         onDismissRequest = onDismissRequest,

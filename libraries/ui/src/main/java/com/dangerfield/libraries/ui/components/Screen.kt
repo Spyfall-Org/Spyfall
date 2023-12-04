@@ -15,7 +15,7 @@ import com.dangerfield.libraries.ui.theme.SpyfallTheme
 @Composable
 fun Screen(
     modifier: Modifier = Modifier,
-    header: @Composable () -> Unit = {},
+    topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     containerColor: Color = SpyfallTheme.colorScheme.background.color,
@@ -25,7 +25,7 @@ fun Screen(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = header,
+        topBar = topBar,
         bottomBar = bottomBar,
         snackbarHost = snackbarHost,
         containerColor = containerColor,

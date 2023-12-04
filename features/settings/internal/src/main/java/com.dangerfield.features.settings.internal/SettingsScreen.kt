@@ -27,7 +27,7 @@ fun SettingsScreen(
 ) {
     Screen(
         modifier = modifier,
-        header = {
+        topBar = {
             Header(
                 title = "Settings",
                 onNavigateBack = onNavigateBack

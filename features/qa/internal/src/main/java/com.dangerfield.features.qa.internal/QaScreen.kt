@@ -27,7 +27,7 @@ fun QaScreen(
 ) {
     Screen(
         modifier = modifier,
-        header = {
+        topBar = {
             Header(
                 title = "QA Menu",
                 onNavigateBack = onNavigateBack

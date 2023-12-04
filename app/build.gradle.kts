@@ -84,7 +84,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.navigation.compose)
 
-
     /**
      * Project Modules
      * Both internal and external should be included here to make sure all objects

@@ -1,5 +1,6 @@
 package com.dangerfield.features.gameplay.internal
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ fun GameCard(
     val radius = Radii.Card
 
     BadgedBox(
+        modifier = modifier,
         badge = {
             FirstBadge(
                 isFirst = isFirst,
@@ -49,9 +51,11 @@ fun GameCard(
                 color = SpyfallTheme.colorScheme.surfacePrimary,
                 contentColor = SpyfallTheme.colorScheme.onSurfacePrimary,
                 contentPadding = PaddingValues(Spacing.S800),
+                modifier = Modifier.clickable { isMarkedOff = !isMarkedOff }
             ) {
                 Text(
                     text = text,
+                    color = if (isMarkedOff) SpyfallTheme.colorScheme.textDisabled else SpyfallTheme.colorScheme.text,
                     textDecoration = if (isMarkedOff) TextDecoration.LineThrough else TextDecoration.None,
                 )
             }

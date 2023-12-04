@@ -5,6 +5,7 @@ import androidx.navigation.compose.composable
 import com.dangerfield.features.rules.rulesNavigationRoute
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.bottomsheet.bottomSheet
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
@@ -12,11 +13,13 @@ import javax.inject.Inject
 class ModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
-        composable(
+        bottomSheet(
             route = rulesNavigationRoute.navRoute,
             arguments = rulesNavigationRoute.navArguments
         ) {
-            RulesScreen()
+            RulesBottomSheet(
+                onDismissRequest = router::dismissSheet
+            )
         }
     }
 }

@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.features.joinGame)
     implementation(projects.features.settings)
     implementation(projects.features.newGame)
+    implementation(projects.features.rules)
     implementation(projects.features.forcedUpdate)
     implementation(projects.libraries.navigation)
 }

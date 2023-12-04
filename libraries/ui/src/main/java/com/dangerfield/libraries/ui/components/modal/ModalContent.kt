@@ -28,7 +28,7 @@ fun ModalContent(
     modifier: Modifier = Modifier,
     topContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
-    bottomContent: @Composable () -> Unit = {},
+    bottomContent: @Composable (() -> Unit)? = null,
 ) {
     val scrollState = rememberScrollState()
 
@@ -63,22 +63,22 @@ fun ModalContent(
             }
         }
 
+        if (bottomContent != null) {
+            Spacer(modifier = Modifier.height(Spacing.S1000))
 
-        Spacer(modifier = Modifier.height(Spacing.S1000))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Spacing.S1000),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ProvideButtonConfig(size = ButtonSize.Small) {
-                bottomContent()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.S1000),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ProvideButtonConfig(size = ButtonSize.Small) {
+                    bottomContent()
+                }
             }
+            Spacer(modifier = Modifier.height(Spacing.S1000))
         }
     }
-
-    Spacer(modifier = Modifier.height(Spacing.S1000))
 }
 
 @Composable
