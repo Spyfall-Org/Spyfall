@@ -23,7 +23,7 @@ import com.dangerfield.libraries.ui.components.BadgedBox
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.circleBackground
 
 @Composable

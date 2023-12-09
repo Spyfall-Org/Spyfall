@@ -3,7 +3,7 @@ package com.dangerfield.libraries.ui.components.button
 import spyfallx.ui.Border
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.StandardBorderWidth
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon

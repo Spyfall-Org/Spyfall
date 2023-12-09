@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.ui.components.Divider
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 
 @Composable

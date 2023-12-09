@@ -3,9 +3,7 @@ package com.dangerfield.features.rules.internal
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.captionBarPadding
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -28,7 +26,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomS
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.getBoldSpan
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 
 @Composable
 fun RulesBottomSheet(
@@ -38,14 +36,9 @@ fun RulesBottomSheet(
 ) {
     BasicBottomSheet(
         onDismissRequest = { onDismissRequest(sheetState) },
-        modifier = modifier
-            .navigationBarsPadding()
-            .captionBarPadding()
-            .imePadding()
-            .statusBarsPadding()
-        ,
+        modifier = modifier,
         state = sheetState,
-        windowInsets = WindowInsets(0,0,0,0),
+        showCloseButton = true,
         topAccessory = dragHandleTopAccessory(),
         topContent = {
             Text(text = "Rules")

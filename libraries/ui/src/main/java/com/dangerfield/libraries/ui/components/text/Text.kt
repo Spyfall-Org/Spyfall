@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.dangerfield.libraries.ui.PreviewContent
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.color.LocalContentColor

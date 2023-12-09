@@ -31,7 +31,8 @@ class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                         value = value
                     )
                 },
-                onNavigateBack = router::goBack
+                onNavigateBack = router::goBack,
+                sessionId = state.sessionId
             )
         }
     }

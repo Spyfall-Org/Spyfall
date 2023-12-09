@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import com.dangerfield.libraries.ui.PreviewContent
 import spyfallx.ui.R
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.SpyfallTheme

@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.PreviewContent
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import spyfallx.ui.then
 import spyfallx.ui.thenIf

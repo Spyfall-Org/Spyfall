@@ -45,7 +45,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Radius
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 

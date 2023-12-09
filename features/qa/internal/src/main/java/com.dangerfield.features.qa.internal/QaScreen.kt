@@ -14,7 +14,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.Screen
 
 @Composable
@@ -22,6 +22,7 @@ fun QaScreen(
     configuredValues: List<DisplayableConfigValue>,
     experiments: List<DisplayableExperiment>,
     modifier: Modifier = Modifier,
+    sessionId: String? = null,
     onExperimentOverride: (DisplayableExperiment, Any) -> Unit = {_,_ ->},
     onNavigateBack: () -> Unit = {}
 ) {
@@ -39,6 +40,14 @@ fun QaScreen(
                 .padding(it)
                 .padding(horizontal = Spacing.S800)
         ) {
+            if (sessionId != null) {
+                QaSection(title = "Info") {
+                    QaInfoItem {
+                        Text(text = "Session ID: $sessionId")
+                    }
+                }
+            }
+
             if (configuredValues.isNotEmpty()) {
                 QaSection(title = "Configured Values") {
                     ConfigurableValuesList(configuredValues = configuredValues)
@@ -144,7 +153,8 @@ fun PreviewQaScreen() {
     PreviewContent {
         QaScreen(
             configuredValues = Fakes.displayableConfigValues,
-            experiments = Fakes.displayableExperiments
+            experiments = Fakes.displayableExperiments,
+            sessionId = "1234"
         )
     }
 }

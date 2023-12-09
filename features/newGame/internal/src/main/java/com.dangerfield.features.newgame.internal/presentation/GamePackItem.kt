@@ -33,7 +33,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import com.dangerfield.spyfall.features.newgame.internal.R
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 
 @Composable

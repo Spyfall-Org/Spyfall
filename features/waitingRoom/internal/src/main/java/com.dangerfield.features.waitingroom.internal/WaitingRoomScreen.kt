@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.Radii
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button

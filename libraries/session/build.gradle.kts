@@ -4,6 +4,8 @@ plugins {
 
 spyfall {
     flowroutines()
+    moshi()
+
 }
 android {
     namespace = "com.dangerfield.spyfall.libraries.session"
@@ -11,4 +13,5 @@ android {
 
 dependencies {
     implementation(projects.libraries.common)
+    implementation(project.libs.kotlinx.serialization.json)
 }

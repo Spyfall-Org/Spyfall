@@ -118,6 +118,7 @@ androidx-datastore-core = "androidx.datastore:datastore-core:1.1.0-alpha06"
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase-database = { module = "com.google.firebase:firebase-database", name = "firebase-database" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", name = "firebase-auth" }
 firebase-storage = { module = "com.google.firebase:firebase-storage", name = "firebase-storage" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore", name = "firebase-firestore" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }

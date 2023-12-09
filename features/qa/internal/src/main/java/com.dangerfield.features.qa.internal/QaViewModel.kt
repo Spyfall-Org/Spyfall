@@ -1,17 +1,28 @@
 package com.dangerfield.features.qa.internal
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.libraries.config.ConfigOverride
 import com.dangerfield.libraries.config.ConfigOverrideRepository
 import com.dangerfield.libraries.config.ConfiguredValue
 import com.dangerfield.libraries.config.Experiment
+import com.dangerfield.libraries.coreflowroutines.launchOnStart
+import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,21 +30,27 @@ class QaViewModel @Inject constructor(
     private val configOverrideRepository: ConfigOverrideRepository,
     private val configuredValues: Set<@JvmSuppressWildcards ConfiguredValue<*>>,
     private val experiments: Set<@JvmSuppressWildcards Experiment<*>>,
+    private val sessionRepository: SessionRepository
 ) : ViewModel() {
 
     private val actions = Channel<Action>(Channel.UNLIMITED)
 
     val state = flow {
-
         for (action in actions) handleAction(action)
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.Eagerly,
-        State(
-            configValues = getConfigValues(),
-            experiments = getExperiments()
+    }
+        .launchOnStart {
+            sessionRepository.sessionFlow.collectLatest {
+                updateSessionId(it.sessionId?.toString())
+            }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(500),
+            State(
+                configValues = getConfigValues(),
+                experiments = getExperiments(),
+            )
         )
-    )
 
     fun addOverride(path: String, value: Any) = actions.trySend(Action.AddOverride(path, value))
 
@@ -41,13 +58,18 @@ class QaViewModel @Inject constructor(
         when (action) {
             is Action.AddOverride -> {
                 applyOverrideOptimistically(action)
-
                 configOverrideRepository.addOverride(
                     ConfigOverride(
                         path = action.path,
                         value = action.value
                     )
                 )
+            }
+
+            is Action.UpdateSessionId -> {
+                updateState {
+                    it.copy(sessionId = action.sessionId)
+                }
             }
         }
     }
@@ -99,6 +121,12 @@ class QaViewModel @Inject constructor(
             )
         }
 
+    private fun updateSessionId(sessionId: String?) {
+        viewModelScope.launch {
+            actions.send(Action.UpdateSessionId(sessionId))
+        }
+    }
+
     data class DisplayableConfigValue(
         val name: String,
         val description: String?,
@@ -116,11 +144,13 @@ class QaViewModel @Inject constructor(
 
     sealed class Action {
         class AddOverride(val path: String, val value: Any) : Action()
+        internal class UpdateSessionId(val sessionId: String?) : Action()
     }
 
     data class State(
         val configValues: List<DisplayableConfigValue>,
         val experiments: List<DisplayableExperiment>,
+        val sessionId: String? = null
     )
 
     private suspend inline fun FlowCollector<State>.updateState(function: (State) -> State) {

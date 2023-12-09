@@ -4,8 +4,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeout
+import spyfallx.core.Failure
+import spyfallx.core.Success
 import spyfallx.core.Try
+import spyfallx.core.defaultOnError
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -79,5 +87,48 @@ suspend fun <T> tryWithTimeout(duration: Duration, block: suspend CoroutineScope
         withTimeout(duration, block)
     } catch (e: TimeoutCancellationException) {
         Try.Failure(e)
+    }
+}
+
+fun <A> Flow<Try<A>>.defaultOnError(default: () -> A): Flow<A> = map { it.defaultOnError(default) }
+
+fun <A, B> Flow<Try<A>>.flatMapTry(success: (A) -> Flow<Try<B>>): Flow<Try<B>> {
+    return flatMapLatest { result ->
+        when (result) {
+            is Success -> success(result.value)
+            is Failure -> kotlinx.coroutines.flow.flowOf(Failure(result.exception))
+        }
+    }
+}
+
+fun <T> Flow<T>.mapTry(): Flow<Try<T>> {
+    return this.map { Try { it } }.catch { emit(Failure(it)) }
+}
+
+fun <T, R> Flow<Try<T>>.wrapMap(mapper: suspend (T) -> Try<R>): Flow<Try<R>> {
+    return map { item ->
+        when (item) {
+            is Success -> mapper(item.value)
+            is Failure -> Try.raise(item.exception)
+        }
+    }
+}
+
+/**
+ * [transform] will map using the previous emission from the upstream flow and the current, most recent emission
+ */
+fun <T : Any, R> Flow<T>.mapWithPrevious(transform: (oldItem: T?, newItem: T) -> R): Flow<R> =
+    mapWithPrevious(null, transform)
+
+/**
+ * [transform] will map using the previous emission from the upstream flow and the current, most recent emission.
+ *
+ * For the first item then [initialItem] will be used
+ */
+fun <I, T : I, R> Flow<T>.mapWithPrevious(initialItem: I, transform: (oldItem: I, newItem: T) -> R): Flow<R> = flow {
+    var previous: I = initialItem
+    collect { value ->
+        emit(transform(previous, value))
+        previous = value
     }
 }

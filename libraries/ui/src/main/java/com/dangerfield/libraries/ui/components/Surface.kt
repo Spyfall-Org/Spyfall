@@ -25,7 +25,7 @@ import spyfallx.ui.Border
 import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Radius
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.color.ProvideContentColor
 import spyfallx.ui.color.background

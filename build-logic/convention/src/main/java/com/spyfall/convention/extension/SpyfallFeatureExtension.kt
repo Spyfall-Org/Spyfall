@@ -26,6 +26,11 @@ abstract class SpyfallFeatureExtension {
         project.optInKotlinMarkers(*markerClasses)
     }
 
+    fun datastore() {
+        project.dependencies {
+            add("implementation", getModule("libraries:datastore"))
+        }
+    }
     fun daggerHilt(withProcessors: Boolean = true) {
         if (withProcessors) {
             project.pluginManager.apply("dagger.hilt.android.plugin")
@@ -78,6 +83,7 @@ abstract class SpyfallFeatureExtension {
         project.dependencies {
             "implementation"(platform(project.libs.firebase.bom))
             add("implementation", project.libs.firebase.database)
+            add("implementation", project.libs.firebase.auth)
             add("implementation", project.libs.firebase.firestore)
             add("implementation", project.libs.firebase.analytics)
             add("implementation", project.libs.firebase.storage)
@@ -104,6 +110,13 @@ abstract class SpyfallFeatureExtension {
             "implementation"(project.libs.moshi)
         }
         project.extensions.configure(configure)
+    }
+
+    fun serialization() {
+        project.dependencies {
+
+            add("implementation",project.libs.kotlinx.serialization.json)
+        }
     }
 
     fun unitTesting() {

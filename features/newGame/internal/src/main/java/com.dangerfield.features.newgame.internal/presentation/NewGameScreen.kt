@@ -46,7 +46,7 @@ import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.isOpen
 import com.dangerfield.libraries.ui.rememberKeyboardState
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 
 @Composable
 fun NewGameScreen(

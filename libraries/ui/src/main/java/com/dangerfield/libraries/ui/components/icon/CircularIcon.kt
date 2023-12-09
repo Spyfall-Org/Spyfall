@@ -10,7 +10,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
 import com.dangerfield.libraries.ui.Radii
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.ColorToken
 
 @Composable

@@ -3,6 +3,7 @@ package com.dangerfield.spyfall
 import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.dangerfield.libraries.coresession.internal.SessionRepositoryImpl
 import com.dangerfield.libraries.logging.RemoteLogger
 import com.dangerfield.spyfall.legacy.di.legacySpyfallModules
 import com.dangerfield.spyfall.legacy.util.RemoveUserTimer
@@ -19,6 +20,7 @@ import org.koin.core.logger.Level.NONE
 import spyfallx.core.ApplicationStateRepository
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 
 @HiltAndroidApp
 class SpyfallApplication : Application() {
@@ -42,13 +44,18 @@ class SpyfallApplication : Application() {
 
         // TODO look into permission requesting for analytics collection
         firebaseAnalytics.setAnalyticsCollectionEnabled(BuildConfig.DEBUG)
+        firebaseAnalytics.setSessionTimeoutDuration(
+            SessionRepositoryImpl.SESSION_MAXIMUM_TIME_AWAY.inWholeMilliseconds
+        )
 
         lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: androidx.lifecycle.LifecycleOwner) {
+                super.onStart(owner)
                 applicationStateRepository.onAppStart()
             }
 
             override fun onStop(owner: androidx.lifecycle.LifecycleOwner) {
+                super.onStop(owner)
                 applicationStateRepository.onAppStop()
             }
         })

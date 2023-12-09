@@ -11,18 +11,25 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import spyfallx.core.logOnError
 import com.dangerfield.libraries.ui.color.ColorPrimitive
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import spyfallx.core.Try
+import spyfallx.core.failFast
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val isUpdateRequired: IsAppUpdateRequired,
-    private val ensureAppConfigLoaded: EnsureAppConfigLoaded
+    private val ensureAppConfigLoaded: EnsureAppConfigLoaded,
+    private val ensureSessionLoaded: EnsureSessionLoaded
 ) : ViewModel() {
 
     val state: StateFlow<State> = flow {
         tryWithTimeout(10.seconds) {
-            ensureAppConfigLoaded()
+           startUpTasks.awaitAll().failFast()
         }
             .logOnError()
             .onFailure { emit(State.Error) }
@@ -39,6 +46,12 @@ class MainActivityViewModel @Inject constructor(
             viewModelScope,
             SharingStarted.Eagerly,
             initialValue = State.Loading
+        )
+
+    private val CoroutineScope.startUpTasks: List<Deferred<Try<Unit>>>
+        get() = listOf(
+            async { ensureSessionLoaded() },
+            async { ensureAppConfigLoaded() }
         )
 
     sealed class State {

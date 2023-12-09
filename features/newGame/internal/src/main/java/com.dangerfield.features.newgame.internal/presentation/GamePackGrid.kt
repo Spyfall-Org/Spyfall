@@ -12,7 +12,7 @@ import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.AccentColor
 
 @Composable

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
@@ -57,3 +58,11 @@ private class ProducerScope<E>(
     scope: CoroutineScope,
     override val channel: SendChannel<E>,
 ) : kotlinx.coroutines.channels.ProducerScope<E>, CoroutineScope by scope, SendChannel<E> by channel
+
+
+/**
+ * Flow that emits one value from the given block
+ */
+fun <T> flowOf(block: suspend () -> T): Flow<T> = flow {
+    emit(block())
+}

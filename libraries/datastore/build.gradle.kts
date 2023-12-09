@@ -1,7 +1,10 @@
-import com.spyfall.convention.util.getModule
-
 plugins {
     id("spyfall.android.library")
+}
+
+spyfall {
+    flowroutines()
+    daggerHilt()
 }
 
 android {
@@ -10,4 +13,7 @@ android {
 
 dependencies {
     implementation(projects.libraries.common)
+    api(libs.androidx.datastore)
+    api(libs.androidx.datastore.core)
+    api(libs.kotlinx.serialization.json)
 }

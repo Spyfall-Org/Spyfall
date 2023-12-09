@@ -20,7 +20,7 @@ import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.modifiers.drawVerticalScrollbar
 import com.dangerfield.libraries.ui.theme.SpyfallTheme
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 
 @Composable
@@ -35,12 +35,6 @@ fun ModalContent(
     Column(
         modifier = modifier
             .background(SpyfallTheme.colorScheme.background)
-            .padding(
-                top = Spacing.S800,
-                start = Spacing.S800,
-                end = Spacing.S800,
-                bottom = Spacing.S800
-            )
     ) {
         ProvideTextConfig(SpyfallTheme.typography.Heading.H900) {
             topContent()
@@ -76,7 +70,6 @@ fun ModalContent(
                     bottomContent()
                 }
             }
-            Spacer(modifier = Modifier.height(Spacing.S1000))
         }
     }
 }

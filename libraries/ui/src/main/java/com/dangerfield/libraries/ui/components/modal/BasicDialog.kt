@@ -16,8 +16,10 @@ import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.Radii
-import spyfallx.ui.Spacing
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.clip
+import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import spyfallx.ui.color.background
 
 @Composable
 fun BasicDialog(
@@ -30,16 +32,29 @@ fun BasicDialog(
     Dialog(
         onDismissRequest = onDismissRequest,
     ) {
-        ModalContent(
-            modifier = modifier.clip(Radii.Card),
-            topContent = topContent,
-            content = content,
-            bottomContent = bottomContent
-        )
+        Column(
+            modifier = Modifier
+                .clip(Radii.Card)
+                .background(SpyfallTheme.colorScheme.background)
+        ) {
+
+            ModalContent(
+                modifier = modifier.padding(
+                    top = Spacing.S800,
+                    start = Spacing.S800,
+                    end = Spacing.S800,
+                    bottom = Spacing.S800
+                ),
+                topContent = topContent,
+                content = content,
+                bottomContent = bottomContent
+            )
+        }
     }
 }
 
-@Composable fun BasicDialog(
+@Composable
+fun BasicDialog(
     onDismissRequest: () -> Unit,
     title: String,
     description: String,

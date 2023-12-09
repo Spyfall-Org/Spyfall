@@ -8,20 +8,20 @@ import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
-import com.dangerfield.libraries.session.SessionState
-import com.dangerfield.libraries.session.SessionStateRepository
+import com.dangerfield.libraries.session.ActiveGame
+import com.dangerfield.libraries.session.SessionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import spyfallx.core.Try
 import spyfallx.core.failure
 import spyfallx.core.success
-import timber.log.Timber
+import spyfallx.core.throwIfDebug
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 class JoinGameUseCase @Inject constructor(
-    private val sessionStateRepository: SessionStateRepository,
+    private val sessionRepository: SessionRepository,
     private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
     @ApplicationScope private val applicationScope: CoroutineScope,
@@ -46,13 +46,23 @@ class JoinGameUseCase @Inject constructor(
             gameRepository.getGame(accessCode).fold(onSuccess = { game ->
                 val joinGameError = getGameStateError(accessCode, game, userName)
 
-                joinGameError?.failure() ?: joinGame(
-                    accessCode = accessCode, userName = userName, game = game, id = id
-                )
+                if (joinGameError != null) {
+                    joinGameError.failure()
+                } else {
+                    joinGame(
+                        accessCode = accessCode,
+                        userName = userName,
+                        game = game,
+                        id = id
+                    )
+                }
             }, onFailure = {
                 it.toJoinGameFailure()
             }).onSuccess {
-                updateSession(userName, accessCode)
+                updateSession(
+                    userId = id,
+                    accessCode = accessCode
+                )
             }
         }
     }
@@ -99,20 +109,19 @@ class JoinGameUseCase @Inject constructor(
         else -> JoinGameError.UnknownError(this).failure()
     }
 
-    private fun updateSession(name: String, accessCode: String) {
-        sessionStateRepository.updateSessionState(
-            SessionState.InGame(
-                username = name, accessCode = accessCode
+    private suspend fun updateSession(userId: String, accessCode: String) {
+        sessionRepository.updateActiveGame(
+            ActiveGame(
+                accessCode = accessCode,
+                userId = userId
             )
         )
     }
 
     private fun checkForExistingSession() {
         applicationScope.launch {
-            sessionStateRepository.getSessionState().let { sessionState ->
-                if (sessionState is SessionState.InGame) {
-                    Timber.d("User is already in an existing game while joining a game. ")
-                }
+            if (sessionRepository.session.activeGame != null) {
+                throwIfDebug { "User is already in an existing game while joining a game." }
             }
         }
     }
