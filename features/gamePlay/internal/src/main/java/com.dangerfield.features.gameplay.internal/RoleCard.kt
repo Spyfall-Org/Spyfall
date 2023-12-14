@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,7 +34,9 @@ fun RoleCard(
 ) {
     var isHidden by remember { mutableStateOf(false) }
 
-    SubcomposeLayout { constraints ->
+    SubcomposeLayout(
+        modifier = Modifier.padding(horizontal = Spacing.S800),
+    ) { constraints ->
         val buttonPlaceable = subcompose(0) {
             Button(size = ButtonSize.Small, onClick = { isHidden = !isHidden }) {
                 Text(text = if (isHidden) "Show" else "Hide")
@@ -49,6 +52,7 @@ fun RoleCard(
                 Column(
                     modifier = Modifier
                         .background(OddOneOutTheme.colorScheme.surfacePrimary, radius = Radii.Round)
+                        .fillMaxWidth()
                         .padding(vertical = Spacing.S500, horizontal = Spacing.S1200)
                         .padding(bottom = Spacing.S500),
                     horizontalAlignment = Alignment.CenterHorizontally

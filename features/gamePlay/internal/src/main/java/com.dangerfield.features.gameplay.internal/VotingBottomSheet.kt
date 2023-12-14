@@ -24,6 +24,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 fun VotingBottomSheet(
     modifier: Modifier = Modifier,
     bottomSheetState: BottomSheetState = rememberBottomSheetState(),
+    hasVoted: Boolean,
     onDismiss: (BottomSheetState) -> Unit
 ) {
 
@@ -33,7 +34,7 @@ fun VotingBottomSheet(
         topAccessory = iconTopAccessory(icon = SpyfallIcon.Alarm(null)),
         modifier = modifier,
         topContent = {
-            Text(text = "Time to vote!")
+            Text(text = if (hasVoted) "Voting Rules" else "Time to vote!")
         },
         content = {
             Column {
@@ -42,23 +43,31 @@ fun VotingBottomSheet(
                 VerticalSpacerS800()
 
                 BulletRow {
-                    Text(text = "Come to a consensus on who you all think the odd one out is")
+                    Text(text = "Come to a majority agreement on who you all think the odd one out is")
                 }
 
-                BulletRow {
-                    Text(text = "Once done (regardless of if the guess is correct) the odd one out can reveal themselves and guess the location")
-                }
+                VerticalSpacerS500()
 
                 BulletRow {
-                    Text(text = "If the players guess the odd one out correctly the player wins")
+                    Text(text = "Once done (regardless of if the guess is correct) the odd one out must reveal themselves and guess the location")
                 }
+
+                VerticalSpacerS500()
+
+                BulletRow {
+                    Text(text = "If the majority of the players guess the odd one out correctly the players win")
+                }
+
+                VerticalSpacerS500()
 
                 BulletRow {
                     Text(text = "If the odd one out guesses the location correctly the odd one out wins")
                 }
 
+                VerticalSpacerS500()
+                
                 BulletRow {
-                    Text(text = "If both guess correctly or both guess incorrectly the game ends in a draw! But congrats to the odd one out for fooling everyone!")
+                    Text(text = "If both sides win or both sides lose then the game ends in a draw!")
                 }
             }
         },
@@ -82,8 +91,8 @@ private fun PreviewVotingBottomSheet() {
     PreviewContent {
         VotingBottomSheet(
             bottomSheetState = bottomSheetState,
-            onDismiss = { }
-
+            onDismiss = { },
+            hasVoted = false
         )
     }
 }

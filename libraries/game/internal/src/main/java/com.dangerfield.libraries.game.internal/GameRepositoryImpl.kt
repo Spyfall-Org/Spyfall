@@ -1,9 +1,13 @@
 package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
+import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameError
+import com.dangerfield.libraries.game.GameError.TriedToLeaveStartedGame
 import com.dangerfield.libraries.game.GameRepository
+import com.dangerfield.libraries.game.GetGamePlayLocations
+import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.StartGameError
 import kotlinx.coroutines.CoroutineScope
@@ -18,17 +22,21 @@ import kotlinx.coroutines.flow.stateIn
 import se.ansman.dagger.auto.AutoBind
 import spyfallx.core.Try
 import spyfallx.core.allOrNone
+import spyfallx.core.developerSnackOnError
 import spyfallx.core.failure
 import spyfallx.core.illegalState
 import spyfallx.core.logOnError
 import spyfallx.core.success
 import java.time.Clock
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @AutoBind
 class GameRepositoryImpl @Inject constructor(
     private val gameDataSource: GameDataSource,
     private val clock: Clock,
+    private val getGamePlayLocations: GetGamePlayLocations,
+    private val locationPackRepository: LocationPackRepository,
     @ApplicationScope private val applicationScope: CoroutineScope
 ) : GameRepository {
 
@@ -42,7 +50,7 @@ class GameRepositoryImpl @Inject constructor(
         .filterNotNull()
         .stateIn(
             scope = applicationScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(GameSubscriptionTimeout),
             initialValue = null
         )
 
@@ -72,8 +80,20 @@ class GameRepositoryImpl @Inject constructor(
         }
             .logOnError()
 
-    override suspend fun removeUser(accessCode: String, username: String) {
-        TODO("Not yet implemented")
+    override suspend fun removeUser(accessCode: String, username: String): Try<Unit> {
+        val currentGame = currentGameFlow.value.takeIf { it?.accessCode == accessCode }
+            ?: gameDataSource.getGame(accessCode).getOrNull()
+
+        return when {
+            currentGame == null || currentGame.accessCode != accessCode -> {
+                // assume best intent, try to remove from the provided access code anyway
+                gameDataSource.removePlayer(accessCode, username)
+            }
+
+            currentGame.isBeingStarted -> TriedToLeaveStartedGame.failure()
+            currentGame.players.size == 1 -> gameDataSource.delete(accessCode)
+            else -> gameDataSource.removePlayer(accessCode, username)
+        }.logOnError()
     }
 
     override suspend fun doesGameExist(accessCode: String): Try<Boolean> {
@@ -91,7 +111,7 @@ class GameRepositoryImpl @Inject constructor(
     }
 
     override suspend fun end(accessCode: String) {
-        TODO("Not yet implemented")
+        gameDataSource.delete(accessCode)
     }
 
     override suspend fun setGameIsBeingStarted(
@@ -109,8 +129,45 @@ class GameRepositoryImpl @Inject constructor(
         return gameDataSource.setStartedAt(accessCode, clock.millis()).logOnError()
     }
 
-    override suspend fun reset(accessCode: String) {
-        TODO("Not yet implemented")
+    override suspend fun reset(accessCode: String): Try<Unit> {
+        val currentGame = currentGameFlow.value.takeIf { it?.accessCode == accessCode }
+            ?: gameDataSource.getGame(accessCode).getOrNull()
+            ?: return illegalState("Game is null when resetting")
+
+        val packs = locationPackRepository
+            .getPacks()
+            .getOrThrow()
+            .filter { it.name in currentGame.packNames }
+
+        val newLocations = getGamePlayLocations(packs)
+            .getOrNull()
+            ?.map { it.name }
+            ?: currentGame.locationOptionNames
+
+        var newLocation = newLocations.random()
+
+        while (newLocation == currentGame.locationName) {
+            newLocation = newLocations.random()
+        }
+
+        val resetGame = currentGame.copy(
+            locationName = newLocation,
+            isBeingStarted = false,
+            players = currentGame.players.map {
+                it.copy(
+                    role = null,
+                    isOddOneOut = false,
+                    votedCorrectly = null
+                )
+            },
+            locationOptionNames = newLocations,
+            startedAt = null,
+        )
+        return Try {
+            gameDataSource.setGame(resetGame)
+        }
+            .logOnError()
+            .developerSnackOnError { "Could not reset game" }
     }
 
     override suspend fun changeName(accessCode: String, newName: String, id: String): Try<Unit> {
@@ -124,15 +181,24 @@ class GameRepositoryImpl @Inject constructor(
 
     override suspend fun getGame(accessCode: String): Try<Game> = gameDataSource.getGame(accessCode)
 
-    override suspend fun submitLocationVote(accessCode: String, voterId: String, location: String): Try<Unit> {
+    override suspend fun submitLocationVote(
+        accessCode: String,
+        voterId: String,
+        location: String
+    ): Try<Unit> {
         val game = currentGameFlow.value ?: return illegalState("Game is null when voting")
         return gameDataSource.setPlayerVotedCorrectly(
             accessCode = accessCode,
             playerId = voterId,
-            votedCorrectly = location == game.locationName).logOnError()
+            votedCorrectly = location == game.locationName
+        ).logOnError()
     }
 
-    override suspend fun submitOddOneOutVote(accessCode: String, voterId: String, voteId: String): Try<Unit> {
+    override suspend fun submitOddOneOutVote(
+        accessCode: String,
+        voterId: String,
+        voteId: String
+    ): Try<Unit> {
         val oddOneOut = currentGameFlow.value
             ?.players
             ?.find { it.isOddOneOut }
@@ -141,7 +207,12 @@ class GameRepositoryImpl @Inject constructor(
         return gameDataSource.setPlayerVotedCorrectly(
             accessCode = accessCode,
             playerId = voterId,
-            votedCorrectly = voteId == oddOneOut.id)
+            votedCorrectly = voteId == oddOneOut.id
+        )
             .logOnError()
+    }
+
+    companion object {
+        private const val GameSubscriptionTimeout = 5_000L
     }
 }

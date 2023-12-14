@@ -56,12 +56,12 @@ class FirestoreGameDataSource @Inject constructor(
     /**
      * Players are stored as a map of id to player, so we need to remove the entry matching the id
      */
-    override suspend fun removePlayer(accessCode: String, id: String) {
+    override suspend fun removePlayer(accessCode: String, id: String) = Try {
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .update(FieldPath.of(PLAYERS_FIELD_KEY, id), FieldValue.delete())
             .await()
-    }
+    }.ignoreValue()
 
     override suspend fun updatePlayers(accessCode: String, list: List<Player>) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
@@ -90,9 +90,9 @@ class FirestoreGameDataSource @Inject constructor(
             .await()
     }
 
-    override suspend fun endGame(accessCode: String) {
+    override suspend fun delete(accessCode: String): Try<Unit> = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode).delete().await()
-    }
+    }.ignoreValue()
 
     override suspend fun setGameBeingStarted(accessCode: String, isBeingStarted: Boolean) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)

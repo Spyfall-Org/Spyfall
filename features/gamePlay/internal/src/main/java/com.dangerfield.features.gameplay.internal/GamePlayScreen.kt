@@ -48,10 +48,13 @@ fun GamePlayScreen(
     isLoadingVote: Boolean,
     hasMePlayerSubmittedVote: Boolean,
     gameResult: GameResult?,
-    onVotingQuestionClicked: () -> Unit,
+    onVotingQuestionClicked: (hasVoted: Boolean) -> Unit,
     onGamePlayQuestionClicked: () -> Unit,
     onSubmitPlayerVoteClicked: (id: String) -> Unit,
+    onEndGameClicked: () -> Unit,
+    onResetGameClicked: () -> Unit,
     onSubmitLocationVoteClicked: (location: String) -> Unit,
+    onTimeToVote: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -63,7 +66,10 @@ fun GamePlayScreen(
     val isVotingOnOddOneOut = !isVotingOnLocation
 
     LaunchedEffect(isTimeUp) {
-        if (isTimeUp) scrollState.animateScrollTo(0)
+        if (isTimeUp) {
+            scrollState.animateScrollTo(0)
+            onTimeToVote()
+        }
     }
 
     LaunchedEffect(gameResult) {
@@ -81,7 +87,9 @@ fun GamePlayScreen(
         ) {
             HelpButton(
                 isTimeUp = isTimeUp,
-                onVotingQuestionClicked = onVotingQuestionClicked,
+                onVotingQuestionClicked = {
+                    onVotingQuestionClicked(hasMePlayerSubmittedVote)
+                },
                 onGamePlayQuestionClicked = onGamePlayQuestionClicked
             )
 
@@ -89,7 +97,8 @@ fun GamePlayScreen(
                 hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
                 isTimeUp = isTimeUp,
                 gameResult = gameResult,
-                timeRemaining = timeRemaining
+                timeRemaining = timeRemaining,
+                isMePlayerOddOneOut = isOddOneOut
             )
 
             RoleCard(
@@ -151,7 +160,10 @@ fun GamePlayScreen(
 
             VerticalSpacerS1200()
 
-            Button(modifier = Modifier.fillMaxWidth(), onClick = { /*TODO*/ }) {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onResetGameClicked
+            ) {
                 Text(text = "Restart Game")
             }
 
@@ -159,7 +171,8 @@ fun GamePlayScreen(
 
             Button(type = ButtonType.Regular,
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { /*TODO*/ }) {
+                onClick = onEndGameClicked
+            ) {
                 Text(text = "End Game")
             }
 
@@ -349,10 +362,12 @@ private fun Header(
     hasMePlayerSubmittedVote: Boolean,
     isTimeUp: Boolean,
     gameResult: GameResult?,
-    timeRemaining: String
+    timeRemaining: String,
+    isMePlayerOddOneOut: Boolean
 ) {
     val headerText = when {
         gameResult == GameResult.PlayersWon -> "The Players Have Won!"
+        gameResult == GameResult.OddOneOutWon && isMePlayerOddOneOut -> "You have won!"
         gameResult == GameResult.OddOneOutWon -> "The Odd One Out Has Won!"
         gameResult == GameResult.Draw -> "It's a Draw!"
         hasMePlayerSubmittedVote -> "Counting votes..."
@@ -381,7 +396,7 @@ private fun PreviewGamePlayScreen() {
             timeRemaining = "1:32",
             role = "The Odd One Out",
             isOddOneOut = true,
-            onVotingQuestionClicked = { -> },
+            onVotingQuestionClicked = { _ -> },
             onGamePlayQuestionClicked = { -> },
             isLoadingVote = false,
             onSubmitPlayerVoteClicked = { },
@@ -390,6 +405,9 @@ private fun PreviewGamePlayScreen() {
             isTimeUp = false,
             hasMePlayerSubmittedVote = false,
             gameResult = null,
+            onTimeToVote = {},
+            onEndGameClicked = {},
+            onResetGameClicked = {}
         )
     }
 }
@@ -406,7 +424,7 @@ private fun PreviewGamePlayScreenVoting() {
             timeRemaining = "1:32",
             role = "The Odd One Out",
             isOddOneOut = true,
-            onVotingQuestionClicked = { -> },
+            onVotingQuestionClicked = { _ -> },
             onGamePlayQuestionClicked = { -> },
             isLoadingVote = false,
             onSubmitPlayerVoteClicked = { },
@@ -415,6 +433,9 @@ private fun PreviewGamePlayScreenVoting() {
             isTimeUp = true,
             hasMePlayerSubmittedVote = false,
             gameResult = null,
+            onTimeToVote = {},
+            onEndGameClicked = {},
+            onResetGameClicked = {}
         )
     }
 }
@@ -431,7 +452,7 @@ private fun PreviewGamePlayScreenVoted() {
             timeRemaining = "1:32",
             role = "The Odd One Out",
             isOddOneOut = true,
-            onVotingQuestionClicked = { -> },
+            onVotingQuestionClicked = { _ -> },
             onGamePlayQuestionClicked = { -> },
             isLoadingVote = false,
             onSubmitPlayerVoteClicked = { },
@@ -440,6 +461,9 @@ private fun PreviewGamePlayScreenVoted() {
             isTimeUp = true,
             hasMePlayerSubmittedVote = true,
             gameResult = null,
+            onTimeToVote = {},
+            onEndGameClicked = {},
+            onResetGameClicked = {},
         )
     }
 }
@@ -456,7 +480,7 @@ private fun PreviewGamePlayScreenResults() {
             timeRemaining = "1:32",
             role = "The Odd One Out",
             isOddOneOut = true,
-            onVotingQuestionClicked = { -> },
+            onVotingQuestionClicked = { _ -> },
             onGamePlayQuestionClicked = { -> },
             isLoadingVote = false,
             onSubmitPlayerVoteClicked = { },
@@ -465,6 +489,9 @@ private fun PreviewGamePlayScreenResults() {
             isTimeUp = true,
             hasMePlayerSubmittedVote = true,
             gameResult = GameResult.Draw,
+            onTimeToVote = {},
+            onEndGameClicked = {},
+            onResetGameClicked = {},
         )
     }
 }

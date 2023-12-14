@@ -1,6 +1,7 @@
 package com.dangerfield.features.newgame.internal.usecase
 
 import com.dangerfield.libraries.game.GameConfig
+import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Pack
 import spyfallx.core.Try
 import spyfallx.core.success

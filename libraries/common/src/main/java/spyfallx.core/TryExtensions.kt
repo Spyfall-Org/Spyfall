@@ -66,8 +66,8 @@ fun <T> Try<T>.developerSnackOnError(
     lazyMessage: () -> String,
 ): Try<T> = onFailure {
     if (BuildConfig.DEBUG && this is Failure) {
-        DeveloperMessagePresenter.showDeveloperMessage(
-            DeveloperMessage(
+        UserMessagePresenter.showDeveloperMessage(
+            Message(
                 message = lazyMessage(),
                 autoDismiss = autoDismiss
             )
@@ -80,8 +80,8 @@ fun <T> Try<T>.developerSnackOnSuccess(
     lazyMessage: () -> String,
 ): Try<T> = onFailure {
     if (BuildConfig.DEBUG && this is spyfallx.core.Success) {
-        DeveloperMessagePresenter.showDeveloperMessage(
-            DeveloperMessage(
+        UserMessagePresenter.showDeveloperMessage(
+            Message(
                 message = lazyMessage(),
                 autoDismiss = autoDismiss
             )

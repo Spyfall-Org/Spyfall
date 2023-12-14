@@ -8,6 +8,7 @@ import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Event
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.Game
+import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
@@ -22,8 +23,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackOnError
+import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -33,10 +34,23 @@ class WaitingRoomViewModel @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val startGameUseCase: StartGameUseCase,
     private val session: Session,
+    private val leaveGameUseCase: LeaveGameUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : SEAViewModel<State, Event, Action>() {
 
     private val isSubscribedToGameFlow = AtomicBoolean(false)
+
+    private val meUserId: String
+        get() {
+            val userId = session.activeGame?.userId
+            if (userId == null) {
+                viewModelScope.launch {
+                    updateState { it.copy(didSomethingGoWrong = true) }
+                }
+            }
+            return userId.orEmpty()
+        }
+
     private val accessCode: String get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
     override val initialState = State(
         accessCode = accessCode,
@@ -60,7 +74,23 @@ class WaitingRoomViewModel @Inject constructor(
             is Action.LoadRoom -> loadRoom()
             is Action.ChangeName -> changeName(action.name, action.id)
             Action.StartGame -> startGame()
+            Action.LeaveGame -> leaveGame()
         }
+    }
+
+    private suspend fun leaveGame() {
+        leaveGameUseCase.invoke(
+            accessCode = accessCode,
+            id = meUserId,
+            isGameBeingStarted = state.value.isLoadingStart
+        )
+            .onSuccess { sendEvent(Event.LeftGame) }
+            .onFailure {
+                if (it is GameError.TriedToLeaveStartedGame) {
+                    sendEvent(Event.TriedToLeaveStartedGame)
+                }
+            }
+            .logOnError()
     }
 
     private suspend fun startGame() {
@@ -88,11 +118,14 @@ class WaitingRoomViewModel @Inject constructor(
                     when (gameState) {
                         is GameState.Started -> {
                             updateState { it.copy(isLoadingStart = false) }
-                            sendEvent(Event.GameStarted(
-                                accessCode = accessCode,
-                                timeLimit = gameState.timeLimitMins
-                            ))
+                            sendEvent(
+                                Event.GameStarted(
+                                    accessCode = accessCode,
+                                    timeLimit = gameState.timeLimitMins
+                                )
+                            )
                         }
+
                         is GameState.Starting -> updateState { it.copy(isLoadingStart = true) }
                         is GameState.Waiting -> updateState { state ->
                             val mePlayer =
@@ -127,10 +160,13 @@ class WaitingRoomViewModel @Inject constructor(
         data object LoadRoom : Action()
         data class ChangeName(val name: String, val id: String) : Action()
         data object StartGame : Action()
+        data object LeaveGame : Action()
     }
 
     sealed class Event {
         data class GameStarted(val accessCode: String, val timeLimit: Int) : Event()
+        data object TriedToLeaveStartedGame : Event()
+        data object LeftGame : Event()
     }
 
     data class State(

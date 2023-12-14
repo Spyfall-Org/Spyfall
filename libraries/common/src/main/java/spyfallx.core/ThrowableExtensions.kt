@@ -37,8 +37,8 @@ fun developerSnackIfDebug(
 ) {
     val message = lazyMessage()
     if (BuildConfig.DEBUG) {
-        DeveloperMessagePresenter.showDeveloperMessage(
-            DeveloperMessage(
+        UserMessagePresenter.showDeveloperMessage(
+            Message(
                 message = lazyMessage().toString(), autoDismiss = autoDismiss
             )
         )

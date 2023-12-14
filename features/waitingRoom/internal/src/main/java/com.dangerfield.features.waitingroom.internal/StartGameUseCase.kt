@@ -13,7 +13,7 @@ class StartGameUseCase @Inject constructor(
 
     /**
      * Sets the flag for the game being started to true
-     * assigns every player a role (including a random spy)
+     * assigns every player a role (including a random odd one out)
      * sets the started at time.
      */
     suspend operator fun invoke(
@@ -27,11 +27,11 @@ class StartGameUseCase @Inject constructor(
 
         val shuffledRoles = packsPackRepository.getRoles(locationName).getOrThrow().shuffled()
         val shuffledPlayers = players.shuffled()
-        val randomSpyIndex = shuffledPlayers.indices.random()
+        val oddOneOutIndex = shuffledPlayers.indices.random()
 
         val shuffledPlayersWithRoles = shuffledPlayers.mapIndexed { index, player ->
-            val role = if (index == randomSpyIndex) "The Spy" else shuffledRoles[index]
-            player.copy(role = role, isOddOneOut = index == randomSpyIndex)
+            val role = if (index == oddOneOutIndex) "The Odd One Out" else shuffledRoles[index]
+            player.copy(role = role, isOddOneOut = index == oddOneOutIndex)
         }
 
         gameRepository

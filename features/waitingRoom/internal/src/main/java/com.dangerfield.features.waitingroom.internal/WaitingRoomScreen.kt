@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ fun WaitingRoomScreen(
     isLoadingRoom: Boolean,
     isLoadingStart: Boolean,
     onStartGameClicked: () -> Unit,
+    onLeaveGameClicked: () -> Unit,
     onCallLinkButtonClicked: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -65,11 +67,14 @@ fun WaitingRoomScreen(
             Row {
                 Text(text = "Access Code:", typographyToken = OddOneOutTheme.typography.Default.Bold)
                 Spacer(modifier = Modifier.width(Spacing.S500))
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = accessCode,
-                    typographyToken = OddOneOutTheme.typography.Default
-                )
+                SelectionContainer {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = accessCode,
+                        typographyToken = OddOneOutTheme.typography.Default
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
 
                 if (videoCallLink != null) {
                     IconButton(
@@ -94,7 +99,7 @@ fun WaitingRoomScreen(
             if (!isLoadingStart) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { /*TODO*/ },
+                    onClick = onLeaveGameClicked,
                     type = ButtonType.Regular
                 ) {
                     Text(text = "Leave Game")
@@ -168,7 +173,8 @@ fun PreviewWaitingRoomScreen() {
             isLoadingStart = false,
             videoCallLink = "https://meet.google.com/lookup/abc123",
             onCallLinkButtonClicked = { },
-            onStartGameClicked = {}
+            onStartGameClicked = {},
+            onLeaveGameClicked = {},
         )
     }
 }

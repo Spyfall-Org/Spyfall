@@ -15,6 +15,7 @@ import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,11 +31,11 @@ import kotlin.time.Duration.Companion.minutes
 class GamePlayViewModel @Inject constructor(
     private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
-    private val session: Session,
+    private val sessionRepository: SessionRepository,
     private val savedStateHandle: SavedStateHandle
 ) : SEAViewModel<State, Event, Action>() {
 
-    private val meUserId = session.activeGame?.userId ?: ""
+    private val meUserId = sessionRepository.session.activeGame?.userId ?: ""
     private val isSubscribedToGameFlow = AtomicBoolean(false)
 
     // TODO may be concurency issues here, the timer could be stoped or started from different coroutines
@@ -65,7 +66,20 @@ class GamePlayViewModel @Inject constructor(
             Action.LoadGamePlay -> loadGamePlay()
             is Action.SubmitLocationVote -> submitLocationVote(action)
             is Action.SubmitOddOneOutVote -> submitOddOneOutVote(action)
+            Action.ResetGame -> resetGame()
+            Action.EndGame -> endGame()
         }
+    }
+
+    private suspend fun endGame() {
+        gameRepository.end(accessCode)
+        sessionRepository.updateActiveGame(null)
+        sendEvent(Event.GameKilled)
+    }
+
+    private suspend fun resetGame() {
+        gameRepository.reset(accessCode)
+
     }
 
     private suspend fun GamePlayViewModel.submitOddOneOutVote(action: Action.SubmitOddOneOutVote) {
@@ -114,19 +128,25 @@ class GamePlayViewModel @Inject constructor(
                 mapToGameState(accessCode, game)
             }.collect { gameState ->
                 when (gameState) {
-                    is GameState.DoesNotExist, is GameState.Starting, is GameState.Unknown -> developerSnackIfDebug {
+                    is GameState.Starting, is GameState.Unknown -> developerSnackIfDebug {
                         "Illegal game state ${gameState::class.java.simpleName}"
                     }
-                    is GameState.Waiting -> sendEvent(Event.GameReset)
+
+                    is GameState.DoesNotExist -> {
+                        sessionRepository.updateActiveGame(null)
+                        sendEvent(Event.GameKilled)
+                    }
+
+                    is GameState.Waiting -> sendEvent(Event.GameReset(accessCode))
+
                     is GameState.Started -> {
                         if (!isTimerRunning) startTimer()
                         updateGameState(gameState)
                     }
 
                     is GameState.Voting -> {
-                        sendEvent(Event.GameTimedOut)
-                        updateState { it.copy(isTimeUp = true) }
                         stopTimer()
+                        updateState { it.copy(isTimeUp = true) }
                     }
 
                     is GameState.VotingEnded -> {
@@ -155,7 +175,7 @@ class GamePlayViewModel @Inject constructor(
                         isOddOneOut = player.isOddOneOut
                     )
                 },
-                mePlayer = gameState.players.find { it.id == session.user.id }
+                mePlayer = gameState.players.find { it.id == meUserId}
                     ?.let { me ->
                         DisplayablePlayer(
                             name = me.userName,
@@ -211,13 +231,14 @@ class GamePlayViewModel @Inject constructor(
     )
 
     sealed class Event {
-        data object GameReset : Event()
-        data object GameEnded : Event()
-        data object GameTimedOut : Event()
+        data class GameReset(val accessCode: String) : Event()
+        data object GameKilled : Event()
     }
 
     sealed class Action {
+        data object ResetGame : Action()
         data object LoadGamePlay : Action()
+        data object EndGame: Action()
         data class SubmitOddOneOutVote(val id: String) : Action()
         data class SubmitLocationVote(val location: String) : Action()
     }

@@ -32,6 +32,14 @@ class NavControllerRouter(
             .throwIfDebug()
     }
 
+    override fun popBackTo(route: Route.Template, inclusive: Boolean) {
+        Try {
+            navController.popBackStack(route.navRoute, inclusive)
+        }
+            .logOnError()
+            .throwIfDebug()
+    }
+
     override fun dismissSheet(sheetState: BottomSheetState) {
         if (sheetState.isVisible) {
             Try {

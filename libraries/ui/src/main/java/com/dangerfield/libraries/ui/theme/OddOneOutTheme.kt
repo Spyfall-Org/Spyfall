@@ -1,6 +1,8 @@
 package com.dangerfield.libraries.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -43,10 +45,16 @@ fun OddOneOutTheme(
         ColorScheme.lightMode(accentColor)
     }
 
+    val textSelectionColors = TextSelectionColors(
+        handleColor = colorScheme.accent.color,
+        backgroundColor = colorScheme.accent.color.copy(alpha = 0.4F)
+    )
+
     SetupMaterialTheme {
         CompositionLocalProvider(
             LocalColorScheme provides colorScheme,
             LocalContentColor provides colorScheme.text,
+            LocalTextSelectionColors provides textSelectionColors,
             LocalTypography provides OddOneOutTheme.typography,
             LocalMinimumInteractiveComponentEnforcement provides false,
             androidx.compose.material3.LocalContentColor provides colorScheme.text.color,

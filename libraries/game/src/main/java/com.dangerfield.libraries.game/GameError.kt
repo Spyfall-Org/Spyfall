@@ -10,4 +10,6 @@ sealed class GameError(message: String) : Throwable(message) {
     )
 
     data object GameNotFound : GameError("Game not found")
+
+    data object TriedToLeaveStartedGame : GameError("Tried to leave a game that has already started")
 }

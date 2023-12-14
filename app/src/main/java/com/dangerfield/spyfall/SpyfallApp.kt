@@ -32,7 +32,7 @@ import com.dangerfield.libraries.ui.components.toSnackbarData
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import kotlinx.coroutines.flow.receiveAsFlow
-import spyfallx.core.DeveloperMessagePresenter
+import spyfallx.core.UserMessagePresenter
 import spyfallx.ui.color.AccentColor
 
 @Suppress("MagicNumber")
@@ -57,14 +57,14 @@ fun SpyfallApp(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        DeveloperMessagePresenter
+        UserMessagePresenter
             .messages
             .receiveAsFlow()
             .observeWithLifecycle(lifecycleOwner.lifecycle) {
                 snackbarHostState.showSnackbar(
                     message = it.message,
                     withDismissAction = !it.autoDismiss,
-                    duration = SnackbarDuration.Indefinite
+                    duration = if(it.autoDismiss) SnackbarDuration.Short else SnackbarDuration.Indefinite
                 )
             }
     }

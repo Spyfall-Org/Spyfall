@@ -9,10 +9,10 @@ interface GameDataSource {
     suspend fun setGame(game: Game)
     suspend fun getGame(accessCode: String): Try<Game>
     suspend fun subscribeToGame(accessCode: String): Try<Flow<Game>>
-    suspend fun removePlayer(accessCode: String, id: String)
+    suspend fun removePlayer(accessCode: String, id: String): Try<Unit>
     suspend fun addPlayer(accessCode: String, player: Player)
     suspend fun setLocation(accessCode: String, location: String)
-    suspend fun endGame(accessCode: String)
+    suspend fun delete(accessCode: String): Try<Unit>
     suspend fun setGameBeingStarted(accessCode: String, isBeingStarted: Boolean): Try<Unit>
     suspend fun setStartedAt(accessCode: String, startedAt: Long): Try<Unit>
     suspend fun updatePlayers(accessCode: String, list: List<Player>): Try<Unit>

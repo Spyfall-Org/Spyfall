@@ -93,7 +93,7 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                     remainingMillis: ${remainingMillis(startedAt ?: 0, game.timeLimitMins)}
                     everyoneHasARole: ${game.players.everyoneHasARole()}
                     everyoneHasVoted: ${game.players.everyoneHasVoted()}
-                    remainingTimeMilis = ${startedAt?.let { remainingMillis(it, game.timeLimitMins) }}
+                    remainingTimeMillis = ${startedAt?.let { remainingMillis(it, game.timeLimitMins) }}
                 """.trimIndent())
             }
         }
@@ -108,19 +108,18 @@ class MapToGameStateUseCaseImpl @Inject constructor(
 
     private fun calculateGameResult(game: Game): GameResult {
         val oddOneOut = game.players.find { it.isOddOneOut } ?: return GameResult.Error
-        val playersWon =
-            game.players.filter { it.votedCorrectly == true }.size == game.players.size - 1
-        val oddOneOutWon = oddOneOut.votedCorrectly == true
+        val players = (game.players - oddOneOut)
+
+        val majorityPlayersVotedCorrectly = players.count { it.votedCorrectly() } > players.size / 2
 
         return when {
-            playersWon && oddOneOutWon -> GameResult.Draw
-            playersWon -> GameResult.PlayersWon
-            oddOneOutWon -> GameResult.OddOneOutWon
+            majorityPlayersVotedCorrectly && oddOneOut.votedCorrectly() -> GameResult.Draw
+            majorityPlayersVotedCorrectly -> GameResult.PlayersWon
+            oddOneOut.votedCorrectly() -> GameResult.OddOneOutWon
             else -> GameResult.Draw
         }
     }
 
     private fun Collection<Player>.everyoneHasARole() = this.all { it.role != null }
     private fun Collection<Player>.everyoneHasVoted() = this.all { it.votedCorrectly != null }
-
 }

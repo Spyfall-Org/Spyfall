@@ -10,13 +10,16 @@ import com.dangerfield.features.gameplay.gamePlayScreenRoute
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.LoadGamePlay
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.SubmitLocationVote
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.SubmitOddOneOutVote
+import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameKilled
+import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameReset
+import com.dangerfield.features.waitingroom.navigateToWaitingRoom
+import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
-import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.bottomsheet.bottomSheet
+import com.dangerfield.libraries.navigation.navArgument
 import se.ansman.dagger.auto.AutoBindIntoSet
-import spyfallx.core.doNothing
 import javax.inject.Inject
 
 @AutoBindIntoSet
@@ -34,9 +37,8 @@ class GamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
 
             ObserveWithLifecycle(flow = viewModel.events) {
                 when (it) {
-                    GamePlayViewModel.Event.GameEnded -> doNothing()
-                    GamePlayViewModel.Event.GameTimedOut -> router.navigateToVotingInfo()
-                    GamePlayViewModel.Event.GameReset -> doNothing()
+                    is GameReset -> router.navigateToWaitingRoom(accessCode = it.accessCode)
+                    GameKilled -> router.popBackTo(welcomeNavigationRoute)
                 }
             }
 
@@ -59,6 +61,9 @@ class GamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                 location = state.location,
                 hasMePlayerSubmittedVote = state.isVoteSubmitted,
                 gameResult = state.gameResult,
+                onTimeToVote = router::navigateToVotingInfo,
+                onResetGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.ResetGame) },
+                onEndGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.EndGame) }
             )
         }
 
@@ -66,8 +71,11 @@ class GamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
             route = votingRoute.navRoute,
             arguments = votingRoute.navArguments
         ) {
+            val hasVoted = it.navArgument<Boolean>(hasVotedArgument) ?: false
+
             VotingBottomSheet(
-                onDismiss = router::dismissSheet
+                onDismiss = router::dismissSheet,
+                hasVoted = hasVoted
             )
         }
 

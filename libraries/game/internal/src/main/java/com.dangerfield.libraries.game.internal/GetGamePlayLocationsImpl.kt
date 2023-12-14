@@ -1,17 +1,20 @@
-package com.dangerfield.features.newgame.internal.usecase
+package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.GameConfig
+import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
+import se.ansman.dagger.auto.AutoBind
 import spyfallx.core.Try
 import spyfallx.core.failure
 import spyfallx.core.throwIfDebug
 import javax.inject.Inject
 
-class GetGamePlayLocations @Inject constructor(
+@AutoBind
+class GetGamePlayLocationsImpl @Inject constructor(
     private val gameConfig: GameConfig
-) {
-    operator fun invoke(packs: List<Pack>): Try<List<Location>> = Try {
+): GetGamePlayLocations {
+    override operator fun invoke(packs: List<Pack>): Try<List<Location>> = Try {
 
         val gamePlayLocations = mutableSetOf<Location>()
         val packBank = packs.map { it.locations.toMutableSet() }
