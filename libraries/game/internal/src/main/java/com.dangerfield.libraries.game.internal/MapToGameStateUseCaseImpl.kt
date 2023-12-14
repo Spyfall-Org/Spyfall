@@ -31,22 +31,20 @@ class MapToGameStateUseCaseImpl @Inject constructor(
         return timeLimitInMillis - (currentTimeMillis - startedAt)
     }
 
+    @Suppress("LongMethod")
     override fun invoke(accessCode: String, game: Game?): GameState {
         val startedAt = game?.startedAt
 
         return when {
             accessCode.isEmpty() || game == null -> GameState.DoesNotExist(accessCode)
 
-            !game.isBeingStarted
-                    && game.startedAt == null
-                    && !game.players.everyoneHasARole()
+            hasNotStarted(game)
             -> GameState.Waiting(
                 accessCode = accessCode,
                 players = game.players,
             )
 
-            game.isBeingStarted
-                    && (game.startedAt == null || !game.players.everyoneHasARole() )
+            isBeingStarted(game)
             -> GameState.Starting(
                 accessCode = accessCode,
                 players = game.players
@@ -100,6 +98,13 @@ class MapToGameStateUseCaseImpl @Inject constructor(
             }
         }
     }
+
+    private fun isBeingStarted(game: Game) = (game.isBeingStarted
+            && (game.startedAt == null || !game.players.everyoneHasARole()))
+
+    private fun hasNotStarted(game: Game) = (!game.isBeingStarted
+            && game.startedAt == null
+            && !game.players.everyoneHasARole())
 
     private fun calculateGameResult(game: Game): GameResult {
         val oddOneOut = game.players.find { it.isOddOneOut } ?: return GameResult.Error

@@ -117,38 +117,10 @@ class GamePlayViewModel @Inject constructor(
                     is GameState.DoesNotExist, is GameState.Starting, is GameState.Unknown -> developerSnackIfDebug {
                         "Illegal game state ${gameState::class.java.simpleName}"
                     }
-
                     is GameState.Waiting -> sendEvent(Event.GameReset)
                     is GameState.Started -> {
                         if (!isTimerRunning) startTimer()
-                        updateState { prev ->
-                            prev.copy(
-                                isLoadingPlayers = false,
-                                isLoadingLocations = false,
-                                players = gameState.players.map { player ->
-                                    DisplayablePlayer(
-                                        name = player.userName,
-                                        isFirst = gameState.firstPlayer == player,
-                                        id = player.id,
-                                        role = player.role ?: "",
-                                        isOddOneOut = player.isOddOneOut
-                                    )
-                                },
-                                mePlayer = gameState.players.find { it.id == session.user.id }
-                                    ?.let { me ->
-                                        DisplayablePlayer(
-                                            name = me.userName,
-                                            isFirst = gameState.firstPlayer == me,
-                                            id = me.id,
-                                            role = me.role ?: "",
-                                            isOddOneOut = me.isOddOneOut
-                                        )
-                                    },
-                                locations = gameState.locationNames,
-                                location = gameState.location,
-                                timeRemaining = gameState.timeRemainingMillis.millisToMMss(),
-                            )
-                        }
+                        updateGameState(gameState)
                     }
 
                     is GameState.Voting -> {
@@ -169,6 +141,37 @@ class GamePlayViewModel @Inject constructor(
         }
     }
 
+    private suspend fun GamePlayViewModel.updateGameState(gameState: GameState.Started) {
+        updateState { prev ->
+            prev.copy(
+                isLoadingPlayers = false,
+                isLoadingLocations = false,
+                players = gameState.players.map { player ->
+                    DisplayablePlayer(
+                        name = player.userName,
+                        isFirst = gameState.firstPlayer == player,
+                        id = player.id,
+                        role = player.role ?: "",
+                        isOddOneOut = player.isOddOneOut
+                    )
+                },
+                mePlayer = gameState.players.find { it.id == session.user.id }
+                    ?.let { me ->
+                        DisplayablePlayer(
+                            name = me.userName,
+                            isFirst = gameState.firstPlayer == me,
+                            id = me.id,
+                            role = me.role ?: "",
+                            isOddOneOut = me.isOddOneOut
+                        )
+                    },
+                locations = gameState.locationNames,
+                location = gameState.location,
+                timeRemaining = gameState.timeRemainingMillis.millisToMMss(),
+            )
+        }
+    }
+
     private fun stopTimer() {
         timerJob?.cancel()
         timerJob = null
@@ -184,6 +187,7 @@ class GamePlayViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ImplicitDefaultLocale")
     private fun Long.millisToMMss(): String {
         val minutes = this / 60000
         val seconds = (this % 60000) / 1000

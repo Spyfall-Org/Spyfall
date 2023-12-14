@@ -1,6 +1,6 @@
 package com.dangerfield.features.gameplay.internal
 
-class Fake() {
+class Fake {
     val players = listOf(
         DisplayablePlayer("John", "123", role = "role", isFirst = false, isOddOneOut = false),
         DisplayablePlayer(

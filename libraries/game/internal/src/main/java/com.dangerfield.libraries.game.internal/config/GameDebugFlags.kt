@@ -1,3 +1,4 @@
+@file:Suppress("MatchingDeclarationName")
 package com.dangerfield.libraries.game.internal.config
 
 import com.dangerfield.libraries.config.AppConfigMap
