@@ -10,4 +10,5 @@ interface GameConfig {
     val minTimeLimit: Int
     val locationsPerGame: Int
     val isSingleDeviceModeEnabled: Boolean
+    val forceShortGames: Boolean
 }

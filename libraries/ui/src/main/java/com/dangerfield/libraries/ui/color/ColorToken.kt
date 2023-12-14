@@ -32,13 +32,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import com.dangerfield.libraries.ui.color.ColorGradientPrimitive
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import spyfallx.ui.Border
+import com.dangerfield.libraries.ui.Border
 import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Radius
-import spyfallx.ui.StandardBorderWidth
+import com.dangerfield.libraries.ui.StandardBorderWidth
 import spyfallx.ui.inset
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.thenIf
 import spyfallx.ui.thenIfNotNull
 import androidx.compose.ui.graphics.Color as ComposeColor
@@ -301,7 +301,7 @@ fun Modifier.background(
     alpha: Float = 1f,
     border: Border? = null,
 ): Modifier = composed {
-    val actualShadowColor = shadowColor.takeOrElse { SpyfallTheme.colorScheme.shadow }.color
+    val actualShadowColor = shadowColor.takeOrElse { OddOneOutTheme.colorScheme.shadow }.color
     inspectable(
         debugInspectorInfo {
             name = "background"
@@ -356,7 +356,7 @@ private inline fun <ShapeToken : Any> Modifier.border(
     color: ColorToken.Color = ColorToken.Color.Unspecified,
     width: Dp = StandardBorderWidth,
 ): Modifier = composed {
-    val resolvedColor = color.takeOrElse { SpyfallTheme.colorScheme.border }
+    val resolvedColor = color.takeOrElse { OddOneOutTheme.colorScheme.border }
     inspectable(
         debugInspectorInfo {
             name = "border"

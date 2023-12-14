@@ -27,7 +27,7 @@ import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.spyfall.libraries.resources.R
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 @Suppress("MagicNumber")
@@ -83,13 +83,13 @@ private fun WelcomeScreenContent(
             }
             Text(
                 text = "Welcome to",
-                typographyToken = SpyfallTheme.typography.Display.D1200.Bold,
+                typographyToken = OddOneOutTheme.typography.Display.D1200.Bold,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )
             Text(
                 text = stringResource(id = R.string.app_name),
-                typographyToken = SpyfallTheme.typography.Display.D1200.Bold,
+                typographyToken = OddOneOutTheme.typography.Display.D1200.Bold,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )

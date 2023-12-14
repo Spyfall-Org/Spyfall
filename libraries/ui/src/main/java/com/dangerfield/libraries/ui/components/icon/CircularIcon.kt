@@ -1,5 +1,6 @@
 package com.dangerfield.libraries.ui.components.icon
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,7 +9,7 @@ import androidx.compose.ui.unit.Dp
 import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.Surface
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.ColorToken
@@ -22,6 +23,7 @@ fun CircularIcon(
     contentColor: ColorToken.Color,
     modifier: Modifier = Modifier,
     elevation: Elevation = Elevation.None,
+    onClick: (() -> Unit)? = null
 ) {
     Surface(
         color = backgroundColor,
@@ -29,7 +31,9 @@ fun CircularIcon(
         contentPadding = PaddingValues(padding),
         elevation = elevation,
         radius = Radii.Round,
-        modifier = modifier
+        modifier = modifier.clickable(enabled = onClick != null) {
+            onClick?.invoke()
+        }
     ) {
         Icon(
             spyfallIcon = icon,
@@ -46,8 +50,8 @@ private fun CircularIconPreview() {
             icon = SpyfallIcon.Android("Test"),
             iconSize = IconSize.Large,
             padding = Spacing.S400,
-            backgroundColor = SpyfallTheme.colorScheme.background,
-            contentColor = SpyfallTheme.colorScheme.onBackground
+            backgroundColor = OddOneOutTheme.colorScheme.background,
+            contentColor = OddOneOutTheme.colorScheme.onBackground
         )
     }
 }

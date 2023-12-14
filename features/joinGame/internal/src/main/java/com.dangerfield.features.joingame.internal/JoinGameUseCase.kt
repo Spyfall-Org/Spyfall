@@ -1,6 +1,5 @@
 package com.dangerfield.features.joingame.internal
 
-import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
@@ -10,12 +9,10 @@ import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.SessionRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import spyfallx.core.Try
+import spyfallx.core.developerSnackIfDebug
 import spyfallx.core.failure
 import spyfallx.core.success
-import spyfallx.core.throwIfDebug
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
@@ -24,7 +21,6 @@ class JoinGameUseCase @Inject constructor(
     private val sessionRepository: SessionRepository,
     private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
-    @ApplicationScope private val applicationScope: CoroutineScope,
     private val gameConfig: GameConfig
 ) {
     suspend operator fun invoke(
@@ -33,7 +29,7 @@ class JoinGameUseCase @Inject constructor(
 
         checkForExistingSession()
 
-        val id = UUID.randomUUID().toString()
+        val id = sessionRepository.session.user.id ?: UUID.randomUUID().toString()
 
         return if (accessCode.length < gameConfig.accessCodeLength || accessCode.length > gameConfig.accessCodeLength) {
             JoinGameError.InvalidAccessCodeLength(requiredLength = gameConfig.accessCodeLength)
@@ -78,7 +74,7 @@ class JoinGameUseCase @Inject constructor(
             gameState is GameState.DoesNotExist -> JoinGameError.GameNotFound
             gameState is GameState.Started -> JoinGameError.GameAlreadyStarted
             gameState is GameState.Starting -> JoinGameError.GameAlreadyStarted
-            gameState is GameState.TimedOut -> JoinGameError.GameAlreadyStarted
+            gameState is GameState.Voting -> JoinGameError.GameAlreadyStarted
 
             gameState is GameState.Waiting && gameState.players.size > gameConfig.maxPlayers -> JoinGameError.GameHasMaxPlayers(
                 gameConfig.maxPlayers
@@ -118,11 +114,10 @@ class JoinGameUseCase @Inject constructor(
         )
     }
 
-    private fun checkForExistingSession() {
-        applicationScope.launch {
-            if (sessionRepository.session.activeGame != null) {
-                throwIfDebug { "User is already in an existing game while joining a game." }
-            }
+    private suspend fun checkForExistingSession() {
+        if (sessionRepository.session.activeGame != null) {
+            sessionRepository.updateActiveGame(null)
+            developerSnackIfDebug { "User is already in an existing game while joining a game." }
         }
     }
 

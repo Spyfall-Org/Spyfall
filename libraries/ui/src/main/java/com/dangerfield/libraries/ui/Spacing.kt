@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlin.math.roundToInt
 
 object Spacing {
@@ -115,8 +115,8 @@ private fun SpacingPreview() {
                     )
                 ) {
                     SpacingPreviewRow(
-                        start = { Text("Token", style = SpyfallTheme.typography.Body.B600.style) },
-                        center = { Text("Value", style = SpyfallTheme.typography.Body.B600.style) },
+                        start = { Text("Token", style = OddOneOutTheme.typography.Body.B600.style) },
+                        center = { Text("Value", style = OddOneOutTheme.typography.Body.B600.style) },
                         end = {}
                     )
                 }
@@ -130,11 +130,11 @@ private fun SpacingPreview() {
                         start = {
                             Text(
                                 text = spacer.name.replace("spacer", "spacer-"),
-                                style = SpyfallTheme.typography.Heading.H800.style
+                                style = OddOneOutTheme.typography.Heading.H800.style
                             )
                         },
                         center = {
-                            Text("${spacer().value.roundToInt()}dp", style = SpyfallTheme.typography.Heading.H800.style)
+                            Text("${spacer().value.roundToInt()}dp", style = OddOneOutTheme.typography.Heading.H800.style)
                         },
                         end = {
                             Box(

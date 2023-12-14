@@ -18,7 +18,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.clip
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.color.background
 
 @Composable
@@ -35,7 +35,7 @@ fun BasicDialog(
         Column(
             modifier = Modifier
                 .clip(Radii.Card)
-                .background(SpyfallTheme.colorScheme.background)
+                .background(OddOneOutTheme.colorScheme.background)
         ) {
 
             ModalContent(

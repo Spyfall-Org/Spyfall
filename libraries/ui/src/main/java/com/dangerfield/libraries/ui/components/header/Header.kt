@@ -17,7 +17,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.typography.TypographyToken
 import com.dangerfield.libraries.ui.Elevation
 import spyfallx.ui.thenIf
@@ -28,8 +28,8 @@ fun Header(
     title: String,
     modifier: Modifier = Modifier,
     onNavigateBack: (() -> Unit)? = null,
-    typographyToken: TypographyToken = SpyfallTheme.typography.Heading.H1000,
-    backgroundColor: Color = SpyfallTheme.colorScheme.background.color,
+    typographyToken: TypographyToken = OddOneOutTheme.typography.Heading.H1000,
+    backgroundColor: Color = OddOneOutTheme.colorScheme.background.color,
     actions: @Composable RowScope.() -> Unit = {},
     scrollState: ScrollState? = null,
     liftOnScroll: Boolean = scrollState != null,
@@ -55,9 +55,9 @@ fun Header(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = backgroundColor,
             scrolledContainerColor = backgroundColor,
-            navigationIconContentColor = SpyfallTheme.colorScheme.onBackground.color,
-            titleContentColor = SpyfallTheme.colorScheme.onBackground.color,
-            actionIconContentColor = SpyfallTheme.colorScheme.onBackground.color
+            navigationIconContentColor = OddOneOutTheme.colorScheme.onBackground.color,
+            titleContentColor = OddOneOutTheme.colorScheme.onBackground.color,
+            actionIconContentColor = OddOneOutTheme.colorScheme.onBackground.color
         )
     )
 }

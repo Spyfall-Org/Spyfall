@@ -1,12 +1,11 @@
 package com.dangerfield.libraries.ui.components.modal.bottomsheet
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Immutable
 sealed class TopAccessory {
@@ -29,7 +28,7 @@ fun dragHandleTopAccessory() = TopAccessory.DragHandle
 @Composable
 fun iconTopAccessory(
     icon: SpyfallIcon,
-    color: Color = SpyfallTheme.colorScheme.background.color,
-    backgroundColor: Color = SpyfallTheme.colorScheme.onBackground.color,
+    color: Color = OddOneOutTheme.colorScheme.background.color,
+    backgroundColor: Color = OddOneOutTheme.colorScheme.onBackground.color,
     iconSize: IconSize = IconSize.Small
 ) = TopAccessory.Icon(icon, color, backgroundColor, iconSize)

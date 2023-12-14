@@ -13,7 +13,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 @Suppress("MagicNumber")
@@ -26,13 +26,13 @@ fun BlockingErrorScreen() {
             Spacer(modifier = Modifier.fillMaxHeight(0.10f))
             Text(
                 text = "Hmmmm...",
-                typographyToken = SpyfallTheme.typography.Display.D1000,
+                typographyToken = OddOneOutTheme.typography.Display.D1000,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Something went terribly wrong. We are sooooooooo sorry. Please restart the app to try again.",
-                typographyToken = SpyfallTheme.typography.Body.B700,
+                typographyToken = OddOneOutTheme.typography.Body.B700,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )

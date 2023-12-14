@@ -11,13 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.R
 import spyfallx.ui.color.background
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.color.AccentColor
 import spyfallx.ui.thenIf
 
@@ -45,10 +44,10 @@ fun PreviewContent(
     CompositionLocalProvider(
         LocalContext provides context,
     ) {
-        SpyfallTheme(isDarkMode = isDarkMode, accentColor = accentColor) {
+        OddOneOutTheme(isDarkMode = isDarkMode, accentColor = accentColor) {
             Box(
                 modifier = modifier
-                    .thenIf(showBackground) { background(SpyfallTheme.colorScheme.background) }
+                    .thenIf(showBackground) { background(OddOneOutTheme.colorScheme.background) }
                     .padding(contentPadding)
             ) {
                 content()

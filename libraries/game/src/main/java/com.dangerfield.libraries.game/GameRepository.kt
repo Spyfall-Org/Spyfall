@@ -2,7 +2,6 @@ package com.dangerfield.libraries.game
 
 import kotlinx.coroutines.flow.Flow
 import spyfallx.core.Try
-import java.lang.Exception
 
 interface GameRepository {
 
@@ -22,12 +21,15 @@ interface GameRepository {
     suspend fun doesGameExist(accessCode: String): Try<Boolean>
 
     suspend fun end(accessCode: String)
-    suspend fun start(accessCode: String)
+    suspend fun start(accessCode: String): Try<Unit>
+    suspend fun setGameIsBeingStarted(accessCode: String, isBeingStarted: Boolean): Try<Unit>
     suspend fun reset(accessCode: String)
-    suspend fun changeName(newName: String, player: Player)
+    suspend fun changeName(accessCode: String, newName: String, id: String): Try<Unit>
 
-    suspend fun assignRoles(accessCode: String)
+    suspend fun updatePlayers(accessCode: String, players: List<Player>): Try<Unit>
 
-    suspend fun getGameFlow(accessCode: String): Flow<Game>
+    fun getGameFlow(accessCode: String): Flow<Game>
     suspend fun getGame(accessCode: String): Try<Game>
+    suspend fun submitLocationVote(accessCode: String, voterId: String,  location: String): Try<Unit>
+    suspend fun submitOddOneOutVote(accessCode: String, voterId: String, voteId: String): Try<Unit>
 }

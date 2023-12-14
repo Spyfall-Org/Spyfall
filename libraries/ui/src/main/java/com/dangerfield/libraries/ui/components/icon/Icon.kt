@@ -19,7 +19,7 @@ import com.dangerfield.libraries.ui.NumericalValues.V1000
 import com.dangerfield.libraries.ui.NumericalValues.V1200
 import com.dangerfield.libraries.ui.NumericalValues.V400
 import com.dangerfield.libraries.ui.NumericalValues.V800
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun Icon(
@@ -97,7 +97,7 @@ private fun IconPreview() {
                     spyfallIcon = SpyfallIcon.Check("check")
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "${it.name} Icon", typographyToken = SpyfallTheme.typography.Body.B500
+                Text(text = "${it.name} Icon", typographyToken = OddOneOutTheme.typography.Body.B500
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }

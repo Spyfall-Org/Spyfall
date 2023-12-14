@@ -1,13 +1,13 @@
 package com.dangerfield.libraries.ui.components.button
 
-import spyfallx.ui.Border
+import com.dangerfield.libraries.ui.Border
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
-import spyfallx.ui.StandardBorderWidth
+import com.dangerfield.libraries.ui.StandardBorderWidth
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
@@ -96,25 +96,25 @@ internal fun ButtonSize.padding(hasIcon: Boolean): PaddingValues =
     }
 
 private val SmallButtonTextConfig = TextConfig(
-    typographyToken = SpyfallTheme.typography.Label.L600,
+    typographyToken = OddOneOutTheme.typography.Label.L600,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val SmallTextButtonTextConfig = TextConfig(
-    typographyToken = SpyfallTheme.typography.Body.B600.SemiBold,
+    typographyToken = OddOneOutTheme.typography.Body.B600.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val LargeButtonTextConfig = TextConfig(
-    typographyToken = SpyfallTheme.typography.Label.L800.SemiBold,
+    typographyToken = OddOneOutTheme.typography.Label.L800.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val LargeTextButtonTextConfig = TextConfig(
-    typographyToken = SpyfallTheme.typography.Body.B700.SemiBold,
+    typographyToken = OddOneOutTheme.typography.Body.B700.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
@@ -159,28 +159,28 @@ private fun BasicButtonPreview() {
             ButtonRow(
                 size = ButtonSize.Large,
                 style = ButtonStyle.Filled,
-                backgroundColor = SpyfallTheme.colorScheme.surfacePrimary,
-                contentColor = SpyfallTheme.colorScheme.onSurfacePrimary
+                backgroundColor = OddOneOutTheme.colorScheme.surfacePrimary,
+                contentColor = OddOneOutTheme.colorScheme.onSurfacePrimary
             )
             ButtonRow(
                 size = ButtonSize.Small,
                 style = ButtonStyle.Filled,
-                backgroundColor = SpyfallTheme.colorScheme.accent,
-                contentColor = SpyfallTheme.colorScheme.onAccent
+                backgroundColor = OddOneOutTheme.colorScheme.accent,
+                contentColor = OddOneOutTheme.colorScheme.onAccent
             )
             ButtonRow(
                 size = ButtonSize.Large,
                 backgroundColor = null,
                 style = ButtonStyle.Outlined,
-                contentColor = SpyfallTheme.colorScheme.text,
-                borderColor = SpyfallTheme.colorScheme.surfacePrimary
+                contentColor = OddOneOutTheme.colorScheme.text,
+                borderColor = OddOneOutTheme.colorScheme.surfacePrimary
             )
             ButtonRow(
                 size = ButtonSize.Small,
                 style = ButtonStyle.Outlined,
                 backgroundColor = null,
-                contentColor = SpyfallTheme.colorScheme.text,
-                borderColor = SpyfallTheme.colorScheme.surfacePrimary
+                contentColor = OddOneOutTheme.colorScheme.text,
+                borderColor = OddOneOutTheme.colorScheme.surfacePrimary
             )
         }
     }

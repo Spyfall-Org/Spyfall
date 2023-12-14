@@ -17,7 +17,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun QaDropDownItem(
@@ -59,7 +59,7 @@ fun QaDropDownItem(
             }
         },
         supportingContent = {
-            ProvideTextConfig(typographyToken = SpyfallTheme.typography.Body.B600) {
+            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B600) {
                 supportingText?.invoke()
             }
         },

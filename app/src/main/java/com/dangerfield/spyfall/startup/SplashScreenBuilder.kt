@@ -1,5 +1,7 @@
 package com.dangerfield.spyfall.startup
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.view.Gravity
 import android.view.View
@@ -38,58 +40,35 @@ class SplashScreenBuilder(private val activity: Activity) {
         internalSplashScreen.setKeepOnScreenCondition { false }
 
         internalSplashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
-            val loadingView = splashScreenViewProvider.addLoadingIndicator()
+
+            val animator =  splashScreenViewProvider.startIconRotation()
+
             (activity as? LifecycleOwner)?.lifecycleScope?.launch {
-                var shouldShowLoading = showLoadingCondition()
                 var isSplashScreenUp = keepOnScreenCondition()
                 while (isSplashScreenUp) {
                     delay(500)
-                    shouldShowLoading = showLoadingCondition()
                     isSplashScreenUp = keepOnScreenCondition()
-                    if (!showLoadingCondition()) {
-                        splashScreenViewProvider.removeView(loadingView)
-                    }
                 }
 
+                animator?.pause()
                 splashScreenViewProvider.remove()
             } ?: run {
                 splashScreenViewProvider.remove()
-                Timber.d("SplashScreenBuilder: Activity is not a lifecycle owner, splash screen will be removed")
+                Timber.e("SplashScreenBuilder: Activity is not a lifecycle owner, splash screen will be removed")
             }
         }
     }
 
-    private fun SplashScreenViewProvider.removeView(view: View?) {
-        (this.view as? ViewGroup)?.removeView(view)
-
-    }
-
     @Suppress("MagicNumber")
-    private fun SplashScreenViewProvider.addLoadingIndicator(): View? = Try {
-        val viewGroup = this.view as? ViewGroup ?: return null
-        val iconView = this.iconView
-
-        val progressBar = ProgressBar(viewGroup.context).apply {
-            isIndeterminate = true
-            visibility = View.VISIBLE
+    private fun SplashScreenViewProvider.startIconRotation(): ValueAnimator? = Try {
+        val animator = ValueAnimator.ofFloat(0f, 360f)
+        animator.addUpdateListener { animation ->
+            iconView.rotation = animation.animatedValue as Float
         }
-
-        val iconBottom = iconView.bottom
-        val parentHeight = viewGroup.height
-        val distanceToBottom = parentHeight - iconBottom
-
-        val layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-        ).apply {
-            bottomMargin = distanceToBottom / 2
-        }
-
-        progressBar.layoutParams = layoutParams
-        progressBar.z = 10f
-
-        viewGroup.addView(progressBar)
-        progressBar
+        animator.duration = 1000 // duration for one rotation
+        animator.repeatCount = ValueAnimator.INFINITE
+        animator.repeatMode = ValueAnimator.RESTART
+        animator.start()
+        animator
     }.getOrNull()
 }

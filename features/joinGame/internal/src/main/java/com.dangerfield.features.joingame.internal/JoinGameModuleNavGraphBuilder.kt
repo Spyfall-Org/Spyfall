@@ -7,6 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.joingame.joinGameNavigationRoute
+import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
@@ -33,7 +34,7 @@ class JoinGameModuleNavGraphBuilder @Inject constructor(
             ObserveWithLifecycle(flow = viewModel.events) {
                 when (it) {
                     is Event.GameJoined -> {
-                        Timber.d("Game joined")
+                        router.navigateToWaitingRoom(it.accessCode)
                     }
                 }
             }

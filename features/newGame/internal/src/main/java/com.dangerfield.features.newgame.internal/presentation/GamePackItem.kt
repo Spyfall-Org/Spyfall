@@ -31,7 +31,7 @@ import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.elevation
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.spyfall.features.newgame.internal.R
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
@@ -51,10 +51,9 @@ fun GamePackItem(
                 elevation = Elevation.Fixed,
                 shape = Radii.Card.shape,
                 clip = true,
-                shadowColor = SpyfallTheme.colorScheme.shadow
+                shadowColor = OddOneOutTheme.colorScheme.shadow
             )
             .fillMaxWidth()
-            .height(100.dp)
             .clickable {
                 onClick(!isSelected)
             }
@@ -70,36 +69,39 @@ fun GamePackItem(
             }
         }
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(OddOneOutTheme.colorScheme.surfaceSecondary)
+        ) {
             Column(
                 modifier = Modifier
-                    .weight(0.6f)
                     .fillMaxWidth()
+                    .weight(1f)
                     .background(colorPrimitive),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = number,
-                    typographyToken = SpyfallTheme.typography.Display.D1100,
+                    typographyToken = OddOneOutTheme.typography.Display.D1100,
                     colorPrimitive = colorPrimitive.onColorPrimitive
                 )
             }
             Column(
                 modifier = Modifier
-                    .weight(0.4f)
                     .fillMaxWidth()
-                    .background(SpyfallTheme.colorScheme.surfaceSecondary)
-                    .padding(horizontal = Spacing.S300),
+                    .weight(0.8f)
+                    .padding(horizontal = Spacing.S200)
+                ,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = type,
-                    typographyToken = SpyfallTheme.typography.Heading.H600,
+                    typographyToken = OddOneOutTheme.typography.Heading.H600,
                     textAlign = TextAlign.Center,
-                    color = SpyfallTheme.colorScheme.text,
-                    maxLines = 2
+                    color = OddOneOutTheme.colorScheme.text,
                 )
             }
         }
@@ -127,9 +129,10 @@ fun GamePackItem(
 private fun PreviewGamePackItem() {
     PreviewContent {
         GamePackItem(
+            modifier = Modifier.height(100.dp),
             colorPrimitive = ColorPrimitive.GrapeJelly500,
             number = "1",
-            type = "Standard Pack",
+            type = "Standard  Extra Special Super Pack",
             onClick = {},
         )
     }

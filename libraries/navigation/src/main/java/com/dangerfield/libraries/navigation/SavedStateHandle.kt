@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NamedNavArgument
 import spyfallx.core.Try
 import spyfallx.core.checkInDebug
+import spyfallx.core.developerSnackOnError
 import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 
@@ -18,6 +19,6 @@ fun <T : Any> SavedStateHandle.navArgument(navArgument: NamedNavArgument): T? = 
 
     value
 }
+    .developerSnackOnError { "Saved state handle did not have expected: ${navArgument.name}" }
     .logOnError()
-    .throwIfDebug()
     .getOrNull()

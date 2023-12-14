@@ -14,7 +14,7 @@ import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon.ChevronRight
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun QANavigationItem(
@@ -45,7 +45,7 @@ fun QANavigationItem(
             }
         },
         supportingContent = {
-            ProvideTextConfig(typographyToken = SpyfallTheme.typography.Body.B600) {
+            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B600) {
                 supportingText?.invoke()
             }
         },

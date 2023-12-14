@@ -15,6 +15,7 @@ sealed class GameState(val accessCode: String) {
     class Waiting(
         accessCode: String,
         val players: List<Player>,
+        val videoCallLink: String? = null,
     ) : GameState(accessCode)
 
     /**
@@ -36,25 +37,32 @@ sealed class GameState(val accessCode: String) {
         val players: List<Player>,
         val startedAt: Long,
         val timeLimitMins: Int,
+        val timeRemainingMillis: Long,
         val firstPlayer: Player,
+        val locationNames: List<String>,
         val location: String,
+        val videoCallLink: String? = null,
     ) : GameState(accessCode)
 
     /**
-     * State representing that the game has timed out
+     * State representing that the game has timed out and the voting stage has begun
      * At this point the game is over and should be pending user action to either end or play again
      */
-    class TimedOut(
+    class Voting(
         accessCode: String,
         val players: List<Player>,
-        val firstPlayer: Player,
+        val hasMePlayerVoted: Boolean,
         val location: String,
     ) : GameState(accessCode)
 
+    class VotingEnded(
+        accessCode: String,
+        val result: GameResult
+    ) : GameState(accessCode)
 
     /**
      * State representing that the game is in an unknown state
      * This should never happen and is a catch all for any unexpected state
      */
-    class Unknown(accessCode: String, ) : GameState(accessCode)
+    class Unknown(val game: Game) : GameState(game.accessCode)
 }

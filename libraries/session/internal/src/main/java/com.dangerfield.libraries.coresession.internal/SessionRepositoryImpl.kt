@@ -1,6 +1,5 @@
 package com.dangerfield.libraries.coresession.internal
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -8,35 +7,27 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
 import com.dangerfield.libraries.coreflowroutines.flowOf
-import com.dangerfield.libraries.flowroutines.DispatcherProvider
+import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.SessionRepository
 import com.dangerfield.libraries.session.User
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.AppState
 import spyfallx.core.ApplicationStateRepository
 import spyfallx.core.Try
 import spyfallx.core.getOrElse
@@ -45,7 +36,6 @@ import spyfallx.core.throwIfDebug
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @AutoBind
 @Singleton
@@ -55,11 +45,14 @@ class SessionRepositoryImpl @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val firebaseAnalytics: FirebaseAnalytics,
     private val datastore: DataStore<Preferences>,
-    private val applicationStateRepository: ApplicationStateRepository,
+    applicationStateRepository: ApplicationStateRepository,
     moshi: Moshi,
 ) : SessionRepository {
+
     override val session = LazySession()
     override val sessionFlow: Flow<Session> get() = sharedSessionFlow
+
+    // TODO investigate when this doesnt load, have some fallback, have some tracking
     private val sessionIdFlow = applicationStateRepository
         .getApplicationStateFlow()
         .map { firebaseAnalytics.sessionId.await() }
@@ -146,7 +139,7 @@ class SessionRepositoryImpl @Inject constructor(
          * The maximum amount of time the application can be in the background before the
          * session is considered ended
          */
-        val SESSION_MAXIMUM_TIME_AWAY = 1.seconds
+        val SESSION_MAXIMUM_TIME_AWAY = 10.minutes
     }
 
     /**

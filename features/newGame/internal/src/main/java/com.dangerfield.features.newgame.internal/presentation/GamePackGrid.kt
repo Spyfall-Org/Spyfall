@@ -1,12 +1,16 @@
 package com.dangerfield.features.newgame.internal.presentation
 
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.PreviewContent
@@ -21,13 +25,13 @@ fun GamePackGrid(
     onPackSelected: (DisplayablePack, Boolean) -> Unit
 ) {
     NonLazyVerticalGrid(
-        modifier = Modifier.fillMaxWidth(),
         columns = 3,
         data = gamePacks,
         verticalSpacing = Spacing.S300,
         horizontalSpacing = Spacing.S300,
         itemContent = { index, gamePack ->
             GamePackItem(
+                modifier = Modifier.fillMaxHeight(),
                 colorPrimitive = AccentColor.entries.toTypedArray()
                     .let { it[index % it.size] }.colorPrimitive,
                 type = gamePack.type,
@@ -50,19 +54,19 @@ private fun PreviewGamePackGrid() {
                 listOf(
                     DisplayablePack(
                         isSelected = false,
-                        pack = Pack(name = "Special 1", locations = listOf())
+                        pack = Pack(name = "Super Duper extra Special Pack 1", locations = listOf())
                     ),
                     DisplayablePack(
                         isSelected = false,
-                        pack = Pack(name = "Special 2", locations = listOf())
+                        pack = Pack(name = "Super Special Pack 2", locations = listOf())
                     ),
                     DisplayablePack(
                         isSelected = false,
-                        pack = Pack(name = "Special 3", locations = listOf())
+                        pack = Pack(name = "Super Special Pack 3", locations = listOf())
                     ),
                     DisplayablePack(
                         isSelected = false,
-                        pack = Pack(name = "Special 4", locations = listOf())
+                        pack = Pack(name = "Super Special Pack 4", locations = listOf())
                     ),
                 )
             )
@@ -72,7 +76,7 @@ private fun PreviewGamePackGrid() {
             gamePacks = packs,
             onPackSelected = { displayablePack, isSelected ->
                 packs = packs.map {
-                    if(it.pack == displayablePack.pack) {
+                    if (it.pack == displayablePack.pack) {
                         it.copy(isSelected = isSelected)
                     } else {
                         it

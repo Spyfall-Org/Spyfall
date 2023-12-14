@@ -6,7 +6,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.dangerfield.features.colorpicker.ColorConfig
-import com.dangerfield.libraries.flowroutines.DispatcherProvider
+import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

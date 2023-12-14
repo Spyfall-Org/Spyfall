@@ -16,7 +16,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import androidx.compose.material3.DropdownMenu as MaterialDropdownMenu
 import androidx.compose.material3.DropdownMenuItem as MaterialDropdownMenuItem
 
@@ -76,7 +76,7 @@ fun BasicDropdownMenuItem(
     MaterialDropdownMenuItem(
         text = {
             CompositionLocalProvider(
-                LocalTextStyle provides SpyfallTheme.typography.Body.B700.Bold.style,
+                LocalTextStyle provides OddOneOutTheme.typography.Body.B700.Bold.style,
                 content = text
             )
         },

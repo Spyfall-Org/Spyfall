@@ -35,7 +35,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.plus
 import com.dangerfield.libraries.ui.rememberWithKey
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.withSize
 import kotlinx.coroutines.launch
 import com.dangerfield.libraries.ui.Spacing
@@ -60,8 +60,8 @@ fun BottomSheet(
     contentAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val backgroundColor = SpyfallTheme.colorScheme.background
-    val contentColor = SpyfallTheme.colorScheme.onBackground
+    val backgroundColor = OddOneOutTheme.colorScheme.background
+    val contentColor = OddOneOutTheme.colorScheme.onBackground
     val shape = bottomSheetShape(topAccessory)
 
     val systemBarVerticalInsets: WindowInsets =  WindowInsets.systemBars.only(WindowInsetsSides.Vertical)
@@ -90,7 +90,7 @@ fun BottomSheet(
         shape = shape,
         windowInsets = systemBarVerticalInsets,
         containerColor = backgroundColor.color,
-        scrimColor = SpyfallTheme.colorScheme.backgroundOverlay.color,
+        scrimColor = OddOneOutTheme.colorScheme.backgroundOverlay.color,
         tonalElevation = 0.dp,
         dragHandle = null
     ) {
@@ -196,7 +196,7 @@ private fun DragHandle(
             modifier = Modifier
                 .size(Spacing.S1400, 5.dp)
                 .background(
-                    color = SpyfallTheme.colorScheme.onBackground,
+                    color = OddOneOutTheme.colorScheme.onBackground,
                     radius = Radii.Round
                 )
         )
@@ -219,7 +219,7 @@ private fun TopAccessory(
                     iconSize = IconSize.Small,
                     padding = Spacing.S400,
                     backgroundColor = LocalColorScheme.current.background,
-                    contentColor = SpyfallTheme.colorScheme.onBackground,
+                    contentColor = OddOneOutTheme.colorScheme.onBackground,
                     elevation = Elevation.Fixed
                 )
             }
@@ -278,8 +278,8 @@ private fun PreviewBottomSheetIcon(
             onDismissRequest = {},
             topAccessory = TopAccessory.Icon(
                 icon = SpyfallIcon.VideoCall("Video"),
-                color = SpyfallTheme.colorScheme.background.color,
-                backgroundColor = SpyfallTheme.colorScheme.onBackground.color
+                color = OddOneOutTheme.colorScheme.background.color,
+                backgroundColor = OddOneOutTheme.colorScheme.onBackground.color
             ),
             state = rememberBottomSheetState(BottomSheetValue.Expanded),
         ) {

@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.color.background
 
 @Immutable
@@ -117,7 +117,7 @@ private fun PreviewRadii() {
                 ) {
                     Text(
                         text = name,
-                        style = SpyfallTheme.typography.Heading.H800.style,
+                        style = OddOneOutTheme.typography.Heading.H800.style,
                         color = ColorPrimitive.Black800.color
                     )
                     Spacer(modifier = Modifier.height(Spacing.S800))
@@ -125,7 +125,7 @@ private fun PreviewRadii() {
                         modifier = Modifier
                             .aspectRatio(0.75f)
                             .fillMaxWidth()
-                            .background(SpyfallTheme.colorScheme.surfaceSecondary),
+                            .background(OddOneOutTheme.colorScheme.surfaceSecondary),
                         contentAlignment = Alignment.Center
                     ) {
                         if (radii == Radii.Round) {
@@ -147,7 +147,7 @@ private fun RoundPreview(radius: Radius) {
             .padding(52.dp)
             .aspectRatio(1f)
             .fillMaxSize()
-            .background(SpyfallTheme.colorScheme.text, radius)
+            .background(OddOneOutTheme.colorScheme.text, radius)
     )
 }
 
@@ -162,7 +162,7 @@ private fun RoundedPreview(radius: Radius) {
             Modifier
                 .fillMaxSize()
                 .background(
-                    color = SpyfallTheme.colorScheme.text,
+                    color = OddOneOutTheme.colorScheme.text,
                     radius = radius.withSides(topStart = true)
                 )
         )

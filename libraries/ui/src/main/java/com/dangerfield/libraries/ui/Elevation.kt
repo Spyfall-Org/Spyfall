@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.lerp
 import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.background
 import spyfallx.ui.color.takeOrElse
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 
 @Immutable
@@ -112,7 +112,7 @@ private inline fun <S : Any> Modifier.elevation(
     clip: Boolean = elevation > Elevation.None,
     shadowColor: ColorToken.Color = ColorToken.Color.Unspecified,
 ): Modifier = composed {
-    val color = shadowColor.takeOrElse { SpyfallTheme.colorScheme.shadow }
+    val color = shadowColor.takeOrElse { OddOneOutTheme.colorScheme.shadow }
     inspectable(
         debugInspectorInfo {
             name = "elevation"
@@ -150,8 +150,8 @@ private fun ElevationPreview() {
                     Box(Modifier.weight(1f)) {
                         Text(
                             "elevation-${elevation.name.lowercase()}",
-                            style = SpyfallTheme.typography.Heading.H800.style,
-                            color = SpyfallTheme.colorScheme.text.color
+                            style = OddOneOutTheme.typography.Heading.H800.style,
+                            color = OddOneOutTheme.colorScheme.text.color
                         )
                     }
                 }
@@ -164,7 +164,7 @@ private fun ElevationPreview() {
                         modifier = Modifier
                             .weight(1f)
                             .aspectRatio(1f)
-                            .background(SpyfallTheme.colorScheme.surfaceSecondary),
+                            .background(OddOneOutTheme.colorScheme.surfaceSecondary),
                         contentAlignment = Alignment.Center
                     ) {
                         val size = when (elevation()) {
@@ -186,7 +186,7 @@ private fun ElevationPreview() {
                         Box(
                             modifier = Modifier
                                 .background(
-                                    SpyfallTheme.colorScheme.surfacePrimary,
+                                    OddOneOutTheme.colorScheme.surfacePrimary,
                                     radius = radius,
                                     elevation = elevation()
                                 )

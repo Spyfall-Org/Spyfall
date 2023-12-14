@@ -7,7 +7,7 @@ import androidx.datastore.core.Serializer
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
-import com.dangerfield.libraries.flowroutines.DispatcherProvider
+import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import se.ansman.dagger.auto.AutoBind
 import java.io.File

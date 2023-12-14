@@ -21,7 +21,7 @@ class MinNameLength @Inject constructor(
 ) : ConfiguredValue<Int>() {
     override val displayName: String = "Minimum Name Length Length"
     override val path: String = "game.minNameLength"
-    override val default: Int = 3
+    override val default: Int = 2
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -72,6 +72,7 @@ class MinTimeLimit @Inject constructor(
     override val displayName: String = "Minimum Game Time Limit"
     override val path: String = "game.minTimeLimit"
     override val default: Int = 2
+    override val debugOverride: Int = 1
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 

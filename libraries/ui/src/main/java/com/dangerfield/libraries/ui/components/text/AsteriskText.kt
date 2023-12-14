@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import com.dangerfield.libraries.ui.HorizontalSpacerS200
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun AsteriskText(text: @Composable () -> Unit) {
@@ -13,7 +13,7 @@ fun AsteriskText(text: @Composable () -> Unit) {
         HorizontalSpacerS200()
         Text(
             text = "*",
-            typographyToken = SpyfallTheme.typography.Display.D800,
+            typographyToken = OddOneOutTheme.typography.Display.D800,
             colorPrimitive = ColorPrimitive.CherryPop700
         )
     }

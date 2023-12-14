@@ -42,7 +42,6 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
                 when (it) {
                     is Event.GameCreated -> router.navigateToWaitingRoom(
                         accessCode = it.accessCode,
-                        videoCallLink = it.videoCallLink,
                     )
 
                     is Event.SingleDeviceGameCreated -> {

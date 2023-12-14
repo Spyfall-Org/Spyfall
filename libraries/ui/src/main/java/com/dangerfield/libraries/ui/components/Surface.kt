@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.throttledCallback
-import spyfallx.ui.Border
+import com.dangerfield.libraries.ui.Border
 import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Radius
@@ -126,8 +126,8 @@ private fun Modifier.surface(
 private fun SurfacePreview() {
     PreviewContent {
         Surface(
-            color = SpyfallTheme.colorScheme.background,
-            contentColor = SpyfallTheme.colorScheme.text,
+            color = OddOneOutTheme.colorScheme.background,
+            contentColor = OddOneOutTheme.colorScheme.text,
             contentPadding = PaddingValues(Spacing.S900)
         ) {
             Text("Hello")
@@ -140,8 +140,8 @@ private fun SurfacePreview() {
 private fun ClickableSurfacePreview() {
     PreviewContent {
         Surface(
-            color = SpyfallTheme.colorScheme.background,
-            contentColor = SpyfallTheme.colorScheme.text,
+            color = OddOneOutTheme.colorScheme.background,
+            contentColor = OddOneOutTheme.colorScheme.text,
             onClick = {},
             radius = Radii.Banner,
             contentPadding = PaddingValues(Spacing.S900)

@@ -48,7 +48,6 @@ sealed class ColorPrimitive(val color: Color) {
     data object Black200: ColorPrimitive(Color(0xFFF6F6F6))
     data object Black100: ColorPrimitive(Color(0xFFFBFBFB))
     data object White900: ColorPrimitive(Color(0xFFFFFFFF))
-
     data object GrapeJelly500: ColorPrimitive(Color(0xFF9533C7))
     data object SkyDive400: ColorPrimitive(Color(0xFF00A0EF))
     data object MintyFresh300: ColorPrimitive(Color(0xFF2FD566))
@@ -60,7 +59,6 @@ sealed class ColorPrimitive(val color: Color) {
         get() {
             return if (color.luminance() > 0.4) Black900 else White900
         }
-
 }
 
 @Suppress("ComplexMethod")

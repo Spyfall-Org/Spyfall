@@ -56,12 +56,12 @@ class JoinGameViewModel @Inject constructor(
 
     private suspend fun FlowCollector<State>.handleJoinGame() {
         updateState { it.copy(isLoading = true) }
-
+        val accessCode =  state.value.accessCodeState.value
         joinGame(
-            accessCode = state.value.accessCodeState.value,
+            accessCode = accessCode,
             userName = state.value.userNameState.value
         )
-            .onSuccess { _events.trySend(Event.GameJoined) }
+            .onSuccess { _events.trySend(Event.GameJoined(accessCode)) }
             .logOnError()
             .onFailure { throwable ->
                 if (throwable is JoinGameError) {

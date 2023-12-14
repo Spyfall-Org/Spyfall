@@ -45,7 +45,7 @@ import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.isOpen
 import com.dangerfield.libraries.ui.rememberKeyboardState
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
 
 @Composable
@@ -238,8 +238,8 @@ private fun FormField(
             if (formFieldState is FieldState.Invalid && (!hasFocus || showErrorWhenNotFocused)) {
                 Text(
                     text = formFieldState.errorMessage,
-                    typographyToken = SpyfallTheme.typography.Body.B500,
-                    color = SpyfallTheme.colorScheme.textWarning
+                    typographyToken = OddOneOutTheme.typography.Body.B500,
+                    color = OddOneOutTheme.colorScheme.textWarning
                 )
             }
         }
@@ -258,6 +258,13 @@ private fun PacksField(
         AsteriskText {
             Text(text = "Packs:")
         }
+
+        Text(
+            text = "Choose which packs you want to play with",
+            typographyToken = OddOneOutTheme.typography.Body.B500
+        )
+        
+        VerticalSpacerS500()
 
         if (isLoading) {
             CircularProgressIndicator()
@@ -320,7 +327,7 @@ private fun SingleDeviceField(
             )
             Text(
                 text = "Pass the device around to each player",
-                typographyToken = SpyfallTheme.typography.Body.B500
+                typographyToken = OddOneOutTheme.typography.Body.B500
             )
         }
 
@@ -346,7 +353,7 @@ private fun GameLengthField(
             }
             Text(
                 text = "How many minutes should each round last:",
-                typographyToken = SpyfallTheme.typography.Body.B500,
+                typographyToken = OddOneOutTheme.typography.Body.B500,
             )
         }
 
@@ -405,7 +412,7 @@ private fun VideoCallLink(
                 )
                 Text(
                     text = "Past a video call link if you have one:",
-                    typographyToken = SpyfallTheme.typography.Body.B500
+                    typographyToken = OddOneOutTheme.typography.Body.B500
                 )
             }
 

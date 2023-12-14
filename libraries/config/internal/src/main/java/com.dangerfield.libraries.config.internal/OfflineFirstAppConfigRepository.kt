@@ -7,7 +7,7 @@ import com.dangerfield.libraries.config.internal.model.FallbackConfigMapMapBased
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
-import com.dangerfield.libraries.flowroutines.DispatcherProvider
+import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

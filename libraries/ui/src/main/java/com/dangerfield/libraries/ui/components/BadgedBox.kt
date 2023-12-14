@@ -42,7 +42,7 @@ import com.dangerfield.libraries.ui.components.icon.CircularIcon
 import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Radius
 import com.dangerfield.libraries.ui.Spacing
@@ -209,7 +209,7 @@ fun Badge(
 @ExperimentalMaterial3Api
 object BadgeDefaults {
     /** Default container color for a badge. */
-    val containerColor: Color @Composable get() = SpyfallTheme.colorScheme.accent.color
+    val containerColor: Color @Composable get() = OddOneOutTheme.colorScheme.accent.color
 }
 
 /*@VisibleForTesting*/
@@ -227,7 +227,7 @@ internal val BadgeWithContentVerticalOffset = -4.dp
 internal val BadgeOffset = 0.dp
 
 internal object BadgeTokens {
-    val LargeLabelTextStyle = SpyfallTheme.typography.Label.L600.style
+    val LargeLabelTextStyle = OddOneOutTheme.typography.Label.L600.style
     val LargeShape = Radii.Round.shape
     val LargeSize = 16.0.dp
     val Shape = Radii.Round.shape
@@ -251,8 +251,8 @@ private fun PreviewBadgedBox() {
                     CircularIcon(
                         icon = SpyfallIcon.Close(""),
                         iconSize = IconSize.Small,
-                        backgroundColor = SpyfallTheme.colorScheme.onBackground,
-                        contentColor = SpyfallTheme.colorScheme.background,
+                        backgroundColor = OddOneOutTheme.colorScheme.onBackground,
+                        contentColor = OddOneOutTheme.colorScheme.background,
                         padding = Spacing.S100,
                         elevation = Elevation.Fixed
                     )
@@ -261,8 +261,8 @@ private fun PreviewBadgedBox() {
                 content = {
                     Surface(
                         radius = radius,
-                        color = SpyfallTheme.colorScheme.accent,
-                        contentColor = SpyfallTheme.colorScheme.onBackground,
+                        color = OddOneOutTheme.colorScheme.accent,
+                        contentColor = OddOneOutTheme.colorScheme.onBackground,
                         contentPadding = PaddingValues(Spacing.S800),
                     ) {
                         Text(text = "Example")

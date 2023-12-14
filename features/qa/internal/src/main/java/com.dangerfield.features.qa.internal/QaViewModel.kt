@@ -1,6 +1,5 @@
 package com.dangerfield.features.qa.internal
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.libraries.config.ConfigOverride
@@ -8,19 +7,13 @@ import com.dangerfield.libraries.config.ConfigOverrideRepository
 import com.dangerfield.libraries.config.ConfiguredValue
 import com.dangerfield.libraries.config.Experiment
 import com.dangerfield.libraries.coreflowroutines.launchOnStart
-import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -28,7 +28,7 @@ import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @NonRestartableComposable
 @Composable
@@ -37,17 +37,19 @@ fun IconButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     backgroundColor: ColorToken.Color? = null,
-    iconColor: ColorToken.Color = SpyfallTheme.colorScheme.onBackground,
+    iconColor: ColorToken.Color = OddOneOutTheme.colorScheme.onBackground,
     size: IconButton.Size = IconButton.Size.Medium,
     enabled: Boolean = true,
-    tooltipText: String = icon.contentDescription,
+    tooltipText: String? = icon.contentDescription,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
-    TooltipBox(tooltip = { Text(text = tooltipText) }) {
-        val padding = size.padding
-        val iconSize = size.iconSize
+    val padding = size.padding
+    val iconSize = size.iconSize
+
+    @Composable
+    fun Button(modifier: Modifier) {
         Surface(
-            modifier = modifier.tooltipAnchor(),
+            modifier = modifier,
             contentPadding = PaddingValues(padding),
             color = backgroundColor,
             contentColor = iconColor,
@@ -62,6 +64,13 @@ fun IconButton(
                 iconSize = iconSize
             )
         }
+    }
+    if (tooltipText != null) {
+        TooltipBox(tooltip = { Text(text = tooltipText) }) {
+            Button(modifier = modifier.tooltipAnchor())
+        }
+    } else {
+        Button(modifier = modifier)
     }
 }
 
@@ -148,8 +157,8 @@ private fun PreviewIconButtonsBackground() {
                     IconButton(
                         icon = icon,
                         modifier = Modifier.size(48.dp),
-                        backgroundColor = SpyfallTheme.colorScheme.onBackground,
-                        iconColor = SpyfallTheme.colorScheme.background,
+                        backgroundColor = OddOneOutTheme.colorScheme.onBackground,
+                        iconColor = OddOneOutTheme.colorScheme.background,
                         size = IconButton.Size.Medium,
                         onClick = {}
                     )

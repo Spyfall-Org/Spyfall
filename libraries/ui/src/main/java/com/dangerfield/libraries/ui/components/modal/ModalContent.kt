@@ -19,7 +19,7 @@ import com.dangerfield.libraries.ui.components.button.ProvideButtonConfig
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.modifiers.drawVerticalScrollbar
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 
@@ -34,9 +34,9 @@ fun ModalContent(
 
     Column(
         modifier = modifier
-            .background(SpyfallTheme.colorScheme.background)
+            .background(OddOneOutTheme.colorScheme.background)
     ) {
-        ProvideTextConfig(SpyfallTheme.typography.Heading.H900) {
+        ProvideTextConfig(OddOneOutTheme.typography.Heading.H900) {
             topContent()
         }
 
@@ -47,12 +47,12 @@ fun ModalContent(
                 .weight(1f, fill = false)
                 .drawVerticalScrollbar(
                     scrollState,
-                    SpyfallTheme.colorScheme.textDisabled.color
+                    OddOneOutTheme.colorScheme.textDisabled.color
                 )
                 .verticalScroll(scrollState),
         ) {
 
-            ProvideTextConfig(SpyfallTheme.typography.Body.B700) {
+            ProvideTextConfig(OddOneOutTheme.typography.Body.B700) {
                 content()
             }
         }

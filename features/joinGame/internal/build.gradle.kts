@@ -13,6 +13,7 @@ android {
 }
 dependencies {
     implementation(projects.features.joinGame)
+    implementation(projects.features.waitingRoom)
     implementation(projects.libraries.common)
     implementation(projects.libraries.game)
     implementation(projects.libraries.session)

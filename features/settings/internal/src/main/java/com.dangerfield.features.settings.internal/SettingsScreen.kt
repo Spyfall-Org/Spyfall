@@ -15,7 +15,7 @@ import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.spyfall.libraries.resources.R
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun SettingsScreen(
@@ -72,8 +72,8 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(top = Spacing.S1000),
                 textAlign = TextAlign.Center,
-                typographyToken = SpyfallTheme.typography.Body.B700,
-                color = SpyfallTheme.colorScheme.textDisabled
+                typographyToken = OddOneOutTheme.typography.Body.B700,
+                color = OddOneOutTheme.colorScheme.textDisabled
             )
         }
     }

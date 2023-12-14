@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.typography.TypographyToken
 
 @Composable
@@ -30,8 +30,8 @@ fun BasicTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     typographyToken: TypographyToken = LocalTextConfig.current.typographyToken
-        ?: SpyfallTheme.typography.Default,
-    color: Color = SpyfallTheme.colorScheme.onBackground.color,
+        ?: OddOneOutTheme.typography.Default,
+    color: Color = OddOneOutTheme.colorScheme.onBackground.color,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -40,13 +40,13 @@ fun BasicTextField(
     minLines: Int = 1,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    cursorBrush: Brush = SolidColor(SpyfallTheme.colorScheme.accent.color),
+    cursorBrush: Brush = SolidColor(OddOneOutTheme.colorScheme.accent.color),
     decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit =
         @Composable { innerTextField -> innerTextField() },
 ) {
     val textSelectionColors = TextSelectionColors(
-        handleColor = SpyfallTheme.colorScheme.accent.color,
-        backgroundColor = SpyfallTheme.colorScheme.accent.color.copy(alpha = 0.4F)
+        handleColor = OddOneOutTheme.colorScheme.accent.color,
+        backgroundColor = OddOneOutTheme.colorScheme.accent.color.copy(alpha = 0.4F)
     )
 
     CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {

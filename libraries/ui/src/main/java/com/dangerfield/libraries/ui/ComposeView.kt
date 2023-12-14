@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 
 fun Context.themedComposeView(
@@ -13,7 +13,7 @@ fun Context.themedComposeView(
 ) = ComposeView(this).apply {
     setViewCompositionStrategy(viewCompositionStrategy)
     setContent {
-        SpyfallTheme {
+        OddOneOutTheme {
             content()
         }
     }
@@ -25,7 +25,7 @@ fun ComposeView.themedComposeContent(
 ) = this.apply {
     setViewCompositionStrategy(viewCompositionStrategy)
     setContent {
-        SpyfallTheme {
+        OddOneOutTheme {
             content()
         }
     }

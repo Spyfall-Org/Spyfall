@@ -26,7 +26,7 @@ import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.background
 import spyfallx.ui.color.border
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.thenIf
 
 @Composable
@@ -38,13 +38,13 @@ fun ColorPickerDialog(
 ) {
     Box(modifier = modifier
         .fillMaxSize()
-        .background(SpyfallTheme.colorScheme.backgroundOverlay)) {
+        .background(OddOneOutTheme.colorScheme.backgroundOverlay)) {
         Dialog(onDismissRequest = onDismiss) {
 
             Column(
                 modifier
                     .background(
-                        color = SpyfallTheme.colorScheme.background.color,
+                        color = OddOneOutTheme.colorScheme.background.color,
                         shape = Radii.Card.shape
                     )
                     .padding(Spacing.S500)
@@ -65,7 +65,7 @@ fun ColorPickerDialog(
                                     .thenIf(color.colorPrimitive == selectedColor) {
                                         border(
                                             radius = Radii.Card,
-                                            color = SpyfallTheme.colorScheme.onSurfacePrimary,
+                                            color = OddOneOutTheme.colorScheme.onSurfacePrimary,
                                             width = 3.dp
                                         )
                                     }

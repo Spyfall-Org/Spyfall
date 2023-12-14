@@ -19,23 +19,26 @@ import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.button.ButtonSize
+import com.dangerfield.libraries.ui.components.text.BoldPrefixedText
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun RoleCard(
     role: String,
+    isTheOddOneOut: Boolean,
+    location: String?,
     text: String,
 ) {
     var isHidden by remember { mutableStateOf(false) }
 
     SubcomposeLayout { constraints ->
         val buttonPlaceable = subcompose(0) {
-            Button(onClick = { isHidden = !isHidden }) {
+            Button(size = ButtonSize.Small, onClick = { isHidden = !isHidden }) {
                 Text(text = if (isHidden) "Show" else "Hide")
             }
         }.first().measure(constraints)
-
 
         val contentPlaceable = subcompose(1) {
             AnimatedVisibility(
@@ -45,22 +48,29 @@ fun RoleCard(
             ) {
                 Column(
                     modifier = Modifier
-                        .background(SpyfallTheme.colorScheme.surfacePrimary, radius = Radii.Round)
-                        .padding(vertical = Spacing.S1000, horizontal = Spacing.S1200)
+                        .background(OddOneOutTheme.colorScheme.surfacePrimary, radius = Radii.Round)
+                        .padding(vertical = Spacing.S500, horizontal = Spacing.S1200)
                         .padding(bottom = Spacing.S500),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    BoldPrefixedText(boldText = "Role: ", regularText = role)
+
+                    if (location != null && !isTheOddOneOut) {
+                        BoldPrefixedText(boldText = "Location: ", regularText = location)
+                    }
                     Text(
-                        text = "Role: $role",
-                        typographyToken = SpyfallTheme.typography.Default.Bold
+                        text = text,
+                        typographyToken = OddOneOutTheme.typography.Body.B800
                     )
-                    Text(text = text)
                 }
             }
         }.firstOrNull()?.measure(constraints)
 
         val width = maxOf(buttonPlaceable.width, contentPlaceable?.width ?: 0)
-        val height = maxOf((contentPlaceable?.height ?: 0) + buttonPlaceable.height / 2, buttonPlaceable.height)
+        val height = maxOf(
+            (contentPlaceable?.height ?: 0) + buttonPlaceable.height / 2,
+            buttonPlaceable.height
+        )
 
         layout(width, height) {
             contentPlaceable?.place(0, 0)
@@ -75,11 +85,27 @@ fun RoleCard(
 
 @Composable
 @Preview
-private fun PreviewRoleCard() {
+private fun PreviewRoleCardOddOneOut() {
     PreviewContent(showBackground = true) {
         RoleCard(
-            role = "The Spy!",
-            text = "Don't get found out!"
+            role = "The Odd One Out!",
+            text = "Don't get found out!",
+            location = "The Beach",
+            isTheOddOneOut = true
         )
     }
 }
+
+@Composable
+@Preview
+private fun PreviewRoleCardPlayer() {
+    PreviewContent(showBackground = true) {
+        RoleCard(
+            role = "Someone",
+            text = "Fine the odd one out",
+            location = "The Beach",
+            isTheOddOneOut = false
+        )
+    }
+}
+

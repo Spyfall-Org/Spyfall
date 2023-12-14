@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.thenIf
 import com.dangerfield.libraries.ui.typography.Typography
 import spyfallx.ui.color.ColorToken
@@ -149,14 +149,14 @@ private fun ColorTokenPreview(
                     name = {
                         Text(
                             color.tokenName,
-                            style = SpyfallTheme.typography.Heading.H700.style
+                            style = OddOneOutTheme.typography.Heading.H700.style
                         )
-                        when (val token = color(SpyfallTheme.colorScheme)) {
+                        when (val token = color(OddOneOutTheme.colorScheme)) {
                             is ColorToken.Color -> {
                                 if (token.color.alpha < 1f) {
                                     Text(
                                         text = "alpha: ${token.color.alpha}",
-                                        style = SpyfallTheme.typography.Label.L500.style
+                                        style = OddOneOutTheme.typography.Label.L500.style
                                     )
                                 }
                             }
@@ -164,7 +164,7 @@ private fun ColorTokenPreview(
                         }
 
                     },
-                    content = { ColorCard(color(SpyfallTheme.colorScheme)) }
+                    content = { ColorCard(color(OddOneOutTheme.colorScheme)) }
                 )
             }
         }
@@ -173,7 +173,7 @@ private fun ColorTokenPreview(
     PreviewContent(showBackground = true) {
         CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides LocalContentColor.current.color) {
             Column(Modifier.padding(Spacing.S500)) {
-                Text(parameter.name, style = SpyfallTheme.typography.Heading.H900.style)
+                Text(parameter.name, style = OddOneOutTheme.typography.Heading.H900.style)
                 Spacer(Modifier.height(Spacing.S500))
                 Row(Modifier.fillMaxWidth()) {
                     Box(Modifier.weight(1f), propagateMinConstraints = true) {
@@ -241,7 +241,7 @@ private fun PreviewCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    SpyfallTheme(isDarkMode = isDarkMode) {
+    OddOneOutTheme(isDarkMode = isDarkMode) {
         CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides LocalContentColor.current.color) {
             Column(
                 modifier
@@ -260,7 +260,7 @@ private fun PreviewCard(
 private val KProperty1<ColorScheme, ColorToken>.tokenName: String
     @ReadOnlyComposable
     @Composable
-    get() = get(SpyfallTheme.colorScheme).name
+    get() = get(OddOneOutTheme.colorScheme).name
 
 @Composable
 private fun ColorRow(
@@ -270,12 +270,12 @@ private fun ColorRow(
 ) {
     Row(modifier) {
         Column(Modifier.weight(1f)) {
-            Divider(color = (if (SpyfallTheme.isDarkMode) ColorPrimitive.Black700 else ColorPrimitive.Black400).color)
+            Divider(color = (if (OddOneOutTheme.isDarkMode) ColorPrimitive.Black700 else ColorPrimitive.Black400).color)
             Spacer(Modifier.height(12.dp))
-            ProvideTextStyle(SpyfallTheme.typography.Heading.H700.style, name)
+            ProvideTextStyle(OddOneOutTheme.typography.Heading.H700.style, name)
         }
         Spacer(Modifier.width(24.dp))
-        ProvideTextStyle(SpyfallTheme.typography.Heading.H500.style, content)
+        ProvideTextStyle(OddOneOutTheme.typography.Heading.H500.style, content)
     }
 }
 
@@ -287,7 +287,7 @@ private fun ColorCard(
     @Composable
     fun GradientColor(name: String, color: Color) {
         Column {
-            Divider(color = (if (SpyfallTheme.isDarkMode) ColorPrimitive.Black700 else ColorPrimitive.Black300).color)
+            Divider(color = (if (OddOneOutTheme.isDarkMode) ColorPrimitive.Black700 else ColorPrimitive.Black300).color)
             Spacer(Modifier.height(4.dp))
             Text(name)
             Text(color.toHexString())
@@ -313,7 +313,7 @@ private fun ColorCard(
                 is ColorToken.Color -> token.color
                 is ColorToken.Gradient -> token.from
             }
-            if (SpyfallTheme.isDarkMode) {
+            if (OddOneOutTheme.isDarkMode) {
                 primaryColor.luminance() < 0.03f
             } else {
                 primaryColor.luminance() > 0.7f
@@ -345,7 +345,7 @@ private fun ColorCard(
                 .thenIf(showBorder) {
                     border(
                         1.dp,
-                        (if (SpyfallTheme.isDarkMode) ColorPrimitive.Black600 else ColorPrimitive.Black400).color,
+                        (if (OddOneOutTheme.isDarkMode) ColorPrimitive.Black600 else ColorPrimitive.Black400).color,
                         shape
                     )
                 }

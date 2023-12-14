@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 fun Modifier.drawVerticalScrollbar(
     state: ScrollState,
@@ -171,7 +171,7 @@ private fun TextWithScrollbarPreview() {
     PreviewContent {
         Surface(
             modifier = Modifier
-                .drawVerticalScrollbar(state = scrollState, color = SpyfallTheme.colorScheme.border.color, reverseScrolling = false)
+                .drawVerticalScrollbar(state = scrollState, color = OddOneOutTheme.colorScheme.border.color, reverseScrolling = false)
         ) {
             Text(
                 text = "This is a very long sentence".repeat(50),
@@ -181,7 +181,7 @@ private fun TextWithScrollbarPreview() {
                         state = scrollState,
                         enabled = true
                     ),
-                color = SpyfallTheme.colorScheme.textWarning
+                color = OddOneOutTheme.colorScheme.textWarning
             )
         }
     }

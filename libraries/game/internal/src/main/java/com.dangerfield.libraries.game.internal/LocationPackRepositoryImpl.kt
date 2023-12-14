@@ -8,6 +8,7 @@ import kotlinx.coroutines.tasks.await
 import se.ansman.dagger.auto.AutoBind
 import spyfallx.core.Try
 import spyfallx.core.logOnError
+import spyfallx.core.success
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -38,7 +39,16 @@ class LocationPackRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getRoles(locationName: String): Try<List<String>> {
-        return Try.just(emptyList())
+        val packs = getPacks().getOrThrow()
+       packs.forEach {
+           it.locations.forEach { location ->
+               if(location.name == locationName) {
+                   return location.roles.success()
+               }
+           }
+       }
+
+        return Try.Failure(Exception("Location not found"))
     }
 
     private suspend fun loadPacks() = Try {

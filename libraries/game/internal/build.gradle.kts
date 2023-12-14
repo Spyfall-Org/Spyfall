@@ -5,6 +5,7 @@ plugins {
 spyfall {
     daggerHilt()
     firebase()
+    flowroutines()
 }
 
 android {
@@ -14,4 +15,5 @@ dependencies {
     implementation(projects.libraries.game)
     implementation(projects.libraries.config)
     implementation(projects.libraries.common)
+    implementation(project(":libraries:session"))
 }

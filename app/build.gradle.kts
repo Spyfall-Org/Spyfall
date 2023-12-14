@@ -1,6 +1,3 @@
-import com.android.build.api.dsl.Packaging
-import com.spyfall.convention.util.getModule
-
 plugins {
     id("spyfall.android.application")
     id("com.google.firebase.crashlytics")
@@ -56,6 +53,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso.core)
@@ -95,6 +93,8 @@ dependencies {
     implementation(projects.features.welcome.internal)
     implementation(projects.features.joinGame)
     implementation(projects.features.joinGame.internal)
+    implementation(projects.features.gamePlay)
+    implementation(projects.features.gamePlay.internal)
     implementation(projects.features.settings)
     implementation(projects.features.settings.internal)
     implementation(projects.features.blockingError)

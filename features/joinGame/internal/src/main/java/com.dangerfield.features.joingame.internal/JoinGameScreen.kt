@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -24,7 +24,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.header.Header
@@ -37,7 +36,7 @@ import com.dangerfield.libraries.ui.components.text.AsteriskText
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun JoinGameScreen(
@@ -148,21 +147,23 @@ private fun JoinGameScreenContent(
 
             Spacer(modifier = Modifier.height(Spacing.S1200))
 
-            Button(
-                enabled = !isLoading,
-                onClick = onJoinGameClicked,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(25.dp),
-                        color = SpyfallTheme.colorScheme.onAccent.color
-                    )
-                } else {
+            if (isLoading) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                // TODO change to add disabled state
+                Button(
+                    onClick = onJoinGameClicked,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(text = "Join Game")
                 }
             }
+
             VerticalSpacerS1200()
         }
     }
@@ -210,16 +211,16 @@ private fun AccessCodeField(
     if (gameNotFound) {
         Text(
             text = "A game with that access code does not exist.",
-            color = SpyfallTheme.colorScheme.textWarning,
-            typographyToken = SpyfallTheme.typography.Label.L700
+            color = OddOneOutTheme.colorScheme.textWarning,
+            typographyToken = OddOneOutTheme.typography.Label.L700
         )
     }
 
     if (gameAlreadyStarted) {
         Text(
             text = "This game has already started and can no longer be joined.",
-            color = SpyfallTheme.colorScheme.textWarning,
-            typographyToken = SpyfallTheme.typography.Label.L700
+            color = OddOneOutTheme.colorScheme.textWarning,
+            typographyToken = OddOneOutTheme.typography.Label.L700
         )
     }
 
@@ -231,8 +232,8 @@ private fun AccessCodeField(
         }
         Text(
             text = text,
-            color = SpyfallTheme.colorScheme.textWarning,
-            typographyToken = SpyfallTheme.typography.Label.L700
+            color = OddOneOutTheme.colorScheme.textWarning,
+            typographyToken = OddOneOutTheme.typography.Label.L700
         )
     }
 }
@@ -273,16 +274,16 @@ private fun NameField(
     if (usernameTaken) {
         Text(
             text = "That user name is already taken by another player.",
-            color = SpyfallTheme.colorScheme.textWarning,
-            typographyToken = SpyfallTheme.typography.Label.L700
+            color = OddOneOutTheme.colorScheme.textWarning,
+            typographyToken = OddOneOutTheme.typography.Label.L700
         )
     }
 
     if (invalidNameLengthError != null) {
         Text(
             text = "User names must be between ${invalidNameLengthError.min} and ${invalidNameLengthError.max} characters long.",
-            color = SpyfallTheme.colorScheme.textWarning,
-            typographyToken = SpyfallTheme.typography.Label.L700
+            color = OddOneOutTheme.colorScheme.textWarning,
+            typographyToken = OddOneOutTheme.typography.Label.L700
         )
     }
 }

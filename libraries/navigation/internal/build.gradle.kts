@@ -4,6 +4,8 @@ plugins {
 
 spyfall {
     compose()
+    flowroutines()
+    daggerHilt()
 }
 
 android {

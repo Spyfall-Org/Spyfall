@@ -52,5 +52,5 @@ data class UserNameState(
 )
 
 sealed class Event {
-    data object GameJoined : Event()
+    data class GameJoined(val accessCode: String) : Event()
 }

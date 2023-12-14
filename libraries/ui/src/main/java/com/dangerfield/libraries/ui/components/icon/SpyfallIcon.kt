@@ -12,15 +12,18 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material.icons.outlined.Upcoming
@@ -51,107 +54,122 @@ import com.dangerfield.libraries.ui.components.text.Text
 
 sealed class SpyfallIcon(
     val imageVector: ImageVector,
-    val contentDescription: String
+    val contentDescription: String?
 ) {
-    class Add(contentDescription: String) : SpyfallIcon(
+    class Add(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Rounded.Add,
         contentDescription = contentDescription
     )
 
-    class ArrowBack(contentDescription: String) : SpyfallIcon(
+    class ArrowBack(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Rounded.ArrowBack,
         contentDescription = contentDescription
     )
 
-    class Bookmark(contentDescription: String) : SpyfallIcon(
+    class Bookmark(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Rounded.Bookmark,
         contentDescription = contentDescription
     )
 
-    class BookmarkBorder(contentDescription: String) : SpyfallIcon(
+    class BookmarkBorder(contentDescription: String?) : SpyfallIcon(
         contentDescription = contentDescription,
         imageVector = Icons.Rounded.BookmarkBorder,
     )
 
-    class Bookmarks(contentDescription: String) :
+    class Bookmarks(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Bookmarks, contentDescription = contentDescription)
 
-    class BookmarksBorder(contentDescription: String) :
+    class BookmarksBorder(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Outlined.Bookmarks, contentDescription = contentDescription)
 
-    class Info(contentDescription: String) :
+    class Info(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Default.Info, contentDescription = contentDescription)
 
-    class Check(contentDescription: String) :
+    class Check(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Check, contentDescription = contentDescription)
 
-    class Close(contentDescription: String) :
+    class Close(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Close, contentDescription = contentDescription)
 
-    class Grid3x3(contentDescription: String) :
+    class Grid3x3(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Grid3x3, contentDescription = contentDescription)
 
-    class MoreVert(contentDescription: String) :
+    class MoreVert(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Default.MoreVert, contentDescription = contentDescription)
 
-    class Person(contentDescription: String) :
+    class Person(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Person, contentDescription = contentDescription)
 
-    class Search(contentDescription: String) :
+    class Search(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Search, contentDescription = contentDescription)
 
-    class Settings(contentDescription: String) :
+    class Settings(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Settings, contentDescription = contentDescription)
 
-    class ShortText(contentDescription: String) :
+    class ShortText(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.ShortText, contentDescription = contentDescription)
 
-    class Upcoming(contentDescription: String) :
+    class Upcoming(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.Upcoming, contentDescription = contentDescription)
 
-    class UpcomingBorder(contentDescription: String) :
+    class UpcomingBorder(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Outlined.Upcoming, contentDescription = contentDescription)
 
-    class ViewDay(contentDescription: String) :
+    class ViewDay(contentDescription: String?) :
         SpyfallIcon(imageVector = Icons.Rounded.ViewDay, contentDescription = contentDescription)
 
-    class ChevronLeft(contentDescription: String) : SpyfallIcon(
+    class ChevronLeft(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.ChevronLeft,
         contentDescription = contentDescription
     )
 
-    class ChevronRight(contentDescription: String) : SpyfallIcon(
+    class ChevronRight(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.ChevronRight,
         contentDescription = contentDescription
     )
 
-    class Theme(contentDescription: String) : SpyfallIcon(
+    class Theme(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.Palette,
         contentDescription = contentDescription
     )
 
-    class Chat(contentDescription: String) : SpyfallIcon(
+    class Chat(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.ChatBubble,
         contentDescription = contentDescription
     )
 
-    class Android(contentDescription: String) : SpyfallIcon(
+    class Android(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.Android,
         contentDescription = contentDescription
     )
 
-    class DropDown(contentDescription: String) : SpyfallIcon(
+    class DropDown(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.ArrowDropDown,
         contentDescription = contentDescription
     )
 
-    class Bug(contentDescription: String) : SpyfallIcon(
+    class Bug(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.BugReport,
         contentDescription = contentDescription
     )
 
-    class VideoCall(contentDescription: String) : SpyfallIcon(
+    class VideoCall(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.VideoCall,
+        contentDescription = contentDescription
+    )
+
+    class Pencil(contentDescription: String?) : SpyfallIcon(
+        imageVector = Icons.Default.Edit,
+        contentDescription = contentDescription
+    )
+
+    class Alarm(contentDescription: String?) : SpyfallIcon(
+        imageVector = Icons.Default.Alarm,
+        contentDescription = contentDescription
+    )
+
+    class Question(contentDescription: String?) : SpyfallIcon(
+        imageVector = Icons.Default.QuestionMark,
         contentDescription = contentDescription
     )
 }
@@ -184,7 +202,10 @@ private val allIcons = listOf(
     SpyfallIcon.DropDown(""),
     SpyfallIcon.Bug(""),
     SpyfallIcon.VideoCall(""),
-    )
+    SpyfallIcon.Pencil(""),
+    SpyfallIcon.Alarm(""),
+    SpyfallIcon.Question(""),
+)
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=1000,height=1200,unit=dp,dpi=200")
 @Composable

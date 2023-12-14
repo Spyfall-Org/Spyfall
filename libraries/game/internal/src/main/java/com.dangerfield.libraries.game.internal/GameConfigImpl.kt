@@ -2,6 +2,7 @@ package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.internal.config.AccessCodeLength
+import com.dangerfield.libraries.game.internal.config.ForceShortGames
 import com.dangerfield.libraries.game.internal.config.IsSingleDeviceModeEnabled
 import com.dangerfield.libraries.game.internal.config.LocationsPerGame
 import com.dangerfield.libraries.game.internal.config.MaxNameLength
@@ -23,7 +24,8 @@ class GameConfigImpl @Inject constructor(
     private val minTimeLimitValue: MinTimeLimit,
     private val minPlayersValue: MinPlayers,
     private val locationsPerGameValue: LocationsPerGame,
-    private val isSingleDeviceModeEnabledExperiment: IsSingleDeviceModeEnabled
+    private val isSingleDeviceModeEnabledExperiment: IsSingleDeviceModeEnabled,
+    private val forceShortGamesFlag: ForceShortGames
     ): GameConfig {
 
     override val accessCodeLength: Int
@@ -52,4 +54,7 @@ class GameConfigImpl @Inject constructor(
 
     override val isSingleDeviceModeEnabled: Boolean
         get() = isSingleDeviceModeEnabledExperiment()
+
+    override val forceShortGames: Boolean
+        get() = forceShortGamesFlag()
 }

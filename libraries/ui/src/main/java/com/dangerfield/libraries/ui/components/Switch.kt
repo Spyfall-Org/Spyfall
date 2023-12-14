@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun Switch(
@@ -24,14 +24,14 @@ fun Switch(
         enabled = enabled,
         interactionSource = interactionSource,
         colors = SwitchDefaults.colors(
-            uncheckedThumbColor = SpyfallTheme.colorScheme.onSurfacePrimary.color,
-            uncheckedTrackColor = SpyfallTheme.colorScheme.surfacePrimary.color,
-            uncheckedBorderColor = SpyfallTheme.colorScheme.onSurfacePrimary.color,
-            checkedThumbColor = SpyfallTheme.colorScheme.onAccent.color,
-            checkedTrackColor = SpyfallTheme.colorScheme.accent.color,
-            checkedBorderColor = SpyfallTheme.colorScheme.accent.color,
-            disabledCheckedBorderColor = SpyfallTheme.colorScheme.surfaceDisabled.color,
-            disabledUncheckedBorderColor = SpyfallTheme.colorScheme.surfaceDisabled.color,
+            uncheckedThumbColor = OddOneOutTheme.colorScheme.onSurfacePrimary.color,
+            uncheckedTrackColor = OddOneOutTheme.colorScheme.surfacePrimary.color,
+            uncheckedBorderColor = OddOneOutTheme.colorScheme.onSurfacePrimary.color,
+            checkedThumbColor = OddOneOutTheme.colorScheme.onAccent.color,
+            checkedTrackColor = OddOneOutTheme.colorScheme.accent.color,
+            checkedBorderColor = OddOneOutTheme.colorScheme.accent.color,
+            disabledCheckedBorderColor = OddOneOutTheme.colorScheme.surfaceDisabled.color,
+            disabledUncheckedBorderColor = OddOneOutTheme.colorScheme.surfaceDisabled.color,
         )
     )
 }

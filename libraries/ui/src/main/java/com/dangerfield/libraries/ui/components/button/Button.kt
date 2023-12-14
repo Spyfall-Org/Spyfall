@@ -28,7 +28,7 @@ import spyfallx.ui.color.animateColorTokenAsState
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -62,10 +62,10 @@ fun Button(
         ButtonStyle.Filled -> null
         ButtonStyle.Outlined -> {
             val targetColor = when {
-                !enabled -> SpyfallTheme.colorScheme.surfaceDisabled
+                !enabled -> OddOneOutTheme.colorScheme.surfaceDisabled
                 else -> when (type) {
-                    ButtonType.Accent -> SpyfallTheme.colorScheme.accent
-                    ButtonType.Regular -> SpyfallTheme.colorScheme.onBackground
+                    ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
+                    ButtonType.Regular -> OddOneOutTheme.colorScheme.onBackground
                 }
             }
             key(type) {
@@ -147,10 +147,10 @@ private fun ButtonType.backgroundColor(
 @Composable
 @ReadOnlyComposable
 private fun ButtonType.filledBackgroundColorToken(enabled: Boolean) = when {
-    !enabled -> SpyfallTheme.colorScheme.surfaceDisabled
+    !enabled -> OddOneOutTheme.colorScheme.surfaceDisabled
     else -> when (this) {
-        ButtonType.Accent -> SpyfallTheme.colorScheme.accent
-        ButtonType.Regular -> SpyfallTheme.colorScheme.surfaceSecondary
+        ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
+        ButtonType.Regular -> OddOneOutTheme.colorScheme.surfaceSecondary
     }
 }
 
@@ -159,26 +159,26 @@ private fun ButtonType.filledBackgroundColorToken(enabled: Boolean) = when {
 private fun ButtonType.contentColor(style: ButtonStyle, enabled: Boolean): ColorToken.Color =
     when (style) {
         ButtonStyle.Filled -> when {
-            !enabled -> SpyfallTheme.colorScheme.onSurfaceDisabled
+            !enabled -> OddOneOutTheme.colorScheme.onSurfaceDisabled
             else -> when (this) {
-                ButtonType.Accent -> SpyfallTheme.colorScheme.onAccent
-                ButtonType.Regular -> SpyfallTheme.colorScheme.text
+                ButtonType.Accent -> OddOneOutTheme.colorScheme.onAccent
+                ButtonType.Regular -> OddOneOutTheme.colorScheme.text
             }
         }
 
         ButtonStyle.Outlined -> when {
-            !enabled -> SpyfallTheme.colorScheme.textDisabled
+            !enabled -> OddOneOutTheme.colorScheme.textDisabled
             else -> when (this) {
-                ButtonType.Accent -> SpyfallTheme.colorScheme.accent
-                ButtonType.Regular -> SpyfallTheme.colorScheme.text
+                ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
+                ButtonType.Regular -> OddOneOutTheme.colorScheme.text
             }
         }
 
         ButtonStyle.NoBackground -> when {
-            !enabled -> SpyfallTheme.colorScheme.textDisabled
+            !enabled -> OddOneOutTheme.colorScheme.textDisabled
             else -> when (this) {
-                ButtonType.Accent -> SpyfallTheme.colorScheme.accent
-                ButtonType.Regular -> SpyfallTheme.colorScheme.text
+                ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
+                ButtonType.Regular -> OddOneOutTheme.colorScheme.text
             }
         }
     }
@@ -229,12 +229,12 @@ private fun ButtonPreview(
                 }
             }
 
-            Text(text = "Button Size: ${state.size}", typographyToken = SpyfallTheme.typography.Display.D1000)
-            Text(text = "Mode:" + if (state.inverse) "Dark" else "Light", typographyToken = SpyfallTheme.typography.Display.D1000)
+            Text(text = "Button Size: ${state.size}", typographyToken = OddOneOutTheme.typography.Display.D1000)
+            Text(text = "Mode:" + if (state.inverse) "Dark" else "Light", typographyToken = OddOneOutTheme.typography.Display.D1000)
 
 
             Row {
-                ProvideTextConfig(SpyfallTheme.typography.Heading.H700) {
+                ProvideTextConfig(OddOneOutTheme.typography.Heading.H700) {
                     Text("Accent", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
                     Text("Regular", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
                     Text("Disabled", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)

@@ -18,7 +18,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun ListItem(
@@ -43,7 +43,7 @@ fun ListItem(
         Column(modifier = Modifier.weight(1f)) {
             headlineContent()
             ProvideTextConfig(
-                typographyToken = SpyfallTheme.typography.Body.B600
+                typographyToken = OddOneOutTheme.typography.Body.B600
             ) {
                 supportingContent?.let { it() }
             }

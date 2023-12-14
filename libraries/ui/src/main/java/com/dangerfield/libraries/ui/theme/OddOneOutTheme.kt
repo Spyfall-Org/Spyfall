@@ -17,7 +17,7 @@ import com.dangerfield.libraries.ui.typography.Typography
 
 //TODO hide colors & typography into the internal module so that people must go through the theme
 // I could make this an interface? idk man
-object SpyfallTheme {
+object OddOneOutTheme {
     val isDarkMode: Boolean
         @ReadOnlyComposable
         @Composable
@@ -32,7 +32,7 @@ object SpyfallTheme {
 }
 
 @Composable
-fun SpyfallTheme(
+fun OddOneOutTheme(
     accentColor: ColorPrimitive = ColorPrimitive.CherryPop700,
     isDarkMode: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
@@ -47,7 +47,7 @@ fun SpyfallTheme(
         CompositionLocalProvider(
             LocalColorScheme provides colorScheme,
             LocalContentColor provides colorScheme.text,
-            LocalTypography provides SpyfallTheme.typography,
+            LocalTypography provides OddOneOutTheme.typography,
             LocalMinimumInteractiveComponentEnforcement provides false,
             androidx.compose.material3.LocalContentColor provides colorScheme.text.color,
             content = content

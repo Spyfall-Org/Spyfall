@@ -44,7 +44,7 @@ import spyfallx.ui.R
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -157,7 +157,7 @@ private fun TooltipContent(
     Column(
         modifier = modifier
             .semantics { paneTitle = context.getString(R.string.tool_tip_pane_title) }
-            .background(SpyfallTheme.colorScheme.surfacePrimary)
+            .background(OddOneOutTheme.colorScheme.surfacePrimary)
             .padding(Spacing.S800)
     ) {
         content()
@@ -250,7 +250,7 @@ private fun TooltipBoxPreview() {
             Text(
                 text = "Long Press Me",
                 modifier = Modifier.tooltipAnchor(),
-                typographyToken = SpyfallTheme.typography.Default
+                typographyToken = OddOneOutTheme.typography.Default
             )
         }
     }

@@ -18,7 +18,7 @@ import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun QASwitchItem(
@@ -54,7 +54,7 @@ fun QASwitchItem(
             }
         },
         supportingContent = {
-            ProvideTextConfig(typographyToken = SpyfallTheme.typography.Body.B600) {
+            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B600) {
                 supportingText?.invoke()
             }
         },

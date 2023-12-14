@@ -140,7 +140,9 @@ class NewGameViewModel @Inject constructor(
                         )
                     )
                 }
-        }.onFailure {
+        }
+            .logOnError()
+            .onFailure {
             updateState { it.copy(didSomethingGoWrong = true) }
         }
             .eitherWay {

@@ -48,14 +48,45 @@ inline fun <T> Try<T>.flatMapIf(predicate: Boolean, mapper: (T) -> Try<T>): Try<
  * Returns the list of values from a list of tries. If any of the tries are a failure, the entire
  * list is a failure.
  */
-inline fun <T: Any> Collection<Try<T>>.failFast(): Try<List<T>> {
+inline fun <T : Any> Collection<Try<T>>.failFast(): Try<List<T>> {
     return Try { this.map { it.getOrThrow() } }
 }
 
 fun <T> Try<T>.logOnError(message: String? = null): Try<T> = onFailure { Timber.e(it, message) }
 
 fun <T> Try<T>.throwIfDebug(): Try<T> = onFailure {
-    if (BuildConfig.DEBUG && this is Failure) throw it
+    if (BuildConfig.DEBUG && this is Failure) {
+        Timber.e("THROWING DEBUG EXCEPTION")
+        throw it
+    }
+}
+
+fun <T> Try<T>.developerSnackOnError(
+    autoDismiss: Boolean = false,
+    lazyMessage: () -> String,
+): Try<T> = onFailure {
+    if (BuildConfig.DEBUG && this is Failure) {
+        DeveloperMessagePresenter.showDeveloperMessage(
+            DeveloperMessage(
+                message = lazyMessage(),
+                autoDismiss = autoDismiss
+            )
+        )
+    }
+}
+
+fun <T> Try<T>.developerSnackOnSuccess(
+    autoDismiss: Boolean = true,
+    lazyMessage: () -> String,
+): Try<T> = onFailure {
+    if (BuildConfig.DEBUG && this is spyfallx.core.Success) {
+        DeveloperMessagePresenter.showDeveloperMessage(
+            DeveloperMessage(
+                message = lazyMessage(),
+                autoDismiss = autoDismiss
+            )
+        )
+    }
 }
 
 fun Throwable.failure(): Try<Nothing> = Failure(this)

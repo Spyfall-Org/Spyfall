@@ -2,16 +2,10 @@
 package com.dangerfield.features.rules.internal
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.captionBarPadding
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
-import com.dangerfield.libraries.ui.HorizontalSpacerS800
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS100
@@ -24,9 +18,10 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValu
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.dragHandleTopAccessory
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.getBoldSpan
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.components.text.BoldPrefixedText
+import com.dangerfield.libraries.ui.components.text.BulletRow
 
 @Composable
 fun RulesBottomSheet(
@@ -178,14 +173,14 @@ private fun Section(title: String, content: @Composable () -> Unit) {
 @Composable
 private fun Title(text: String) {
     Column {
-        Text(text = text, typographyToken = SpyfallTheme.typography.Heading.H800)
+        Text(text = text, typographyToken = OddOneOutTheme.typography.Heading.H800)
     }
 }
 
 @Composable
 private fun SubTitle(text: String) {
     Column {
-        Text(text = text, typographyToken = SpyfallTheme.typography.Body.B700.Bold)
+        Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B700.Bold)
         VerticalSpacerS100()
     }
 }
@@ -193,36 +188,14 @@ private fun SubTitle(text: String) {
 @Composable
 private fun Body(text: String) {
     Column {
-        Text(text = text, typographyToken = SpyfallTheme.typography.Body.B600)
+        Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B600)
     }
 }
 
 @Composable
 private fun Body(text: AnnotatedString) {
     Column {
-        Text(text = text, typographyToken = SpyfallTheme.typography.Body.B600)
-    }
-}
-
-@Composable
-private fun BulletRow(
-    content: @Composable () -> Unit = { }
-) {
-    Row {
-        Text(text = "•")
-        HorizontalSpacerS800()
-        content()
-    }
-}
-
-@Composable
-private fun BoldPrefixedText(
-    boldText: String,
-    regularText: String
-) {
-    val annotatedString = getBoldSpan(fullString = "$boldText $regularText", boldString = boldText)
-    Row {
-        Body(text = annotatedString)
+        Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B600)
     }
 }
 

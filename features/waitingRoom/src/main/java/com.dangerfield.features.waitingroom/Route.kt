@@ -9,12 +9,10 @@ import com.dangerfield.libraries.navigation.route
 
 fun Router.navigateToWaitingRoom(
     accessCode: String,
-    videoCallLink: String? = null
 ) {
     navigate(
         fillRoute(waitingRoomRoute) {
             fill(accessCodeArgument, accessCode)
-            fill(videoCallLinkArgument, videoCallLink)
             popUpTo(welcomeNavigationRoute)
         }
     )
@@ -22,12 +20,6 @@ fun Router.navigateToWaitingRoom(
 
 val accessCodeArgument = navArgument("accessCode") { type = NavType.StringType }
 
-val videoCallLinkArgument = navArgument("videoCallLink") {
-    type = NavType.StringType
-    nullable = true
-}
-
 val waitingRoomRoute = route("waitingRoom") {
     argument(accessCodeArgument)
-    argument(videoCallLinkArgument)
 }

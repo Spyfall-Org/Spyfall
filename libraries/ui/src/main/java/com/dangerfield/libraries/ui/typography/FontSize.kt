@@ -14,7 +14,7 @@ import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.asSp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlin.math.roundToInt
 import kotlin.reflect.KProperty0
 
@@ -89,13 +89,13 @@ private fun FontSizePreview() {
         Column {
             PreviewRow(
                 token = {
-                    Text("Token", style = SpyfallTheme.typography.Body.B600.style, color = ColorPrimitive.Black800.color)
+                    Text("Token", style = OddOneOutTheme.typography.Body.B600.style, color = ColorPrimitive.Black800.color)
                 },
                 value = {
-                    Text("SP Value", style = SpyfallTheme.typography.Body.B600.style, color = ColorPrimitive.Black600.color)
+                    Text("SP Value", style = OddOneOutTheme.typography.Body.B600.style, color = ColorPrimitive.Black600.color)
                 },
                 poppins = {
-                    Text("Poppins Example", style = SpyfallTheme.typography.Body.B600.style, color = ColorPrimitive.Black600.color)
+                    Text("Poppins Example", style = OddOneOutTheme.typography.Body.B600.style, color = ColorPrimitive.Black600.color)
                 },
             )
             for ((value, size) in sizes) {
@@ -120,14 +120,14 @@ private fun PreviewRow(
         token = {
             Text(
                 text = "font-size-${value.name.removePrefix("value")}",
-                style = SpyfallTheme.typography.Heading.H600.style,
+                style = OddOneOutTheme.typography.Heading.H600.style,
                 color = color
             )
         },
         value = {
             Text(
                 text = "${value.get().value.roundToInt()}sp",
-                style = SpyfallTheme.typography.Body.B700.style,
+                style = OddOneOutTheme.typography.Body.B700.style,
                 color = color
             )
         },

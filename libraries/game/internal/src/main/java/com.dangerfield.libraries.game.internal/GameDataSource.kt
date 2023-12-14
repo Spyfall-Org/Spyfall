@@ -2,15 +2,20 @@ package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.Player
+import kotlinx.coroutines.flow.Flow
 import spyfallx.core.Try
 
 interface GameDataSource {
     suspend fun setGame(game: Game)
     suspend fun getGame(accessCode: String): Try<Game>
-    suspend fun removePlayer(accessCode: String, player: Player)
+    suspend fun subscribeToGame(accessCode: String): Try<Flow<Game>>
+    suspend fun removePlayer(accessCode: String, id: String)
     suspend fun addPlayer(accessCode: String, player: Player)
     suspend fun setLocation(accessCode: String, location: String)
     suspend fun endGame(accessCode: String)
-    suspend fun setStarted(accessCode: String, started: Boolean)
-    suspend fun setPlayers(accessCode: String, list: List<Player>)
+    suspend fun setGameBeingStarted(accessCode: String, isBeingStarted: Boolean): Try<Unit>
+    suspend fun setStartedAt(accessCode: String, startedAt: Long): Try<Unit>
+    suspend fun updatePlayers(accessCode: String, list: List<Player>): Try<Unit>
+    suspend fun changeName(accessCode: String, newName: String, id: String): Try<Unit>
+    suspend fun setPlayerVotedCorrectly(accessCode: String, playerId: String, votedCorrectly: Boolean): Try<Unit>
 }

@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.typography.TypographyToken
 
 @Composable
@@ -34,14 +34,14 @@ fun OutlinedTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     typographyToken: TypographyToken = LocalTextConfig.current.typographyToken
-        ?: SpyfallTheme.typography.Default,
+        ?: OddOneOutTheme.typography.Default,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
-    color: Color = SpyfallTheme.colorScheme.onBackground.color,
+    color: Color = OddOneOutTheme.colorScheme.onBackground.color,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -50,7 +50,7 @@ fun OutlinedTextField(
     minLines: Int = 1,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    cursorBrush: Brush = SolidColor(SpyfallTheme.colorScheme.accent.color)
+    cursorBrush: Brush = SolidColor(OddOneOutTheme.colorScheme.accent.color)
 ) {
     BasicTextField(
         value = value,
@@ -85,7 +85,7 @@ fun OutlinedTextField(
                             typographyToken = typographyToken.copy(
                                 fontWeight = FontWeight.Normal
                             ),
-                            color = SpyfallTheme.colorScheme.textDisabled,
+                            color = OddOneOutTheme.colorScheme.textDisabled,
                             textDecoration = TextDecoration.Underline,
                             textAlign = TextAlign.Start,
                             maxLines = 1,
@@ -122,11 +122,11 @@ private val outlineTextFieldPadding
 private val outlinedTextFieldColors
     @Composable
     get() = OutlinedTextFieldDefaults.colors(
-        focusedContainerColor = SpyfallTheme.colorScheme.background.color,
-        unfocusedContainerColor = SpyfallTheme.colorScheme.background.color,
-        disabledContainerColor = SpyfallTheme.colorScheme.background.color,
-        focusedBorderColor = SpyfallTheme.colorScheme.border.color,
-        unfocusedBorderColor = SpyfallTheme.colorScheme.border.color,
+        focusedContainerColor = OddOneOutTheme.colorScheme.background.color,
+        unfocusedContainerColor = OddOneOutTheme.colorScheme.background.color,
+        disabledContainerColor = OddOneOutTheme.colorScheme.background.color,
+        focusedBorderColor = OddOneOutTheme.colorScheme.border.color,
+        unfocusedBorderColor = OddOneOutTheme.colorScheme.border.color,
     )
 
 private val FocusedBorderThickness = 2.dp

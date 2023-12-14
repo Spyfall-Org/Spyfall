@@ -2,7 +2,7 @@ package com.dangerfield.libraries.coresession.internal
 
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
-import com.dangerfield.libraries.flowroutines.DispatcherProvider
+import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
 import com.dangerfield.libraries.session.User
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope

@@ -27,7 +27,7 @@ import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.typography.FontSize
 import kotlin.math.roundToInt
 
@@ -362,7 +362,7 @@ private fun TokensPreview(
         contentPadding = PaddingValues(Spacing.S900),
         showBackground = true
     ) {
-        CompositionLocalProvider(LocalContentColor provides SpyfallTheme.colorScheme.text.color) {
+        CompositionLocalProvider(LocalContentColor provides OddOneOutTheme.colorScheme.text.color) {
             Column(verticalArrangement = Arrangement.spacedBy(Spacing.S500)) {
                 Text(
                     text = group.name,
@@ -374,19 +374,19 @@ private fun TokensPreview(
                 Divider(color = ColorPrimitive.Black800.color, modifier = Modifier.fillMaxWidth())
                 PreviewRow(
                     token = {
-                        Text("Token", style = SpyfallTheme.typography.Heading.H600.style)
+                        Text("Token", style = OddOneOutTheme.typography.Heading.H600.style)
                     },
                     specs = {
                         Text(
                             "Specs",
-                            style = SpyfallTheme.typography.Heading.H600.style,
+                            style = OddOneOutTheme.typography.Heading.H600.style,
                             color = ColorPrimitive.Black600.color
                         )
                     },
                     example = {
                         Text(
                             "Example",
-                            style = SpyfallTheme.typography.Heading.H600.style,
+                            style = OddOneOutTheme.typography.Heading.H600.style,
                             color = ColorPrimitive.Black600.color
                         )
                     }
@@ -402,7 +402,7 @@ private fun TokensPreview(
                         token = {
                             Text(
                                 text = token.identifier,
-                                style = SpyfallTheme.typography.Heading.H700.style
+                                style = OddOneOutTheme.typography.Heading.H700.style
                             )
                         },
                         specs = {
@@ -422,7 +422,7 @@ private fun TokensPreview(
                                 Size: ${NumericalValues.getValue(token.fontSize.value.dp)} (${token.fontSize.value.roundToInt()}sp)  
                                 Line: ${NumericalValues.getValue(token.lineHeight.value.dp)} (${token.lineHeight.value.roundToInt()}sp)  
                                 """.trimIndent(),
-                                style = SpyfallTheme.typography.Body.B600.style,
+                                style = OddOneOutTheme.typography.Body.B600.style,
                                 color = ColorPrimitive.Black600.color
                             )
                         },
@@ -477,40 +477,40 @@ private class PreviewGroupPreviewParameterProvider : PreviewParameterProvider<Pr
         PreviewGroup(
             name = "Display",
             listOf(
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D1500, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D1400, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D1300, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D1200, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D1100, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D1000, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D900, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Display.D800, "Welcome to Spyfall")
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D1500, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D1400, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D1300, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D1200, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D1100, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D1000, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D900, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Display.D800, "Welcome to Spyfall")
             )
         ),
 
         PreviewGroup(
             name = "Heading",
             listOf(
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H1100, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H1200, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H1000, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H900, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H800, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H700, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H600, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H500, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Heading.H400, "Welcome to Spyfall")
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H1100, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H1200, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H1000, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H900, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H800, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H700, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H600, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H500, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Heading.H400, "Welcome to Spyfall")
             )
         ),
 
         PreviewGroup(
             name = "Label",
             listOf(
-                PreviewGroup.Token(SpyfallTheme.typography.Label.L800, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Label.L700, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Label.L600, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Label.L500, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Label.L400, "Welcome to Spyfall")
+                PreviewGroup.Token(OddOneOutTheme.typography.Label.L800, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Label.L700, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Label.L600, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Label.L500, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Label.L400, "Welcome to Spyfall")
 
             )
         ),
@@ -518,13 +518,13 @@ private class PreviewGroupPreviewParameterProvider : PreviewParameterProvider<Pr
         PreviewGroup(
             name = "Body",
             listOf(
-                PreviewGroup.Token(SpyfallTheme.typography.Body.B800, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Body.B700, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Body.B700.Italic, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Body.B600, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Body.B600.Italic, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Body.B500, "Welcome to Spyfall"),
-                PreviewGroup.Token(SpyfallTheme.typography.Body.B500.Italic, "Welcome to Spyfall")
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B800, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B700, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B700.Italic, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B600, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B600.Italic, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B500, "Welcome to Spyfall"),
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B500.Italic, "Welcome to Spyfall")
             )
         )
     )

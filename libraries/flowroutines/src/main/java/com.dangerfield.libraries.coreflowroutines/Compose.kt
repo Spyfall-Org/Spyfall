@@ -8,6 +8,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import spyfallx.core.DeveloperMessage
+import spyfallx.core.DeveloperMessagePresenter
+import spyfallx.core.common.BuildConfig
 
 //TODO document
 @Composable
@@ -20,5 +23,25 @@ fun <T> ObserveWithLifecycle(flow: Flow<T>, onItem: (T) -> Unit) {
                 flow.collect(onItem)
             }
         }
+    }
+}
+
+suspend fun <T> Flow<T>.observeWithLifecycle(lifecycleOwner: Lifecycle, onItem: suspend (T) -> Unit) {
+    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        withContext(Dispatchers.Main.immediate) {
+            collect(onItem)
+        }
+    }
+}
+
+fun showDeveloperMessage(developerMessage: DeveloperMessage) {
+    if (BuildConfig.DEBUG) {
+        DeveloperMessagePresenter.showDeveloperMessage(developerMessage)
+    }
+}
+
+fun showDeveloperMessage(autoDismiss: Boolean = true, lazyMessage: () -> String) {
+    if (BuildConfig.DEBUG) {
+        DeveloperMessagePresenter.showDeveloperMessage(DeveloperMessage(lazyMessage(), autoDismiss))
     }
 }

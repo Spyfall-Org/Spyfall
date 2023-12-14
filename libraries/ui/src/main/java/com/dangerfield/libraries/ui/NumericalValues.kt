@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
@@ -204,13 +204,13 @@ private fun NumericalValuesPreviewContent(
             Row {
                 Text(
                     text = "System value",
-                    style = SpyfallTheme.typography.Body.B600.style,
+                    style = OddOneOutTheme.typography.Body.B600.style,
                     color = ColorPrimitive.Black800.color,
                     modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = "DP value",
-                    style = SpyfallTheme.typography.Body.B600.style,
+                    style = OddOneOutTheme.typography.Body.B600.style,
                     color = ColorPrimitive.Black600.color,
                     modifier = Modifier.weight(1f)
                 )
@@ -218,7 +218,7 @@ private fun NumericalValuesPreviewContent(
             Spacer(Modifier.height(Spacing.S500))
             for (value in values.reversed()) {
                 val alignmentLine = textAlignmentLines.getValue(value)
-                Divider(Modifier.fillMaxWidth(), color = SpyfallTheme.colorScheme.border.color)
+                Divider(Modifier.fillMaxWidth(), color = OddOneOutTheme.colorScheme.border.color)
                 NumericalValueText(value, alignmentLine)
             }
         }
@@ -249,13 +249,13 @@ private fun NumericalValueText(
     ) {
         Text(
             text = value.name.removePrefix("value"),
-            style = SpyfallTheme.typography.Heading.H800.style,
+            style = OddOneOutTheme.typography.Heading.H800.style,
             color = ColorPrimitive.Black800.color,
             modifier = Modifier.weight(1f)
         )
         Text(
             text = "${value.get().value.roundToInt()}dp",
-            style = SpyfallTheme.typography.Heading.H800.style,
+            style = OddOneOutTheme.typography.Heading.H800.style,
             color = ColorPrimitive.Black600.color,
             modifier = Modifier.weight(1f)
         )

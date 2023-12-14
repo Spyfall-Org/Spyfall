@@ -17,7 +17,7 @@ import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 @Suppress("MagicNumber")
@@ -32,7 +32,7 @@ fun ForcedUpdateScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.10f))
             Text(
                 text = "We've made some exciting changes",
-                typographyToken = SpyfallTheme.typography.Display.D1000,
+                typographyToken = OddOneOutTheme.typography.Display.D1000,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )
@@ -41,7 +41,7 @@ fun ForcedUpdateScreen(
 
             Text(
                 text = "Please download the latest app from the app store to enjoy them.",
-                typographyToken = SpyfallTheme.typography.Body.B700,
+                typographyToken = OddOneOutTheme.typography.Body.B700,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )

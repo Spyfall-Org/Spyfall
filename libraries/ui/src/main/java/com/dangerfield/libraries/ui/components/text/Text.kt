@@ -22,7 +22,7 @@ import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.color.LocalContentColor
 import spyfallx.ui.color.takeOrElse
-import com.dangerfield.libraries.ui.theme.SpyfallTheme
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.typography.TypographyToken
 
 @NonRestartableComposable
@@ -31,7 +31,7 @@ fun Text(
     text: String,
     modifier: Modifier = Modifier,
     colorPrimitive: ColorPrimitive,
-    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: SpyfallTheme.typography.Default,
+    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: OddOneOutTheme.typography.Default,
     textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
     textAlign: TextAlign? = LocalTextConfig.current.textAlign,
     onTextLayout: (TextLayoutResult) -> Unit = {},
@@ -61,7 +61,7 @@ fun Text(
     text: String,
     modifier: Modifier = Modifier,
     color: ColorToken.Color? = null,
-    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: SpyfallTheme.typography.Default,
+    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: OddOneOutTheme.typography.Default,
     textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
     textAlign: TextAlign? = LocalTextConfig.current.textAlign,
     onTextLayout: (TextLayoutResult) -> Unit = {},
@@ -123,7 +123,7 @@ fun Text(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
     color: ColorToken.Color? = null,
-    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: SpyfallTheme.typography.Default,
+    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: OddOneOutTheme.typography.Default,
     textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
     textAlign: TextAlign? = LocalTextConfig.current.textAlign,
     onTextLayout: (TextLayoutResult) -> Unit = {},
@@ -150,7 +150,7 @@ fun Text(
     @StringRes text: Int,
     modifier: Modifier = Modifier,
     color: ColorToken.Color? = null,
-    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: SpyfallTheme.typography.Default,
+    typographyToken: TypographyToken = LocalTextConfig.current.typographyToken ?: OddOneOutTheme.typography.Default,
     textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
     textAlign: TextAlign? = LocalTextConfig.current.textAlign,
     onTextLayout: (TextLayoutResult) -> Unit = {},
