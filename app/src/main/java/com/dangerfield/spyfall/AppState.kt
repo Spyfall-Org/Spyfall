@@ -1,20 +1,56 @@
 package com.dangerfield.spyfall
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.floatingwindow.FloatingWindowNavigator
+import com.dangerfield.libraries.navigation.internal.NavControllerRouter
+import com.dangerfield.libraries.network.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
-@Suppress("UnusedPrivateMember")
+@Composable
+fun rememberAppState(
+    networkMonitor: NetworkMonitor,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    navHostController: NavHostController = rememberNavController(FloatingWindowNavigator()),
+): AppState {
+    return remember(
+        navHostController,
+        coroutineScope,
+        networkMonitor,
+    ) {
+        AppState(
+            networkMonitor,
+            coroutineScope,
+            NavControllerRouter(
+                navHostController = navHostController,
+                coroutineScope = coroutineScope
+            )
+        )
+    }
+}
+
 @Stable
 class AppState(
-    private val coroutineScope: CoroutineScope
+    networkMonitor: NetworkMonitor,
+    val coroutineScope: CoroutineScope,
+    val router: NavControllerRouter,
 ) {
+    val currentDestination: String?
+        @Composable get() = router.currentRouteName
 
-    // TODO pick this back up
-//    val isOffline = networkMonitor.isOnline
-//        .map(Boolean::not)
-//        .stateIn(
-//            scope = coroutineScope,
-//            started = SharingStarted.WhileSubscribed(5_000),
-//            initialValue = false,
-//        )
+    val isOffline = networkMonitor.isOnline
+        .map(Boolean::not)
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 }

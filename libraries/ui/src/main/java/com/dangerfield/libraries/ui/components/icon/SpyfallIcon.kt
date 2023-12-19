@@ -19,12 +19,15 @@ import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.VideoCall
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material.icons.outlined.Upcoming
 import androidx.compose.material.icons.rounded.Add
@@ -154,7 +157,7 @@ sealed class SpyfallIcon(
     )
 
     class VideoCall(contentDescription: String?) : SpyfallIcon(
-        imageVector = Icons.Default.VideoCall,
+        imageVector = Icons.Default.Videocam,
         contentDescription = contentDescription
     )
 
@@ -170,6 +173,16 @@ sealed class SpyfallIcon(
 
     class Question(contentDescription: String?) : SpyfallIcon(
         imageVector = Icons.Default.QuestionMark,
+        contentDescription = contentDescription
+    )
+
+    class Share(contentDescription: String?) : SpyfallIcon(
+        imageVector = Icons.Default.IosShare,
+        contentDescription = contentDescription
+    )
+
+    class Copy(contentDescription: String?) : SpyfallIcon(
+        imageVector = Icons.Default.ContentCopy,
         contentDescription = contentDescription
     )
 }
@@ -205,6 +218,8 @@ private val allIcons = listOf(
     SpyfallIcon.Pencil(""),
     SpyfallIcon.Alarm(""),
     SpyfallIcon.Question(""),
+    SpyfallIcon.Share(""),
+    SpyfallIcon.Copy(""),
 )
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=1000,height=1200,unit=dp,dpi=200")

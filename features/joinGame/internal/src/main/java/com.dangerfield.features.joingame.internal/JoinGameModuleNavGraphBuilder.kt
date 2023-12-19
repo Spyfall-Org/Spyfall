@@ -14,7 +14,6 @@ import com.dangerfield.libraries.navigation.Router
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.BuildInfo
 import spyfallx.core.openStoreLinkToApp
-import timber.log.Timber
 import javax.inject.Inject
 
 @AutoBindIntoSet

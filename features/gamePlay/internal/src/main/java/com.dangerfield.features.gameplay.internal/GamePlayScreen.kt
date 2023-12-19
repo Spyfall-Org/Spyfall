@@ -1,7 +1,11 @@
 package com.dangerfield.features.gameplay.internal
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -19,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.game.GameResult
+import com.dangerfield.libraries.ui.HorizontalSpacerS800
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
@@ -44,6 +50,8 @@ fun GamePlayScreen(
     role: String,
     isOddOneOut: Boolean,
     location: String?,
+    videoCallLink: String?,
+    onVideoCallButtonClicked: (String) -> Unit,
     isTimeUp: Boolean,
     isLoadingVote: Boolean,
     hasMePlayerSubmittedVote: Boolean,
@@ -59,11 +67,11 @@ fun GamePlayScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    var selectedPlayerForVote by rememberSaveable { mutableStateOf<DisplayablePlayer?>(null) }
-    var selectedLocationForVote by rememberSaveable { mutableStateOf<String?>(null) }
-    val hasSelectedVote: Boolean = selectedPlayerForVote != null || selectedLocationForVote != null
-    val isVotingOnLocation = isOddOneOut
-    val isVotingOnOddOneOut = !isVotingOnLocation
+    var showLeaveGameDialog by remember { mutableStateOf(false) }
+
+    BackHandler {
+        showLeaveGameDialog = !showLeaveGameDialog
+    }
 
     LaunchedEffect(isTimeUp) {
         if (isTimeUp) {
@@ -77,107 +85,177 @@ fun GamePlayScreen(
     }
 
     Screen { padding ->
-        ScrollingColumnWithFadingEdge(
-            modifier = modifier
-                .background(OddOneOutTheme.colorScheme.background)
-                .padding(padding)
-                .padding(horizontal = Spacing.S1000),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            state = scrollState
-        ) {
-            HelpButton(
+        Box {
+            GamePlayScreenContent(
+                modifier = modifier,
+                padding = padding,
+                scrollState = scrollState,
                 isTimeUp = isTimeUp,
-                onVotingQuestionClicked = {
-                    onVotingQuestionClicked(hasMePlayerSubmittedVote)
-                },
-                onGamePlayQuestionClicked = onGamePlayQuestionClicked
-            )
-
-            Header(
+                onVotingQuestionClicked = onVotingQuestionClicked,
                 hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
-                isTimeUp = isTimeUp,
+                onGamePlayQuestionClicked = onGamePlayQuestionClicked,
                 gameResult = gameResult,
+                videoCallLink = videoCallLink,
                 timeRemaining = timeRemaining,
-                isMePlayerOddOneOut = isOddOneOut
-            )
-
-            RoleCard(
+                isOddOneOut = isOddOneOut,
                 role = role,
                 location = location,
-                text = if (isOddOneOut) "Don't get found out" else "Find the odd one out",
-                isTheOddOneOut = isOddOneOut
+                isVotingOnOddOneOut = !isOddOneOut,
+                players = players,
+                isVotingOnLocation = isOddOneOut,
+                locations = locations,
+                isLoadingVote = isLoadingVote,
+                onSubmitPlayerVoteClicked = onSubmitPlayerVoteClicked,
+                onSubmitLocationVoteClicked = onSubmitLocationVoteClicked,
+                onResetGameClicked = onResetGameClicked,
+                onEndGameClicked = onEndGameClicked,
+                onVideoCallButtonClicked = onVideoCallButtonClicked
             )
 
-            Spacer(modifier = Modifier.height(Spacing.S1000))
-
-            AnimatedVisibility(visible = !isTimeUp || isVotingOnOddOneOut) {
-                PlayerList(
-                    isTimeUp = isTimeUp,
-                    hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
-                    selectedPlayer = selectedPlayerForVote,
-                    players = players,
-                    onPlayerSelectedForVote = {
-                        selectedPlayerForVote = it
-                    }
+            if (showLeaveGameDialog) {
+                GamePlayLeaveDialog(
+                    onDismissRequest = { showLeaveGameDialog = false },
+                    onLeaveConfirmed = onEndGameClicked
                 )
             }
-
-            AnimatedVisibility(visible = !isTimeUp || isVotingOnLocation) {
-                LocationsList(
-                    hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
-                    selectedLocation = selectedLocationForVote,
-                    locations = locations,
-                    isTimeUp = isTimeUp,
-                    onLocationSelectedForVote = {
-                        selectedLocationForVote = it
-                    }
-                )
-            }
-
-            AnimatedVisibility(visible = isTimeUp && !hasMePlayerSubmittedVote) {
-                VoteButton(
-                    isLoadingVote = isLoadingVote,
-                    selectedPlayer = selectedPlayerForVote,
-                    selectedLocation = selectedLocationForVote,
-                    hasSelectedVote = hasSelectedVote,
-                    onSubmitPlayerVoteClicked = onSubmitPlayerVoteClicked,
-                    onSubmitLocationVoteClicked = onSubmitLocationVoteClicked
-                )
-            }
-
-            AnimatedVisibility(
-                visible =
-                gameResult != null &&
-                        (location != null || !isVotingOnLocation)
-                        && (players.find { it.isOddOneOut } != null || !isVotingOnOddOneOut )
-            ) {
-                CorrectAnswer(
-                    isVotingOnLocation = isVotingOnLocation,
-                    location = location.orEmpty(),
-                    oddOneOutName = players.find { it.isOddOneOut }?.name.orEmpty()
-                )
-            }
-
-            VerticalSpacerS1200()
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onResetGameClicked
-            ) {
-                Text(text = "Restart Game")
-            }
-
-            Spacer(modifier = Modifier.height(Spacing.S800))
-
-            Button(type = ButtonType.Regular,
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onEndGameClicked
-            ) {
-                Text(text = "End Game")
-            }
-
-            VerticalSpacerS1200()
         }
+    }
+}
+
+@Composable
+private fun GamePlayScreenContent(
+    modifier: Modifier,
+    padding: PaddingValues,
+    scrollState: ScrollState,
+    isTimeUp: Boolean,
+    onVotingQuestionClicked: (hasVoted: Boolean) -> Unit,
+    hasMePlayerSubmittedVote: Boolean,
+    onGamePlayQuestionClicked: () -> Unit,
+    gameResult: GameResult?,
+    timeRemaining: String,
+    isOddOneOut: Boolean,
+    role: String,
+    videoCallLink: String?,
+    onVideoCallButtonClicked: (String) -> Unit,
+    location: String?,
+    isVotingOnOddOneOut: Boolean,
+    players: List<DisplayablePlayer>,
+    isVotingOnLocation: Boolean,
+    locations: List<String>,
+    isLoadingVote: Boolean,
+    onSubmitPlayerVoteClicked: (id: String) -> Unit,
+    onSubmitLocationVoteClicked: (location: String) -> Unit,
+    onResetGameClicked: () -> Unit,
+    onEndGameClicked: () -> Unit
+) {
+    var selectedPlayerForVote by rememberSaveable { mutableStateOf<DisplayablePlayer?>(null) }
+    var selectedLocationForVote by rememberSaveable { mutableStateOf<String?>(null) }
+    val hasSelectedVote: Boolean = selectedPlayerForVote != null || selectedLocationForVote != null
+
+    ScrollingColumnWithFadingEdge(
+        modifier = modifier
+            .background(OddOneOutTheme.colorScheme.background)
+            .padding(padding)
+            .padding(horizontal = Spacing.S1000),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        state = scrollState
+    ) {
+        ActionButtons(
+            isTimeUp = isTimeUp,
+            onVotingQuestionClicked = {
+                onVotingQuestionClicked(hasMePlayerSubmittedVote)
+            },
+            onGamePlayQuestionClicked = onGamePlayQuestionClicked,
+            videoCallLink = videoCallLink,
+            onVideoCallButtonClicked = onVideoCallButtonClicked,
+
+        )
+
+        Header(
+            hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
+            isTimeUp = isTimeUp,
+            gameResult = gameResult,
+            timeRemaining = timeRemaining,
+            isMePlayerOddOneOut = isOddOneOut
+        )
+
+        RoleCard(
+            role = role,
+            location = location,
+            text = if (isOddOneOut) "Don't get found out" else "Find the odd one out",
+            isTheOddOneOut = isOddOneOut
+        )
+
+        Spacer(modifier = Modifier.height(Spacing.S1000))
+
+        AnimatedVisibility(visible = !isTimeUp || isVotingOnOddOneOut) {
+            PlayerList(
+                isTimeUp = isTimeUp,
+                hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
+                selectedPlayer = selectedPlayerForVote,
+                players = players,
+                onPlayerSelectedForVote = {
+                    selectedPlayerForVote = it
+                }
+            )
+        }
+
+        AnimatedVisibility(visible = !isTimeUp || isVotingOnLocation) {
+            LocationsList(
+                hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
+                selectedLocation = selectedLocationForVote,
+                locations = locations,
+                isTimeUp = isTimeUp,
+                onLocationSelectedForVote = {
+                    selectedLocationForVote = it
+                }
+            )
+        }
+
+        AnimatedVisibility(visible = isTimeUp && !hasMePlayerSubmittedVote) {
+            VoteButton(
+                isLoadingVote = isLoadingVote,
+                selectedPlayer = selectedPlayerForVote,
+                selectedLocation = selectedLocationForVote,
+                hasSelectedVote = hasSelectedVote,
+                onSubmitPlayerVoteClicked = onSubmitPlayerVoteClicked,
+                onSubmitLocationVoteClicked = onSubmitLocationVoteClicked
+            )
+        }
+
+        AnimatedVisibility(
+            visible =
+            gameResult != null &&
+                    (location != null || !isVotingOnLocation)
+                    && (players.find { it.isOddOneOut } != null || !isVotingOnOddOneOut)
+        ) {
+            CorrectAnswer(
+                isVotingOnLocation = isVotingOnLocation,
+                location = location.orEmpty(),
+                oddOneOutName = players.find { it.isOddOneOut }?.name.orEmpty()
+            )
+        }
+
+        VerticalSpacerS1200()
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onResetGameClicked
+        ) {
+            Text(text = "Restart Game")
+        }
+
+        Spacer(modifier = Modifier.height(Spacing.S800))
+
+        Button(
+            type = ButtonType.Regular,
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onEndGameClicked
+        ) {
+            Text(text = "End Game")
+        }
+
+        VerticalSpacerS1200()
     }
 }
 
@@ -333,9 +411,11 @@ private fun PlayerList(
 }
 
 @Composable
-private fun HelpButton(
+private fun ActionButtons(
     isTimeUp: Boolean,
+    videoCallLink: String?,
     onVotingQuestionClicked: () -> Unit,
+    onVideoCallButtonClicked: (String) -> Unit,
     onGamePlayQuestionClicked: () -> Unit
 ) {
     Row(
@@ -344,6 +424,20 @@ private fun HelpButton(
             .padding(bottom = Spacing.S50, top = Spacing.S1000)
     ) {
         Spacer(modifier = Modifier.weight(1f))
+
+        if (videoCallLink != null) {
+            CircularIcon(
+                icon = SpyfallIcon.VideoCall(""),
+                iconSize = IconSize.Medium,
+                padding = Spacing.S200,
+                backgroundColor = OddOneOutTheme.colorScheme.surfacePrimary,
+                contentColor = OddOneOutTheme.colorScheme.onSurfacePrimary,
+                onClick = { onVideoCallButtonClicked(videoCallLink) }
+            )
+
+            HorizontalSpacerS800()
+        }
+
         CircularIcon(
             icon = SpyfallIcon.Question(""),
             iconSize = IconSize.Medium,
@@ -407,7 +501,9 @@ private fun PreviewGamePlayScreen() {
             gameResult = null,
             onTimeToVote = {},
             onEndGameClicked = {},
-            onResetGameClicked = {}
+            onResetGameClicked = {},
+            videoCallLink = "https:zoom.com",
+            onVideoCallButtonClicked = {}
         )
     }
 }
@@ -435,7 +531,9 @@ private fun PreviewGamePlayScreenVoting() {
             gameResult = null,
             onTimeToVote = {},
             onEndGameClicked = {},
-            onResetGameClicked = {}
+            onResetGameClicked = {},
+            videoCallLink = "https:zoom.com",
+            onVideoCallButtonClicked = {}
         )
     }
 }
@@ -464,6 +562,8 @@ private fun PreviewGamePlayScreenVoted() {
             onTimeToVote = {},
             onEndGameClicked = {},
             onResetGameClicked = {},
+            videoCallLink = "https:zoom.com",
+            onVideoCallButtonClicked = {}
         )
     }
 }
@@ -492,6 +592,8 @@ private fun PreviewGamePlayScreenResults() {
             onTimeToVote = {},
             onEndGameClicked = {},
             onResetGameClicked = {},
+            videoCallLink = "https:zoom.com",
+            onVideoCallButtonClicked = {}
         )
     }
 }

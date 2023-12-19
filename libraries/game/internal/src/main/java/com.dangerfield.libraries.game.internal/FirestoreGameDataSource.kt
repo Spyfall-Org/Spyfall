@@ -3,6 +3,7 @@ package com.dangerfield.libraries.game.internal
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.Player
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,19 +16,21 @@ import se.ansman.dagger.auto.AutoBind
 import spyfallx.core.Try
 import spyfallx.core.failure
 import spyfallx.core.logOnError
+import java.time.Clock
 import javax.inject.Inject
 
 @AutoBind
 class FirestoreGameDataSource @Inject constructor(
     private val db: FirebaseFirestore,
     private val gameSerializer: GameMapSerializer,
-    private val playerSerializer: PlayerSerializer
+    private val playerSerializer: PlayerSerializer,
+    private val clock: Clock
 ) : GameDataSource {
 
     override suspend fun setGame(game: Game) {
         db.collection(GAMES_COLLECTION_KEY)
             .document(game.accessCode)
-            .set(gameSerializer.serializeGame(game))
+            .set(gameSerializer.serializeGame(game.withLastActiveAt()))
             .await()
     }
 
@@ -59,34 +62,34 @@ class FirestoreGameDataSource @Inject constructor(
     override suspend fun removePlayer(accessCode: String, id: String) = Try {
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
-            .update(FieldPath.of(PLAYERS_FIELD_KEY, id), FieldValue.delete())
+            .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY, id), FieldValue.delete())
             .await()
     }.ignoreValue()
 
     override suspend fun updatePlayers(accessCode: String, list: List<Player>) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .update(PLAYERS_FIELD_KEY, playerSerializer.serializePlayers(list))
+            .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY), playerSerializer.serializePlayers(list))
             .await()
     }.ignoreValue()
 
     override suspend fun addPlayer(accessCode: String, player: Player) {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .update(
+            .activeUpdate(
                 FieldPath.of(PLAYERS_FIELD_KEY, player.id),
-                playerSerializer.serializePlayer(player)
+                playerSerializer.serializePlayer(player),
             )
             .await()
     }
 
     override suspend fun changeName(accessCode: String, newName: String, id: String) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .update(FieldPath.of(PLAYERS_FIELD_KEY, id, USERNAME_FIELD_KEY), newName)
+            .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY, id, USERNAME_FIELD_KEY), newName)
             .await()
     }.ignoreValue()
 
     override suspend fun setLocation(accessCode: String, location: String) {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .update(LOCATION_FIELD_KEY, location)
+            .activeUpdate(FieldPath.of(LOCATION_FIELD_KEY), location)
             .await()
     }
 
@@ -96,13 +99,13 @@ class FirestoreGameDataSource @Inject constructor(
 
     override suspend fun setGameBeingStarted(accessCode: String, isBeingStarted: Boolean) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .update(IS_BEING_STARTED_KEY, isBeingStarted)
+            .activeUpdate(FieldPath.of(IS_BEING_STARTED_KEY), isBeingStarted)
             .await()
     }.ignoreValue()
 
     override suspend fun setStartedAt(accessCode: String, startedAt: Long): Try<Unit> = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .update(STARTED_AT_FIELD_KEY, startedAt)
+            .activeUpdate(FieldPath.of(STARTED_AT_FIELD_KEY), startedAt)
             .await()
     }.ignoreValue()
 
@@ -112,12 +115,19 @@ class FirestoreGameDataSource @Inject constructor(
         votedCorrectly: Boolean
     ) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .update(
+            .activeUpdate(
                 FieldPath.of(PLAYERS_FIELD_KEY, playerId, VOTED_CORRECTLY_FIELD_KEY),
                 votedCorrectly
             )
             .await()
     }.ignoreValue()
+
+    private fun Game.withLastActiveAt(): Game = copy(lastActiveAt = clock.millis())
+
+    private fun DocumentReference.activeUpdate(fieldPath: FieldPath, value: Any?) =
+        update(
+            fieldPath, value, FieldPath.of(LAST_ACTIVE_AT_FIELD_KEY), clock.millis()
+        )
 
     companion object {
         const val VOTED_CORRECTLY_FIELD_KEY = "votedCorrectly"
@@ -133,6 +143,7 @@ class FirestoreGameDataSource @Inject constructor(
         const val STARTED_AT_FIELD_KEY = "startedAt"
         const val LOCATIONS_FIELD_KEY = "locations"
         const val USERNAME_FIELD_KEY = "userName"
+        const val LAST_ACTIVE_AT_FIELD_KEY = "lastActiveAt"
         const val ROLE_FIELD_KEY = "role"
         const val IS_ODD_ONE_OUT_FIELD_KEY = "isOddOneOut"
         const val USER_ID_FIELD_KEY = "id"

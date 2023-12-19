@@ -11,10 +11,10 @@ import kotlinx.serialization.Serializable
  * if they have not already been loaded.
  */
 interface Session {
-    val user: User
     val startedAt: Long?
-    val activeGame: ActiveGame?
     val sessionId: Long?
+    val user: User
+    val activeGame: ActiveGame?
 }
 
 @JsonClass(generateAdapter = true)

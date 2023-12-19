@@ -17,7 +17,7 @@ import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.R
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import spyfallx.ui.color.AccentColor
+import com.dangerfield.libraries.ui.color.ThemeColor
 import spyfallx.ui.thenIf
 
 /**
@@ -31,7 +31,7 @@ fun PreviewContent(
     isDarkMode: Boolean = isSystemInDarkTheme(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     showBackground: Boolean = true,
-    accentColor: ColorPrimitive = AccentColor.entries.random().colorPrimitive,
+    themeColor: ColorPrimitive = ThemeColor.entries.random().colorPrimitive,
     content: @Composable BoxScope.() -> Unit,
 ) {
     var context = LocalContext.current
@@ -44,7 +44,7 @@ fun PreviewContent(
     CompositionLocalProvider(
         LocalContext provides context,
     ) {
-        OddOneOutTheme(isDarkMode = isDarkMode, accentColor = accentColor) {
+        OddOneOutTheme(isDarkMode = isDarkMode, themeColor = themeColor) {
             Box(
                 modifier = modifier
                     .thenIf(showBackground) { background(OddOneOutTheme.colorScheme.background) }

@@ -5,27 +5,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.dialog
 import com.dangerfield.features.newgame.internal.presentation.NewGameScreen
 import com.dangerfield.features.newgame.internal.presentation.NewGameViewModel
-import com.dangerfield.features.newgame.internal.presentation.VideoCallInfoBottomSheet
 import com.dangerfield.features.newgame.internal.presentation.model.Event
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
-import com.dangerfield.features.newgame.internal.usecase.RecognizedVideoCallingPlatforms
 import com.dangerfield.features.newgame.newGameNavigationRoute
+import com.dangerfield.features.videoCall.IsVideoCallingEnabled
+import com.dangerfield.features.videoCall.navigateToVideoCallLinkInfo
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
-import com.dangerfield.libraries.navigation.bottomsheet.bottomSheet
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
 class NewGameModuleNavGraphBuilder @Inject constructor(
     private val gameConfig: GameConfig,
-    private val recognizedVideoCallingPlatforms: RecognizedVideoCallingPlatforms
+    private val isVideoCallingEnabled: IsVideoCallingEnabled,
 ) : ModuleNavBuilder {
 
     // TODO consider making a router and asserting more control over navigation
@@ -76,19 +74,8 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
                 numOfPlayersState = state.numberOfPlayersState,
                 isFormValid = state.formState is FormState.Valid,
                 isSingleDeviceModeEnabled = gameConfig.isSingleDeviceModeEnabled,
-                isVideoCallLinkEnabled = recognizedVideoCallingPlatforms().isNotEmpty(),
+                isVideoCallLinkEnabled = isVideoCallingEnabled(),
                 onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo,
-            )
-        }
-
-        bottomSheet(
-            route = videoCallLinkInfoRoute.navRoute,
-            arguments = videoCallLinkInfoRoute.navArguments
-        ) {
-
-            VideoCallInfoBottomSheet(
-                recognizedPlatforms = recognizedVideoCallingPlatforms().keys.toList(),
-                onDismiss = router::dismissSheet,
             )
         }
     }

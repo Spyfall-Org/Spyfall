@@ -1,4 +1,5 @@
 @file:Suppress("MagicNumber", "VariableNaming")
+
 package com.dangerfield.libraries.ui.typography
 
 import androidx.compose.foundation.*
@@ -349,6 +350,15 @@ class Typography {
             lineBreak = LineBreak.Paragraph,
             identifier = "body-500"
         )
+
+        val B400 = TypographyToken(
+            fontFamily = FontFamilyToken.Poppins,
+            fontWeight = FontWeight.Normal,
+            fontSize = FontSize.S400,
+            lineHeight = LineHeight.H500,
+            lineBreak = LineBreak.Paragraph,
+            identifier = "body-400"
+        )
     }
 }
 
@@ -520,18 +530,29 @@ private class PreviewGroupPreviewParameterProvider : PreviewParameterProvider<Pr
             listOf(
                 PreviewGroup.Token(OddOneOutTheme.typography.Body.B800, "Welcome to Spyfall"),
                 PreviewGroup.Token(OddOneOutTheme.typography.Body.B700, "Welcome to Spyfall"),
-                PreviewGroup.Token(OddOneOutTheme.typography.Body.B700.Italic, "Welcome to Spyfall"),
+                PreviewGroup.Token(
+                    OddOneOutTheme.typography.Body.B700.Italic,
+                    "Welcome to Spyfall"
+                ),
                 PreviewGroup.Token(OddOneOutTheme.typography.Body.B600, "Welcome to Spyfall"),
-                PreviewGroup.Token(OddOneOutTheme.typography.Body.B600.Italic, "Welcome to Spyfall"),
+                PreviewGroup.Token(
+                    OddOneOutTheme.typography.Body.B600.Italic,
+                    "Welcome to Spyfall"
+                ),
                 PreviewGroup.Token(OddOneOutTheme.typography.Body.B500, "Welcome to Spyfall"),
-                PreviewGroup.Token(OddOneOutTheme.typography.Body.B500.Italic, "Welcome to Spyfall")
+                PreviewGroup.Token(
+                    OddOneOutTheme.typography.Body.B500.Italic,
+                    "Welcome to Spyfall"
+                ),
+                PreviewGroup.Token(OddOneOutTheme.typography.Body.B400, "Welcome to Spyfall"),
             )
         )
     )
 }
 
 fun TextStyle.toTypographyToken() = TypographyToken(
-    fontFamily = FontFamilyToken.entries.firstOrNull { it.fontFamily == this.fontFamily } ?: FontFamilyToken.Poppins,
+    fontFamily = FontFamilyToken.entries.firstOrNull { it.fontFamily == this.fontFamily }
+        ?: FontFamilyToken.Poppins,
     fontWeight = this.fontWeight ?: FontWeight.Normal,
     fontSize = fontSize,
     lineHeight = lineHeight,

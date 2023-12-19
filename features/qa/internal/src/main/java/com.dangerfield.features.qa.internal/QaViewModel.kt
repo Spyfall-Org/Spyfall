@@ -7,9 +7,11 @@ import com.dangerfield.libraries.config.ConfigOverrideRepository
 import com.dangerfield.libraries.config.ConfiguredValue
 import com.dangerfield.libraries.config.Experiment
 import com.dangerfield.libraries.coreflowroutines.launchOnStart
-import com.dangerfield.libraries.session.SessionRepository
+import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.SessionFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +25,7 @@ class QaViewModel @Inject constructor(
     private val configOverrideRepository: ConfigOverrideRepository,
     private val configuredValues: Set<@JvmSuppressWildcards ConfiguredValue<*>>,
     private val experiments: Set<@JvmSuppressWildcards Experiment<*>>,
-    private val sessionRepository: SessionRepository
+    private val sessionFlow: SessionFlow
 ) : ViewModel() {
 
     private val actions = Channel<Action>(Channel.UNLIMITED)
@@ -32,7 +34,7 @@ class QaViewModel @Inject constructor(
         for (action in actions) handleAction(action)
     }
         .launchOnStart {
-            sessionRepository.sessionFlow.collectLatest {
+            sessionFlow.collectLatest {
                 updateSessionId(it.sessionId?.toString())
             }
         }

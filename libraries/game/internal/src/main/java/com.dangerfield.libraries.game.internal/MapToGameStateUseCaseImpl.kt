@@ -38,10 +38,13 @@ class MapToGameStateUseCaseImpl @Inject constructor(
         return when {
             accessCode.isEmpty() || game == null -> GameState.DoesNotExist(accessCode)
 
+            isExpired(game) -> GameState.Expired(accessCode)
+
             hasNotStarted(game)
             -> GameState.Waiting(
                 accessCode = accessCode,
                 players = game.players,
+                videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() }
             )
 
             isBeingStarted(game)
@@ -58,6 +61,7 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                 players = game.players,
                 startedAt = startedAt,
                 timeLimitMins = game.timeLimitMins,
+                videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() },
                 firstPlayer = game.players.first(),
                 location = game.locationName,
                 locationNames = game.locationOptionNames,
@@ -72,7 +76,9 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                 accessCode = accessCode,
                 players = game.players,
                 location = game.locationName,
-                hasMePlayerVoted = game.player(session.user.id)?.hasVoted() == true
+                hasMePlayerVoted = game.player(session.user.id)?.hasVoted() == true,
+                locationNames = game.locationOptionNames,
+                videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() }
             )
 
             startedAt != null
@@ -81,11 +87,16 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                     && game.players.everyoneHasVoted()
             -> GameState.VotingEnded(
                 accessCode = accessCode,
-                result = calculateGameResult(game)
+                result = calculateGameResult(game),
+                locationNames = game.locationOptionNames,
+                players = game.players,
+                location = game.locationName,
+                videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() }
             )
 
             else -> GameState.Unknown(game = game).also {
-                Timber.e("""
+                Timber.e(
+                    """
                     Unknown game state for game:
                     accessCode: $accessCode
                     startedAt: $startedAt
@@ -93,10 +104,25 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                     remainingMillis: ${remainingMillis(startedAt ?: 0, game.timeLimitMins)}
                     everyoneHasARole: ${game.players.everyoneHasARole()}
                     everyoneHasVoted: ${game.players.everyoneHasVoted()}
-                    remainingTimeMillis = ${startedAt?.let { remainingMillis(it, game.timeLimitMins) }}
-                """.trimIndent())
+                    remainingTimeMillis = ${
+                        startedAt?.let {
+                            remainingMillis(
+                                it,
+                                game.timeLimitMins
+                            )
+                        }
+                    }
+                """.trimIndent()
+                )
             }
         }
+    }
+
+    private fun isExpired(game: Game): Boolean {
+        val lastActive = game.lastActiveAt ?: return false
+        val currentTime = clock.instant()
+        val minsSinceLastActivity = currentTime.minusMillis(lastActive).epochSecond / 60
+        return minsSinceLastActivity >= gameConfig.gameInactivityExpirationMins
     }
 
     private fun isBeingStarted(game: Game) = (game.isBeingStarted

@@ -1,10 +1,17 @@
 package com.dangerfield.features.example
 
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.fillRoute
+import com.dangerfield.libraries.navigation.route
 
-const val exampleNavigationRoute = "exampleNavigationRoute"
+fun Router.navigateToExample() {
+    navigate(
+        fillRoute(exampleRoute) {
+            //fill(someArgument, someValue)
+        }
+    )
+}
 
-fun NavController.navigateToExample(navOptions: NavOptions? = null) {
-    this.navigate(exampleNavigationRoute, navOptions)
+val exampleRoute = route("example") {
+    // argument(someArgument)
 }

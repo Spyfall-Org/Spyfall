@@ -8,7 +8,9 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.session.ActiveGame
-import com.dangerfield.libraries.session.SessionRepository
+import com.dangerfield.libraries.session.ClearActiveGame
+import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.UpdateActiveGame
 import spyfallx.core.Try
 import spyfallx.core.developerSnackIfDebug
 import spyfallx.core.failure
@@ -18,18 +20,20 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 class JoinGameUseCase @Inject constructor(
-    private val sessionRepository: SessionRepository,
     private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
-    private val gameConfig: GameConfig
+    private val gameConfig: GameConfig,
+    private val session: Session,
+    private val updateActiveGame: UpdateActiveGame,
+    private val clearActiveGame: ClearActiveGame
 ) {
     suspend operator fun invoke(
         accessCode: String, userName: String
     ): Try<Game> {
 
-        checkForExistingSession()
+        checkForExistingSession(accessCode, userName)
 
-        val id = sessionRepository.session.user.id ?: UUID.randomUUID().toString()
+        val id = session.user.id ?: UUID.randomUUID().toString()
 
         return if (accessCode.length < gameConfig.accessCodeLength || accessCode.length > gameConfig.accessCodeLength) {
             JoinGameError.InvalidAccessCodeLength(requiredLength = gameConfig.accessCodeLength)
@@ -106,7 +110,7 @@ class JoinGameUseCase @Inject constructor(
     }
 
     private suspend fun updateSession(userId: String, accessCode: String) {
-        sessionRepository.updateActiveGame(
+        updateActiveGame(
             ActiveGame(
                 accessCode = accessCode,
                 userId = userId
@@ -114,9 +118,9 @@ class JoinGameUseCase @Inject constructor(
         )
     }
 
-    private suspend fun checkForExistingSession() {
-        if (sessionRepository.session.activeGame != null) {
-            sessionRepository.updateActiveGame(null)
+    private suspend fun checkForExistingSession(accessCode: String, userName: String) {
+        if (session.activeGame != null) {
+            clearActiveGame()
             developerSnackIfDebug { "User is already in an existing game while joining a game." }
         }
     }

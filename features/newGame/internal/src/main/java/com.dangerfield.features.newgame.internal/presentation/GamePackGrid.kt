@@ -1,23 +1,19 @@
 package com.dangerfield.features.newgame.internal.presentation
 
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ThemePreviews
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.Spacing
-import spyfallx.ui.color.AccentColor
+import com.dangerfield.libraries.ui.color.ThemeColor
 
 @Composable
 fun GamePackGrid(
@@ -32,7 +28,7 @@ fun GamePackGrid(
         itemContent = { index, gamePack ->
             GamePackItem(
                 modifier = Modifier.fillMaxHeight(),
-                colorPrimitive = AccentColor.entries.toTypedArray()
+                colorPrimitive = ThemeColor.entries.toTypedArray()
                     .let { it[index % it.size] }.colorPrimitive,
                 type = gamePack.type,
                 number = gamePack.number,

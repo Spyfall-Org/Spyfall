@@ -13,6 +13,7 @@ android {
 }
 dependencies {
     implementation(projects.features.waitingRoom)
+    implementation(projects.features.videoCall)
     implementation(projects.features.gamePlay)
     implementation(projects.libraries.common)
     implementation(projects.libraries.game)

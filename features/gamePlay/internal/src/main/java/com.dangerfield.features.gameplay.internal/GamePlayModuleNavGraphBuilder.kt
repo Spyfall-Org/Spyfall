@@ -12,12 +12,14 @@ import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.Submi
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.SubmitOddOneOutVote
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameKilled
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameReset
+import com.dangerfield.features.videoCall.navigateToVideoCallBottomSheet
+import com.dangerfield.features.videoCall.navigateToVideoCallLinkInfo
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
-import com.dangerfield.libraries.navigation.bottomsheet.bottomSheet
+import com.dangerfield.libraries.navigation.floatingwindow.bottomSheet
 import com.dangerfield.libraries.navigation.navArgument
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
@@ -63,7 +65,9 @@ class GamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                 gameResult = state.gameResult,
                 onTimeToVote = router::navigateToVotingInfo,
                 onResetGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.ResetGame) },
-                onEndGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.EndGame) }
+                onEndGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.EndGame) },
+                videoCallLink = state.videoCallLink,
+                onVideoCallButtonClicked =  router::navigateToVideoCallBottomSheet,
             )
         }
 

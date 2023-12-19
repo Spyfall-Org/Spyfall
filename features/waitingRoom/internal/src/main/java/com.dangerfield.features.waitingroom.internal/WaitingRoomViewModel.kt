@@ -52,6 +52,7 @@ class WaitingRoomViewModel @Inject constructor(
         }
 
     private val accessCode: String get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
+
     override val initialState = State(
         accessCode = accessCode,
         players = emptyList(),

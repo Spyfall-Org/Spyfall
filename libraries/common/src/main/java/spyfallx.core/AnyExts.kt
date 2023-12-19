@@ -7,7 +7,7 @@ import kotlin.contracts.contract
 /**
  * Convenience method for only executing logic if the parameters are not null
  */
-fun <A, B, T> allOrNone(one: A?, two: B?, block: (A, B) -> T): T? = if (one != null && two != null) block(one, two) else null
+inline fun <A, B, T> allOrNone(one: A?, two: B?, block: (A, B) -> T): T? = if (one != null && two != null) block(one, two) else null
 
 /**
  * Convenience method for only executing logic if the parameters are not null

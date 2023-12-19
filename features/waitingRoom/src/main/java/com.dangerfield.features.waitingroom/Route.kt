@@ -8,7 +8,7 @@ import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
 
 fun Router.navigateToWaitingRoom(
-    accessCode: String,
+    accessCode: String
 ) {
     navigate(
         fillRoute(waitingRoomRoute) {

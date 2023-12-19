@@ -2,6 +2,7 @@ package com.dangerfield.features.settings.internal
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dangerfield.features.colorpicker.navigateToColorPicker
 import com.dangerfield.features.qa.navigateToQa
 import com.dangerfield.features.settings.settingsNavigationRoute
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
@@ -24,7 +25,8 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
                 versionName = buildInfo.versionName,
                 isDebug = buildInfo.isDebug,
                 onQaOptionClicked = router::navigateToQa,
-                onNavigateBack = router::goBack
+                onNavigateBack = router::goBack,
+                onThemeOptionClicked = router::navigateToColorPicker
             )
         }
     }

@@ -22,6 +22,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     versionName: String,
     isDebug: Boolean = false,
+    onThemeOptionClicked: () -> Unit = { },
     onQaOptionClicked: () -> Unit = { },
     onNavigateBack: () -> Unit = { },
 ) {
@@ -42,7 +43,7 @@ fun SettingsScreen(
 
             SettingsOption(
                 text = "Theme",
-                onClick = { },
+                onClick = onThemeOptionClicked,
                 leadingIcon = SpyfallIcon.Theme("Change Theme"),
             )
 

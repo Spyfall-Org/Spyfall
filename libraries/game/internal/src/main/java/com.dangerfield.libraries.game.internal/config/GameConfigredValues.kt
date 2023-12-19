@@ -56,6 +56,16 @@ class MinPlayers @Inject constructor(
 }
 
 @AutoBindIntoSet
+class InactivityExpirationMins @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Int>() {
+    override val displayName: String = "Inactivity Expiration Mins"
+    override val path: String = "game.inactivityExpirationMins"
+    override val default: Int = 30
+    override fun resolveValue(): Int = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
 class LocationsPerGame @Inject constructor(
     private val appConfigMap: AppConfigMap
 ) : ConfiguredValue<Int>() {

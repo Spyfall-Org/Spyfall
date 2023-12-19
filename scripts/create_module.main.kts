@@ -105,11 +105,12 @@ fun createPackage(directory: String, featureName: String, isFeature: Boolean, is
     if (!isFeature || isInternal ) {
         navigationFile.delete()
     } else {
+        val capFeatureName = featureName.replaceFirstChar { it.uppercase() }
         renameExampleFile(navigationFile, featureName)
-        navigationFile.renameTo(File("$mainDir/Navigation.kt"))
+        navigationFile.renameTo(File("$mainDir/${capFeatureName}Navigation.kt"))
     }
 
-    if (isInternal) {
+    if (isInternal && isFeature) {
         renameExampleFile(navGraphBuilderFile, featureName)
         navGraphBuilderFile.renameTo(File("$mainDir/ModuleNavGraphBuilder.kt"))
     } else {
@@ -152,7 +153,7 @@ fun updateAppGradleFile(moduleType: String, moduleName: String, isInternal: Bool
 
     val internalAddition = if (isInternal) ".internal" else ""
     val moduleParentName = if (moduleType == "library") "libraries" else "features"
-    val moduleNameCleaned = moduleName.replace(":", ".").lowercase()
+    val moduleNameCleaned = moduleName.replace(":", ".")
     val lineToAdd = "\timplementation(projects.$moduleParentName.$moduleNameCleaned$internalAddition)"
 
     val lines = appBuildGradleFile.readLines().toMutableList()

@@ -8,45 +8,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.dangerfield.features.welcome.internal.WelcomeViewModel.WelcomeEvent.ForcedUpdateRequired
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.IconButton.Size.Medium
-import com.dangerfield.libraries.ui.components.Screen
-import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.spyfall.libraries.resources.R
+import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.spyfall.libraries.resources.R
 
 @Composable
 @Suppress("MagicNumber")
 fun WelcomeScreen(
-    onForcedUpdateRequired: () -> Unit = {},
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
     onRulesClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
-    viewModel: WelcomeViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.collectAsState()
-
-    when {
-        state.value.events.contains(ForcedUpdateRequired) -> {
-            viewModel.onEventHandled(ForcedUpdateRequired)
-            onForcedUpdateRequired()
-        }
-    }
 
     WelcomeScreenContent(
         onNewGameClicked = onNewGameClicked,

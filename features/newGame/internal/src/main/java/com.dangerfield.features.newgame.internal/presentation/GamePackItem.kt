@@ -32,8 +32,8 @@ import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import com.dangerfield.spyfall.features.newgame.internal.R
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.spyfall.libraries.resources.R
 import spyfallx.ui.color.background
 
 @Composable

@@ -191,7 +191,7 @@ private fun ButtonPreview(
     PreviewContent(
         contentPadding = PaddingValues(Spacing.S200),
         isDarkMode = state.inverse,
-        accentColor = ColorPrimitive.CherryPop700,
+        themeColor = ColorPrimitive.CherryPop700,
         showBackground = true,
         modifier = Modifier
             .fillMaxWidth()

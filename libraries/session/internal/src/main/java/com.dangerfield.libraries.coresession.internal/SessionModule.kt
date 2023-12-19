@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 object SessionModule {
 
     @Provides
-    fun providesSession(sessionRepository: SessionRepositoryImpl): Session {
+    fun providesSession(sessionRepository: SessionRepository): Session {
         return sessionRepository.session
     }
 }

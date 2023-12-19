@@ -1,5 +1,6 @@
 package com.dangerfield.spyfall
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.SnackbarDuration
@@ -17,14 +18,15 @@ import com.dangerfield.features.blockingerror.blockingErrorRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.coreflowroutines.observeWithLifecycle
-import com.dangerfield.libraries.navigation.bottomsheet.BottomSheetHost
-import com.dangerfield.libraries.navigation.bottomsheet.BottomSheetNavigator
-import com.dangerfield.libraries.navigation.bottomsheet.getBottomSheetNavigator
+import com.dangerfield.libraries.navigation.floatingwindow.FloatingWindowHost
+import com.dangerfield.libraries.navigation.floatingwindow.FloatingWindowNavigator
+import com.dangerfield.libraries.navigation.floatingwindow.getFloatingWindowNavigator
 import com.dangerfield.libraries.navigation.fadeInToEndAnim
 import com.dangerfield.libraries.navigation.fadeInToStartAnim
 import com.dangerfield.libraries.navigation.fadeOutToEndAnim
 import com.dangerfield.libraries.navigation.fadeOutToStartAnim
 import com.dangerfield.libraries.navigation.internal.NavControllerRouter
+import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.Snackbar
 import com.dangerfield.libraries.ui.components.isDebugMessage
@@ -33,22 +35,21 @@ import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import kotlinx.coroutines.flow.receiveAsFlow
 import spyfallx.core.UserMessagePresenter
-import spyfallx.ui.color.AccentColor
 
 @Suppress("MagicNumber")
 @Composable
 fun SpyfallApp(
-    accentColor: AccentColor,
+    accentColor: ColorPrimitive,
     navBuilderRegistry: NavBuilderRegistry,
     isUpdateRequired: Boolean,
     hasBlockingError: Boolean,
 ) {
-    val navController = rememberNavController(BottomSheetNavigator())
+    val navController = rememberNavController(FloatingWindowNavigator())
     val coroutineScope = rememberCoroutineScope()
 
     val router = remember {
         NavControllerRouter(
-            navController = navController,
+            navHostController = navController,
             coroutineScope = coroutineScope
         )
     }
@@ -80,7 +81,7 @@ fun SpyfallApp(
 
     OddOneOutTheme(
         isDarkMode = isSystemInDarkTheme(),
-        accentColor = accentColor.colorPrimitive
+        themeColor = accentColor
     ) {
         Screen(
             snackbarHost = {
@@ -97,7 +98,7 @@ fun SpyfallApp(
         ) {
             NavHost(
                 modifier = Modifier.imePadding(),
-                navController = navController,
+                navController = router.navHostController,
                 startDestination = startingRoute.navRoute,
                 enterTransition = { fadeInToStartAnim() },
                 exitTransition = { fadeOutToStartAnim() },
@@ -110,10 +111,10 @@ fun SpyfallApp(
                 )
             }
 
-            val bottomSheetNavigator = navController.getBottomSheetNavigator()
+            val bottomSheetNavigator = router.navHostController.getFloatingWindowNavigator()
 
             bottomSheetNavigator?.let {
-                BottomSheetHost(bottomSheetNavigator)
+                FloatingWindowHost(bottomSheetNavigator)
             }
         }
     }

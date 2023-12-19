@@ -18,6 +18,7 @@ class JoinGameViewModel @Inject constructor(
     private val joinGame: JoinGameUseCase
 ) : ViewModel() {
 
+    // TODO add form validation to the UI
     private val actions = Channel<Action>(Channel.UNLIMITED)
     private val _events = Channel<Event>()
 

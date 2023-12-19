@@ -68,7 +68,14 @@ data class Game(
      * The version of the game being played. Older versions of the app may not be able to play with newer versions
      * if the game model changes. So we track the model being used with a version number
      */
-    val version: Int
+    val version: Int,
+
+    /**
+     * The timestamp of the last activity in the game
+     * Activity defined as any change to the game model
+     * player joining, game starting, game restarting, etc.
+     */
+    val lastActiveAt: Long?
 ) {
     fun player(id: String?): Player? = players.find { it.id == id }
 }

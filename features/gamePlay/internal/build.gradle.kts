@@ -12,6 +12,7 @@ android {
     namespace = "com.dangerfield.spyfall.features.gameplay.internal"
 }
 dependencies {
+    implementation(projects.features.videoCall)
     implementation(projects.libraries.game)
     implementation(projects.features.gamePlay)
     implementation(projects.features.welcome)

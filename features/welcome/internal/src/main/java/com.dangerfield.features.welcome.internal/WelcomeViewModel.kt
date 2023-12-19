@@ -1,57 +1,83 @@
 package com.dangerfield.features.welcome.internal
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
-import com.dangerfield.libraries.coreflowroutines.launchOnStart
+import com.dangerfield.features.welcome.internal.WelcomeViewModel.Action
+import com.dangerfield.features.welcome.internal.WelcomeViewModel.Event
+import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.game.GameRepository
+import com.dangerfield.libraries.game.GameState
+import com.dangerfield.libraries.game.MapToGameStateUseCase
+import com.dangerfield.libraries.session.ClearActiveGame
+import com.dangerfield.libraries.session.Session
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import spyfallx.core.developerSnackIfDebug
+import spyfallx.core.withBackoffRetry
 import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-    private val isAppUpdateRequired: IsAppUpdateRequired
-) : ViewModel() {
+    private val session: Session,
+    private val clearActiveGame: ClearActiveGame,
+    private val gameRepository: GameRepository,
+    private val mapToGameState: MapToGameStateUseCase,
+) : SEAViewModel<Unit, Event, Action>() {
 
-    private val uiEventsFlow = MutableStateFlow(setOf<WelcomeEvent>())
+    override val initialState = Unit
 
-    val state = uiEventsFlow.map {
-        State(
-            events = it.toList()
-        )
+    override suspend fun handleAction(action: Action) {
+        when (action) {
+            Action.CheckForActiveGame -> checkForActiveGame()
+        }
     }
-        .launchOnStart {
-            if (isAppUpdateRequired()) {
-                uiEventsFlow.update {
-                    it + WelcomeEvent.ForcedUpdateRequired
-                }
+
+    private suspend fun checkForActiveGame() {
+        val activeGame = session.activeGame
+        if (activeGame != null) {
+            withBackoffRetry(
+                retries = 3,
+                initialDelayMillis = 500,
+                factor = 2.0,
+            ) {
+                gameRepository
+                    .getGame(activeGame.accessCode)
             }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = State(
-                events = emptyList()
-            )
-        )
+                .map { game ->
+                    mapToGameState(game.accessCode, game)
+                }
+                .onSuccess {
+                    developerSnackIfDebug {
+                        "Found game with state: ${it::class.java.simpleName}. Access code: ${activeGame.accessCode}"
+                    }
 
-    fun onEventHandled(event: WelcomeEvent) {
-        uiEventsFlow.update {
-            it - event
+                    when (it) {
+                        is GameState.Expired -> {
+                            gameRepository.end(activeGame.accessCode)
+                            clearActiveGame()
+                        }
+
+                        is GameState.Waiting,
+                        is GameState.Starting -> {
+                            sendEvent(Event.GameInWaitingRoomFound(activeGame.accessCode))
+                        }
+
+                        is GameState.Unknown,
+                        is GameState.DoesNotExist -> clearActiveGame()
+
+                        is GameState.Started,
+                        is GameState.Voting,
+                        is GameState.VotingEnded -> {
+                            sendEvent(Event.GameInProgressFound(activeGame.accessCode))
+                        }
+                    }
+                }
         }
     }
 
-    data class State(
-        val events: List<WelcomeEvent>,
-    )
+    sealed class Action {
+        data object CheckForActiveGame : Action()
+    }
 
-    sealed class WelcomeEvent {
-        data object ForcedUpdateRequired : WelcomeEvent()
+    sealed class Event {
+        data class GameInWaitingRoomFound(val accessCode: String) : Event()
+        data class GameInProgressFound(val accessCode: String) : Event()
     }
 }

@@ -17,27 +17,16 @@ import com.dangerfield.features.newgame.internal.presentation.model.timeLimit
 import com.dangerfield.features.newgame.internal.presentation.model.userName
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
-import com.dangerfield.features.newgame.internal.usecase.IsRecognizedVideoCallingUrl
-import com.dangerfield.libraries.coreflowroutines.collect
+import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
 import com.dangerfield.libraries.coreflowroutines.launchOnStart
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import spyfallx.core.Try
@@ -47,7 +36,6 @@ import spyfallx.core.illegalState
 import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @Suppress("TooManyFunctions")
 @HiltViewModel
@@ -56,7 +44,7 @@ class NewGameViewModel @Inject constructor(
     private val createMultiDeviceGameGameUseCase: CreateGame,
     private val createSingleDeviceGameUseCase: CreateSingleDeviceGame,
     private val gameConfig: GameConfig,
-    private val isRecognizedVideoCallingUrl: IsRecognizedVideoCallingUrl
+    private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink
 ) : ViewModel() {
 
     // TODO rework this to allow for a debounce on the video call link
@@ -207,7 +195,7 @@ class NewGameViewModel @Inject constructor(
         updateState {
             val videoCallLinkState = if (link.isEmpty()) {
                 Idle(link)
-            } else if (isRecognizedVideoCallingUrl(link)) {
+            } else if (isRecognizedVideoCallLink(link)) {
                 Valid(link)
             } else {
                 Invalid(

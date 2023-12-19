@@ -105,7 +105,8 @@ private val iconButtons = listOf(
     SpyfallIcon.MoreVert(""),
     SpyfallIcon.Person(""),
     SpyfallIcon.Settings(""),
-)
+    SpyfallIcon.Share(""),
+    )
 
 @Suppress("MagicNumber")
 @Preview(device = "spec:shape=Normal,width=1200,height=400,unit=dp,dpi=150")

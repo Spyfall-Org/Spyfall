@@ -3,12 +3,12 @@ package spyfallx.core
 import kotlinx.coroutines.flow.StateFlow
 
 interface ApplicationStateRepository {
-    fun getApplicationStateFlow(): StateFlow<AppState>
+    fun foregroundStateFlow(): StateFlow<ForegroundState>
     fun onAppStart()
     fun onAppStop()
 }
 
-enum class AppState {
+enum class ForegroundState {
     FOREGROUND,
     BACKGROUND
 }

@@ -7,13 +7,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.gameplay.navigateToGamePlayScreen
+import com.dangerfield.features.videoCall.navigateToVideoCallBottomSheet
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Action.LeaveGame
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Action.LoadRoom
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Action.StartGame
+import com.dangerfield.features.waitingroom.internal.changename.ChangeNameDialog
+import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewModel
+import com.dangerfield.features.waitingroom.internal.changename.changeNameRoute
+import com.dangerfield.features.waitingroom.internal.changename.navigateToChangeName
 import com.dangerfield.features.waitingroom.waitingRoomRoute
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.floatingwindow.bottomSheet
+import com.dangerfield.libraries.navigation.floatingwindow.dialog
+import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.ui.showMessage
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.Message
@@ -66,12 +74,36 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
                 isLoadingStart = state.isLoadingStart,
                 videoCallLink = state.videoCallLink,
                 onStartGameClicked = { viewModel.takeAction(StartGame) },
-                onCallLinkButtonClicked = {
-                    /*
-                    show a pop up modal to open or copy link
-                     */
-                },
-                onLeaveGameClicked = { viewModel.takeAction(LeaveGame) }
+                onCallLinkButtonClicked = router::navigateToVideoCallBottomSheet,
+                onLeaveGameClicked = { viewModel.takeAction(LeaveGame) },
+                onChangeNameClicked = { router.navigateToChangeName(state.accessCode) }
+            )
+        }
+
+        dialog(
+            route = changeNameRoute.navRoute,
+            arguments = changeNameRoute.navArguments
+        ) {
+            val viewModel = hiltViewModel<ChangeNameViewModel>()
+
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
+            ObserveWithLifecycle(flow = viewModel.events) { event ->
+                when (event) {
+                    is ChangeNameViewModel.Event.NameChanged -> router.goBack()
+                }
+            }
+
+            ChangeNameDialog(
+                name = state.name,
+                onNameUpdated = { viewModel.takeAction(ChangeNameViewModel.Action.UpdateName(it)) },
+                onChangeNameClicked = { viewModel.takeAction(ChangeNameViewModel.Action.SubmitNameChange(it)) },
+                minNameLength = state.minNameLength,
+                maxNameLength = state.maxNameLength,
+                isNameTaken = state.isNameTaken,
+                isLoading = state.isLoading,
+                isInvalidLength = state.isNameInvalidLength,
+                onDismissRequest =  router::goBack
             )
         }
     }

@@ -13,5 +13,6 @@ android {
 
 dependencies {
     implementation(projects.libraries.common)
+    implementation(projects.libraries.ui)
     implementation(project.libs.kotlinx.serialization.json)
 }

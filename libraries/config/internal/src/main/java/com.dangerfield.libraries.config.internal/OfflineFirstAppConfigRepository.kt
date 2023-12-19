@@ -2,6 +2,7 @@ package com.dangerfield.libraries.config.internal
 
 import androidx.annotation.VisibleForTesting
 import com.dangerfield.libraries.config.AppConfigMap
+import com.dangerfield.libraries.config.AppConfigRepository
 import com.dangerfield.libraries.config.ConfigOverrideRepository
 import com.dangerfield.libraries.config.internal.model.FallbackConfigMapMapBased
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
@@ -27,7 +28,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import se.ansman.dagger.auto.AutoBind
 import se.ansman.dagger.auto.AutoInitialize
-import spyfallx.core.AppState
+import spyfallx.core.ForegroundState
 import spyfallx.core.ApplicationStateRepository
 import spyfallx.core.withBackoffRetry
 import timber.log.Timber
@@ -69,11 +70,11 @@ class OfflineFirstAppConfigRepository @Inject constructor(
 
     init {
         Timber.d("Initializing AppConfigRepository")
-        applicationStateRepository.getApplicationStateFlow()
+        applicationStateRepository.foregroundStateFlow()
             .onEach { state ->
                 when (state) {
-                    AppState.FOREGROUND -> startAppConfigRefresh()
-                    AppState.BACKGROUND -> stopAppConfigRefresh()
+                    ForegroundState.FOREGROUND -> startAppConfigRefresh()
+                    ForegroundState.BACKGROUND -> stopAppConfigRefresh()
                 }
             }.launchIn(applicationScope)
     }

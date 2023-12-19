@@ -39,6 +39,8 @@ abstract class SEAViewModel<S, E, A> : ViewModel() {
         _events.trySend(event)
     }
 
+    //TODO this allows for global app updates, the flow collector method more or less meant you could
+    // only update from within an action, which enforced UDF
     protected suspend fun updateState(update: suspend (S) -> S) {
         Try {
             _state.update { update(it) }

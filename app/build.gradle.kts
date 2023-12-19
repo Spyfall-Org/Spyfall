@@ -89,6 +89,8 @@ dependencies {
      */
     implementation(projects.features.forcedUpdate)
     implementation(projects.features.forcedUpdate.internal)
+    implementation(projects.features.colorPicker)
+    implementation(projects.features.colorPicker.internal)
     implementation(projects.features.welcome)
     implementation(projects.features.welcome.internal)
     implementation(projects.features.joinGame)
@@ -124,6 +126,10 @@ dependencies {
 	implementation(projects.features.rules.internal)
 	implementation(projects.libraries.navigation)
 	implementation(projects.libraries.navigation.internal)
+	implementation(projects.features.videoCall)
+	implementation(projects.features.videoCall.internal)
+	implementation(projects.libraries.network)
+	implementation(projects.libraries.network.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations

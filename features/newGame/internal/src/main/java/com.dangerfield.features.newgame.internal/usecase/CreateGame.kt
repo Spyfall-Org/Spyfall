@@ -9,10 +9,13 @@ import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.session.ActiveGame
-import com.dangerfield.libraries.session.SessionRepository
+import com.dangerfield.libraries.session.ClearActiveGame
+import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.UpdateActiveGame
 import spyfallx.core.Try
 import spyfallx.core.developerSnackIfDebug
 import spyfallx.core.failure
+import java.time.Clock
 import java.util.UUID
 import javax.inject.Inject
 
@@ -21,7 +24,10 @@ class CreateGame @Inject constructor(
     private val gameRepository: GameRepository,
     private val getGamePlayLocations: GetGamePlayLocations,
     private val gameConfig: GameConfig,
-    private val sessionRepository: SessionRepository,
+    private val clock: Clock,
+    private val session: Session,
+    private val updateActiveGame: UpdateActiveGame,
+    private val clearActiveGame: ClearActiveGame
 ) {
     suspend operator fun invoke(
         userName: String,
@@ -54,7 +60,7 @@ class CreateGame @Inject constructor(
 
         val accessCode = generateAccessCode.invoke().getOrThrow()
         val locations = getGamePlayLocations(packs).getOrThrow()
-        val userId = sessionRepository.session.user.id ?: UUID.randomUUID().toString()
+        val userId = session.user.id ?: UUID.randomUUID().toString()
         val currentPlayer = Player(
             id = userId,
             role = null,
@@ -74,13 +80,14 @@ class CreateGame @Inject constructor(
             locationOptionNames = locations.map { it.name },
             videoCallLink = videoCallLink,
             version = CURRENT_GAME_MODEL_VERSION,
-            accessCode = accessCode
+            accessCode = accessCode,
+            lastActiveAt = clock.millis()
         )
 
         gameRepository.create(game)
             .map { accessCode }
             .onSuccess {
-                sessionRepository.updateActiveGame(
+                updateActiveGame(
                     ActiveGame(
                         accessCode = accessCode,
                         userId = userId
@@ -91,12 +98,11 @@ class CreateGame @Inject constructor(
     }
 
     private suspend fun checkForExistingSession() {
-        if (sessionRepository.session.activeGame != null) {
-            sessionRepository.updateActiveGame(null)
+        if (session.activeGame != null) {
+            clearActiveGame()
             developerSnackIfDebug {
-                "User is already in an existing game while joining a game."
+                "User is already in an existing game while creating a game."
             }
         }
     }
-
 }

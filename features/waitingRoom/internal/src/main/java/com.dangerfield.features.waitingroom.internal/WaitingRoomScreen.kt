@@ -1,7 +1,10 @@
 package com.dangerfield.features.waitingroom.internal
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,23 +15,28 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.DisplayablePlayer
 import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
-import spyfallx.ui.color.background
+import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.header.Header
-import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
+import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.modifiers.drawVerticalScrollbar
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import spyfallx.ui.color.background
 
 @Composable
 fun WaitingRoomScreen(
@@ -38,11 +46,17 @@ fun WaitingRoomScreen(
     videoCallLink: String?,
     isLoadingRoom: Boolean,
     isLoadingStart: Boolean,
+    onChangeNameClicked: () -> Unit,
     onStartGameClicked: () -> Unit,
     onLeaveGameClicked: () -> Unit,
     onCallLinkButtonClicked: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    var showLeaveGameDialog by remember { mutableStateOf(false) }
+
+    BackHandler {
+        showLeaveGameDialog = !showLeaveGameDialog
+    }
 
     Screen(
         modifier = modifier,
@@ -53,81 +67,125 @@ fun WaitingRoomScreen(
             )
         }
     ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .drawVerticalScrollbar(
-                    scrollState,
-                    OddOneOutTheme.colorScheme.surfaceDisabled.color
+        Box {
+            WaitingRoomScreenContent(
+                scrollState = scrollState,
+                it = it,
+                accessCode = accessCode,
+                videoCallLink = videoCallLink,
+                onCallLinkButtonClicked = onCallLinkButtonClicked,
+                isLoadingRoom = isLoadingRoom,
+                players = players,
+                isLoadingStart = isLoadingStart,
+                onLeaveGameClicked = onLeaveGameClicked,
+                onStartGameClicked = onStartGameClicked,
+                onChangeNameClicked = onChangeNameClicked
+            )
+
+            if (showLeaveGameDialog) {
+                WaitingRoomLeavingDialog(
+                    onDismissRequest = { showLeaveGameDialog = false },
+                    onLeaveConfirmed = onLeaveGameClicked
                 )
-                .padding(it)
-                .padding(horizontal = Spacing.S1000)
-        ) {
-            Spacer(modifier = Modifier.height(Spacing.S1000))
-            Row {
-                Text(text = "Access Code:", typographyToken = OddOneOutTheme.typography.Default.Bold)
-                Spacer(modifier = Modifier.width(Spacing.S500))
-                SelectionContainer {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = accessCode,
-                        typographyToken = OddOneOutTheme.typography.Default
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-
-                if (videoCallLink != null) {
-                    IconButton(
-                        icon = SpyfallIcon.VideoCall("Join game video call"),
-                        onClick = {
-                            onCallLinkButtonClicked(videoCallLink)
-                        }
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(Spacing.S500))
-
-            if (isLoadingRoom) {
-                CircularProgressIndicator()
-            } else {
-                PlayerList(players)
-            }
-
-            Spacer(modifier = Modifier.height(Spacing.S1200))
-
-            if (!isLoadingStart) {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = onLeaveGameClicked,
-                    type = ButtonType.Regular
-                ) {
-                    Text(text = "Leave Game")
-                }
-
-                Spacer(modifier = Modifier.height(Spacing.S1000))
-
-
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = onStartGameClicked
-                ) {
-                    Text(text = "Start Game")
-                }
-            } else {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = androidx.compose.ui.Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
             }
         }
     }
 }
 
 @Composable
-private fun PlayerList(players: List<DisplayablePlayer>) {
+private fun WaitingRoomScreenContent(
+    scrollState: ScrollState,
+    it: PaddingValues,
+    accessCode: String,
+    videoCallLink: String?,
+    onCallLinkButtonClicked: (String) -> Unit,
+    onChangeNameClicked: () -> Unit,
+    isLoadingRoom: Boolean,
+    players: List<DisplayablePlayer>,
+    isLoadingStart: Boolean,
+    onLeaveGameClicked: () -> Unit,
+    onStartGameClicked: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(scrollState)
+            .drawVerticalScrollbar(
+                scrollState,
+                OddOneOutTheme.colorScheme.surfaceDisabled.color
+            )
+            .padding(it)
+            .padding(horizontal = Spacing.S1000)
+    ) {
+        Spacer(modifier = Modifier.height(Spacing.S1000))
+        Row {
+            Text(text = "Access Code:", typographyToken = OddOneOutTheme.typography.Default.Bold)
+            Spacer(modifier = Modifier.width(Spacing.S500))
+            SelectionContainer {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = accessCode,
+                    typographyToken = OddOneOutTheme.typography.Default
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+
+            if (videoCallLink != null) {
+                IconButton(
+                    icon = SpyfallIcon.VideoCall("Join game video call"),
+                    onClick = {
+                        onCallLinkButtonClicked(videoCallLink)
+                    }
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(Spacing.S500))
+
+        if (isLoadingRoom) {
+            CircularProgressIndicator()
+        } else {
+            PlayerList(
+                players = players,
+                onChangeNameClicked = onChangeNameClicked
+            )
+        }
+
+        Spacer(modifier = Modifier.height(Spacing.S1200))
+
+        if (!isLoadingStart) {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onLeaveGameClicked,
+                type = ButtonType.Regular
+            ) {
+                Text(text = "Leave Game")
+            }
+
+            Spacer(modifier = Modifier.height(Spacing.S1000))
+
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onStartGameClicked
+            ) {
+                Text(text = "Start Game")
+            }
+        } else {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlayerList(
+    players: List<DisplayablePlayer>,
+    onChangeNameClicked: () -> Unit,
+) {
     players.forEachIndexed { index, player ->
         if (index != 0) {
             Spacer(modifier = Modifier.height(Spacing.S500))
@@ -148,7 +206,7 @@ private fun PlayerList(players: List<DisplayablePlayer>) {
             Text(text = player.name)
             if (player.isMe) {
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(icon = SpyfallIcon.Pencil("Change name"), onClick = { })
+                IconButton(icon = SpyfallIcon.Pencil("Change name"), onClick = onChangeNameClicked)
             }
         }
     }
@@ -175,6 +233,7 @@ fun PreviewWaitingRoomScreen() {
             onCallLinkButtonClicked = { },
             onStartGameClicked = {},
             onLeaveGameClicked = {},
+            onChangeNameClicked = {}
         )
     }
 }

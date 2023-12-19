@@ -9,7 +9,7 @@ import com.dangerfield.libraries.navigation.route
 
 fun Router.navigateToGamePlayScreen(
     accessCode: String,
-    timeLimit: Int
+    timeLimit: Int? = null
 ) {
     navigate(
         fillRoute(gamePlayScreenRoute) {
@@ -21,7 +21,11 @@ fun Router.navigateToGamePlayScreen(
 }
 
 val accessCodeArgument = navArgument("accessCode") { type = NavType.StringType }
-val timeLimitArgument = navArgument("timeLimit") { type = NavType.IntType }
+
+val timeLimitArgument = navArgument("timeLimit") {
+    type = NavType.IntType
+    defaultValue = 0
+}
 
 val gamePlayScreenRoute = route("gamePlay") {
     argument(accessCodeArgument)

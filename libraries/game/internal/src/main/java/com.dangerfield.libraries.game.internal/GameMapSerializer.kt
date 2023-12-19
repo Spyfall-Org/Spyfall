@@ -36,6 +36,7 @@ class GameMapSerializer @Inject constructor(
                     timeLimitMins = (map[FirestoreGameDataSource.TIME_LIMIT_MINS_FIELD_KEY] as Number).toInt(),
                     videoCallLink = map[FirestoreGameDataSource.VIDEO_CALL_LINK_FIELD_KEY] as? String?,
                     version = version,
+                    lastActiveAt = map[FirestoreGameDataSource.LAST_ACTIVE_AT_FIELD_KEY] as? Long?
                 )
             }
         }

@@ -15,7 +15,7 @@ sealed class GameState(val accessCode: String) {
     class Waiting(
         accessCode: String,
         val players: List<Player>,
-        val videoCallLink: String? = null,
+        val videoCallLink: String?
     ) : GameState(accessCode)
 
     /**
@@ -41,7 +41,7 @@ sealed class GameState(val accessCode: String) {
         val firstPlayer: Player,
         val locationNames: List<String>,
         val location: String,
-        val videoCallLink: String? = null,
+        val videoCallLink: String?
     ) : GameState(accessCode)
 
     /**
@@ -51,14 +51,27 @@ sealed class GameState(val accessCode: String) {
     class Voting(
         accessCode: String,
         val players: List<Player>,
+        val locationNames: List<String>,
+        val videoCallLink: String?,
         val hasMePlayerVoted: Boolean,
         val location: String,
     ) : GameState(accessCode)
 
     class VotingEnded(
         accessCode: String,
-        val result: GameResult
+        val result: GameResult,
+        val players: List<Player>,
+        val locationNames: List<String>,
+        val location: String,
+        val videoCallLink: String?
     ) : GameState(accessCode)
+
+    /**
+     * State representing that the game has expired
+     * This happens when the game has been inactive for a certain amount of time
+     * This is to prevent games from being left open indefinitely
+     */
+    class Expired(accessCode: String) : GameState(accessCode)
 
     /**
      * State representing that the game is in an unknown state

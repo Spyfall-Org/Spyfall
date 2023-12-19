@@ -17,7 +17,7 @@ class DebugException(message: String) : Exception(message)
 
 fun throwIfDebug(throwable: Throwable) {
     if (BuildConfig.DEBUG) {
-        Timber.e("THROWING DEBUG EXCEPTION")
+        val throwable = DebugException(throwable.message.orEmpty())
         throw throwable
     }
 }

@@ -1,8 +1,7 @@
 package com.dangerfield.libraries.navigation.internal
 
-import androidx.navigation.NavController
-import androidx.navigation.NavDirections
-import androidx.navigation.NavOptions
+import android.util.Log
+import androidx.navigation.NavHostController
 import com.dangerfield.libraries.navigation.Route
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
@@ -13,12 +12,20 @@ import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 
 class NavControllerRouter(
-    private val navController: NavController,
+    val navHostController: NavHostController,
     private val coroutineScope: CoroutineScope
 ) : Router {
+
+    init {
+        Log.d("Elijah", "New nav controller initialized $this")
+    }
+
+    override val currentRouteName: String?
+        get() = navHostController.currentDestination?.route
+
     override fun navigate(filledRoute: Route.Filled) {
         Try {
-            navController.navigate(filledRoute.route, filledRoute.navOptions())
+            navHostController.navigate(filledRoute.route, filledRoute.navOptions())
         }
             .logOnError()
             .throwIfDebug()
@@ -26,7 +33,7 @@ class NavControllerRouter(
 
     override fun goBack() {
         Try {
-            navController.popBackStack()
+            navHostController.popBackStack()
         }
             .logOnError()
             .throwIfDebug()
@@ -34,7 +41,7 @@ class NavControllerRouter(
 
     override fun popBackTo(route: Route.Template, inclusive: Boolean) {
         Try {
-            navController.popBackStack(route.navRoute, inclusive)
+            navHostController.popBackStack(route.navRoute, inclusive)
         }
             .logOnError()
             .throwIfDebug()

@@ -11,4 +11,5 @@ interface GameConfig {
     val locationsPerGame: Int
     val isSingleDeviceModeEnabled: Boolean
     val forceShortGames: Boolean
+    val gameInactivityExpirationMins: Int
 }

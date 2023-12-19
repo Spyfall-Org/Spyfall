@@ -35,14 +35,14 @@ object OddOneOutTheme {
 
 @Composable
 fun OddOneOutTheme(
-    accentColor: ColorPrimitive = ColorPrimitive.CherryPop700,
+    themeColor: ColorPrimitive = ColorPrimitive.CherryPop700,
     isDarkMode: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (isDarkMode) {
-        ColorScheme.darkMode(accentColor)
+        ColorScheme.darkMode(themeColor)
     } else {
-        ColorScheme.lightMode(accentColor)
+        ColorScheme.lightMode(themeColor)
     }
 
     val textSelectionColors = TextSelectionColors(

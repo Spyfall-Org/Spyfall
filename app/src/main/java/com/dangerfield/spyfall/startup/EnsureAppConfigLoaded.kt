@@ -1,6 +1,6 @@
 package com.dangerfield.spyfall.startup
 
-import com.dangerfield.libraries.config.internal.AppConfigRepository
+import com.dangerfield.libraries.config.AppConfigRepository
 import kotlinx.coroutines.flow.first
 import spyfallx.core.Try
 import spyfallx.core.throwIfDebug
