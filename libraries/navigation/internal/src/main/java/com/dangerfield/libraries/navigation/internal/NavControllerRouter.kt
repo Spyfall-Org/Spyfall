@@ -1,5 +1,7 @@
 package com.dangerfield.libraries.navigation.internal
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.navigation.NavHostController
 import com.dangerfield.libraries.navigation.Route
@@ -8,6 +10,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetStat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import spyfallx.core.Try
+import spyfallx.core.developerSnackOnError
 import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 
@@ -38,6 +41,24 @@ class NavControllerRouter(
             .logOnError()
             .throwIfDebug()
     }
+
+    override fun openWebLink(url: String) {
+        Try { Uri.parse(url) }
+            .map { uri ->
+                // add https if no scheme
+                if (uri?.scheme.isNullOrEmpty()) {
+                    uri.buildUpon().scheme("https").build()
+                } else {
+                    uri
+                }
+            }
+            .map {
+                navHostController.context.openWebLinkFromContext(it)
+            }
+            .developerSnackOnError { "Could not open web link $url" }
+            .logOnError()
+    }
+
 
     override fun popBackTo(route: Route.Template, inclusive: Boolean) {
         Try {

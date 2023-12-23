@@ -460,9 +460,9 @@ private fun Header(
     isMePlayerOddOneOut: Boolean
 ) {
     val headerText = when {
-        gameResult == GameResult.PlayersWon -> "The Players Have Won!"
-        gameResult == GameResult.OddOneOutWon && isMePlayerOddOneOut -> "You have won!"
-        gameResult == GameResult.OddOneOutWon -> "The Odd One Out Has Won!"
+        gameResult == GameResult.PlayersWon -> "The Players Won!"
+        gameResult == GameResult.OddOneOutWon && isMePlayerOddOneOut -> "You won!"
+        gameResult == GameResult.OddOneOutWon -> "The Odd One Out Won!"
         gameResult == GameResult.Draw -> "It's a Draw!"
         hasMePlayerSubmittedVote -> "Counting votes..."
         isTimeUp -> "Time to vote!"

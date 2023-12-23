@@ -43,11 +43,6 @@ class WaitingRoomViewModel @Inject constructor(
     private val meUserId: String
         get() {
             val userId = session.activeGame?.userId
-            if (userId == null) {
-                viewModelScope.launch {
-                    updateState { it.copy(didSomethingGoWrong = true) }
-                }
-            }
             return userId.orEmpty()
         }
 
@@ -71,6 +66,12 @@ class WaitingRoomViewModel @Inject constructor(
         )
 
     override suspend fun handleAction(action: Action) {
+        if (meUserId.isEmpty()) {
+            updateState {
+                it.copy(didSomethingGoWrong = true)
+            }
+        }
+
         when (action) {
             is Action.LoadRoom -> loadRoom()
             is Action.ChangeName -> changeName(action.name, action.id)

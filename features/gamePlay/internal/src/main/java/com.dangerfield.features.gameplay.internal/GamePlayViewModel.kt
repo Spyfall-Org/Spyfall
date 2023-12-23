@@ -16,7 +16,6 @@ import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
-import com.dangerfield.libraries.session.UpdateActiveGame
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -92,7 +91,7 @@ class GamePlayViewModel @Inject constructor(
         gameRepository.reset(accessCode)
     }
 
-    private suspend fun GamePlayViewModel.submitOddOneOutVote(action: Action.SubmitOddOneOutVote) {
+    private suspend fun submitOddOneOutVote(action: Action.SubmitOddOneOutVote) {
         updateState { it.copy(isLoadingVoteSubmit = true) }
         gameRepository.submitOddOneOutVote(
             accessCode,
@@ -110,7 +109,7 @@ class GamePlayViewModel @Inject constructor(
             }
     }
 
-    private suspend fun GamePlayViewModel.submitLocationVote(action: Action.SubmitLocationVote) {
+    private suspend fun submitLocationVote(action: Action.SubmitLocationVote) {
         updateState { it.copy(isLoadingVoteSubmit = true) }
         gameRepository.submitLocationVote(
             accessCode,

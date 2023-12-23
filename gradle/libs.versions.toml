@@ -47,6 +47,7 @@ navigationSafeArgsGenerator = "2.7.6"
 navigationCommonKtx = "2.7.6"
 material3Android = "1.2.0-alpha12"
 material3 = "1.1.2"
+androidx-browser = "1.7.0"
 
 [libraries]
 # AndroidX
@@ -201,6 +202,7 @@ androidx-navigation-safe-args-generator = { group = "androidx.navigation", name 
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

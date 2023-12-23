@@ -14,6 +14,8 @@ android {
 dependencies {
     implementation(projects.libraries.navigation)
     implementation(projects.libraries.common)
+    implementation(projects.libraries.resources)
     implementation(projects.libraries.ui)
+    implementation(libs.browser)
 
 }

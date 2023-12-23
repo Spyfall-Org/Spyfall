@@ -17,6 +17,7 @@ import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.floatingwindow.bottomSheet
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
@@ -75,7 +76,7 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
                 isFormValid = state.formState is FormState.Valid,
                 isSingleDeviceModeEnabled = gameConfig.isSingleDeviceModeEnabled,
                 isVideoCallLinkEnabled = isVideoCallingEnabled(),
-                onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo,
+                onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo
             )
         }
     }

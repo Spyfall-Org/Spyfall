@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +49,8 @@ import com.dangerfield.libraries.ui.isOpen
 import com.dangerfield.libraries.ui.rememberKeyboardState
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.components.icon.IconSize
+import kotlinx.coroutines.launch
 
 @Composable
 fun NewGameScreen(
@@ -62,6 +66,7 @@ fun NewGameScreen(
     minGameLength: Int,
     maxGameLength: Int,
     isFormValid: Boolean,
+    isLoadingPacks: Boolean,
     isVideoCallLinkEnabled: Boolean,
     onIsSingleDeviceUpdated: (Boolean) -> Unit,
     numOfPlayersState: FieldState<String>,
@@ -75,12 +80,13 @@ fun NewGameScreen(
     onVideoCallLinkInfoClicked: () -> Unit = {},
     onCreateGameClicked: () -> Unit = {},
     isLoadingCreation: Boolean,
-    isLoadingPacks: Boolean,
 ) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
     val keyboardState = rememberKeyboardState()
     var videoCallFieldHasFocus by remember { mutableStateOf(false) }
+    var showPacksInfoBottomSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(keyboardState, videoCallFieldHasFocus) {
         if (keyboardState.isOpen && videoCallFieldHasFocus) {
@@ -135,7 +141,10 @@ fun NewGameScreen(
                         PacksField(
                             isLoading = isLoadingPacks,
                             packsState = packsState,
-                            onPackSelected = onPackSelected
+                            onPackSelected = onPackSelected,
+                            onPacksInfoClicked = {
+                                showPacksInfoBottomSheet = true
+                            },
                         )
                     }
                 }
@@ -211,6 +220,18 @@ fun NewGameScreen(
         if (didSomethingGoWrong) {
             NewGameErrorDialog(onDismissRequest = onNavigateBack)
         }
+
+        if (showPacksInfoBottomSheet) {
+            PacksInfoBottomSheet(
+                packs = packsState.backingValue?.map { it.pack } ?: emptyList(),
+                onDismiss = {
+                    coroutineScope.launch {
+                        it.hide()
+                        showPacksInfoBottomSheet = false
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -250,19 +271,33 @@ private fun FormField(
 private fun PacksField(
     packsState: FieldState<List<DisplayablePack>>,
     onPackSelected: (DisplayablePack, Boolean) -> Unit,
+    onPacksInfoClicked: () -> Unit = {},
     isLoading: Boolean
 ) {
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier) {
-        AsteriskText {
-            Text(text = "Packs:")
-        }
 
-        Text(
-            text = "Choose which packs you want to play with",
-            typographyToken = OddOneOutTheme.typography.Body.B500
-        )
+        Row {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                AsteriskText {
+                    Text(text = "Packs:")
+                }
+                Text(
+                    text = "Choose which packs you want to play with",
+                    typographyToken = OddOneOutTheme.typography.Body.B500
+                )
+            }
+
+            HorizontalSpacerS600()
+
+            IconButton(
+                icon = SpyfallIcon.Info("Packs Information"),
+                onClick = onPacksInfoClicked
+            )
+        }
         
         VerticalSpacerS500()
 
@@ -487,6 +522,7 @@ fun PreviewNewGameScreen() {
             maxGameLength = 10,
             isFormValid = false,
             isVideoCallLinkEnabled = true,
+            isLoadingPacks = false,
             onIsSingleDeviceUpdated = { isSingleDevice = it },
             numOfPlayersState = FieldState.Valid(""),
             isSingleDeviceModeEnabled = true,
@@ -498,7 +534,7 @@ fun PreviewNewGameScreen() {
             onNavigateBack = { },
             onCreateGameClicked = { },
             isLoadingCreation = false,
-            isLoadingPacks = false
+            onVideoCallLinkInfoClicked = { -> },
         )
     }
 }

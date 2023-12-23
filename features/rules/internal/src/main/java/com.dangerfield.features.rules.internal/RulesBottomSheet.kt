@@ -70,13 +70,16 @@ private fun RulesContent() {
 
             BulletRow {
                 BoldPrefixedText(
+                    typography = OddOneOutTheme.typography.Body.B600,
                     boldText = "Select Location Packs:",
-                    regularText = "Each pack contains a unique set of locations and roles to play with."
+                    regularText = "Each pack contains a unique set of locations and roles to play with.",
+
                 )
             }
 
             BulletRow {
                 BoldPrefixedText(
+                    typography = OddOneOutTheme.typography.Body.B600,
                     boldText = "Pick a time limit:",
                     regularText = "Choose how long players have to complete their objective. 5 minutes is reccomended for most games"
                 )
@@ -84,6 +87,7 @@ private fun RulesContent() {
 
             BulletRow {
                 BoldPrefixedText(
+                    typography = OddOneOutTheme.typography.Body.B600,
                     boldText = "Regular or Single device",
                     regularText = "Choose to play with everyone on their own device or on a single device shared among players."
                 )
@@ -118,6 +122,7 @@ private fun RulesContent() {
             SubTitle(text = "The Goal")
 
             BoldPrefixedText(
+                typography = OddOneOutTheme.typography.Body.B600,
                 boldText = "Players:",
                 regularText = "To identify the odd one out without revealing the location to them."
             )
@@ -125,6 +130,7 @@ private fun RulesContent() {
             VerticalSpacerS500()
 
             BoldPrefixedText(
+                typography = OddOneOutTheme.typography.Body.B600,
                 boldText = "The odd one out:",
                 regularText = "To identify the location without revealing they are the odd one out"
             )

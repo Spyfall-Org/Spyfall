@@ -5,6 +5,7 @@ plugins {
 spyfall {
     compose()
     daggerHilt()
+    flowroutines()
 }
 
 android {
@@ -18,4 +19,5 @@ dependencies {
     implementation(projects.libraries.resources)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.navigation)
+    implementation(libs.lottie.compose)
 }

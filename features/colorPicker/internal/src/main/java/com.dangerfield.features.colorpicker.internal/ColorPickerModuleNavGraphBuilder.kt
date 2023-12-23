@@ -31,12 +31,16 @@ class ColorPickerModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
             val colorConfigs = ThemeColor.entries.map { Specific(it) } + Random
 
             ColorPickerDialog(
-                onConfigSelected = {
+                onColorConfigSelected = {
                     viewModel.takeAction(ColorPickerViewModel.Action.UpdateColorConfig(it))
                 },
-                selectedConfig = state.colorConfig,
+                selectedColorConfig = state.colorConfig,
                 onDismiss = router::goBack,
-                colorConfigs = colorConfigs
+                colorConfigs = colorConfigs,
+                selectedDarkModeConfig = state.darkModeConfig,
+                onDarkModeConfigSelected = {
+                    viewModel.takeAction(ColorPickerViewModel.Action.UpdateDarkModeConfig(it))
+                }
             )
         }
     }

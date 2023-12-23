@@ -27,6 +27,7 @@ class SpyfallApplication : Application() {
     @Inject
     lateinit var applicationStateRepository: ApplicationStateRepository
 
+    // TODO see if initializing analytics or app check later or something would be better
     @Inject
     lateinit var firebaseAnalytics: FirebaseAnalytics
 

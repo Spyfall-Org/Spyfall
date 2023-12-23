@@ -6,10 +6,12 @@ import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.session.ColorConfig
+import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.EnsureSessionLoaded
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.ui.color.ColorPrimitive
+import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.spyfall.startup.MainActivityViewModel.Action
 import com.dangerfield.spyfall.startup.MainActivityViewModel.Event
 import com.dangerfield.spyfall.startup.MainActivityViewModel.State
@@ -24,7 +26,6 @@ import kotlinx.coroutines.launch
 import spyfallx.core.Try
 import spyfallx.core.failFast
 import spyfallx.core.logOnError
-import com.dangerfield.libraries.ui.color.ThemeColor
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -53,14 +54,18 @@ class MainActivityViewModel @Inject constructor(
             startUpTasks.awaitAll().failFast()
         }
             .logOnError()
-            .onFailure { updateState { State.Error } }
+            .onFailure {
+                updateState { State.Error }
+            }
             .onSuccess {
-                val colorPrimitive = getSessionColorPrimitive(sessionFlow.first())
+                val session = sessionFlow.first()
+                val colorPrimitive = getSessionColorPrimitive(session)
 
                 updateState {
                     State.Loaded(
                         isUpdateRequired = isAppUpdateRequired().first(),
-                        accentColor = colorPrimitive
+                        accentColor = colorPrimitive,
+                        darkModeConfig = session.user.themeConfig.darkModeConfig
                     )
                 }
 
@@ -69,18 +74,20 @@ class MainActivityViewModel @Inject constructor(
                 }
 
                 viewModelScope.launch {
-                    listenForSessionColorUpdates()
+                    listenForConfigUpdates()
                 }
             }
     }
 
-    private suspend fun listenForSessionColorUpdates() {
+    private suspend fun listenForConfigUpdates() {
         sessionFlow.collectLatest {
             val colorPrimitive = getSessionColorPrimitive(it)
-            Log.d("Elijah", "listenForSessionColorUpdates: $colorPrimitive")
             updateState { state ->
                 if (state is State.Loaded) {
-                    state.copy(accentColor = colorPrimitive)
+                    state.copy(
+                        accentColor = colorPrimitive,
+                        darkModeConfig = it.user.themeConfig.darkModeConfig
+                    )
                 } else {
                     state
                 }
@@ -128,7 +135,8 @@ class MainActivityViewModel @Inject constructor(
     sealed class State {
         data class Loaded(
             val isUpdateRequired: Boolean,
-            val accentColor: ColorPrimitive
+            val accentColor: ColorPrimitive,
+            val darkModeConfig: DarkModeConfig
         ) : State()
 
         data object Loading : State()

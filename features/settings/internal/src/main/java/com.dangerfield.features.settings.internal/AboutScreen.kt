@@ -18,21 +18,19 @@ import com.dangerfield.spyfall.libraries.resources.R
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
-fun SettingsScreen(
+fun AboutScreen(
     modifier: Modifier = Modifier,
     versionName: String,
-    isDebug: Boolean = false,
-    onThemeOptionClicked: () -> Unit = { },
-    onQaOptionClicked: () -> Unit = { },
-    onAboutOptionClicked: () -> Unit = { },
+    onPrivacyPolicyClicked: () -> Unit = { },
+    onTermsOfServiceClicked: () -> Unit = { },
+    onThirdPartyServicesClicked: () -> Unit = { },
     onNavigateBack: () -> Unit = { },
-    onContactUsClicked: () -> Unit = { },
 ) {
     Screen(
         modifier = modifier,
         topBar = {
             Header(
-                title = "Settings",
+                title = "About",
                 onNavigateBack = onNavigateBack
             )
         }
@@ -44,30 +42,22 @@ fun SettingsScreen(
         ) {
 
             SettingsOption(
-                text = "Theme",
-                onClick = onThemeOptionClicked,
-                leadingIcon = SpyfallIcon.Theme("Change Theme"),
+                text = "Privacy Policy",
+                onClick = onPrivacyPolicyClicked,
+                trailingIcon = SpyfallIcon.ChevronRight("About Spyfall"),
             )
 
             SettingsOption(
-                leadingIcon = SpyfallIcon.Info("About"),
-                text = "About",
-                onClick = onAboutOptionClicked
+                text = "Terms of Service",
+                onClick = onTermsOfServiceClicked,
+                trailingIcon = SpyfallIcon.ChevronRight("About Spyfall"),
             )
 
             SettingsOption(
-                text = "Contact Us",
-                onClick = onContactUsClicked,
-                leadingIcon = SpyfallIcon.Chat("Feedback"),
+                text = "Third Party Services",
+                onClick = onThirdPartyServicesClicked,
+                trailingIcon = SpyfallIcon.ChevronRight("About Spyfall"),
             )
-
-            if (isDebug) {
-                SettingsOption(
-                    text = "QA Menu",
-                    onClick = onQaOptionClicked,
-                    leadingIcon = SpyfallIcon.Android("Feedback"),
-                )
-            }
 
             Text(
                 text = stringResource(id = R.string.app_name)+ " Version: $versionName",
@@ -86,9 +76,12 @@ fun SettingsScreen(
 @ThemePreviews
 private fun PreviewSettingsScreen() {
     PreviewContent {
-        SettingsScreen(
+        AboutScreen(
             versionName = "X.Y.Z",
-            isDebug = true
+            onPrivacyPolicyClicked = { -> },
+            onTermsOfServiceClicked = { -> },
+            onThirdPartyServicesClicked = { -> },
+            onNavigateBack = { -> },
         )
     }
 }

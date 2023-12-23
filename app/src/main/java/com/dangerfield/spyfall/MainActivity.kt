@@ -8,9 +8,9 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dangerfield.libraries.network.NetworkMonitor
+import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.spyfall.legacy.util.collectWhileStarted
@@ -48,16 +48,12 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState) // should be called after splash screen builder
 
-        // Turn off the decor fitting system windows, which allows us to handle insets,
-        // including IME animations.
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
         // Delay set content so we can animate splash screen views
         collectWhileStarted(mainActivityViewModel.state) { state ->
             isLoading = state is Loading
             when  {
                 state is Loading -> doNothing()
-                state is Loaded && !hasSetContent.getAndSet(true) -> setAppContent()
+                state !is Loading && !hasSetContent.getAndSet(true) -> setAppContent()
             }
         }
     }
@@ -68,11 +64,15 @@ class MainActivity : ComponentActivity() {
 
             val state by mainActivityViewModel.state.collectAsStateWithLifecycle()
 
+            // TODO make the app still usable when there is an error.
+            // we dont need a session and such to let the user use the app.
             SpyfallApp(
                 navBuilderRegistry = navBuilderRegistry,
                 isUpdateRequired = state.isUpdateRequired,
                 hasBlockingError = state is Error,
                 accentColor = state.accentColor,
+                darkModeConfig = state.darkModeConfig,
+                networkMonitor = networkMonitor
             )
         }
     }
@@ -83,4 +83,8 @@ class MainActivity : ComponentActivity() {
 
     private val State.isUpdateRequired: Boolean
         get() = this is Loaded && isUpdateRequired
+
+    private val State.darkModeConfig: DarkModeConfig
+        get() = (this as? Loaded)?.darkModeConfig
+            ?: DarkModeConfig.System
 }

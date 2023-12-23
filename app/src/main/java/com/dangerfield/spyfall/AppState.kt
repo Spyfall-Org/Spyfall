@@ -19,20 +19,14 @@ import kotlinx.coroutines.flow.stateIn
 fun rememberAppState(
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    navHostController: NavHostController = rememberNavController(FloatingWindowNavigator()),
 ): AppState {
     return remember(
-        navHostController,
         coroutineScope,
         networkMonitor,
     ) {
         AppState(
             networkMonitor,
             coroutineScope,
-            NavControllerRouter(
-                navHostController = navHostController,
-                coroutineScope = coroutineScope
-            )
         )
     }
 }
@@ -41,10 +35,7 @@ fun rememberAppState(
 class AppState(
     networkMonitor: NetworkMonitor,
     val coroutineScope: CoroutineScope,
-    val router: NavControllerRouter,
 ) {
-    val currentDestination: String?
-        @Composable get() = router.currentRouteName
 
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)

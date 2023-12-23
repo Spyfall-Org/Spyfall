@@ -3,6 +3,7 @@ package com.dangerfield.libraries.coreflowroutines
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -50,4 +51,7 @@ abstract class SEAViewModel<S, E, A> : ViewModel() {
     }
 
     protected abstract suspend fun handleAction(action: A)
+
 }
+
+

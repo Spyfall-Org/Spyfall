@@ -23,4 +23,6 @@
     <color name="colorPrimaryDark">#DADADA</color>
     <color name="colorAccent">#D65656</color>
 
+    <color name="colorStatusBar">#FFFFFF</color>
+
 </resources>

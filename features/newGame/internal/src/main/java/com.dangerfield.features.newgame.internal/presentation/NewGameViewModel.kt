@@ -44,7 +44,7 @@ class NewGameViewModel @Inject constructor(
     private val createMultiDeviceGameGameUseCase: CreateGame,
     private val createSingleDeviceGameUseCase: CreateSingleDeviceGame,
     private val gameConfig: GameConfig,
-    private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink
+    private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
 ) : ViewModel() {
 
     // TODO rework this to allow for a debounce on the video call link

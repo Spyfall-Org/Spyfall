@@ -1,6 +1,7 @@
 package com.dangerfield.features.colorpicker.internal
 
-import com.dangerfield.features.colorpicker.internal.ColorPickerViewModel.*
+import com.dangerfield.features.colorpicker.internal.ColorPickerViewModel.Action
+import com.dangerfield.features.colorpicker.internal.ColorPickerViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.DarkModeConfig
@@ -13,12 +14,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ColorPickerViewModel @Inject constructor(
     private val updateColorConfig: UpdateColorConfig,
-    private val updateDarkModeConfig: UpdateDarkModeConfig
+    private val updateDarkModeConfig: UpdateDarkModeConfig,
+    private val session: Session
 ) : SEAViewModel<State, Unit, Action>() {
 
     override val initialState = State(
-        colorConfig = ColorConfig.Random,
-        darkModeConfig = DarkModeConfig.System
+        colorConfig = session.user.themeConfig.colorConfig,
+        darkModeConfig = session.user.themeConfig.darkModeConfig
     )
 
     override suspend fun handleAction(action: Action) {

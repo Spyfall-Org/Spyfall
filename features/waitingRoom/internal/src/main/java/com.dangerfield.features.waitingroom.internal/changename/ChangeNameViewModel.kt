@@ -2,7 +2,9 @@ package com.dangerfield.features.waitingroom.internal.changename
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewModel.*
+import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewModel.Action
+import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewModel.Event
+import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
@@ -48,7 +50,7 @@ class ChangeNameViewModel @Inject constructor(
 
     override suspend fun handleAction(action: Action) {
         when (action) {
-            is Action.SubmitNameChange -> onNameChangeSubmitted(action)
+            is Action.SubmitNameChange -> handleNameChangeSubmit(action)
             is Action.UpdateName -> updateName(action.name)
         }
     }
@@ -56,7 +58,7 @@ class ChangeNameViewModel @Inject constructor(
     private suspend fun allPlayers() = currentGamePlayers.replayCache.firstOrNull()
         ?: currentGamePlayers.first()
 
-    private suspend fun onNameChangeSubmitted(
+    private suspend fun handleNameChangeSubmit(
         action: Action.SubmitNameChange
     ) {
         allOrNone(

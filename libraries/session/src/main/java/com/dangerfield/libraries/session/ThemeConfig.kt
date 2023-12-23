@@ -12,8 +12,6 @@ sealed class ColorConfig {
     data class Specific(val color: ThemeColor) : ColorConfig()
 }
 
-sealed class DarkModeConfig {
-    data object System : DarkModeConfig()
-    data object Dark : DarkModeConfig()
-    data object Light : DarkModeConfig()
+enum class DarkModeConfig {
+    System, Dark, Light
 }

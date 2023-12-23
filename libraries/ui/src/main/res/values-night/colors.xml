@@ -23,4 +23,6 @@
     <color name="colorPrimaryDark">@color/black</color>
     <color name="colorAccent">#D65656</color>
 
+    <color name="colorStatusBar">#000000</color>
+
 </resources>

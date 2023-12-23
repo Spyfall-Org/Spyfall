@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
@@ -45,26 +46,33 @@ fun RoleCard(
 
         val contentPlaceable = subcompose(1) {
             AnimatedVisibility(
-                visible = !isHidden,
-                enter = expandVertically(),
-                exit = shrinkVertically()
+                visible = !isHidden, enter = expandVertically(), exit = shrinkVertically()
             ) {
                 Column(
                     modifier = Modifier
-                        .background(OddOneOutTheme.colorScheme.surfacePrimary, radius = Radii.Round)
+                        .background(
+                            OddOneOutTheme.colorScheme.surfacePrimary, radius = Radii.Round
+                        )
                         .fillMaxWidth()
                         .padding(vertical = Spacing.S500, horizontal = Spacing.S1200)
                         .padding(bottom = Spacing.S500),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    BoldPrefixedText(boldText = "Role: ", regularText = role)
+                    BoldPrefixedText(
+                        boldText = "Role: ",
+                        regularText = role,
+                        textAlign = TextAlign.Center,
+                    )
 
                     if (location != null && !isTheOddOneOut) {
-                        BoldPrefixedText(boldText = "Location: ", regularText = location)
+                        BoldPrefixedText(
+                            boldText = "Location: ",
+                            regularText = location,
+                            textAlign = TextAlign.Center,
+                        )
                     }
                     Text(
-                        text = text,
-                        typographyToken = OddOneOutTheme.typography.Body.B800
+                        text = text, typographyToken = OddOneOutTheme.typography.Body.B800
                     )
                 }
             }
@@ -72,8 +80,7 @@ fun RoleCard(
 
         val width = maxOf(buttonPlaceable.width, contentPlaceable?.width ?: 0)
         val height = maxOf(
-            (contentPlaceable?.height ?: 0) + buttonPlaceable.height / 2,
-            buttonPlaceable.height
+            (contentPlaceable?.height ?: 0) + buttonPlaceable.height / 2, buttonPlaceable.height
         )
 
         layout(width, height) {
@@ -105,9 +112,9 @@ private fun PreviewRoleCardOddOneOut() {
 private fun PreviewRoleCardPlayer() {
     PreviewContent(showBackground = true) {
         RoleCard(
-            role = "Someone",
+            role = "Something that takes up space",
             text = "Fine the odd one out",
-            location = "The Beach",
+            location = "Some longer location name",
             isTheOddOneOut = false
         )
     }

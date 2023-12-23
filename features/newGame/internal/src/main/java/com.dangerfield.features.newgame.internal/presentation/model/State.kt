@@ -1,5 +1,6 @@
 package com.dangerfield.features.newgame.internal.presentation.model
 
+import com.dangerfield.libraries.game.Pack
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
