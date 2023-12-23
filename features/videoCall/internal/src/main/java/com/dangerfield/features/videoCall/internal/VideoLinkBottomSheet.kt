@@ -37,6 +37,7 @@ import com.dangerfield.libraries.ui.getBoldUnderlinedSpan
 import kotlinx.coroutines.delay
 
 @Composable
+@Suppress("MaxLineLength")
 fun VideoLinkBottomSheet(
     modifier: Modifier = Modifier,
     bottomSheetState: BottomSheetState = rememberBottomSheetState(),

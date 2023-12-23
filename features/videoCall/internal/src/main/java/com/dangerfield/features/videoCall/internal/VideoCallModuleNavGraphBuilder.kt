@@ -13,7 +13,7 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class ModuleNavGraphBuilder @Inject constructor(
+class VideoCallModuleNavGraphBuilder @Inject constructor(
     private val recognizedVideoCallingPlatforms: RecognizedVideoCallingPlatforms
 ): ModuleNavBuilder {
     override fun NavGraphBuilder.buildNavGraph(router: Router) {

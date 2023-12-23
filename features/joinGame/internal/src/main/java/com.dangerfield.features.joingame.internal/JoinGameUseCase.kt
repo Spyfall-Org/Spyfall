@@ -31,7 +31,7 @@ class JoinGameUseCase @Inject constructor(
         accessCode: String, userName: String
     ): Try<Game> {
 
-        checkForExistingSession(accessCode, userName)
+        checkForExistingSession()
 
         val id = session.user.id ?: UUID.randomUUID().toString()
 
@@ -118,7 +118,7 @@ class JoinGameUseCase @Inject constructor(
         )
     }
 
-    private suspend fun checkForExistingSession(accessCode: String, userName: String) {
+    private suspend fun checkForExistingSession() {
         if (session.activeGame != null) {
             clearActiveGame()
             developerSnackIfDebug { "User is already in an existing game while joining a game." }

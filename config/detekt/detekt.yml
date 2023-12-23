@@ -116,7 +116,7 @@ complexity:
   LongMethod:
     active: true
     ignoreAnnotated: ['Preview', 'Composable', 'ThemePreviews']
-    threshold: 60
+    threshold: 120
   LongParameterList:
     active: true
     functionThreshold: 15

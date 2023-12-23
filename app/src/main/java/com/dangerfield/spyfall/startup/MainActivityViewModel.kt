@@ -1,6 +1,5 @@
 package com.dangerfield.spyfall.startup
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
@@ -13,7 +12,6 @@ import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.spyfall.startup.MainActivityViewModel.Action
-import com.dangerfield.spyfall.startup.MainActivityViewModel.Event
 import com.dangerfield.spyfall.startup.MainActivityViewModel.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +33,7 @@ class MainActivityViewModel @Inject constructor(
     private val ensureSessionLoaded: EnsureSessionLoaded,
     private val isAppUpdateRequired: IsAppUpdateRequired,
     private val sessionFlow: SessionFlow
-) : SEAViewModel<State, Event, Action>() {
+) : SEAViewModel<State, Unit, Action>() {
 
     override val initialState = State.Loading
 
@@ -126,10 +124,6 @@ class MainActivityViewModel @Inject constructor(
 
     sealed class Action {
         data object LoadApp : Action()
-    }
-
-    sealed class Event {
-
     }
 
     sealed class State {
