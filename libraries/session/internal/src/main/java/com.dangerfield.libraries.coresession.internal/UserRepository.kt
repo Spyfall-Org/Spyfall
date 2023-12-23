@@ -4,8 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
-import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
 import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.ThemeConfig
@@ -14,16 +12,12 @@ import com.dangerfield.libraries.ui.color.ThemeColor
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
@@ -40,7 +34,6 @@ class UserRepository @Inject constructor(
     private val auth: FirebaseAuth,
     @ApplicationScope private val applicationScope: CoroutineScope,
     private val dataStore: DataStore<Preferences>,
-    dispatcherProvider: DispatcherProvider,
 ) {
 
     private val updateMutex = Mutex()
