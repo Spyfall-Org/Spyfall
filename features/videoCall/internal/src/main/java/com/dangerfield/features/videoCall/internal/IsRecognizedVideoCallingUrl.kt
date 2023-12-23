@@ -5,7 +5,7 @@ import se.ansman.dagger.auto.AutoBind
 import javax.inject.Inject
 
 @AutoBind
-class IsRecognizedVideoCallLinkImpl @Inject constructor(
+class IsRecognizedVideoCallingUrl @Inject constructor(
     val recognizedVideoCallingPlatforms: RecognizedVideoCallingPlatforms
 ): IsRecognizedVideoCallLink {
 
