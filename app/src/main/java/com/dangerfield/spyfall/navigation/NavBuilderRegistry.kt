@@ -11,8 +11,6 @@ class NavBuilderRegistry @Inject constructor(
 ) {
 
     fun registerNavBuilderForModule(navGraphBuilder: NavGraphBuilder, router: Router) {
-        Log.d("Elijah", "Registering nav graph builders of size ${navBuilders.size}")
-
         navBuilders.forEach { moduleNavBuilder ->
             with(moduleNavBuilder) {
                 navGraphBuilder.buildNavGraph(router)

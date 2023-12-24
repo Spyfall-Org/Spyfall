@@ -1,6 +1,5 @@
 package com.dangerfield.features.newgame.internal.presentation.model
 
-import com.dangerfield.libraries.game.Pack
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -32,7 +31,7 @@ sealed class Event {
         val videoCallLink: String?
     ) : Event()
 
-    data object SingleDeviceGameCreated : Event()
+    data class SingleDeviceGameCreated(val accessCode: String) : Event()
 }
 
 data class State(

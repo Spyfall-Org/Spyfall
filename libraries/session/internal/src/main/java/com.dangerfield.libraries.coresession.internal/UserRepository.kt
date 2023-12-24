@@ -22,6 +22,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
 import spyfallx.core.Try
+import spyfallx.core.logOnError
 import spyfallx.core.withBackoffRetry
 import java.util.Locale
 import java.util.UUID
@@ -60,8 +61,9 @@ class UserRepository @Inject constructor(
                 emit(it)
             }
             .onFailure {
-                emit(UUID.randomUUID().toString())
+                emit(generateUserId())
             }
+            .logOnError("Failed to get user id")
     }
 
     private val userFlow = combine(
@@ -120,13 +122,14 @@ class UserRepository @Inject constructor(
     ) {
         Try {
             if (auth.currentUser == null) {
-                auth.signInAnonymously().await()
-                auth.uid ?: UUID.randomUUID().toString()
+                auth.signInAnonymously().await().user?.uid ?: generateUserId()
             } else {
-                auth.uid ?: UUID.randomUUID().toString()
+                auth.currentUser?.uid ?: generateUserId()
             }
         }
     }
+
+    private fun generateUserId(): String = "GENERATED-" + UUID.randomUUID().toString()
 
     companion object {
         private val defaultThemeConfig = ThemeConfig(

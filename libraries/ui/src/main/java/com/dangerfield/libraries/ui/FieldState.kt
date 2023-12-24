@@ -1,4 +1,4 @@
-package com.dangerfield.features.settings.internal
+package com.dangerfield.libraries.ui
 
 sealed class FieldState<out T>(val backingValue: T?) {
     data class Idle<T>(val value: T) : FieldState<T>(value)

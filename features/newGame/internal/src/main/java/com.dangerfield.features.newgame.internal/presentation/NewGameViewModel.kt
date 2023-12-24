@@ -115,8 +115,8 @@ class NewGameViewModel @Inject constructor(
 
         if (state.isSingleDevice) {
             createSingleDeviceGame(state)
-                .onSuccess {
-                    _events.trySend(Event.SingleDeviceGameCreated)
+                .onSuccess { accessCode ->
+                    _events.trySend(Event.SingleDeviceGameCreated(accessCode))
                 }
         } else {
             createMultiDeviceGame(state)
@@ -131,14 +131,14 @@ class NewGameViewModel @Inject constructor(
         }
             .logOnError()
             .onFailure {
-            updateState { it.copy(didSomethingGoWrong = true) }
-        }
+                updateState { it.copy(didSomethingGoWrong = true) }
+            }
             .eitherWay {
                 updateState { it.copy(isLoadingCreation = false) }
             }
     }
 
-    private suspend fun createSingleDeviceGame(state: State): Try<Unit> =
+    private suspend fun createSingleDeviceGame(state: State): Try<String> =
         allOrNone(
             state.timeLimit(),
             state.numberOfPlayers(),

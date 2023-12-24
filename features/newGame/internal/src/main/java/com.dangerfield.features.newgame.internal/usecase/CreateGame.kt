@@ -6,6 +6,7 @@ import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.session.ActiveGame
@@ -18,10 +19,11 @@ import spyfallx.core.failure
 import java.time.Clock
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class CreateGame @Inject constructor(
     private val generateAccessCode: GenerateAccessCode,
-    private val gameRepository: GameRepository,
+    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val getGamePlayLocations: GetGamePlayLocations,
     private val gameConfig: GameConfig,
     private val clock: Clock,

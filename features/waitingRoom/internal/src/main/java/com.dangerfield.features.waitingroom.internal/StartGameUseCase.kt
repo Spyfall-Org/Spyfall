@@ -2,13 +2,15 @@ package com.dangerfield.features.waitingroom.internal
 
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Player
 import spyfallx.core.Try
 import javax.inject.Inject
+import javax.inject.Named
 
 class StartGameUseCase @Inject constructor(
     private val packsPackRepository: LocationPackRepository,
-    private val gameRepository: GameRepository
+    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository
 ) {
 
     /**

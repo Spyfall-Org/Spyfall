@@ -20,6 +20,17 @@ fun Router.navigateToGamePlayScreen(
     )
 }
 
+fun Router.navigateToSingleDeviceInfoRoute(
+    accessCode: String,
+) {
+    navigate(
+        fillRoute(singleDeviceInfoRoute) {
+            fill(accessCodeArgument, accessCode)
+            popUpTo(welcomeNavigationRoute)
+        }
+    )
+}
+
 val accessCodeArgument = navArgument("accessCode") { type = NavType.StringType }
 
 val timeLimitArgument = navArgument("timeLimit") {
@@ -31,3 +42,8 @@ val gamePlayScreenRoute = route("gamePlay") {
     argument(accessCodeArgument)
     argument(timeLimitArgument)
 }
+
+val singleDeviceInfoRoute = route("singleDeviceInfo") {
+    argument(accessCodeArgument)
+}
+

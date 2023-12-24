@@ -1,13 +1,13 @@
 package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameError.TriedToLeaveStartedGame
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.StartGameError
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import se.ansman.dagger.auto.AutoBind
 import spyfallx.core.Try
-import spyfallx.core.allOrNone
 import spyfallx.core.developerSnackOnError
 import spyfallx.core.failure
 import spyfallx.core.illegalState
@@ -29,10 +28,11 @@ import spyfallx.core.logOnError
 import spyfallx.core.success
 import java.time.Clock
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
+import javax.inject.Named
 
+@Named(MultiDeviceRepositoryName)
 @AutoBind
-class GameRepositoryImpl @Inject constructor(
+class MutliDeviceGameRepository @Inject constructor(
     private val gameDataSource: GameDataSource,
     private val clock: Clock,
     private val getGamePlayLocations: GetGamePlayLocations,
@@ -214,5 +214,6 @@ class GameRepositoryImpl @Inject constructor(
 
     companion object {
         private const val GameSubscriptionTimeout = 5_000L
+        const val name = "MultiDeviceGameRepository"
     }
 }

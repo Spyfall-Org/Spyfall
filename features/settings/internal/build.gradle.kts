@@ -6,6 +6,7 @@ spyfall {
     compose()
     daggerHilt()
     flowroutines()
+    firebase()
 }
 
 android {
@@ -16,6 +17,7 @@ dependencies {
     implementation(projects.features.qa)
     implementation(projects.features.colorPicker)
     implementation(projects.libraries.common)
+    implementation(projects.libraries.session)
     implementation(projects.libraries.resources)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.navigation)

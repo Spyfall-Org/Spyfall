@@ -3,6 +3,14 @@ package com.dangerfield.libraries.game
 import kotlinx.coroutines.flow.Flow
 import spyfallx.core.Try
 
+/*
+instead of an access code I could make this of type T where T is of the type Game
+and we have online game and offline game and they have different atrtivutes
+like offline games dont have an access code and online games do.
+
+kinda feels like I shold avoid complicating it, create the duplicaiotn and work to reduce it later
+rather than try to think of some super clever way to do it now.
+ */
 interface GameRepository {
 
     suspend fun create(game: Game): Try<Unit>
@@ -33,3 +41,6 @@ interface GameRepository {
     suspend fun submitLocationVote(accessCode: String, voterId: String,  location: String): Try<Unit>
     suspend fun submitOddOneOutVote(accessCode: String, voterId: String, voteId: String): Try<Unit>
 }
+
+const val SingleDeviceRepositoryName = "SingleDeviceRepository"
+const val MultiDeviceRepositoryName = "MultiDeviceRepository"

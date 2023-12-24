@@ -1,10 +1,14 @@
 package com.dangerfield.libraries.game
 
+import com.squareup.moshi.JsonClass
+
 /**
  * WARNING: This version should be update if the core model changes. It is used to tell if 2
  * versions of the app are compatible to play together
  */
 const val CURRENT_GAME_MODEL_VERSION = 1
+// TODO i should probably use the versioned moshi adapter for this
+@JsonClass(generateAdapter = true)
 data class Game(
 
     /**

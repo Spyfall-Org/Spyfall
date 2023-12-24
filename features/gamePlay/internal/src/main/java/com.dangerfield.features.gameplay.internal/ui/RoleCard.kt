@@ -1,4 +1,4 @@
-package com.dangerfield.features.gameplay.internal
+package com.dangerfield.features.gameplay.internal.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -30,23 +30,25 @@ import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 fun RoleCard(
     role: String,
     isTheOddOneOut: Boolean,
+    isHidden: Boolean = false,
     location: String?,
-    text: String,
+    text: String?,
+    onHideShowClicked: () -> Unit
 ) {
-    var isHidden by remember { mutableStateOf(false) }
-
     SubcomposeLayout(
         modifier = Modifier.padding(horizontal = Spacing.S800),
     ) { constraints ->
         val buttonPlaceable = subcompose(0) {
-            Button(size = ButtonSize.Small, onClick = { isHidden = !isHidden }) {
+            Button(size = ButtonSize.Small, onClick = onHideShowClicked) {
                 Text(text = if (isHidden) "Show" else "Hide")
             }
         }.first().measure(constraints)
 
         val contentPlaceable = subcompose(1) {
             AnimatedVisibility(
-                visible = !isHidden, enter = expandVertically(), exit = shrinkVertically()
+                visible = !isHidden,
+                enter = expandVertically(),
+                exit = shrinkVertically()
             ) {
                 Column(
                     modifier = Modifier
@@ -54,7 +56,7 @@ fun RoleCard(
                             OddOneOutTheme.colorScheme.surfacePrimary, radius = Radii.Round
                         )
                         .fillMaxWidth()
-                        .padding(vertical = Spacing.S500, horizontal = Spacing.S1200)
+                        .padding(vertical = Spacing.S1000, horizontal = Spacing.S1200)
                         .padding(bottom = Spacing.S500),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -71,9 +73,11 @@ fun RoleCard(
                             textAlign = TextAlign.Center,
                         )
                     }
-                    Text(
-                        text = text, typographyToken = OddOneOutTheme.typography.Body.B800
-                    )
+                    if (text != null) {
+                        Text(
+                            text = text, typographyToken = OddOneOutTheme.typography.Body.B800
+                        )
+                    }
                 }
             }
         }.firstOrNull()?.measure(constraints)
@@ -102,7 +106,9 @@ private fun PreviewRoleCardOddOneOut() {
             role = "The Odd One Out!",
             text = "Don't get found out!",
             location = "The Beach",
-            isTheOddOneOut = true
+            isTheOddOneOut = true,
+            isHidden = false,
+            onHideShowClicked = { -> },
         )
     }
 }
@@ -115,7 +121,9 @@ private fun PreviewRoleCardPlayer() {
             role = "Something that takes up space",
             text = "Fine the odd one out",
             location = "Some longer location name",
-            isTheOddOneOut = false
+            isTheOddOneOut = false,
+            isHidden = false,
+            onHideShowClicked = { -> },
         )
     }
 }

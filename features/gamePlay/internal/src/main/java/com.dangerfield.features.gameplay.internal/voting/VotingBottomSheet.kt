@@ -1,4 +1,4 @@
-package com.dangerfield.features.gameplay.internal
+package com.dangerfield.features.gameplay.internal.voting
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,44 +21,53 @@ import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
 
 @Composable
-fun GameHelpBottomSheet(
+fun VotingBottomSheet(
     modifier: Modifier = Modifier,
     bottomSheetState: BottomSheetState = rememberBottomSheetState(),
+    hasVoted: Boolean,
     onDismiss: (BottomSheetState) -> Unit
 ) {
 
     BasicBottomSheet(
         onDismissRequest = { onDismiss(bottomSheetState) },
         state = bottomSheetState,
-        topAccessory = iconTopAccessory(icon = SpyfallIcon.Question(null)),
+        topAccessory = iconTopAccessory(icon = SpyfallIcon.Alarm(null)),
         modifier = modifier,
         topContent = {
-            Text(text = "How to play")
+            Text(text = if (hasVoted) "Voting Rules" else "Time to vote!")
         },
         content = {
             Column {
-                Text(text = "Read The Rules Bitch")
+                Text(text = "You can choose to do this through the app by voting or amongst yourselves by talking")
 
                 VerticalSpacerS800()
 
                 BulletRow {
-                    Text(text = "Come to a consensus on who you all think the odd one out is")
+                    Text(text = "Come to a majority agreement on who you all think the odd one out is")
                 }
 
-                BulletRow {
-                    Text(text = "Once done (regardless of if the guess is correct) the odd one out can reveal themselves and guess the location")
-                }
+                VerticalSpacerS500()
 
                 BulletRow {
-                    Text(text = "If the players guess the odd one out correctly the player wins")
+                    Text(text = "Once done (regardless of if the guess is correct) the odd one out must reveal themselves and guess the location")
                 }
+
+                VerticalSpacerS500()
+
+                BulletRow {
+                    Text(text = "If the majority of the players guess the odd one out correctly the players win")
+                }
+
+                VerticalSpacerS500()
 
                 BulletRow {
                     Text(text = "If the odd one out guesses the location correctly the odd one out wins")
                 }
 
+                VerticalSpacerS500()
+                
                 BulletRow {
-                    Text(text = "If both guess correctly or both guess incorrectly the game ends in a draw! But congrats to the odd one out for fooling everyone!")
+                    Text(text = "If both sides win or both sides lose then the game ends in a draw!")
                 }
             }
         },
@@ -77,13 +86,13 @@ fun GameHelpBottomSheet(
 
 @Composable
 @ThemePreviews
-private fun PreviewGameHelpBottomSheet() {
+private fun PreviewVotingBottomSheet() {
     val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {
-        GameHelpBottomSheet(
+        VotingBottomSheet(
             bottomSheetState = bottomSheetState,
-            onDismiss = { }
-
+            onDismiss = { },
+            hasVoted = false
         )
     }
 }

@@ -6,18 +6,20 @@ import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import dagger.hilt.android.lifecycle.HiltViewModel
 import spyfallx.core.developerSnackIfDebug
 import spyfallx.core.withBackoffRetry
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
     private val session: Session,
     private val clearActiveGame: ClearActiveGame,
-    private val gameRepository: GameRepository,
+    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
 ) : SEAViewModel<Unit, Event, Action>() {
 

@@ -6,6 +6,7 @@ import com.dangerfield.libraries.game.internal.config.ForceShortGames
 import com.dangerfield.libraries.game.internal.config.InactivityExpirationMins
 import com.dangerfield.libraries.game.internal.config.IsSingleDeviceModeEnabled
 import com.dangerfield.libraries.game.internal.config.LocationsPerGame
+import com.dangerfield.libraries.game.internal.config.LocationsPerSingleDeviceGame
 import com.dangerfield.libraries.game.internal.config.MaxNameLength
 import com.dangerfield.libraries.game.internal.config.MaxPlayers
 import com.dangerfield.libraries.game.internal.config.MaxTimeLimit
@@ -26,6 +27,7 @@ class GameConfigImpl @Inject constructor(
     private val minPlayersValue: MinPlayers,
     private val inactivityExpirationMinsValue: InactivityExpirationMins,
     private val locationsPerGameValue: LocationsPerGame,
+    private val locationsPerSingleDeviceGameValue: LocationsPerSingleDeviceGame,
     private val isSingleDeviceModeEnabledExperiment: IsSingleDeviceModeEnabled,
     private val forceShortGamesFlag: ForceShortGames
     ): GameConfig {
@@ -62,4 +64,7 @@ class GameConfigImpl @Inject constructor(
 
     override val gameInactivityExpirationMins: Int
         get() = inactivityExpirationMinsValue()
+
+    override val locationsPerSingleDeviceGame: Int
+        get() = locationsPerSingleDeviceGameValue()
 }

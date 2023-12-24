@@ -24,14 +24,12 @@ class ApplicationStateRepositoryImpl @Inject constructor(
 
     override fun onAppStart() {
         applicationScope.launch {
-            Log.d("Elijah", "about to emit foreground")
             appStateFlow.emit(ForegroundState.FOREGROUND)
         }
     }
 
     override fun onAppStop() {
         applicationScope.launch {
-            Log.d("Elijah", "about to emit background")
             appStateFlow.emit(ForegroundState.BACKGROUND)
         }
     }

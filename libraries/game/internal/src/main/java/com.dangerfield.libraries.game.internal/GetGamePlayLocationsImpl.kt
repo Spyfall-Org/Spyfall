@@ -14,7 +14,7 @@ import javax.inject.Inject
 class GetGamePlayLocationsImpl @Inject constructor(
     private val gameConfig: GameConfig
 ): GetGamePlayLocations {
-    override operator fun invoke(packs: List<Pack>): Try<List<Location>> = Try {
+    override operator fun invoke(packs: List<Pack>, isSingleDevice: Boolean): Try<List<Location>> = Try {
 
         val gamePlayLocations = mutableSetOf<Location>()
         val packBank = packs.map { it.locations.toMutableSet() }
@@ -22,7 +22,13 @@ class GetGamePlayLocationsImpl @Inject constructor(
 
         var iteration = 0
 
-        while (gamePlayLocations.size < gameConfig.locationsPerGame) {
+        val numOfLocationsToChoose = if (isSingleDevice) {
+            gameConfig.locationsPerSingleDeviceGame
+        } else {
+            gameConfig.locationsPerGame
+        }
+
+        while (gamePlayLocations.size < numOfLocationsToChoose) {
             if (iteration > totalLocations) {
                 return IllegalStateException(
                     """

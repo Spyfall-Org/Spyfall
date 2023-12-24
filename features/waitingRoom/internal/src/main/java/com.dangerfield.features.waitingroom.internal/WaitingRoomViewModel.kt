@@ -12,6 +12,7 @@ import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.Session
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,10 +28,11 @@ import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class WaitingRoomViewModel @Inject constructor(
-    private val gameRepository: GameRepository,
+    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
     private val startGameUseCase: StartGameUseCase,
     private val session: Session,

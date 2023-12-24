@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dangerfield.features.gameplay.navigateToSingleDeviceInfoRoute
 import com.dangerfield.features.newgame.internal.presentation.NewGameScreen
 import com.dangerfield.features.newgame.internal.presentation.NewGameViewModel
 import com.dangerfield.features.newgame.internal.presentation.model.Event
@@ -17,7 +18,6 @@ import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
-import com.dangerfield.libraries.navigation.floatingwindow.bottomSheet
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
@@ -44,9 +44,9 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
                     )
 
                     is Event.SingleDeviceGameCreated -> {
-                        // TODO navigate to singleDeviceGame feature, or just straight to game?
-                        // or should these also be in the waiting room?
-                        // idk man
+                        router.navigateToSingleDeviceInfoRoute(
+                            accessCode = it.accessCode,
+                        )
                     }
                 }
             }

@@ -1,4 +1,5 @@
-package com.dangerfield.features.gameplay.internal
+
+package com.dangerfield.features.gameplay.internal.voting
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument

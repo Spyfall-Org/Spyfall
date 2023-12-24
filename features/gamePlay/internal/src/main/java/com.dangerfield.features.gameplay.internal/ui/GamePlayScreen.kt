@@ -1,4 +1,4 @@
-package com.dangerfield.features.gameplay.internal
+package com.dangerfield.features.gameplay.internal.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -23,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.features.gameplay.internal.DisplayablePlayer
+import com.dangerfield.features.gameplay.internal.Fake
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.ui.HorizontalSpacerS800
 import com.dangerfield.libraries.ui.PreviewContent
@@ -151,6 +153,7 @@ private fun GamePlayScreenContent(
     var selectedPlayerForVote by rememberSaveable { mutableStateOf<DisplayablePlayer?>(null) }
     var selectedLocationForVote by rememberSaveable { mutableStateOf<String?>(null) }
     val hasSelectedVote: Boolean = selectedPlayerForVote != null || selectedLocationForVote != null
+    var isRoleHidden by remember { mutableStateOf(false) }
 
     ScrollingColumnWithFadingEdge(
         modifier = modifier
@@ -183,7 +186,9 @@ private fun GamePlayScreenContent(
             role = role,
             location = location,
             text = if (isOddOneOut) "Don't get found out" else "Find the odd one out",
-            isTheOddOneOut = isOddOneOut
+            isTheOddOneOut = isOddOneOut,
+            isHidden = isRoleHidden,
+            onHideShowClicked = { isRoleHidden = !isRoleHidden },
         )
 
         Spacer(modifier = Modifier.height(Spacing.S1000))

@@ -1,7 +1,9 @@
 package com.dangerfield.libraries.ui.components.modal
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,26 +31,34 @@ fun BasicDialog(
     content: @Composable () -> Unit = {},
     bottomContent: @Composable () -> Unit = {},
 ) {
-    Dialog(
-        onDismissRequest = onDismissRequest,
-    ) {
-        Column(
-            modifier = Modifier
-                .clip(Radii.Card)
-                .background(OddOneOutTheme.colorScheme.background)
-        ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(OddOneOutTheme.colorScheme.backgroundOverlay)
+    )
+    {
 
-            ModalContent(
-                modifier = modifier.padding(
-                    top = Spacing.S800,
-                    start = Spacing.S800,
-                    end = Spacing.S800,
-                    bottom = Spacing.S800
-                ),
-                topContent = topContent,
-                content = content,
-                bottomContent = bottomContent
-            )
+        Dialog(
+            onDismissRequest = onDismissRequest,
+        ) {
+            Column(
+                modifier = Modifier
+                    .clip(Radii.Card)
+                    .background(OddOneOutTheme.colorScheme.background)
+            ) {
+
+                ModalContent(
+                    modifier = modifier.padding(
+                        top = Spacing.S800,
+                        start = Spacing.S800,
+                        end = Spacing.S800,
+                        bottom = Spacing.S800
+                    ),
+                    topContent = topContent,
+                    content = content,
+                    bottomContent = bottomContent
+                )
+            }
         }
     }
 }

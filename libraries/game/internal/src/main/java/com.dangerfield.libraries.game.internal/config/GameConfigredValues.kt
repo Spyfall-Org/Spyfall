@@ -76,6 +76,16 @@ class LocationsPerGame @Inject constructor(
 }
 
 @AutoBindIntoSet
+class LocationsPerSingleDeviceGame @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Int>() {
+    override val displayName: String = "Locations Per Single Device Game"
+    override val path: String = "game.locationsPerSingleDeviceGame"
+    override val default: Int = 6
+    override fun resolveValue(): Int = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
 class MinTimeLimit @Inject constructor(
     private val appConfigMap: AppConfigMap
 ) : ConfiguredValue<Int>() {

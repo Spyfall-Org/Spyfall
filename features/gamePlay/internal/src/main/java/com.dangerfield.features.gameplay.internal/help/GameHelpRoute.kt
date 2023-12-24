@@ -1,4 +1,4 @@
-package com.dangerfield.features.gameplay.internal
+package com.dangerfield.features.gameplay.internal.help
 
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.route

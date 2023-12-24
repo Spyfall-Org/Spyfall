@@ -4,6 +4,8 @@ plugins {
 
 spyfall {
     flowroutines()
+    moshi()
+    datastore()
 }
 
 android {
@@ -12,4 +14,7 @@ android {
 
 dependencies {
     implementation(projects.libraries.common)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.core)
 }

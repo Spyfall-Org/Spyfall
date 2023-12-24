@@ -8,6 +8,7 @@ import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewMo
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.Session
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,10 +18,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import spyfallx.core.allOrNone
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class ChangeNameViewModel @Inject constructor(
-    private val gameRepository: GameRepository,
+    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val savedStateHandle: SavedStateHandle,
     private val gameConfig: GameConfig,
     private val session: Session

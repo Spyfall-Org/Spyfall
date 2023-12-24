@@ -13,6 +13,7 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
@@ -25,11 +26,12 @@ import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackIfDebug
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
 class GamePlayViewModel @Inject constructor(
-    private val gameRepository: GameRepository,
+    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
     private val session: Session,
     private val clearActiveGame: ClearActiveGame,
@@ -126,10 +128,6 @@ class GamePlayViewModel @Inject constructor(
                 updateState { it.copy(isLoadingVoteSubmit = false) }
             }
     }
-
-    // TODO PROBLEM: the user can enter the game at any point
-    // The game state needs to give them everything they might need.
-    // it cant rely on a build up
 
     private suspend fun loadGamePlay() {
         if (isSubscribedToGameFlow.getAndSet(true)) return

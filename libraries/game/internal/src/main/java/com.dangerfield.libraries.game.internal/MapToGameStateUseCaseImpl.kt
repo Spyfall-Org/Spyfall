@@ -40,14 +40,14 @@ class MapToGameStateUseCaseImpl @Inject constructor(
 
             isExpired(game) -> GameState.Expired(accessCode)
 
-            hasNotStarted(game)
+            !hasStarted(game) && !game.isBeingStarted
             -> GameState.Waiting(
                 accessCode = accessCode,
                 players = game.players,
                 videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() }
             )
 
-            isBeingStarted(game)
+            game.isBeingStarted
             -> GameState.Starting(
                 accessCode = accessCode,
                 players = game.players
@@ -125,12 +125,7 @@ class MapToGameStateUseCaseImpl @Inject constructor(
         return minsSinceLastActivity >= gameConfig.gameInactivityExpirationMins
     }
 
-    private fun isBeingStarted(game: Game) = (game.isBeingStarted
-            && (game.startedAt == null || !game.players.everyoneHasARole()))
-
-    private fun hasNotStarted(game: Game) = (!game.isBeingStarted
-            && game.startedAt == null
-            && !game.players.everyoneHasARole())
+    private fun hasStarted(game: Game) = game.startedAt != null && game.players.everyoneHasARole()
 
     private fun calculateGameResult(game: Game): GameResult {
         val oddOneOut = game.players.find { it.isOddOneOut } ?: return GameResult.Error

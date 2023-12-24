@@ -1,4 +1,4 @@
-package com.dangerfield.features.gameplay.internal
+package com.dangerfield.features.gameplay.internal.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii

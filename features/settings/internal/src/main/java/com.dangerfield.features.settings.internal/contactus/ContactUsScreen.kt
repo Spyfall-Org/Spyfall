@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.dangerfield.features.settings.internal.FieldState
+import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
@@ -68,7 +68,7 @@ fun ContactUsScreen(
     isLoadingSubmit: Boolean = false,
     isFormValid: Boolean,
     wasFormSubmittedSuccessfully: Boolean,
-    didSomethingGoWrong: Boolean,
+    didSubmitFail: Boolean,
     contactReasonFieldState: FieldState<ContactReason?>,
     nameFieldState: FieldState<String>,
     emailFieldState: FieldState<String>,
@@ -125,7 +125,7 @@ fun ContactUsScreen(
                 SuccessMessage()
             }
 
-            if (didSomethingGoWrong) {
+            if (didSubmitFail) {
                 ContactUsErrorDialog(onDismiss = onSomethingWentWrongDismissed)
             }
         }
@@ -395,7 +395,7 @@ private fun PreviewSettingsScreen() {
             onEmailUpdated = { },
             onMessageUpdated = { },
             wasFormSubmittedSuccessfully = false,
-            didSomethingGoWrong = false,
+            didSubmitFail = false,
             onSomethingWentWrongDismissed = { -> }
         )
     }
@@ -419,7 +419,7 @@ private fun PreviewSuccess() {
             onEmailUpdated = { },
             onMessageUpdated = { },
             wasFormSubmittedSuccessfully = true,
-            didSomethingGoWrong = false,
+            didSubmitFail = false,
             onSomethingWentWrongDismissed = { -> }
         )
     }

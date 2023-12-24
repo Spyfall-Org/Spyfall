@@ -72,7 +72,7 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
                 onEmailUpdated = {  viewModel.takeAction(UpdateEmail(it))  },
                 onMessageUpdated = {  viewModel.takeAction(UpdateMessage(it))  },
                 wasFormSubmittedSuccessfully = state.wasFormSuccessfullySubmitted,
-                didSomethingGoWrong = state.didSomethingGoWrong,
+                didSubmitFail = state.didSubmitFail,
                 onSomethingWentWrongDismissed = {  viewModel.takeAction(DismissSomethingWentWrong)  },
             )
         }

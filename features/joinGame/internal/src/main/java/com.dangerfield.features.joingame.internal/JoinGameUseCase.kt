@@ -7,6 +7,7 @@ import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
+import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
@@ -17,10 +18,11 @@ import spyfallx.core.failure
 import spyfallx.core.success
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.time.Duration.Companion.seconds
 
 class JoinGameUseCase @Inject constructor(
-    private val gameRepository: GameRepository,
+    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
     private val gameConfig: GameConfig,
     private val session: Session,
@@ -84,7 +86,8 @@ class JoinGameUseCase @Inject constructor(
                 gameConfig.maxPlayers
             )
 
-            gameState is GameState.Waiting && gameState.players.any { it.userName == userName } -> JoinGameError.UsernameTaken
+            gameState is GameState.Waiting
+                    && gameState.players.any { it.userName.lowercase() == userName.lowercase() } -> JoinGameError.UsernameTaken
 
             else -> null
         }

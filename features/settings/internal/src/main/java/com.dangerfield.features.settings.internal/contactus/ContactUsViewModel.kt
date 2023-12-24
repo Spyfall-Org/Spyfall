@@ -1,12 +1,16 @@
 package com.dangerfield.features.settings.internal.contactus
 
-import com.dangerfield.features.settings.internal.FieldState
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
-import kotlinx.coroutines.delay
+import com.dangerfield.libraries.ui.FieldState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ContactUsViewModel : SEAViewModel<State, Nothing, Action>() {
+@HiltViewModel
+class ContactUsViewModel @Inject constructor(
+    private val sendContactForm: SendContactForm
+) : SEAViewModel<State, Nothing, Action>() {
 
     override val initialState = State(
         isLoadingSubmit = false,
@@ -15,7 +19,7 @@ class ContactUsViewModel : SEAViewModel<State, Nothing, Action>() {
         emailFieldState = FieldState.Idle(""),
         messageFieldState = FieldState.Idle(""),
         isFormValid = false,
-        didSomethingGoWrong = false,
+        didSubmitFail = false,
         wasFormSuccessfullySubmitted = false
     )
 
@@ -26,7 +30,7 @@ class ContactUsViewModel : SEAViewModel<State, Nothing, Action>() {
             is Action.UpdateEmail -> updateEmail(action.email)
             is Action.UpdateMessage -> updateMessage(action.message)
             is Action.UpdateName -> updateName(action.name)
-            is Action.DismissSomethingWentWrong -> updateState { it.copy(didSomethingGoWrong = false) }
+            is Action.DismissSomethingWentWrong -> updateState { it.copy(didSubmitFail = false) }
         }
     }
 
@@ -80,11 +84,23 @@ class ContactUsViewModel : SEAViewModel<State, Nothing, Action>() {
 
     private suspend fun handleSubmit() {
         updateState { it.copy(isLoadingSubmit = true) }
-        delay(3_000)
-        updateState { it.copy(
-            isLoadingSubmit = false,
-            wasFormSuccessfullySubmitted = true
-        ) }
+        val state = state.value
+
+        sendContactForm.invoke(
+            name = state.nameFieldState.backingValue.orEmpty(),
+            email =  state.emailFieldState.backingValue.orEmpty(),
+            message =  state.messageFieldState.backingValue.orEmpty(),
+            contactReason = state.contactReasonState.backingValue ?: ContactReason.None
+        )
+            .onSuccess {
+                updateState { it.copy(wasFormSuccessfullySubmitted = true) }
+            }
+            .onFailure {
+                updateState { it.copy(didSubmitFail = true) }
+            }
+            .eitherWay {
+                updateState { it.copy(isLoadingSubmit = false) }
+            }
     }
 
     private fun String.isEmailFormat(): Boolean {
@@ -106,7 +122,7 @@ class ContactUsViewModel : SEAViewModel<State, Nothing, Action>() {
         val emailFieldState: FieldState<String>,
         val messageFieldState: FieldState<String>,
         val isFormValid: Boolean,
-        val didSomethingGoWrong: Boolean,
+        val didSubmitFail: Boolean,
         val wasFormSuccessfullySubmitted: Boolean,
     )
 
