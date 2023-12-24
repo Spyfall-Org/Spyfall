@@ -36,6 +36,7 @@ fun SingleDeviceInfoScreen(
                 .padding(bottom = Spacing.S1000)
         ) {
             VerticalSpacerS500()
+            @Suppress("MaxLineLength")
             Text(
                 text = "Single device games are played by each player passing around the device.\n\nWhen handed the device the player will be able to reveal their role and the location (if they are not the odd one out).\n\nWhen done that player should press the \"Next Player\" button before handing the device off to the next player.\n\nThe last player will be able to start the game.",
                 typographyToken = OddOneOutTheme.typography.Body.B700
