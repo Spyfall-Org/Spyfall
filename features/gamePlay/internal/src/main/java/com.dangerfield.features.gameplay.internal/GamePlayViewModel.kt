@@ -1,5 +1,6 @@
 package com.dangerfield.features.gameplay.internal
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackIfDebug
+import spyfallx.core.throwIfDebug
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
@@ -91,6 +93,7 @@ class GamePlayViewModel @Inject constructor(
 
     private suspend fun resetGame() {
         gameRepository.reset(accessCode)
+            .throwIfDebug()
     }
 
     private suspend fun submitOddOneOutVote(action: Action.SubmitOddOneOutVote) {
@@ -138,6 +141,7 @@ class GamePlayViewModel @Inject constructor(
             ) { game, _ ->
                 mapToGameState(accessCode, game)
             }.collect { gameState ->
+                Log.d("Elijah", "Game state of ${gameState::class.simpleName} in game play")
                 when (gameState) {
                     is GameState.Starting,
                     is GameState.Expired,

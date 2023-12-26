@@ -47,14 +47,14 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                 videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() }
             )
 
-            game.isBeingStarted
+            !hasStarted(game) && game.isBeingStarted
             -> GameState.Starting(
                 accessCode = accessCode,
                 players = game.players
             )
 
-            startedAt != null
-                    && game.players.everyoneHasARole()
+            hasStarted(game)
+                    && startedAt != null
                     && remainingMillis(startedAt, game.timeLimitMins) > 0
             -> GameState.Started(
                 accessCode = accessCode,
@@ -68,8 +68,8 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                 timeRemainingMillis = remainingMillis(startedAt, game.timeLimitMins)
             )
 
-            startedAt != null
-                    && game.players.everyoneHasARole()
+            hasStarted(game)
+                    && startedAt != null
                     && remainingMillis(startedAt, game.timeLimitMins) <= 0
                     && !game.players.everyoneHasVoted()
             -> GameState.Voting(
@@ -82,7 +82,7 @@ class MapToGameStateUseCaseImpl @Inject constructor(
             )
 
             startedAt != null
-                    && game.players.everyoneHasARole()
+                    && hasStarted(game)
                     && remainingMillis(startedAt, game.timeLimitMins) <= 0
                     && game.players.everyoneHasVoted()
             -> GameState.VotingEnded(

@@ -1,10 +1,11 @@
 package com.dangerfield.libraries.game.internal
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
+import com.dangerfield.libraries.datastore.distinctKeyFlow
+import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
@@ -29,9 +30,11 @@ import spyfallx.core.throwIfDebug
 import java.time.Clock
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Named(SingleDeviceRepositoryName)
 @AutoBind
+@Singleton
 class SingleDeviceGameRepository
 @Inject constructor(
     private val datastore: DataStore<Preferences>,
@@ -43,15 +46,14 @@ class SingleDeviceGameRepository
 ) : GameRepository {
     private val jsonAdapter = moshi.adapter(Game::class.java)
 
-    private val gameFlow = datastore.data.map {
-        it[gamePreferenceKey]?.let { json ->
-            Log.d("Elijah", "data store got non empty game")
-            jsonAdapter.fromJson(json)
-        } ?: run {
-            Log.d("Elijah", "data store got null game")
-            null
+    private val gameFlow = datastore
+        .distinctKeyFlow(gamePreferenceKey)
+        .map {
+            it?.let { json ->
+                Try { jsonAdapter.fromJson(json) }.throwIfDebug().getOrNull()
+            }
         }
-    }
+
         .stateIn(
             applicationScope,
             SharingStarted.Eagerly,
@@ -59,7 +61,6 @@ class SingleDeviceGameRepository
         )
 
     override suspend fun create(game: Game): Try<Unit> = Try {
-        Log.d("Elijah", "Creating game")
         datastore.updateData {
             it.toMutablePreferences().apply {
                 val gameJson = jsonAdapter.toJson(game)
@@ -113,45 +114,56 @@ class SingleDeviceGameRepository
         }
     }
 
+    // TODO extract out logic shared from this
     override suspend fun reset(accessCode: String): Try<Unit> = Try {
         val currentGame = gameFlow.value.takeIf { it?.accessCode == accessCode }
             ?: return illegalState("Single Device Game is null when resetting")
 
-        val packs = locationPackRepository
-            .getPacks()
-            .getOrThrow()
-            .filter { it.name in currentGame.packNames }
-
-        val newLocations = getGamePlayLocations(packs)
-            .getOrNull()
-            ?.map { it.name }
-            ?: currentGame.locationOptionNames
-
-        var newLocation = newLocations.random()
-
-        while (newLocation == currentGame.locationName) {
-            newLocation = newLocations.random()
+        val packs = currentGame.packNames.mapNotNull { packName ->
+            locationPackRepository.getPack(packName)
+                .throwIfDebug()
+                .getOrNull()
         }
 
-        val resetGame = currentGame.copy(
-            locationName = newLocation,
+        val locations = getGamePlayLocations(packs = packs, isSingleDevice = true).getOrThrow()
+        val location = locations.random()
+        val shuffledRoles = location.roles.shuffled()
+
+        val players = currentGame.players.map {
+            it.copy(
+                role = null,
+                isOddOneOut = false,
+                votedCorrectly = null
+            )
+        }
+
+        val oddOneOutIndex = players.indices.random()
+
+        val playersWithRoles = players.mapIndexed { index, player ->
+            val role = if (index == oddOneOutIndex) "The Odd One Out" else shuffledRoles[index]
+            player.copy(role = role, isOddOneOut = index == oddOneOutIndex)
+        }
+
+        val game = Game(
+            locationName = location.name,
+            packNames = packs.map { it.name },
             isBeingStarted = false,
-            players = currentGame.players.map {
-                it.copy(
-                    role = null,
-                    isOddOneOut = false,
-                    votedCorrectly = null
-                )
-            },
-            locationOptionNames = newLocations,
+            players = playersWithRoles,
+            timeLimitMins = currentGame.timeLimitMins,
             startedAt = null,
+            locationOptionNames = locations.map { it.name },
+            videoCallLink = null,
+            version = CURRENT_GAME_MODEL_VERSION,
+            accessCode = accessCode,
+            lastActiveAt = clock.millis()
         )
-        return updateGame {
-            resetGame
-        }
+
+        return updateGame { game }
             .logOnError()
             .developerSnackOnError { "Could not reset game" }
     }
+        .logOnError("Could not reset game")
+        .throwIfDebug()
 
     override suspend fun changeName(accessCode: String, newName: String, id: String): Try<Unit> =
         Try {

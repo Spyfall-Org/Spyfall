@@ -36,41 +36,7 @@ fun VotingBottomSheet(
         topContent = {
             Text(text = if (hasVoted) "Voting Rules" else "Time to vote!")
         },
-        content = {
-            Column {
-                Text(text = "You can choose to do this through the app by voting or amongst yourselves by talking")
-
-                VerticalSpacerS800()
-
-                BulletRow {
-                    Text(text = "Come to a majority agreement on who you all think the odd one out is")
-                }
-
-                VerticalSpacerS500()
-
-                BulletRow {
-                    Text(text = "Once done (regardless of if the guess is correct) the odd one out must reveal themselves and guess the location")
-                }
-
-                VerticalSpacerS500()
-
-                BulletRow {
-                    Text(text = "If the majority of the players guess the odd one out correctly the players win")
-                }
-
-                VerticalSpacerS500()
-
-                BulletRow {
-                    Text(text = "If the odd one out guesses the location correctly the odd one out wins")
-                }
-
-                VerticalSpacerS500()
-                
-                BulletRow {
-                    Text(text = "If both sides win or both sides lose then the game ends in a draw!")
-                }
-            }
-        },
+        content = { VotingExplanationBlock(hasVoted) },
         bottomContent = {
             Button(
                 modifier = Modifier
@@ -82,6 +48,47 @@ fun VotingBottomSheet(
             }
         }
     )
+}
+
+@Composable
+fun VotingExplanationBlock(hasVoted: Boolean = false) {
+    Column {
+
+        if (!hasVoted) {
+            Text(text = "You can choose to do this through the app by voting or amongst yourselves by talking")
+            VerticalSpacerS800()
+        }
+
+        BulletRow {
+            Text(
+                text = "Come to a majority agreement on who you all think the odd one out is",
+            )
+        }
+
+        VerticalSpacerS500()
+
+        BulletRow {
+            Text(text = "Once done (regardless of if the guess is correct) the odd one out must reveal themselves and guess the location")
+        }
+
+        VerticalSpacerS500()
+
+        BulletRow {
+            Text(text = "If the majority of the players guess the odd one out correctly the players win")
+        }
+
+        VerticalSpacerS500()
+
+        BulletRow {
+            Text(text = "If the odd one out guesses the location correctly the odd one out wins")
+        }
+
+        VerticalSpacerS500()
+
+        BulletRow {
+            Text(text = "If both sides win or both sides lose then the game ends in a draw!")
+        }
+    }
 }
 
 @Composable

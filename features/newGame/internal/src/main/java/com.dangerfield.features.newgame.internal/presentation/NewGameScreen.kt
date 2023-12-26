@@ -164,7 +164,8 @@ fun NewGameScreen(
 
                 FormField(
                     formFieldState = numOfPlayersState,
-                    isFieldVisible = isSingleDevice
+                    isFieldVisible = isSingleDevice,
+                    showErrorWhenNotFocused = true, // last field should show error,
                 ) {
                     NumOfPlayersField(
                         numOfPlayersState = numOfPlayersState,
@@ -178,7 +179,7 @@ fun NewGameScreen(
                     FormField(
                         formFieldState = videoCallLinkState,
                         isFieldVisible = !isSingleDevice,
-                        showErrorWhenNotFocused = true, // last field should show error,
+                        showErrorWhenNotFocused = true,
                         onFocusChanged = { videoCallFieldHasFocus = it }
 
                     ) {

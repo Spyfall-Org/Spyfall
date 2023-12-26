@@ -19,9 +19,9 @@ fun CircularIcon(
     icon: SpyfallIcon,
     iconSize: IconSize,
     padding: Dp,
-    backgroundColor: ColorToken.Color,
-    contentColor: ColorToken.Color,
     modifier: Modifier = Modifier,
+    backgroundColor: ColorToken.Color = OddOneOutTheme.colorScheme.surfacePrimary,
+    contentColor: ColorToken.Color  = OddOneOutTheme.colorScheme.onSurfacePrimary,
     elevation: Elevation = Elevation.None,
     onClick: (() -> Unit)? = null
 ) {

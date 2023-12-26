@@ -92,7 +92,8 @@ class CreateSingleDeviceGame @Inject constructor(
                 updateActiveGame(
                     ActiveGame(
                         accessCode = accessCode,
-                        userId = userId
+                        userId = userId,
+                        isSingleDevice = true
                     )
                 )
             }

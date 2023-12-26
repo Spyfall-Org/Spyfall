@@ -19,7 +19,7 @@ import com.dangerfield.features.gameplay.internal.ui.GamePlayScreen
 import com.dangerfield.features.gameplay.internal.voting.VotingBottomSheet
 import com.dangerfield.features.gameplay.internal.voting.hasVotedArgument
 import com.dangerfield.features.gameplay.internal.voting.navigateToVotingInfo
-import com.dangerfield.features.gameplay.internal.voting.votingRoute
+import com.dangerfield.features.gameplay.internal.voting.votingInfoRoute
 import com.dangerfield.features.videoCall.navigateToVideoCallBottomSheet
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.features.welcome.welcomeNavigationRoute
@@ -75,12 +75,13 @@ class GamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                 onEndGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.EndGame) },
                 videoCallLink = state.videoCallLink,
                 onVideoCallButtonClicked =  router::navigateToVideoCallBottomSheet,
+                mePlayerId = state.mePlayer?.id.orEmpty()
             )
         }
 
         bottomSheet(
-            route = votingRoute.navRoute,
-            arguments = votingRoute.navArguments
+            route = votingInfoRoute.navRoute,
+            arguments = votingInfoRoute.navArguments
         ) {
             val hasVoted = it.navArgument<Boolean>(hasVotedArgument) ?: false
 

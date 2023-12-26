@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -93,6 +94,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
         // TODO apply targeted overrides (starting with version overrides)
         emitAll(configFlow)
     }
+        .distinctUntilChanged()
         .onEach {
             Timber.d("Config emitted: ${it.map}")
         }

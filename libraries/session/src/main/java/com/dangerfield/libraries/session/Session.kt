@@ -18,7 +18,9 @@ interface Session {
 }
 
 @JsonClass(generateAdapter = true)
+// TODO need to version this, i added a new field and things crashed on the next run,
 data class ActiveGame(
     val accessCode: String,
-    val userId: String
+    val userId: String,
+    val isSingleDevice: Boolean
 )

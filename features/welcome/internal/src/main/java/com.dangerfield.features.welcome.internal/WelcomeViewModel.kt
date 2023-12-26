@@ -7,6 +7,7 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
+import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,11 +20,15 @@ import javax.inject.Named
 class WelcomeViewModel @Inject constructor(
     private val session: Session,
     private val clearActiveGame: ClearActiveGame,
-    @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
+    @Named(MultiDeviceRepositoryName) private val multiDeviceGameRepository: GameRepository,
+    @Named(SingleDeviceRepositoryName) private val singleDeviceRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
 ) : SEAViewModel<Unit, Event, Action>() {
 
     override val initialState = Unit
+
+    private val gameRepository: GameRepository
+        get() = if (session.activeGame?.isSingleDevice == true) singleDeviceRepository else multiDeviceGameRepository
 
     override suspend fun handleAction(action: Action) {
         when (action) {
@@ -31,6 +36,10 @@ class WelcomeViewModel @Inject constructor(
         }
     }
 
+    /*
+    TODO I could probably have a provider of the repo that changes based on the sessions active game being online or
+    not
+     */
     private suspend fun checkForActiveGame() {
         val activeGame = session.activeGame
         if (activeGame != null) {
@@ -39,8 +48,7 @@ class WelcomeViewModel @Inject constructor(
                 initialDelayMillis = 500,
                 factor = 2.0,
             ) {
-                gameRepository
-                    .getGame(activeGame.accessCode)
+                gameRepository.getGame(activeGame.accessCode)
             }
                 .map { game ->
                     mapToGameState(game.accessCode, game)
@@ -52,13 +60,19 @@ class WelcomeViewModel @Inject constructor(
 
                     when (it) {
                         is GameState.Expired -> {
-                            gameRepository.end(activeGame.accessCode)
+                            if (!activeGame.isSingleDevice) {
+                                gameRepository.end(activeGame.accessCode)
+                            }
                             clearActiveGame()
                         }
 
                         is GameState.Waiting,
                         is GameState.Starting -> {
-                            sendEvent(Event.GameInWaitingRoomFound(activeGame.accessCode))
+                            if (activeGame.isSingleDevice) {
+                                sendEvent(Event.GameInSingleDeviceRoleRevealFound(activeGame.accessCode))
+                            } else {
+                                sendEvent(Event.GameInWaitingRoomFound(activeGame.accessCode))
+                            }
                         }
 
                         is GameState.Unknown,
@@ -67,7 +81,7 @@ class WelcomeViewModel @Inject constructor(
                         is GameState.Started,
                         is GameState.Voting,
                         is GameState.VotingEnded -> {
-                            sendEvent(Event.GameInProgressFound(activeGame.accessCode))
+                            sendEvent(Event.GameInProgressFound(activeGame.accessCode, activeGame.isSingleDevice))
                         }
                     }
                 }
@@ -79,7 +93,8 @@ class WelcomeViewModel @Inject constructor(
     }
 
     sealed class Event {
+        data class GameInSingleDeviceRoleRevealFound(val accessCode: String) : Event()
         data class GameInWaitingRoomFound(val accessCode: String) : Event()
-        data class GameInProgressFound(val accessCode: String) : Event()
+        data class GameInProgressFound(val accessCode: String, val isSingleDevice: Boolean) : Event()
     }
 }

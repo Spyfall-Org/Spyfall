@@ -21,9 +21,14 @@ fun GamePlayGrid(
     items: List<String>,
     isDisplayingForSelection: Boolean,
     isClickEnabled: Boolean,
+    selectedItem: String? = null,
     onItemSelectedForVote: (Int?) -> Unit = {}
 ) {
-    var indexSelectedForVote by remember { mutableStateOf<Int?>(null) }
+    var indexSelectedForVote by remember {
+        mutableStateOf<Int?>(
+            items.indexOf(selectedItem).takeIf { it != -1 }
+        )
+    }
 
     NonLazyVerticalGrid(columns = 2, data = items) { index, item ->
         val shouldPadEnd = index % 2 == 0
@@ -37,8 +42,8 @@ fun GamePlayGrid(
                 val indexUpdate = if (alreadySelected) null else index
                 indexSelectedForVote = indexUpdate
                 onItemSelectedForVote(indexUpdate)
-            } ,
-            isSelectedForVote = index  == indexSelectedForVote,
+            },
+            isSelectedForVote = index == indexSelectedForVote,
             isClickEnabled = isClickEnabled,
             modifier = Modifier
                 .fillMaxHeight()
@@ -66,7 +71,15 @@ private fun PreviewCrossOutGridVoting() {
             indexOfFirst = 1,
             isDisplayingForSelection = true,
             isClickEnabled = true,
-            items = listOf("one", "two", "three", "four", "five but longer than normal", "six", "seven")
+            items = listOf(
+                "one",
+                "two",
+                "three",
+                "four",
+                "five but longer than normal",
+                "six",
+                "seven"
+            )
         )
     }
 }
@@ -79,7 +92,15 @@ private fun PreviewCrossOutGridNotVoting() {
             indexOfFirst = 1,
             isDisplayingForSelection = false,
             isClickEnabled = true,
-            items = listOf("one", "two", "three", "four", "five but longer than normal", "six", "seven")
+            items = listOf(
+                "one",
+                "two",
+                "three",
+                "four",
+                "five but longer than normal",
+                "six",
+                "seven"
+            )
         )
     }
 }

@@ -5,6 +5,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.gameplay.navigateToGamePlayScreen
+import com.dangerfield.features.gameplay.navigateToSingleDeviceGamePlayScreen
+import com.dangerfield.features.gameplay.navigateToSingleDeviceInfoRoute
 import com.dangerfield.features.joingame.navigateToJoinGame
 import com.dangerfield.features.newgame.navigateToNewGame
 import com.dangerfield.features.rules.navigateToRules
@@ -27,7 +29,7 @@ class WelcomeModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
         composable(
             route = welcomeNavigationRoute.navRoute,
             arguments = welcomeNavigationRoute.navArguments
-        ) {
+        ) { backStackEntry ->
 
             val viewModel: WelcomeViewModel = hiltViewModel()
 
@@ -38,16 +40,30 @@ class WelcomeModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
             ObserveWithLifecycle(flow = viewModel.events) {
                 when (it) {
                     is WelcomeViewModel.Event.GameInProgressFound -> {
-                        if (router.isOnWelcomeScreen()) {
-                            router.navigateToGamePlayScreen(
-                                accessCode = it.accessCode, timeLimit = null
-                            )
+                        router.ifStillOn(backStackEntry) {
+                            if (it.isSingleDevice) {
+                                navigateToSingleDeviceGamePlayScreen(
+                                    accessCode = it.accessCode,
+                                    timeLimit = null
+                                )
+                            } else {
+                                navigateToGamePlayScreen(
+                                    accessCode = it.accessCode,
+                                    timeLimit = null
+                                )
+                            }
                         }
                     }
 
                     is WelcomeViewModel.Event.GameInWaitingRoomFound -> {
-                        if (router.isOnWelcomeScreen()) {
-                            router.navigateToWaitingRoom(it.accessCode)
+                        router.ifStillOn(backStackEntry) {
+                            navigateToWaitingRoom(it.accessCode)
+                        }
+                    }
+
+                    is WelcomeViewModel.Event.GameInSingleDeviceRoleRevealFound -> {
+                        router.ifStillOn(backStackEntry) {
+                            navigateToSingleDeviceInfoRoute(it.accessCode)
                         }
                     }
                 }

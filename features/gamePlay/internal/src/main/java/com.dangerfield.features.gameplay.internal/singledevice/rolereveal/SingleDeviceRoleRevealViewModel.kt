@@ -1,12 +1,13 @@
-package com.dangerfield.features.gameplay.internal.singledevice
+package com.dangerfield.features.gameplay.internal.singledevice.rolereveal
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.DisplayablePlayer
-import com.dangerfield.features.gameplay.internal.singledevice.SingleDevicePlayerRoleViewModel.Action
-import com.dangerfield.features.gameplay.internal.singledevice.SingleDevicePlayerRoleViewModel.Event
-import com.dangerfield.features.gameplay.internal.singledevice.SingleDevicePlayerRoleViewModel.State
+import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action
+import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Event
+import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
@@ -28,7 +29,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class SingleDevicePlayerRoleViewModel @Inject constructor(
+class SingleDeviceRoleRevealViewModel @Inject constructor(
     @Named(SingleDeviceRepositoryName) private val gameRepository: GameRepository,
     private val savedStateHandle: SavedStateHandle,
     private val mapToGameState: MapToGameStateUseCase,
@@ -52,29 +53,40 @@ class SingleDevicePlayerRoleViewModel @Inject constructor(
         location = null,
         isGameStarted = false,
         isLastPlayer = false,
-        nameFieldState = FieldState.Idle("")
+        nameFieldState = FieldState.Idle(""),
+        locationOptions = emptyList()
     )
 
     override suspend fun handleAction(action: Action) {
         when (action) {
             Action.LoadGame -> loadGame()
             Action.LoadNextPlayer -> pollPlayer()
-            Action.StartGame -> {
-                // i think i just set started at and thats it
-            }
-
+            Action.StartGame -> startGame()
             is Action.UpdateName -> changeName(action.name)
         }
+    }
+
+    private suspend fun startGame() {
+        gameRepository.start(accessCode)
     }
 
     private suspend fun changeName(newName: String) {
         val id = state.value.currentPlayer?.id ?: return
 
-        val isNameInvalidLength = newName.length !in gameConfig.minNameLength..gameConfig.maxNameLength
+        val isNameInvalidLength =
+            newName.length !in gameConfig.minNameLength..gameConfig.maxNameLength
 
         val fieldState = when {
-            newName.isNotEmpty() && isNameInvalidLength -> Invalid(newName, "Name must be between ${gameConfig.minNameLength} and ${gameConfig.maxNameLength} characters")
-            gameFlow.first().players.find { it.userName.lowercase() == newName.lowercase() } != null -> Invalid(newName, "Name is taken")
+            newName.isNotEmpty() && isNameInvalidLength -> Invalid(
+                newName,
+                "Name must be between ${gameConfig.minNameLength} and ${gameConfig.maxNameLength} characters"
+            )
+
+            gameFlow.first().players.find { it.userName.lowercase() == newName.lowercase() } != null -> Invalid(
+                newName,
+                "Name is taken"
+            )
+
             else -> FieldState.Valid(newName)
         }
 
@@ -98,7 +110,10 @@ class SingleDevicePlayerRoleViewModel @Inject constructor(
             gameRepository.getGame(accessCode)
                 .onSuccess { game ->
                     updateState { state ->
-                        state.copy(location = game.locationName)
+                        state.copy(
+                            location = game.locationName,
+                            locationOptions = game.locationOptionNames
+                        )
                     }
                     val displayablePlayers = game.players.mapIndexed { index, player ->
                         DisplayablePlayer(
@@ -120,6 +135,8 @@ class SingleDevicePlayerRoleViewModel @Inject constructor(
                 .map { game ->
                     mapToGameState(accessCode, game)
                 }.collect { gameState ->
+                    Log.d("Elijah", "Game state of ${gameState::class.simpleName} in role reveal")
+
                     when (gameState) {
                         is GameState.Expired,
                         is GameState.Voting,
@@ -176,7 +193,8 @@ class SingleDevicePlayerRoleViewModel @Inject constructor(
         val isLastPlayer: Boolean,
         val location: String?,
         val isGameStarted: Boolean,
-        val nameFieldState: FieldState<String>
+        val nameFieldState: FieldState<String>,
+        val locationOptions: List<String>,
     )
 
     sealed class Event {

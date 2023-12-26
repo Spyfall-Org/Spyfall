@@ -50,6 +50,7 @@ fun GamePlayScreen(
     locations: List<String>,
     timeRemaining: String,
     role: String,
+    mePlayerId: String,
     isOddOneOut: Boolean,
     location: String?,
     videoCallLink: String?,
@@ -104,6 +105,7 @@ fun GamePlayScreen(
                 location = location,
                 isVotingOnOddOneOut = !isOddOneOut,
                 players = players,
+                mePlayerId = mePlayerId,
                 isVotingOnLocation = isOddOneOut,
                 locations = locations,
                 isLoadingVote = isLoadingVote,
@@ -142,6 +144,7 @@ private fun GamePlayScreenContent(
     location: String?,
     isVotingOnOddOneOut: Boolean,
     players: List<DisplayablePlayer>,
+    mePlayerId: String,
     isVotingOnLocation: Boolean,
     locations: List<String>,
     isLoadingVote: Boolean,
@@ -199,6 +202,7 @@ private fun GamePlayScreenContent(
                 hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
                 selectedPlayer = selectedPlayerForVote,
                 players = players,
+                mePlayerId = mePlayerId,
                 onPlayerSelectedForVote = {
                     selectedPlayerForVote = it
                 }
@@ -375,6 +379,7 @@ private fun CorrectAnswer(
 @Composable
 private fun PlayerList(
     isTimeUp: Boolean,
+    mePlayerId: String,
     hasMePlayerSubmittedVote: Boolean,
     selectedPlayer: DisplayablePlayer?,
     players: List<DisplayablePlayer>,
@@ -395,18 +400,18 @@ private fun PlayerList(
 
         VerticalSpacerS500()
 
-        val namesToShow = if (hasMePlayerSubmittedVote) {
-            listOf(selectedPlayer?.name.orEmpty())
-        } else {
-            players.map { it.name }
+        val playersToShow = when {
+            hasMePlayerSubmittedVote -> listOf(selectedPlayer)
+            isTimeUp -> players.filter { it.id != mePlayerId }
+            else ->  players
         }
 
         GamePlayGrid(
-            items = namesToShow,
+            items = playersToShow.map { it?.name.orEmpty() },
             indexOfFirst = players.indexOfFirst { it.isFirst },
             isDisplayingForSelection = isTimeUp,
             onItemSelectedForVote = { index ->
-                onPlayerSelectedForVote(index?.let { players[it] })
+                onPlayerSelectedForVote(index?.let { playersToShow[it] })
             },
             isClickEnabled = !hasMePlayerSubmittedVote,
         )
@@ -508,7 +513,8 @@ private fun PreviewGamePlayScreen() {
             onEndGameClicked = {},
             onResetGameClicked = {},
             videoCallLink = "https:zoom.com",
-            onVideoCallButtonClicked = {}
+            onVideoCallButtonClicked = {},
+            mePlayerId = "1"
         )
     }
 }
@@ -538,7 +544,8 @@ private fun PreviewGamePlayScreenVoting() {
             onEndGameClicked = {},
             onResetGameClicked = {},
             videoCallLink = "https:zoom.com",
-            onVideoCallButtonClicked = {}
+            onVideoCallButtonClicked = {},
+            mePlayerId = "1"
         )
     }
 }
@@ -568,7 +575,8 @@ private fun PreviewGamePlayScreenVoted() {
             onEndGameClicked = {},
             onResetGameClicked = {},
             videoCallLink = "https:zoom.com",
-            onVideoCallButtonClicked = {}
+            onVideoCallButtonClicked = {},
+            mePlayerId = "1"
         )
     }
 }
@@ -598,7 +606,8 @@ private fun PreviewGamePlayScreenResults() {
             onEndGameClicked = {},
             onResetGameClicked = {},
             videoCallLink = "https:zoom.com",
-            onVideoCallButtonClicked = {}
+            onVideoCallButtonClicked = {},
+            mePlayerId = "1"
         )
     }
 }

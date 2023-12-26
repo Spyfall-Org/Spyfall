@@ -29,13 +29,13 @@ class LocationPackRepositoryImpl @Inject constructor(
     }
         .logOnError()
 
-    override suspend fun getPack(packName: String): Try<Pack> {
-        return Try.Failure(Exception("Not implemented"))
+    override suspend fun getPack(packName: String): Try<Pack> = Try {
+        val packs = getPacks().getOrThrow()
+        packs.first { it.name == packName }
     }
 
     override suspend fun getLocations(packName: String): Try<List<Location>> {
         return Try.just(emptyList())
-
     }
 
     override suspend fun getRoles(locationName: String): Try<List<String>> {

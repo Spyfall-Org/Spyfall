@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
 import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
+import com.dangerfield.libraries.datastore.distinctKeyFlow
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.User
@@ -57,15 +58,15 @@ class SessionRepository @Inject constructor(
     private val activeGameAdapter = moshi.adapter(ActiveGame::class.java)
     private val sessionDataAdapter = moshi.adapter(SessionData::class.java)
 
-    private val activeGameFlow: Flow<ActiveGame?> =
-        datastore.data.map { preferences ->
-            preferences[ACTIVE_GAME_KEY]?.let {
-                Try { activeGameAdapter.fromJson(it) }
-                    .logOnError()
-                    .throwIfDebug()
-                    .getOrNull()
+    private val activeGameFlow: Flow<ActiveGame?> = datastore.distinctKeyFlow(ACTIVE_GAME_KEY)
+            .map {
+                it?.let {
+                    Try { activeGameAdapter.fromJson(it) }
+                        .logOnError()
+                        .throwIfDebug()
+                        .getOrNull()
+                }
             }
-        }
 
     private val sharedSessionFlow: SharedFlow<Session> = combine(
         activeGameFlow,
@@ -114,7 +115,7 @@ class SessionRepository @Inject constructor(
 
     private suspend fun getCachedSessionData(id: Long): SessionData? =
         datastore.data.first()[SESSION_DATA_KEY]?.let {
-            val sessionData = sessionDataAdapter.fromJson(it)
+            val sessionData = Try { sessionDataAdapter.fromJson(it) }.throwIfDebug().getOrNull()
             if (sessionData?.id == id) sessionData else null
         }
 

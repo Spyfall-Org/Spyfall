@@ -92,7 +92,8 @@ class CreateGame @Inject constructor(
                 updateActiveGame(
                     ActiveGame(
                         accessCode = accessCode,
-                        userId = userId
+                        userId = userId,
+                        isSingleDevice = false
                     )
                 )
             }

@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
+import com.dangerfield.libraries.datastore.distinctKeyFlow
 import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.ThemeConfig
@@ -39,21 +40,24 @@ class UserRepository @Inject constructor(
 
     private val updateMutex = Mutex()
 
-    private val colorConfigFlow = dataStore.data.map { prefs ->
-        prefs[ThemeColorKey]?.takeIf { it.isNotEmpty() }?.let { string ->
-            Try { ColorConfig.Specific(ThemeColor.valueOf(string)) }
-                .getOrNull()
-                ?: ColorConfig.Random
-        } ?: ColorConfig.Random
-    }
+    private val colorConfigFlow = dataStore.distinctKeyFlow(ThemeColorKey)
+        .map { cachedValue ->
+            cachedValue?.let { string ->
+                Try { ColorConfig.Specific(ThemeColor.valueOf(string)) }
+                    .getOrNull()
+                    ?: ColorConfig.Random
+            } ?: ColorConfig.Random
+        }
 
-    private val darkModeConfigFlow = dataStore.data.map {
-        it[DarkModeConfigKey]?.let { string ->
-            Try { DarkModeConfig.valueOf(string) }
-                .getOrNull()
-                ?: DarkModeConfig.System
-        } ?: DarkModeConfig.System
-    }
+    private val darkModeConfigFlow = dataStore
+        .distinctKeyFlow(DarkModeConfigKey)
+        .map { cachedValue ->
+            cachedValue?.let { string ->
+                Try { DarkModeConfig.valueOf(string) }
+                    .getOrNull()
+                    ?: DarkModeConfig.System
+            } ?: DarkModeConfig.System
+        }
 
     private val userIdFlow = flow {
         getUserId()

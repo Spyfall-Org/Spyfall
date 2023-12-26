@@ -56,7 +56,7 @@ fun <T> Try<T>.logOnError(message: String? = null): Try<T> = onFailure { Timber.
 
 fun <T> Try<T>.throwIfDebug(): Try<T> = onFailure {
     if (BuildConfig.DEBUG && this is Failure) {
-        Timber.e("THROWING DEBUG EXCEPTION")
+        Timber.e("THROWING DEBUG EXCEPTION: ${it.localizedMessage}")
         throw it
     }
 }

@@ -9,6 +9,7 @@ import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.EnsureSessionLoaded
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.SessionFlow
+import com.dangerfield.libraries.session.ThemeConfig
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.spyfall.startup.MainActivityViewModel.Action
@@ -19,7 +20,9 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import spyfallx.core.Try
 import spyfallx.core.failFast
@@ -57,7 +60,7 @@ class MainActivityViewModel @Inject constructor(
             }
             .onSuccess {
                 val session = sessionFlow.first()
-                val colorPrimitive = getSessionColorPrimitive(session)
+                val colorPrimitive = getSessionColorPrimitive(session.user.themeConfig)
 
                 updateState {
                     State.Loaded(
@@ -78,23 +81,26 @@ class MainActivityViewModel @Inject constructor(
     }
 
     private suspend fun listenForConfigUpdates() {
-        sessionFlow.collectLatest {
-            val colorPrimitive = getSessionColorPrimitive(it)
-            updateState { state ->
-                if (state is State.Loaded) {
-                    state.copy(
-                        accentColor = colorPrimitive,
-                        darkModeConfig = it.user.themeConfig.darkModeConfig
-                    )
-                } else {
-                    state
+        sessionFlow
+            .map { it.user.themeConfig }
+            .distinctUntilChanged()
+            .collectLatest { config ->
+                val colorPrimitive = getSessionColorPrimitive(config)
+                updateState { state ->
+                    if (state is State.Loaded) {
+                        state.copy(
+                            accentColor = colorPrimitive,
+                            darkModeConfig = config.darkModeConfig
+                        )
+                    } else {
+                        state
+                    }
                 }
             }
-        }
     }
 
-    private suspend fun getSessionColorPrimitive(session: Session): ColorPrimitive {
-        val initialColorConfig = session.user.themeConfig.colorConfig
+    private suspend fun getSessionColorPrimitive(themeConfig: ThemeConfig): ColorPrimitive {
+        val initialColorConfig = themeConfig.colorConfig
         val colorPrimitive = if (initialColorConfig is ColorConfig.Specific) {
             initialColorConfig.color.colorPrimitive
         } else {
@@ -105,7 +111,9 @@ class MainActivityViewModel @Inject constructor(
 
     private fun listenForAppUpdateRequired() {
         viewModelScope.launch {
-            isAppUpdateRequired().collectLatest { isUpdateRequired ->
+            isAppUpdateRequired()
+                .distinctUntilChanged()
+                .collectLatest { isUpdateRequired ->
                 val state = state.value
                 if (state is State.Loaded) {
                     updateState {

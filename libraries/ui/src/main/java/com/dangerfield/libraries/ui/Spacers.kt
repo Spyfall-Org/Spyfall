@@ -28,6 +28,11 @@ fun VerticalSpacerS1200() {
 }
 
 @Composable
+fun VerticalSpacerS1000() {
+    Spacer(modifier = Modifier.height(Spacing.S1000))
+}
+
+@Composable
 fun HorizontalSpacerS800() {
     Spacer(modifier = Modifier.width(Spacing.S800))
 }

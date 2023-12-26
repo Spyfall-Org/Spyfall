@@ -22,6 +22,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetStat
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValue
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun PacksInfoBottomSheet(
@@ -45,7 +46,7 @@ fun PacksInfoBottomSheet(
                 if (packs.isNotEmpty()) {
                     VerticalSpacerS800()
                     packs.forEach { pack ->
-                        Text(text = pack.name)
+                        Text(text = pack.name, typographyToken = OddOneOutTheme.typography.Default)
                         VerticalSpacerS500()
                         NonLazyVerticalGrid(
                             columns = 2,

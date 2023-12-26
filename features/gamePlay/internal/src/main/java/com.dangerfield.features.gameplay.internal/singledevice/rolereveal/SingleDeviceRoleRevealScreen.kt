@@ -1,9 +1,10 @@
-package com.dangerfield.features.gameplay.internal.singledevice
+package com.dangerfield.features.gameplay.internal.singledevice.rolereveal
 
-import androidx.compose.foundation.layout.Spacer
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.features.gameplay.internal.DisplayablePlayer
+import com.dangerfield.features.gameplay.internal.ui.GamePlayGrid
 import com.dangerfield.features.gameplay.internal.ui.RoleCard
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.PreviewContent
@@ -35,6 +37,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import spyfallx.core.doNothing
 
 @Composable
 fun SingleDevicePlayerRoleScreen(
@@ -42,6 +45,7 @@ fun SingleDevicePlayerRoleScreen(
     location: String?,
     onNextPlayerClicked: () -> Unit,
     isLastPlayer: Boolean,
+    locationOptions: List<String>,
     nameFieldState: FieldState<String?>,
     onStartGameClicked: () -> Unit,
     onNameUpdated: (String) -> Unit
@@ -49,8 +53,16 @@ fun SingleDevicePlayerRoleScreen(
     var isRoleHidden by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
+
+    BackHandler {
+        // user should not be able to see previous players roles
+        // TODO add some dialog to end the game
+        doNothing()
+    }
 
     ScrollingColumnWithFadingEdge(
+        state = scrollState,
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = Spacing.S1100)
@@ -152,6 +164,17 @@ fun SingleDevicePlayerRoleScreen(
 
             VerticalSpacerS1200()
 
+            Text(text = "The Odd One Out (might be you) will think the location is one of the following:")
+
+            VerticalSpacerS500()
+            GamePlayGrid(
+                items = locationOptions,
+                isDisplayingForSelection = false,
+                isClickEnabled = false
+            )
+
+            VerticalSpacerS1200()
+
             val areButtonsEnabled =
                 nameFieldState is FieldState.Valid || nameFieldState is FieldState.Idle
 
@@ -170,6 +193,7 @@ fun SingleDevicePlayerRoleScreen(
                         isRoleHidden = true
                         coroutineScope.launch {
                             delay(200)
+                            scrollState.animateScrollTo(0)
                             onNextPlayerClicked()
                         }
                     },
@@ -180,6 +204,9 @@ fun SingleDevicePlayerRoleScreen(
                     Text(text = "Next Player")
                 }
             }
+
+            VerticalSpacerS1200()
+
         } else {
             Text(
                 text = "Loading...",
@@ -197,7 +224,7 @@ private fun PreviewSingleDevicePlayerRoleScreen() {
     PreviewContent {
         SingleDevicePlayerRoleScreen(
             currentPlayer = DisplayablePlayer(
-                name = "Jane",
+                name = "Player 1",
                 id = "",
                 role = "The Odd One Out",
                 isFirst = false,
@@ -209,6 +236,7 @@ private fun PreviewSingleDevicePlayerRoleScreen() {
             onStartGameClicked = { -> },
             nameFieldState = FieldState.Valid("Jane"),
             onNameUpdated = { },
+            locationOptions = listOf("Bank", "School", "Hospital", "Park", "Mall", "Restaurant")
         )
     }
 }

@@ -1,13 +1,15 @@
 package com.dangerfield.libraries.navigation.internal
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.dangerfield.libraries.navigation.Route
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import spyfallx.core.Try
 import spyfallx.core.developerSnackOnError
@@ -19,12 +21,17 @@ class NavControllerRouter(
     private val coroutineScope: CoroutineScope
 ) : Router {
 
-    init {
-        Log.d("Elijah", "New nav controller initialized $this")
-    }
-
     override val currentRouteName: String?
         get() = navHostController.currentDestination?.route
+
+    init {
+        navHostController
+            .currentBackStackEntryFlow
+            .onEach {
+                Log.d("NavControllerRouter", "backstack: ${it.destination.route}")
+            }
+            .launchIn(coroutineScope)
+    }
 
     override fun navigate(filledRoute: Route.Filled) {
         Try {
@@ -83,5 +90,15 @@ class NavControllerRouter(
         } else {
             goBack()
         }
+    }
+
+    override fun ifStillOn(backStackEntry: NavBackStackEntry, action: Router.() -> Unit) {
+        if (currentRouteName == backStackEntry.destination.route) {
+            action.invoke(this)
+        }
+    }
+
+    override fun getBackStackEntry(route: Route.Template): NavBackStackEntry {
+        return navHostController.getBackStackEntry(route.navRoute)
     }
 }

@@ -1,5 +1,6 @@
 package com.dangerfield.libraries.navigation
 
+import androidx.navigation.NavBackStackEntry
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
 
 
@@ -10,4 +11,6 @@ interface Router {
     fun openWebLink(url: String)
     fun popBackTo(route: Route.Template, inclusive: Boolean = false)
     fun dismissSheet(sheetState: BottomSheetState)
+    fun ifStillOn(backStackEntry: NavBackStackEntry, action: Router.() -> Unit)
+    fun getBackStackEntry(route: Route.Template): NavBackStackEntry
 }
