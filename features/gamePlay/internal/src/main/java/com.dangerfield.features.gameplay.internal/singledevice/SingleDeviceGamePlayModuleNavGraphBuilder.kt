@@ -47,6 +47,7 @@ import javax.inject.Inject
 @AutoBindIntoSet
 class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
 
+    @Suppress("LongMethod")
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
 
         composable(

@@ -23,8 +23,6 @@ import javax.inject.Inject
 @AutoBindIntoSet
 class WelcomeModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
 
-    private fun Router.isOnWelcomeScreen() = currentRouteName == welcomeNavigationRoute.navRoute
-
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(
             route = welcomeNavigationRoute.navRoute,
