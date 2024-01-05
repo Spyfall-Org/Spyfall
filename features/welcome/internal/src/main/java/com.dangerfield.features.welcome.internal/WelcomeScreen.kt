@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
@@ -39,7 +39,7 @@ fun WelcomeScreen(
         onNewGameClicked = onNewGameClicked,
         onJoinGameClicked = onJoinGameClicked,
         onSettingsClicked = onSettingsClicked,
-        onRulesClicked = onRulesClicked
+        onRulesClicked = onRulesClicked,
     )
 }
 
@@ -87,10 +87,11 @@ private fun WelcomeScreenContent(
                 modifier = Modifier.padding(horizontal = Spacing.S1100),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 Button(
                     onClick = onNewGameClicked,
                     modifier = Modifier.fillMaxWidth(),
-                    type = ButtonType.Regular
+                    type = ButtonType.Accent
                 ) {
                     Text(text = "New Game")
                 }
@@ -98,6 +99,7 @@ private fun WelcomeScreenContent(
                 Spacer(modifier = Modifier.height(Spacing.S1000))
 
                 Button(
+                    type = ButtonType.Regular,
                     onClick = onJoinGameClicked,
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -119,7 +121,6 @@ private fun WelcomeScreenContent(
     }
 }
 
-
 @Composable
 @Preview
 private fun PreviewWelcomeScreen() {
@@ -128,7 +129,7 @@ private fun PreviewWelcomeScreen() {
             onNewGameClicked = {},
             onJoinGameClicked = {},
             onSettingsClicked = {},
-            onRulesClicked = {}
+            onRulesClicked = {},
         )
     }
 }
@@ -141,7 +142,7 @@ private fun PreviewWelcomeScreenDark() {
             onNewGameClicked = {},
             onJoinGameClicked = {},
             onSettingsClicked = {},
-            onRulesClicked = {}
+            onRulesClicked = {},
         )
     }
 }

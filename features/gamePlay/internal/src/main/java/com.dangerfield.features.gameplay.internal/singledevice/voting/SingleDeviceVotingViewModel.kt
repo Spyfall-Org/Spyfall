@@ -1,6 +1,5 @@
 package com.dangerfield.features.gameplay.internal.singledevice.voting
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackIfDebug
 import spyfallx.core.doNothing
+import spyfallx.core.getOrElse
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,6 +36,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
     private val clearActiveGame: ClearActiveGame,
 ) : SEAViewModel<State, Event, Action>() {
 
+    private var currentPlayerRoleIndex = 0
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
 
     private val gameFlow by lazy {
@@ -61,6 +62,11 @@ class SingleDeviceVotingViewModel @Inject constructor(
         isLoadingResult = false,
         location = "",
         oddOneOutName = "",
+        correctGuessesForOddOneOut = 0,
+        oddOneOutLocationGuess = null,
+        result = null,
+        isFirstPlayer = false,
+        totalPlayerCount = 0,
     )
 
     override suspend fun handleAction(action: Action) {
@@ -71,25 +77,28 @@ class SingleDeviceVotingViewModel @Inject constructor(
             is Action.SubmitVoteForLocation -> submitVoteForLocation(action)
             is Action.SubmitVoteForPlayer -> submitVoteForPlayer(action)
             Action.WaitForResults -> updateState { state -> state.copy(isLoadingResult = true)  }
+            Action.PreviousPlayer -> loadPlayer(--currentPlayerRoleIndex)
         }
     }
 
     private suspend fun submitVoteForLocation(action: Action.SubmitVoteForLocation) {
-        pollPlayer()
+        loadPlayer(++currentPlayerRoleIndex)
         gameRepository.submitLocationVote(
             accessCode = accessCode,
             voterId = action.voterId,
             location = action.location,
         )
+
+        updateState { state -> state.copy(oddOneOutLocationGuess = action.location) }
     }
 
     private suspend fun submitVoteForPlayer(action: Action.SubmitVoteForPlayer) {
-        pollPlayer()
+        loadPlayer(++currentPlayerRoleIndex)
         gameRepository.submitOddOneOutVote(
             accessCode = accessCode,
             voterId = action.voterId,
             voteId = action.playerId
-        )
+        ).getOrElse { false }
     }
 
     private fun loadGame() {
@@ -119,7 +128,8 @@ class SingleDeviceVotingViewModel @Inject constructor(
 
                     playersToShowRoles.clear()
                     playersToShowRoles.addAll(playersToVote.map { it.toDisplayable(false) })
-                    pollPlayer()
+                    currentPlayerRoleIndex = 0
+                    loadPlayer(currentPlayerRoleIndex)
                 }
         }
     }
@@ -149,9 +159,10 @@ class SingleDeviceVotingViewModel @Inject constructor(
 
                         is GameState.Voting -> doNothing()
                         is GameState.VotingEnded -> {
-                            Log.d("Elijah", "Got vote ending state: $gameState")
                             updateState { state ->
                                 state.copy(
+                                    correctGuessesForOddOneOut = gameState.players.filter { !it.isOddOneOut }.filter { it.votedCorrectly() }.size,
+                                    totalPlayerCount = gameState.players.size,
                                     location = gameState.location,
                                     oddOneOutName = gameState.players.first { it.isOddOneOut }.userName,
                                     result = gameState.result,
@@ -164,21 +175,17 @@ class SingleDeviceVotingViewModel @Inject constructor(
         }
     }
 
-    private suspend fun pollPlayer() {
+    private suspend fun loadPlayer(index: Int) {
         val allPlayers = allPlayers.getValue()
-        val nextPlayer = playersToShowRoles.elementAtOrNull(0)
+        val player = playersToShowRoles.elementAtOrNull(index)
 
-        val currentPlayer = nextPlayer?.let {
-            playersToShowRoles.remove(it)
-            it
-        }
-
-        if (currentPlayer != null) {
-            updateState { state ->
-                state.copy(
-                    currentPlayer = currentPlayer,
-                    isLastPlayer = playersToShowRoles.isEmpty(),
-                    playerOptions = allPlayers.filter { it.id != currentPlayer.id }
+        if (player != null) {
+            updateState {
+                it.copy(
+                    currentPlayer = player,
+                    isLastPlayer = index == playersToShowRoles.size - 1,
+                    isFirstPlayer = index == 0,
+                    playerOptions = allPlayers.filter { it.id != player.id }
                 )
             }
         }
@@ -201,11 +208,15 @@ class SingleDeviceVotingViewModel @Inject constructor(
     data class State(
         val currentPlayer: DisplayablePlayer?,
         val isLastPlayer: Boolean,
+        val isFirstPlayer: Boolean,
+        val totalPlayerCount: Int,
         val locationOptions: List<String>,
         val isLoadingResult: Boolean,
         val playerOptions: List<DisplayablePlayer>,
         val location: String,
         val oddOneOutName: String,
+        val correctGuessesForOddOneOut: Int,
+        val oddOneOutLocationGuess: String?,
         val result: GameResult? = null,
     )
 
@@ -219,6 +230,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         data class SubmitVoteForPlayer(val voterId: String, val playerId: String) : Action()
         data object WaitForResults : Action()
         data class SubmitVoteForLocation(val voterId: String, val location: String) : Action()
+        data object PreviousPlayer: Action()
         data object EndGame : Action()
         data object ResetGame : Action()
     }

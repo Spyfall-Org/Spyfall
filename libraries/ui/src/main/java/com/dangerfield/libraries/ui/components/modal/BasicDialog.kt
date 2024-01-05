@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.button.ButtonType

@@ -2,6 +2,7 @@ package com.dangerfield.features.gameplay.internal
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -32,7 +33,8 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class GamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
+class GamePlayModuleNavGraphBuilder @Inject constructor(
+) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
 
@@ -71,10 +73,12 @@ class GamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                 hasMePlayerSubmittedVote = state.isVoteSubmitted,
                 gameResult = state.gameResult,
                 onTimeToVote = router::navigateToVotingInfo,
-                onResetGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.ResetGame) },
+                onResetGameClicked = {
+                    viewModel.takeAction(GamePlayViewModel.Action.ResetGame)
+                },
                 onEndGameClicked = { viewModel.takeAction(GamePlayViewModel.Action.EndGame) },
                 videoCallLink = state.videoCallLink,
-                onVideoCallButtonClicked =  router::navigateToVideoCallBottomSheet,
+                onVideoCallButtonClicked = router::navigateToVideoCallBottomSheet,
                 mePlayerId = state.mePlayer?.id.orEmpty()
             )
         }

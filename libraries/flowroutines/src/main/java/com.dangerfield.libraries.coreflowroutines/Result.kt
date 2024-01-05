@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.flowroutines
+package com.dangerfield.libraries.coreflowroutines
 
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow

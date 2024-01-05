@@ -5,8 +5,8 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable

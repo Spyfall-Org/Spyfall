@@ -1,6 +1,5 @@
 package com.dangerfield.features.gameplay.internal.singledevice.gameplay
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
@@ -73,8 +72,6 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
             ) { game, _ ->
                 mapToGameState(accessCode, game)
             }.collect { gameState ->
-                Log.d("Elijah", "Game state of ${gameState::class.simpleName} in single dev game play")
-
                 when (gameState) {
                     is GameState.Starting,
                     is GameState.Expired,
@@ -89,8 +86,8 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
 
                     is GameState.Waiting -> sendEvent(Event.GameReset(accessCode))
                     is GameState.Started -> updateInProgressGame(gameState)
-                    is GameState.Voting -> updateVotingGame()
-                    is GameState.VotingEnded -> doNothing()
+                    is GameState.Voting,
+                    is GameState.VotingEnded -> updateVotingGame()
                 }
             }
         }

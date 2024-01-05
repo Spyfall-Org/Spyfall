@@ -36,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.Elevation
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.components.BadgeTokens.LargeLabelTextStyle
 import com.dangerfield.libraries.ui.components.icon.CircularIcon
 import com.dangerfield.libraries.ui.components.icon.IconSize

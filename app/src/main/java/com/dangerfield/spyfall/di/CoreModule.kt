@@ -2,6 +2,9 @@ package com.dangerfield.spyfall.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.dangerfield.features.ads.AdsConfig
+import com.dangerfield.features.ads.OddOneOutAd
+import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
 import com.dangerfield.spyfall.BuildConfig.VERSION_CODE
@@ -53,6 +56,21 @@ object CoreModule {
     @Singleton
     fun provideFirebaseFirestore(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
+    }
+
+    @Singleton
+    @Provides
+    fun providesGameResetInterstitialAd(
+        adsConfig: AdsConfig,
+        @ApplicationScope applicationScope: CoroutineScope,
+        dispatcherProvider: DispatcherProvider
+    ): InterstitialAd<OddOneOutAd.GameRestartInterstitial> {
+        return InterstitialAd(
+            ad = OddOneOutAd.GameRestartInterstitial,
+            adsConfig = adsConfig,
+            applicationScope = applicationScope,
+            dispatcherProvider = dispatcherProvider
+        )
     }
 
     @Provides

@@ -198,7 +198,7 @@ class MutliDeviceGameRepository @Inject constructor(
         accessCode: String,
         voterId: String,
         voteId: String
-    ): Try<Unit> {
+    ): Try<Boolean> {
         val oddOneOut = currentGameFlow.value
             ?.players
             ?.find { it.isOddOneOut }
@@ -210,6 +210,7 @@ class MutliDeviceGameRepository @Inject constructor(
             votedCorrectly = voteId == oddOneOut.id
         )
             .logOnError()
+            .map { voteId == oddOneOut.id }
     }
 
     companion object {

@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.Spacing

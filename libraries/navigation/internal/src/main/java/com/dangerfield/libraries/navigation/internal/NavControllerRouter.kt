@@ -2,10 +2,12 @@ package com.dangerfield.libraries.navigation.internal
 
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.dangerfield.libraries.navigation.Route
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.navigation.updateArg
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
@@ -67,12 +69,16 @@ class NavControllerRouter(
     }
 
 
-    override fun popBackTo(route: Route.Template, inclusive: Boolean) {
+    override fun popBackTo(
+        route: Route.Template,
+        inclusive: Boolean
+    ) {
         Try {
             navHostController.popBackStack(route.navRoute, inclusive)
         }
             .logOnError()
             .throwIfDebug()
+
     }
 
     override fun dismissSheet(sheetState: BottomSheetState) {

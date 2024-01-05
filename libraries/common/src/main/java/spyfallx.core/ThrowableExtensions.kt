@@ -43,7 +43,7 @@ fun developerSnackIfDebug(
             )
         )
     }
-    Timber.e(message.toString())
+    Timber.i(message.toString())
 }
 
 inline fun checkInDebug(value: Boolean, lazyMessage: () -> Any) {

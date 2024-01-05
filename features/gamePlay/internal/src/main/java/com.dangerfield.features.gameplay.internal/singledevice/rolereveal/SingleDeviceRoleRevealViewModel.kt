@@ -1,10 +1,10 @@
 package com.dangerfield.features.gameplay.internal.singledevice.rolereveal
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.DisplayablePlayer
+import com.dangerfield.features.gameplay.internal.singledevice.info.SingleDeviceInfoViewModel
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Event
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.State
@@ -38,6 +38,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
 ) : SEAViewModel<State, Event, Action>() {
 
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
+    private var currentPlayerRoleIndex = 0
 
     private val gameFlow by lazy {
         gameRepository.getGameFlow(accessCode)
@@ -54,15 +55,24 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         isGameStarted = false,
         isLastPlayer = false,
         nameFieldState = FieldState.Idle(""),
-        locationOptions = emptyList()
+        locationOptions = emptyList(),
+        isFirstPlayer = false
     )
 
     override suspend fun handleAction(action: Action) {
         when (action) {
             Action.LoadGame -> loadGame()
-            Action.LoadNextPlayer -> pollPlayer()
+            Action.LoadNextPlayer -> {
+                currentPlayerRoleIndex = (currentPlayerRoleIndex + 1).coerceAtMost(playersToShowRoles.size - 1)
+                loadPlayer(currentPlayerRoleIndex)
+            }
             Action.StartGame -> startGame()
             is Action.UpdateName -> changeName(action.name)
+            Action.LoadPreviousPlayer -> {
+                currentPlayerRoleIndex = (currentPlayerRoleIndex - 1).coerceAtLeast(0)
+                loadPlayer(currentPlayerRoleIndex)
+            }
+            Action.EndGame -> endGame()
         }
     }
 
@@ -126,7 +136,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
                     }
                     playersToShowRoles.clear()
                     playersToShowRoles.addAll(displayablePlayers)
-                    pollPlayer()
+                    loadPlayer(currentPlayerRoleIndex)
                 }
         }
 
@@ -135,8 +145,6 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
                 .map { game ->
                     mapToGameState(accessCode, game)
                 }.collect { gameState ->
-                    Log.d("Elijah", "Game state of ${gameState::class.simpleName} in role reveal")
-
                     when (gameState) {
                         is GameState.Expired,
                         is GameState.Voting,
@@ -168,21 +176,29 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         }
     }
 
-    private suspend fun pollPlayer() {
+    private suspend fun endGame() {
+        gameRepository.end(accessCode)
+        // TODO pack game ending behind a uses case and leave game for that matter.
+        // not super sure I need a data source as well as a repository
+        // maybe I continue trucking on and clean that up later
+
+        clearActiveGame()
+        sendEvent(Event.GameKilled)
+    }
+
+    private suspend fun loadPlayer(index: Int) {
+
         updateState { it.copy(nameFieldState = FieldState.Idle("")) }
 
-        val nextPlayer = playersToShowRoles.elementAtOrNull(0)
+        val player = playersToShowRoles.elementAtOrNull(index)
 
-        val currentPlayer = nextPlayer?.let {
-            playersToShowRoles.remove(it)
-            it
-        }
-
-        if (currentPlayer != null) {
+        if (player != null) {
             updateState {
                 it.copy(
-                    currentPlayer = currentPlayer,
-                    isLastPlayer = playersToShowRoles.isEmpty()
+                    currentPlayer = player,
+                    isLastPlayer = index == playersToShowRoles.size - 1,
+                    isFirstPlayer = index == 0,
+                    nameFieldState = FieldState.Idle(player.name)
                 )
             }
         }
@@ -191,6 +207,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     data class State(
         val currentPlayer: DisplayablePlayer?,
         val isLastPlayer: Boolean,
+        val isFirstPlayer: Boolean,
         val location: String?,
         val isGameStarted: Boolean,
         val nameFieldState: FieldState<String>,
@@ -204,7 +221,9 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     sealed class Action {
         internal data object LoadGame : Action()
         data object LoadNextPlayer : Action()
+        data object LoadPreviousPlayer : Action()
         data object StartGame : Action()
+        data object EndGame : Action()
         data class UpdateName(val name: String) : Action()
     }
 }

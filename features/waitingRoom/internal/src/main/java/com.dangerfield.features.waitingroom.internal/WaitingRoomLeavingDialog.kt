@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
@@ -26,14 +26,14 @@ fun WaitingRoomLeavingDialog(
             Text(text = "Leaving so soon?")
         },
         content = {
-            Text(text = "Your are leaving the game and will be removed if you continue.")
+            Text(text = "You are leaving the game and will be removed if you continue.")
         },
         bottomContent = {
             Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onLeaveConfirmed,
-                    type = ButtonType.Regular
+                    type = ButtonType.Accent
                 ) {
                     Text(text = "Leave")
                 }
@@ -41,6 +41,7 @@ fun WaitingRoomLeavingDialog(
                 VerticalSpacerS800()
 
                 Button(
+                    type = ButtonType.Regular,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {

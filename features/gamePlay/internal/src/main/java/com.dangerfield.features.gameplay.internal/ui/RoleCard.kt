@@ -7,16 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
@@ -26,11 +22,13 @@ import com.dangerfield.libraries.ui.components.text.BoldPrefixedText
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
+// TODO cleanup
+// Lots of logic in this view, but it's all pretty simple.
 @Composable
 fun RoleCard(
     role: String,
     isTheOddOneOut: Boolean,
-    isHidden: Boolean = false,
+    isVisible: Boolean = false,
     location: String?,
     text: String?,
     onHideShowClicked: () -> Unit
@@ -40,13 +38,14 @@ fun RoleCard(
     ) { constraints ->
         val buttonPlaceable = subcompose(0) {
             Button(size = ButtonSize.Small, onClick = onHideShowClicked) {
-                Text(text = if (isHidden) "Show" else "Hide")
+                Text(text = if (!isVisible) "Show" else "Hide")
             }
         }.first().measure(constraints)
 
         val contentPlaceable = subcompose(1) {
+
             AnimatedVisibility(
-                visible = !isHidden,
+                visible = isVisible,
                 enter = expandVertically(),
                 exit = shrinkVertically()
             ) {
@@ -75,7 +74,9 @@ fun RoleCard(
                     }
                     if (text != null) {
                         Text(
-                            text = text, typographyToken = OddOneOutTheme.typography.Body.B800
+                            text = text,
+                            typographyToken = OddOneOutTheme.typography.Body.B800,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -107,7 +108,7 @@ private fun PreviewRoleCardOddOneOut() {
             text = "Don't get found out!",
             location = "The Beach",
             isTheOddOneOut = true,
-            isHidden = false,
+            isVisible = true,
             onHideShowClicked = { -> },
         )
     }
@@ -122,7 +123,7 @@ private fun PreviewRoleCardPlayer() {
             text = "Fine the odd one out",
             location = "Some longer location name",
             isTheOddOneOut = false,
-            isHidden = false,
+            isVisible = true,
             onHideShowClicked = { -> },
         )
     }

@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.ui
+package com.dangerfield.libraries.ui.preview
 
 import android.content.res.Configuration
 import androidx.appcompat.view.ContextThemeWrapper

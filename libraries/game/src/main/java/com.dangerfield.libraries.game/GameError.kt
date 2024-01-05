@@ -1,5 +1,6 @@
 package com.dangerfield.libraries.game
 
+// TODO cleanup this didnt end up becoming super helpful, lets reevaluate
 sealed class GameError(message: String) : Throwable(message) {
     data class IncompatibleVersion(
         val isCurrentLower: Boolean,

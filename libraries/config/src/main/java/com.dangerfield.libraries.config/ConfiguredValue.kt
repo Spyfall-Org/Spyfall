@@ -30,5 +30,7 @@ abstract class ConfiguredValue<out T : Any> {
 
     abstract fun resolveValue(): T
 
+
+
     operator fun invoke(): T = this.value
 }

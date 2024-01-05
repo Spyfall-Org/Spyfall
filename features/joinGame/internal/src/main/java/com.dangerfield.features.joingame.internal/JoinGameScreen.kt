@@ -30,7 +30,7 @@ import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.components.text.AsteriskText
 import com.dangerfield.libraries.ui.Spacing
@@ -38,6 +38,7 @@ import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
+// TODO add error messages while typing
 @Composable
 fun JoinGameScreen(
     accessCode: String,

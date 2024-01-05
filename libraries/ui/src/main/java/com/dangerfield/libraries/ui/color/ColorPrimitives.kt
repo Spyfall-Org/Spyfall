@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.components.icon.LargeIcon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import spyfallx.ui.thenIf

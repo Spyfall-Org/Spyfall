@@ -9,8 +9,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.libraries.game.Pack
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.color.ThemeColor

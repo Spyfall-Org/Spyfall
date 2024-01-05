@@ -12,11 +12,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Sizes
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.color.ProvideContentColor
 import com.dangerfield.libraries.ui.components.icon.Icon

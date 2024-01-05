@@ -9,6 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dangerfield.features.ads.AdsConfig
+import com.dangerfield.features.ads.ui.InterstitialAd
+import com.dangerfield.features.ads.OddOneOutAd.GameRestartInterstitial
 import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.ui.color.ColorPrimitive
@@ -37,7 +40,15 @@ class MainActivity : ComponentActivity() {
     lateinit var navBuilderRegistry: NavBuilderRegistry
 
     @Inject
+    lateinit var adsConfig: AdsConfig
+
+    @Inject
+    lateinit var gameResetInterstitialAd: InterstitialAd<GameRestartInterstitial>
+
+    @Inject
     lateinit var networkMonitor: NetworkMonitor
+
+    // TODO cleanup: Completely remove legacy code
 
     override fun onCreate(savedInstanceState: Bundle?) {
         var isLoading: Boolean by mutableStateOf(false)
@@ -47,6 +58,10 @@ class MainActivity : ComponentActivity() {
             .build()
 
         super.onCreate(savedInstanceState) // should be called after splash screen builder
+
+        gameResetInterstitialAd.load(this)
+
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // Delay set content so we can animate splash screen views
         collectWhileStarted(mainActivityViewModel.state) { state ->
@@ -66,15 +81,21 @@ class MainActivity : ComponentActivity() {
 
             // TODO make the app still usable when there is an error.
             // we dont need a session and such to let the user use the app.
-            SpyfallApp(
+            OddOneOutApp(
                 navBuilderRegistry = navBuilderRegistry,
                 isUpdateRequired = state.isUpdateRequired,
                 hasBlockingError = state is Error,
                 accentColor = state.accentColor,
                 darkModeConfig = state.darkModeConfig,
-                networkMonitor = networkMonitor
+                networkMonitor = networkMonitor,
+                adsConfig = adsConfig
             )
         }
+    }
+
+    override fun onDestroy() {
+        gameResetInterstitialAd.remove()
+        super.onDestroy()
     }
 
     private val State.accentColor: ColorPrimitive

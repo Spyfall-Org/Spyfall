@@ -83,7 +83,6 @@ class QaViewModel @Inject constructor(
                 },
                 experiments = it.experiments.map { experiment ->
                     if (experiment.path == action.path) {
-
                         experiment.copy(value = action.value)
                     } else {
                         experiment

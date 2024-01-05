@@ -87,6 +87,9 @@ dependencies {
      * Both internal and external should be included here to make sure all objects
      * are added to the dependency graph
      */
+    implementation(projects.features.ads)
+    implementation(projects.features.ads.internal)
+    implementation(projects.features.ads.ui)
     implementation(projects.features.forcedUpdate)
     implementation(projects.features.forcedUpdate.internal)
     implementation(projects.features.colorPicker)
@@ -134,6 +137,9 @@ dependencies {
 
     // lottie for animations
     implementation(libs.lottie)
+
+    // ads
+    implementation(libs.google.play.services.ads)
 
     // Dependency Injection
     implementation(libs.koin.core)

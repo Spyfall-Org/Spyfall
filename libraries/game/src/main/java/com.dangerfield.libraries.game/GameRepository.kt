@@ -39,7 +39,7 @@ interface GameRepository {
     fun getGameFlow(accessCode: String): Flow<Game>
     suspend fun getGame(accessCode: String): Try<Game>
     suspend fun submitLocationVote(accessCode: String, voterId: String,  location: String): Try<Unit>
-    suspend fun submitOddOneOutVote(accessCode: String, voterId: String, voteId: String): Try<Unit>
+    suspend fun submitOddOneOutVote(accessCode: String, voterId: String, voteId: String): Try<Boolean>
 }
 
 const val SingleDeviceRepositoryName = "SingleDeviceRepository"

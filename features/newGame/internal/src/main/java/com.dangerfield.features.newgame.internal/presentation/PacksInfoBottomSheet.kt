@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800

@@ -66,6 +66,8 @@ class FirestoreGameDataSource @Inject constructor(
             .await()
     }.ignoreValue()
 
+    // TODO maybe this shoudl update the individual fields and not set the entire user
+    // That user may change their name durring this.
     override suspend fun updatePlayers(accessCode: String, list: List<Player>) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY), playerSerializer.serializePlayers(list))

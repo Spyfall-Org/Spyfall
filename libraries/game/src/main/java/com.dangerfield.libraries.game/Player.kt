@@ -1,6 +1,5 @@
 package com.dangerfield.libraries.game
 
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)

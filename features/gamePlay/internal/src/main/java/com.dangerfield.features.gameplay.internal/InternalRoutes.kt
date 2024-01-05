@@ -8,6 +8,7 @@ import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
 
+// TODO cleanup seperate into different files, maybe put into a sealed class instead to keep everthing in one place while keeping it organized
 fun Router.navigateToSingleDevicePlayerRoleRoute(
     accessCode: String,
     timeLimit: Int? = null

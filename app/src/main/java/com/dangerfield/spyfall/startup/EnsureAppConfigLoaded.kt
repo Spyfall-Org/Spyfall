@@ -7,6 +7,7 @@ import spyfallx.core.throwIfDebug
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// TODO cleanup feels like this should be in the app config library
 @Singleton
 class EnsureAppConfigLoaded @Inject constructor(
     private val appConfigRepository: AppConfigRepository

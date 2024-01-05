@@ -6,8 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS100
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
@@ -47,8 +48,7 @@ fun RulesBottomSheet(
 @Composable
 private fun RulesContent() {
     Column(
-        Modifier
-            .padding(horizontal = Spacing.S800)
+        Modifier.padding(horizontal = Spacing.S800)
     ) {
         Body(text = "Odd one out is a game of deception, misdirection, and deduction.")
         VerticalSpacerS800()

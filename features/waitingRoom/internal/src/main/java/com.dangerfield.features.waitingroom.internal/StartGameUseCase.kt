@@ -27,6 +27,8 @@ class StartGameUseCase @Inject constructor(
             .setGameIsBeingStarted(accessCode, true)
             .getOrThrow()
 
+        // TODO cleanup
+        // this logic is hella repeated, maybe an AssignRolesUseCase?
         val shuffledRoles = packsPackRepository.getRoles(locationName).getOrThrow().shuffled()
         val shuffledPlayers = players.shuffled()
         val oddOneOutIndex = shuffledPlayers.indices.random()

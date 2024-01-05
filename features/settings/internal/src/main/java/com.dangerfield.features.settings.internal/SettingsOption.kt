@@ -11,9 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.text.Text
 

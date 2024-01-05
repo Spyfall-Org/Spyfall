@@ -3,10 +3,10 @@ package com.dangerfield.spyfall
 import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.dangerfield.features.ads.ui.initializeAds
 import com.dangerfield.libraries.coresession.internal.SessionRepository
 import com.dangerfield.libraries.logging.RemoteLogger
 import com.dangerfield.spyfall.legacy.di.legacySpyfallModules
-import com.dangerfield.spyfall.legacy.util.RemoveUserTimer
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -69,7 +69,8 @@ class SpyfallApplication : Application() {
         }
 
         setupFireStoreSettings()
-        setupGameLeftObserver()
+
+        initializeAds()
     }
 
     private fun setupFireStoreSettings() {
@@ -80,8 +81,4 @@ class SpyfallApplication : Application() {
         db.firestoreSettings = settings
     }
 
-    private fun setupGameLeftObserver() {
-        val removeUserTimer: RemoveUserTimer by inject()
-        ProcessLifecycleOwner.get().lifecycle.addObserver(removeUserTimer)
-    }
 }

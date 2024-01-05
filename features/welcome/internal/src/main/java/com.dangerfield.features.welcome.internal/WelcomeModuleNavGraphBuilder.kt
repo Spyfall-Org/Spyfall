@@ -1,7 +1,12 @@
 package com.dangerfield.features.welcome.internal
 
+import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.gameplay.navigateToGamePlayScreen
@@ -17,6 +22,10 @@ import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
@@ -71,7 +80,7 @@ class WelcomeModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                 onJoinGameClicked = router::navigateToJoinGame,
                 onNewGameClicked = router::navigateToNewGame,
                 onSettingsClicked = router::navigateToSettings,
-                onRulesClicked = router::navigateToRules
+                onRulesClicked = router::navigateToRules,
             )
         }
     }

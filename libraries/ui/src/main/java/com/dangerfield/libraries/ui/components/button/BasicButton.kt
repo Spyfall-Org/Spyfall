@@ -1,7 +1,7 @@
 package com.dangerfield.libraries.ui.components.button
 
 import com.dangerfield.libraries.ui.Border
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.StandardBorderWidth

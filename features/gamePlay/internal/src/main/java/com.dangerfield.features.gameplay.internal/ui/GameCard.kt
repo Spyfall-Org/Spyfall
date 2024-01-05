@@ -24,9 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.components.BadgedBox
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
@@ -35,6 +35,9 @@ import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.circleBackground
 import spyfallx.ui.thenIf
 
+// TODO cleanup truly this is a mess
+// need to make the api much cleaner and maybe even just make some different components
+// for different use cases
 @Composable
 fun GameCard(
     modifier: Modifier = Modifier,

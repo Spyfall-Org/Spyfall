@@ -62,7 +62,7 @@ class InactivityExpirationMins @Inject constructor(
     override val displayName: String = "Inactivity Expiration Mins"
     override val path: String = "game.inactivityExpirationMins"
     override val default: Int = 30
-    override val debugOverride: Int = 5
+    override val debugOverride: Int = 10
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 

@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.NumericalValues.V1300
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.NumericalValues.V1000
 import com.dangerfield.libraries.ui.NumericalValues.V1200

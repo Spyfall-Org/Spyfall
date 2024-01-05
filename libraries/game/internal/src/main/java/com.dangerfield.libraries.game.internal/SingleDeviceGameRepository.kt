@@ -88,7 +88,6 @@ class SingleDeviceGameRepository
 
     override suspend fun end(accessCode: String) {
         Try {
-            // remove from DB
             datastore.updateData {
                 it.toMutablePreferences().apply {
                     remove(gamePreferenceKey)
@@ -159,6 +158,7 @@ class SingleDeviceGameRepository
         )
 
         return updateGame { game }
+            .ignoreValue()
             .logOnError()
             .developerSnackOnError { "Could not reset game" }
     }
@@ -183,7 +183,7 @@ class SingleDeviceGameRepository
     override suspend fun updatePlayers(accessCode: String, players: List<Player>): Try<Unit> {
         return updateGame {
             it.copy(players = players)
-        }
+        }.ignoreValue()
     }
 
     override fun getGameFlow(accessCode: String): Flow<Game> =
@@ -217,8 +217,7 @@ class SingleDeviceGameRepository
         accessCode: String,
         voterId: String,
         voteId: String
-    ): Try<Unit> {
-        return updateGame {
+    ): Try<Boolean> = updateGame {
             val oddOneOutId = it.players.find { p -> p.isOddOneOut }?.id
                 ?: throw IllegalStateException("No odd one out")
 
@@ -229,11 +228,17 @@ class SingleDeviceGameRepository
                     player
                 }
             })
+        }.map { game ->
+            game.players.find { it.id == voterId }?.votedCorrectly ?: false
         }
-    }
 
-    private suspend fun updateGame(update: (Game) -> Game): Try<Unit> {
-        val currentGame = gameFlow.value ?: return illegalState("Offline Game not in state")
+
+    private fun Game.withUpdatedLastActiveAt() = copy(lastActiveAt = clock.millis())
+
+    private suspend fun updateGame(update: (Game) -> Game): Try<Game> {
+        val currentGame = gameFlow.value?.withUpdatedLastActiveAt()
+            ?: return illegalState("Offline Game not in state")
+
         return Try {
             val updatedGame = update(currentGame)
             datastore.updateData {
@@ -241,10 +246,10 @@ class SingleDeviceGameRepository
                     this[gamePreferenceKey] = jsonAdapter.toJson(updatedGame)
                 }
             }
+            updatedGame
         }
             .throwIfDebug()
             .logOnError("Could not update the single device game")
-            .ignoreValue()
     }
 
     companion object {

@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
     implementation(projects.libraries.common)
+    implementation(projects.features.ads)
 }
 
 android {

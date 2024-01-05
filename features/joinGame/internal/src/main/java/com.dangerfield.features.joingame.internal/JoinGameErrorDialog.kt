@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.joingame.internal.UnresolvableError.IncompatibleError
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 
 @Composable
 fun JoinGameErrorDialog(

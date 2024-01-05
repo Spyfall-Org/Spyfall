@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
@@ -19,6 +19,7 @@ fun GamePlayLeaveDialog(
     modifier: Modifier = Modifier
 ) {
 
+    // TODO cleanup investiage color button on top or bottom and negative vs positive
     BasicDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
@@ -33,7 +34,7 @@ fun GamePlayLeaveDialog(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onLeaveConfirmed,
-                    type = ButtonType.Regular
+                    type = ButtonType.Accent
                 ) {
                     Text(text = "Leave")
                 }
@@ -41,6 +42,7 @@ fun GamePlayLeaveDialog(
                 VerticalSpacerS800()
 
                 Button(
+                    type = ButtonType.Regular,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {

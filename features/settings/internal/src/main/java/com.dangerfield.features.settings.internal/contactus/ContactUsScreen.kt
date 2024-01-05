@@ -41,10 +41,10 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.components.header.Header
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
@@ -135,7 +135,7 @@ fun ContactUsScreen(
 @Composable
 private fun SuccessMessage() {
     val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.check_animation))
-
+    // TODO make this black or something, the user cant see it.
     Column(
         modifier = Modifier
             .fillMaxSize()

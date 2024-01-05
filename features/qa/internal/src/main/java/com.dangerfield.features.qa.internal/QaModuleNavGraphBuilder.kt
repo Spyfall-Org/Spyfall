@@ -31,6 +31,12 @@ class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                         value = value
                     )
                 },
+                onConfigValueOverride = { configValue, value ->
+                    viewModel.addOverride(
+                        path = configValue.path,
+                        value = value
+                    )
+                },
                 onNavigateBack = router::goBack,
                 sessionId = state.sessionId
             )

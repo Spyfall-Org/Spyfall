@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,8 +29,8 @@ import com.dangerfield.features.newgame.internal.presentation.model.DisplayableP
 import com.dangerfield.features.newgame.internal.presentation.model.FieldState
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
-import com.dangerfield.libraries.ui.PreviewContent
-import com.dangerfield.libraries.ui.ThemePreviews
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
@@ -49,7 +48,6 @@ import com.dangerfield.libraries.ui.isOpen
 import com.dangerfield.libraries.ui.rememberKeyboardState
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.components.icon.IconSize
 import kotlinx.coroutines.launch
 
 @Composable
@@ -317,41 +315,6 @@ private fun PacksField(
 }
 
 @Composable
-private fun NumOfPlayersField(
-    onNumOfPlayersUpdated: (String) -> Unit,
-    minPlayers: Int,
-    maxPlayers: Int,
-    numOfPlayersState: FieldState<String>,
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            AsteriskText {
-                Text(
-                    text = "Number of players",
-                )
-            }
-
-        }
-
-        HorizontalSpacerS600()
-
-        OutlinedTextField(
-            modifier = Modifier.width(IntrinsicSize.Max),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            value = numOfPlayersState.backingValue.orEmpty(),
-            onValueChange = onNumOfPlayersUpdated,
-            placeholder = {
-                Text(text = "$minPlayers-$maxPlayers")
-            },
-            singleLine = true
-        )
-    }
-
-}
-
-@Composable
 private fun SingleDeviceField(
     isSingleDevice: Boolean,
     onIsSingleDeviceUpdated: (Boolean) -> Unit
@@ -402,6 +365,37 @@ private fun GameLengthField(
             onValueChange = onTimeLimitUpdated,
             placeholder = {
                 Text(text = "$minGameLength-$maxGameLength")
+            },
+            singleLine = true
+        )
+    }
+}
+
+@Composable
+private fun NumOfPlayersField(
+    onNumOfPlayersUpdated: (String) -> Unit,
+    minPlayers: Int,
+    maxPlayers: Int,
+    numOfPlayersState: FieldState<String>,
+) {
+    Row {
+        Column(modifier = Modifier.weight(1f)) {
+            AsteriskText {
+                Text(
+                    text = "Number of players",
+                )
+            }
+        }
+
+        HorizontalSpacerS600()
+
+        OutlinedTextField(
+            modifier = Modifier.width(IntrinsicSize.Max),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            value = numOfPlayersState.backingValue.orEmpty(),
+            onValueChange = onNumOfPlayersUpdated,
+            placeholder = {
+                Text(text = "$minPlayers-$maxPlayers")
             },
             singleLine = true
         )

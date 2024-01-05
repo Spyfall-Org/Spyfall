@@ -24,3 +24,12 @@ fun <T : Any> SavedStateHandle.navArgument(navArgument: NamedNavArgument, checkE
     .developerSnackOnError { "Saved state handle did not have expected: ${navArgument.name}" }
     .logOnError()
     .getOrNull()
+
+
+fun SavedStateHandle.updateArg(navArgument: NamedNavArgument, value: Any?) {
+    Try {
+        set(navArgument.name, value)
+    }
+        .logOnError()
+        .throwIfDebug()
+}

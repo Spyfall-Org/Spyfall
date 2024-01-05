@@ -39,7 +39,7 @@ import com.dangerfield.libraries.coreflowroutines.cancelledJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import spyfallx.ui.R
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background

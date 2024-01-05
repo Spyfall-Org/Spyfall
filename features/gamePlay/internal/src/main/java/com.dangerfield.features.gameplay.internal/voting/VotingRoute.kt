@@ -8,7 +8,7 @@ import com.dangerfield.features.gameplay.singleDeviceInfoRoute
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
-
+// TODO consider sealed class I think
 fun Router.navigateToVotingInfo(hasVoted: Boolean = false) {
     navigate(
         fillRoute(votingInfoRoute) {
@@ -37,7 +37,7 @@ fun Router.navigateToSingleDeviceVotingResults(accessCode: String) {
 
 val hasVotedArgument = navArgument("hasVoted") { type = NavType.BoolType }
 
-val votingInfoRoute = route("voting") {
+val votingInfoRoute = route("votingInfo") {
     argument(hasVotedArgument)
 }
 

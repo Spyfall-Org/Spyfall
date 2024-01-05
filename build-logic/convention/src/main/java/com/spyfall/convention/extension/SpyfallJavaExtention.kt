@@ -4,7 +4,6 @@ package com.spyfall.convention.extension
 import com.spyfall.convention.util.getModule
 import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.optInKotlinMarkers
-import com.spyfall.convention.util.useKspDagger
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies

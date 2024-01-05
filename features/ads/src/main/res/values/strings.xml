@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ads_mod_app_id" translatable="false">ca-app-pub-7008637445039253~6033749759</string>
+
+
+    <string name="single_device_voting_id" translate="false">ca-app-pub-7008637445039253/1536073799</string>
+    <string name="single_device_results_id" translatable="false">ca-app-pub-7008637445039253/9232345385</string>
+    <string name="single_device_role_reveal_id" translatable="false">ca-app-pub-7008637445039253/5360548986</string>
+    <string name="waiting_room_banner_id" translatable="false">ca-app-pub-7008637445039253/2374474751</string>
+    <string name="multi_player_game_play_banner_id" translatable="false">ca-app-pub-7008637445039253/7738482074</string>
+    <string name="single_device_game_play_banner_id" translatable="false">ca-app-pub-7008637445039253/3176458525</string>
+    <string name="game_restart_interstitial_id" translatable="false">ca-app-pub-7008637445039253/9762010181</string>
+    <string name="test_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+
+</resources>

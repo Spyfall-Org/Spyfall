@@ -12,7 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.button.ProvideButtonConfig
@@ -42,16 +43,15 @@ fun ModalContent(
 
         Spacer(modifier = Modifier.height(Spacing.S600))
 
-        Box(
+        ScrollingColumnWithFadingEdge(
+            state = scrollState,
             modifier = Modifier
                 .weight(1f, fill = false)
                 .drawVerticalScrollbar(
                     scrollState,
                     OddOneOutTheme.colorScheme.textDisabled.color
                 )
-                .verticalScroll(scrollState),
         ) {
-
             ProvideTextConfig(OddOneOutTheme.typography.Body.B700) {
                 content()
             }

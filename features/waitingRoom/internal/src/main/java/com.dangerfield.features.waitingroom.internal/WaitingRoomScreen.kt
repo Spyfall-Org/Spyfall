@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,10 +21,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.features.ads.OddOneOutAd
+import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.DisplayablePlayer
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
+import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.VerticalSpacerS1000
+import com.dangerfield.libraries.ui.VerticalSpacerS1200
+import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
@@ -34,7 +39,6 @@ import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.modifiers.drawVerticalScrollbar
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.color.background
 
@@ -61,10 +65,9 @@ fun WaitingRoomScreen(
     Screen(
         modifier = modifier,
         topBar = {
-            Header(
-                title = "Waiting for players...",
-                scrollState = scrollState
-            )
+            Column {
+                AdBanner(ad = OddOneOutAd.WaitingRoomBanner)
+            }
         }
     ) {
         Box {
@@ -106,79 +109,93 @@ private fun WaitingRoomScreenContent(
     onLeaveGameClicked: () -> Unit,
     onStartGameClicked: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(scrollState)
-            .drawVerticalScrollbar(
-                scrollState,
-                OddOneOutTheme.colorScheme.surfaceDisabled.color
+
+        ScrollingColumnWithFadingEdge(
+            state = scrollState,
+            modifier = Modifier
+                .padding(it)
+                .padding(horizontal = Spacing.S1000)
+        ) {
+
+            VerticalSpacerS1000()
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Waiting for players...",
+                typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
             )
-            .padding(it)
-            .padding(horizontal = Spacing.S1000)
-    ) {
-        Spacer(modifier = Modifier.height(Spacing.S1000))
-        Row {
-            Text(text = "Access Code:", typographyToken = OddOneOutTheme.typography.Default.Bold)
-            Spacer(modifier = Modifier.width(Spacing.S500))
-            SelectionContainer {
+
+            VerticalSpacerS1000()
+
+            Row {
                 Text(
-                    modifier = Modifier.weight(1f),
-                    text = accessCode,
-                    typographyToken = OddOneOutTheme.typography.Default
+                    text = "Access Code:",
+                    typographyToken = OddOneOutTheme.typography.Default.Bold
                 )
-            }
-            Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.width(Spacing.S500))
+                SelectionContainer {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = accessCode,
+                        typographyToken = OddOneOutTheme.typography.Default
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
 
-            if (videoCallLink != null) {
-                IconButton(
-                    icon = SpyfallIcon.VideoCall("Join game video call"),
-                    onClick = {
-                        onCallLinkButtonClicked(videoCallLink)
-                    }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(Spacing.S500))
-
-        if (isLoadingRoom) {
-            CircularProgressIndicator()
-        } else {
-            PlayerList(
-                players = players,
-                onChangeNameClicked = onChangeNameClicked
-            )
-        }
-
-        Spacer(modifier = Modifier.height(Spacing.S1200))
-
-        if (!isLoadingStart) {
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onLeaveGameClicked,
-                type = ButtonType.Regular
-            ) {
-                Text(text = "Leave Game")
+                if (videoCallLink != null) {
+                    IconButton(
+                        icon = SpyfallIcon.VideoCall("Join game video call"),
+                        onClick = {
+                            onCallLinkButtonClicked(videoCallLink)
+                        }
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(Spacing.S1000))
+            VerticalSpacerS500()
 
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onStartGameClicked
-            ) {
-                Text(text = "Start Game")
-            }
-        } else {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
+            if (isLoadingRoom) {
                 CircularProgressIndicator()
+            } else {
+                PlayerList(
+                    players = players,
+                    onChangeNameClicked = onChangeNameClicked
+                )
             }
+
+            VerticalSpacerS1200()
+
+            if (!isLoadingStart) {
+
+                Button(
+                    type = ButtonType.Accent,
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onStartGameClicked
+                ) {
+                    Text(text = "Start Game")
+                }
+
+                VerticalSpacerS1000()
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onLeaveGameClicked,
+                    type = ButtonType.Regular
+                ) {
+                    Text(text = "Leave Game")
+                }
+
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            VerticalSpacerS1000()
         }
-    }
 }
 
 @Composable

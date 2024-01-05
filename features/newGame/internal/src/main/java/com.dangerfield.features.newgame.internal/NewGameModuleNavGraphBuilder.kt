@@ -27,7 +27,6 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
     private val isVideoCallingEnabled: IsVideoCallingEnabled,
 ) : ModuleNavBuilder {
 
-    // TODO consider making a router and asserting more control over navigation
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(
             route = newGameNavigationRoute.navRoute,

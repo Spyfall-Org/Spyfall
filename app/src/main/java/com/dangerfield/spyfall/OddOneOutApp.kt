@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,6 +32,8 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.dangerfield.features.ads.AdsConfig
+import com.dangerfield.features.ads.LocalAdsConfig
 import com.dangerfield.features.blockingerror.blockingErrorRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
@@ -60,11 +63,12 @@ import spyfallx.ui.color.background
 
 @Suppress("MagicNumber")
 @Composable
-fun SpyfallApp(
+fun OddOneOutApp(
     accentColor: ColorPrimitive,
     darkModeConfig: DarkModeConfig,
     navBuilderRegistry: NavBuilderRegistry,
     networkMonitor: NetworkMonitor,
+    adsConfig: AdsConfig,
     appState: AppState = rememberAppState(networkMonitor = networkMonitor),
     isUpdateRequired: Boolean,
     hasBlockingError: Boolean
@@ -114,75 +118,78 @@ fun SpyfallApp(
     }
 
     // TODO add maintainence mode
-    // maybe have main activity view model observe the config and update the app state.
-    // having an app state here would be great
-
-    OddOneOutTheme(
-        isDarkMode = shouldShowDarkMode,
-        themeColor = accentColor
+    CompositionLocalProvider(
+        LocalAdsConfig provides adsConfig
     ) {
-        Screen(
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    snackbar = {
-                        Snackbar(
-                            isDebugMessage = it.isDebugMessage(),
-                            snackbarData = it.toSnackbarData()
-                        )
-                    }
-                )
-            },
+        OddOneOutTheme(
+            isDarkMode = shouldShowDarkMode,
+            themeColor = accentColor
         ) {
-            Column(
-                modifier = Modifier.padding(it)
+            Screen(
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = snackbarHostState,
+                        snackbar = {
+                            Snackbar(
+                                isDebugMessage = it.isDebugMessage(),
+                                snackbarData = it.toSnackbarData()
+                            )
+                        }
+                    )
+                },
             ) {
-                AnimatedVisibility(
-                    visible = isOffline,
-                    enter = slideInVertically(),
-                    exit = slideOutVertically()
+                Column(
+                    modifier = Modifier.padding(it)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(OddOneOutTheme.colorScheme.textWarning),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                    AnimatedVisibility(
+                        visible = isOffline,
+                        enter = slideInVertically(),
+                        exit = slideOutVertically()
                     ) {
-                        Text(
-                            text = "Odd One Out is offline",
-                            typographyToken = OddOneOutTheme.typography.Body.B700,
-                            color = OddOneOutTheme.colorScheme.text,
+                        // TODO cleanup make this a component
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(OddOneOutTheme.colorScheme.textWarning),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Odd One Out is offline",
+                                typographyToken = OddOneOutTheme.typography.Body.B700,
+                                color = OddOneOutTheme.colorScheme.text,
+                            )
+                        }
+                    }
+
+                    // TODO fix the padding with bottom sheets and text fields
+                    NavHost(
+                        // modifier = Modifier.imePadding(),
+                        navController = router.navHostController,
+                        startDestination = startingRoute.navRoute,
+                        enterTransition = { fadeInToStartAnim() },
+                        exitTransition = { fadeOutToStartAnim() },
+                        popEnterTransition = { fadeInToEndAnim() },
+                        popExitTransition = { fadeOutToEndAnim() }
+                    ) {
+                        navBuilderRegistry.registerNavBuilderForModule(
+                            navGraphBuilder = this,
+                            router = router
                         )
                     }
                 }
 
-                NavHost(
-                    modifier = Modifier.imePadding(),
-                    navController = router.navHostController,
-                    startDestination = startingRoute.navRoute,
-                    enterTransition = { fadeInToStartAnim() },
-                    exitTransition = { fadeOutToStartAnim() },
-                    popEnterTransition = { fadeInToEndAnim() },
-                    popExitTransition = { fadeOutToEndAnim() }
-                ) {
-                    navBuilderRegistry.registerNavBuilderForModule(
-                        navGraphBuilder = this,
-                        router = router
-                    )
+                val bottomSheetNavigator = router.navHostController.getFloatingWindowNavigator()
+
+                bottomSheetNavigator?.let {
+                    FloatingWindowHost(bottomSheetNavigator)
                 }
-            }
-
-            val bottomSheetNavigator = router.navHostController.getFloatingWindowNavigator()
-
-            bottomSheetNavigator?.let {
-                FloatingWindowHost(bottomSheetNavigator)
             }
         }
     }
 }
 
-fun setStatusBarColor(shouldBeDark: Boolean, context: Context) {
+private fun setStatusBarColor(shouldBeDark: Boolean, context: Context) {
     val window = (context as Activity).window
     val statusBarColor = if (shouldBeDark) Color.BLACK else Color.WHITE
     window.statusBarColor = statusBarColor

@@ -2,11 +2,14 @@ package com.dangerfield.features.gameplay.internal.singledevice
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.dangerfield.features.ads.AdsConfig
+import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.navigateToSingleDevicePlayerRoleRoute
 import com.dangerfield.features.gameplay.internal.singleDevicePlayerRoleRoute
@@ -15,11 +18,15 @@ import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDe
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.Event.GameKilled
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.Event.GameReset
+import com.dangerfield.features.gameplay.internal.singledevice.info.SingleDeviceInfoScreen
+import com.dangerfield.features.gameplay.internal.singledevice.info.SingleDeviceInfoViewModel
 import com.dangerfield.features.gameplay.internal.singledevice.results.SingleDeviceResultsScreen
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDevicePlayerRoleScreen
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel
+import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action.EndGame
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action.LoadGame
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action.LoadNextPlayer
+import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action.LoadPreviousPlayer
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action.StartGame
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action.UpdateName
 import com.dangerfield.features.gameplay.internal.singledevice.voting.SingleDeviceVotingScreen
@@ -45,7 +52,13 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
+class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
+    private val interstitialAd: com.dangerfield.features.ads.ui.InterstitialAd<OddOneOutAd.GameRestartInterstitial>,
+    private val adsConfig: AdsConfig
+) : ModuleNavBuilder {
+
+    // TODO should this be cached? is it okay to have it per session?
+    private var numberOfRestarts = 0
 
     @Suppress("LongMethod")
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -54,8 +67,25 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
             route = singleDeviceInfoRoute.navRoute,
             arguments = singleDeviceInfoRoute.navArguments
         ) {
+            val viewModel = hiltViewModel<SingleDeviceInfoViewModel>()
             val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
             val timeLimit = it.navArgument<Int>(timeLimitArgument) ?: return@composable
+            val context = LocalContext.current
+
+            LaunchedEffect(Unit) {
+                val restartFrequency = adsConfig.gameRestInterstitialAdFrequency
+                if (numberOfRestarts > 0 && numberOfRestarts % restartFrequency == 0) {
+                    interstitialAd.show(context, onAdDismissed = {})
+                }
+            }
+
+            ObserveWithLifecycle(viewModel.events) { event ->
+                when (event) {
+                    SingleDeviceInfoViewModel.Event.GameEnded -> router.popBackTo(
+                        welcomeNavigationRoute
+                    )
+                }
+            }
 
             SingleDeviceInfoScreen(
                 onStartClicked = {
@@ -63,6 +93,9 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
                         accessCode = accessCode,
                         timeLimit = timeLimit
                     )
+                },
+                onEndGameClicked = {
+                    viewModel.takeAction(SingleDeviceInfoViewModel.Action.EndGame)
                 }
             )
         }
@@ -92,6 +125,14 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
                 viewModel.takeAction(LoadGame)
             }
 
+            ObserveWithLifecycle(viewModel.events) { event ->
+                when (event) {
+                    SingleDeviceRoleRevealViewModel.Event.GameKilled -> router.popBackTo(
+                        welcomeNavigationRoute
+                    )
+                }
+            }
+
             SingleDevicePlayerRoleScreen(
                 currentPlayer = state.currentPlayer,
                 location = state.location,
@@ -101,6 +142,9 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
                 nameFieldState = state.nameFieldState,
                 onNameUpdated = { viewModel.takeAction(UpdateName(it)) },
                 locationOptions = state.locationOptions,
+                onEndGameClicked = { viewModel.takeAction(EndGame) },
+                onPreviousPlayerClicked = { viewModel.takeAction(LoadPreviousPlayer) },
+                isFirstPlayer = state.isFirstPlayer
             )
         }
 
@@ -116,7 +160,10 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
 
             ObserveWithLifecycle(flow = viewModel.events) { event ->
                 when (event) {
-                    is GameReset -> router.popBackTo(singleDeviceInfoRoute)
+                    is GameReset -> router.popBackTo(singleDeviceInfoRoute).also {
+                        numberOfRestarts++
+                    }
+
                     GameKilled -> router.popBackTo(welcomeNavigationRoute)
                 }
             }
@@ -205,6 +252,17 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
                             )
                         )
                     },
+                    isFirstPlayer = state.isFirstPlayer,
+                    onPreviousPlayerClicked = {
+                        viewModel.takeAction(
+                            SingleDeviceVotingViewModel.Action.PreviousPlayer
+                        )
+                    },
+                    onEndGameClicked = {
+                        viewModel.takeAction(
+                            SingleDeviceVotingViewModel.Action.EndGame
+                        )
+                    },
                 )
             }
 
@@ -226,10 +284,14 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
 
                 ObserveWithLifecycle(flow = viewModel.events) { event ->
                     when (event) {
-                        SingleDeviceVotingViewModel.Event.GameKilled -> router.popBackTo(welcomeNavigationRoute)
+                        SingleDeviceVotingViewModel.Event.GameKilled -> router.popBackTo(
+                            welcomeNavigationRoute
+                        )
+
                         SingleDeviceVotingViewModel.Event.GameReset -> {
-                            router.popBackTo(singleDeviceVotingNavigationRoute, inclusive = true)
-                            router.popBackTo(singleDeviceInfoRoute)
+                            router.popBackTo(singleDeviceInfoRoute).also {
+                                numberOfRestarts++
+                            }
                         }
                     }
                 }
@@ -241,11 +303,14 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor() : ModuleNa
                     onEndGameClicked = {
                         viewModel.takeAction(SingleDeviceVotingViewModel.Action.EndGame)
                     },
+                    totalPlayerCount = state.totalPlayerCount,
                     didOddOneOutWin = state.result == GameResult.OddOneOutWon,
                     isTie = state.result == GameResult.Draw,
                     oddOneOutName = state.oddOneOutName,
                     locationName = state.location,
                     onVotingInfoClicked = { router.navigateToVotingInfo(hasVoted = true) },
+                    correctOddOneOutVoteCount = state.correctGuessesForOddOneOut,
+                    oddOneOutLocationGuess = state.oddOneOutLocationGuess,
                 )
             }
         }

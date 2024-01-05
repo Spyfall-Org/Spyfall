@@ -40,6 +40,7 @@ class GetGamePlayLocationsImpl @Inject constructor(
                     .throwIfDebug()
             }
 
+            // TODO non empty packs size can be 0 here
             val nonEmptyPacks = packBank.filter { it.isNotEmpty() }
             val packIndex = iteration % nonEmptyPacks.size
             val locations = nonEmptyPacks[packIndex]

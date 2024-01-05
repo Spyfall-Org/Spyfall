@@ -35,15 +35,15 @@ import kotlin.time.Duration.Companion.minutes
 class GamePlayViewModel @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
-    private val session: Session,
     private val clearActiveGame: ClearActiveGame,
-    private val savedStateHandle: SavedStateHandle
-) : SEAViewModel<State, Event, Action>() {
+    private val savedStateHandle: SavedStateHandle,
+    session: Session,
+    ) : SEAViewModel<State, Event, Action>() {
 
     private val meUserId = session.activeGame?.userId ?: ""
     private val isSubscribedToGameFlow = AtomicBoolean(false)
 
-    // TODO may be concurency issues here, the timer could be stoped or started from different coroutines
+    // TODO cleanup may be concurency issues here, the timer could be stoped or started from different coroutines
     private var timerJob: Job? = null
     private val gameTimeRefreshTrigger = TriggerFlow()
     private val isTimerRunning: Boolean get() = timerJob != null
@@ -54,6 +54,7 @@ class GamePlayViewModel @Inject constructor(
     private val timeLimitArg: Int?
         get() = savedStateHandle.navArgument<Int>(timeLimitArgument).takeIf { (it ?: 0) > 0 }
 
+    // TODO cleanup consider putting voting into a different screen
     override val initialState = State(
         players = emptyList(),
         locations = emptyList(),
@@ -83,10 +84,7 @@ class GamePlayViewModel @Inject constructor(
 
     private suspend fun endGame() {
         gameRepository.end(accessCode)
-        // TODO pack game ending behind a uses case and leave game for that matter.
-        // not super sure I need a data source as well as a repository
-        // maybe I continue trucking on and clean that up later
-
+        // TODO cleanup consider having game repo clear active game and stuff
         clearActiveGame()
         sendEvent(Event.GameKilled)
     }
@@ -132,6 +130,7 @@ class GamePlayViewModel @Inject constructor(
             }
     }
 
+    // TODO cleanup consider having individual functions gameRepository.getGameFlow.waitUntil(STATE)
     private suspend fun loadGamePlay() {
         if (isSubscribedToGameFlow.getAndSet(true)) return
         viewModelScope.launch {
@@ -141,7 +140,6 @@ class GamePlayViewModel @Inject constructor(
             ) { game, _ ->
                 mapToGameState(accessCode, game)
             }.collect { gameState ->
-                Log.d("Elijah", "Game state of ${gameState::class.simpleName} in game play")
                 when (gameState) {
                     is GameState.Starting,
                     is GameState.Expired,
@@ -273,6 +271,7 @@ class GamePlayViewModel @Inject constructor(
     private fun startTimer() {
         if (isTimerRunning) return
         timerJob = viewModelScope.launch {
+            // TODO cleanup should this run on viewmodel scope? infact maybe look at all viewmodel scopes
             while (isActive) {
                 gameTimeRefreshTrigger.pull()
                 delay(500)

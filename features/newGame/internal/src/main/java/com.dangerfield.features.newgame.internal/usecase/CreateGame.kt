@@ -36,19 +36,17 @@ class CreateGame @Inject constructor(
         packs: List<Pack>,
         timeLimit: Int,
         videoCallLink: String?
-    ): Try<String> {
-        return when {
-            packs.isEmpty() -> CreateGameError.PacksEmpty.failure()
-            timeLimit < gameConfig.minTimeLimit -> CreateGameError.TimeLimitTooShort.failure()
-            timeLimit > gameConfig.maxTimeLimit -> CreateGameError.TimeLimitTooLong.failure()
-            userName.isBlank() -> CreateGameError.NameBlank.failure()
-            else -> create(
-                userName = userName,
-                packs = packs,
-                timeLimit = timeLimit,
-                videoCallLink = videoCallLink
-            )
-        }
+    ): Try<String> = when {
+        packs.isEmpty() -> CreateGameError.PacksEmpty.failure()
+        timeLimit < gameConfig.minTimeLimit -> CreateGameError.TimeLimitTooShort.failure()
+        timeLimit > gameConfig.maxTimeLimit -> CreateGameError.TimeLimitTooLong.failure()
+        userName.isBlank() -> CreateGameError.NameBlank.failure()
+        else -> create(
+            userName = userName,
+            packs = packs,
+            timeLimit = timeLimit,
+            videoCallLink = videoCallLink
+        )
     }
 
     private suspend fun create(

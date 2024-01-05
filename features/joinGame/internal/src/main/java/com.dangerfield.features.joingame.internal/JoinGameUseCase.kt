@@ -21,6 +21,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.time.Duration.Companion.seconds
 
+// TODO cleanup this use case is too much. It doesnt need to check all this right? Take ex. from create game
 class JoinGameUseCase @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,

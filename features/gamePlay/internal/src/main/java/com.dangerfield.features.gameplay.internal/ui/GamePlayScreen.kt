@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,11 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.features.ads.OddOneOutAd.MultiPlayerGamePlayBanner
+import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.gameplay.internal.DisplayablePlayer
 import com.dangerfield.features.gameplay.internal.Fake
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.ui.HorizontalSpacerS800
-import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
@@ -44,6 +45,8 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.color.background
 
+// TODO cleanup
+// can we reduce params, and reduce logic in the view?
 @Composable
 fun GamePlayScreen(
     players: List<DisplayablePlayer>,
@@ -87,18 +90,32 @@ fun GamePlayScreen(
         if (gameResult != null) scrollState.animateScrollTo(0)
     }
 
-    Screen { padding ->
-        Box {
+    Screen(
+        modifier = modifier,
+        topBar = {
+            Column {
+                AdBanner(ad = MultiPlayerGamePlayBanner)
+                ActionButtons(
+                    isTimeUp = isTimeUp,
+                    onVotingQuestionClicked = {
+                        onVotingQuestionClicked(hasMePlayerSubmittedVote)
+                    },
+                    onGamePlayQuestionClicked = onGamePlayQuestionClicked,
+                    videoCallLink = videoCallLink,
+                    onVideoCallButtonClicked = onVideoCallButtonClicked,
+
+                    )
+            }
+        }
+    ) { padding ->
+
+        Box(modifier = Modifier.padding(padding)) {
             GamePlayScreenContent(
                 modifier = modifier,
-                padding = padding,
                 scrollState = scrollState,
                 isTimeUp = isTimeUp,
-                onVotingQuestionClicked = onVotingQuestionClicked,
                 hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
-                onGamePlayQuestionClicked = onGamePlayQuestionClicked,
                 gameResult = gameResult,
-                videoCallLink = videoCallLink,
                 timeRemaining = timeRemaining,
                 isOddOneOut = isOddOneOut,
                 role = role,
@@ -113,7 +130,6 @@ fun GamePlayScreen(
                 onSubmitLocationVoteClicked = onSubmitLocationVoteClicked,
                 onResetGameClicked = onResetGameClicked,
                 onEndGameClicked = onEndGameClicked,
-                onVideoCallButtonClicked = onVideoCallButtonClicked
             )
 
             if (showLeaveGameDialog) {
@@ -129,18 +145,13 @@ fun GamePlayScreen(
 @Composable
 private fun GamePlayScreenContent(
     modifier: Modifier,
-    padding: PaddingValues,
     scrollState: ScrollState,
     isTimeUp: Boolean,
-    onVotingQuestionClicked: (hasVoted: Boolean) -> Unit,
     hasMePlayerSubmittedVote: Boolean,
-    onGamePlayQuestionClicked: () -> Unit,
     gameResult: GameResult?,
     timeRemaining: String,
     isOddOneOut: Boolean,
     role: String,
-    videoCallLink: String?,
-    onVideoCallButtonClicked: (String) -> Unit,
     location: String?,
     isVotingOnOddOneOut: Boolean,
     players: List<DisplayablePlayer>,
@@ -161,21 +172,10 @@ private fun GamePlayScreenContent(
     ScrollingColumnWithFadingEdge(
         modifier = modifier
             .background(OddOneOutTheme.colorScheme.background)
-            .padding(padding)
             .padding(horizontal = Spacing.S1000),
         horizontalAlignment = Alignment.CenterHorizontally,
         state = scrollState
     ) {
-        ActionButtons(
-            isTimeUp = isTimeUp,
-            onVotingQuestionClicked = {
-                onVotingQuestionClicked(hasMePlayerSubmittedVote)
-            },
-            onGamePlayQuestionClicked = onGamePlayQuestionClicked,
-            videoCallLink = videoCallLink,
-            onVideoCallButtonClicked = onVideoCallButtonClicked,
-
-        )
 
         Header(
             hasMePlayerSubmittedVote = hasMePlayerSubmittedVote,
@@ -190,7 +190,7 @@ private fun GamePlayScreenContent(
             location = location,
             text = if (isOddOneOut) "Don't get found out" else "Find the odd one out",
             isTheOddOneOut = isOddOneOut,
-            isHidden = isRoleHidden,
+            isVisible = !isRoleHidden,
             onHideShowClicked = { isRoleHidden = !isRoleHidden },
         )
 
@@ -403,7 +403,7 @@ private fun PlayerList(
         val playersToShow = when {
             hasMePlayerSubmittedVote -> listOf(selectedPlayer)
             isTimeUp -> players.filter { it.id != mePlayerId }
-            else ->  players
+            else -> players
         }
 
         GamePlayGrid(
@@ -422,6 +422,7 @@ private fun PlayerList(
 
 @Composable
 private fun ActionButtons(
+    modifier: Modifier = Modifier,
     isTimeUp: Boolean,
     videoCallLink: String?,
     onVotingQuestionClicked: () -> Unit,
@@ -429,9 +430,9 @@ private fun ActionButtons(
     onGamePlayQuestionClicked: () -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = Spacing.S50, top = Spacing.S1000)
+            .padding(bottom = Spacing.S500, top = Spacing.S500, end = Spacing.S500),
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
