@@ -3,7 +3,7 @@ package com.dangerfield.features.newgame.internal.presentation.model
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-sealed class CreateGameError {
+sealed class CreateGameError: Throwable() {
     data object NameBlank : CreateGameError()
     data object PacksEmpty : CreateGameError()
     data object TimeLimitInvalid : CreateGameError()
@@ -12,6 +12,7 @@ sealed class CreateGameError {
     data object InvalidNumberOfPlayers : CreateGameError()
     data object TooManyPlayers : CreateGameError()
     data object TooFewPlayers : CreateGameError()
+    data object VideoCallLinkInvalid: CreateGameError()
 }
 
 sealed class Action {

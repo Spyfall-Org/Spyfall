@@ -1,6 +1,5 @@
 package com.dangerfield.features.joingame.internal
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,25 +19,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
-import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.header.Header
-import com.dangerfield.libraries.ui.components.text.AsteriskText
-import com.dangerfield.libraries.ui.components.text.OutlinedTextField
+import com.dangerfield.libraries.ui.components.text.InputField
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
-import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -176,63 +170,6 @@ private fun JoinGameScreenContent(
             }
 
             VerticalSpacerS1200()
-        }
-    }
-}
-
-@Composable
-private fun InputField(
-    title: String,
-    fieldState: FieldState<String>,
-    onFieldUpdated: (String) -> Unit,
-    focusRequester: FocusRequester,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    hint: String? = null,
-    isRequired: Boolean = false,
-    shouldShowErrorWhileTyping: Boolean = false,
-    onFocusChanged: (Boolean) -> Unit = {},
-) {
-    var hasFocus by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .focusRequester(focusRequester)
-            .onFocusChanged {
-                hasFocus = it.hasFocus
-                onFocusChanged(it.hasFocus)
-            }
-    ) {
-
-        if (isRequired) {
-            AsteriskText {
-                Text(text = title)
-            }
-        } else {
-            Text(text = title)
-        }
-
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            keyboardActions = keyboardActions,
-            keyboardOptions = keyboardOptions,
-            value = fieldState.value.orEmpty(),
-            onValueChange = onFieldUpdated,
-            placeholder = {
-                hint?.let { Text(text = it) }
-            },
-            singleLine = true
-        )
-
-        VerticalSpacerS500()
-
-        if (fieldState is FieldState.Invalid && (!hasFocus || shouldShowErrorWhileTyping)) {
-            Text(
-                text = fieldState.errorMessage,
-                typographyToken = OddOneOutTheme.typography.Body.B500,
-                color = OddOneOutTheme.colorScheme.textWarning
-            )
         }
     }
 }
