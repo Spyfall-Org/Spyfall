@@ -6,6 +6,7 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
+import com.dangerfield.libraries.game.GenerateLocalUUID
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ActiveGame
@@ -21,53 +22,56 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.time.Duration.Companion.seconds
 
-// TODO cleanup this use case is too much. It doesnt need to check all this right? Take ex. from create game
 class JoinGameUseCase @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
     private val gameConfig: GameConfig,
     private val session: Session,
     private val updateActiveGame: UpdateActiveGame,
-    private val clearActiveGame: ClearActiveGame
+    private val clearActiveGame: ClearActiveGame,
+    private val generateLocalUUID: GenerateLocalUUID
 ) {
     suspend operator fun invoke(
         accessCode: String, userName: String
     ): Try<Game> {
-
         checkForExistingSession()
+        val userId = session.user.id ?: generateLocalUUID()
 
-        val id = session.user.id ?: UUID.randomUUID().toString()
+        return when {
+            accessCode.length != gameConfig.accessCodeLength ->
+                JoinGameError.InvalidAccessCodeLength(gameConfig.accessCodeLength).failure()
 
-        return if (accessCode.length < gameConfig.accessCodeLength || accessCode.length > gameConfig.accessCodeLength) {
-            JoinGameError.InvalidAccessCodeLength(requiredLength = gameConfig.accessCodeLength)
-                .failure()
-        } else if (userName.length > gameConfig.maxNameLength || userName.length < gameConfig.minNameLength) {
-            JoinGameError.InvalidNameLength(
-                min = gameConfig.minNameLength, max = gameConfig.maxNameLength
-            ).failure()
-        } else {
-            gameRepository.getGame(accessCode).fold(onSuccess = { game ->
-                val joinGameError = getGameStateError(accessCode, game, userName)
+            userName.length !in gameConfig.minNameLength..gameConfig.maxNameLength ->
+                JoinGameError.InvalidNameLength(gameConfig.minNameLength, gameConfig.maxNameLength)
+                    .failure()
 
-                if (joinGameError != null) {
-                    joinGameError.failure()
-                } else {
-                    joinGame(
-                        accessCode = accessCode,
-                        userName = userName,
-                        game = game,
-                        id = id
-                    )
-                }
-            }, onFailure = {
-                it.toJoinGameFailure()
-            }).onSuccess {
-                updateSession(
-                    userId = id,
-                    accessCode = accessCode
+            else -> joinGame(
+                accessCode = accessCode,
+                userName = userName,
+                userId = userId,
+            )
+        }
+    }
+
+    private suspend fun joinGame(
+        accessCode: String, userName: String, userId: String
+    ): Try<Game> {
+        val game = gameRepository.getGame(accessCode).getOrNull()
+            ?: return JoinGameError.GameNotFound.failure()
+
+        val joinError = getGameStateError(accessCode, game, userName)
+
+        return joinError?.failure()
+            ?: tryWithTimeout(5.seconds) {
+                gameRepository.join(
+                    accessCode = accessCode,
+                    userName = userName,
+                    userId = userId
                 )
             }
-        }
+                .onSuccess { updateSession(userId, accessCode) }
+                .map { game }
+                .mapFailure { it.toJoinGameError() }
     }
 
     private fun getGameStateError(
@@ -83,7 +87,7 @@ class JoinGameUseCase @Inject constructor(
             gameState is GameState.Starting -> JoinGameError.GameAlreadyStarted
             gameState is GameState.Voting -> JoinGameError.GameAlreadyStarted
 
-            gameState is GameState.Waiting && gameState.players.size > gameConfig.maxPlayers -> JoinGameError.GameHasMaxPlayers(
+            gameState is GameState.Waiting && gameState.players.size >= gameConfig.maxPlayers -> JoinGameError.GameHasMaxPlayers(
                 gameConfig.maxPlayers
             )
 
@@ -94,23 +98,11 @@ class JoinGameUseCase @Inject constructor(
         }
     }
 
-    private suspend fun joinGame(
-        accessCode: String, userName: String, game: Game, id: String
-    ): Try<Game> = tryWithTimeout(10.seconds) {
-        gameRepository.join(
-            accessCode = accessCode, userName = userName, userId = id
-        ).fold(
-            onSuccess = { game.success() },
-            onFailure = { it.toJoinGameFailure() }
-        )
-    }
-
-    private fun Throwable.toJoinGameFailure() = when (this) {
+    private fun Throwable.toJoinGameError(): Throwable = when (this) {
+        is JoinGameError -> this
         is GameError.IncompatibleVersion -> JoinGameError.IncompatibleVersion(isCurrentLower = isCurrentLower)
-            .failure()
-
-        is GameError.GameNotFound -> JoinGameError.GameNotFound.failure()
-        else -> JoinGameError.UnknownError(this).failure()
+        is GameError.GameNotFound -> JoinGameError.GameNotFound
+        else -> JoinGameError.UnknownError(this)
     }
 
     private suspend fun updateSession(userId: String, accessCode: String) {

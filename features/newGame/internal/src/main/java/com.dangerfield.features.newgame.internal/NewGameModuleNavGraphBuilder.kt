@@ -75,7 +75,8 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
                 isFormValid = state.formState is FormState.Valid,
                 isSingleDeviceModeEnabled = gameConfig.isSingleDeviceModeEnabled,
                 isVideoCallLinkEnabled = isVideoCallingEnabled(),
-                onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo
+                onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo,
+                onSomethingWentWrongDismissed = viewModel::resolveSomethingWentWrong,
             )
         }
     }

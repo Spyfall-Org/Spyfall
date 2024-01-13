@@ -87,10 +87,10 @@ class ContactUsViewModel @Inject constructor(
         val state = state.value
 
         sendContactForm.invoke(
-            name = state.nameFieldState.backingValue.orEmpty(),
-            email =  state.emailFieldState.backingValue.orEmpty(),
-            message =  state.messageFieldState.backingValue.orEmpty(),
-            contactReason = state.contactReasonState.backingValue ?: ContactReason.None
+            name = state.nameFieldState.value.orEmpty(),
+            email =  state.emailFieldState.value.orEmpty(),
+            message =  state.messageFieldState.value.orEmpty(),
+            contactReason = state.contactReasonState.value ?: ContactReason.None
         )
             .onSuccess {
                 updateState { it.copy(wasFormSuccessfullySubmitted = true) }

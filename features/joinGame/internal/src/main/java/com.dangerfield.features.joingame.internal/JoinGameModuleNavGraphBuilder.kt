@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.dangerfield.features.joingame.joinGameNavigationRoute
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
+import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import se.ansman.dagger.auto.AutoBindIntoSet
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @AutoBindIntoSet
 class JoinGameModuleNavGraphBuilder @Inject constructor(
-    private val buildInfo: BuildInfo
+    private val buildInfo: BuildInfo,
+    private val gameConfig: GameConfig
 ) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -39,21 +41,18 @@ class JoinGameModuleNavGraphBuilder @Inject constructor(
             }
 
             JoinGameScreen(
-                accessCode = state.accessCodeState.value,
-                userName = state.userNameState.value,
                 isLoading = state.isLoading,
-                gameNotFound = state.accessCodeState.gameDoesNotExist,
                 unresolvableError = state.unresolvableError,
-                invalidNameLengthError = state.userNameState.invalidNameLengthError,
-                gameAlreadyStarted = state.accessCodeState.gameAlreadyStarted,
-                invalidAccessCodeLengthError = state.accessCodeState.invalidLengthError,
-                usernameTaken = state.userNameState.isTaken,
                 onJoinGameClicked = viewModel::joinGame,
                 onAccessCodeChanged = viewModel::updateAccessCode,
                 onUserNameChanged = viewModel::updateUserName,
                 onSomethingWentWrongDismissed = viewModel::onSomethingWentWrongDismissed,
                 onUpdateAppClicked = { context.openStoreLinkToApp(buildInfo) },
                 onNavigateBack = router::goBack,
+                accessCodeState = state.accessCodeState,
+                userNameState = state.userNameState,
+                isFormValid = state.isFormValid,
+                accessCodeLength = gameConfig.accessCodeLength
             )
         }
     }

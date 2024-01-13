@@ -8,7 +8,10 @@ androidxNavigation = "2.7.6"
 androidGradlePlugin = "8.1.2"
 androidxComposeRuntimeTracing = "1.0.0-alpha04"
 androidxLifecycle = "2.6.2"
+androidxTestRunner = "1.5.2"
+androidxTestRules = "1.5.0"
 autoDagger = "0.11.0"
+assertk = "0.28.0"
 coroutines = "1.7.3"
 cacheFixGradlePlugin = "2.7.2"
 crashlyticsGradlePlugin = "2.9.9"
@@ -64,7 +67,6 @@ androidx-test-junit = "androidx.test.ext:junit-ktx:1.1.5"
 androidx-test-core = "androidx.test:core-ktx:1.5.0"
 androidx-test-arch-core = "androidx.arch.core:core-testing:2.2.0"
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
-androidx-test-runner = "androidx.test:runner:1.5.2"
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
@@ -179,9 +181,17 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 
-
 # Lint
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
+# Testing
+
+#Testing
+assertk = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk" }
+mockk = "io.mockk:mockk:1.13.9"
+turbine = "app.cash.turbine:turbine:0.12.1"
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }

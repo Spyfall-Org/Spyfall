@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +36,6 @@ import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
-import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
@@ -110,92 +110,92 @@ private fun WaitingRoomScreenContent(
     onStartGameClicked: () -> Unit
 ) {
 
-        ScrollingColumnWithFadingEdge(
-            state = scrollState,
-            modifier = Modifier
-                .padding(it)
-                .padding(horizontal = Spacing.S1000)
-        ) {
+    ScrollingColumnWithFadingEdge(
+        state = scrollState,
+        modifier = Modifier
+            .padding(it)
+            .padding(horizontal = Spacing.S1000)
+    ) {
 
-            VerticalSpacerS1000()
+        VerticalSpacerS1000()
 
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Waiting for players...",
+            typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
+        )
+
+        VerticalSpacerS1000()
+
+        Row {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Waiting for players...",
-                typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
+                text = "Access Code:",
+                typographyToken = OddOneOutTheme.typography.Default.Bold
             )
-
-            VerticalSpacerS1000()
-
-            Row {
+            Spacer(modifier = Modifier.width(Spacing.S500))
+            SelectionContainer {
                 Text(
-                    text = "Access Code:",
-                    typographyToken = OddOneOutTheme.typography.Default.Bold
-                )
-                Spacer(modifier = Modifier.width(Spacing.S500))
-                SelectionContainer {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = accessCode,
-                        typographyToken = OddOneOutTheme.typography.Default
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-
-                if (videoCallLink != null) {
-                    IconButton(
-                        icon = SpyfallIcon.VideoCall("Join game video call"),
-                        onClick = {
-                            onCallLinkButtonClicked(videoCallLink)
-                        }
-                    )
-                }
-            }
-
-            VerticalSpacerS500()
-
-            if (isLoadingRoom) {
-                CircularProgressIndicator()
-            } else {
-                PlayerList(
-                    players = players,
-                    onChangeNameClicked = onChangeNameClicked
+                    modifier = Modifier.weight(1f),
+                    text = accessCode,
+                    typographyToken = OddOneOutTheme.typography.Default
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
 
-            VerticalSpacerS1200()
+            if (videoCallLink != null) {
+                IconButton(
+                    icon = SpyfallIcon.VideoCall("Join game video call"),
+                    onClick = {
+                        onCallLinkButtonClicked(videoCallLink)
+                    }
+                )
+            }
+        }
 
-            if (!isLoadingStart) {
+        VerticalSpacerS500()
 
-                Button(
-                    type = ButtonType.Accent,
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = onStartGameClicked
-                ) {
-                    Text(text = "Start Game")
-                }
+        if (isLoadingRoom) {
+            CircularProgressIndicator()
+        } else {
+            PlayerList(
+                players = players,
+                onChangeNameClicked = onChangeNameClicked
+            )
+        }
 
-                VerticalSpacerS1000()
+        VerticalSpacerS1200()
 
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = onLeaveGameClicked,
-                    type = ButtonType.Regular
-                ) {
-                    Text(text = "Leave Game")
-                }
+        if (!isLoadingStart) {
 
-            } else {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+            Button(
+                type = ButtonType.Accent,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onStartGameClicked
+            ) {
+                Text(text = "Start Game")
             }
 
             VerticalSpacerS1000()
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onLeaveGameClicked,
+                type = ButtonType.Regular
+            ) {
+                Text(text = "Leave Game")
+            }
+
+        } else {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
+
+        VerticalSpacerS1000()
+    }
 }
 
 @Composable
@@ -203,6 +203,7 @@ private fun PlayerList(
     players: List<DisplayablePlayer>,
     onChangeNameClicked: () -> Unit,
 ) {
+
     players.forEachIndexed { index, player ->
         if (index != 0) {
             Spacer(modifier = Modifier.height(Spacing.S500))
@@ -223,7 +224,10 @@ private fun PlayerList(
             Text(text = player.name)
             if (player.isMe) {
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(icon = SpyfallIcon.Pencil("Change name"), onClick = onChangeNameClicked)
+                IconButton(
+                    icon = SpyfallIcon.Pencil("Change name"),
+                    onClick = onChangeNameClicked
+                )
             }
         }
     }

@@ -62,10 +62,5 @@ gradlePlugin {
             id = "spyfall.android.detekt"
             implementationClass = "com.spyfall.convention.plugin.AndroidDetektConventionPlugin"
         }
-
-        register("androidCheckstyle") {
-            id = "spyfall.android.checkstyle"
-            implementationClass = "com.spyfall.convention.plugin.AndroidCheckstyleConventionPlugin"
-        }
     }
 }

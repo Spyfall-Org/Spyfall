@@ -20,4 +20,5 @@ dependencies {
     implementation(projects.libraries.ui)
     implementation(projects.libraries.config)
     implementation(projects.libraries.navigation)
+    testImplementation(projects.libraries.test)
 }

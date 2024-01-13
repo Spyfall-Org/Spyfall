@@ -214,7 +214,7 @@ private fun RoleRevealScreenContent(
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = nameFieldState.backingValue.orEmpty(),
+                    value = nameFieldState.value.orEmpty(),
                     onValueChange = onNameUpdated,
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done

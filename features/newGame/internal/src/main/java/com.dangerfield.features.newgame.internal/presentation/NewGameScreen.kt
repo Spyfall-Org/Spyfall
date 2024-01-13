@@ -72,6 +72,7 @@ fun NewGameScreen(
     onNumOfPlayersUpdated: (String) -> Unit = {},
     packsState: FieldState<List<DisplayablePack>>,
     didSomethingGoWrong: Boolean = false,
+    onSomethingWentWrongDismissed: () -> Unit = {},
     videoCallLinkState: FieldState<String>,
     onVideoCallLinkUpdated: (String) -> Unit = {},
     onNavigateBack: () -> Unit = {},
@@ -217,7 +218,7 @@ fun NewGameScreen(
         }
 
         if (didSomethingGoWrong) {
-            NewGameErrorDialog(onDismissRequest = onNavigateBack)
+            NewGameErrorDialog(onDismissRequest = onSomethingWentWrongDismissed)
         }
 
         if (showPacksInfoBottomSheet) {
@@ -423,7 +424,6 @@ private fun UserNameField(
             singleLine = true
         )
     }
-
 }
 
 @Composable

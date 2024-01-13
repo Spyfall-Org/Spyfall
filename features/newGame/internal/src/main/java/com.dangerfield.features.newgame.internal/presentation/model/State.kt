@@ -17,6 +17,7 @@ sealed class CreateGameError {
 sealed class Action {
     class UpdateName(val name: String) : Action()
     class UpdateVideoCallLink(val link: String) : Action()
+    object ResolveSomethingWentWrong : Action()
     class UpdateTimeLimit(val timeLimit: String) : Action()
     class UpdateGameType(val isSingleDevice: Boolean) : Action()
     class UpdateNumOfPlayers(val numOfPlayers: String) : Action()

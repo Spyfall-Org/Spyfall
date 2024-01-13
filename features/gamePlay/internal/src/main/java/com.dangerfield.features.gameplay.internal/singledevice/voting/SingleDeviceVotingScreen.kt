@@ -237,8 +237,8 @@ private fun VotingScreenContent(
                             // TODO this view is super super stateful
                             onIsVotingOptionsHiddenChanged(true)
                             coroutineScope.launch {
-                                delay(200)
                                 scrollState.animateScrollTo(0)
+                                delay(100)
                                 val playerVote = selectedPlayerForVote
                                 val locationVote = selectedLocationForVote
                                 if (playerVote != null) {

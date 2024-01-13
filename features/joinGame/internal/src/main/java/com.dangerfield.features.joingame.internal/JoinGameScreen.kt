@@ -1,16 +1,16 @@
 package com.dangerfield.features.joingame.internal
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,35 +21,35 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.ui.FieldState
+import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.VerticalSpacerS1200
+import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
+import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.header.Header
+import com.dangerfield.libraries.ui.components.text.AsteriskText
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
+import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.VerticalSpacerS1200
-import com.dangerfield.libraries.ui.components.text.AsteriskText
-import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.components.Screen
-import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
-// TODO add error messages while typing
 @Composable
 fun JoinGameScreen(
-    accessCode: String,
-    userName: String,
+    accessCodeState: FieldState<String>,
+    userNameState: FieldState<String>,
+    isFormValid: Boolean,
     isLoading: Boolean,
-    gameNotFound: Boolean,
+    accessCodeLength: Int,
     unresolvableError: UnresolvableError?,
-    invalidNameLengthError: InvalidNameLengthError?,
-    gameAlreadyStarted: Boolean,
-    invalidAccessCodeLengthError: InvalidAccessCodeLengthError?,
-    usernameTaken: Boolean,
     onJoinGameClicked: () -> Unit,
     onAccessCodeChanged: (String) -> Unit,
     onUserNameChanged: (String) -> Unit,
@@ -61,21 +61,18 @@ fun JoinGameScreen(
 
     Box {
         JoinGameScreenContent(
-            accessCode = accessCode,
+            accessCodeState = accessCodeState,
+            userNameState = userNameState,
+            isLoading = isLoading,
             onAccessCodeChanged = onAccessCodeChanged,
-            gameNotFound = gameNotFound,
-            gameAlreadyStarted = gameAlreadyStarted,
-            invalidAccessCodeLengthError = invalidAccessCodeLengthError,
-            userName = userName,
             onUserNameChanged = onUserNameChanged,
-            usernameTaken = usernameTaken,
-            invalidNameLengthError = invalidNameLengthError,
             onJoinGameClicked = {
                 focusManager.clearFocus()
                 onJoinGameClicked()
             },
-            isLoading = isLoading,
-            onNavigateBack = onNavigateBack
+            accessCodeLength = accessCodeLength,
+            onNavigateBack = onNavigateBack,
+            isFormValid = isFormValid
         )
 
         if (unresolvableError != null) {
@@ -91,22 +88,23 @@ fun JoinGameScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun JoinGameScreenContent(
-    accessCode: String,
-    onAccessCodeChanged: (String) -> Unit,
-    gameNotFound: Boolean,
-    gameAlreadyStarted: Boolean,
-    invalidAccessCodeLengthError: InvalidAccessCodeLengthError?,
-    userName: String,
-    onUserNameChanged: (String) -> Unit,
-    usernameTaken: Boolean,
-    invalidNameLengthError: InvalidNameLengthError?,
-    onJoinGameClicked: () -> Unit,
+    accessCodeState: FieldState<String>,
+    userNameState: FieldState<String>,
+    accessCodeLength: Int,
+    isFormValid: Boolean,
     isLoading: Boolean,
+    onAccessCodeChanged: (String) -> Unit,
+    onUserNameChanged: (String) -> Unit,
+    onJoinGameClicked: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val (nameFocusRequester, accessCodeFocusRequester) = remember { FocusRequester.createRefs() }
-
     val scrollState = rememberScrollState()
+    val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        accessCodeFocusRequester.requestFocus()
+    }
 
     Screen(
         topBar = {
@@ -122,31 +120,42 @@ private fun JoinGameScreenContent(
                 .padding(it)
                 .padding(horizontal = Spacing.S1000)
         ) {
-            Spacer(modifier = Modifier.height(Spacing.S1200))
+            VerticalSpacerS1200()
 
-            AccessCodeField(
-                accessCodeFocusRequester,
-                accessCode,
-                onAccessCodeChanged,
-                nameFocusRequester,
-                gameNotFound,
-                gameAlreadyStarted,
-                invalidAccessCodeLengthError
+            InputField(
+                title = "Access Code:",
+                hint = "Enter the $accessCodeLength digit code",
+                shouldShowErrorWhileTyping = false,
+                focusRequester = accessCodeFocusRequester,
+                fieldState = accessCodeState,
+                keyboardActions = KeyboardActions {
+                    nameFocusRequester.requestFocus()
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                onFieldUpdated = onAccessCodeChanged
             )
 
-            Spacer(modifier = Modifier.height(Spacing.S1200))
+            VerticalSpacerS1200()
 
             // TODO use username generation an collect analytics around usage
-            NameField(
-                nameFocusRequester,
-                userName,
-                onUserNameChanged,
-                onJoinGameClicked,
-                usernameTaken,
-                invalidNameLengthError
+            InputField(
+                title = "Username:",
+                hint = "Pick a username",
+                shouldShowErrorWhileTyping = true,
+                focusRequester = nameFocusRequester,
+                fieldState = userNameState,
+                onFieldUpdated = onUserNameChanged,
+                keyboardActions = KeyboardActions {
+                    if (isFormValid) {
+                        onJoinGameClicked()
+                    } else {
+                        focusManager.clearFocus()
+                    }
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
             )
 
-            Spacer(modifier = Modifier.height(Spacing.S1200))
+            VerticalSpacerS1200()
 
             if (isLoading) {
                 Column(
@@ -156,10 +165,11 @@ private fun JoinGameScreenContent(
                     CircularProgressIndicator()
                 }
             } else {
-                // TODO change to add disabled state
                 Button(
                     onClick = onJoinGameClicked,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
+                    enabled = isFormValid,
                 ) {
                     Text(text = "Join Game")
                 }
@@ -171,125 +181,63 @@ private fun JoinGameScreenContent(
 }
 
 @Composable
-private fun AccessCodeField(
-    accessCodeFocusRequester: FocusRequester,
-    accessCode: String,
-    onAccessCodeChanged: (String) -> Unit,
-    nameFocusRequester: FocusRequester,
-    gameNotFound: Boolean,
-    gameAlreadyStarted: Boolean,
-    invalidAccessCodeLengthError: InvalidAccessCodeLengthError?
+private fun InputField(
+    title: String,
+    fieldState: FieldState<String>,
+    onFieldUpdated: (String) -> Unit,
+    focusRequester: FocusRequester,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    hint: String? = null,
+    isRequired: Boolean = false,
+    shouldShowErrorWhileTyping: Boolean = false,
+    onFocusChanged: (Boolean) -> Unit = {},
 ) {
+    var hasFocus by remember { mutableStateOf(false) }
 
-    AsteriskText {
-        Text(text = "Access Code:")
-    }
-
-    Spacer(modifier = Modifier.height(Spacing.S600))
-
-    OutlinedTextField(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .focusRequester(accessCodeFocusRequester),
-        value = accessCode,
-        onValueChange = onAccessCodeChanged,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Next
-        ),
-        keyboardActions = KeyboardActions(
-            onNext = {
-                nameFocusRequester.requestFocus()
+            .focusRequester(focusRequester)
+            .onFocusChanged {
+                hasFocus = it.hasFocus
+                onFocusChanged(it.hasFocus)
             }
-        ),
-        placeholder = {
-            Text(text = "6 character game code")
-        },
-        singleLine = true
-    )
+    ) {
 
-    Spacer(modifier = Modifier.height(Spacing.S600))
-
-    if (gameNotFound) {
-        Text(
-            text = "A game with that access code does not exist.",
-            color = OddOneOutTheme.colorScheme.textWarning,
-            typographyToken = OddOneOutTheme.typography.Label.L700
-        )
-    }
-
-    if (gameAlreadyStarted) {
-        Text(
-            text = "This game has already started and can no longer be joined.",
-            color = OddOneOutTheme.colorScheme.textWarning,
-            typographyToken = OddOneOutTheme.typography.Label.L700
-        )
-    }
-
-    if (invalidAccessCodeLengthError != null) {
-        val text = if (accessCode.isNotEmpty()) {
-            "Access codes are ${invalidAccessCodeLengthError.requiredLength} character long."
+        if (isRequired) {
+            AsteriskText {
+                Text(text = title)
+            }
         } else {
-            "Please fill out the access code."
+            Text(text = title)
         }
-        Text(
-            text = text,
-            color = OddOneOutTheme.colorScheme.textWarning,
-            typographyToken = OddOneOutTheme.typography.Label.L700
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions,
+            value = fieldState.value.orEmpty(),
+            onValueChange = onFieldUpdated,
+            placeholder = {
+                hint?.let { Text(text = it) }
+            },
+            singleLine = true
         )
+
+        VerticalSpacerS500()
+
+        if (fieldState is FieldState.Invalid && (!hasFocus || shouldShowErrorWhileTyping)) {
+            Text(
+                text = fieldState.errorMessage,
+                typographyToken = OddOneOutTheme.typography.Body.B500,
+                color = OddOneOutTheme.colorScheme.textWarning
+            )
+        }
     }
 }
 
-@Composable
-private fun NameField(
-    nameFocusRequester: FocusRequester,
-    userName: String,
-    onUserNameChanged: (String) -> Unit,
-    onJoinGameClicked: () -> Unit,
-    usernameTaken: Boolean,
-    invalidNameLengthError: InvalidNameLengthError?
-) {
-    AsteriskText {
-        Text(text = "User Name:")
-    }
-    Spacer(modifier = Modifier.height(Spacing.S600))
-
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .focusRequester(nameFocusRequester),
-        value = userName,
-        onValueChange = onUserNameChanged,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = { onJoinGameClicked() }
-        ),
-        placeholder = {
-            Text(text = "Pick a user name:")
-        },
-        singleLine = true
-    )
-    Spacer(modifier = Modifier.height(Spacing.S600))
-
-    if (usernameTaken) {
-        Text(
-            text = "That user name is already taken by another player.",
-            color = OddOneOutTheme.colorScheme.textWarning,
-            typographyToken = OddOneOutTheme.typography.Label.L700
-        )
-    }
-
-    if (invalidNameLengthError != null) {
-        Text(
-            text = "User names must be between ${invalidNameLengthError.min} and ${invalidNameLengthError.max} characters long.",
-            color = OddOneOutTheme.colorScheme.textWarning,
-            typographyToken = OddOneOutTheme.typography.Label.L700
-        )
-    }
-}
-
-@Preview
+@ThemePreviews
 @Composable
 fun PreviewJoinGameScreen() {
     PreviewContent() {
@@ -298,8 +246,6 @@ fun PreviewJoinGameScreen() {
         var isLoading by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
         JoinGameScreen(
-            accessCode = accessCode,
-            userName = userName,
             isLoading = false,
             onJoinGameClicked = {
                 isLoading = true
@@ -310,50 +256,14 @@ fun PreviewJoinGameScreen() {
             },
             onAccessCodeChanged = { accessCode = it },
             onUserNameChanged = { userName = it },
-            gameNotFound = false,
-            invalidNameLengthError = null,
-            gameAlreadyStarted = false,
-            invalidAccessCodeLengthError = null,
-            usernameTaken = false,
             unresolvableError = null,
             onSomethingWentWrongDismissed = {},
             onUpdateAppClicked = {},
-            onNavigateBack = {}
+            onNavigateBack = {},
+            accessCodeState = FieldState.Valid(""),
+            userNameState = FieldState.Valid(""),
+            isFormValid = true,
+            accessCodeLength = 6
         )
     }
 }
-
-@Preview
-@Composable
-fun PreviewJoinGameScreenDark() {
-    PreviewContent(isDarkMode = true) {
-        var accessCode by remember { mutableStateOf("") }
-        var userName by remember { mutableStateOf("") }
-        var isLoading by remember { mutableStateOf(false) }
-        val coroutineScope = rememberCoroutineScope()
-        JoinGameScreen(
-            accessCode = accessCode,
-            userName = userName,
-            isLoading = false,
-            onJoinGameClicked = {
-                isLoading = true
-                coroutineScope.launch {
-                    delay(5000)
-                    isLoading = false
-                }
-            },
-            onAccessCodeChanged = { accessCode = it },
-            onUserNameChanged = { userName = it },
-            gameNotFound = false,
-            invalidNameLengthError = null,
-            gameAlreadyStarted = false,
-            invalidAccessCodeLengthError = null,
-            usernameTaken = false,
-            unresolvableError = null,
-            onSomethingWentWrongDismissed = {},
-            onUpdateAppClicked = {},
-            onNavigateBack = {}
-        )
-    }
-}
-

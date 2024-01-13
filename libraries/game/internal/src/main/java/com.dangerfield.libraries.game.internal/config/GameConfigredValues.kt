@@ -72,7 +72,7 @@ class LocationsPerGame @Inject constructor(
 ) : ConfiguredValue<Int>() {
     override val displayName: String = "Locations Per Game"
     override val path: String = "game.locationsPerGame"
-    override val default: Int = 14
+    override val default: Int = 12
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 

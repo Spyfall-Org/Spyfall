@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.features.ads.OddOneOutAd.GameRestartInterstitial
@@ -25,6 +26,7 @@ import com.dangerfield.spyfall.startup.MainActivityViewModel.State.Loaded
 import com.dangerfield.spyfall.startup.MainActivityViewModel.State.Loading
 import com.dangerfield.spyfall.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import spyfallx.core.doNothing
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -59,8 +61,6 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState) // should be called after splash screen builder
 
-        gameResetInterstitialAd.load(this)
-
         //WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // Delay set content so we can animate splash screen views
@@ -91,6 +91,8 @@ class MainActivity : ComponentActivity() {
                 adsConfig = adsConfig
             )
         }
+
+        gameResetInterstitialAd.load(this@MainActivity)
     }
 
     override fun onDestroy() {

@@ -36,10 +36,6 @@ android {
         viewBinding = true
     }
 
-    packaging {
-        resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
-    }
-
     namespace = "com.dangerfield.spyfall"
 }
 
@@ -56,7 +52,6 @@ dependencies {
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.espresso.core)
     implementation(libs.androidx.recyclerview)
     implementation(libs.arch.fragment.navigation)
     implementation(libs.arch.navigation.ui)
@@ -133,6 +128,8 @@ dependencies {
 	implementation(projects.features.videoCall.internal)
 	implementation(projects.libraries.network)
 	implementation(projects.libraries.network.internal)
+	implementation(projects.libraries.test)
+	implementation(projects.libraries.test.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations

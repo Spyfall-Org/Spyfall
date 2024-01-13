@@ -1,5 +1,7 @@
 package com.dangerfield.features.joingame.internal
 
+import com.dangerfield.libraries.ui.FieldState
+
 sealed class Action {
     data class UpdateUserName(val userName: String) : Action()
     data class UpdateAccessCode(val accessCode: String) : Action()
@@ -8,9 +10,10 @@ sealed class Action {
 }
 
 data class State(
-    val accessCodeState: AccessCodeState,
-    val userNameState: UserNameState,
+    val accessCodeState: FieldState<String>,
+    val userNameState: FieldState<String>,
     val isLoading: Boolean,
+    val isFormValid: Boolean,
     val unresolvableError: UnresolvableError? = null
 )
 
@@ -18,38 +21,6 @@ sealed class UnresolvableError {
     data class IncompatibleError(val isCurrentLower: Boolean): UnresolvableError()
     data object UnknownError: UnresolvableError()
 }
-
-fun State.withNoErrors(): State =
-    copy(
-        accessCodeState = accessCodeState.copy(
-            gameDoesNotExist = false,
-            maxPlayersError = null,
-            gameAlreadyStarted = false,
-            invalidLengthError = null,
-        ),
-        userNameState = userNameState.copy(
-            invalidNameLengthError = null,
-            isTaken = false,
-        )
-    )
-
-data class AccessCodeState(
-    val value: String,
-    val gameDoesNotExist: Boolean = false,
-    val maxPlayersError: MaxPlayersError? = null,
-    val gameAlreadyStarted: Boolean = false,
-    val invalidLengthError: InvalidAccessCodeLengthError? = null,
-)
-
-data class MaxPlayersError(val max: Int)
-data class InvalidAccessCodeLengthError(val requiredLength: Int)
-data class InvalidNameLengthError(val min: Int, val max: Int)
-
-data class UserNameState(
-    val value: String,
-    val invalidNameLengthError: InvalidNameLengthError? = null,
-    val isTaken: Boolean = false,
-)
 
 sealed class Event {
     data class GameJoined(val accessCode: String) : Event()

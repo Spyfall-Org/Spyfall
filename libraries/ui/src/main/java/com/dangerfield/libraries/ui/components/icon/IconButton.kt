@@ -21,7 +21,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dangerfield.libraries.ui.tooltip.TooltipBox
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
@@ -40,7 +39,6 @@ fun IconButton(
     iconColor: ColorToken.Color = OddOneOutTheme.colorScheme.onBackground,
     size: IconButton.Size = IconButton.Size.Medium,
     enabled: Boolean = true,
-    tooltipText: String? = icon.contentDescription,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val padding = size.padding
@@ -65,13 +63,9 @@ fun IconButton(
             )
         }
     }
-    if (tooltipText != null) {
-        TooltipBox(tooltip = { Text(text = tooltipText) }) {
-            Button(modifier = modifier.tooltipAnchor())
-        }
-    } else {
-        Button(modifier = modifier)
-    }
+
+    Button(modifier = modifier)
+
 }
 
 object IconButton {

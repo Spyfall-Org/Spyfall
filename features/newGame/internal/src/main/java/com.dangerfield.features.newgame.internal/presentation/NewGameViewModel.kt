@@ -86,6 +86,7 @@ class NewGameViewModel @Inject constructor(
     fun createGame() = actions.trySend(Action.CreateGame)
     fun loadPacks() = actions.trySend(Action.LoadPacks)
     fun updateVideoCallLink(link: String) = actions.trySend(Action.UpdateVideoCallLink(link))
+    fun resolveSomethingWentWrong() = actions.trySend(Action.ResolveSomethingWentWrong)
     fun updateName(name: String) = actions.trySend(Action.UpdateName(name))
     fun updateTimeLimit(timeLimit: String) = actions.trySend(Action.UpdateTimeLimit(timeLimit))
 
@@ -99,7 +100,12 @@ class NewGameViewModel @Inject constructor(
             is Action.UpdateGameType -> handleUpdateGameType(action.isSingleDevice)
             is Action.UpdateNumOfPlayers -> handleUpdateNumOfPlayers(action.numOfPlayers)
             is Action.SelectPack -> handleSelectPack(action.pack, action.isSelected)
+            Action.ResolveSomethingWentWrong -> handleResolveSomethingWentWrong()
         }
+    }
+
+    private suspend fun FlowCollector<State>.handleResolveSomethingWentWrong() {
+       updateState { it.copy(didSomethingGoWrong = false) }
     }
 
     private suspend fun FlowCollector<State>.handleCreateGame() {
@@ -169,6 +175,7 @@ class NewGameViewModel @Inject constructor(
             timeLimit = timeLimit,
             videoCallLink = state.videoCallLinkState.backingValue
         )
+        // TODO handle failures dude
     } ?: illegalState(
         """
             Cannot create multi device game with

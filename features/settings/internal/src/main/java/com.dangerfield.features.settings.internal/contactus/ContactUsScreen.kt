@@ -199,7 +199,7 @@ private fun Form(
                 RadioGroup {
                     ContactReason.entries.forEach { reason ->
                         ContactTypeOption(
-                            isSelected = contactReasonFieldState.backingValue == reason,
+                            isSelected = contactReasonFieldState.value == reason,
                             contactReason = reason,
                             onSelected = onContactReasonSelected
                         )
@@ -216,7 +216,7 @@ private fun Form(
                 }
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = nameFieldState.backingValue.orEmpty(),
+                    value = nameFieldState.value.orEmpty(),
                     onValueChange = onNameUpdated,
                     keyboardOptions = KeyboardOptions.Default.copy(
                         autoCorrect = false,
@@ -237,7 +237,7 @@ private fun Form(
                 }
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth().focusRequester(emailFocusRequester),
-                    value = emailFieldState.backingValue.orEmpty(),
+                    value = emailFieldState.value.orEmpty(),
                     onValueChange = onEmailUpdated,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -262,11 +262,14 @@ private fun Form(
                         .heightIn(min = 200.dp)
                         .fillMaxWidth()
                         .focusRequester(messageFocusRequester),
-                    value = messageFieldState.backingValue.orEmpty(),
+                    value = messageFieldState.value.orEmpty(),
                     onValueChange = onMessageUpdated,
                     singleLine = false,
                     placeholder = {
-                        Text(text = "What would you like to tell us?")
+                        Text(
+                            text = "What would you like to tell us?",
+                            maxLines = 5
+                        )
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         autoCorrect = true,
