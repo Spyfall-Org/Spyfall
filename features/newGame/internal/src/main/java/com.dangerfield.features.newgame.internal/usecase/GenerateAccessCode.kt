@@ -21,6 +21,5 @@ class GenerateAccessCode @Inject constructor(
         accessCode
     }
 
-
     private fun randomCode() = UUID.randomUUID().toString().take(gameConfig.accessCodeLength)
 }
