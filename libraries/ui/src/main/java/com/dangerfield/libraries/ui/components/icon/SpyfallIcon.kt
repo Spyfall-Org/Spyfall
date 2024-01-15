@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -184,6 +185,11 @@ sealed class SpyfallIcon(
         imageVector = Icons.Default.ContentCopy,
         contentDescription = contentDescription
     )
+
+    class Graph(contentDescription: String?) : SpyfallIcon(
+        imageVector = Icons.Default.AutoGraph,
+        contentDescription = contentDescription
+    )
 }
 
 private val allIcons = listOf(
@@ -219,6 +225,7 @@ private val allIcons = listOf(
     SpyfallIcon.Question(""),
     SpyfallIcon.Share(""),
     SpyfallIcon.Copy(""),
+    SpyfallIcon.Graph(""),
 )
 
 @Preview(device = "spec:id=reference_phone,shape=Normal,width=1000,height=1200,unit=dp,dpi=200")

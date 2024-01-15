@@ -15,6 +15,7 @@ import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
+import com.dangerfield.libraries.session.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -34,7 +35,8 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
     @Named(SingleDeviceRepositoryName) private val gameRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
-) : SEAViewModel<State, Event, Action>() {
+    private val userRepository: UserRepository,
+    ) : SEAViewModel<State, Event, Action>() {
 
     private val isSubscribedToGameFlow = AtomicBoolean(false)
 
@@ -42,6 +44,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
     private var timerJob: Job? = null
     private val gameTimeRefreshTrigger = TriggerFlow()
     private val isTimerRunning: Boolean get() = timerJob != null
+    private val hasRecordedGamePlayed = AtomicBoolean(false)
 
     private val accessCode: String
         get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
@@ -111,8 +114,19 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
                 timeRemaining = gameState.timeRemainingMillis.millisToMMss(),
             )
         }
+
+        if (hasRecordedGamePlayed.getAndSet(true)) {
+            recordGamePlayed(gameState)
+        }
     }
 
+    private suspend fun recordGamePlayed(gameState: GameState.Started) {
+        userRepository.addGamePlayed(
+            accessCode = gameState.accessCode,
+            startedAt = gameState.startedAt,
+            wasSingleDevice = true
+        )
+    }
 
     private fun stopTimer() {
         timerJob?.cancel()

@@ -85,14 +85,24 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                     && hasStarted(game)
                     && remainingMillis(startedAt, game.timeLimitMins) <= 0
                     && game.players.everyoneHasVoted()
-            -> GameState.VotingEnded(
-                accessCode = accessCode,
-                result = calculateGameResult(game),
-                locationNames = game.locationOptionNames,
-                players = game.players,
-                location = game.locationName,
-                videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() }
-            )
+            -> {
+                val result = calculateGameResult(game)
+                val mePlayer = game.player(session.activeGame?.userId)
+
+                GameState.VotingEnded(
+                    accessCode = accessCode,
+                    result = result,
+                    locationNames = game.locationOptionNames,
+                    players = game.players,
+                    startedAt = startedAt,
+                    location = game.locationName,
+                    videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() },
+                    didMePlayerWin = mePlayer?.let {
+                        (it.isOddOneOut && result == GameResult.OddOneOutWon)
+                                || (!it.isOddOneOut && result == GameResult.PlayersWon)
+                    } ?: false
+                )
+            }
 
             else -> GameState.Unknown(game = game).also {
                 Timber.e(

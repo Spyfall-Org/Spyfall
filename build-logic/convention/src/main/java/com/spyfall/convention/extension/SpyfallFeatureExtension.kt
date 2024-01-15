@@ -26,11 +26,20 @@ abstract class SpyfallFeatureExtension {
         project.optInKotlinMarkers(*markerClasses)
     }
 
-    fun datastore() {
+    fun storage() {
         project.dependencies {
-            add("implementation", getModule("libraries:datastore"))
+            add("implementation", getModule("libraries:storage"))
         }
     }
+
+    fun room() {
+        kapt()
+        project.dependencies {
+            "api"(project.libs.room)
+            "kapt"(project.libs.room.compiler)
+        }
+    }
+
     fun daggerHilt(withProcessors: Boolean = true) {
         if (withProcessors) {
             project.pluginManager.apply("dagger.hilt.android.plugin")

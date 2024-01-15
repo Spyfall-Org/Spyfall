@@ -7,10 +7,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
 import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
-import com.dangerfield.libraries.datastore.distinctKeyFlow
+import com.dangerfield.libraries.storage.datastore.distinctKeyFlow
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.User
+import com.dangerfield.libraries.session.UserRepository
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.CoroutineScope

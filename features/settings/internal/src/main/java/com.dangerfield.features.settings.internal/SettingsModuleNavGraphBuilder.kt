@@ -18,14 +18,18 @@ import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.A
 import com.dangerfield.features.settings.settingsNavigationRoute
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.session.SessionFlow
+import com.dangerfield.libraries.session.Stats
+import kotlinx.coroutines.flow.map
 import se.ansman.dagger.auto.AutoBindIntoSet
 import spyfallx.core.BuildInfo
 import javax.inject.Inject
 
 @AutoBindIntoSet
 class SettingsModuleNavGraphBuilder @Inject constructor(
-    private val buildInfo: BuildInfo
-): ModuleNavBuilder {
+    private val buildInfo: BuildInfo,
+    private val sessionFlow: SessionFlow
+) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(
@@ -39,6 +43,7 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
                 onNavigateBack = router::goBack,
                 onThemeOptionClicked = router::navigateToColorPicker,
                 onAboutOptionClicked = router::navigateToAbout,
+                onStatsClicked = router::navigateToStats,
                 onContactUsClicked = router::navigateToContactUs
             )
         }
@@ -68,12 +73,37 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
                 onSubmitClicked = { viewModel.takeAction(Submit) },
                 contactReasonFieldState = state.contactReasonState,
                 onContactReasonSelected = { viewModel.takeAction(UpdateContactReason(it)) },
-                onNameUpdated = {  viewModel.takeAction(UpdateName(it))  },
-                onEmailUpdated = {  viewModel.takeAction(UpdateEmail(it))  },
-                onMessageUpdated = {  viewModel.takeAction(UpdateMessage(it))  },
+                onNameUpdated = { viewModel.takeAction(UpdateName(it)) },
+                onEmailUpdated = { viewModel.takeAction(UpdateEmail(it)) },
+                onMessageUpdated = { viewModel.takeAction(UpdateMessage(it)) },
                 wasFormSubmittedSuccessfully = state.wasFormSuccessfullySubmitted,
                 didSubmitFail = state.didSubmitFail,
-                onSomethingWentWrongDismissed = {  viewModel.takeAction(DismissSomethingWentWrong)  },
+                onSomethingWentWrongDismissed = { viewModel.takeAction(DismissSomethingWentWrong) },
+            )
+        }
+
+        composable(stats.navRoute) {
+            val statsState by sessionFlow
+                .map { it.user.stats }
+                .collectAsStateWithLifecycle(
+                    initialValue = Stats(
+                        multiDeviceGamesPlayed = 0,
+                        winsAsOddOne = listOf(),
+                        winsAsPlayer = listOf(),
+                        lossesAsOddOne = listOf(),
+                        lossesAsPlayer = listOf(),
+                        singleDeviceGamesPlayed = 0
+                    )
+                )
+
+            StatsScreen(
+                onNavigateBack = router::goBack,
+                gamesLostAsPlayer = statsState.lossesAsPlayer.count(),
+                gamesLostAsOddOne = statsState.lossesAsOddOne.count(),
+                gamesWonAsPlayer = statsState.winsAsPlayer.count(),
+                gamesWonAsOddOne = statsState.winsAsOddOne.count(),
+                totalMultiDeviceGamesPlayed = statsState.multiDeviceGamesPlayed,
+                totalSingleDeviceGamesPlayed = statsState.singleDeviceGamesPlayed,
             )
         }
     }

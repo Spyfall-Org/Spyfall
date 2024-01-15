@@ -18,6 +18,12 @@ android {
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -103,7 +109,7 @@ dependencies {
     implementation(projects.features.newGame.internal)
     implementation(projects.features.waitingRoom)
     implementation(projects.features.waitingRoom.internal)
-    implementation(projects.libraries.datastore)
+    implementation(projects.libraries.storage)
     implementation(projects.libraries.config)
     implementation(projects.libraries.config.internal)
     implementation(projects.libraries.config.internal)
@@ -130,6 +136,8 @@ dependencies {
 	implementation(projects.libraries.network.internal)
 	implementation(projects.libraries.test)
 	implementation(projects.libraries.test.internal)
+	implementation(projects.libraries.storage.internal)
+	implementation(projects.libraries.session.storage)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations

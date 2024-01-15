@@ -6,7 +6,7 @@ spyfall {
     daggerHilt()
     firebase()
     flowroutines()
-    datastore()
+    storage()
     moshi()
 }
 

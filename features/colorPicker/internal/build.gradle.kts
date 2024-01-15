@@ -5,7 +5,7 @@ plugins {
 
 spyfall {
     daggerHilt()
-    datastore()
+    storage()
     compose()
 }
 android {

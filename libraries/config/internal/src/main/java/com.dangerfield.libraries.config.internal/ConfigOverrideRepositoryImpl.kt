@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.config.ConfigOverride
 import com.dangerfield.libraries.config.ConfigOverrideRepository
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.datastore.distinctKeyFlow
-import com.dangerfield.libraries.datastore.withDistinctKeyFlow
+import com.dangerfield.libraries.storage.datastore.distinctKeyFlow
+import com.dangerfield.libraries.storage.datastore.withDistinctKeyFlow
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.CoroutineScope

@@ -61,9 +61,11 @@ sealed class GameState(val accessCode: String) {
         accessCode: String,
         val result: GameResult,
         val players: List<Player>,
+        val startedAt: Long,
         val locationNames: List<String>,
         val location: String,
-        val videoCallLink: String?
+        val videoCallLink: String?,
+        val didMePlayerWin: Boolean,
     ) : GameState(accessCode)
 
     /**

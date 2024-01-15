@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.datastore
+package com.dangerfield.libraries.storage.datastore
 
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore

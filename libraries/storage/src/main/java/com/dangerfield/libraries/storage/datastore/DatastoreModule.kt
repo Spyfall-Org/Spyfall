@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.datastore
+package com.dangerfield.libraries.storage.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

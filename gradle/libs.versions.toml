@@ -28,6 +28,7 @@ lottie = "6.2.0"
 moshiXGradlePlugin = "0.25.1"
 robolectric = "4.10.3"
 roborazzi = "1.5.0-alpha-2"
+room = "2.6.1"
 timber = "5.0.1"
 
 #plugins
@@ -154,6 +155,12 @@ autoDagger-compiler = { module = "se.ansman.dagger.auto:compiler", version.ref =
 # Dagger
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+
+# Room
+room = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-common = { module = "androidx.room:room-common", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
 
 # Hilt
 dagger-hilt-core = { module = "com.google.dagger:hilt-core", version.ref = "dagger" }

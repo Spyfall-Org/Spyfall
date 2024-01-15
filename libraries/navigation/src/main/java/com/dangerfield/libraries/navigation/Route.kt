@@ -10,6 +10,7 @@ import spyfallx.core.doNothing
 import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 import java.lang.StringBuilder
+import kotlin.math.sin
 
 class Route internal constructor() {
 
@@ -98,8 +99,14 @@ class Route internal constructor() {
         val navArguments: List<NamedNavArgument>
     ) {
 
-        fun noArgRoute(): Filled {
-            return Filler(navRoute, navArguments).build()
+        fun noArgRoute(singleTop: Boolean = true): Filled {
+            val filler = Filler(
+                navRoute,
+                navArguments
+            )
+
+            filler.launchSingleTop(singleTop)
+            return filler.build()
         }
 
         class Filler internal constructor(

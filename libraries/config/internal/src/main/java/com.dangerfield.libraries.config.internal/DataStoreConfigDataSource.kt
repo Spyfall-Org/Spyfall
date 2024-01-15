@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.config.AppConfigMap
 import com.dangerfield.libraries.config.internal.model.BasicMapBasedAppConfigMapMap
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.datastore.withDistinctKeyFlow
+import com.dangerfield.libraries.storage.datastore.withDistinctKeyFlow
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.CoroutineScope

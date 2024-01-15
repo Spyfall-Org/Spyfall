@@ -52,7 +52,7 @@ class CreateGame @Inject constructor(
         timeLimit < gameConfig.minTimeLimit -> CreateGameError.TimeLimitTooShort.failure()
         timeLimit > gameConfig.maxTimeLimit -> CreateGameError.TimeLimitTooLong.failure()
         userName.isBlank() -> CreateGameError.NameBlank.failure()
-        videoCallLink != null && !isRecognizedVideoCallLink(videoCallLink) -> CreateGameError.VideoCallLinkInvalid.failure()
+        !videoCallLink.isNullOrBlank() && !isRecognizedVideoCallLink(videoCallLink) -> CreateGameError.VideoCallLinkInvalid.failure()
         else -> create(
             userName = userName,
             packs = packs,

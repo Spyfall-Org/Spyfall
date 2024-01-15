@@ -4,6 +4,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+spyfall {
+    moshi()
+}
+
 dependencies {
     implementation(libs.kotlin.std)
     implementation(libs.kotlinx.coroutines)

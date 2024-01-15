@@ -1,6 +1,5 @@
 package com.dangerfield.features.gameplay.internal
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
@@ -17,7 +16,9 @@ import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
+import com.dangerfield.libraries.session.GameKey
 import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,11 +38,14 @@ class GamePlayViewModel @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val savedStateHandle: SavedStateHandle,
+    private val userRepository: UserRepository,
     session: Session,
     ) : SEAViewModel<State, Event, Action>() {
 
     private val meUserId = session.activeGame?.userId ?: ""
     private val isSubscribedToGameFlow = AtomicBoolean(false)
+    private val hasRecordedResult = AtomicBoolean(false)
+    private val hasRecordedGamePlayed = AtomicBoolean(false)
 
     // TODO cleanup may be concurency issues here, the timer could be stoped or started from different coroutines
     private var timerJob: Job? = null
@@ -163,6 +167,7 @@ class GamePlayViewModel @Inject constructor(
 
     private suspend fun updateVotingEndedGame(gameState: GameState.VotingEnded) {
         stopTimer()
+
         updateState { prev ->
             prev.copy(
                 isLoadingPlayers = false,
@@ -193,6 +198,30 @@ class GamePlayViewModel @Inject constructor(
                 gameResult = gameState.result,
             )
         }
+
+        if (!hasRecordedResult.getAndSet(true)) {
+            recordResult(gameState)
+        }
+    }
+
+    private suspend fun recordResult(gameState: GameState.VotingEnded) {
+        val mePlayer = gameState.players.find { it.id == meUserId } ?: return
+        val didWinAsOddOne = gameState.result == GameResult.OddOneOutWon && mePlayer.isOddOneOut
+        val didWinAsPlayer = gameState.result == GameResult.PlayersWon && !mePlayer.isOddOneOut
+        userRepository.addUsersGameResult(
+            wasOddOneOut = mePlayer.isOddOneOut,
+            didWin = didWinAsPlayer || didWinAsOddOne,
+            accessCode = gameState.accessCode,
+            startedAt = gameState.startedAt
+        )
+    }
+
+    private suspend fun recordGamePlayed(gameState: GameState.Started) {
+        userRepository.addGamePlayed(
+            accessCode = gameState.accessCode,
+            startedAt = gameState.startedAt,
+            wasSingleDevice = false
+        )
     }
 
     private suspend fun updateVotingGame(gameState: GameState.Voting) {
@@ -260,6 +289,10 @@ class GamePlayViewModel @Inject constructor(
                 location = gameState.location,
                 timeRemaining = gameState.timeRemainingMillis.millisToMMss(),
             )
+        }
+
+        if (!hasRecordedGamePlayed.getAndSet(true)) {
+            recordGamePlayed(gameState)
         }
     }
 

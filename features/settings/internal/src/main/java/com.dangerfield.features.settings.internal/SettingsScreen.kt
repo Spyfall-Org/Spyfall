@@ -24,6 +24,7 @@ fun SettingsScreen(
     isDebug: Boolean = false,
     onThemeOptionClicked: () -> Unit = { },
     onQaOptionClicked: () -> Unit = { },
+    onStatsClicked: () -> Unit = { },
     onAboutOptionClicked: () -> Unit = { },
     onNavigateBack: () -> Unit = { },
     onContactUsClicked: () -> Unit = { },
@@ -59,6 +60,12 @@ fun SettingsScreen(
                 text = "Contact Us",
                 onClick = onContactUsClicked,
                 leadingIcon = SpyfallIcon.Chat("Feedback"),
+            )
+
+            SettingsOption(
+                text = "Stats",
+                onClick = onStatsClicked,
+                leadingIcon = SpyfallIcon.Graph("Stats"),
             )
 
             if (isDebug) {

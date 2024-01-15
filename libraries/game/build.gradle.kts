@@ -5,7 +5,7 @@ plugins {
 spyfall {
     flowroutines()
     moshi()
-    datastore()
+    storage()
 }
 
 android {

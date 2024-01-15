@@ -115,7 +115,7 @@ class JoinGameViewModel @Inject constructor(
 
                 is JoinGameError.InvalidNameLength -> it.copy(
                     userNameState = FieldState.Invalid(
-                        input = it.accessCodeState.value,
+                        input = it.userNameState.value,
                         errorMessage = "Names must be between ${joinGameError.min} - ${joinGameError.max} characters long."
 
                     )
@@ -123,7 +123,7 @@ class JoinGameViewModel @Inject constructor(
 
                 is JoinGameError.UsernameTaken -> it.copy(
                     userNameState = FieldState.Invalid(
-                        input = it.accessCodeState.value,
+                        input = it.userNameState.value,
                         errorMessage = "That username is taken. Please try to think of something more original."
 
                     )

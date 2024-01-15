@@ -21,7 +21,7 @@ class IsSingleDeviceModeEnabled @Inject constructor(
         get() = true
 
     override val isDebugOnly: Boolean
-        get() = true
+        get() = false
 
     override fun resolveValue(): Boolean = appConfigMap.experiment(this)
 }

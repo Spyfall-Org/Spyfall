@@ -7,7 +7,7 @@ spyfall {
     firebase()
     daggerHilt()
     moshi()
-    datastore()
+    storage()
 }
 
 android {
@@ -15,6 +15,7 @@ android {
 }
 dependencies {
     implementation(projects.libraries.session)
+    implementation(projects.libraries.session.storage)
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
     implementation(libs.kotlinx.serialization.json)

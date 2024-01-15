@@ -68,7 +68,7 @@ class ColorScheme internal constructor(
             textDisabled = ColorToken.Color("text-disabled", ColorPrimitive.Black500),
             textWarning = ColorToken.Color("text-warning", ColorPrimitive.CherryPop700),
             surfacePrimary = ColorToken.Color("surface-primary", ColorPrimitive.Black300),
-            onSurfacePrimary = ColorToken.Color("onsurface-primary", ColorPrimitive.Black600),
+            onSurfacePrimary = ColorToken.Color("onsurface-primary", ColorPrimitive.Black700),
             surfaceSecondary = ColorToken.Color("surface-secondary", ColorPrimitive.White900),
             onSurfaceSecondary = ColorToken.Color("onsurface-secondary", ColorPrimitive.Black300),
             surfaceDisabled = ColorToken.Color("surface-disabled", ColorPrimitive.Black200),

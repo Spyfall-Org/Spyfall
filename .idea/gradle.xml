@@ -58,7 +58,6 @@
             <option value="$PROJECT_DIR$/libraries/common/internal" />
             <option value="$PROJECT_DIR$/libraries/config" />
             <option value="$PROJECT_DIR$/libraries/config/internal" />
-            <option value="$PROJECT_DIR$/libraries/datastore" />
             <option value="$PROJECT_DIR$/libraries/flowroutines" />
             <option value="$PROJECT_DIR$/libraries/game" />
             <option value="$PROJECT_DIR$/libraries/game/internal" />
@@ -72,6 +71,8 @@
             <option value="$PROJECT_DIR$/libraries/resources/internal" />
             <option value="$PROJECT_DIR$/libraries/session" />
             <option value="$PROJECT_DIR$/libraries/session/internal" />
+            <option value="$PROJECT_DIR$/libraries/storage" />
+            <option value="$PROJECT_DIR$/libraries/storage/internal" />
             <option value="$PROJECT_DIR$/libraries/test" />
             <option value="$PROJECT_DIR$/libraries/test/internal" />
             <option value="$PROJECT_DIR$/libraries/ui" />
