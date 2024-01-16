@@ -7,7 +7,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.videocall"
+    namespace = "com.dangerfield.oddoneoout.features.videocall"
 }
 dependencies {
     implementation(projects.libraries.common)

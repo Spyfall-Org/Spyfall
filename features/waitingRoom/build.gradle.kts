@@ -7,7 +7,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.waitingroom"
+    namespace = "com.dangerfield.oddoneoout.features.waitingroom"
 }
 dependencies {
     implementation(projects.libraries.common)

@@ -7,7 +7,7 @@ spyfall {
     daggerHilt()
 }
 android {
-    namespace = "com.dangerfield.spyfall.features.videocall.internal"
+    namespace = "com.dangerfield.oddoneoout.features.videocall.internal"
 }
 dependencies {
     implementation(projects.features.videoCall)

@@ -24,7 +24,7 @@ import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.session.Stats
 import kotlinx.coroutines.flow.map
 import se.ansman.dagger.auto.AutoBindIntoSet
-import spyfallx.core.BuildInfo
+import oddoneout.core.BuildInfo
 import javax.inject.Inject
 
 @AutoBindIntoSet

@@ -5,10 +5,10 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
-import spyfallx.core.Try
-import spyfallx.core.getOrElse
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
+import oddoneout.core.Try
+import oddoneout.core.getOrElse
+import oddoneout.core.logOnError
+import oddoneout.core.throwIfDebug
 
 @Composable
 inline fun <reified VM : ViewModel> NavBackStackEntry.viewModelScopedTo(

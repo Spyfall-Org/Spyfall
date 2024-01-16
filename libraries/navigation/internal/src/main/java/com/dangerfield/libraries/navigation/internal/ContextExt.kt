@@ -4,9 +4,9 @@ import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import com.dangerfield.spyfall.libraries.navigation.internal.R
-import spyfallx.core.Try
-import spyfallx.core.getOrElse
+import com.dangerfield.oddoneoout.libraries.navigation.internal.R
+import oddoneout.core.Try
+import oddoneout.core.getOrElse
 
 fun Context.openWebLinkFromContext(uri: Uri): Boolean =
     Try {

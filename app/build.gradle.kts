@@ -42,7 +42,7 @@ android {
         viewBinding = true
     }
 
-    namespace = "com.dangerfield.spyfall"
+    namespace = "com.dangerfield.oddoneout"
 }
 
 dependencies {

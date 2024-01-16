@@ -11,7 +11,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.libraries.session.internal"
+    namespace = "com.dangerfield.oddoneoout.libraries.session.internal"
 }
 dependencies {
     implementation(projects.libraries.session)

@@ -5,8 +5,8 @@ import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.ui.FieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import spyfallx.core.allOrNone
-import spyfallx.core.logOnError
+import oddoneout.core.allOrNone
+import oddoneout.core.logOnError
 import javax.inject.Inject
 
 @HiltViewModel

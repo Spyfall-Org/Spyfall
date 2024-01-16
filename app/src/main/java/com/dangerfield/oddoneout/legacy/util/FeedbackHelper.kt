@@ -1,0 +1,135 @@
+package com.dangerfield.oddoneout.legacy.util
+
+import android.app.AlertDialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.view.LayoutInflater
+import android.widget.Toast
+import com.dangerfield.oddoneout.BuildConfig
+import com.dangerfield.oddoneout.R
+import com.dangerfield.oddoneout.databinding.DialogFeedbackBinding
+import com.dangerfield.oddoneout.legacy.api.Constants
+import com.dangerfield.oddoneout.legacy.models.Feedback
+import com.google.firebase.firestore.FirebaseFirestore
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+
+class FeedbackHelper(
+    private val db: FirebaseFirestore,
+    private val constants: Constants
+) {
+
+    private var dialogViewBinding: DialogFeedbackBinding? = null
+
+    fun showFeedbackDialog(context: Context) {
+        val dialog = getNewFeedbackDialog(context)
+        dialog.show()
+        dialogViewBinding?.tvFeedback?.openKeyboard()
+    }
+
+    private fun getNewFeedbackDialog(context: Context): AlertDialog {
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogViewBinding = DialogFeedbackBinding.inflate(LayoutInflater.from(context))
+        dialogBuilder.setView(dialogViewBinding?.root)
+        val dialog = dialogBuilder.create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogViewBinding?.apply {
+            btnFeedbackSubmit.background.setTint(UIHelper.accentColor)
+            UIHelper.updateDrawableToTheme(context, R.drawable.edit_text_custom_cursor)
+            btnFeedbackSubmit.setOnClickListener {
+                val feedbackText = tvFeedback.text.toString().trim()
+                if (feedbackText.isNullOrEmpty()) {
+                    Toast.makeText(
+                        context,
+                        "Looks like your feedback was empty. We would appreciate any feedback you have to give :)",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (!tvEmail.containsValidOrEmptyEmail()) {
+                    Toast.makeText(
+                        context,
+                        "Looks like your email was not formatted properly. Please try again :)",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    submitFeedback(feedbackText, tvEmail.text.trim().toString())
+                    Toast.makeText(
+                        context,
+                        "Thank you for your feedback! We rely on it to bring you a good experience",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    this.tvFeedback.hideKeyboard()
+                    dialog.dismiss()
+                }
+            }
+            btnFeedbackCancel.setOnClickListener {
+                this.tvFeedback.hideKeyboard()
+                dialog.dismiss()
+            }
+        }
+        return dialog
+    }
+
+    private fun submitFeedback(message: String, email: String) {
+
+        val dateFormat: DateFormat = SimpleDateFormat("MM/dd/yyyy")
+
+        val apiLevel = "${Build.VERSION.SDK_INT}"
+        val device = "${Build.DEVICE}"
+        val modelAndProduct = "${Build.MODEL} (${Build.PRODUCT})"
+        val appVersion = BuildConfig.VERSION_NAME
+        val osVersion = getOSString(Build.VERSION.SDK_INT)
+
+        val feedback = Feedback(
+            message = message,
+            osVersion = osVersion,
+            apiLevel = apiLevel,
+            device = device,
+            modelAndProduct = modelAndProduct,
+            appVersion = appVersion,
+            date = dateFormat.format(Date()),
+            email = if (email.isNullOrEmpty()) "NO_EMAIL_PROVIDED" else email
+        )
+
+        db.collection(constants.feedback).document("Android-" + UUID.randomUUID()).set(feedback)
+    }
+
+    private fun getOSString(code: Int): String {
+        return when (code) {
+            1,
+            2 -> "BASE"
+            3 -> "CUPCAKE"
+            4 -> "DONUT"
+            5 -> "ECLAIR"
+            6 -> "ECLAIR_0_1"
+            7 -> "ECLAIR_MR1"
+            8 -> "FROYO"
+            9 -> "GINGERBREAD"
+            10 -> "GINGERBREAD_MR1"
+            11 -> "HONEYCOMB"
+            12 -> "HONEYCOMB_MR1"
+            13 -> "HONEYCOMB_MR2"
+            14 -> "ICE_CREAM_SANDWICH"
+            15 -> "ICE_CREAM_SANDWICH_MR1"
+            16 -> "JELLY_BEAN"
+            17 -> "JELLY_BEAN_MR1"
+            18 -> "JELLY_BEAN_MR2"
+            19 -> "KITKAT"
+            20 -> "KITKAT_WATCH"
+            21 -> "LOLLIPOP"
+            22 -> "LOLLIPOP_MR1"
+            23 -> "M"
+            24 -> "N"
+            25 -> "N_MR1"
+            26 -> "O"
+            27 -> "O_MR1"
+            28 -> "P"
+            29 -> "Q"
+            30 -> "R"
+            else -> "UNKNOWN VERSION CODE: $code"
+        }
+    }
+}

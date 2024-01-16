@@ -9,7 +9,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.ui.internal"
+    namespace = "com.dangerfield.oddoneoout.ui.internal"
 }
 dependencies {
     implementation(getModule("libraries:common"))

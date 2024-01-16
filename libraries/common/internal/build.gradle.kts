@@ -7,7 +7,7 @@ spyfall {
     daggerHilt()
 }
 android {
-    namespace = "com.dangerfield.spyfall.libraries.common.internal"
+    namespace = "com.dangerfield.oddoneoout.libraries.common.internal"
 }
 dependencies {
     implementation(projects.libraries.common)

@@ -4,7 +4,6 @@ import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.UpdateColorConfig
 import com.dangerfield.libraries.session.UserRepository
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.doNothing
 import javax.inject.Inject
 
 @AutoBind

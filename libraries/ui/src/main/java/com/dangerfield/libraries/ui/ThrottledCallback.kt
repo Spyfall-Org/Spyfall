@@ -2,7 +2,7 @@ package com.dangerfield.libraries.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import spyfallx.core.RateLimiter
+import oddoneout.core.RateLimiter
 
 
 /**

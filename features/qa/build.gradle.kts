@@ -6,7 +6,7 @@ spyfall {
     compose()
 }
 android {
-    namespace = "com.dangerfield.spyfall.features.qa"
+    namespace = "com.dangerfield.oddoneoout.features.qa"
 }
 dependencies {
     implementation(projects.libraries.common)

@@ -24,7 +24,7 @@ import com.dangerfield.libraries.ui.components.icon.IconButton.Size.Medium
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import com.dangerfield.spyfall.libraries.resources.R
+import com.dangerfield.oddoneoout.features.welcome.internal.R
 
 @Composable
 @Suppress("MagicNumber")

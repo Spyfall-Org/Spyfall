@@ -8,7 +8,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.ads.ui"
+    namespace = "com.dangerfield.oddoneoout.features.ads.ui"
 }
 dependencies {
     implementation(projects.libraries.common)

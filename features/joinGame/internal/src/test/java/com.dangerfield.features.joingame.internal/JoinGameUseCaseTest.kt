@@ -25,7 +25,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 class JoinGameUseCaseTest {
 

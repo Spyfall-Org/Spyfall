@@ -3,7 +3,7 @@ package com.dangerfield.libraries.coresession.internal
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.UpdateActiveGame
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.Try
+import oddoneout.core.Try
 import javax.inject.Inject
 
 @AutoBind

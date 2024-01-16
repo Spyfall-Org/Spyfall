@@ -4,10 +4,10 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.dangerfield.libraries.session.GameKey
 import com.squareup.moshi.Moshi
-import spyfallx.core.Try
-import spyfallx.core.logOnError
-import spyfallx.core.readJson
-import spyfallx.core.toJson
+import oddoneout.core.Try
+import oddoneout.core.logOnError
+import oddoneout.core.readJson
+import oddoneout.core.toJson
 import javax.inject.Inject
 
 @ProvidedTypeConverter

@@ -6,7 +6,7 @@ import com.dangerfield.libraries.analytics.Metric
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.google.firebase.analytics.FirebaseAnalytics
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.throwIfDebug
+import oddoneout.core.throwIfDebug
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -6,9 +6,9 @@ import com.dangerfield.libraries.game.Pack
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.Try
-import spyfallx.core.logOnError
-import spyfallx.core.success
+import oddoneout.core.Try
+import oddoneout.core.logOnError
+import oddoneout.core.success
 import timber.log.Timber
 import javax.inject.Inject
 

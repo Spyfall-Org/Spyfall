@@ -8,9 +8,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import spyfallx.core.Message
-import spyfallx.core.UserMessagePresenter
-import spyfallx.core.common.BuildConfig
 
 //TODO document
 @Composable

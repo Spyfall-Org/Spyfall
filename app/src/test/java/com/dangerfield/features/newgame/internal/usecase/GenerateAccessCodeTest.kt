@@ -13,7 +13,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 class GenerateAccessCodeTest {
 

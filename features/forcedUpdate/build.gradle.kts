@@ -7,7 +7,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.forcedupdate"
+    namespace = "com.dangerfield.oddoneoout.features.forcedupdate"
 }
 dependencies {
     implementation(projects.libraries.common)

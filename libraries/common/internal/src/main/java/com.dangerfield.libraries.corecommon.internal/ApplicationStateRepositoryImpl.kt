@@ -1,14 +1,13 @@
 package com.dangerfield.libraries.corecommon.internal
 
-import android.util.Log
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.ForegroundState
-import spyfallx.core.ApplicationStateRepository
+import oddoneout.core.ForegroundState
+import oddoneout.core.ApplicationStateRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

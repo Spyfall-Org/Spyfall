@@ -2,11 +2,11 @@ package com.dangerfield.libraries.navigation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NamedNavArgument
-import spyfallx.core.Try
-import spyfallx.core.checkInDebug
-import spyfallx.core.developerSnackOnError
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
+import oddoneout.core.Try
+import oddoneout.core.checkInDebug
+import oddoneout.core.developerSnackOnError
+import oddoneout.core.logOnError
+import oddoneout.core.throwIfDebug
 
 fun <T : Any> SavedStateHandle.navArgument(navArgument: NamedNavArgument, checkExists: Boolean = true): T? = Try {
     val value = get<T>(navArgument.name)

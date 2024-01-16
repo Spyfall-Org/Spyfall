@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 suspend fun <T> DataStore<T>.tryUpdateData(transform: suspend (t: T) -> T): Try<T> = Try {
     updateData { transform(it) }

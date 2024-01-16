@@ -30,12 +30,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import spyfallx.core.Try
-import spyfallx.core.allOrNone
-import spyfallx.core.checkInDebug
-import spyfallx.core.illegalState
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
+import oddoneout.core.Try
+import oddoneout.core.allOrNone
+import oddoneout.core.checkInDebug
+import oddoneout.core.illegalState
+import oddoneout.core.logOnError
+import oddoneout.core.throwIfDebug
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")

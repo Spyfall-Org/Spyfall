@@ -27,11 +27,11 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
-import spyfallx.core.ApplicationStateRepository
-import spyfallx.core.Try
-import spyfallx.core.getOrElse
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
+import oddoneout.core.ApplicationStateRepository
+import oddoneout.core.Try
+import oddoneout.core.getOrElse
+import oddoneout.core.logOnError
+import oddoneout.core.throwIfDebug
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.minutes

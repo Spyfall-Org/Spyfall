@@ -1,7 +1,7 @@
 package com.dangerfield.libraries.game
 
 import kotlinx.coroutines.flow.Flow
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 /*
 instead of an access code I could make this of type T where T is of the type Game

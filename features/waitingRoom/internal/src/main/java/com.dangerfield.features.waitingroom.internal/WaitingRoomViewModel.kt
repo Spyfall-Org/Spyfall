@@ -23,9 +23,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import spyfallx.core.developerSnackOnError
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
+import oddoneout.core.developerSnackOnError
+import oddoneout.core.logOnError
+import oddoneout.core.throwIfDebug
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named

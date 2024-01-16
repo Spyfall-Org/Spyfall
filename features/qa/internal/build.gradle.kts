@@ -8,7 +8,7 @@ spyfall {
     flowroutines()
 }
 android {
-    namespace = "com.dangerfield.spyfall.features.qa.internal"
+    namespace = "com.dangerfield.oddoneoout.features.qa.internal"
 }
 dependencies {
     implementation(projects.features.qa)

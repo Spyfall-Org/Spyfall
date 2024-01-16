@@ -6,7 +6,7 @@ import assertk.assertions.prop
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 fun <T> Assert<Try<T>>.isSuccess(): Assert<T> = transform { actual ->
     actual.fold(

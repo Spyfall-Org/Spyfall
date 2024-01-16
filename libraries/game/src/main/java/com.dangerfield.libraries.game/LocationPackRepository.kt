@@ -1,6 +1,6 @@
 package com.dangerfield.libraries.game
 
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 interface LocationPackRepository {
     suspend fun getPacks(): Try<List<Pack>>

@@ -28,9 +28,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.Try
-import spyfallx.core.logOnError
-import spyfallx.core.withBackoffRetry
+import oddoneout.core.Try
+import oddoneout.core.logOnError
+import oddoneout.core.withBackoffRetry
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject

@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.shareIn
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.Try
-import spyfallx.core.logOnError
+import oddoneout.core.Try
+import oddoneout.core.logOnError
 import timber.log.Timber
 import javax.inject.Inject
 

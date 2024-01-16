@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.await
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.Try
-import spyfallx.core.failure
-import spyfallx.core.logOnError
+import oddoneout.core.Try
+import oddoneout.core.failure
+import oddoneout.core.logOnError
 import java.time.Clock
 import javax.inject.Inject
 

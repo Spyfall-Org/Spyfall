@@ -9,7 +9,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.libraries.storage"
+    namespace = "com.dangerfield.oddoneoout.libraries.storage"
 }
 
 dependencies {

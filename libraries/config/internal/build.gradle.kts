@@ -10,7 +10,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.libraries.config.internal"
+    namespace = "com.dangerfield.oddoneoout.libraries.config.internal"
 }
 dependencies {
     implementation(projects.libraries.config)

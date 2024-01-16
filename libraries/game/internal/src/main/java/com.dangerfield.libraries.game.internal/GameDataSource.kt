@@ -3,7 +3,7 @@ package com.dangerfield.libraries.game.internal
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.Player
 import kotlinx.coroutines.flow.Flow
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 interface GameDataSource {
     suspend fun setGame(game: Game)

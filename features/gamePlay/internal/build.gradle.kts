@@ -9,7 +9,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.gameplay.internal"
+    namespace = "com.dangerfield.oddoneoout.features.gameplay.internal"
 }
 dependencies {
     implementation(projects.features.videoCall)

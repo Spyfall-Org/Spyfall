@@ -1,7 +1,7 @@
 package com.dangerfield.libraries.ui
 
-import spyfallx.core.Message
-import spyfallx.core.UserMessagePresenter
+import oddoneout.core.Message
+import oddoneout.core.UserMessagePresenter
 
 fun showDeveloperMessage(developerMessage: Message) {
     UserMessagePresenter.showDeveloperMessage(developerMessage)

@@ -9,7 +9,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.joingame.internal"
+    namespace = "com.dangerfield.oddoneoout.features.joingame.internal"
 }
 dependencies {
     implementation(projects.features.joinGame)

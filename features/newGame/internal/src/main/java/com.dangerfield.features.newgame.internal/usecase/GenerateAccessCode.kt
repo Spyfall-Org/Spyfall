@@ -3,7 +3,7 @@ package com.dangerfield.features.newgame.internal.usecase
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
-import spyfallx.core.Try
+import oddoneout.core.Try
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

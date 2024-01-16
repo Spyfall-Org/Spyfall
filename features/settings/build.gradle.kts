@@ -6,7 +6,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.settings"
+    namespace = "com.dangerfield.oddoneoout.features.settings"
 }
 dependencies {
     implementation(projects.libraries.common)

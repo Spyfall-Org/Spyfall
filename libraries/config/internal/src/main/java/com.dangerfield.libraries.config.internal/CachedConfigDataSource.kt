@@ -2,7 +2,7 @@ package com.dangerfield.libraries.config.internal
 
 import com.dangerfield.libraries.config.AppConfigMap
 import kotlinx.coroutines.flow.Flow
-import spyfallx.core.Try
+import oddoneout.core.Try
 
 /**
  * Abstraction to encapsulate the logic behind the local storage of the app config.

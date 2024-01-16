@@ -3,10 +3,10 @@ package com.dangerfield.libraries.navigation
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
-import spyfallx.core.Try
-import spyfallx.core.checkInDebug
-import spyfallx.core.developerSnackOnError
-import spyfallx.core.logOnError
+import oddoneout.core.Try
+import oddoneout.core.checkInDebug
+import oddoneout.core.developerSnackOnError
+import oddoneout.core.logOnError
 
 inline fun <reified T : Any> NavBackStackEntry.navArgument(navArgument: NamedNavArgument): T? =
     Try {

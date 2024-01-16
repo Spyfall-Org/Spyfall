@@ -9,7 +9,7 @@ spyfall {
     compose()
 }
 android {
-    namespace = "com.dangerfield.spyfall.features.colorpicker.internal"
+    namespace = "com.dangerfield.oddoneoout.features.colorpicker.internal"
 }
 dependencies {
     implementation(projects.libraries.common)

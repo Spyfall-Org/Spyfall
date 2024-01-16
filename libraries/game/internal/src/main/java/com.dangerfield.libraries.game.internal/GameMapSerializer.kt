@@ -3,7 +3,7 @@ package com.dangerfield.libraries.game.internal
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameError
-import spyfallx.core.Try
+import oddoneout.core.Try
 import javax.inject.Inject
 
 class GameMapSerializer @Inject constructor(

@@ -11,8 +11,8 @@ import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
-import spyfallx.core.Try
-import spyfallx.core.developerSnackIfDebug
+import oddoneout.core.Try
+import oddoneout.core.developerSnackIfDebug
 import java.time.Clock
 import java.util.UUID
 import javax.inject.Inject

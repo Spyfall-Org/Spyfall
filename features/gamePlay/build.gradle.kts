@@ -4,7 +4,7 @@ plugins {
 
 
 android {
-    namespace = "com.dangerfield.spyfall.features.gameplay"
+    namespace = "com.dangerfield.oddoneoout.features.gameplay"
 }
 dependencies {
     implementation(projects.libraries.common)

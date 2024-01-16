@@ -33,7 +33,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.spyfall.libraries.resources.R
+import com.dangerfield.oddoneoout.features.newgame.internal.R
 import spyfallx.ui.color.background
 
 @Composable

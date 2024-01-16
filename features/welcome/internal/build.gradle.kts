@@ -9,7 +9,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.welcome.internal"
+    namespace = "com.dangerfield.oddoneoout.features.welcome.internal"
 }
 dependencies {
     implementation(projects.features.welcome)

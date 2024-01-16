@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.welcome"
+    namespace = "com.dangerfield.oddoneoout.features.welcome"
 }
 dependencies {
     implementation(projects.libraries.common)

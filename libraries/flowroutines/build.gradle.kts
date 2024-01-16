@@ -7,7 +7,7 @@ spyfall {
     compose()
 }
 android {
-    namespace = "com.dangerfield.spyfall.libraries.flowroutines"
+    namespace = "com.dangerfield.oddoneoout.libraries.flowroutines"
 }
 
 dependencies {

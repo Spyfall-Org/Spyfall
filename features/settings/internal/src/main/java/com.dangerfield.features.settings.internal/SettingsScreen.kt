@@ -14,8 +14,8 @@ import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.spyfall.libraries.resources.R
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.settings.internal.R
 
 @Composable
 fun SettingsScreen(

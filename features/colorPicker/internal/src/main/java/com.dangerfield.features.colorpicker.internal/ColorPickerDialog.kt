@@ -47,7 +47,7 @@ import com.dangerfield.libraries.ui.components.radio.rememberRadioGroupState
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.rememberRipple
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import com.dangerfield.spyfall.libraries.resources.R
+import com.dangerfield.oddoneoout.features.colorpicker.internal.R
 
 @Composable
 fun ColorPickerDialog(

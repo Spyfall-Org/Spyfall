@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import spyfallx.core.allOrNone
+import oddoneout.core.allOrNone
 import javax.inject.Inject
 import javax.inject.Named
 

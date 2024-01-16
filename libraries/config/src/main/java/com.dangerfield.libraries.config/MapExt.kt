@@ -1,8 +1,8 @@
 package com.dangerfield.libraries.config
 
-import spyfallx.core.Try
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
+import oddoneout.core.Try
+import oddoneout.core.logOnError
+import oddoneout.core.throwIfDebug
 
 /**
  * Find a value of type [T] in the given [root] with optional appended [path].

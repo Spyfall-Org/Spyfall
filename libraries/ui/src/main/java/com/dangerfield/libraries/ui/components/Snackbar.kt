@@ -25,7 +25,7 @@ import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import spyfallx.core.DebugSnackMessageToken
+import oddoneout.core.DebugSnackMessageToken
 import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.background
 import spyfallx.ui.color.border

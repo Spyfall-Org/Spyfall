@@ -4,7 +4,7 @@ import android.content.Context
 import com.dangerfield.libraries.config.AppConfigMap
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.serialization.json.Json
-import spyfallx.core.Try
+import oddoneout.core.Try
 import javax.inject.Inject
 
 /**

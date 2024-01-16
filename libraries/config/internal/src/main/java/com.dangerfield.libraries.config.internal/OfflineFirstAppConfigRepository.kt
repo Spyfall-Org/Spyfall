@@ -29,9 +29,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import se.ansman.dagger.auto.AutoBind
 import se.ansman.dagger.auto.AutoInitialize
-import spyfallx.core.ForegroundState
-import spyfallx.core.ApplicationStateRepository
-import spyfallx.core.withBackoffRetry
+import oddoneout.core.ForegroundState
+import oddoneout.core.ApplicationStateRepository
+import oddoneout.core.withBackoffRetry
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

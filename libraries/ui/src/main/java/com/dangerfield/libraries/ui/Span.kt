@@ -5,8 +5,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration.Companion
-import spyfallx.core.throwIfDebug
+import oddoneout.core.throwIfDebug
 
 @Composable
 fun getBoldSpan(fullString: String, boldString: String): AnnotatedString = buildAnnotatedString {

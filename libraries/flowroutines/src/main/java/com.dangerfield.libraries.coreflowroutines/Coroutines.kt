@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeout
-import spyfallx.core.Failure
-import spyfallx.core.Success
-import spyfallx.core.Try
-import spyfallx.core.defaultOnError
+import oddoneout.core.Failure
+import oddoneout.core.Success
+import oddoneout.core.Try
+import oddoneout.core.defaultOnError
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract

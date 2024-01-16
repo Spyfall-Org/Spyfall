@@ -7,7 +7,7 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Player
-import spyfallx.core.Try
+import oddoneout.core.Try
 import javax.inject.Inject
 import javax.inject.Named
 

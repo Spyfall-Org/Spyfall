@@ -6,7 +6,7 @@ spyfall {
     firebase()
 }
 android {
-    namespace = "com.dangerfield.spyfall.libraries.logging"
+    namespace = "com.dangerfield.oddoneoout.libraries.logging"
 }
 
 dependencies {

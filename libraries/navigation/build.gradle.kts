@@ -7,7 +7,7 @@ spyfall {
     compose()
 }
 android {
-    namespace = "com.dangerfield.spyfall.libraries.navigation"
+    namespace = "com.dangerfield.oddoneoout.libraries.navigation"
 }
 
 dependencies {

@@ -17,10 +17,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import spyfallx.core.Try
-import spyfallx.core.doNothing
-import spyfallx.core.findActivity
-import spyfallx.core.logOnError
+import oddoneout.core.Try
+import oddoneout.core.doNothing
+import oddoneout.core.findActivity
+import oddoneout.core.logOnError
 import timber.log.Timber
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

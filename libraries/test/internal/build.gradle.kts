@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.libraries.test.internal"
+    namespace = "com.dangerfield.oddoneoout.libraries.test.internal"
 }
 dependencies {
     implementation(projects.libraries.test)

@@ -8,7 +8,7 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.spyfall.features.blockingerror.internal"
+    namespace = "com.dangerfield.oddoneoout.features.blockingerror.internal"
 }
 dependencies {
     implementation(projects.features.blockingError)

@@ -5,9 +5,9 @@ import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.Try
-import spyfallx.core.failure
-import spyfallx.core.throwIfDebug
+import oddoneout.core.Try
+import oddoneout.core.failure
+import oddoneout.core.throwIfDebug
 import javax.inject.Inject
 
 @AutoBind

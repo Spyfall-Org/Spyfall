@@ -5,7 +5,7 @@ spyfall {
     compose()
 }
 android {
-    namespace = "com.dangerfield.spyfall.features.newgame"
+    namespace = "com.dangerfield.oddoneoout.features.newgame"
 }
 dependencies {
     implementation(projects.libraries.common)

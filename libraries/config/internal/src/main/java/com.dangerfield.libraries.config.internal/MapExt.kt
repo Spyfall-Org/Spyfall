@@ -3,11 +3,6 @@ package com.dangerfield.libraries.config.internal
 import com.dangerfield.libraries.config.ConfigOverride
 import com.dangerfield.libraries.config.internal.model.BasicMapBasedAppConfigMapMap
 import com.dangerfield.libraries.config.AppConfigMap
-import com.dangerfield.libraries.config.getValueForPath
-import com.dangerfield.libraries.config.getValueRecursive
-import spyfallx.core.Try
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
 import timber.log.Timber
 
 fun AppConfigMap.applyOverrides(overrides: List<ConfigOverride<Any>>): AppConfigMap {

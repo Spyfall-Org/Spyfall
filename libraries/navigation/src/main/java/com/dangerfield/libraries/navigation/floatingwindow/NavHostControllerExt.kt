@@ -4,9 +4,9 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.Navigator
 import androidx.navigation.get
-import spyfallx.core.Try
-import spyfallx.core.logOnError
-import spyfallx.core.throwIfDebug
+import oddoneout.core.Try
+import oddoneout.core.logOnError
+import oddoneout.core.throwIfDebug
 
 fun NavHostController.getFloatingWindowNavigator(): FloatingWindowNavigator? = Try {
     navigatorProvider.get<Navigator<out NavDestination>>(

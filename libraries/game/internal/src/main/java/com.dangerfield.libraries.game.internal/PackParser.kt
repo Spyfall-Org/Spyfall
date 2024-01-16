@@ -2,7 +2,7 @@ package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
-import spyfallx.core.Try
+import oddoneout.core.Try
 import javax.inject.Inject
 
 class PackParser @Inject constructor() {

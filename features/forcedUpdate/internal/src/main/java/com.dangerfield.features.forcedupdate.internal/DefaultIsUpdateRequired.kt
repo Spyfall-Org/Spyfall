@@ -2,11 +2,10 @@ package com.dangerfield.features.forcedupdate.internal
 
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
 import com.dangerfield.libraries.config.AppConfigFlow
-import com.dangerfield.libraries.config.AppConfigMap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import se.ansman.dagger.auto.AutoBind
-import spyfallx.core.BuildInfo
+import oddoneout.core.BuildInfo
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -234,7 +234,7 @@ fun updateGradleBuildFile(moduleType: String, newDir: String, isInternal: Boolea
             line = if (parentModule == null) "" else line.replace("example", parentModule)
         }
         if (line.contains("namespace = \"com.dangerfield.example\"")) {
-            val newNamespace = "com.dangerfield.spyfall.${newDir.replace("/",".").lowercase()}"
+            val newNamespace = "com.dangerfield.oddoneoout.${newDir.replace("/",".").lowercase()}"
             line = line.replace("com.dangerfield.example", newNamespace)
         }
         modifiedLines.add(line)

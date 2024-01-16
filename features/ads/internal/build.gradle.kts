@@ -7,7 +7,7 @@ spyfall {
     daggerHilt()
 }
 android {
-    namespace = "com.dangerfield.spyfall.features.ads.internal"
+    namespace = "com.dangerfield.oddoneoout.features.ads.internal"
 }
 dependencies {
     implementation(projects.features.ads)

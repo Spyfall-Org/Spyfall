@@ -15,8 +15,8 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import se.ansman.dagger.auto.AutoBindIntoSet
-import spyfallx.core.BuildInfo
-import spyfallx.core.openStoreLinkToApp
+import oddoneout.core.BuildInfo
+import oddoneout.core.openStoreLinkToApp
 import javax.inject.Inject
 
 @AutoBindIntoSet

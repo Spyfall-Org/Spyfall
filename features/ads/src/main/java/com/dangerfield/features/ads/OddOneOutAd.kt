@@ -1,6 +1,6 @@
 package com.dangerfield.features.ads
 
-import com.dangerfield.spyfall.features.ads.R
+import com.dangerfield.oddoneout.features.ads.R
 
 sealed class OddOneOutAd(val resId: Int) {
     data object SingleDeviceVoting : OddOneOutAd(R.string.single_device_voting_id)
