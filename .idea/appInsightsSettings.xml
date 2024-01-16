@@ -27,7 +27,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.dangerfield.spyfall.free.debug" />
+                  <option name="appId" value="com.dangerfield.oddoneoout.free.debug" />
                   <option name="mobileSdkAppId" value="1:582472331032:android:617fe01b081db7db41b86d" />
                   <option name="projectId" value="spyfall-debug-a260e" />
                   <option name="projectNumber" value="582472331032" />

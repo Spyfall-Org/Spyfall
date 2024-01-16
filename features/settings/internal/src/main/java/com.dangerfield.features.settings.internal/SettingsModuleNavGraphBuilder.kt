@@ -65,9 +65,9 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
             AboutScreen(
                 versionName = buildInfo.versionName,
                 onNavigateBack = router::goBack,
-                onPrivacyPolicyClicked = { router.openWebLink("https://spyfall-org.github.io/") },
-                onTermsOfServiceClicked = { router.openWebLink("https://spyfall-org.github.io/") },
-                onThirdPartyServicesClicked = { router.openWebLink("https://spyfall-org.github.io/") }
+                onPrivacyPolicyClicked = { router.openWebLink(AboutLinks.PrivacyPolicy) },
+                onTermsOfServiceClicked = { router.openWebLink(AboutLinks.TermsOfService) },
+                onThirdPartyServicesClicked = { router.openWebLink(AboutLinks.ThirdPartyServices) }
             )
         }
 
