@@ -9,7 +9,7 @@ pluginManagement {
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "Spyfall"
+rootProject.name = "OddOneOut"
 
 include("app")
 include("features:ads")
@@ -40,6 +40,7 @@ include("features:waitingRoom")
 include("features:waitingRoom:internal")
 include("features:welcome")
 include("features:welcome:internal")
+include("libraries:analytics")
 include("libraries:common")
 include("libraries:common:internal")
 include("libraries:config")
@@ -57,10 +58,11 @@ include("libraries:resources")
 include("libraries:resources:internal")
 include("libraries:session")
 include("libraries:session:internal")
+include("libraries:session:storage")
 include("libraries:storage")
 include("libraries:storage:internal")
 include("libraries:test")
 include("libraries:test:internal")
 include("libraries:ui")
 include("libraries:ui:internal")
-include("libraries:session:storage")
+include("libraries:analytics:internal")

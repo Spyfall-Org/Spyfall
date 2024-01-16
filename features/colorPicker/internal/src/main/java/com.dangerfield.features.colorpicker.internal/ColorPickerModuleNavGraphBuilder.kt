@@ -5,6 +5,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import com.dangerfield.features.colorpicker.colorPickerRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.floatingwindow.dialog
@@ -29,6 +31,11 @@ class ColorPickerModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             val colorConfigs = ThemeColor.entries.map { Specific(it) } + Random
+
+            PageLogEffect(
+                route = colorPickerRoute,
+                type = PageType.Dialog
+            )
 
             ColorPickerDialog(
                 onColorConfigSelected = {

@@ -4,11 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.DisplayablePlayer
+import com.dangerfield.features.gameplay.internal.singledevice.SingleDeviceGameMetricTracker
 import com.dangerfield.features.gameplay.internal.singledevice.info.SingleDeviceInfoViewModel
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Action
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Event
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
@@ -19,8 +21,11 @@ import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.FieldState.Invalid
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackIfDebug
 import spyfallx.core.doNothing
@@ -34,15 +39,21 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
-    private val gameConfig: GameConfig
+    private val gameConfig: GameConfig,
+    private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
 ) : SEAViewModel<State, Event, Action>() {
 
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
     private var currentPlayerRoleIndex = 0
 
-    private val gameFlow by lazy {
-        gameRepository.getGameFlow(accessCode)
-    }
+    private val gameFlow: SharedFlow<Game> = gameRepository
+        .getGameFlow(accessCode)
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            replay = 1
+        )
+
 
     private val accessCode: String
         get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
@@ -63,21 +74,35 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         when (action) {
             Action.LoadGame -> loadGame()
             Action.LoadNextPlayer -> {
-                currentPlayerRoleIndex = (currentPlayerRoleIndex + 1).coerceAtMost(playersToShowRoles.size - 1)
+                currentPlayerRoleIndex =
+                    (currentPlayerRoleIndex + 1).coerceAtMost(playersToShowRoles.size - 1)
                 loadPlayer(currentPlayerRoleIndex)
             }
+
             Action.StartGame -> startGame()
             is Action.UpdateName -> changeName(action.name)
             Action.LoadPreviousPlayer -> {
                 currentPlayerRoleIndex = (currentPlayerRoleIndex - 1).coerceAtLeast(0)
                 loadPlayer(currentPlayerRoleIndex)
             }
+
             Action.EndGame -> endGame()
         }
     }
 
     private suspend fun startGame() {
         gameRepository.start(accessCode)
+            .onSuccess {
+                singleDeviceGameMetricTracker.trackGameStarted(
+                    game = getGame()
+                )
+            }
+            .onFailure {
+                singleDeviceGameMetricTracker.trackGameStartFailure(
+                    game = getGame(),
+                    throwable = it
+                )
+            }
     }
 
     private suspend fun changeName(newName: String) {
@@ -181,10 +206,15 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         // TODO pack game ending behind a uses case and leave game for that matter.
         // not super sure I need a data source as well as a repository
         // maybe I continue trucking on and clean that up later
-
         clearActiveGame()
         sendEvent(Event.GameKilled)
+        singleDeviceGameMetricTracker.trackGameEnded(
+            game = getGame(),
+            timeRemainingMillis = 0
+        )
     }
+
+    private suspend fun getGame() = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
 
     private suspend fun loadPlayer(index: Int) {
 

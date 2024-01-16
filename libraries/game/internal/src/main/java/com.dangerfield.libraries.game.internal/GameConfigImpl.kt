@@ -5,6 +5,7 @@ import com.dangerfield.libraries.game.internal.config.AccessCodeLength
 import com.dangerfield.libraries.game.internal.config.ForceShortGames
 import com.dangerfield.libraries.game.internal.config.InactivityExpirationMins
 import com.dangerfield.libraries.game.internal.config.IsSingleDeviceModeEnabled
+import com.dangerfield.libraries.game.internal.config.IsVideoCallLinkEnabled
 import com.dangerfield.libraries.game.internal.config.LocationsPerGame
 import com.dangerfield.libraries.game.internal.config.LocationsPerSingleDeviceGame
 import com.dangerfield.libraries.game.internal.config.MaxNameLength
@@ -29,7 +30,8 @@ class GameConfigImpl @Inject constructor(
     private val locationsPerGameValue: LocationsPerGame,
     private val locationsPerSingleDeviceGameValue: LocationsPerSingleDeviceGame,
     private val isSingleDeviceModeEnabledExperiment: IsSingleDeviceModeEnabled,
-    private val forceShortGamesFlag: ForceShortGames
+    private val forceShortGamesFlag: ForceShortGames,
+    private val isVideoCallLinkEnabledFlag: IsVideoCallLinkEnabled
     ): GameConfig {
 
     override val accessCodeLength: Int
@@ -67,4 +69,7 @@ class GameConfigImpl @Inject constructor(
 
     override val locationsPerSingleDeviceGame: Int
         get() = locationsPerSingleDeviceGameValue()
+
+    override val isVideoCallLinkEnabled: Boolean
+        get() = isVideoCallLinkEnabledFlag()
 }

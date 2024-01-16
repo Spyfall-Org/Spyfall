@@ -17,6 +17,7 @@ dependencies {
     implementation(projects.features.qa)
     implementation(projects.features.colorPicker)
     implementation(projects.libraries.common)
+    implementation(projects.libraries.analytics)
     implementation(projects.libraries.session)
     implementation(projects.libraries.resources)
     implementation(projects.libraries.ui)

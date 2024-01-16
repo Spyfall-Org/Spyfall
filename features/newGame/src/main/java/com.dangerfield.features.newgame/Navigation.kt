@@ -4,7 +4,7 @@ import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
 
-val newGameNavigationRoute = route("newGame")
+val newGameNavigationRoute = route("new_game")
 
 //TODO make every screen launch single ton
 fun Router.navigateToNewGame() {

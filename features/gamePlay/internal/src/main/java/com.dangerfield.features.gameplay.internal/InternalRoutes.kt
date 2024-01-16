@@ -1,9 +1,7 @@
 package com.dangerfield.features.gameplay.internal
 
 import com.dangerfield.features.gameplay.accessCodeArgument
-import com.dangerfield.features.gameplay.singleDeviceInfoRoute
 import com.dangerfield.features.gameplay.timeLimitArgument
-import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
@@ -21,12 +19,11 @@ fun Router.navigateToSingleDevicePlayerRoleRoute(
     )
 }
 
-val singleDevicePlayerRoleRoute = route("singleDevicePlayerRole") {
+val singleDevicePlayerRoleRoute = route("single_device_role_reveal") {
     argument(accessCodeArgument)
     argument(timeLimitArgument)
 }
 
-
-val singleDeviceVotingNavigationRoute = route("singleDeviceVotingNavigationRoute") {
+val singleDeviceVotingParentRoute = route("single_device_voting_parent") {
     argument(accessCodeArgument)
 }

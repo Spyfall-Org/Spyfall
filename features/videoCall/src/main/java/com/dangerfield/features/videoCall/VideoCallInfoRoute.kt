@@ -7,4 +7,4 @@ fun Router.navigateToVideoCallLinkInfo() {
     navigate(videoCallLinkInfoRoute.noArgRoute())
 }
 
-val videoCallLinkInfoRoute = route("videoCallLinkInfo")
+val videoCallLinkInfoRoute = route("video_call_info")

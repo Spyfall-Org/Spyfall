@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.features.joinGame)
     implementation(projects.features.waitingRoom)
     implementation(projects.libraries.common)
+    implementation(projects.libraries.analytics)
     implementation(projects.libraries.game)
     implementation(projects.libraries.session)
     implementation(projects.libraries.ui)

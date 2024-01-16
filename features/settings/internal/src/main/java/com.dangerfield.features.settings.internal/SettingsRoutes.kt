@@ -20,4 +20,4 @@ val aboutRoute = route("about")
 
 val stats = route("stats")
 
-val contactUsRoute = route("contactUs")
+val contactUsRoute = route("contact_us")

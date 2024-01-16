@@ -54,17 +54,17 @@ val timeLimitArgument = navArgument("timeLimit") {
     defaultValue = 0
 }
 
-val gamePlayScreenRoute = route("gamePlay") {
+val gamePlayScreenRoute = route("game_play") {
     argument(accessCodeArgument)
     argument(timeLimitArgument)
 }
 
-val singleDeviceInfoRoute = route("singleDeviceInfo") {
+val singleDeviceInfoRoute = route("single_device_info") {
     argument(accessCodeArgument)
     argument(timeLimitArgument)
 }
 
-val singleDeviceGamePlayRoute = route("singleDeviceGamePlay") {
+val singleDeviceGamePlayRoute = route("single_device_game_play") {
     argument(accessCodeArgument)
     argument(timeLimitArgument)
 }

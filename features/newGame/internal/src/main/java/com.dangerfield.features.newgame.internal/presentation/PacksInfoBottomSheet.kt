@@ -1,14 +1,17 @@
 package com.dangerfield.features.newgame.internal.presentation
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
+import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
+import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.preview.ThemePreviews
@@ -31,6 +34,12 @@ fun PacksInfoBottomSheet(
     packs: List<Pack>,
     onDismiss: (BottomSheetState) -> Unit
 ) {
+
+    PageLogEffect(
+        route = route("packs_info_bottom_sheet"),
+        type = PageType.BottomSheet
+    )
+
     BasicBottomSheet(
         onDismissRequest = { onDismiss(bottomSheetState) },
         state = bottomSheetState,
@@ -39,7 +48,7 @@ fun PacksInfoBottomSheet(
             Text(text = "Choose your packs")
         },
         content = {
-            Column {
+            ScrollingColumnWithFadingEdge {
                 Text(
                     text = "Each pack comes with a list of locations that may be chosen for your game. You can choose as many packs as you'd like.",
                 )

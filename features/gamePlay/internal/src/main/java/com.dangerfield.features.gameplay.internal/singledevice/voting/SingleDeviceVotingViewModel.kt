@@ -4,12 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.DisplayablePlayer
+import com.dangerfield.features.gameplay.internal.singledevice.SingleDeviceGameMetricTracker
 import com.dangerfield.features.gameplay.internal.singledevice.voting.SingleDeviceVotingViewModel.Action
 import com.dangerfield.features.gameplay.internal.singledevice.voting.SingleDeviceVotingViewModel.Event
 import com.dangerfield.features.gameplay.internal.singledevice.voting.SingleDeviceVotingViewModel.State
 import com.dangerfield.features.gameplay.internal.toDisplayable
 import com.dangerfield.libraries.coreflowroutines.LazySuspend
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.game.GameState
@@ -18,8 +20,11 @@ import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackIfDebug
 import spyfallx.core.doNothing
@@ -34,14 +39,19 @@ class SingleDeviceVotingViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
+    private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
 ) : SEAViewModel<State, Event, Action>() {
 
     private var currentPlayerRoleIndex = 0
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
 
-    private val gameFlow by lazy {
-        gameRepository.getGameFlow(accessCode)
-    }
+    private val gameFlow: SharedFlow<Game> = gameRepository
+        .getGameFlow(accessCode)
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            replay = 1
+        )
 
     private val allPlayers = LazySuspend {
         gameFlow.first().players.mapIndexed { index, player ->
@@ -53,6 +63,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
 
     private val hasLoadedGame = AtomicBoolean(false)
+    private val hasRecordedResult = AtomicBoolean(false)
 
     override val initialState = State(
         currentPlayer = null,
@@ -159,6 +170,8 @@ class SingleDeviceVotingViewModel @Inject constructor(
 
                         is GameState.Voting -> doNothing()
                         is GameState.VotingEnded -> {
+                            recordResult(gameState)
+
                             updateState { state ->
                                 state.copy(
                                     correctGuessesForOddOneOut = gameState.players.filter { !it.isOddOneOut }.filter { it.votedCorrectly() }.size,
@@ -172,6 +185,17 @@ class SingleDeviceVotingViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    private suspend fun recordResult(
+        gameState: GameState.VotingEnded
+    ) {
+        if (!hasRecordedResult.getAndSet(true)) {
+            singleDeviceGameMetricTracker.trackVotingEnded(
+                timeLimitMins = getGame().timeLimitMins,
+                gameState = gameState
+            )
         }
     }
 
@@ -196,14 +220,30 @@ class SingleDeviceVotingViewModel @Inject constructor(
         // TODO pack game ending behind a uses case and leave game for that matter.
         // not super sure I need a data source as well as a repository
         // maybe I continue trucking on and clean that up later
-
         clearActiveGame()
         sendEvent(Event.GameKilled)
+        singleDeviceGameMetricTracker.trackGameEnded(
+            game = getGame(),
+            timeRemainingMillis = 0
+        )
     }
 
     private suspend fun resetGame() {
         gameRepository.reset(accessCode)
+            .onSuccess {
+                singleDeviceGameMetricTracker.trackGameRestarted(
+                    game = getGame(),
+                    timeRemainingMillis = 0
+                )
+            }.onFailure {
+                singleDeviceGameMetricTracker.trackGameRestartError(
+                    game = getGame(),
+                    timeRemainingMillis = 0
+                )
+            }
     }
+
+    private suspend fun getGame() = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
 
     data class State(
         val currentPlayer: DisplayablePlayer?,

@@ -14,6 +14,7 @@ dependencies {
     implementation(projects.features.qa)
     implementation(projects.libraries.common)
     implementation(projects.libraries.session)
+    implementation(projects.libraries.analytics)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.config)
     implementation(projects.libraries.navigation)

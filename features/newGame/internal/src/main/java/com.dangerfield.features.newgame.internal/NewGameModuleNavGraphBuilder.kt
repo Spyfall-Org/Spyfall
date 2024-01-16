@@ -11,9 +11,10 @@ import com.dangerfield.features.newgame.internal.presentation.NewGameViewModel
 import com.dangerfield.features.newgame.internal.presentation.model.Event
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
 import com.dangerfield.features.newgame.newGameNavigationRoute
-import com.dangerfield.features.videoCall.IsVideoCallingEnabled
 import com.dangerfield.features.videoCall.navigateToVideoCallLinkInfo
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
@@ -24,7 +25,6 @@ import javax.inject.Inject
 @AutoBindIntoSet
 class NewGameModuleNavGraphBuilder @Inject constructor(
     private val gameConfig: GameConfig,
-    private val isVideoCallingEnabled: IsVideoCallingEnabled,
 ) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -35,6 +35,11 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
 
             val viewModel = hiltViewModel<NewGameViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
+
+            PageLogEffect(
+                route = newGameNavigationRoute,
+                type = PageType.FullScreenPage
+            )
 
             ObserveWithLifecycle(flow = viewModel.events) {
                 when (it) {
@@ -74,7 +79,7 @@ class NewGameModuleNavGraphBuilder @Inject constructor(
                 numOfPlayersState = state.numberOfPlayersState,
                 isFormValid = state.formState is FormState.Valid,
                 isSingleDeviceModeEnabled = gameConfig.isSingleDeviceModeEnabled,
-                isVideoCallLinkEnabled = isVideoCallingEnabled(),
+                isVideoCallLinkEnabled = gameConfig.isVideoCallLinkEnabled,
                 onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo,
                 onSomethingWentWrongDismissed = viewModel::resolveSomethingWentWrong,
             )

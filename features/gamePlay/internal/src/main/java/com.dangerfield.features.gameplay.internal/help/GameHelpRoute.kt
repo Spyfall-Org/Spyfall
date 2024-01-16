@@ -9,4 +9,4 @@ fun Router.navigateToGameHelp() {
     )
 }
 
-val gameHelpRoute = route("gameHelp")
+val gameHelpRoute = route("in_game_help_bottom_sheet")

@@ -2,6 +2,7 @@ package com.dangerfield.features.newgame.internal.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dangerfield.features.newgame.internal.metrics.NewGameMetricsTracker
 import com.dangerfield.features.newgame.internal.presentation.model.Action
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.features.newgame.internal.presentation.model.Event
@@ -45,6 +46,7 @@ class NewGameViewModel @Inject constructor(
     private val createSingleDeviceGameUseCase: CreateSingleDeviceGame,
     private val gameConfig: GameConfig,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
+    private val newGameMetricsTracker: NewGameMetricsTracker
 ) : ViewModel() {
 
     // TODO rework this to allow for a debounce on the video call link
@@ -122,11 +124,23 @@ class NewGameViewModel @Inject constructor(
         if (state.isSingleDevice) {
             createSingleDeviceGame(state)
                 .onSuccess { accessCode ->
+                    newGameMetricsTracker.trackSingleDeviceGameCreated(
+                        packs = state.selectedPacks()?.map { it.name } ?: emptyList(),
+                        timeLimit = state.timeLimit() ?: 0,
+                        playerCount = state.numberOfPlayers() ?: 0
+                    )
                     _events.trySend(Event.SingleDeviceGameCreated(accessCode))
                 }
         } else {
             createMultiDeviceGame(state)
                 .onSuccess { accessCode ->
+                    newGameMetricsTracker.trackMultiDeviceGameCreated(
+                        location = state.selectedPacks()?.firstOrNull()?.name ?: "unknown",
+                        packs = state.selectedPacks()?.map { it.name } ?: emptyList(),
+                        timeLimit = state.timeLimit() ?: 0,
+                        videoLink = state.videoCallLinkState.backingValue,
+                        accessCode = accessCode
+                    )
                     _events.trySend(
                         Event.GameCreated(
                             accessCode,
@@ -137,6 +151,7 @@ class NewGameViewModel @Inject constructor(
         }
             .logOnError()
             .onFailure {
+                newGameMetricsTracker.trackErrorCreatingGame(state.isSingleDevice, it)
                 updateState { it.copy(didSomethingGoWrong = true) }
             }
             .eitherWay {

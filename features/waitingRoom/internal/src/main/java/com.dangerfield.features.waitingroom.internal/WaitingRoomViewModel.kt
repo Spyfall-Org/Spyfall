@@ -83,8 +83,10 @@ class WaitingRoomViewModel @Inject constructor(
     }
 
     private suspend fun leaveGame() {
+        val game = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
+
         leaveGameUseCase.invoke(
-            accessCode = accessCode,
+            game = game,
             id = meUserId,
             isGameBeingStarted = state.value.isLoadingStart
         )
@@ -100,7 +102,12 @@ class WaitingRoomViewModel @Inject constructor(
     private suspend fun startGame() {
         updateState { it.copy(isLoadingStart = true) }
         val game = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
-        startGameUseCase(accessCode, game.players, game.locationName)
+        startGameUseCase(
+            accessCode = accessCode,
+            players = game.players,
+            locationName = game.locationName,
+            id = meUserId
+        )
             .developerSnackOnError { "Error starting game" }
             .eitherWay {
                 updateState { it.copy(isLoadingStart = false) }

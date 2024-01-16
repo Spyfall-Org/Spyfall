@@ -6,6 +6,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.qa.qaNavigationRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import se.ansman.dagger.auto.AutoBindIntoSet
@@ -21,6 +23,11 @@ class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
         ) {
             val viewModel: QaViewModel = hiltViewModel()
             val state by viewModel.state.collectAsStateWithLifecycle()
+
+            PageLogEffect(
+                route = qaNavigationRoute,
+                type = PageType.FullScreenPage
+            )
 
             QaScreen(
                 configuredValues = state.configValues,

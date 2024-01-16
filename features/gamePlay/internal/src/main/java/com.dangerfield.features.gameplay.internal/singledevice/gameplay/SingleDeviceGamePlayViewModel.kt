@@ -3,12 +3,14 @@ package com.dangerfield.features.gameplay.internal.singledevice.gameplay
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
-import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.State
-import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.Event
+import com.dangerfield.features.gameplay.internal.singledevice.SingleDeviceGameMetricTracker
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.Action
+import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.Event
+import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.State
 import com.dangerfield.features.gameplay.timeLimitArgument
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.TriggerFlow
+import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
@@ -19,11 +21,14 @@ import com.dangerfield.libraries.session.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackIfDebug
-import spyfallx.core.doNothing
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,6 +41,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val userRepository: UserRepository,
+    private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
     ) : SEAViewModel<State, Event, Action>() {
 
     private val isSubscribedToGameFlow = AtomicBoolean(false)
@@ -52,10 +58,17 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
     private val timeLimitArg: Int?
         get() = savedStateHandle.navArgument<Int>(timeLimitArgument).takeIf { (it ?: 0) > 0 }
 
+    private val gameFlow: SharedFlow<Game> = gameRepository
+        .getGameFlow(accessCode)
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            replay = 1
+        )
 
     override val initialState = State(
         isTimeUp = false,
-        timeRemaining = timeLimitArg?.minutes?.inWholeMilliseconds?.millisToMMss() ?: ""
+        timeRemainingMillis = timeLimitArg?.minutes?.inWholeMilliseconds ?: 0
     )
 
     override suspend fun handleAction(action: Action) {
@@ -70,7 +83,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         if (isSubscribedToGameFlow.getAndSet(true)) return
         viewModelScope.launch {
             combine(
-                gameRepository.getGameFlow(accessCode),
+                gameFlow,
                 gameTimeRefreshTrigger
             ) { game, _ ->
                 mapToGameState(accessCode, game)
@@ -101,7 +114,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         updateState { prev ->
             prev.copy(
                 isTimeUp = true,
-                timeRemaining = 0L.millisToMMss(),
+                timeRemainingMillis = 0L,
             )
         }
     }
@@ -111,7 +124,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
 
         updateState { prev ->
             prev.copy(
-                timeRemaining = gameState.timeRemainingMillis.millisToMMss(),
+                timeRemainingMillis = gameState.timeRemainingMillis,
             )
         }
 
@@ -143,30 +156,39 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ImplicitDefaultLocale")
-    private fun Long.millisToMMss(): String {
-        val minutes = this / 60000
-        val seconds = (this % 60000) / 1000
-        return String.format("%02d:%02d", minutes, seconds)
-    }
-
     private suspend fun endGame() {
         gameRepository.end(accessCode)
         // TODO pack game ending behind a uses case and leave game for that matter.
         // not super sure I need a data source as well as a repository
         // maybe I continue trucking on and clean that up later
-
         clearActiveGame()
         sendEvent(Event.GameKilled)
+        singleDeviceGameMetricTracker.trackGameEnded(
+            game = getGame(),
+            timeRemainingMillis = state.value.timeRemainingMillis
+        )
     }
 
     private suspend fun resetGame() {
         gameRepository.reset(accessCode)
+            .onSuccess {
+                singleDeviceGameMetricTracker.trackGameRestarted(
+                    game = getGame(),
+                    timeRemainingMillis = 0
+                )
+            }.onFailure {
+                singleDeviceGameMetricTracker.trackGameRestartError(
+                    game = getGame(),
+                    timeRemainingMillis = 0
+                )
+            }
     }
+
+    private suspend fun getGame() = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
 
     data class State(
         val isTimeUp: Boolean,
-        val timeRemaining: String
+        val timeRemainingMillis: Long
     )
 
     sealed class Action {

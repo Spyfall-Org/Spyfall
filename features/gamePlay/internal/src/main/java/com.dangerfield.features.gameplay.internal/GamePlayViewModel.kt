@@ -9,6 +9,7 @@ import com.dangerfield.features.gameplay.internal.GamePlayViewModel.State
 import com.dangerfield.features.gameplay.timeLimitArgument
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.TriggerFlow
+import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.game.GameState
@@ -22,10 +23,15 @@ import com.dangerfield.libraries.session.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import spyfallx.core.developerSnackIfDebug
+import spyfallx.core.logOnError
 import spyfallx.core.throwIfDebug
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -39,6 +45,7 @@ class GamePlayViewModel @Inject constructor(
     private val clearActiveGame: ClearActiveGame,
     private val savedStateHandle: SavedStateHandle,
     private val userRepository: UserRepository,
+    private val metricsTracker: MultiDeviceGameMetricsTracker,
     session: Session,
     ) : SEAViewModel<State, Event, Action>() {
 
@@ -58,11 +65,19 @@ class GamePlayViewModel @Inject constructor(
     private val timeLimitArg: Int?
         get() = savedStateHandle.navArgument<Int>(timeLimitArgument).takeIf { (it ?: 0) > 0 }
 
+    private val gameFlow: SharedFlow<Game> = gameRepository
+        .getGameFlow(accessCode)
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            replay = 1
+        )
+
     // TODO cleanup consider putting voting into a different screen
     override val initialState = State(
         players = emptyList(),
         locations = emptyList(),
-        timeRemaining = timeLimitArg?.minutes?.inWholeMilliseconds?.millisToMMss().orEmpty(),
+        timeRemainingMillis = timeLimitArg?.minutes?.inWholeMilliseconds ?: 0,
         isLoadingLocations = true,
         isLoadingPlayers = true,
         didSomethingGoWrongLoading = accessCode.isEmpty() || meUserId.isEmpty(),
@@ -91,10 +106,27 @@ class GamePlayViewModel @Inject constructor(
         // TODO cleanup consider having game repo clear active game and stuff
         clearActiveGame()
         sendEvent(Event.GameKilled)
+        metricsTracker.trackGameEnded(
+            game = getGame(),
+            timeRemainingMillis = state.value.timeRemainingMillis
+        )
     }
 
     private suspend fun resetGame() {
         gameRepository.reset(accessCode)
+            .onSuccess {
+                metricsTracker.trackGameRestarted(
+                    game = getGame(),
+                    timeRemainingMillis = state.value.timeRemainingMillis
+                )
+            }
+            .onFailure {
+                metricsTracker.trackGameRestartError(
+                    game = getGame(),
+                    timeRemainingMillis = state.value.timeRemainingMillis
+                )
+            }
+            .logOnError()
             .throwIfDebug()
     }
 
@@ -139,7 +171,7 @@ class GamePlayViewModel @Inject constructor(
         if (isSubscribedToGameFlow.getAndSet(true)) return
         viewModelScope.launch {
             combine(
-                gameRepository.getGameFlow(accessCode),
+                gameFlow,
                 gameTimeRefreshTrigger
             ) { game, _ ->
                 mapToGameState(accessCode, game)
@@ -201,6 +233,11 @@ class GamePlayViewModel @Inject constructor(
 
         if (!hasRecordedResult.getAndSet(true)) {
             recordResult(gameState)
+
+            metricsTracker.trackVotingEnded(
+                timeLimitMins = getGame().timeLimitMins,
+                gameState = gameState
+            )
         }
     }
 
@@ -287,7 +324,7 @@ class GamePlayViewModel @Inject constructor(
                     },
                 locations = gameState.locationNames,
                 location = gameState.location,
-                timeRemaining = gameState.timeRemainingMillis.millisToMMss(),
+                timeRemainingMillis = gameState.timeRemainingMillis,
             )
         }
 
@@ -312,12 +349,7 @@ class GamePlayViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ImplicitDefaultLocale")
-    private fun Long.millisToMMss(): String {
-        val minutes = this / 60000
-        val seconds = (this % 60000) / 1000
-        return String.format("%02d:%02d", minutes, seconds)
-    }
+    private suspend fun getGame() =  gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
 
     data class State(
         val isLoadingPlayers: Boolean,
@@ -329,7 +361,7 @@ class GamePlayViewModel @Inject constructor(
         val mePlayer: DisplayablePlayer?,
         val locations: List<String>,
         val location: String?,
-        val timeRemaining: String,
+        val timeRemainingMillis: Long,
         val didSomethingGoWrongLoading: Boolean,
         val didSomethingGoWrongVoting: Boolean,
         val videoCallLink: String?,

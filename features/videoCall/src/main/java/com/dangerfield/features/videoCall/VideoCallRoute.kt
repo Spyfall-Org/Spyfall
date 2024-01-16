@@ -8,7 +8,7 @@ import com.dangerfield.libraries.navigation.route
 
 fun Router.navigateToVideoCallBottomSheet(link: String) {
     navigate(
-        fillRoute(videoCallRoute) {
+        fillRoute(videoCallDetails) {
             fill(videoLinkArgument, link)
         }
     )
@@ -16,7 +16,6 @@ fun Router.navigateToVideoCallBottomSheet(link: String) {
 
 val videoLinkArgument = navArgument("videoLink") { type = NavType.StringType }
 
-val videoCallRoute = route("videoLinkRoute") {
+val videoCallDetails = route("video_call_details") {
     argument(videoLinkArgument)
 }
-

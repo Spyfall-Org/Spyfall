@@ -47,7 +47,7 @@ fun RulesBottomSheet(
 
 @Composable
 private fun RulesContent() {
-    Column(
+    ScrollingColumnWithFadingEdge(
         Modifier.padding(horizontal = Spacing.S800)
     ) {
         Body(text = "Odd one out is a game of deception, misdirection, and deduction.")

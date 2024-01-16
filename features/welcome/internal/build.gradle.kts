@@ -14,6 +14,7 @@ android {
 dependencies {
     implementation(projects.features.welcome)
     implementation(projects.libraries.ui)
+    implementation(projects.libraries.analytics)
     implementation(projects.libraries.common)
     implementation(projects.libraries.session)
     implementation(projects.libraries.game)

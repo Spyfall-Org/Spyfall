@@ -4,7 +4,7 @@ import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
 
-val blockingErrorRoute = route("blockingError")
+val blockingErrorRoute = route("blocking_error")
 
 fun Router.navigateToBlockingError() {
     this.navigate(blockingErrorRoute.noArgRoute())

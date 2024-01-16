@@ -18,6 +18,6 @@ fun Router.navigateToChangeName(
 
 val changeNameAccessCodeArgument = navArgument("accessCode") { type = NavType.StringType }
 
-val changeNameRoute = route("changeName") {
+val changeNameRoute = route("change_name_dialog") {
     argument(changeNameAccessCodeArgument)
 }

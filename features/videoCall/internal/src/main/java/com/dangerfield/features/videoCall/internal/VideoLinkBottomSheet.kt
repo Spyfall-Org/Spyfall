@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
+import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.preview.ThemePreviews
@@ -68,8 +69,7 @@ fun VideoLinkBottomSheet(
             Text(text = "Video Link")
         },
         content = {
-            Column {
-
+            ScrollingColumnWithFadingEdge {
                 val annotatedString = getBoldUnderlinedSpan(
                     fullString = "The creator of this game has added a video link to make it easier to play with anyone anywhere. \n\nBut PLEASE remember, be careful opening links from strangers over the internet.",
                     boldString = "be careful"

@@ -3,6 +3,7 @@ package com.dangerfield.features.gameplay.internal
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -24,6 +25,8 @@ import com.dangerfield.features.gameplay.internal.voting.votingInfoRoute
 import com.dangerfield.features.videoCall.navigateToVideoCallBottomSheet
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.features.welcome.welcomeNavigationRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
@@ -46,6 +49,11 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
             val viewModel = hiltViewModel<GamePlayViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
 
+            PageLogEffect(
+                route = gamePlayScreenRoute,
+                type = PageType.FullScreenPage
+            )
+
             ObserveWithLifecycle(flow = viewModel.events) {
                 when (it) {
                     is GameReset -> router.navigateToWaitingRoom(accessCode = it.accessCode)
@@ -60,7 +68,7 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
             GamePlayScreen(
                 players = state.players,
                 locations = state.locations,
-                timeRemaining = state.timeRemaining,
+                timeRemaining = state.timeRemainingMillis.millisToMMss(),
                 role = state.mePlayer?.role.orEmpty(),
                 isOddOneOut = state.mePlayer?.isOddOneOut ?: false,
                 isTimeUp = state.isTimeUp,
@@ -89,6 +97,14 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
         ) {
             val hasVoted = it.navArgument<Boolean>(hasVotedArgument) ?: false
 
+            PageLogEffect(
+                route = votingInfoRoute,
+                type = PageType.BottomSheet,
+                extras = bundleOf(
+                    "hasVoted" to hasVoted.toString()
+                )
+            )
+
             VotingBottomSheet(
                 onDismiss = router::dismissSheet,
                 hasVoted = hasVoted
@@ -99,6 +115,12 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
             route = gameHelpRoute.navRoute,
             arguments = gameHelpRoute.navArguments
         ) {
+
+            PageLogEffect(
+                route = gameHelpRoute,
+                type = PageType.BottomSheet
+            )
+
             GameHelpBottomSheet(
                 onDismiss = router::dismissSheet
             )

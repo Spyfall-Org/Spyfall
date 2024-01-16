@@ -16,6 +16,8 @@ import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.A
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action.UpdateMessage
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action.UpdateName
 import com.dangerfield.features.settings.settingsNavigationRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.session.SessionFlow
@@ -36,6 +38,12 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
             route = settingsNavigationRoute.navRoute,
             arguments = settingsNavigationRoute.navArguments,
         ) {
+
+            PageLogEffect(
+                route = settingsNavigationRoute,
+                type = PageType.FullScreenPage
+            )
+
             SettingsScreen(
                 versionName = buildInfo.versionName,
                 isDebug = buildInfo.isDebug,
@@ -49,6 +57,11 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
         }
 
         composable(aboutRoute.navRoute) {
+            PageLogEffect(
+                route = aboutRoute,
+                type = PageType.FullScreenPage
+            )
+
             AboutScreen(
                 versionName = buildInfo.versionName,
                 onNavigateBack = router::goBack,
@@ -62,6 +75,11 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
 
             val viewModel = hiltViewModel<ContactUsViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
+
+            PageLogEffect(
+                route = contactUsRoute,
+                type = PageType.FullScreenPage
+            )
 
             ContactUsScreen(
                 isLoadingSubmit = state.isLoadingSubmit,
@@ -95,6 +113,11 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
                         singleDeviceGamesPlayed = 0
                     )
                 )
+
+            PageLogEffect(
+                route = stats,
+                type = PageType.FullScreenPage
+            )
 
             StatsScreen(
                 onNavigateBack = router::goBack,

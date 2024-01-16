@@ -37,6 +37,8 @@ import com.dangerfield.features.ads.LocalAdsConfig
 import com.dangerfield.features.blockingerror.blockingErrorRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
+import com.dangerfield.libraries.analytics.LocalMetricsTracker
+import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.coreflowroutines.observeWithLifecycle
 import com.dangerfield.libraries.navigation.fadeInToEndAnim
 import com.dangerfield.libraries.navigation.fadeInToStartAnim
@@ -69,6 +71,7 @@ fun OddOneOutApp(
     navBuilderRegistry: NavBuilderRegistry,
     networkMonitor: NetworkMonitor,
     adsConfig: AdsConfig,
+    metricsTracker: MetricsTracker,
     appState: AppState = rememberAppState(networkMonitor = networkMonitor),
     isUpdateRequired: Boolean,
     hasBlockingError: Boolean
@@ -119,7 +122,8 @@ fun OddOneOutApp(
 
     // TODO add maintainence mode
     CompositionLocalProvider(
-        LocalAdsConfig provides adsConfig
+        LocalAdsConfig provides adsConfig,
+        LocalMetricsTracker provides metricsTracker
     ) {
         OddOneOutTheme(
             isDarkMode = shouldShowDarkMode,

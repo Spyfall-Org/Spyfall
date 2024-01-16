@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.game)
     implementation(projects.libraries.session)
+    implementation(projects.libraries.analytics)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.navigation)
     implementation(libs.google.play.services.ads)

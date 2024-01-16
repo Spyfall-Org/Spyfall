@@ -71,6 +71,7 @@
             <option value="$PROJECT_DIR$/libraries/resources/internal" />
             <option value="$PROJECT_DIR$/libraries/session" />
             <option value="$PROJECT_DIR$/libraries/session/internal" />
+            <option value="$PROJECT_DIR$/libraries/session/storage" />
             <option value="$PROJECT_DIR$/libraries/storage" />
             <option value="$PROJECT_DIR$/libraries/storage/internal" />
             <option value="$PROJECT_DIR$/libraries/test" />

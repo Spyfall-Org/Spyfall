@@ -10,6 +10,7 @@ interface GameConfig {
     val minTimeLimit: Int
     val locationsPerGame: Int
     val isSingleDeviceModeEnabled: Boolean
+    val isVideoCallLinkEnabled: Boolean
     val forceShortGames: Boolean
     val locationsPerSingleDeviceGame: Int
     val gameInactivityExpirationMins: Int

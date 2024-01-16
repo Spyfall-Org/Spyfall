@@ -11,9 +11,10 @@ import androidx.navigation.navigation
 import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.gameplay.accessCodeArgument
+import com.dangerfield.features.gameplay.internal.millisToMMss
 import com.dangerfield.features.gameplay.internal.navigateToSingleDevicePlayerRoleRoute
 import com.dangerfield.features.gameplay.internal.singleDevicePlayerRoleRoute
-import com.dangerfield.features.gameplay.internal.singleDeviceVotingNavigationRoute
+import com.dangerfield.features.gameplay.internal.singleDeviceVotingParentRoute
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayScreen
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel.Event.GameKilled
@@ -42,6 +43,8 @@ import com.dangerfield.features.gameplay.singleDeviceGamePlayRoute
 import com.dangerfield.features.gameplay.singleDeviceInfoRoute
 import com.dangerfield.features.gameplay.timeLimitArgument
 import com.dangerfield.features.welcome.welcomeNavigationRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
@@ -71,6 +74,11 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
             val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
             val timeLimit = it.navArgument<Int>(timeLimitArgument) ?: return@composable
             val context = LocalContext.current
+
+            PageLogEffect(
+                route = singleDeviceInfoRoute,
+                type = PageType.FullScreenPage
+            )
 
             LaunchedEffect(Unit) {
                 val restartFrequency = adsConfig.gameRestInterstitialAdFrequency
@@ -106,11 +114,14 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
         ) {
 
             val viewModel = hiltViewModel<SingleDeviceRoleRevealViewModel>()
-
             val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
             val timeLimit = it.navArgument<Int>(timeLimitArgument) ?: return@composable
-
             val state by viewModel.state.collectAsStateWithLifecycle()
+
+            PageLogEffect(
+                route = singleDevicePlayerRoleRoute,
+                type = PageType.FullScreenPage
+            )
 
             LaunchedEffect(state.isGameStarted) {
                 if (state.isGameStarted) {
@@ -153,10 +164,13 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
             arguments = singleDeviceGamePlayRoute.navArguments
         ) {
             val viewModel = hiltViewModel<SingleDeviceGamePlayViewModel>()
-
             val state by viewModel.state.collectAsStateWithLifecycle()
-
             val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
+
+            PageLogEffect(
+                route = singleDeviceGamePlayRoute,
+                type = PageType.FullScreenPage
+            )
 
             ObserveWithLifecycle(flow = viewModel.events) { event ->
                 when (event) {
@@ -175,7 +189,7 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
             // TODO resuming on voting ended stage for some reason isnt working
 
             SingleDeviceGamePlayScreen(
-                timeRemaining = state.timeRemaining,
+                timeRemaining = state.timeRemainingMillis.millisToMMss(),
                 isTimeUp = state.isTimeUp,
                 onTimeToVote = {
                     router.navigateToSingleDeviceVoting(accessCode)
@@ -191,7 +205,7 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
 
         // wrapping in navigation so they share the same view model
         navigation(
-            route = singleDeviceVotingNavigationRoute.navRoute,
+            route = singleDeviceVotingParentRoute.navRoute,
             startDestination = singleDeviceVotingRoute.navRoute,
         ) {
 
@@ -201,13 +215,18 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
             ) {
 
                 val viewModel: SingleDeviceVotingViewModel = it.viewModelScopedTo(
-                    route = singleDeviceVotingNavigationRoute,
+                    route = singleDeviceVotingParentRoute,
                     router = router
                 )
 
                 val state by viewModel.state.collectAsStateWithLifecycle()
 
                 val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
+
+                PageLogEffect(
+                    route = singleDeviceVotingRoute,
+                    type = PageType.FullScreenPage
+                )
 
                 LaunchedEffect(Unit) {
                     router.navigateToVotingInfo()
@@ -272,11 +291,16 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
             ) {
 
                 val viewModel: SingleDeviceVotingViewModel = it.viewModelScopedTo(
-                    route = singleDeviceVotingNavigationRoute,
+                    route = singleDeviceVotingParentRoute,
                     router = router
                 )
 
                 val state by viewModel.state.collectAsStateWithLifecycle()
+
+                PageLogEffect(
+                    route = singleDeviceVotingResultsRoute,
+                    type = PageType.FullScreenPage
+                )
 
                 LaunchedEffect(Unit) {
                     viewModel.takeAction(SingleDeviceVotingViewModel.Action.LoadGame)

@@ -8,6 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.joingame.joinGameNavigationRoute
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
@@ -31,6 +33,11 @@ class JoinGameModuleNavGraphBuilder @Inject constructor(
             val viewModel = hiltViewModel<JoinGameViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
             val context = LocalContext.current
+
+            PageLogEffect(
+                route = joinGameNavigationRoute,
+                type = PageType.FullScreenPage
+            )
 
             ObserveWithLifecycle(flow = viewModel.events) {
                 when (it) {

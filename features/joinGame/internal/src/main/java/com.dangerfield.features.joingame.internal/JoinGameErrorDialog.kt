@@ -2,7 +2,12 @@ package com.dangerfield.features.joingame.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.os.bundleOf
 import com.dangerfield.features.joingame.internal.UnresolvableError.IncompatibleError
+import com.dangerfield.features.joingame.joinGameNavigationRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.preview.PreviewContent
 
@@ -12,6 +17,14 @@ fun JoinGameErrorDialog(
     onUpdateClicked: () -> Unit,
     unresolvableError: UnresolvableError
 ) {
+
+    PageLogEffect(
+        route = route("join_game_error"),
+        type = PageType.Dialog,
+        extras = bundleOf(
+            "error_type" to unresolvableError.javaClass.simpleName
+        )
+    )
 
     val title = when (unresolvableError) {
         is IncompatibleError -> {

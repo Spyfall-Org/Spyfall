@@ -14,6 +14,7 @@ android {
 dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.session)
+    implementation(projects.libraries.analytics)
     implementation(projects.features.colorPicker)
     implementation(projects.libraries.flowroutines)
     implementation(projects.libraries.ui)

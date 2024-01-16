@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.features.ads.OddOneOutAd.GameRestartInterstitial
+import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.ui.color.ColorPrimitive
@@ -43,6 +44,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var adsConfig: AdsConfig
+
+    @Inject
+    lateinit var metricsTracker: MetricsTracker
 
     @Inject
     lateinit var gameResetInterstitialAd: InterstitialAd<GameRestartInterstitial>
@@ -88,7 +92,8 @@ class MainActivity : ComponentActivity() {
                 accentColor = state.accentColor,
                 darkModeConfig = state.darkModeConfig,
                 networkMonitor = networkMonitor,
-                adsConfig = adsConfig
+                adsConfig = adsConfig,
+                metricsTracker = metricsTracker
             )
         }
 

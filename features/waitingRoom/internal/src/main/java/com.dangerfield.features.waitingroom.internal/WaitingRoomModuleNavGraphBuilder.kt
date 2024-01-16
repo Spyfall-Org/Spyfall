@@ -16,6 +16,8 @@ import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewMo
 import com.dangerfield.features.waitingroom.internal.changename.changeNameRoute
 import com.dangerfield.features.waitingroom.internal.changename.navigateToChangeName
 import com.dangerfield.features.waitingroom.waitingRoomRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
@@ -40,6 +42,11 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
             val viewModel = hiltViewModel<WaitingRoomViewModel>()
 
             val state by viewModel.state.collectAsStateWithLifecycle()
+
+            PageLogEffect(
+                route = waitingRoomRoute,
+                type = PageType.FullScreenPage
+            )
 
             ObserveWithLifecycle(flow = viewModel.events) { event ->
                 when (event) {
@@ -87,6 +94,11 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
             val viewModel = hiltViewModel<ChangeNameViewModel>()
 
             val state by viewModel.state.collectAsStateWithLifecycle()
+
+            PageLogEffect(
+                route = changeNameRoute,
+                type = PageType.Dialog
+            )
 
             ObserveWithLifecycle(flow = viewModel.events) { event ->
                 when (event) {

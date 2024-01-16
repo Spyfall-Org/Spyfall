@@ -26,6 +26,26 @@ class IsSingleDeviceModeEnabled @Inject constructor(
     override fun resolveValue(): Boolean = appConfigMap.experiment(this)
 }
 
+@AutoBindIntoSet
+class IsVideoCallLinkEnabled @Inject constructor(
+    private val appConfigMap: AppConfigMap
+): Experiment<Boolean>() {
+    override val displayName: String
+        get() = "Video Call Links Enabled"
+
+    override val control: Boolean
+        get() = false
+
+    override val test: Boolean
+        get() = true
+
+    override val isDebugOnly: Boolean
+        get() = false
+
+    override fun resolveValue(): Boolean = appConfigMap.experiment(this)
+}
+
+
 /*
 To create a virtual game
 - add a switch to the new game screen with "Open to anyone"

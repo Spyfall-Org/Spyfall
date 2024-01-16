@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS800
@@ -21,6 +24,11 @@ fun EndOrGoBackDialog(
     onGoBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    PageLogEffect(
+        route = route("end_game_or_go_back_dialog"),
+        type = PageType.Dialog
+    )
 
     BasicDialog(
         onDismissRequest = onDismissRequest,

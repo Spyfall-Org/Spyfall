@@ -22,7 +22,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class SpyfallApplication : Application() {
+class OddOneOutApplication : Application() {
 
     @Inject
     lateinit var applicationStateRepository: ApplicationStateRepository
@@ -64,7 +64,7 @@ class SpyfallApplication : Application() {
 
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) ERROR else NONE)
-            androidContext(this@SpyfallApplication)
+            androidContext(this@OddOneOutApplication)
             modules(legacySpyfallModules)
         }
 
