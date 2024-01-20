@@ -6,11 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.oddoneoout.libraries.dictionary.internal.R
 
 @Composable
 fun LanguageSupportDialog(
@@ -20,16 +22,27 @@ fun LanguageSupportDialog(
     modifier: Modifier = Modifier
 ) {
     val message = if (isUnsupported) {
-        "Unfortunately we do not have support for $language yet.\n\nIf you would like to help us translate and add support for this language please reach out to us using the contact form in settings. Thank you!"
+        dictionaryString(
+            R.string.languageSupport_unsupportedDialog_body,
+            mapOf("language" to language)
+        )
     } else {
-        "We are currently working on improving our support for $language.\n\nSome of the words you see may not be perfectly translated. If you see any mistakes please let us know by using the contact form in settings. Thank you!"
+        dictionaryString(
+            R.string.languageSupport_partialSupportDialog_body,
+            mapOf("language" to language)
+        )
     }
 
     BasicDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         topContent = {
-            Text(text = "Do you speak $language?")
+            Text(
+                text = dictionaryString(
+                    R.string.languageSupport_dialog_header,
+                    mapOf("language" to language)
+                )
+            )
         },
         content = {
             Text(text = message)
@@ -41,7 +54,7 @@ fun LanguageSupportDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
-                    Text(text = "Okay")
+                    Text(text = dictionaryString(id = R.string.app_okay_action))
                 }
             }
         }

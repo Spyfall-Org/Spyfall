@@ -87,5 +87,8 @@ type = the type of component the string is used by (action, header, body, label,
     <string name="contatUs_feedback_label">Feedback</string>
     <string name="contactUs_suggestion_label">Suggestion</string>
     <string name="contactUs_other_label">Other</string>
+    <string name="languageSupport_unsupportedDialog_body">Unfortunately we do not have support for {language} yet.\n\nIf you would like to help us translate and add support for this language please reach out to us using the contact form in settings. Thank you!</string>
+    <string name="languageSupport_partialSupportDialog_body">We are currently working on improving our support for {language}.\n\nSome of the words you see may not be perfectly translated. If you see any mistakes please let us know by using the contact form in settings. Thank you!</string>
+    <string name="languageSupport_dialog_header">Do you speak {language}?</string>
 
 </resources>
