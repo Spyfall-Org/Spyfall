@@ -10,23 +10,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dangerfield.features.ads.AdsConfig
-import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.features.ads.OddOneOutAd.GameRestartInterstitial
+import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.libraries.analytics.MetricsTracker
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.network.NetworkMonitor
-import com.dangerfield.libraries.session.DarkModeConfig
-import com.dangerfield.libraries.ui.color.ColorPrimitive
-import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.oddoneout.legacy.util.collectWhileStarted
 import com.dangerfield.oddoneout.navigation.NavBuilderRegistry
 import com.dangerfield.oddoneout.startup.MainActivityViewModel
-import com.dangerfield.oddoneout.startup.MainActivityViewModel.State
-import com.dangerfield.oddoneout.startup.MainActivityViewModel.State.Error
-import com.dangerfield.oddoneout.startup.MainActivityViewModel.State.Loaded
-import com.dangerfield.oddoneout.startup.MainActivityViewModel.State.Loading
 import com.dangerfield.oddoneout.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import oddoneout.core.doNothing
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -45,6 +38,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var metricsTracker: MetricsTracker
+
+    @Inject
+    lateinit var dictionary: Dictionary
 
     @Inject
     lateinit var gameResetInterstitialAd: InterstitialAd<GameRestartInterstitial>
@@ -67,10 +63,9 @@ class MainActivity : ComponentActivity() {
 
         // Delay set content so we can animate splash screen views
         collectWhileStarted(mainActivityViewModel.state) { state ->
-            isLoading = state is Loading
-            when  {
-                state is Loading -> doNothing()
-                state !is Loading && !hasSetContent.getAndSet(true) -> setAppContent()
+            isLoading = state.isBlockingLoad
+            if (!state.isBlockingLoad && !hasSetContent.getAndSet(true)) {
+                setAppContent()
             }
         }
     }
@@ -86,12 +81,14 @@ class MainActivity : ComponentActivity() {
             OddOneOutApp(
                 navBuilderRegistry = navBuilderRegistry,
                 isUpdateRequired = state.isUpdateRequired,
-                hasBlockingError = state is Error,
+                hasBlockingError = state.hasBlockingError,
                 accentColor = state.accentColor,
                 darkModeConfig = state.darkModeConfig,
                 networkMonitor = networkMonitor,
                 adsConfig = adsConfig,
-                metricsTracker = metricsTracker
+                metricsTracker = metricsTracker,
+                dictionary = dictionary,
+                languageSupportLevel = state.languageSupportLevel
             )
         }
 
@@ -103,14 +100,4 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
-    private val State.accentColor: ColorPrimitive
-        get() = (this as? Loaded)?.accentColor
-            ?: ThemeColor.CherryPop700.colorPrimitive
-
-    private val State.isUpdateRequired: Boolean
-        get() = this is Loaded && isUpdateRequired
-
-    private val State.darkModeConfig: DarkModeConfig
-        get() = (this as? Loaded)?.darkModeConfig
-            ?: DarkModeConfig.System
 }

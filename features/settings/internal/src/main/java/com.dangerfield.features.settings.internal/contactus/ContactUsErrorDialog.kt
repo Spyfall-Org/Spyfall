@@ -1,24 +1,27 @@
 package com.dangerfield.features.settings.internal.contactus
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
+import com.dangerfield.oddoneoout.features.settings.internal.R
 
 @Composable
 fun ContactUsErrorDialog(
     onDismiss: () -> Unit,
 ) {
 
-    val title = "Lets try that again"
+    val title = dictionaryString(R.string.app_tryAgainErrorDialog_header)
 
-    val description = "Looks like something went wrong submitting your form, please try again."
+    val description = dictionaryString(R.string.contactUs_errorSubmitting_body)
 
     BasicDialog(
         onDismissRequest = onDismiss,
         title = title,
         description = description,
-        primaryButtonText = "Ok",
+        primaryButtonText = dictionaryString(id = R.string.app_okay_action),
         onPrimaryButtonClicked = {
             onDismiss()
         }

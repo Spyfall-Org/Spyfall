@@ -140,6 +140,8 @@ dependencies {
 	implementation(projects.libraries.session.storage)
 	implementation(projects.libraries.analytics)
 	implementation(projects.libraries.analytics.internal)
+	implementation(projects.libraries.dictionary)
+	implementation(projects.libraries.dictionary.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     // lottie for animations

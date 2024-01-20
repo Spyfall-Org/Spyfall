@@ -10,7 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
@@ -21,6 +23,7 @@ import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 import spyfallx.ui.color.background
 
 @Composable
@@ -58,7 +61,7 @@ fun ChangeNameDialog(
             onDismissRequest = onDismissRequest,
             modifier = modifier,
             topContent = {
-                Text(text = "Change Name")
+                Text(text = dictionaryString(R.string.changeName_dialog_header))
             },
             content = {
                 Column {
@@ -67,7 +70,7 @@ fun ChangeNameDialog(
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
                         placeholder = {
-                            Text(text = "Enter a new name")
+                            Text(text = dictionaryString(R.string.changeName_inputHint_label))
                         },
                         value = name,
                         onValueChange = onNameUpdated
@@ -75,8 +78,15 @@ fun ChangeNameDialog(
 
 
                     val errorText = when {
-                        isInvalidLength -> "Name must be between $minNameLength and $maxNameLength characters"
-                        isNameTaken -> "That user name is already taken by another player."
+                        isInvalidLength -> dictionaryString(
+                            R.string.changeName_invalidLength_text,
+                            mapOf(
+                                "min" to minNameLength.toString(),
+                                "max" to maxNameLength.toString()
+                            )
+                        )
+
+                        isNameTaken -> dictionaryString(R.string.changeName_usernameTakenErrror_text)
                         else -> null
                     }
 
@@ -101,7 +111,7 @@ fun ChangeNameDialog(
                         onClick = { onChangeNameClicked(name) },
                         type = ButtonType.Accent
                     ) {
-                        Text(text = "Submit")
+                        Text(text = dictionaryString(R.string.submit_action))
                     }
 
                     VerticalSpacerS800()
@@ -110,7 +120,7 @@ fun ChangeNameDialog(
                         type = ButtonType.Regular,
                         modifier = Modifier.fillMaxWidth(), onClick = onDismissRequest
                     ) {
-                        Text(text = "Cancel")
+                        Text(text = dictionaryString(R.string.cancel_action))
                     }
                 }
             },

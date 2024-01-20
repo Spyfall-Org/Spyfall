@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
@@ -30,7 +31,7 @@ fun AboutScreen(
         modifier = modifier,
         topBar = {
             Header(
-                title = "About",
+                title = dictionaryString(R.string.settings_about_header),
                 onNavigateBack = onNavigateBack
             )
         }
@@ -42,25 +43,28 @@ fun AboutScreen(
         ) {
 
             SettingsOption(
-                text = "Privacy Policy",
+                text = dictionaryString(R.string.about_privacyPolicy_label),
                 onClick = onPrivacyPolicyClicked,
-                trailingIcon = SpyfallIcon.ChevronRight("About Spyfall"),
+                trailingIcon = SpyfallIcon.ChevronRight(null),
             )
 
             SettingsOption(
-                text = "Terms of Service",
+                text = dictionaryString(R.string.about_termsOfService_label),
                 onClick = onTermsOfServiceClicked,
-                trailingIcon = SpyfallIcon.ChevronRight("About Spyfall"),
+                trailingIcon = SpyfallIcon.ChevronRight(null),
             )
 
             SettingsOption(
-                text = "Third Party Services",
+                text = dictionaryString(R.string.about_thirdPartyServices_label),
                 onClick = onThirdPartyServicesClicked,
-                trailingIcon = SpyfallIcon.ChevronRight("About Spyfall"),
+                trailingIcon = SpyfallIcon.ChevronRight(null),
             )
 
             Text(
-                text = stringResource(id = R.string.app_name)+ " Version: $versionName",
+                text = dictionaryString(id = R.string.app_name) + dictionaryString(
+                    R.string.settings_version_label,
+                    mapOf("version" to versionName)
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = Spacing.S1000),

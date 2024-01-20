@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
@@ -21,6 +23,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomS
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.oddoneoout.features.videocall.internal.R
 
 @Composable
 fun VideoCallInfoBottomSheet(
@@ -32,26 +35,26 @@ fun VideoCallInfoBottomSheet(
     BasicBottomSheet(
         onDismissRequest = { onDismiss(bottomSheetState) },
         state = bottomSheetState,
-        topAccessory = iconTopAccessory(icon = SpyfallIcon.VideoCall("Video")),
+        topAccessory = iconTopAccessory(icon = SpyfallIcon.VideoCall(null)),
         modifier = modifier,
         topContent = {
-            Text(text = "Add video calling to your game")
+            Text(text = dictionaryString(R.string.videoLink_infoDialog_title))
         },
         content = {
             ScrollingColumnWithFadingEdge {
                 Text(
-                    text = "You can add a video link when creating your game to make it easier to play with anyone anywhere. When a player joins the game they will also have access to this link.",
+                    text = dictionaryString(R.string.videoLink_infoDialogBody_text),
                 )
                 if (recognizedPlatforms.isNotEmpty()) {
                     VerticalSpacerS800()
-                    Text("To ensure user safety we only accept links from the following platforms:")
+                    Text(dictionaryString(R.string.videoLink_infoDialogSaftey_header))
                     VerticalSpacerS500()
                     NonLazyVerticalGrid(
                         columns = 2,
                         data = recognizedPlatforms
                     ) { _, item ->
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = "•")
+                            Text(text = dictionaryString(R.string.bullet_point))
                             HorizontalSpacerS600()
                             Text(text = item)
                         }
@@ -69,7 +72,7 @@ fun VideoCallInfoBottomSheet(
                     .padding(Spacing.S800),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
-                Text(text = "Okay")
+                Text(text = dictionaryString(R.string.app_okay_action))
             }
         }
     )

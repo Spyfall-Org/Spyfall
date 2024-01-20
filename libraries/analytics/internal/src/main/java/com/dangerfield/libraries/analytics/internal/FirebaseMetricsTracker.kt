@@ -5,6 +5,7 @@ import androidx.core.os.bundleOf
 import com.dangerfield.libraries.analytics.Metric
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.google.firebase.analytics.FirebaseAnalytics
+import oddoneout.core.BuildInfo
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.throwIfDebug
 import timber.log.Timber
@@ -15,6 +16,7 @@ import javax.inject.Singleton
 @AutoBind
 class FirebaseMetricsTracker @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics,
+    private val buildInfo: BuildInfo
 ) : MetricsTracker {
 
     override fun log(metric: Metric) {
@@ -82,9 +84,21 @@ class FirebaseMetricsTracker @Inject constructor(
     }
 
     private fun log(key: String, bundle: Bundle) {
+        bundle.addSharedMetricValues()
+
         val bundleString = bundle.keySet().joinToString(", ") { "$it: ${bundle[it]}" }
         Timber.i("Event: $key\n$bundleString")
+
         firebaseAnalytics.logEvent(key.toFirebaseKey(), bundle)
+    }
+
+    private fun Bundle.addSharedMetricValues() {
+        putAll(
+            bundleOf(
+                APP_VERSION to buildInfo.versionName,
+                PLATFORM to PLATFORM_ANDROID,
+            )
+        )
     }
 
     /**
@@ -117,5 +131,9 @@ class FirebaseMetricsTracker @Inject constructor(
         private const val PAGE_VIEWED = "page_viewed"
         private const val ERROR_EVENT = "error_event"
         private const val PAGE_TYPE = "page_type"
+        private const val PLATFORM = "platform"
+        private const val APP_VERSION = "app_version"
+        private const val DEBUG = "debug"
+        private const val PLATFORM_ANDROID = "android"
     }
 }

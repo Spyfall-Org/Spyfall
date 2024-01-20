@@ -13,11 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.LocalDictionary
+import com.dangerfield.libraries.dictionary.applyArgs
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.R
 import spyfallx.ui.color.background
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.color.ThemeColor
+import oddoneout.core.Try
 import spyfallx.ui.thenIf
 
 /**
@@ -41,8 +45,20 @@ fun PreviewContent(
             R.style.Theme_Spyfall
         )
     }
+
+    val previewDictionary = object: Dictionary {
+        override fun getString(key: Int, args: Map<String,String>): String = Try {
+            context.getString(key).applyArgs(args)
+        }.getOrNull() ?: "DNE"
+
+        override fun getOptionalString(key: Int, args: Map<String,String>): String? = Try {
+            context.getString(key).applyArgs(args)
+        }.getOrNull()
+    }
+
     CompositionLocalProvider(
         LocalContext provides context,
+        LocalDictionary provides previewDictionary,
     ) {
         OddOneOutTheme(isDarkMode = isDarkMode, themeColor = themeColor) {
             Box(

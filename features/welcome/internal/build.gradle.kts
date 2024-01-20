@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.libraries.session)
     implementation(projects.libraries.game)
     implementation(projects.libraries.resources)
+    implementation(projects.libraries.dictionary)
     implementation(projects.features.joinGame)
     implementation(projects.features.waitingRoom)
     implementation(projects.features.gamePlay)

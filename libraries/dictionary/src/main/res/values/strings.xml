@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--
+naming converntion:  nameSpace_component_type
+
+
+nameSpace = lowest common logical ancestor of string usages. (usually a feature or module name. Highest is "app")
+
+component (Optional) = the name of the component that uses the resource
+examples: errorDialog, playerList,
+
+type = the type of component the string is used by (action, header, body, label, a11y, etc...)
+
+-->
+    <string name="app_name">Odd One Out</string>
+    <string name="welcome_intro_header">Welcome to</string>
+    <string name="welcome_newGame_action">New Game</string>
+    <string name="joinGame_join_action">Join Game</string>
+    <string name="welcome_rules_action">Rules</string>
+    <string name="waitingRoom_waiting_header">Waiting for players...</string>
+    <string name="waitingRoom_accessCode_header">Access Code:</string>
+    <string name="waitingRoom_joinVideo_a11y">Join game video call</string>
+    <string name="waitingRoom_startGame_action">Start Game</string>
+    <string name="waitingRoom_leaveGame_action">Leave Game</string>
+    <string name="waitingRoom_leaveGameDialog_header">Leaving so soon?</string>
+    <string name="waitingRoom_leaveGameDialog_text">You are leaving the game and will be removed if you continue.</string>
+    <string name="leaveGame_action">Leave</string>
+    <string name="dialogCancel_action">Cancel</string>
+    <string name="changeName_invalidLength_text">Name must be between {min} and {max} characters</string>
+    <string name="waitinRoom_cannotLeaveGame_text">Cannot Leave a started game</string>
+    <string name="changeName_dialog_header">Change Name</string>
+    <string name="changeName_inputHint_label">Enter a new name</string>
+    <string name="changeName_usernameTakenErrror_text">That user name is already taken by another player.</string>
+    <string name="submit_action">Submit</string>
+    <string name="cancel_action">Cancel</string>
+    <string name="videoCall_detailDialog_title">Video Link</string>
+    <string name="videoLink_detailDialogDescription_text">The creator of this game has added a video link to make it easier to play with anyone anywhere. \n\nBut PLEASE remember, be careful opening links from strangers over the internet.</string>
+    <string name="videoLink_beCareful_label">be careful</string>
+    <string name="videoLink_copyLink_a11y">Copy Link</string>
+    <string name="open_action">Open</string>
+    <string name="videoLink_infoDialog_title">Add video calling to your game</string>
+    <string name="videoLink_infoDialogBody_text">You can add a video link when creating your game to make it easier to play with anyone anywhere. When a player joins the game they will also have access to this link.</string>
+    <string name="video_openWith_header">Open with</string>
+    <string name="bullet_point">•</string>
+    <string name="videoLink_infoDialogSaftey_header">To ensure user safety we only accept links from the following platforms:</string>
+    <string name="stats_infoNote_body">Games results are not collected when players vote amongst themselves instead of in the app. Because of this the stats here may not fully represent wins and losses.</string>
+    <string name="stats_totalGamesPlayed_header">Total Games Played:</string>
+    <string name="app_okay_action">Okay</string>
+    <string name="settings_stats_header">Stats</string>
+    <string name="stats_infoNote_label">Note</string>
+    <string name="stats_mutliDeviceGames_header">Multi Device Games</string>
+    <string name="stats_gamesYouveWon_header">Games You\'ve Won:</string>
+    <string name="stats_gamesYouveWonAsOddOneOut_label">As Odd One Out - {gamesWon}</string>
+    <string name="stats_gamesYouveWonAsPlayer_label">As Player - {gamesWon}</string>
+    <string name="stats_gamesYouveLost_header">Games You\'ve Lost:</string>
+    <string name="stats_gamesYouveLostAsOddOneOut_label">As Odd One Out - {gamesLost}</string>
+    <string name="stats_gamesYouveLostAsPlayer_label">As Player - {gamesLost}</string>
+    <string name="stats_singleDeviceGames_header">Single Device Games</string>
+    <string name="stats_singleDeviceTotalGamesPlayed_header">Total Games Played:</string>
+    <string name="settings_theme_label">Change Theme</string>
+    <string name="settings_about_label">About</string>
+    <string name="settings_contactUs_label">Contact Us</string>
+    <string name="settings_stats_label">Stats</string>
+    <string name="settings_qaMenu_label">QA Menu</string>
+    <string name="settings_version_label">" Version: {version}"</string>
+    <string name="settings_settingsScreen_header">Settings</string>
+    <string name="settings_about_header">About</string>
+    <string name="about_privacyPolicy_label">Privacy Policy</string>
+    <string name="about_termsOfService_label">Terms of Service</string>
+    <string name="about_thirdPartyServices_label">Third Party Services</string>
+    <string name="app_tryAgainErrorDialog_header">Lets try that again</string>
+    <string name="contactUs_errorSubmitting_body">Looks like something went wrong submitting your form, please try again.</string>
+    <string name="contactUs_invalidEmail_text">Please enter a valid email address</string>
+    <string name="contactUs_invalidMessage_text">Please enter a message</string>
+    <string name="contactUs_invalidName_text">Please enter a name</string>
+    <string name="settings_contactUs_header">Contact Us</string>
+    <string name="contactUs_sumitSuccessMessage_text">Your message has been sent to us, thank you for helping us improve the experience for everyone!</string>
+    <string name="contactUs_reasonPrompt_text">What you would you like to contact us about?</string>
+    <string name="app_required_label">Required</string>
+    <string name="contactUs_nameField_header">Name</string>
+    <string name="contactUs_emailField_header">Email</string>
+    <string name="contactUs_messageField_header">Message</string>
+    <string name="contactUs_messageField_hint">What would you like to tell us?</string>
+    <string name="app_submit_label">Submit</string>
+    <string name="contactUs_question_label">Question</string>
+    <string name="contactUs_issue_label">Issue</string>
+    <string name="contatUs_feedback_label">Feedback</string>
+    <string name="contactUs_suggestion_label">Suggestion</string>
+    <string name="contactUs_other_label">Other</string>
+
+</resources>

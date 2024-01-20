@@ -31,6 +31,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.preview.PreviewContent
@@ -88,7 +90,7 @@ fun ContactUsScreen(
         modifier = modifier,
         topBar = {
             Header(
-                title = "Contact Us",
+                title = dictionaryString(R.string.settings_contactUs_header),
                 onNavigateBack = onNavigateBack
             )
         }
@@ -144,7 +146,7 @@ private fun SuccessMessage() {
     ) {
         VerticalSpacerS800()
         Text(
-            text = "Your message has been sent to us, thank you for helping us improve the experience for everyone!",
+            text = dictionaryString(R.string.contactUs_sumitSuccessMessage_text),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
@@ -185,10 +187,10 @@ private fun Form(
 
         VerticalSpacerS800()
 
-        Text(text = "What you would you like to contact us about?")
+        Text(text = dictionaryString(R.string.contactUs_reasonPrompt_text))
         AsteriskText {
             Text(
-                text = "(Required)",
+                text = "(${dictionaryString(R.string.app_required_label)})",
                 typographyToken = OddOneOutTheme.typography.Body.B700
             )
         }
@@ -212,7 +214,7 @@ private fun Form(
         FormField(formFieldState = nameFieldState) {
             Column {
                 AsteriskText {
-                    Text(text = "Name")
+                    Text(text = dictionaryString(R.string.contactUs_nameField_header))
                 }
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -233,10 +235,12 @@ private fun Form(
         FormField(formFieldState = emailFieldState) {
             Column {
                 AsteriskText {
-                    Text(text = "Email")
+                    Text(text = dictionaryString(R.string.contactUs_emailField_header))
                 }
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().focusRequester(emailFocusRequester),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(emailFocusRequester),
                     value = emailFieldState.value.orEmpty(),
                     onValueChange = onEmailUpdated,
                     singleLine = true,
@@ -255,7 +259,7 @@ private fun Form(
         FormField(formFieldState = messageFieldState) {
             Column {
                 AsteriskText {
-                    Text(text = "Message")
+                    Text(text = dictionaryString(R.string.contactUs_messageField_header))
                 }
                 OutlinedTextField(
                     modifier = Modifier
@@ -267,7 +271,7 @@ private fun Form(
                     singleLine = false,
                     placeholder = {
                         Text(
-                            text = "What would you like to tell us?",
+                            text = dictionaryString(R.string.contactUs_messageField_hint),
                             maxLines = 5
                         )
                     },
@@ -277,8 +281,10 @@ private fun Form(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            if (isFormValid) {
+                                onSubmitClicked()
+                            }
                             focusManager.clearFocus()
-                            onSubmitClicked()
                         }
                     )
                 )
@@ -304,7 +310,7 @@ private fun Form(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Submit")
+                Text(text = dictionaryString(R.string.app_submit_label))
             }
         }
 
@@ -323,6 +329,13 @@ private fun ContactTypeOption(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val state = rememberRadioButtonState(isSelected)
+    val reasonString = when(contactReason) {
+        ContactReason.Question -> dictionaryString(R.string.contactUs_question_label)
+        ContactReason.Issue -> dictionaryString(R.string.contactUs_issue_label)
+        ContactReason.Feedback -> dictionaryString(R.string.contatUs_feedback_label)
+        ContactReason.Suggestion -> dictionaryString(R.string.contactUs_suggestion_label)
+        ContactReason.Other -> dictionaryString(R.string.contactUs_other_label)
+    }
 
     LaunchedEffect(state.selected) {
         if (state.selected) {
@@ -339,7 +352,7 @@ private fun ContactTypeOption(
             .padding(Spacing.S200)
     ) {
         Text(
-            contactReason.name,
+            reasonString,
             modifier = Modifier.weight(1f),
             typographyToken = OddOneOutTheme.typography.Body.B700
         )

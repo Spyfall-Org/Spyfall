@@ -22,9 +22,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.ui.preview.PreviewContent

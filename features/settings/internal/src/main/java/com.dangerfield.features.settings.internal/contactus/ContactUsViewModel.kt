@@ -3,13 +3,16 @@ package com.dangerfield.features.settings.internal.contactus
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.ui.FieldState
+import com.dangerfield.oddoneoout.features.settings.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ContactUsViewModel @Inject constructor(
-    private val sendContactForm: SendContactForm
+    private val sendContactForm: SendContactForm,
+    private val dictionary: Dictionary,
 ) : SEAViewModel<State, Nothing, Action>() {
 
     override val initialState = State(
@@ -47,7 +50,7 @@ class ContactUsViewModel @Inject constructor(
             } else {
                 FieldState.Invalid(
                     email,
-                    "Please enter a valid email address"
+                    dictionary.getString(R.string.contactUs_invalidEmail_text)
                 )
             }
             it.copy(emailFieldState = state).withFormValidation()
@@ -61,7 +64,7 @@ class ContactUsViewModel @Inject constructor(
             } else {
                 FieldState.Invalid(
                     message,
-                    "Please enter a message"
+                    dictionary.getString(R.string.contactUs_invalidMessage_text)
                 )
             }
             it.copy(messageFieldState = state).withFormValidation()
@@ -75,7 +78,7 @@ class ContactUsViewModel @Inject constructor(
             } else {
                 FieldState.Invalid(
                     name,
-                    "Please enter a name"
+                    dictionary.getString(R.string.contactUs_invalidName_text)
                 )
             }
             it.copy(nameFieldState = state).withFormValidation()
@@ -83,6 +86,7 @@ class ContactUsViewModel @Inject constructor(
     }
 
     private suspend fun handleSubmit() {
+        if (!state.value.isFormValid) return
         updateState { it.copy(isLoadingSubmit = true) }
         val state = state.value
 
@@ -90,7 +94,7 @@ class ContactUsViewModel @Inject constructor(
             name = state.nameFieldState.value.orEmpty(),
             email =  state.emailFieldState.value.orEmpty(),
             message =  state.messageFieldState.value.orEmpty(),
-            contactReason = state.contactReasonState.value ?: ContactReason.None
+            contactReason = state.contactReasonState.value ?: ContactReason.Other
         )
             .onSuccess {
                 updateState { it.copy(wasFormSuccessfullySubmitted = true) }

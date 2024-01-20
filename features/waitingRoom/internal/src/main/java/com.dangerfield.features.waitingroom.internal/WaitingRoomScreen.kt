@@ -21,10 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.DisplayablePlayer
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
@@ -40,6 +42,7 @@ import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 import spyfallx.ui.color.background
 
 @Composable
@@ -121,7 +124,7 @@ private fun WaitingRoomScreenContent(
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Waiting for players...",
+            text = dictionaryString(R.string.waitingRoom_waiting_header),
             typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
         )
 
@@ -129,7 +132,7 @@ private fun WaitingRoomScreenContent(
 
         Row {
             Text(
-                text = "Access Code:",
+                text = dictionaryString(R.string.waitingRoom_accessCode_header),
                 typographyToken = OddOneOutTheme.typography.Default.Bold
             )
             Spacer(modifier = Modifier.width(Spacing.S500))
@@ -144,7 +147,7 @@ private fun WaitingRoomScreenContent(
 
             if (videoCallLink != null) {
                 IconButton(
-                    icon = SpyfallIcon.VideoCall("Join game video call"),
+                    icon = SpyfallIcon.VideoCall(dictionaryString(R.string.waitingRoom_joinVideo_a11y)),
                     onClick = {
                         onCallLinkButtonClicked(videoCallLink)
                     }
@@ -172,7 +175,7 @@ private fun WaitingRoomScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onStartGameClicked
             ) {
-                Text(text = "Start Game")
+                Text(text = dictionaryString(R.string.waitingRoom_startGame_action))
             }
 
             VerticalSpacerS1000()
@@ -182,7 +185,7 @@ private fun WaitingRoomScreenContent(
                 onClick = onLeaveGameClicked,
                 type = ButtonType.Regular
             ) {
-                Text(text = "Leave Game")
+                Text(text = dictionaryString(R.string.waitingRoom_leaveGame_action))
             }
 
         } else {

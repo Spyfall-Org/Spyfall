@@ -14,6 +14,7 @@ import oddoneout.core.throwIfDebug
 
 /**
  * A view model that revolves around State (S), Events (E) and Actions (A)
+ * TODO bummed that I can map the state. not a fan of that
  */
 abstract class SEAViewModel<S, E, A> : ViewModel() {
 

@@ -18,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.preview.PreviewContent
@@ -35,6 +37,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessor
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.getBoldUnderlinedSpan
+import com.dangerfield.oddoneoout.features.videocall.internal.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -45,10 +48,11 @@ fun VideoLinkBottomSheet(
     link: String,
     onDismiss: (BottomSheetState) -> Unit
 ) {
+    val chooserTitle = dictionaryString(R.string.video_openWith_header)
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
     val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(link)) }
-    val chooser = remember { Intent.createChooser(intent, "Open with") }
+    val chooser = remember { Intent.createChooser(intent, chooserTitle) }
     val canOpenVideoLink = remember { intent.resolveActivity(context.packageManager) != null }
     var showLinkCopiedCheckmark by remember { mutableStateOf(false) }
 
@@ -63,16 +67,16 @@ fun VideoLinkBottomSheet(
         onDismissRequest = { onDismiss(bottomSheetState) },
         state = bottomSheetState,
         showCloseButton = true,
-        topAccessory = iconTopAccessory(icon = SpyfallIcon.VideoCall("Video")),
+        topAccessory = iconTopAccessory(icon = SpyfallIcon.VideoCall(null)),
         modifier = modifier,
         topContent = {
-            Text(text = "Video Link")
+            Text(text = dictionaryString(R.string.videoCall_detailDialog_title))
         },
         content = {
             ScrollingColumnWithFadingEdge {
                 val annotatedString = getBoldUnderlinedSpan(
-                    fullString = "The creator of this game has added a video link to make it easier to play with anyone anywhere. \n\nBut PLEASE remember, be careful opening links from strangers over the internet.",
-                    boldString = "be careful"
+                    fullString = dictionaryString(R.string.videoLink_detailDialogDescription_text),
+                    boldString = dictionaryString(R.string.videoLink_beCareful_label)
                 )
 
                 Text(text = annotatedString)
@@ -88,7 +92,7 @@ fun VideoLinkBottomSheet(
                     } else {
                         IconButton(
                             size = IconButton.Size.Small,
-                            icon = SpyfallIcon.Copy("Copy Link"),
+                            icon = SpyfallIcon.Copy(dictionaryString(R.string.videoLink_copyLink_a11y)),
                             onClick = {
                                 clipboardManager.setText(AnnotatedString(link))
                             }
@@ -114,7 +118,7 @@ fun VideoLinkBottomSheet(
                         context.startActivity(chooser)
                     }
                 ) {
-                    Text(text = "Open")
+                    Text(text = dictionaryString(R.string.open_action))
                 }
             }
         }

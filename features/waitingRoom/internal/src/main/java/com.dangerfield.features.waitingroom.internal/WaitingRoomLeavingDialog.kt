@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
@@ -14,6 +15,7 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 
 @Composable
 fun WaitingRoomLeavingDialog(
@@ -31,10 +33,10 @@ fun WaitingRoomLeavingDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         topContent = {
-            Text(text = "Leaving so soon?")
+            Text(text = dictionaryString(R.string.waitingRoom_leaveGameDialog_header))
         },
         content = {
-            Text(text = "You are leaving the game and will be removed if you continue.")
+            Text(text = dictionaryString(R.string.waitingRoom_leaveGameDialog_text))
         },
         bottomContent = {
             Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
@@ -43,7 +45,7 @@ fun WaitingRoomLeavingDialog(
                     onClick = onLeaveConfirmed,
                     type = ButtonType.Accent
                 ) {
-                    Text(text = "Leave")
+                    Text(text = dictionaryString(R.string.leaveGame_action))
                 }
 
                 VerticalSpacerS800()
@@ -53,7 +55,7 @@ fun WaitingRoomLeavingDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
-                    Text(text = "Cancel")
+                    Text(text = dictionaryString(R.string.dialogCancel_action))
                 }
             }
         }

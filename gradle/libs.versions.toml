@@ -5,7 +5,7 @@ androidxComposeCompiler = "1.5.4" # used in [AndroidComposeExt]
 androidxCoreSplashscreen = "1.0.1"
 androidDesugarJdkLibs = "2.0.4"
 androidxNavigation = "2.7.6"
-androidGradlePlugin = "8.1.2"
+androidGradlePlugin = "8.2.1"
 androidxComposeRuntimeTracing = "1.0.0-alpha04"
 androidxLifecycle = "2.6.2"
 androidxTestRunner = "1.5.2"
@@ -25,6 +25,7 @@ kotlin = "1.9.20"
 ksp = "1.9.20-1.0.14" # This must match the Kotlin version above
 kotlinxSerializationJson = "1.6.0"
 lottie = "6.2.0"
+lint = "31.2.1"
 moshiXGradlePlugin = "0.25.1"
 robolectric = "4.10.3"
 roborazzi = "1.5.0-alpha-2"
@@ -119,6 +120,11 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 #Datastore
 androidx-datastore = "androidx.datastore:datastore-preferences:1.0.0"
 androidx-datastore-core = "androidx.datastore:datastore-core:1.1.0-alpha07"
+
+# Lint
+lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "lint" }
+lint-checks = { group = "com.android.tools.lint", name = "lint-checks", version.ref = "lint" }
+lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }

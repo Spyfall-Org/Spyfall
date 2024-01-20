@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.HorizontalSpacerS200
 import com.dangerfield.libraries.ui.Radii
@@ -24,6 +26,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.settings.internal.R
 
 @Composable
 fun StatsScreen(
@@ -40,7 +43,7 @@ fun StatsScreen(
         modifier = modifier,
         topBar = {
             Header(
-                title = "Stats",
+                title = dictionaryString(R.string.settings_stats_header),
                 onNavigateBack = onNavigateBack
             )
         }
@@ -55,10 +58,10 @@ fun StatsScreen(
             VerticalSpacerS1200()
 
             Row {
-                Icon(spyfallIcon = SpyfallIcon.Info(""))
+                Icon(spyfallIcon = SpyfallIcon.Info(null))
                 HorizontalSpacerS200()
                 Text(
-                    text = "Note",
+                    text = dictionaryString(R.string.stats_infoNote_label),
                     typographyToken = OddOneOutTheme.typography.Body.B700,
                     color = OddOneOutTheme.colorScheme.onSurfacePrimary
                 )
@@ -68,7 +71,7 @@ fun StatsScreen(
             VerticalSpacerS500()
 
             Text(
-                text = "Games results are not collected when players vote amongst themselves instead of in the app. Because of this the stats here may not fully represent wins and losses.",
+                text = dictionaryString(R.string.stats_infoNote_body),
                 typographyToken = OddOneOutTheme.typography.Body.B700,
                 color = OddOneOutTheme.colorScheme.onSurfacePrimary
             )
@@ -76,7 +79,7 @@ fun StatsScreen(
             VerticalSpacerS1200()
 
             Text(
-                text = "Multi Device Games",
+                text = dictionaryString(R.string.stats_mutliDeviceGames_header),
                 typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
             )
 
@@ -87,7 +90,7 @@ fun StatsScreen(
                     modifier = Modifier.padding(Spacing.S1000)
                 ) {
 
-                    Text(text = "Total Games Played:")
+                    Text(text = dictionaryString(R.string.stats_totalGamesPlayed_header))
 
                     Text(
                         text = "$totalMultiDeviceGamesPlayed",
@@ -96,28 +99,40 @@ fun StatsScreen(
 
                     VerticalSpacerS800()
 
-                    Text(text = "Games You've Won:")
+                    Text(text = dictionaryString(R.string.stats_gamesYouveWon_header))
 
                     Text(
-                        text = "As Odd One Out -  $gamesWonAsOddOne",
+                        text = dictionaryString(
+                            R.string.stats_gamesYouveWonAsOddOneOut_label,
+                            mapOf("gamesWon" to gamesWonAsOddOne.toString())
+                        ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
                     Text(
-                        text = "As Player -  $gamesWonAsPlayer",
+                        text = dictionaryString(
+                            R.string.stats_gamesYouveWonAsPlayer_label,
+                            mapOf("gamesWon" to gamesWonAsPlayer.toString())
+                        ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
 
 
                     VerticalSpacerS1200()
 
-                    Text(text = "Games You've Lost:")
+                    Text(text = dictionaryString(R.string.stats_gamesYouveLost_header))
 
                     Text(
-                        text = "As Odd One Out -  $gamesLostAsOddOne",
+                        text = dictionaryString(
+                            R.string.stats_gamesYouveLostAsOddOneOut_label,
+                            mapOf("gamesLost" to gamesLostAsOddOne.toString())
+                        ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
                     Text(
-                        text = "As Player -  $gamesLostAsPlayer",
+                        text = dictionaryString(
+                            R.string.stats_gamesYouveLostAsPlayer_label,
+                            mapOf("gamesLost" to gamesLostAsPlayer.toString())
+                        ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
                 }
@@ -126,7 +141,7 @@ fun StatsScreen(
             VerticalSpacerS1200()
 
             Text(
-                text = "Single Device Games",
+                text = dictionaryString(R.string.stats_singleDeviceGames_header),
                 typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
             )
 
@@ -138,7 +153,7 @@ fun StatsScreen(
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                 ){
 
-                    Text(text = "Total Games Played:")
+                    Text(text = dictionaryString(R.string.stats_singleDeviceTotalGamesPlayed_header))
 
                     Text(
                         text = "$totalSingleDeviceGamesPlayed",

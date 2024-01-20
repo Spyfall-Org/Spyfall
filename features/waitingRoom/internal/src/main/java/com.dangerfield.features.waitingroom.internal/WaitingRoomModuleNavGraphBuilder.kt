@@ -19,10 +19,12 @@ import com.dangerfield.features.waitingroom.waitingRoomRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.floatingwindow.dialog
 import com.dangerfield.libraries.ui.showMessage
+import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 import se.ansman.dagger.auto.AutoBindIntoSet
 import oddoneout.core.Message
 import javax.inject.Inject
@@ -38,8 +40,8 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
         ) {
 
             val viewModel = hiltViewModel<WaitingRoomViewModel>()
-
             val state by viewModel.state.collectAsStateWithLifecycle()
+            val message = dictionaryString(R.string.waitinRoom_cannotLeaveGame_text)
 
             PageLogEffect(
                 route = waitingRoomRoute,
@@ -58,7 +60,7 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
                     WaitingRoomViewModel.Event.TriedToLeaveStartedGame -> {
                         showMessage(
                             message = Message(
-                                "Cannot Leave a started game",
+                                message,
                                 autoDismiss = true
                             )
                         )

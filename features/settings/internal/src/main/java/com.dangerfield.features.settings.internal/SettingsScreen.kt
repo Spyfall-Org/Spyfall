@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
@@ -33,7 +34,7 @@ fun SettingsScreen(
         modifier = modifier,
         topBar = {
             Header(
-                title = "Settings",
+                title = dictionaryString(R.string.settings_settingsScreen_header),
                 onNavigateBack = onNavigateBack
             )
         }
@@ -45,39 +46,42 @@ fun SettingsScreen(
         ) {
 
             SettingsOption(
-                text = "Theme",
+                text = dictionaryString(R.string.settings_theme_label),
                 onClick = onThemeOptionClicked,
-                leadingIcon = SpyfallIcon.Theme("Change Theme"),
+                leadingIcon = SpyfallIcon.Theme(null),
             )
 
             SettingsOption(
-                leadingIcon = SpyfallIcon.Info("About"),
-                text = "About",
+                leadingIcon = SpyfallIcon.Info(null),
+                text = dictionaryString(R.string.settings_about_label),
                 onClick = onAboutOptionClicked
             )
 
             SettingsOption(
-                text = "Contact Us",
+                text = dictionaryString(R.string.settings_contactUs_label),
                 onClick = onContactUsClicked,
-                leadingIcon = SpyfallIcon.Chat("Feedback"),
+                leadingIcon = SpyfallIcon.Chat(null),
             )
 
             SettingsOption(
-                text = "Stats",
+                text = dictionaryString(R.string.settings_stats_label),
                 onClick = onStatsClicked,
-                leadingIcon = SpyfallIcon.Graph("Stats"),
+                leadingIcon = SpyfallIcon.Graph(null),
             )
 
             if (isDebug) {
                 SettingsOption(
-                    text = "QA Menu",
+                    text = dictionaryString(R.string.settings_qaMenu_label),
                     onClick = onQaOptionClicked,
-                    leadingIcon = SpyfallIcon.Android("Feedback"),
+                    leadingIcon = SpyfallIcon.Android(null),
                 )
             }
 
             Text(
-                text = stringResource(id = R.string.app_name)+ " Version: $versionName",
+                text = dictionaryString(id = R.string.app_name) + dictionaryString(
+                    R.string.settings_version_label,
+                    mapOf("version" to versionName)
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = Spacing.S1000),

@@ -39,6 +39,10 @@ import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.analytics.LocalMetricsTracker
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.coreflowroutines.observeWithLifecycle
+import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
+import com.dangerfield.libraries.dictionary.LanguageSupportLevel
+import com.dangerfield.libraries.dictionary.LocalDictionary
 import com.dangerfield.libraries.navigation.fadeInToEndAnim
 import com.dangerfield.libraries.navigation.fadeInToStartAnim
 import com.dangerfield.libraries.navigation.fadeOutToEndAnim
@@ -58,6 +62,7 @@ import com.dangerfield.libraries.ui.components.toSnackbarData
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneout.navigation.NavBuilderRegistry
 import kotlinx.coroutines.flow.receiveAsFlow
+import oddoneout.core.Message
 import oddoneout.core.UserMessagePresenter
 import spyfallx.ui.color.background
 
@@ -71,9 +76,11 @@ fun OddOneOutApp(
     networkMonitor: NetworkMonitor,
     adsConfig: AdsConfig,
     metricsTracker: MetricsTracker,
+    dictionary: Dictionary,
     appState: AppState = rememberAppState(networkMonitor = networkMonitor),
     isUpdateRequired: Boolean,
-    hasBlockingError: Boolean
+    hasBlockingError: Boolean,
+    languageSupportLevel: LanguageSupportLevel?
 ) {
     val navController = rememberNavController(FloatingWindowNavigator())
     val coroutineScope = rememberCoroutineScope()
@@ -87,6 +94,24 @@ fun OddOneOutApp(
         DarkModeConfig.System -> isDeviceInDarkMode
         DarkModeConfig.Dark -> true
         DarkModeConfig.Light -> false
+    }
+
+    LaunchedEffect(languageSupportLevel) {
+        if (languageSupportLevel is LanguageSupportLevel.NotSupported) {
+            UserMessagePresenter.showMessage(
+                Message(
+                    message = "We currently do not support ${languageSupportLevel.locale.displayName}. So sorry about that.",
+                    autoDismiss = false
+                )
+            )
+        } else if (languageSupportLevel is LanguageSupportLevel.PartiallySupported) {
+            UserMessagePresenter.showMessage(
+                Message(
+                    message = "We are currently working on supporting your device's language. Please feel free to let us know if we got something wrong.",
+                    autoDismiss = false
+                )
+            )
+        }
     }
 
     LaunchedEffect(shouldShowDarkMode, isDeviceInDarkMode) {
@@ -122,7 +147,8 @@ fun OddOneOutApp(
     // TODO add maintainence mode
     CompositionLocalProvider(
         LocalAdsConfig provides adsConfig,
-        LocalMetricsTracker provides metricsTracker
+        LocalMetricsTracker provides metricsTracker,
+        LocalDictionary provides dictionary,
     ) {
         OddOneOutTheme(
             isDarkMode = shouldShowDarkMode,

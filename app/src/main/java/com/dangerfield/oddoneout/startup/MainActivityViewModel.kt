@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
+import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
+import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.EnsureSessionLoaded
@@ -34,10 +36,18 @@ class MainActivityViewModel @Inject constructor(
     private val ensureAppConfigLoaded: EnsureAppConfigLoaded,
     private val ensureSessionLoaded: EnsureSessionLoaded,
     private val isAppUpdateRequired: IsAppUpdateRequired,
-    private val sessionFlow: SessionFlow
+    private val sessionFlow: SessionFlow,
+    private val getLanguageSupportLevel: GetDeviceLanguageSupportLevel
 ) : SEAViewModel<State, Unit, Action>() {
 
-    override val initialState = State.Loading
+    override val initialState = State(
+        isUpdateRequired = false,
+        accentColor = ThemeColor.entries.random().colorPrimitive,
+        darkModeConfig = DarkModeConfig.System,
+        isBlockingLoad = true,
+        hasBlockingError = false,
+        languageSupportLevel = null
+    )
 
     init {
         takeAction(Action.LoadApp)
@@ -51,21 +61,27 @@ class MainActivityViewModel @Inject constructor(
 
     private suspend fun loadApp() {
         tryWithTimeout(10.seconds) {
-            startUpTasks.awaitAll().failFast()
+            requiredStartupTasks.awaitAll().failFast()
         }
             .logOnError()
             .onFailure {
-                updateState { State.Error }
+                updateState {
+                    it.copy(
+                        hasBlockingError = true,
+                        isBlockingLoad = false
+                    )
+                }
             }
             .onSuccess {
                 val session = sessionFlow.first()
                 val colorPrimitive = getSessionColorPrimitive(session.user.themeConfig)
 
                 updateState {
-                    State.Loaded(
-                        isUpdateRequired = isAppUpdateRequired().first(),
+                    it.copy(
+                        isBlockingLoad = false,
                         accentColor = colorPrimitive,
-                        darkModeConfig = session.user.themeConfig.darkModeConfig
+                        darkModeConfig = session.user.themeConfig.darkModeConfig,
+                        languageSupportLevel = null
                     )
                 }
 
@@ -76,7 +92,18 @@ class MainActivityViewModel @Inject constructor(
                 viewModelScope.launch {
                     listenForConfigUpdates()
                 }
+
+                viewModelScope.launch {
+                    getLanguageSupport()
+                }
             }
+    }
+
+    private suspend fun getLanguageSupport() {
+        val languageSupportLevel = getLanguageSupportLevel()
+        updateState {
+            it.copy(languageSupportLevel = languageSupportLevel)
+        }
     }
 
     private suspend fun listenForConfigUpdates() {
@@ -86,19 +113,15 @@ class MainActivityViewModel @Inject constructor(
             .collectLatest { config ->
                 val colorPrimitive = getSessionColorPrimitive(config)
                 updateState { state ->
-                    if (state is State.Loaded) {
-                        state.copy(
-                            accentColor = colorPrimitive,
-                            darkModeConfig = config.darkModeConfig
-                        )
-                    } else {
-                        state
-                    }
+                    state.copy(
+                        accentColor = colorPrimitive,
+                        darkModeConfig = config.darkModeConfig
+                    )
                 }
             }
     }
 
-    private suspend fun getSessionColorPrimitive(themeConfig: ThemeConfig): ColorPrimitive {
+    private fun getSessionColorPrimitive(themeConfig: ThemeConfig): ColorPrimitive {
         val initialColorConfig = themeConfig.colorConfig
         val colorPrimitive = if (initialColorConfig is ColorConfig.Specific) {
             initialColorConfig.color.colorPrimitive
@@ -113,17 +136,14 @@ class MainActivityViewModel @Inject constructor(
             isAppUpdateRequired()
                 .distinctUntilChanged()
                 .collectLatest { isUpdateRequired ->
-                val state = state.value
-                if (state is State.Loaded) {
                     updateState {
-                        state.copy(isUpdateRequired = isUpdateRequired)
+                        it.copy(isUpdateRequired = isUpdateRequired)
                     }
                 }
-            }
         }
     }
 
-    private val CoroutineScope.startUpTasks: List<Deferred<Try<Unit>>>
+    private val CoroutineScope.requiredStartupTasks: List<Deferred<Try<Unit>>>
         get() = listOf(
             async { ensureSessionLoaded() },
             async { ensureAppConfigLoaded() }
@@ -133,15 +153,12 @@ class MainActivityViewModel @Inject constructor(
         data object LoadApp : Action()
     }
 
-    sealed class State {
-        data class Loaded(
-            val isUpdateRequired: Boolean,
-            val accentColor: ColorPrimitive,
-            val darkModeConfig: DarkModeConfig
-        ) : State()
-
-        data object Loading : State()
-
-        data object Error : State()
-    }
+    data class State(
+        val isBlockingLoad: Boolean,
+        val isUpdateRequired: Boolean,
+        val accentColor: ColorPrimitive,
+        val darkModeConfig: DarkModeConfig,
+        val hasBlockingError: Boolean,
+        val languageSupportLevel: LanguageSupportLevel?
+    )
 }

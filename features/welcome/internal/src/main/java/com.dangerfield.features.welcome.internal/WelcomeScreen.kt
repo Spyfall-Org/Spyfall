@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.Screen
@@ -23,11 +24,11 @@ import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.IconButton.Size.Medium
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.welcome.internal.R
 
 @Composable
-@Suppress("MagicNumber")
 fun WelcomeScreen(
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
@@ -44,7 +45,6 @@ fun WelcomeScreen(
 }
 
 @Composable
-@Suppress("MagicNumber")
 private fun WelcomeScreenContent(
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
@@ -62,20 +62,21 @@ private fun WelcomeScreenContent(
                 Spacer(modifier = Modifier.weight(1f))
 
                 IconButton(
-                    icon = SpyfallIcon.Settings("settings"),
+                    icon = SpyfallIcon.Settings(""),
                     onClick = onSettingsClicked,
                     size = Medium,
                     modifier = Modifier.padding(Spacing.S800),
                 )
             }
             Text(
-                text = "Welcome to",
+                text = dictionaryString(R.string.welcome_intro_header),
                 typographyToken = OddOneOutTheme.typography.Display.D1200.Bold,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
             )
+
             Text(
-                text = stringResource(id = R.string.app_name),
+                text = dictionaryString(R.string.app_name),
                 typographyToken = OddOneOutTheme.typography.Display.D1200.Bold,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
@@ -93,7 +94,7 @@ private fun WelcomeScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     type = ButtonType.Accent
                 ) {
-                    Text(text = "New Game")
+                    Text(text = dictionaryString(R.string.welcome_newGame_action))
                 }
 
                 Spacer(modifier = Modifier.height(Spacing.S1000))
@@ -103,41 +104,29 @@ private fun WelcomeScreenContent(
                     onClick = onJoinGameClicked,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Join Game")
+                    Text(text = dictionaryString(R.string.joinGame_join_action))
                 }
 
                 Spacer(modifier = Modifier.height(Spacing.S1000))
 
                 Button(
-                    icon = SpyfallIcon.Info("Open Rules"),
+                    icon = SpyfallIcon.Info(null),
                     onClick = onRulesClicked,
                     style = ButtonStyle.NoBackground
                 ) {
-                    Text(text = "Rules")
+                    Text(text = dictionaryString(R.string.welcome_rules_action))
                 }
             }
+
             Spacer(modifier = Modifier.height(Spacing.S1000))
         }
     }
 }
 
 @Composable
-@Preview
+@ThemePreviews
 private fun PreviewWelcomeScreen() {
     PreviewContent {
-        WelcomeScreenContent(
-            onNewGameClicked = {},
-            onJoinGameClicked = {},
-            onSettingsClicked = {},
-            onRulesClicked = {},
-        )
-    }
-}
-
-@Composable
-@Preview
-private fun PreviewWelcomeScreenDark() {
-    PreviewContent(isDarkMode = true) {
         WelcomeScreenContent(
             onNewGameClicked = {},
             onJoinGameClicked = {},

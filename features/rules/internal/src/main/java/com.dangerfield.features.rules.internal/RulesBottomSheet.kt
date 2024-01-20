@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
@@ -23,6 +25,7 @@ import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.text.BoldPrefixedText
 import com.dangerfield.libraries.ui.components.text.BulletRow
+import com.dangerfield.oddoneoout.features.rules.internal.R
 
 @Composable
 fun RulesBottomSheet(
@@ -37,7 +40,7 @@ fun RulesBottomSheet(
         showCloseButton = true,
         topAccessory = dragHandleTopAccessory(),
         topContent = {
-            Text(text = "Rules")
+            Text(text = dictionaryString(R.string.rules_bottomSheet_header))
         },
         content = {
             RulesContent()
@@ -50,10 +53,10 @@ private fun RulesContent() {
     ScrollingColumnWithFadingEdge(
         Modifier.padding(horizontal = Spacing.S800)
     ) {
-        Body(text = "Odd one out is a game of deception, misdirection, and deduction.")
+        Body(text = dictionaryString(R.string.rules_tagline_text))
         VerticalSpacerS800()
 
-        Section(title = "Overview:") {
+        Section(title = dictionaryString(R.string.rules_overview_label)) {
             Body(text = "At the start of the game all players are given a role at secret location, except for one player who is left in the dark (the odd one out).\n\nPlayers take turns asking each other questions about the location and their role in order to identify the odd one out without revealing the location to them.\n\nThe odd one out must play along, pretending to know the location while trying to deduce it without being discovered as the odd one out.")
         }
 

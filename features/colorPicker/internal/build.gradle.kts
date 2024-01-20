@@ -18,6 +18,7 @@ dependencies {
     implementation(projects.features.colorPicker)
     implementation(projects.libraries.flowroutines)
     implementation(projects.libraries.ui)
+    implementation(projects.libraries.dictionary)
     implementation(projects.libraries.resources)
     implementation(libs.lottie.compose)
     implementation(projects.libraries.navigation)
