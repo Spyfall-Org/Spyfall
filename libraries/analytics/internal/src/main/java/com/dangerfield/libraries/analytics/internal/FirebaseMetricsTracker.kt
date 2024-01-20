@@ -133,7 +133,6 @@ class FirebaseMetricsTracker @Inject constructor(
         private const val PAGE_TYPE = "page_type"
         private const val PLATFORM = "platform"
         private const val APP_VERSION = "app_version"
-        private const val DEBUG = "debug"
         private const val PLATFORM_ANDROID = "android"
     }
 }
