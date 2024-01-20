@@ -27,6 +27,8 @@ class FirebaseOverrideDictionaryDataSource
     /**
      * Gets the locale running in the app. Not necessarily the devices locale
      * The locale used depends on which locales we have support for in resources
+     *
+     * TODO the dictionaries
      */
     private val locale: Locale
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -38,31 +40,31 @@ class FirebaseOverrideDictionaryDataSource
     private val localeString: String
         get() = locale.language
 
-    // TODO consider exposing a flow and using a document observer to observe changes
+    // TODO this document contains support levels for each languge. Consider cahcing the result here
+    // or changing things so that it can be returned here
     override suspend fun getDictionary(): Try<OverrideDictionary> = Try {
-        val localeCollection = "$DICTIONARY_COLLECTION_KEY-$localeString"
-
         Timber.d("Fetching dictionary for ${buildInfo.versionName} with locale: $localeString")
 
-        val dictionaryMap = firebaseFirestore.collection(localeCollection)
+        val localeDictionaryMap = firebaseFirestore.collection(DICTIONARY_COLLECTION_KEY)
             .document(buildInfo.versionName)
             .get()
             .await()
             .data
-            ?.mapNotNull { entry ->
-                val value = Try { entry.value as? String }.getOrNull()
-                value?.let { entry.key to it }
+            ?.get(localeString)
+            ?.let {
+                Try {
+                    it as Map<String, String>
+                }.getOrNull()
             }
-            ?.toMap()
             .orEmpty()
 
         OverrideDictionary(
-            map = dictionaryMap,
+            map = localeDictionaryMap,
             context = applicationContext
         )
     }
 
     companion object {
-        private const val DICTIONARY_COLLECTION_KEY = "dictionary-overrides-android"
+        internal const val DICTIONARY_COLLECTION_KEY = "dictionary-overrides-android"
     }
 }

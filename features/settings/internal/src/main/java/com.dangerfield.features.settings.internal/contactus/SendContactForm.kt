@@ -24,7 +24,7 @@ class SendContactForm @Inject constructor(
         return withBackoffRetry(retries = 3) {
             Try {
                 firebaseFirestore
-                    .collection("contactForms")
+                    .collection("contact-forms")
                     .document(UUID.randomUUID().toString())
                     .set(
                         hashMapOf(
@@ -36,6 +36,8 @@ class SendContactForm @Inject constructor(
                             "uid" to session.user.id,
                             "sessionId" to session.sessionId,
                             "languageCode" to session.user.languageCode,
+                            "languageCode" to session.user.languageCode,
+                            "isResolved" to false
                         )
                     )
                     .await()

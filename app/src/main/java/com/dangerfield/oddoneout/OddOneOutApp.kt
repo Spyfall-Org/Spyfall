@@ -43,6 +43,7 @@ import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LocalDictionary
+import com.dangerfield.libraries.dictionary.internal.ui.navigateToLanguageSupportDialog
 import com.dangerfield.libraries.navigation.fadeInToEndAnim
 import com.dangerfield.libraries.navigation.fadeInToStartAnim
 import com.dangerfield.libraries.navigation.fadeOutToEndAnim
@@ -96,24 +97,6 @@ fun OddOneOutApp(
         DarkModeConfig.Light -> false
     }
 
-    LaunchedEffect(languageSupportLevel) {
-        if (languageSupportLevel is LanguageSupportLevel.NotSupported) {
-            UserMessagePresenter.showMessage(
-                Message(
-                    message = "We currently do not support ${languageSupportLevel.locale.displayName}. So sorry about that.",
-                    autoDismiss = false
-                )
-            )
-        } else if (languageSupportLevel is LanguageSupportLevel.PartiallySupported) {
-            UserMessagePresenter.showMessage(
-                Message(
-                    message = "We are currently working on supporting your device's language. Please feel free to let us know if we got something wrong.",
-                    autoDismiss = false
-                )
-            )
-        }
-    }
-
     LaunchedEffect(shouldShowDarkMode, isDeviceInDarkMode) {
         setStatusBarColor(context = context, shouldBeDark = shouldShowDarkMode)
     }
@@ -129,6 +112,20 @@ fun OddOneOutApp(
         isUpdateRequired -> forcedUpdateNavigationRoute
         hasBlockingError -> blockingErrorRoute
         else -> welcomeNavigationRoute
+    }
+
+
+    LaunchedEffect(languageSupportLevel) {
+        val shouldShowLanguageSupportMessage =
+            languageSupportLevel is LanguageSupportLevel.NotSupported
+                    || languageSupportLevel is LanguageSupportLevel.PartiallySupported
+
+        if (languageSupportLevel != null && shouldShowLanguageSupportMessage) {
+            router.navigateToLanguageSupportDialog(
+                supportLevelName = languageSupportLevel.name,
+                languageDisplayName = languageSupportLevel.locale.displayLanguage
+            )
+        }
     }
 
     LaunchedEffect(Unit) {
