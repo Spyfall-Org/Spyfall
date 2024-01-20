@@ -20,8 +20,10 @@ import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
 import com.dangerfield.libraries.coreflowroutines.launchOnStart
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.oddoneoout.features.newgame.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
@@ -45,6 +47,7 @@ class NewGameViewModel @Inject constructor(
     private val createMultiDeviceGameGameUseCase: CreateGame,
     private val createSingleDeviceGameUseCase: CreateSingleDeviceGame,
     private val gameConfig: GameConfig,
+    private val dictionary: Dictionary,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
     private val newGameMetricsTracker: NewGameMetricsTracker
 ) : ViewModel() {
@@ -202,10 +205,16 @@ class NewGameViewModel @Inject constructor(
 
     private suspend fun FlowCollector<State>.handleUpdateName(name: String) {
         val nameState = when {
-            name.isEmpty() -> Invalid(name, "Name cannot be blank")
+            name.isEmpty() -> Invalid(name, dictionary.getString(R.string.newGame_blankNameError_text))
             name.length !in gameConfig.minNameLength..gameConfig.maxNameLength -> Invalid(
                 name,
-                "Name must be between ${gameConfig.minNameLength}-${gameConfig.maxNameLength} characters"
+                dictionary.getString(
+                    R.string.newGame_nameLengthError_text,
+                    mapOf(
+                        "min" to gameConfig.minNameLength.toString(),
+                        "max" to gameConfig.maxNameLength.toString()
+                    )
+                )
             )
 
             else -> Valid(name)
@@ -222,7 +231,7 @@ class NewGameViewModel @Inject constructor(
             } else {
                 Invalid(
                     link,
-                    "This link is not from one our recognized platforms, Click the info button for more info"
+                    dictionary.getString(R.string.newGame_invalidLinkError_text)
                 )
             }
             it.copy(videoCallLinkState = videoCallLinkState)
@@ -245,23 +254,21 @@ class NewGameViewModel @Inject constructor(
             // we only allow the user to type 2 digits
             val truncatedNumber = numOfPlayers.take(2)
 
-            val numberOfPlayersState = when {
-                truncatedNumber.toIntOrNull() == null -> {
-                    Invalid(
-                        truncatedNumber,
-                        "Invalid Number of players. Please type in a number between ${gameConfig.minPlayers} and ${gameConfig.maxPlayers}."
+            val numberOfPlayersState = if (truncatedNumber.toIntOrNull() == null ||
+                truncatedNumber.toInt() !in gameConfig.minPlayers..gameConfig.maxPlayers
+            ) {
+                Invalid(
+                    truncatedNumber,
+                    dictionary.getString(
+                        R.string.newGame_invalidNumOfPlayersError_text,
+                        mapOf(
+                            "min" to gameConfig.minPlayers.toString(),
+                            "max" to gameConfig.maxPlayers.toString()
+                        )
                     )
-                }
-
-                truncatedNumber.toInt() !in gameConfig.minPlayers..gameConfig.maxPlayers -> {
-                    Invalid(
-                        truncatedNumber,
-                        "Games can only have between ${gameConfig.minTimeLimit}-${gameConfig.maxTimeLimit} players."
-                    )
-                }
-
-                else -> Valid(truncatedNumber)
+                )
             }
+            else Valid(truncatedNumber)
 
             it.copy(numberOfPlayersState = numberOfPlayersState)
 
@@ -271,23 +278,21 @@ class NewGameViewModel @Inject constructor(
         // we only allow the user to type 2 digits
         val truncatedNumber = timeLimit.take(2)
 
-        val timeLimitState = when {
-            truncatedNumber.toIntOrNull() == null -> {
-                Invalid(
-                    truncatedNumber,
-                    "Invalid time limit. Please type in a number between ${gameConfig.minTimeLimit} and ${gameConfig.maxTimeLimit}."
+        val timeLimitState = if (truncatedNumber.toInt() !in gameConfig.minTimeLimit..gameConfig.maxTimeLimit ||
+            truncatedNumber.toIntOrNull() == null
+        ) {
+            Invalid(
+                truncatedNumber,
+                dictionary.getString(
+                    R.string.newGame_invalidTimeLimit_text,
+                    mapOf(
+                        "min" to gameConfig.minTimeLimit.toString(),
+                        "max" to gameConfig.maxTimeLimit.toString()
+                    )
                 )
-            }
-
-            truncatedNumber.toInt() !in gameConfig.minTimeLimit..gameConfig.maxTimeLimit -> {
-                Invalid(
-                    truncatedNumber,
-                    "The game must be between ${gameConfig.minTimeLimit}-${gameConfig.maxTimeLimit} mins."
-                )
-            }
-
-            else -> Valid(truncatedNumber)
+            )
         }
+        else Valid(truncatedNumber)
 
         updateState {
             it.copy(timeLimitState = timeLimitState)
@@ -308,7 +313,8 @@ class NewGameViewModel @Inject constructor(
                 }
             }
             if (updatedPacks.none { it.isSelected }) {
-                state.copy(packsState = Invalid(updatedPacks, "You must select at least one pack"))
+                state.copy(packsState = Invalid(updatedPacks,
+                    dictionary.getString(R.string.newGame_noPacksSelectedError_text)))
             } else {
                 state.copy(packsState = Valid(updatedPacks))
             }

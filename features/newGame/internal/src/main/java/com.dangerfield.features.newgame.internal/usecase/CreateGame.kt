@@ -35,12 +35,6 @@ class CreateGame @Inject constructor(
     private val clearActiveGame: ClearActiveGame
 ) {
 
-    // TODO
-    /*
-    add errors for
-    bad link
-     */
-
     suspend operator fun invoke(
         userName: String,
         packs: List<Pack>,

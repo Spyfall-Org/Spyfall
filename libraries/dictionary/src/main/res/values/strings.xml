@@ -83,4 +83,7 @@ If the device language is not supported we show a dialog explaining our support 
     <string name="contatUs_feedback_label">Feedback</string>
     <string name="contactUs_suggestion_label">Suggestion</string>
     <string name="contactUs_other_label">Other</string>
+    <string name="app_somethingWentWrong_text">Something went wrong</string>
+    <string name="newGame_createGameError_body">We\'re sorry, something seems to have gone wrong creating this game, please try again</string>
+    <string name="newGame_createGame_action">Create Game</string>
 </resources>

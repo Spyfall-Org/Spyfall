@@ -1,5 +1,7 @@
 package com.dangerfield.features.newgame.internal.usecase
 
+import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
@@ -11,6 +13,7 @@ import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
+import com.dangerfield.oddoneoout.features.newgame.internal.R
 import oddoneout.core.Try
 import oddoneout.core.developerSnackIfDebug
 import java.time.Clock
@@ -27,6 +30,7 @@ class CreateSingleDeviceGame @Inject constructor(
     private val updateActiveGame: UpdateActiveGame,
     private val clearActiveGame: ClearActiveGame,
     private val session: Session,
+    private val dictionary: Dictionary
 ) {
 
     suspend operator fun invoke(
@@ -46,7 +50,7 @@ class CreateSingleDeviceGame @Inject constructor(
         val host = Player(
             id = userId,
             role = null,
-            userName = "Player 1",
+            userName = "${dictionary.getString(R.string.app_player_text)} 1",
             isHost = true,
             isOddOneOut = false,
             votedCorrectly = null
@@ -68,7 +72,12 @@ class CreateSingleDeviceGame @Inject constructor(
         val oddOneOutIndex = players.indices.random()
 
         val playersWithRoles = players.mapIndexed { index, player ->
-            val role = if (index == oddOneOutIndex) "The Odd One Out" else shuffledRoles[index]
+            val role = if (index == oddOneOutIndex) {
+                dictionary.getString(R.string.app_theOddOneOutRole_text)
+            } else {
+                shuffledRoles[index]
+            }
+
             player.copy(role = role, isOddOneOut = index == oddOneOutIndex)
         }
 

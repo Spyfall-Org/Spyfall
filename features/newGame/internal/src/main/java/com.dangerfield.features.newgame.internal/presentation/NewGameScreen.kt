@@ -24,9 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.features.newgame.internal.presentation.model.FieldState
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.preview.PreviewContent
@@ -48,6 +50,7 @@ import com.dangerfield.libraries.ui.isOpen
 import com.dangerfield.libraries.ui.rememberKeyboardState
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.oddoneoout.features.newgame.internal.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -98,7 +101,7 @@ fun NewGameScreen(
             modifier = modifier,
             topBar = {
                 Header(
-                    title = "New Game",
+                    title = dictionaryString(R.string.newGame_newGameScreen_header),
                     onNavigateBack = onNavigateBack,
                     liftOnScroll = true,
                     scrollState = scrollState
@@ -209,7 +212,7 @@ fun NewGameScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Create Game")
+                        Text(text = dictionaryString(R.string.newGame_createGame_action))
                     }
                 }
 
@@ -283,10 +286,10 @@ private fun PacksField(
                 modifier = Modifier.weight(1f)
             ) {
                 AsteriskText {
-                    Text(text = "Packs:")
+                    Text(text = dictionaryString(R.string.newGame_packs_header))
                 }
                 Text(
-                    text = "Choose which packs you want to play with",
+                    text = dictionaryString(R.string.newGame_packsDescription_text),
                     typographyToken = OddOneOutTheme.typography.Body.B500
                 )
             }
@@ -294,11 +297,11 @@ private fun PacksField(
             HorizontalSpacerS600()
 
             IconButton(
-                icon = SpyfallIcon.Info("Packs Information"),
+                icon = SpyfallIcon.Info(dictionaryString(R.string.newGame_packsInfo_a11y)),
                 onClick = onPacksInfoClicked
             )
         }
-        
+
         VerticalSpacerS500()
 
         if (isLoading) {
@@ -323,10 +326,10 @@ private fun SingleDeviceField(
     Row {
         Column(Modifier.weight(1f)) {
             Text(
-                text = "Single Device Mode",
+                text = dictionaryString(R.string.newGame_singelDevice_label),
             )
             Text(
-                text = "Pass the device around to each player",
+                text = dictionaryString(R.string.newGame_singleDeviceDescription_text),
                 typographyToken = OddOneOutTheme.typography.Body.B500
             )
         }
@@ -348,11 +351,11 @@ private fun GameLengthField(
         Column(Modifier.weight(1f)) {
             AsteriskText {
                 Text(
-                    text = "Game Length:",
+                    text = dictionaryString(R.string.newGame_gameLength_hader),
                 )
             }
             Text(
-                text = "How many minutes should each round last:",
+                text = dictionaryString(R.string.newGame_gameLengthDescription_text),
                 typographyToken = OddOneOutTheme.typography.Body.B500,
             )
         }
@@ -383,7 +386,7 @@ private fun NumOfPlayersField(
         Column(modifier = Modifier.weight(1f)) {
             AsteriskText {
                 Text(
-                    text = "Number of players",
+                    text = dictionaryString(R.string.newGame_numOfPlayers_header),
                 )
             }
         }
@@ -396,7 +399,14 @@ private fun NumOfPlayersField(
             value = numOfPlayersState.backingValue.orEmpty(),
             onValueChange = onNumOfPlayersUpdated,
             placeholder = {
-                Text(text = "$minPlayers-$maxPlayers")
+                Text(
+                    text = dictionaryString(
+                        id = R.string.newGame_numOfPlayers_hint, mapOf(
+                            "min" to minPlayers.toString(),
+                            "max" to maxPlayers.toString()
+                        )
+                    )
+                )
             },
             singleLine = true
         )
@@ -410,7 +420,7 @@ private fun UserNameField(
 ) {
     Column {
         AsteriskText {
-            Text(text = "User Name:")
+            Text(text = dictionaryString(R.string.newGame_userName_header))
         }
 
         OutlinedTextField(
@@ -419,7 +429,7 @@ private fun UserNameField(
             value = nameState.backingValue.orEmpty(),
             onValueChange = onNameUpdated,
             placeholder = {
-                Text(text = "Pick a user name:")
+                Text(text = dictionaryString(R.string.newGame_userName_hint))
             },
             singleLine = true
         )
@@ -438,10 +448,10 @@ private fun VideoCallLink(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Video Call Link:",
+                    text = dictionaryString(R.string.newGame_videoCall_header),
                 )
                 Text(
-                    text = "Past a video call link if you have one:",
+                    text = dictionaryString(R.string.newGame_videCallDescription_text),
                     typographyToken = OddOneOutTheme.typography.Body.B500
                 )
             }
@@ -449,7 +459,7 @@ private fun VideoCallLink(
             HorizontalSpacerS600()
 
             IconButton(
-                icon = SpyfallIcon.Info("Video Call Link Information"),
+                icon = SpyfallIcon.Info(dictionaryString(R.string.newGame_videoLinkInfo_a11y)),
                 onClick = onVideoCallLinkInfoClicked
             )
         }

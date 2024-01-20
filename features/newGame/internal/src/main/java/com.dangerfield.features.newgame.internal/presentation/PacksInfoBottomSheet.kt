@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.navigation.route
@@ -26,6 +28,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValu
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.newgame.internal.R
 
 @Composable
 fun PacksInfoBottomSheet(
@@ -45,12 +48,12 @@ fun PacksInfoBottomSheet(
         state = bottomSheetState,
         modifier = modifier,
         topContent = {
-            Text(text = "Choose your packs")
+            Text(text = dictionaryString(R.string.newGame_packsInfo_header))
         },
         content = {
             ScrollingColumnWithFadingEdge {
                 Text(
-                    text = "Each pack comes with a list of locations that may be chosen for your game. You can choose as many packs as you'd like.",
+                    text = dictionaryString(R.string.packsInfo_packsDescription_text),
                 )
                 if (packs.isNotEmpty()) {
                     VerticalSpacerS800()
@@ -62,7 +65,7 @@ fun PacksInfoBottomSheet(
                             data = pack.locations
                         ) { _, item ->
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                Text(text = "•")
+                                Text(text = dictionaryString(R.string.packsInfo_bulletPoint_text))
                                 HorizontalSpacerS600()
                                 Text(text = item.name)
                             }
@@ -82,7 +85,7 @@ fun PacksInfoBottomSheet(
                     .padding(Spacing.S800),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
-                Text(text = "Okay")
+                Text(text = dictionaryString(id = R.string.app_okay_action))
             }
         }
     )
