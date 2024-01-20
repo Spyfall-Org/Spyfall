@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-<!--    !!!IMPORTANT!!!:-->
-<!--    Each strings.xml should have this at the top of the file. It is used to determine-->
-<!--    which locale is being used in the app, to compare against the device locale so we can-->
-<!--    tell if we are supporting the device locale or not-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--IMPORTANT: This must be at the top of each strings.xml file:
+When launching the app we compare the devices set language against the
+language being shown to the user in app (which is determined by the appLanguageCode below)
+If the device language is not supported we show a dialog explaining our support level
+-->
     <string name="appLanguageCode">en</string>
 
     <string name="app_name">Odd One Out</string>
@@ -81,8 +83,4 @@
     <string name="contatUs_feedback_label">Feedback</string>
     <string name="contactUs_suggestion_label">Suggestion</string>
     <string name="contactUs_other_label">Other</string>
-    <string name="languageSupport_unsupportedDialog_body">Unfortunately we do not have support for {language} yet.\n\nIf you would like to help us translate and add support for this language please reach out to us using the contact form in settings. Thank you!</string>
-    <string name="languageSupport_partialSupportDialog_body">We are currently working on improving our support for {language}.\n\nSome of the words you see may not be perfectly translated. If you see any mistakes please let us know by using the contact form in settings. Thank you!</string>
-    <string name="languageSupport_dialog_header">Do you speak {language}?</string>
-
 </resources>

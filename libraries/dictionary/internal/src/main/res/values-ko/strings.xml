@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="languageSupport_unsupportedDialog_body">죄송합니다. 현재 {language}을(를) 지원하지 않습니다.\n\n만약 이 언어를 번역하고 지원에 도움을 주고 싶으시다면, 애플리케이션 설정의 연락처 양식을 통해 연락 주시기 바랍니다. 감사합니다\!</string>
+    <string name="languageSupport_partialSupportDialog_body">{language} 지원을 개선 중입니다.\n\n보이는 일부 단어는 완벽하게 번역되지 않을 수 있습니다. 오류를 발견하신 경우, 애플리케이션 설정의 연락처 양식을 사용하여 알려 주시기 바랍니다. 감사합니다\!</string>
+    <string name="languageSupport_dialog_header">{language}을(를) 구사하십니까?</string>
+    <string name="languageSupport_okay_label">확인</string>
+</resources>

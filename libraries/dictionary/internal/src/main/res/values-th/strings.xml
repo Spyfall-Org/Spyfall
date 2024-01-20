@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="languageSupport_unsupportedDialog_body">เสียใจด้วย เรายังไม่รองรับ {language} ในขณะนี้\n\nหากคุณต้องการช่วยแปลและเพิ่มการสนับสนุนสำหรับภาษานี้ โปรดติดต่อเราผ่านแบบฟอร์มติดต่อในการตั้งค่าแอปพลิเคชัน ขอบคุณครับ/ค่ะ\!</string>
+    <string name="languageSupport_partialSupportDialog_body">เรากำลังทำการปรับปรุงการรองรับสำหรับ {language} อยู่ครับ/ค่ะ\n\nบางคำที่คุณเห็นอาจจะไม่ได้ถูกแปลอย่างสมบูรณ์ หากคุณพบข้อผิดพลาดกรุณาแจ้งให้เราทราบผ่านแบบฟอร์มติดต่อในการตั้งค่าแอปพลิเคชัน ขอบคุณครับ/ค่ะ\!</string>
+    <string name="languageSupport_dialog_header">คุณพูดภาษา {language} ได้หรือไม่?</string>
+    <string name="languageSupport_okay_label">ตกลง</string>
+</resources>

@@ -5,7 +5,7 @@ import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.internal.FirebaseOverrideDictionaryDataSource.Companion.DICTIONARY_COLLECTION_KEY
 import com.dangerfield.libraries.dictionary.supportLevelNameMap
-import com.dangerfield.oddoneoout.libraries.dictionary.R
+import com.dangerfield.oddoneoout.libraries.dictionary.internal.R
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await

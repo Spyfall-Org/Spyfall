@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="languageSupport_unsupportedDialog_body">Lamentablemente aún no tenemos soporte para {language}.\n\nSi deseas ayudarnos a traducir y agregar soporte para este idioma, por favor contáctanos utilizando el formulario de contacto en los ajustes de la aplicación. ¡Gracias\!</string>
+
+    <string name="languageSupport_partialSupportDialog_body">Actualmente estamos trabajando en mejorar nuestro soporte para {language}.\n\nAlgunas de las palabras que veas pueden no estar traducidas perfectamente. Si notas algún error, por favor háznoslo saber utilizando el formulario de contacto en los ajustes de la aplicación. ¡Gracias\!</string>
+
+    <string name="languageSupport_dialog_header">¿Hablas {language}?</string>
+
+    <string name="languageSupport_okay_label">Okay</string>
+
+</resources>

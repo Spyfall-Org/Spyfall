@@ -36,7 +36,7 @@ class ModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
                 type = PageType.Dialog,
                 extras = bundleOf(
                     "language" to language,
-                    "supportLevelName" to supportLevelName
+                    "supportLevel" to supportLevelName
                 )
             )
 

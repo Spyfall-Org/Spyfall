@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="languageSupport_unsupportedDialog_body">Malheureusement, nous ne prenons pas encore en charge {language}.\n\nSi vous souhaitez nous aider à traduire et ajouter une prise en charge pour cette langue, veuillez nous contacter en utilisant le formulaire de contact dans les paramètres de l\'application. Merci \!</string>
+    <string name="languageSupport_partialSupportDialog_body">Nous travaillons actuellement à améliorer notre prise en charge pour {language}.\n\nCertains des mots que vous voyez peuvent ne pas être parfaitement traduits. Si vous remarquez des erreurs, veuillez nous en informer en utilisant le formulaire de contact dans les paramètres de l\'application. Merci \!</string>
+    <string name="languageSupport_dialog_header">Parlez-vous {language} ?</string>
+    <string name="languageSupport_okay_label">D\'accord</string>
+</resources>
