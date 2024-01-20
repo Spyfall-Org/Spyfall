@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.features.videoCall)
     implementation(projects.libraries.game)
     implementation(projects.libraries.analytics)
+    implementation(projects.libraries.dictionary)
     implementation(projects.features.gamePlay)
     implementation(projects.features.ads)
     implementation(projects.features.ads.ui)

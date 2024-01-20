@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
@@ -33,6 +34,7 @@ import com.dangerfield.libraries.ui.components.text.InputField
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.oddoneoout.features.joingame.internal.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -103,7 +105,7 @@ private fun JoinGameScreenContent(
     Screen(
         topBar = {
             Header(
-                title = "Join Game",
+                title = dictionaryString(R.string.joinGame_joinGameScreen_header),
                 onNavigateBack = onNavigateBack
             )
         }
@@ -117,8 +119,13 @@ private fun JoinGameScreenContent(
             VerticalSpacerS1200()
 
             InputField(
-                title = "Access Code:",
-                hint = "Enter the $accessCodeLength digit code",
+                title = dictionaryString(R.string.joinGame_accessCode_header),
+                hint = dictionaryString(
+                    R.string.joinGame_accessCode_hint,
+                    mapOf(
+                        "length" to accessCodeLength.toString()
+                    )
+                ),
                 shouldShowErrorWhileTyping = false,
                 focusRequester = accessCodeFocusRequester,
                 fieldState = accessCodeState,
@@ -133,8 +140,8 @@ private fun JoinGameScreenContent(
 
             // TODO use username generation an collect analytics around usage
             InputField(
-                title = "Username:",
-                hint = "Pick a username",
+                title = dictionaryString(R.string.joinGame_usernameField_header),
+                hint = dictionaryString(R.string.joinGame_userNameField_hint),
                 shouldShowErrorWhileTyping = true,
                 focusRequester = nameFocusRequester,
                 fieldState = userNameState,
@@ -165,7 +172,7 @@ private fun JoinGameScreenContent(
                     style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
                     enabled = isFormValid,
                 ) {
-                    Text(text = "Join Game")
+                    Text(text = dictionaryString(R.string.joinGame_join_action))
                 }
             }
 

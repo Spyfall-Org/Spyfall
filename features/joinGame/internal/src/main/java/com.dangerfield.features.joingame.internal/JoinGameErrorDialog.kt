@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.bundleOf
 import com.dangerfield.features.joingame.internal.UnresolvableError.IncompatibleError
-import com.dangerfield.features.joingame.joinGameNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.oddoneoout.features.joingame.internal.R
 
 @Composable
 fun JoinGameErrorDialog(
@@ -28,25 +29,25 @@ fun JoinGameErrorDialog(
 
     val title = when (unresolvableError) {
         is IncompatibleError -> {
-            "Looks like someone needs an update"
+            dictionaryString(R.string.joinGame_versionErrorDialog_header)
         }
 
         UnresolvableError.UnknownError -> {
-            "Hmmmm..."
+            dictionaryString(R.string.joinGame_unknownErrorDialog_header)
         }
     }
 
     val description = when (unresolvableError) {
         is IncompatibleError -> {
             if (unresolvableError.isCurrentLower) {
-                "This game requires a newer version of the app. Please update to join this game."
+                dictionaryString(R.string.joinGame_versionTooLowError_text)
             } else {
-                "This game was created by someone with an older version of the app. All players will need to update and try again to play."
+                dictionaryString(R.string.joinGame_versionTooHighError_text)
             }
         }
 
         UnresolvableError.UnknownError -> {
-            "This is embarrassing, but something went wrong. We arent quite sure what. Please try again."
+            dictionaryString(R.string.joinGame_unknownError_text)
         }
     }
 
@@ -57,7 +58,11 @@ fun JoinGameErrorDialog(
         onDismissRequest = onDismiss,
         title = title,
         description = description,
-        primaryButtonText = if (shouldShowUpdateButton) "Update" else "Ok",
+        primaryButtonText = if (shouldShowUpdateButton) {
+            dictionaryString(R.string.joinGame_update_action)
+        } else {
+            dictionaryString(id = R.string.app_okay_action)
+        },
         onPrimaryButtonClicked = {
             onDismiss()
             if (shouldShowUpdateButton) {

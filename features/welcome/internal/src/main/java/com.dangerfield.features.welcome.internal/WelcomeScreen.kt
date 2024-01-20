@@ -104,7 +104,7 @@ private fun WelcomeScreenContent(
                     onClick = onJoinGameClicked,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = dictionaryString(R.string.joinGame_join_action))
+                    Text(text = dictionaryString(R.string.welcome_join_action))
                 }
 
                 Spacer(modifier = Modifier.height(Spacing.S1000))

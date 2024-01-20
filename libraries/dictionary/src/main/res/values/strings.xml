@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+<!--    It may not be pretty but keeping all string resources in one place makes it easier to translate them.-->
 
-    <!--IMPORTANT: This must be at the top of each strings.xml file:
-When launching the app we compare the devices set language against the
-language being shown to the user in app (which is determined by the appLanguageCode below)
-If the device language is not supported we show a dialog explaining our support level
--->
     <string name="appLanguageCode">en</string>
+    <!--IMPORTANT: This must be at the top of each strings.xml file:
+        When launching the app we compare the devices set language against the
+        language being shown to the user in app (which is determined by the appLanguageCode above)
+        If the device language is not supported we show a dialog explaining our support level
+    -->
 
+    <!-- /////////////////////    App Wide String Strings   /////////////////////-->
     <string name="app_name">Odd One Out</string>
+    <string name="app_tryAgainErrorDialog_header">Lets try that again</string>
+    <string name="app_submit_label">Submit</string>
+    <string name="app_somethingWentWrong_text">Something went wrong</string>
+    <string name="app_okay_action">Okay</string>
+    <string name="app_required_label">Required</string>
+    <string name="app_player_text">Player</string>
+    <string name="app_theOddOneOutRole_text">The Odd One Out</string>
+    <!-- ////////////////////////////////////////////////////-->
+
+
+
+
     <string name="welcome_intro_header">Welcome to</string>
     <string name="welcome_newGame_action">New Game</string>
-    <string name="joinGame_join_action">Join Game</string>
+    <string name="welcome_join_action">Join Game</string>
     <string name="welcome_rules_action">Rules</string>
-    <string name="waitingRoom_waiting_header">Waiting for players...</string>
+    <string name="waitingRoom_waiting_header">Waiting for players…</string>
     <string name="waitingRoom_accessCode_header">Access Code:</string>
     <string name="waitingRoom_joinVideo_a11y">Join game video call</string>
     <string name="waitingRoom_startGame_action">Start Game</string>
@@ -41,7 +55,6 @@ If the device language is not supported we show a dialog explaining our support 
     <string name="videoLink_infoDialogSaftey_header">To ensure user safety we only accept links from the following platforms:</string>
     <string name="stats_infoNote_body">Games results are not collected when players vote amongst themselves instead of in the app. Because of this the stats here may not fully represent wins and losses.</string>
     <string name="stats_totalGamesPlayed_header">Total Games Played:</string>
-    <string name="app_okay_action">Okay</string>
     <string name="settings_stats_header">Stats</string>
     <string name="stats_infoNote_label">Note</string>
     <string name="stats_mutliDeviceGames_header">Multi Device Games</string>
@@ -64,7 +77,6 @@ If the device language is not supported we show a dialog explaining our support 
     <string name="about_privacyPolicy_label">Privacy Policy</string>
     <string name="about_termsOfService_label">Terms of Service</string>
     <string name="about_thirdPartyServices_label">Third Party Services</string>
-    <string name="app_tryAgainErrorDialog_header">Lets try that again</string>
     <string name="contactUs_errorSubmitting_body">Looks like something went wrong submitting your form, please try again.</string>
     <string name="contactUs_invalidEmail_text">Please enter a valid email address</string>
     <string name="contactUs_invalidMessage_text">Please enter a message</string>
@@ -72,18 +84,72 @@ If the device language is not supported we show a dialog explaining our support 
     <string name="settings_contactUs_header">Contact Us</string>
     <string name="contactUs_sumitSuccessMessage_text">Your message has been sent to us, thank you for helping us improve the experience for everyone!</string>
     <string name="contactUs_reasonPrompt_text">What you would you like to contact us about?</string>
-    <string name="app_required_label">Required</string>
     <string name="contactUs_nameField_header">Name</string>
     <string name="contactUs_emailField_header">Email</string>
     <string name="contactUs_messageField_header">Message</string>
     <string name="contactUs_messageField_hint">What would you like to tell us?</string>
-    <string name="app_submit_label">Submit</string>
     <string name="contactUs_question_label">Question</string>
     <string name="contactUs_issue_label">Issue</string>
     <string name="contatUs_feedback_label">Feedback</string>
     <string name="contactUs_suggestion_label">Suggestion</string>
     <string name="contactUs_other_label">Other</string>
-    <string name="app_somethingWentWrong_text">Something went wrong</string>
+
+
+<!-- /////////////////////    New Game Strings   /////////////////////-->
     <string name="newGame_createGameError_body">We\'re sorry, something seems to have gone wrong creating this game, please try again</string>
     <string name="newGame_createGame_action">Create Game</string>
+    <string name="newGame_newGameScreen_header">New Game</string>
+    <string name="newGame_packs_header">Packs:</string>
+    <string name="newGame_packsDescription_text">Choose which packs you want to play with</string>
+    <string name="newGame_packsInfo_a11y">Packs Information</string>
+    <string name="newGame_singelDevice_label">Single Device Mode</string>
+    <string name="newGame_singleDeviceDescription_text">Pass the device around to each player</string>
+    <string name="newGame_gameLength_hader">Game Length:</string>
+    <string name="newGame_gameLengthDescription_text">How many minutes should each round last:</string>
+    <string name="newGame_numOfPlayers_header">Number of players</string>
+    <string name="newGame_numOfPlayers_hint">{min}-{max}</string>
+    <string name="newGame_userName_header">User Name:</string>
+    <string name="newGame_userName_hint">Pick a user name:</string>
+    <string name="newGame_videoCall_header">Video Call Link:</string>
+    <string name="newGame_videCallDescription_text">Past a video call link if you have one:</string>
+    <string name="newGame_videoLinkInfo_a11y">Video Call Link Information</string>
+    <string name="newGame_blankNameError_text">Name cannot be blank</string>
+    <string name="newGame_nameLengthError_text">Name must be between {min}-{max} characters</string>
+    <string name="newGame_invalidLinkError_text">This link is not from one our recognized platforms, Click the info button for more info</string>
+    <string name="newGame_startGame_action">Start Game</string>
+    <string name="newGame_invalidNumOfPlayersError_text">Games can only have between {min} and {max} players.</string>
+    <string name="newGame_invalidTimeLimit_text">Invalid time limit. Please type in a number between {min} and {max}.</string>
+    <string name="newGame_noPacksSelectedError_text">You must select at least one pack</string>
+    <string name="newGame_packsInfo_header">Choose your packs</string>
+    <string name="packsInfo_packsDescription_text">Each pack comes with a list of locations that may be chosen for your game. You can choose as many packs as you\'d like.</string>
+    <string name="packsInfo_bulletPoint_text">•</string>
+    <!-- ////////////////////////////////////////////////////-->
+
+
+    <!-- /////////////////////    Join Game Strings   /////////////////////-->
+    <string name="joinGame_versionErrorDialog_header">Looks like someone needs an update</string>
+    <string name="joinGame_unknownErrorDialog_header">Hmmmm…</string>
+    <string name="joinGame_versionTooLowError_text">This game requires a newer version of the app. Please update to join this game.</string>
+    <string name="joinGame_versionTooHighError_text">This game was created by someone with an older version of the app. All players will need to update and try again to play.</string>
+    <string name="joinGame_unknownError_text">This is embarrassing, but something went wrong. We arent quite sure what. Please try again.</string>
+    <string name="joinGame_update_action">Update</string>
+    <string name="joinGame_accessCode_header">Access Code:</string>
+    <string name="joinGame_accessCode_hint">Enter the {length} digit code</string>
+    <string name="joinGame_usernameField_header">Username:</string>
+    <string name="joinGame_userNameField_hint">Pick a username</string>
+    <string name="joinGame_join_action">Join Game</string>
+    <string name="joinGame_joinGameScreen_header">Join Game</string>
+    <string name="joinGame_accessCodeFieldEmpty_text">Please enter an access code</string>
+    <string name="joinGame_userNameFieldEmptError_text">Please enter a username</string>
+    <string name="joinGame_accessCodeNotFoundError_text">Game with that access code was not found</string>
+    <string name="joinGame_gameAlreadyStartedError_text">Game with that access code was already started</string>
+    <string name="joinGame_gameHasMaxPlayersError_text">Game with that access code already has the maximum number of players</string>
+    <string name="joinGame_invalidAccessCodeError_text">That access code seems to be invalid. Access codes are supposed to be {length} characters long.</string>
+    <string name="joinGame_userNameFieldInvalidError_text">Names must be between {min} - {max} characters long.</string>
+    <string name="joinGame_userNameTakenError_text">That username is taken. Please try to think of something more original.</string>
+    <string name="joinGame_accessCodeLengthError_text">Access codes are {length} characters long.</string>
+    <string name="joinGame_nameLengthError_text">Names must be between {min} - {max} characters long.</string>
+    <!-- ////////////////////////////////////////////////////-->
+
+
 </resources>

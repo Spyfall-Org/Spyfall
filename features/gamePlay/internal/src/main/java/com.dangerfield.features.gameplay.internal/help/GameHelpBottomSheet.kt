@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.preview.ThemePreviews
@@ -18,6 +20,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessor
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
 fun GameHelpBottomSheet(
@@ -32,34 +35,12 @@ fun GameHelpBottomSheet(
         topAccessory = iconTopAccessory(icon = SpyfallIcon.Question(null)),
         modifier = modifier,
         topContent = {
-            Text(text = "How to play")
+            Text(text = stringResource(R.string.gamePlayHelp_howToPlay_header))
         },
         content = {
             Column {
-                // TODO update the language here
+                // TODO MVP update the language here
                 Text(text = "Read The Rules Bitch")
-
-                VerticalSpacerS800()
-
-                BulletRow {
-                    Text(text = "Come to a consensus on who you all think the odd one out is")
-                }
-
-                BulletRow {
-                    Text(text = "Once done (regardless of if the guess is correct) the odd one out can reveal themselves and guess the location")
-                }
-
-                BulletRow {
-                    Text(text = "If the players guess the odd one out correctly the player wins")
-                }
-
-                BulletRow {
-                    Text(text = "If the odd one out guesses the location correctly the odd one out wins")
-                }
-
-                BulletRow {
-                    Text(text = "If both guess correctly or both guess incorrectly the game ends in a draw! But congrats to the odd one out for fooling everyone!")
-                }
             }
         },
         bottomContent = {
@@ -69,7 +50,7 @@ fun GameHelpBottomSheet(
                     .padding(Spacing.S800),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
-                Text(text = "Okay")
+                Text(text = dictionaryString(id = R.string.app_okay_action))
             }
         }
     )

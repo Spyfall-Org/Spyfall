@@ -17,6 +17,7 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.analytics)
     implementation(projects.libraries.game)
+    implementation(projects.libraries.dictionary)
     implementation(projects.libraries.session)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.config)

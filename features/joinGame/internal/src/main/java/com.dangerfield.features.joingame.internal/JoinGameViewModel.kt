@@ -2,8 +2,10 @@ package com.dangerfield.features.joingame.internal
 
 import com.dangerfield.features.joingame.internal.JoinGameUseCase.JoinGameError
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.ui.FieldState
+import com.dangerfield.oddoneoout.features.joingame.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import oddoneout.core.allOrNone
 import oddoneout.core.logOnError
@@ -12,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class JoinGameViewModel @Inject constructor(
     private val joinGame: JoinGameUseCase,
-    private val gameConfig: GameConfig
+    private val gameConfig: GameConfig,
+    private val dictionary: Dictionary,
 ) : SEAViewModel<State, Event, Action>() {
 
     override val initialState = State(
@@ -68,11 +71,11 @@ class JoinGameViewModel @Inject constructor(
             it.copy(
                 accessCodeState = FieldState.Invalid(
                     input = it.accessCodeState.value,
-                    errorMessage = "Please enter an access code"
+                    errorMessage = dictionary.getString(R.string.joinGame_accessCodeFieldEmpty_text)
                 ),
                 userNameState = FieldState.Invalid(
                     input = it.userNameState.value,
-                    errorMessage = "Please enter a username"
+                    errorMessage = dictionary.getString(R.string.joinGame_userNameFieldEmptError_text)
                 )
             )
         }
@@ -84,48 +87,51 @@ class JoinGameViewModel @Inject constructor(
                 is JoinGameError.GameNotFound -> it.copy(
                     accessCodeState = FieldState.Invalid(
                         input = it.accessCodeState.value,
-                        errorMessage = "Game with that access code was not found"
-
+                        errorMessage = dictionary.getString(R.string.joinGame_accessCodeNotFoundError_text)
                     )
                 )
 
                 is JoinGameError.GameAlreadyStarted -> it.copy(
                     accessCodeState = FieldState.Invalid(
                         input = it.accessCodeState.value,
-                        errorMessage = "Game with that access code was already started"
-
+                        errorMessage = dictionary.getString(R.string.joinGame_gameAlreadyStartedError_text)
                     )
                 )
 
                 is JoinGameError.GameHasMaxPlayers -> it.copy(
                     accessCodeState = FieldState.Invalid(
                         input = it.accessCodeState.value,
-                        errorMessage = "Game with that access code already has the maximum number of players"
-
+                        errorMessage = dictionary.getString(R.string.joinGame_gameHasMaxPlayersError_text)
                     )
                 )
 
                 is JoinGameError.InvalidAccessCodeLength -> it.copy(
                     accessCodeState = FieldState.Invalid(
                         input = it.accessCodeState.value,
-                        errorMessage = "That access code seems to be invalid. Access codes are supposed to be ${joinGameError.requiredLength} characters long."
-
+                        errorMessage = dictionary.getString(
+                            R.string.joinGame_invalidAccessCodeError_text,
+                            mapOf("length" to "${joinGameError.requiredLength}")
+                        )
                     )
                 )
 
                 is JoinGameError.InvalidNameLength -> it.copy(
                     userNameState = FieldState.Invalid(
                         input = it.userNameState.value,
-                        errorMessage = "Names must be between ${joinGameError.min} - ${joinGameError.max} characters long."
-
+                        errorMessage = dictionary.getString(
+                            R.string.joinGame_userNameFieldInvalidError_text,
+                            mapOf(
+                                "min" to "${joinGameError.min}",
+                                "max" to "${joinGameError.max}"
+                            )
+                        )
                     )
                 )
 
                 is JoinGameError.UsernameTaken -> it.copy(
                     userNameState = FieldState.Invalid(
                         input = it.userNameState.value,
-                        errorMessage = "That username is taken. Please try to think of something more original."
-
+                        errorMessage = dictionary.getString(R.string.joinGame_userNameTakenError_text)
                     )
                 )
 
@@ -155,7 +161,10 @@ class JoinGameViewModel @Inject constructor(
                 accessCode.length != gameConfig.accessCodeLength -> {
                     FieldState.Invalid(
                         input = accessCode,
-                        errorMessage = "Access codes are ${gameConfig.accessCodeLength} characters long."
+                        errorMessage = dictionary.getString(
+                            R.string.joinGame_accessCodeLengthError_text,
+                            mapOf("length" to "${gameConfig.accessCodeLength}")
+                        )
                     )
                 }
 
@@ -171,9 +180,17 @@ class JoinGameViewModel @Inject constructor(
             userName.length !in gameConfig.minNameLength..gameConfig.maxNameLength -> {
                 FieldState.Invalid(
                     input = userName,
-                    errorMessage = "Names must be between ${gameConfig.minNameLength} - ${gameConfig.maxNameLength} characters long."
+                    errorMessage = dictionary.getString(
+                        R.string.joinGame_nameLengthError_text,
+                        mapOf(
+                            "min" to "${gameConfig.minNameLength}",
+                            "max" to "${gameConfig.maxNameLength}"
+
+                        )
+                    )
                 )
             }
+
             else -> FieldState.Valid(userName)
         }
 
