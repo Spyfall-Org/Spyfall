@@ -150,19 +150,9 @@ dependencies {
     // ads
     implementation(libs.google.play.services.ads)
 
-    // Dependency Injection
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
-
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.moshi)
-
-    // testing
-    // Koin testing tools
-    testImplementation(libs.koin.testing)
-    // Needed JUnit version
-    testImplementation(libs.koin.junit)
 
     testImplementation(libs.androidx.test.junit)
     testImplementation(libs.androidx.test.core)

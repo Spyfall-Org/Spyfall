@@ -114,20 +114,6 @@ fun OddOneOutApp(
         else -> welcomeNavigationRoute
     }
 
-
-    LaunchedEffect(languageSupportLevel) {
-        val shouldShowLanguageSupportMessage =
-            languageSupportLevel is LanguageSupportLevel.NotSupported
-                    || languageSupportLevel is LanguageSupportLevel.PartiallySupported
-
-        if (languageSupportLevel != null && shouldShowLanguageSupportMessage) {
-            router.navigateToLanguageSupportDialog(
-                supportLevelName = languageSupportLevel.name,
-                languageDisplayName = languageSupportLevel.locale.displayLanguage
-            )
-        }
-    }
-
     LaunchedEffect(Unit) {
         UserMessagePresenter
             .messages
@@ -202,6 +188,19 @@ fun OddOneOutApp(
                             navGraphBuilder = this,
                             router = router
                         )
+                    }
+
+                    LaunchedEffect(languageSupportLevel) {
+                        val shouldShowLanguageSupportMessage =
+                            languageSupportLevel is LanguageSupportLevel.NotSupported
+                                    || languageSupportLevel is LanguageSupportLevel.PartiallySupported
+
+                        if (languageSupportLevel != null && shouldShowLanguageSupportMessage) {
+                            router.navigateToLanguageSupportDialog(
+                                supportLevelName = languageSupportLevel.name,
+                                languageDisplayName = languageSupportLevel.locale.displayLanguage
+                            )
+                        }
                     }
                 }
 

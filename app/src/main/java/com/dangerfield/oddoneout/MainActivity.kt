@@ -13,9 +13,9 @@ import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.OddOneOutAd.GameRestartInterstitial
 import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.libraries.analytics.MetricsTracker
+import com.dangerfield.libraries.coreflowroutines.collectWhileStarted
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.network.NetworkMonitor
-import com.dangerfield.oddoneout.legacy.util.collectWhileStarted
 import com.dangerfield.oddoneout.navigation.NavBuilderRegistry
 import com.dangerfield.oddoneout.startup.MainActivityViewModel
 import com.dangerfield.oddoneout.startup.SplashScreenBuilder

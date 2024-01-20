@@ -29,11 +29,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object CoreModule {
 
+    private const val SHARED_PREFS_KEY = "com.dangerfield.oddoneout.shared_prefs"
+
     @Provides
     @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences(
-            context.resources.getString(R.string.shared_preferences),
+            SHARED_PREFS_KEY,
             Context.MODE_PRIVATE
         )
     }

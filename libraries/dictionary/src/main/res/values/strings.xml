@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--
-naming converntion:  nameSpace_component_type
+<!--    !!!IMPORTANT!!!:-->
+<!--    Each strings.xml should have this at the top of the file. It is used to determine-->
+<!--    which locale is being used in the app, to compare against the device locale so we can-->
+<!--    tell if we are supporting the device locale or not-->
+    <string name="appLanguageCode">en</string>
 
-
-nameSpace = lowest common logical ancestor of string usages. (usually a feature or module name. Highest is "app")
-
-component (Optional) = the name of the component that uses the resource
-examples: errorDialog, playerList,
-
-type = the type of component the string is used by (action, header, body, label, a11y, etc...)
-
--->
     <string name="app_name">Odd One Out</string>
     <string name="welcome_intro_header">Welcome to</string>
     <string name="welcome_newGame_action">New Game</string>

@@ -1,13 +1,12 @@
 package com.dangerfield.libraries.dictionary.internal
 
 import android.content.Context
-import android.os.Build
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.internal.FirebaseOverrideDictionaryDataSource.Companion.DICTIONARY_COLLECTION_KEY
 import com.dangerfield.libraries.dictionary.supportLevelNameMap
+import com.dangerfield.oddoneoout.libraries.dictionary.R
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.getField
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import oddoneout.core.BuildInfo
@@ -25,23 +24,19 @@ class GetDeviceLanguageSupportLevelImpl @Inject constructor(
     @ApplicationContext private val applicationContext: Context
 ) : GetDeviceLanguageSupportLevel {
 
-    private val appLocale: Locale
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            applicationContext.resources.configuration.locales[0]
-        } else {
-            applicationContext.resources.configuration.locale
-        }
+    private val appLanguage: String
+        get() = applicationContext.getString(R.string.appLanguageCode)
 
     private val deviceLocale = Locale.getDefault()
 
     override suspend fun invoke(): LanguageSupportLevel = if (!isDeviceLanguageSupported()) {
         LanguageSupportLevel.NotSupported(deviceLocale)
     } else {
-        getLanguageSupportLevel(appLocale).getOrElse { LanguageSupportLevel.Unknown(appLocale) }
+        getLanguageSupportLevel(deviceLocale).getOrElse { LanguageSupportLevel.Unknown(deviceLocale) }
     }.also {
         Timber.d("""
             Device Language: ${deviceLocale.language}
-            App Language: ${appLocale.language}
+            App Language: $appLanguage
             Language support level for ${it.locale.language} is ${'$'}${it::class.simpleName}
         """.trimIndent())
     }
@@ -50,7 +45,7 @@ class GetDeviceLanguageSupportLevelImpl @Inject constructor(
      * if the app doesnt even has the resources for the language, then we dont support it at all
      * otherwise we at least have something to show them, just might not be perfect
      */
-    private fun isDeviceLanguageSupported() = (deviceLocale.language == appLocale.language).also {
+    private fun isDeviceLanguageSupported() = (deviceLocale.language == appLanguage).also {
         Timber.d("isDeviceLanguageSupported: $it")
     }
 

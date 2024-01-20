@@ -6,17 +6,10 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.dangerfield.features.ads.ui.initializeAds
 import com.dangerfield.libraries.coresession.internal.SessionRepository
 import com.dangerfield.libraries.logging.RemoteLogger
-import com.dangerfield.oddoneout.legacy.di.legacySpyfallModules
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import dagger.hilt.android.HiltAndroidApp
-import org.koin.android.ext.android.inject
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
-import org.koin.core.logger.Level.ERROR
-import org.koin.core.logger.Level.NONE
 import oddoneout.core.ApplicationStateRepository
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,6 +23,9 @@ class OddOneOutApplication : Application() {
     // TODO see if initializing analytics or app check later or something would be better
     @Inject
     lateinit var firebaseAnalytics: FirebaseAnalytics
+
+    @Inject
+    lateinit var firebaseFirestore: FirebaseFirestore
 
     private val lifecycle get() = ProcessLifecycleOwner.get().lifecycle
 
@@ -62,23 +58,15 @@ class OddOneOutApplication : Application() {
 
         Timber.plant(RemoteLogger())
 
-        startKoin {
-            androidLogger(if (BuildConfig.DEBUG) ERROR else NONE)
-            androidContext(this@OddOneOutApplication)
-            modules(legacySpyfallModules)
-        }
-
         setupFireStoreSettings()
 
         initializeAds()
     }
 
     private fun setupFireStoreSettings() {
-        val db: FirebaseFirestore by inject()
         val settings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(false)
             .build()
-        db.firestoreSettings = settings
+        firebaseFirestore.firestoreSettings = settings
     }
-
 }

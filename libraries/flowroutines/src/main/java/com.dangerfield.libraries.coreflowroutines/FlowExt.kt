@@ -1,15 +1,25 @@
 package com.dangerfield.libraries.coreflowroutines
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * Collects the flow and calls the collector with the previous and current value.
@@ -66,3 +76,52 @@ private class ProducerScope<E>(
 fun <T> flowOf(block: suspend () -> T): Flow<T> = flow {
     emit(block())
 }
+
+fun <T> StateFlow<T>.collectWhileStarted(lifecycleOwner: LifecycleOwner, block: (T) -> Unit) {
+    lifecycleOwner.lifecycleScope.launch {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            Timber.d("got created state")
+            collectLatest {
+                block(it)
+            }
+        }
+    }
+}
+
+
+/**
+ * utility function to being collecting a flow when the base LifecycleOwner
+ * reaches the started state and stop when it reaches the stopped state
+ *
+ * catches and logs errors by default
+ */
+inline fun <T> LifecycleOwner.collectWhileStarted(
+    flow: Flow<T>,
+    crossinline onError: (Throwable) -> Unit = {},
+    crossinline onSuccess: suspend (T) -> Unit
+): Job =
+    lifecycleScope.launch {
+        flow.flowWithLifecycle(lifecycle)
+            .catch { onError(it) }
+            .collectLatest { onSuccess(it) }
+    }
+
+/**
+ * utility function to being collecting a flow when the base LifecycleOwner
+ * reaches the started state and stop when it reaches the stopped state
+ *
+ * catches and logs errors by default
+ */
+inline fun <T> LifecycleOwner.collectWhenInitialized(
+    flow: Flow<T>,
+    crossinline onError: (Throwable) -> Unit = {},
+    crossinline onSuccess: suspend (T) -> Unit
+): Job =
+    lifecycleScope.launch {
+        flow.flowWithLifecycle(
+            lifecycle,
+            minActiveState = Lifecycle.State.INITIALIZED
+        )
+            .catch { onError(it) }
+            .collectLatest { onSuccess(it) }
+    }
