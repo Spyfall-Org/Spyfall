@@ -103,13 +103,6 @@ fun GameHelpBottomSheet(
 }
 
 @Composable
-private fun Title(text: String) {
-    Column {
-        Text(text = text, typographyToken = OddOneOutTheme.typography.Heading.H800)
-    }
-}
-
-@Composable
 private fun SubTitle(text: String) {
     Column {
         Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B700.Bold)
