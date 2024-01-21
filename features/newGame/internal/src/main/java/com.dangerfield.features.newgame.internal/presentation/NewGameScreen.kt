@@ -325,7 +325,7 @@ private fun SingleDeviceField(
     Row {
         Column(Modifier.weight(1f)) {
             Text(
-                text = dictionaryString(R.string.newGame_singelDevice_label),
+                text = dictionaryString(R.string.newGame_singleDevice_label),
             )
             Text(
                 text = dictionaryString(R.string.newGame_singleDeviceDescription_text),
@@ -350,7 +350,7 @@ private fun GameLengthField(
         Column(Modifier.weight(1f)) {
             AsteriskText {
                 Text(
-                    text = dictionaryString(R.string.newGame_gameLength_hader),
+                    text = dictionaryString(R.string.newGame_gameLength_header),
                 )
             }
             Text(

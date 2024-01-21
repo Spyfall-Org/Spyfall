@@ -78,7 +78,7 @@ fun StatsScreen(
             VerticalSpacerS1200()
 
             Text(
-                text = dictionaryString(R.string.stats_mutliDeviceGames_header),
+                text = dictionaryString(R.string.stats_multiDeviceGames_header),
                 typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
             )
 

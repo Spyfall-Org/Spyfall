@@ -48,11 +48,11 @@ fun PreviewContent(
 
     val previewDictionary = object: Dictionary {
         override fun getString(key: Int, args: Map<String,String>): String = Try {
-            context.getString(key).applyArgs(args)
+            context.getText(key).toString().applyArgs(args)
         }.getOrNull() ?: "DNE"
 
         override fun getOptionalString(key: Int, args: Map<String,String>): String? = Try {
-            context.getString(key).applyArgs(args)
+            context.getText(key).toString().applyArgs(args)
         }.getOrNull()
     }
 

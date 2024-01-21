@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS100
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
@@ -19,11 +19,11 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetStat
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValue
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.dragHandleTopAccessory
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
-import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.components.text.BoldPrefixedText
 import com.dangerfield.libraries.ui.components.text.BulletRow
+import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.rules.internal.R
 
 @Composable
@@ -52,118 +52,83 @@ private fun RulesContent() {
     ScrollingColumnWithFadingEdge(
         Modifier.padding(horizontal = Spacing.S800)
     ) {
-        Body(text = dictionaryString(R.string.rules_tagline_text))
+        Body(text = dictionaryString(R.string.rules_tldr_text))
         VerticalSpacerS800()
 
-        Section(title = dictionaryString(R.string.rules_overview_label)) {
-            Body(text = "At the start of the game all players are given a role at secret location, except for one player who is left in the dark (the odd one out).\n\nPlayers take turns asking each other questions about the location and their role in order to identify the odd one out without revealing the location to them.\n\nThe odd one out must play along, pretending to know the location while trying to deduce it without being discovered as the odd one out.")
+        val overviewTexts = dictionaryString(R.string.rules_overviewSectionParts_text).split("\n")
+        Section(title = dictionaryString(R.string.rules_overview_header)) {
+            overviewTexts.forEachIndexed { index, it ->
+                Body(text = it)
+                if (index != overviewTexts.lastIndex) {
+                    VerticalSpacerS500()
+                }
+            }
         }
 
-        Section(title = "Getting Started") {
-            SubTitle("Join a Game")
+        Section(title = dictionaryString(R.string.rules_gettingStartedSection_header)) {
+            SubTitle(dictionaryString(R.string.rules_joinAGameSection_header))
 
-            BulletRow {
-                Body(text = "In order to join a game you must have the access code of an existing game. You can get this from the player who created it.")
+            val joinAGameBullets = dictionaryString(R.string.rules_joinAGameBullets_text).split("\n")
+            joinAGameBullets.forEach { s ->
+                BulletRow {
+                    Body(text = s)
+                }
+                VerticalSpacerS500()
             }
 
             VerticalSpacerS500()
 
-            SubTitle("Create a Game")
+            SubTitle(dictionaryString(R.string.rules_createAGameSection_header))
 
-            BulletRow {
-                BoldPrefixedText(
-                    typography = OddOneOutTheme.typography.Body.B600,
-                    boldText = "Select Location Packs:",
-                    regularText = "Each pack contains a unique set of locations and roles to play with.",
-
-                )
+            val createAGameBullets = dictionaryString(R.string.rules_createAGameBullets_text).split("\n")
+            createAGameBullets.forEach {
+                BulletRow {
+                    Body(text = it)
+                }
             }
-
-            BulletRow {
-                BoldPrefixedText(
-                    typography = OddOneOutTheme.typography.Body.B600,
-                    boldText = "Pick a time limit:",
-                    regularText = "Choose how long players have to complete their objective. 5 minutes is reccomended for most games"
-                )
-            }
-
-            BulletRow {
-                BoldPrefixedText(
-                    typography = OddOneOutTheme.typography.Body.B600,
-                    boldText = "Regular or Single device",
-                    regularText = "Choose to play with everyone on their own device or on a single device shared among players."
-                )
-            }
-
-            VerticalSpacerS500()
-
-            Body(text = "Once a game is created an access code will be generated so that other players can join the game. Once all players are ready, anyone can start the game.")
-
         }
 
-        Section(title = "Game play:") {
-            Body(text = "As soon as the game starts players will be able to see:")
+        Section(title = dictionaryString(R.string.rules_gamePlaySection_header)) {
+
+            Body(text = dictionaryString(R.string.rules_gamePlayWhatsVisible_header))
 
             VerticalSpacerS500()
 
-            BulletRow {
-                Body(text = "The randomly chosen location and their role (unless they are the odd one out)")
+            val whatsVisibleBullets = dictionaryString(R.string.rules_gamePlayWhatsVisibleBullets_text).split("\n")
+
+            whatsVisibleBullets.forEach {
+                BulletRow {
+                    Body(text = it)
+                }
             }
 
-            BulletRow {
-                Body(text = "The time limit countdown")
+            VerticalSpacerS500()
+
+            SubTitle(text = dictionaryString(R.string.rules_theGoalSection_header))
+
+            val goalBullets = dictionaryString(R.string.rules_goalBullets_text).split("\n")
+            goalBullets.forEach {
+                Body(text = it)
+                VerticalSpacerS500()
             }
 
-            BulletRow {
-                Body(text = "A list of all players and potential game locations")
-            }
+            SubTitle(text = dictionaryString(R.string.rules_questioningSection_header))
 
-
-            VerticalSpacerS500()
-
-            SubTitle(text = "The Goal")
-
-            BoldPrefixedText(
-                typography = OddOneOutTheme.typography.Body.B600,
-                boldText = "Players:",
-                regularText = "To identify the odd one out without revealing the location to them."
-            )
-
-            VerticalSpacerS500()
-
-            BoldPrefixedText(
-                typography = OddOneOutTheme.typography.Body.B600,
-                boldText = "The odd one out:",
-                regularText = "To identify the location without revealing they are the odd one out"
-            )
-
-            VerticalSpacerS500()
-
-            SubTitle(text = "Questioning")
-
-            Body(text = "Players take turns asking each other questions about the location and their role.\n\nThe questions and answers should be vague enough to not reveal the location to the odd one out, but specific enough to identify the odd one out. The odd one out must play along and try not to get discovered while trying to deduce the location.")
-
-            VerticalSpacerS500()
-
-            Body(text = "One player will randomly be chose to go first")
-
+            Body(text = dictionaryString(R.string.rules_questioningSection_body))
 
             VerticalSpacerS800()
 
-            SubTitle(text = "How to win")
+            SubTitle(text = dictionaryString(R.string.rules_howToWinSection_header))
 
-            BulletRow {
-                Body(text = "At any point the odd one out can decide to reveal themselves and guess the location. If they are wrong, the players win otherwise the odd one out wins.")
+            val howToWinBullets = dictionaryString(R.string.rules_howToWinSectionBullets_text).split("\n")
+
+            howToWinBullets.forEach {
+                BulletRow {
+                    Body(text = it)
+                }
+
+                VerticalSpacerS500()
             }
-
-            BulletRow {
-                Body(text = "At any point the players can decide to stop the game and guess who the odd one out is. If they guess correctly the players win, otherwise the odd one out revels themselves and wins.")
-            }
-
-            BulletRow {
-                Body(text = "After the timer runs out, the players must agree to accuse someone of being the odd one out. After the accusation the odd one out reveals themselves. If the players accused wrong, the odd one out wins, If the players accused correctly then the odd one out has a chance to tie the game by guessing the location correctly, otherwise the players win.")
-            }
-
         }
     }
 }
@@ -195,13 +160,6 @@ private fun SubTitle(text: String) {
 
 @Composable
 private fun Body(text: String) {
-    Column {
-        Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B600)
-    }
-}
-
-@Composable
-private fun Body(text: AnnotatedString) {
     Column {
         Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B600)
     }

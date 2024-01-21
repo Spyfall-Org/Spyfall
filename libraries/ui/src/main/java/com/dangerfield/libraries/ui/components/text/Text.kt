@@ -41,7 +41,7 @@ fun Text(
     minLines: Int = LocalTextConfig.current.minLines ?: 1,
 ) {
     Text(
-        text = text,
+        text = text.parseHtml(),
         modifier = modifier,
         typographyToken = typographyToken,
         textDecoration = textDecoration,
@@ -71,7 +71,7 @@ fun Text(
     minLines: Int = LocalTextConfig.current.minLines ?: 1,
 ) {
     BasicText(
-        text = text,
+        text = text.parseHtml(),
         modifier = modifier,
         style = typographyToken.toStyle(color, textDecoration, textAlign),
         overflow = overflow,
@@ -161,7 +161,7 @@ fun Text(
 ) {
 
     Text(
-        text = dictionaryString(text),
+        text = dictionaryString(text).parseHtml(),
         modifier = modifier,
         color = color,
         typographyToken = typographyToken,

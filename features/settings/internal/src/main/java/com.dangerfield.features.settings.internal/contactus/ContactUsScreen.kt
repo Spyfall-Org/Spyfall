@@ -145,7 +145,7 @@ private fun SuccessMessage() {
     ) {
         VerticalSpacerS800()
         Text(
-            text = dictionaryString(R.string.contactUs_sumitSuccessMessage_text),
+            text = dictionaryString(R.string.contactUs_submitSuccessMessage_text),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )

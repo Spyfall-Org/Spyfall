@@ -17,10 +17,10 @@ class ResourceXmlDictionary @Inject constructor(
     @ApplicationContext private val applicationContext: Context,
 ) : Dictionary {
     override fun getString(key: Int, args: Map<String,String>): String {
-        return applicationContext.getString(key).applyArgs(args)
+        return applicationContext.getText(key).toString().applyArgs(args)
     }
 
     override fun getOptionalString(key: Int, args: Map<String,String>): String? {
-        return Try { applicationContext.getString(key) }.getOrNull()?.applyArgs(args)
+        return Try { applicationContext.getText(key).toString() }.getOrNull()?.applyArgs(args)
     }
 }
