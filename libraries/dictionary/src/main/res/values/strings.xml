@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-<!--    It may not be pretty but keeping all string resources in one place makes it easier to translate them.-->
+<!--
+    We follow the following format for our strings: nameSpace_usage_type
+
+    nameSpace:
+        Lowest common logical ancestor that owns this string.
+        Frequently this will be the name of the feature module but could be a sub feature or
+        a logical group in the app. Or for app wide strings it will be "app"
+
+    usage:
+        Where and or how the string will be used. This is very loosely defined. Ideally when reading
+        it will give the reader information about which string this is specifically.
+
+        examples: leaveDialog, userNameFieldError.. etc.
+
+    type:
+        What type of component uses this string. We have a running list of logical types below.
+        New types can be added as needed.
+
+        label
+        text
+        header
+        body
+        hint
+        link
+        action
+-->
 
     <string name="appLanguageCode">en</string>
     <!--IMPORTANT: This must be at the top of each strings.xml file:
@@ -10,14 +35,18 @@
     -->
 
     <!-- /////////////////////    App Wide String Strings   /////////////////////-->
-    <string name="app_name">Odd One Out</string>
+    <string name="app_name_text">Odd One Out</string>
     <string name="app_tryAgainErrorDialog_header">Lets try that again</string>
-    <string name="app_submit_label">Submit</string>
+    <string name="app_submit_action">Submit</string>
     <string name="app_somethingWentWrong_text">Something went wrong</string>
     <string name="app_okay_action">Okay</string>
     <string name="app_required_label">Required</string>
     <string name="app_player_text">Player</string>
     <string name="app_theOddOneOutRole_text">The Odd One Out</string>
+    <string name="app_leave_action">Leave</string>
+    <string name="app_cancel_action">Cancel</string>
+    <string name="app_open_action">Open</string>
+    <string name="app_bullet_point">•</string>
 
     <!-- /////////////////////    Welcome Strings   /////////////////////-->
     <string name="welcome_intro_header">Welcome to</string>
@@ -122,8 +151,6 @@
     <string name="newGame_noPacksSelectedError_text">You must select at least one pack</string>
     <string name="newGame_packsInfo_header">Choose your packs</string>
     <string name="packsInfo_packsDescription_text">Each pack comes with a list of locations that may be chosen for your game. You can choose as many packs as you\'d like.</string>
-    <string name="packsInfo_bulletPoint_text">•</string>
-
 
     <!-- /////////////////////    Join Game Strings   /////////////////////-->
     <string name="joinGame_versionErrorDialog_header">Looks like someone needs an update</string>
@@ -231,12 +258,22 @@
     <string name="votingRules_whereToVote_header">You can choose to do this through the app by voting or amongst yourselves by talking</string>
     <string name="votingRules_rulePoints_text">Come to a majority agreement on who you all think the odd one out is.\nOnce done (regardless of if the guess is correct) the odd one out must reveal themselves and guess the location.\nIf the majority of the players guess the odd one out correctly the players win.\nIf the odd one out guesses the location correctly the odd one out wins.\nIf both sides win or both sides lose then the game ends in a draw!</string>
 
-    <!-- /////////////////////    Unknown Strings   /////////////////////-->
-    <string name="leaveGame_action">Leave</string>
-    <string name="dialogCancel_action">Cancel</string>
-    <string name="open_action">Open</string>
-    <string name="submit_action">Submit</string>
-    <string name="cancel_action">Cancel</string>
-    <string name="bullet_point">•</string>
+    <!-- /////////////////////    Forced Update Strings   /////////////////////-->
+    <string name="forcedUpdate_update_header">We\'ve made some exciting changes</string>
+    <string name="forcedUpdate_message_text">Please download the latest app from the app store to enjoy them.</string>
+    <string name="forcedUpdate_openStore_action">Open App Store</string>
 
+    <!-- /////////////////////    Color Picker Strings   /////////////////////-->
+    <string name="colorPicker_theme_header">Theme</string>
+    <string name="colorPicker_color_header">Color</string>
+    <string name="colorPicker_random_label">Random</string>
+    <string name="colorPicker_darkMode_header">Dark Mode</string>
+    <string name="colorPicker_darkMode_system">System</string>
+    <string name="colorPicker_darkMode_light">Light</string>
+    <string name="colorPicker_darkMode_dark">Dark</string>
+
+    <!-- /////////////////////    Rules Strings   /////////////////////-->
+    <string name="rules_bottomSheet_header">Rules</string>
+    <string name="rules_tagline_text">Odd one out is a game of deception, misdirection, and deduction.</string>
+    <string name="rules_overview_label">Overview:</string>
 </resources>

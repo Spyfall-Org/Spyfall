@@ -2,7 +2,6 @@ package com.dangerfield.features.videoCall.internal
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -117,7 +116,7 @@ fun VideoLinkBottomSheet(
                         context.startActivity(chooser)
                     }
                 ) {
-                    Text(text = dictionaryString(R.string.open_action))
+                    Text(text = dictionaryString(R.string.app_open_action))
                 }
             }
         }

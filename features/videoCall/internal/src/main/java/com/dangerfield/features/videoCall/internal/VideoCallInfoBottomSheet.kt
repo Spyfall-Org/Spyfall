@@ -53,7 +53,7 @@ fun VideoCallInfoBottomSheet(
                         data = recognizedPlatforms
                     ) { _, item ->
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = dictionaryString(R.string.bullet_point))
+                            Text(text = dictionaryString(R.string.app_bullet_point))
                             HorizontalSpacerS600()
                             Text(text = item)
                         }

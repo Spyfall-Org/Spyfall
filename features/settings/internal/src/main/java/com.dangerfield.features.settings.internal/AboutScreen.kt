@@ -60,7 +60,7 @@ fun AboutScreen(
             )
 
             Text(
-                text = dictionaryString(id = R.string.app_name) + dictionaryString(
+                text = dictionaryString(id = R.string.app_name_text) + dictionaryString(
                     R.string.settings_version_label,
                     mapOf("version" to versionName)
                 ),

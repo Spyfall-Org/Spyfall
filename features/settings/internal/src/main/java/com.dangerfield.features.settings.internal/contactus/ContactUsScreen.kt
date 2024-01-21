@@ -309,7 +309,7 @@ private fun Form(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = dictionaryString(R.string.app_submit_label))
+                Text(text = dictionaryString(R.string.app_submit_action))
             }
         }
 

@@ -25,6 +25,7 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BasicBottomShee
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValue
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
+import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.newgame.internal.R
@@ -63,8 +64,7 @@ fun PacksInfoBottomSheet(
                             columns = 2,
                             data = pack.locations
                         ) { _, item ->
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                Text(text = dictionaryString(R.string.packsInfo_bulletPoint_text))
+                            BulletRow(modifier = Modifier.fillMaxWidth()) {
                                 HorizontalSpacerS600()
                                 Text(text = item.name)
                             }

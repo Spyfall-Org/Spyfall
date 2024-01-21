@@ -110,7 +110,7 @@ fun ChangeNameDialog(
                         onClick = { onChangeNameClicked(name) },
                         type = ButtonType.Accent
                     ) {
-                        Text(text = dictionaryString(R.string.submit_action))
+                        Text(text = dictionaryString(R.string.app_submit_action))
                     }
 
                     VerticalSpacerS800()
@@ -119,7 +119,7 @@ fun ChangeNameDialog(
                         type = ButtonType.Regular,
                         modifier = Modifier.fillMaxWidth(), onClick = onDismissRequest
                     ) {
-                        Text(text = dictionaryString(R.string.cancel_action))
+                        Text(text = dictionaryString(R.string.app_cancel_action))
                     }
                 }
             },

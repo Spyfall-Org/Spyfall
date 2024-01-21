@@ -45,7 +45,7 @@ fun WaitingRoomLeavingDialog(
                     onClick = onLeaveConfirmed,
                     type = ButtonType.Accent
                 ) {
-                    Text(text = dictionaryString(R.string.leaveGame_action))
+                    Text(text = dictionaryString(R.string.app_leave_action))
                 }
 
                 VerticalSpacerS800()
@@ -55,7 +55,7 @@ fun WaitingRoomLeavingDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
-                    Text(text = dictionaryString(R.string.dialogCancel_action))
+                    Text(text = dictionaryString(R.string.app_cancel_action))
                 }
             }
         }

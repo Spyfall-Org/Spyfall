@@ -74,7 +74,7 @@ private fun WelcomeScreenContent(
             )
 
             Text(
-                text = dictionaryString(R.string.app_name),
+                text = dictionaryString(R.string.app_name_text),
                 typographyToken = OddOneOutTheme.typography.Display.D1200.Bold,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
