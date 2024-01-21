@@ -22,7 +22,7 @@ if ((detektErrors > 0)); then
   echo "   HTML: file://$projectDir/build/reports/codestyle/detekt.html"
   echo "   XML: file://$projectDir/build/reports/codestyle/detekt.xml"
   echo "\n${RED}Detekt found code style errors! Please resolve them before pushing"
-  isok=1
+  exit 1
 else
   echo "\n${GREEN}No code style errors Detekt-ed "
 fi
