@@ -28,7 +28,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(projects.libraries.common)
     implementation(projects.features.ads)
-    implementation(projects.libraries.dictionary)
+    api(projects.libraries.dictionary)
 }
 
 android {

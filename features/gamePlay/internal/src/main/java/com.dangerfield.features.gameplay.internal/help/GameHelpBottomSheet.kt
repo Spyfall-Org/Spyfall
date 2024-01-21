@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.preview.ThemePreviews
-import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BasicBottomSheet
@@ -35,7 +33,7 @@ fun GameHelpBottomSheet(
         topAccessory = iconTopAccessory(icon = SpyfallIcon.Question(null)),
         modifier = modifier,
         topContent = {
-            Text(text = stringResource(R.string.gamePlayHelp_howToPlay_header))
+            Text(text = dictionaryString(R.string.gamePlayHelp_howToPlay_header))
         },
         content = {
             Column {

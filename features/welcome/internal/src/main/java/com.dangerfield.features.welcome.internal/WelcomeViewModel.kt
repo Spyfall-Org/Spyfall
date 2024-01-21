@@ -53,9 +53,6 @@ class WelcomeViewModel @Inject constructor(
         started = SharingStarted.Eagerly,
         initialValue = 0
     )
-        .onEach {
-            Log.d("Elijah", "On Each Triggered: $it")
-        }
 
     /*
     TODO cleanup I could probably have a provider of the repo that changes based on the sessions active game being online or

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.HorizontalSpacerS200

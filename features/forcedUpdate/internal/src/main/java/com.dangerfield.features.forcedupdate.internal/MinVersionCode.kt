@@ -12,5 +12,6 @@ class MinVersionCode@Inject constructor(
     override val displayName: String = "Min Version Code"
     override val path: String = "min_version_code"
     override val default: Int = 0
+    override val showInQADashboard: Boolean = true
     override fun resolveValue() = appConfigMap.value(this)
 }

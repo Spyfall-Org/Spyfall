@@ -20,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.ads.OddOneOutAd
@@ -283,7 +282,7 @@ private fun VotingScreenContent(
 
             } else {
                 Text(
-                    text = stringResource(R.string.singleDeviceVoting_loading_text),
+                    text = dictionaryString(R.string.singleDeviceVoting_loading_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     typographyToken = OddOneOutTheme.typography.Display.D1100,

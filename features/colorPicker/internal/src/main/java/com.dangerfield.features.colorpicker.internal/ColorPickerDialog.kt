@@ -22,7 +22,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -66,12 +65,12 @@ fun ColorPickerDialog(
 
     BasicDialog(
         topContent = {
-            Text(text = "Theme")
+            Text(text = dictionaryString(R.string.colorPicker_theme_header))
         },
         content = {
             Column {
                 Text(
-                    text = "Color",
+                    text = dictionaryString(R.string.colorPicker_color_header),
                     typographyToken = OddOneOutTheme.typography.Heading.H800
                 )
 
@@ -104,7 +103,7 @@ fun ColorPickerDialog(
                     ) {
                         if (item is ColorConfig.Random) {
                             Text(
-                                text = "Random",
+                                text = dictionaryString(R.string.colorPicker_random_label),
                                 typographyToken = OddOneOutTheme.typography.Body.B400.Bold,
                                 color = OddOneOutTheme.colorScheme.background,
                             )
@@ -131,7 +130,7 @@ fun ColorPickerDialog(
                 VerticalSpacerS1200()
 
                 Text(
-                    text = "Dark Mode",
+                    text = dictionaryString(R.string.colorPicker_darkMode_header),
                     typographyToken = OddOneOutTheme.typography.Heading.H800
                 )
                 val radioGroupState = rememberRadioGroupState()
@@ -156,7 +155,7 @@ fun ColorPickerDialog(
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Okay")
+                Text(text = dictionaryString(id = R.string.app_okay_action))
             }
         },
     )
@@ -170,6 +169,11 @@ private fun DarkModeOption(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val state = rememberRadioButtonState(isSelected)
+    val configString = when(darkModeConfig) {
+        DarkModeConfig.System -> dictionaryString(R.string.colorPicker_darkMode_system)
+        DarkModeConfig.Light -> dictionaryString(R.string.colorPicker_darkMode_light)
+        DarkModeConfig.Dark -> dictionaryString(R.string.colorPicker_darkMode_dark)
+    }
 
     LaunchedEffect(state.selected) {
         if (state.selected) {
@@ -186,7 +190,7 @@ private fun DarkModeOption(
             .padding(Spacing.S700)
     ) {
         Text(
-            darkModeConfig.name,
+            configString,
             modifier = Modifier.weight(1f),
             typographyToken = OddOneOutTheme.typography.Body.B600
         )

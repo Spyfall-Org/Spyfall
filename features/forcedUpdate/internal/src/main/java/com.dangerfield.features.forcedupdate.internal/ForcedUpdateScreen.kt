@@ -11,16 +11,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.forcedupdate.internal.R
 
 @Composable
-@Suppress("MagicNumber")
 fun ForcedUpdateScreen(
     onOpenAppStoreClicked: () -> Unit
 ) {
@@ -31,7 +32,7 @@ fun ForcedUpdateScreen(
         ) {
             Spacer(modifier = Modifier.fillMaxHeight(0.10f))
             Text(
-                text = "We've made some exciting changes",
+                text = dictionaryString(R.string.forcedUpdate_update_header),
                 typographyToken = OddOneOutTheme.typography.Display.D1000,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
@@ -40,7 +41,7 @@ fun ForcedUpdateScreen(
             Spacer(modifier = Modifier.height(Spacing.S500))
 
             Text(
-                text = "Please download the latest app from the app store to enjoy them.",
+                text = dictionaryString(R.string.forcedUpdate_message_text),
                 typographyToken = OddOneOutTheme.typography.Body.B700,
                 modifier = Modifier.padding(horizontal = Spacing.S500),
                 textAlign = TextAlign.Center
@@ -57,7 +58,7 @@ fun ForcedUpdateScreen(
                     modifier = Modifier.fillMaxWidth(),
                     type = ButtonType.Accent
                 ) {
-                    Text(text = "Open App Store")
+                    Text(text = dictionaryString(R.string.forcedUpdate_openStore_action))
                 }
 
                 Spacer(modifier = Modifier.height(Spacing.S1000))

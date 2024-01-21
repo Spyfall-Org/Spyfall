@@ -18,10 +18,12 @@ import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.A
 import com.dangerfield.features.settings.settingsNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.session.Stats
+import com.dangerfield.oddoneoout.features.settings.internal.R
 import kotlinx.coroutines.flow.map
 import se.ansman.dagger.auto.AutoBindIntoSet
 import oddoneout.core.BuildInfo
@@ -30,7 +32,8 @@ import javax.inject.Inject
 @AutoBindIntoSet
 class SettingsModuleNavGraphBuilder @Inject constructor(
     private val buildInfo: BuildInfo,
-    private val sessionFlow: SessionFlow
+    private val sessionFlow: SessionFlow,
+    private val dictionary: Dictionary
 ) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -65,9 +68,9 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
             AboutScreen(
                 versionName = buildInfo.versionName,
                 onNavigateBack = router::goBack,
-                onPrivacyPolicyClicked = { router.openWebLink(AboutLinks.PrivacyPolicy) },
-                onTermsOfServiceClicked = { router.openWebLink(AboutLinks.TermsOfService) },
-                onThirdPartyServicesClicked = { router.openWebLink(AboutLinks.ThirdPartyServices) }
+                onPrivacyPolicyClicked = { router.openWebLink(dictionary.getString(R.string.about_privacyPolicy_link)) },
+                onTermsOfServiceClicked = { router.openWebLink(dictionary.getString(R.string.about_termsOfService_link)) },
+                onThirdPartyServicesClicked = { router.openWebLink(dictionary.getString(R.string.about_thirdPartyServices_link)) }
             )
         }
 

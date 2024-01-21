@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forcedUpdate_update_header">We\'ve made some exciting changes</string>
+    <string name="forcedUpdate_message_text">Please download the latest app from the app store to enjoy them.</string>
+    <string name="forcedUpdate_openStore_action">Open App Store</string>
+</resources>
