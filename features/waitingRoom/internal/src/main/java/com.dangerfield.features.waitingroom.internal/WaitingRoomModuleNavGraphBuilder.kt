@@ -41,7 +41,7 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
 
             val viewModel = hiltViewModel<WaitingRoomViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
-            val message = dictionaryString(R.string.waitinRoom_cannotLeaveGame_text)
+            val message = dictionaryString(R.string.waitingRoom_cannotLeaveGame_text)
 
             PageLogEffect(
                 route = waitingRoomRoute,

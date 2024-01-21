@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.preview.ThemePreviews
@@ -14,6 +16,7 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
 fun GamePlayLeaveDialog(
@@ -32,10 +35,10 @@ fun GamePlayLeaveDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         topContent = {
-            Text(text = "Are you sure?")
+            Text(text = dictionaryString(R.string.gamePlay_leaveDialog_header))
         },
         content = {
-            Text(text = "Leaving the game will end it for all players.")
+            Text(text = dictionaryString(R.string.gamePlay_leaveDialog_body))
         },
         bottomContent = {
             Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
@@ -44,7 +47,7 @@ fun GamePlayLeaveDialog(
                     onClick = onLeaveConfirmed,
                     type = ButtonType.Accent
                 ) {
-                    Text(text = "Leave")
+                    Text(text = dictionaryString(R.string.gamePlay_leaveDialogLeave_action))
                 }
 
                 VerticalSpacerS800()
@@ -54,7 +57,7 @@ fun GamePlayLeaveDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
-                    Text(text = "Cancel")
+                    Text(text = dictionaryString(R.string.gamePlay_leaveGameDialogCancel_action))
                 }
             }
         }

@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import androidx.compose.ui.res.stringResource
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
@@ -19,6 +19,9 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessor
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
 fun VotingBottomSheet(
@@ -34,7 +37,12 @@ fun VotingBottomSheet(
         topAccessory = iconTopAccessory(icon = SpyfallIcon.Alarm(null)),
         modifier = modifier,
         topContent = {
-            Text(text = if (hasVoted) "Voting Rules" else "Time to vote!")
+            Text(text = if (hasVoted) {
+                dictionaryString(R.string.votingRules_alreadyVoted_header)
+            } else {
+                dictionaryString(R.string.votingRules_notVoted_header)
+            }
+            )
         },
         content = { VotingExplanationBlock(hasVoted) },
         bottomContent = {
@@ -44,7 +52,7 @@ fun VotingBottomSheet(
                     .padding(Spacing.S800),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
-                Text(text = "Okay")
+                Text(text = dictionaryString(id = R.string.app_okay_action))
             }
         }
     )
@@ -55,38 +63,18 @@ fun VotingExplanationBlock(hasVoted: Boolean = false) {
     Column {
 
         if (!hasVoted) {
-            Text(text = "You can choose to do this through the app by voting or amongst yourselves by talking")
+            Text(text = dictionaryString(R.string.votingRules_whereToVote_header))
             VerticalSpacerS800()
         }
 
-        BulletRow {
-            Text(
-                text = "Come to a majority agreement on who you all think the odd one out is",
-            )
-        }
+        val rulePoints = dictionaryString(id = R.string.votingRules_rulePoints_text).split("\n")
 
-        VerticalSpacerS500()
+        rulePoints.forEach {
+            BulletRow {
+                Text(text = it)
+            }
 
-        BulletRow {
-            Text(text = "Once done (regardless of if the guess is correct) the odd one out must reveal themselves and guess the location")
-        }
-
-        VerticalSpacerS500()
-
-        BulletRow {
-            Text(text = "If the majority of the players guess the odd one out correctly the players win")
-        }
-
-        VerticalSpacerS500()
-
-        BulletRow {
-            Text(text = "If the odd one out guesses the location correctly the odd one out wins")
-        }
-
-        VerticalSpacerS500()
-
-        BulletRow {
-            Text(text = "If both sides win or both sides lose then the game ends in a draw!")
+            VerticalSpacerS500()
         }
     }
 }

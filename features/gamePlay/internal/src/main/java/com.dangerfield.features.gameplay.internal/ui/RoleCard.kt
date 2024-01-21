@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
@@ -21,6 +23,7 @@ import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.text.BoldPrefixedText
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 // TODO cleanup
 // Lots of logic in this view, but it's all pretty simple.
@@ -38,7 +41,13 @@ fun RoleCard(
     ) { constraints ->
         val buttonPlaceable = subcompose(0) {
             Button(size = ButtonSize.Small, onClick = onHideShowClicked) {
-                Text(text = if (!isVisible) "Show" else "Hide")
+                Text(
+                    text = if (!isVisible) {
+                        dictionaryString(id = R.string.app_show_action)
+                    } else {
+                        dictionaryString(id = R.string.app_hide_action)
+                    }
+                )
             }
         }.first().measure(constraints)
 
@@ -60,14 +69,14 @@ fun RoleCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     BoldPrefixedText(
-                        boldText = "Role: ",
+                        boldText = dictionaryString(R.string.roleCard_role_label),
                         regularText = role,
                         textAlign = TextAlign.Center,
                     )
 
                     if (location != null && !isTheOddOneOut) {
                         BoldPrefixedText(
-                            boldText = "Location: ",
+                            boldText = dictionaryString(R.string.roleCard_location_label),
                             regularText = location,
                             textAlign = TextAlign.Center,
                         )

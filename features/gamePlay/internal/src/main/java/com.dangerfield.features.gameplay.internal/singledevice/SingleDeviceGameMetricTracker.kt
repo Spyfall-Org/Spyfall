@@ -1,7 +1,6 @@
 package com.dangerfield.features.gameplay.internal.singledevice
 
 import androidx.core.os.bundleOf
-import com.dangerfield.features.gameplay.internal.MultiDeviceGameMetricsTracker
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.DRAW
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.ERROR

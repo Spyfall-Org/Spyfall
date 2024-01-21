@@ -21,12 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.Elevation
-import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
@@ -38,9 +37,11 @@ import com.dangerfield.libraries.ui.components.icon.CircularIcon
 import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
-// TODO consider displaying how many votes the odd one out got?
 @Composable
 fun SingleDeviceResultsScreen(
     didOddOneOutWin: Boolean,
@@ -109,7 +110,7 @@ private fun ResultsScreenContent(
             }
         }
     ) { padding ->
-        // TODO coming back to a single device game in the results stage doesnt work
+
         ScrollingColumnWithFadingEdge(
             Modifier
                 .padding(padding)
@@ -119,11 +120,10 @@ private fun ResultsScreenContent(
 
             VerticalSpacerS500()
 
-            @Suppress("MaxLineLength")
             val winnerText = when {
-                isTie -> "It's a tie!"
-                didOddOneOutWin -> "The Odd One Out Won!"
-                else -> "The Players Won!"
+                isTie -> dictionaryString(R.string.gameResults_tieResult_text)
+                didOddOneOutWin -> dictionaryString(R.string.gameResults)
+                else -> dictionaryString(R.string.gameResults_playersWonResult_text)
             }
 
             Text(
@@ -135,7 +135,7 @@ private fun ResultsScreenContent(
 
             VerticalSpacerS1200()
 
-            Text(text = "The Odd One Out:")
+            Text(text = dictionaryString(R.string.singleDeviceGameResults_oddOneOut_header))
 
             VerticalSpacerS800()
 
@@ -144,13 +144,19 @@ private fun ResultsScreenContent(
             VerticalSpacerS500()
 
             Text(
-                text = "$correctOddOneOutVoteCount votes out of ${totalPlayerCount - 1}",
+                text = dictionaryString(
+                    R.string.singleDeviceGameResults_oddOneOutVotes_text,
+                    mapOf(
+                        "correct" to correctOddOneOutVoteCount.toString(),
+                        "total" to totalPlayerCount.toString()
+                    )
+                ),
                 typographyToken = OddOneOutTheme.typography.Body.B800
             )
 
             VerticalSpacerS1200()
 
-            Text(text = "The Secret Location:")
+            Text(text = dictionaryString(R.string.singleDeviceGameResults_location_header))
 
             VerticalSpacerS800()
 
@@ -160,7 +166,10 @@ private fun ResultsScreenContent(
                 VerticalSpacerS500()
 
                 Text(
-                    text = "Guessed: $oddOneOutLocationGuess",
+                    text = dictionaryString(
+                        R.string.singeDeviceGameResults_locationGuessed_header,
+                        mapOf("location" to oddOneOutLocationGuess)
+                    ),
                     typographyToken = OddOneOutTheme.typography.Body.B800
                 )
             }
@@ -172,7 +181,7 @@ private fun ResultsScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onRestartClicked
             ) {
-                Text(text = "Restart Game")
+                Text(text = dictionaryString(R.string.singeDeviceGameResults_restart_action))
             }
 
             Spacer(modifier = Modifier.height(Spacing.S800))
@@ -182,7 +191,7 @@ private fun ResultsScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onEndGameClicked
             ) {
-                Text(text = "End Game")
+                Text(text = dictionaryString(R.string.singeDeviceGameResults_endGame_action))
             }
 
             VerticalSpacerS1200()

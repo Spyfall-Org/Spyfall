@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
@@ -47,7 +46,7 @@ fun VideoCallInfoBottomSheet(
                 )
                 if (recognizedPlatforms.isNotEmpty()) {
                     VerticalSpacerS800()
-                    Text(dictionaryString(R.string.videoLink_infoDialogSaftey_header))
+                    Text(dictionaryString(R.string.videoLink_infoDialogSafety_header))
                     VerticalSpacerS500()
                     NonLazyVerticalGrid(
                         columns = 2,

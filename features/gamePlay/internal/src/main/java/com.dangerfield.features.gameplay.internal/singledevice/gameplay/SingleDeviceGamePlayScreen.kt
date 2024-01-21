@@ -3,7 +3,6 @@ package com.dangerfield.features.gameplay.internal.singledevice.gameplay
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,10 +15,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
@@ -32,6 +33,7 @@ import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 // TODO consider making examples backend driven or rotating
 @Composable
@@ -114,14 +116,14 @@ private fun GamePlayScreenContent(
                 VerticalSpacerS800()
 
                 Text(
-                    text = "Take turns asking each other questions that only someone at the secret location would know.\n\nBut make sure not to reveal the location to the odd one out!",
+                    text = dictionaryString(R.string.singleDeviceGame_inGamePlayDescription_text),
                     typographyToken = OddOneOutTheme.typography.Body.B800,
                 )
 
                 VerticalSpacerS800()
 
                 Text(
-                    text = "Example:",
+                    text = dictionaryString(R.string.singleDeviceGame_inGamePlayExamples_header),
                     typographyToken = OddOneOutTheme.typography.Body.B800.Bold,
                 )
 
@@ -129,7 +131,7 @@ private fun GamePlayScreenContent(
 
                 BulletRow {
                     Text(
-                        text = "Do you come to this location often?",
+                        text = dictionaryString(R.string.singleDeviceGame_inGamePlayExampleOne_text),
                         typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
@@ -138,7 +140,7 @@ private fun GamePlayScreenContent(
 
                 BulletRow {
                     Text(
-                        text = "Can you make money at this location?",
+                        text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayExampleTwo_text),
                         typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
@@ -147,7 +149,7 @@ private fun GamePlayScreenContent(
 
                 BulletRow {
                     Text(
-                        text = "Do you have to wear a uniform?",
+                        text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayExampleThree_text),
                         typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
@@ -156,7 +158,7 @@ private fun GamePlayScreenContent(
 
                 BulletRow {
                     Text(
-                        text = "Could you take kids to this location?",
+                        text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayExampleFour_text),
                         typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
@@ -167,7 +169,7 @@ private fun GamePlayScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onRestartGameClicked
                 ) {
-                    Text(text = "Restart Game")
+                    Text(text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayRestart_action))
                 }
 
                 Spacer(modifier = Modifier.height(Spacing.S800))
@@ -177,7 +179,7 @@ private fun GamePlayScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onEndGameClicked
                 ) {
-                    Text(text = "End Game")
+                    Text(text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayEndGame_action))
                 }
 
                 VerticalSpacerS1200()

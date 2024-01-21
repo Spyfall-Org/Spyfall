@@ -20,12 +20,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.ads.OddOneOutAd.MultiPlayerGamePlayBanner
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.gameplay.internal.DisplayablePlayer
 import com.dangerfield.features.gameplay.internal.Fake
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.ui.HorizontalSpacerS800
 import com.dangerfield.libraries.ui.preview.PreviewContent
@@ -43,6 +45,7 @@ import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 import spyfallx.ui.color.background
 
 // TODO cleanup
@@ -188,7 +191,11 @@ private fun GamePlayScreenContent(
         RoleCard(
             role = role,
             location = location,
-            text = if (isOddOneOut) "Don't get found out" else "Find the odd one out",
+            text = if (isOddOneOut) {
+                dictionaryString(R.string.gamePlay_oddOneRoleTip_text)
+            } else {
+                dictionaryString(R.string.gamePlay_playerRoleTip_text)
+            },
             isTheOddOneOut = isOddOneOut,
             isVisible = !isRoleHidden,
             onHideShowClicked = { isRoleHidden = !isRoleHidden },
@@ -251,7 +258,7 @@ private fun GamePlayScreenContent(
             modifier = Modifier.fillMaxWidth(),
             onClick = onResetGameClicked
         ) {
-            Text(text = "Restart Game")
+            Text(text = dictionaryString(R.string.gamePlay_restart_action))
         }
 
         Spacer(modifier = Modifier.height(Spacing.S800))
@@ -261,7 +268,7 @@ private fun GamePlayScreenContent(
             modifier = Modifier.fillMaxWidth(),
             onClick = onEndGameClicked
         ) {
-            Text(text = "End Game")
+            Text(text = dictionaryString(R.string.gamePlay_end_action))
         }
 
         VerticalSpacerS1200()
@@ -295,14 +302,14 @@ private fun VoteButton(
                     }
                 }
             ) {
-                Text(text = "Submit Vote")
+                Text(text = dictionaryString(R.string.gamePlay_submitVote_action))
             }
         }
 
         VerticalSpacerS1200()
 
         Text(
-            text = "or",
+            text = dictionaryString(R.string.gamePlay_votingOr_text),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
@@ -320,9 +327,9 @@ private fun LocationsList(
     Column {
 
         val text = when {
-            hasMePlayerSubmittedVote -> "Your Vote:"
-            isTimeUp -> "Which location are you at?"
-            else -> "Locations:"
+            hasMePlayerSubmittedVote -> dictionaryString(R.string.gamePlay_yourVote_header)
+            isTimeUp -> dictionaryString(R.string.gamePlay_voteForLocation_header)
+            else -> dictionaryString(R.string.gamePlay_locations_header)
         }
 
         Text(
@@ -360,7 +367,18 @@ private fun CorrectAnswer(
 ) {
     Column {
         Text(
-            text = "The actual ${if (isVotingOnLocation) "location" else "odd one out"}:",
+            text = dictionaryString(
+                R.string.gamePlay_correctAnswer_header,
+                mapOf(
+                    "type" to if (isVotingOnLocation) {
+                        dictionaryString(R.string.app_location_label)
+                    } else {
+                        dictionaryString(
+                            R.string.app_oddOneOut_label
+                        )
+                    }
+                )
+            ),
             typographyToken = OddOneOutTheme.typography.Display.D800
         )
 
@@ -387,9 +405,9 @@ private fun PlayerList(
 ) {
     Column {
         val text = when {
-            hasMePlayerSubmittedVote -> "Your Vote:"
-            isTimeUp -> "Which player is the odd one out?"
-            else -> "Players:"
+            hasMePlayerSubmittedVote -> dictionaryString(id = R.string.gamePlay_yourVote_header)
+            isTimeUp -> dictionaryString(R.string.gamePlay_voteForOddOneOut_header)
+            else -> dictionaryString(R.string.gamePlay_players_header)
         }
 
         Text(
@@ -471,12 +489,12 @@ private fun Header(
     isMePlayerOddOneOut: Boolean
 ) {
     val headerText = when {
-        gameResult == GameResult.PlayersWon -> "The Players Won!"
-        gameResult == GameResult.OddOneOutWon && isMePlayerOddOneOut -> "You won!"
-        gameResult == GameResult.OddOneOutWon -> "The Odd One Out Won!"
-        gameResult == GameResult.Draw -> "It's a Draw!"
-        hasMePlayerSubmittedVote -> "Counting votes..."
-        isTimeUp -> "Time to vote!"
+        gameResult == GameResult.PlayersWon -> dictionaryString(id = R.string.gameResults_playersWonResult_text)
+        gameResult == GameResult.OddOneOutWon && isMePlayerOddOneOut -> dictionaryString(R.string.gameResults_youWon_text)
+        gameResult == GameResult.OddOneOutWon -> dictionaryString(id = R.string.gameResults)
+        gameResult == GameResult.Draw -> dictionaryString(id = R.string.gameResults_tieResult_text)
+        hasMePlayerSubmittedVote -> dictionaryString(R.string.gameResults_countingVotes_text)
+        isTimeUp -> dictionaryString(R.string.gameResults_timeToVote_text)
         else -> timeRemaining
     }
 

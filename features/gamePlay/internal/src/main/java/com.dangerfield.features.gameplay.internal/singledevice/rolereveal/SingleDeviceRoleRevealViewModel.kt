@@ -9,6 +9,7 @@ import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.Single
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Event
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
@@ -19,6 +20,7 @@ import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.FieldState.Invalid
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,6 +41,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val gameConfig: GameConfig,
+    private val dictionary: Dictionary,
     private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
 ) : SEAViewModel<State, Event, Action>() {
 
@@ -113,12 +116,18 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         val fieldState = when {
             newName.isNotEmpty() && isNameInvalidLength -> Invalid(
                 newName,
-                "Name must be between ${gameConfig.minNameLength} and ${gameConfig.maxNameLength} characters"
+                dictionary.getString(
+                    R.string.roleReveal_nameInvalidLengthError_text,
+                    mapOf(
+                        "min" to gameConfig.minNameLength.toString(),
+                        "max" to gameConfig.maxNameLength.toString()
+                    )
+                )
             )
 
             gameFlow.first().players.find { it.userName.lowercase() == newName.lowercase() } != null -> Invalid(
                 newName,
-                "Name is taken"
+                dictionary.getString(R.string.roleReveal_nameTakenError_text)
             )
 
             else -> FieldState.Valid(newName)

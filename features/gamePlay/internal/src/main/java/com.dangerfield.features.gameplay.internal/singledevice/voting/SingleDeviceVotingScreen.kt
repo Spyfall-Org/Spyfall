@@ -20,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.ads.OddOneOutAd
@@ -28,6 +29,7 @@ import com.dangerfield.features.gameplay.internal.Fake
 import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
 import com.dangerfield.features.gameplay.internal.singledevice.EndOrGoBackDialog
 import com.dangerfield.features.gameplay.internal.ui.GamePlayGrid
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
@@ -42,6 +44,7 @@ import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -157,7 +160,10 @@ private fun VotingScreenContent(
             if (currentPlayer != null) {
 
                 Text(
-                    text = "Hand the device to ${currentPlayer.name}",
+                    text = dictionaryString(
+                        id = R.string.singleDevice_handToPlayer_header,
+                        mapOf("name" to currentPlayer.name)
+                    ),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     typographyToken = OddOneOutTheme.typography.Display.D1100
@@ -166,7 +172,7 @@ private fun VotingScreenContent(
                 VerticalSpacerS800()
 
                 Text(
-                    text = "Click \"show\" to see your voting options. The last player will be able to reveal the results.",
+                    text = dictionaryString(R.string.singleDeviceVoting_Instructions_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     typographyToken = OddOneOutTheme.typography.Body.B700
@@ -181,7 +187,13 @@ private fun VotingScreenContent(
                     style = ButtonStyle.Filled,
                     size = ButtonSize.Small
                 ) {
-                    Text(text = if (isVotingOptionsHidden) "Show" else "Hide")
+                    Text(
+                        text = if (isVotingOptionsHidden) {
+                            dictionaryString(R.string.app_show_action)
+                        } else {
+                            dictionaryString(R.string.app_hide_action)
+                        }
+                    )
                 }
 
                 AnimatedVisibility(visible = !isVotingOptionsHidden) {
@@ -191,9 +203,9 @@ private fun VotingScreenContent(
                         VerticalSpacerS1200()
 
                         if (currentPlayer.isOddOneOut) {
-                            Text(text = "Which location were you at?")
+                            Text(text = dictionaryString(R.string.singleDeviceVoting_locationVoting_header))
                         } else {
-                            Text(text = "Who is the odd one out?")
+                            Text(text = dictionaryString(R.string.singleDeviceVoting_oddOneOutVoting_header))
                         }
 
                         VerticalSpacerS500()
@@ -257,7 +269,13 @@ private fun VotingScreenContent(
                         style = if (hasSelectedVote) ButtonStyle.Filled else ButtonStyle.Outlined,
                         enabled = hasSelectedVote,
                     ) {
-                        Text(text = if (isLastPlayer) "See Results" else "Next Player")
+                        Text(
+                            text = if (isLastPlayer) {
+                                dictionaryString(R.string.singleDeviceVoting_seeResults_action)
+                            } else {
+                                dictionaryString(R.string.singleDeviceVoting_nextPlayer_action)
+                            }
+                        )
                     }
                 }
 
@@ -265,7 +283,7 @@ private fun VotingScreenContent(
 
             } else {
                 Text(
-                    text = "Loading...",
+                    text = stringResource(R.string.singleDeviceVoting_loading_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     typographyToken = OddOneOutTheme.typography.Display.D1100,

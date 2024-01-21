@@ -27,6 +27,7 @@ import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
 import com.dangerfield.features.gameplay.internal.singledevice.EndOrGoBackDialog
 import com.dangerfield.features.gameplay.internal.ui.GamePlayGrid
 import com.dangerfield.features.gameplay.internal.ui.RoleCard
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
@@ -42,6 +43,7 @@ import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -158,13 +160,16 @@ private fun RoleRevealScreenContent(
             horizontalAlignment = CenterHorizontally
         ) {
 
-            // TODO add horizontal pager
+            // TODO add horizontal pager?
             VerticalSpacerS1200()
 
             if (currentPlayer != null) {
 
                 Text(
-                    text = "Hand the device to ${currentPlayer.name}",
+                    text = dictionaryString(
+                        R.string.singleDevice_handToPlayer_header,
+                        mapOf("name" to currentPlayer.name)
+                    ),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     typographyToken = OddOneOutTheme.typography.Display.D1100
@@ -174,14 +179,14 @@ private fun RoleRevealScreenContent(
 
                 if (isLastPlayer) {
                     Text(
-                        text = "Click \"show\" to see your role.\n\n When everyone is ready, click start game to begin.",
+                        text = dictionaryString(R.string.roleReveal_starterInstructions_text),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
                 } else {
                     Text(
-                        text = "Click \"show\" to see your role.\n\n When you are ready, click next player and pass the device to the next player.",
+                        text = dictionaryString(R.string.roleReveal_instructions_text),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         typographyToken = OddOneOutTheme.typography.Body.B700
@@ -194,7 +199,7 @@ private fun RoleRevealScreenContent(
                     role = currentPlayer.role,
                     isTheOddOneOut = currentPlayer.isOddOneOut,
                     location = location,
-                    text = if (currentPlayer.isOddOneOut) "Don't get found out!" else null,
+                    text = if (currentPlayer.isOddOneOut) dictionaryString(R.string.roleReveal_dontGetFoundOut_text) else null,
                     isVisible = isRoleVisible,
                     onHideShowClicked = {
                         if(!isRoleVisible) showRoleField() else hideRoleField()
@@ -204,7 +209,7 @@ private fun RoleRevealScreenContent(
                 VerticalSpacerS1200()
 
                 Text(
-                    text = "Remember which player you are or change your name.",
+                    text = dictionaryString(R.string.roleReveal_changeName_header),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
@@ -225,7 +230,7 @@ private fun RoleRevealScreenContent(
                         }
                     ),
                     placeholder = {
-                        Text(text = "Enter new name")
+                        Text(text = dictionaryString(R.string.roleReveal_changeName_hint))
                     },
                     singleLine = true
                 )
@@ -244,7 +249,7 @@ private fun RoleRevealScreenContent(
                 if (nameFieldState is FieldState.Valid) {
                     VerticalSpacerS500()
                     Text(
-                        text = "Name will be updated",
+                        text = dictionaryString(R.string.roleReveal_changeNameSuccess_text),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.fillMaxWidth(),
                         typographyToken = OddOneOutTheme.typography.Body.B500,
@@ -254,7 +259,7 @@ private fun RoleRevealScreenContent(
 
                 VerticalSpacerS1200()
 
-                Text(text = "The Odd One Out (might be you) will think the location is one of the following:")
+                Text(text = dictionaryString(R.string.roleReveal_locations_header))
 
                 VerticalSpacerS500()
                 GamePlayGrid(
@@ -275,7 +280,7 @@ private fun RoleRevealScreenContent(
                         style = if (areButtonsEnabled) ButtonStyle.Filled else ButtonStyle.Outlined,
                         enabled = areButtonsEnabled,
                     ) {
-                        Text(text = "Start Game")
+                        Text(text = dictionaryString(R.string.roleReveal_startGame_action))
                     }
                 } else {
                     Button(
@@ -284,7 +289,7 @@ private fun RoleRevealScreenContent(
                         enabled = areButtonsEnabled,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Next Player")
+                        Text(text = dictionaryString(R.string.roleReveal_nextPlayer_action))
                     }
                 }
 
@@ -292,7 +297,7 @@ private fun RoleRevealScreenContent(
 
             } else {
                 Text(
-                    text = "Loading...",
+                    text = dictionaryString(R.string.roleReveal_loading_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     typographyToken = OddOneOutTheme.typography.Display.D1100

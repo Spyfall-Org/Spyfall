@@ -7,15 +7,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.route
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
 fun EndOrGoBackDialog(
@@ -34,10 +36,10 @@ fun EndOrGoBackDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         topContent = {
-            Text(text = "End the game or go back?")
+            Text(text = dictionaryString(R.string.endOrGoBack_dialog_header))
         },
         content = {
-            Text(text = "Going back will show the previous players details, ending will delete the game.")
+            Text(text = dictionaryString(R.string.endOrGoBack_description_text))
         },
         bottomContent = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -46,7 +48,7 @@ fun EndOrGoBackDialog(
                     onClick = onEndGame,
                     type = ButtonType.Accent
                 ) {
-                    Text(text = "End Game")
+                    Text(text = dictionaryString(R.string.app_end_game_action))
                 }
 
                 VerticalSpacerS800()
@@ -56,7 +58,7 @@ fun EndOrGoBackDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onGoBack
                 ) {
-                    Text(text = "Go Back")
+                    Text(text = dictionaryString(R.string.endOrGoBack_goBack_action))
                 }
 
                 VerticalSpacerS800()
@@ -66,7 +68,7 @@ fun EndOrGoBackDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
-                    Text(text = "Cancel")
+                    Text(text = dictionaryString(R.string.endOrGoBack_cancel_action))
                 }
             }
         }

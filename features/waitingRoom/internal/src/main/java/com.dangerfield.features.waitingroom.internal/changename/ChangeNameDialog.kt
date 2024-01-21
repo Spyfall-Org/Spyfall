@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
@@ -86,7 +85,7 @@ fun ChangeNameDialog(
                             )
                         )
 
-                        isNameTaken -> dictionaryString(R.string.changeName_usernameTakenErrror_text)
+                        isNameTaken -> dictionaryString(R.string.changeName_usernameTakenError_text)
                         else -> null
                     }
 

@@ -12,7 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
+import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.preview.ThemePreviews
@@ -25,6 +27,7 @@ import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
 fun SingleDeviceInfoScreen(
@@ -61,7 +64,7 @@ private fun SingleDeviceInfoScreenContent(
     Screen(
         topBar = {
             Header(
-                title = "Getting started",
+                title = dictionaryString(R.string.singleDeviceInfo_gettingStarted_header),
             )
         }
     ) { padding ->
@@ -71,9 +74,9 @@ private fun SingleDeviceInfoScreenContent(
                 .padding(horizontal = Spacing.S1000)
         ) {
             VerticalSpacerS500()
-            @Suppress("MaxLineLength")
+
             Text(
-                text = "Single device games are played by each player passing around the device.\n\nWhen handed the device the player will be able to reveal their role and the location (if they are not the odd one out).\n\nWhen done that player should press the \"Next Player\" button before handing the device off to the next player.\n\nThe last player will be able to start the game.",
+                text = dictionaryString(R.string.singleDeviceInfo_gameInfo_text),
                 typographyToken = OddOneOutTheme.typography.Body.B700
             )
 
@@ -85,7 +88,7 @@ private fun SingleDeviceInfoScreenContent(
                 onClick = onStartClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Start Game")
+                Text(text = dictionaryString(R.string.singleDeviceInfo_startGame_action))
             }
 
             VerticalSpacerS1000()
@@ -95,7 +98,7 @@ private fun SingleDeviceInfoScreenContent(
                 onClick = onEndGameClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "End Game")
+                Text(text = dictionaryString(R.string.singleDeviceInfo_endGame_action))
             }
 
             VerticalSpacerS1000()
