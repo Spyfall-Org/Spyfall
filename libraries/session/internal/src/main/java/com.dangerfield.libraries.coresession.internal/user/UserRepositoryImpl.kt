@@ -17,6 +17,7 @@ import com.dangerfield.libraries.session.storage.MeGamePlayed
 import com.dangerfield.libraries.session.storage.MeGameResult
 import com.dangerfield.libraries.session.storage.MeGameStatsDao
 import com.dangerfield.libraries.ui.color.ThemeColor
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +42,7 @@ import kotlin.time.Duration.Companion.seconds
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
+    private val firebaseAnalytics: FirebaseAnalytics,
     @ApplicationScope private val applicationScope: CoroutineScope,
     private val dataStore: DataStore<Preferences>,
     private val meGameStatsDao: MeGameStatsDao,
@@ -74,6 +76,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userIdFlow = flow {
         getUserId()
             .onSuccess {
+                firebaseAnalytics.setUserId(it)
                 emit(it)
             }
             .onFailure {

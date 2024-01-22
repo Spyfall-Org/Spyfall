@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                 adsConfig = adsConfig,
                 metricsTracker = metricsTracker,
                 dictionary = dictionary,
+                legalAcceptanceState = state.legalAcceptanceState,
                 languageSupportLevel = state.languageSupportLevel
             )
         }

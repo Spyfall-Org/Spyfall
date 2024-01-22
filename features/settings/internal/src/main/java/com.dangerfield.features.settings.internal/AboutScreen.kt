@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.Screen
@@ -59,14 +61,24 @@ fun AboutScreen(
                 trailingIcon = SpyfallIcon.ChevronRight(null),
             )
 
+            VerticalSpacerS1200()
+
+            Text(
+                text = dictionaryString(R.string.settings_madeWithLove_text),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                typographyToken = OddOneOutTheme.typography.Body.B700,
+                color = OddOneOutTheme.colorScheme.textDisabled
+            )
+
             Text(
                 text = dictionaryString(id = R.string.app_name_text) + dictionaryString(
                     R.string.settings_version_label,
                     mapOf("version" to versionName)
                 ),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = Spacing.S1000),
+                    .fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 typographyToken = OddOneOutTheme.typography.Body.B700,
                 color = OddOneOutTheme.colorScheme.textDisabled

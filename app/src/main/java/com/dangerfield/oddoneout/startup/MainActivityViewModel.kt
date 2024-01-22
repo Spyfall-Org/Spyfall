@@ -2,6 +2,8 @@ package com.dangerfield.oddoneout.startup
 
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
+import com.dangerfield.features.termOfService.GetLegalAcceptanceState
+import com.dangerfield.features.termOfService.LegalAcceptanceState
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
@@ -36,6 +38,7 @@ class MainActivityViewModel @Inject constructor(
     private val ensureAppConfigLoaded: EnsureAppConfigLoaded,
     private val ensureSessionLoaded: EnsureSessionLoaded,
     private val isAppUpdateRequired: IsAppUpdateRequired,
+    private val getLegalAcceptanceState: GetLegalAcceptanceState,
     private val sessionFlow: SessionFlow,
     private val getLanguageSupportLevel: GetDeviceLanguageSupportLevel
 ) : SEAViewModel<State, Unit, Action>() {
@@ -46,7 +49,8 @@ class MainActivityViewModel @Inject constructor(
         darkModeConfig = DarkModeConfig.System,
         isBlockingLoad = true,
         hasBlockingError = false,
-        languageSupportLevel = null
+        languageSupportLevel = null,
+        legalAcceptanceState = null
     )
 
     init {
@@ -96,6 +100,10 @@ class MainActivityViewModel @Inject constructor(
                 viewModelScope.launch {
                     getLanguageSupport()
                 }
+
+                viewModelScope.launch {
+                    listenForLegalAcceptanceState()
+                }
             }
     }
 
@@ -116,6 +124,18 @@ class MainActivityViewModel @Inject constructor(
                     state.copy(
                         accentColor = colorPrimitive,
                         darkModeConfig = config.darkModeConfig
+                    )
+                }
+            }
+    }
+
+    private suspend fun listenForLegalAcceptanceState() {
+        getLegalAcceptanceState()
+            .distinctUntilChanged()
+            .collectLatest { legalAcceptanceState ->
+                updateState { state ->
+                    state.copy(
+                       legalAcceptanceState = legalAcceptanceState
                     )
                 }
             }
@@ -159,6 +179,7 @@ class MainActivityViewModel @Inject constructor(
         val accentColor: ColorPrimitive,
         val darkModeConfig: DarkModeConfig,
         val hasBlockingError: Boolean,
+        val legalAcceptanceState: LegalAcceptanceState?,
         val languageSupportLevel: LanguageSupportLevel?
     )
 }

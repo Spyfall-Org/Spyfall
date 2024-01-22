@@ -7,10 +7,10 @@ spyfall {
 }
 
 android {
-    namespace = "com.dangerfield.example"
+    namespace = "com.dangerfield.oddoneoout.features.termofservice"
 }
 dependencies {
     implementation(projects.libraries.common)
-    implementation(projects.libraries.ui)
     implementation(projects.libraries.navigation)
+    implementation(projects.libraries.ui)
 }

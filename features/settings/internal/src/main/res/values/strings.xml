@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="about_privacyPolicy_link">https://oddoneoutgame.github.io/odd-one-out/privacy-policy/</string>
-    <string name="about_termsOfService_link">https://oddoneoutgame.github.io/odd-one-out/terms-of-service/</string>
-    <string name="about_thirdPartyServices_link">https://oddoneoutgame.github.io/odd-one-out/third-party-services/</string>
-</resources>

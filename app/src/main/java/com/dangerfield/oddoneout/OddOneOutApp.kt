@@ -35,6 +35,8 @@ import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.LocalAdsConfig
 import com.dangerfield.features.blockingerror.blockingErrorRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
+import com.dangerfield.features.termOfService.LegalAcceptanceState
+import com.dangerfield.features.termOfService.termOfServiceRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.analytics.LocalMetricsTracker
 import com.dangerfield.libraries.analytics.MetricsTracker
@@ -77,6 +79,7 @@ fun OddOneOutApp(
     networkMonitor: NetworkMonitor,
     adsConfig: AdsConfig,
     metricsTracker: MetricsTracker,
+    legalAcceptanceState: LegalAcceptanceState?,
     dictionary: Dictionary,
     appState: AppState = rememberAppState(networkMonitor = networkMonitor),
     isUpdateRequired: Boolean,
@@ -109,6 +112,7 @@ fun OddOneOutApp(
     }
 
     val startingRoute = when {
+        legalAcceptanceState == LegalAcceptanceState.NotAccepted -> termOfServiceRoute
         isUpdateRequired -> forcedUpdateNavigationRoute
         hasBlockingError -> blockingErrorRoute
         else -> welcomeNavigationRoute

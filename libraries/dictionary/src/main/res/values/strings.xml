@@ -104,6 +104,7 @@
     <string name="settings_stats_label">Stats</string>
     <string name="settings_qaMenu_label">QA Menu</string>
     <string name="settings_version_label">" Version: {version}"</string>
+    <string name="settings_madeWithLove_text">Made with ❤️</string>
     <string name="settings_settingsScreen_header">Settings</string>
     <string name="settings_about_header">About</string>
     <string name="settings_contactUs_header">Contact Us</string>
@@ -112,6 +113,9 @@
     <string name="about_privacyPolicy_label">Privacy Policy</string>
     <string name="about_termsOfService_label">Terms of Service</string>
     <string name="about_thirdPartyServices_label">Third Party Services</string>
+    <string name="about_privacyPolicy_link">https://oddoneoutgame.github.io/odd-one-out/privacy-policy/</string>
+    <string name="about_termsOfService_link">https://oddoneoutgame.github.io/odd-one-out/terms-of-service/</string>
+    <string name="about_thirdPartyServices_link">https://oddoneoutgame.github.io/odd-one-out/third-party-services/</string>
 
     <!-- /////////////////////    Contact Us Strings   /////////////////////-->
     <string name="contactUs_errorSubmitting_body">Looks like something went wrong submitting your form, please try again.</string>
@@ -298,4 +302,7 @@
     <string name="rules_howToWinSection_header">How to win</string>
     <string name="rules_howToWinSectionBullets_text">At any point the odd one out can decide to reveal themselves and guess the location. If they are wrong, the players win otherwise the odd one out wins.\nAt any point the players can decide to stop the game and guess who the odd one out is. If they guess correctly the players win, otherwise the odd one out revels themselves and wins.\nAfter the timer runs out, the players must agree to accuse someone of being the odd one out. After the accusation the odd one out reveals themselves. If the players accused wrong, the odd one out wins, If the players accused correctly then the odd one out has a chance to tie the game by guessing the location correctly, otherwise the players win.</string>
 
+    <!-- /////////////////////    Blocking Error Strings   /////////////////////-->
+    <string name="blockingError_screen_header">This is embarrassing</string>
+    <string name="blockingError_error_body">We seem to have an uncaught bug in our app. Please try killing the app and starting again.</string>
 </resources>

@@ -49,6 +49,7 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.legacy.support)
     implementation(libs.androidx.lifecycle.ext)
@@ -63,6 +64,7 @@ dependencies {
     implementation(libs.arch.navigation.ui)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.moshi)
 
     implementation(project.libs.dagger)
     implementation(project.libs.dagger.hilt.android)
@@ -82,6 +84,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.navigation.compose)
+
+    // lottie for animations
+    implementation(libs.lottie)
+
+    // ads
+    implementation(libs.google.play.services.ads)
 
     /**
      * Project Modules
@@ -142,17 +150,9 @@ dependencies {
 	implementation(projects.libraries.analytics.internal)
 	implementation(projects.libraries.dictionary)
 	implementation(projects.libraries.dictionary.internal)
+	implementation(projects.features.termOfService)
+	implementation(projects.features.termOfService.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
-
-    // lottie for animations
-    implementation(libs.lottie)
-
-    // ads
-    implementation(libs.google.play.services.ads)
-
-    implementation(libs.androidx.activity.compose)
-
-    implementation(libs.moshi)
 
     testImplementation(libs.androidx.test.junit)
     testImplementation(libs.androidx.test.core)

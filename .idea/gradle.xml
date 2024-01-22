@@ -47,6 +47,8 @@
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/settings/internal" />
             <option value="$PROJECT_DIR$/features/splash" />
+            <option value="$PROJECT_DIR$/features/termOfService" />
+            <option value="$PROJECT_DIR$/features/termOfService/internal" />
             <option value="$PROJECT_DIR$/features/videoCall" />
             <option value="$PROJECT_DIR$/features/videoCall/internal" />
             <option value="$PROJECT_DIR$/features/waitingRoom" />
