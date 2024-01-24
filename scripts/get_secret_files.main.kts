@@ -110,6 +110,7 @@ val serviceAccountKeyPath = args.getOrNull(0) ?: run {
     throw Exception("No service_key.json file found")
 }
 
+@Suppress("TooGenericExceptionCaught", "NestedBlockDepth")
 fun getFiles() {
     val googleDriveServiceAccountKey = File(serviceAccountKeyPath)
     val credentials = ServiceAccountCredentials.fromStream(googleDriveServiceAccountKey.inputStream())
