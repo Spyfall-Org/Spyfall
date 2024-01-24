@@ -71,7 +71,7 @@ fun main() {
 }
 
 fun setPullRequestLink(writer: OutputStreamWriter, pullNumber: String) {
-    writer.writeEnvValue("pullRequestLink", "https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber")
+    writer.writeEnvValue("pullRequestLink", "https://github.com/oddoneoutgame/OddOneOut/pull/$pullNumber")
 }
 
 @Suppress("MaxLineLength")
@@ -83,11 +83,9 @@ fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
         ```
         :warning: :warning: :warning:
         
-        ## [PR that triggered draft](https://github.com/Spyfall-Org/Spyfall/pull/$pullNumber)
+        ## [PR that triggered draft](https://github.com/oddoneoutgame/OddOneOut/pull/$pullNumber)
         When you publish, please merge the above Pull Request back into main.
-         
-        See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
-        
+                 
     """.trimIndent()
 
     val releaseNotesFile = File("release_notes_temp.md").also { it.createNewFile() }
@@ -101,7 +99,7 @@ fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
 }
 
 fun setAppId(writer: OutputStreamWriter) {
-    writer.writeEnvValue("spyfallAppId", getAppId())
+    writer.writeEnvValue("oddoneoutAppId", getAppId())
 }
 
 fun setAppFirebaseLinks(writer: OutputStreamWriter) {
@@ -111,7 +109,7 @@ fun setAppFirebaseLinks(writer: OutputStreamWriter) {
     @Suppress ("MaxLineLength")
     val link = "https://console.firebase.google.com/u/0/project/${projectId}/appdistribution/app/android:${packageName}/releases"
 
-    writer.writeEnvValue("spyfallFirebaseDistributionLink", link)
+    writer.writeEnvValue("oddoneoutFirebaseDistributionLink", link)
 }
 
 fun getAppId(): String {
@@ -172,7 +170,7 @@ fun setReleaseVariables(writer: OutputStreamWriter, branchName: String) {
     }
 
     writer.writeEnvValue("releaseVersion", "$branchVersion")
-    writer.writeEnvValue("releaseTagName", "spyfall/$branchVersion")
+    writer.writeEnvValue("releaseTagName", "oddoneout/$branchVersion")
 }
 
 fun getVersionName(): String {

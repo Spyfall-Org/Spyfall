@@ -92,7 +92,7 @@ fun updatePRArtifactsComment(
 ) {
     val htmlUrl = repo.getWorkflowRun(runID).htmlUrl
 
-    val publishedReleaseUrl = "https://github.com/Spyfall-Org/Spyfall/releases/tag/${tagName?.replace("/","%2F")}"
+    val publishedReleaseUrl = "https://github.com/oddoneoutgame/OddOneOut/releases/tag/${tagName?.replace("/","%2F")}"
 
     @Suppress("MaxLineLength")
     val fullMessage = """
@@ -116,7 +116,6 @@ ${
         (if (releaseDraft != null) """
 - ##### [Release Draft](${releaseDraft.htmlUrl}) 
 - ##### [Release (once published)]($publishedReleaseUrl)
-When it is time to release, publish the draft release and merge this PR. See the [release documentation](https://spyfall-org.github.io/how-to/release/) for more info. 
 """.trimIndent() else null) ?: ""
     }
     

@@ -17,14 +17,14 @@ jobs:
       isReleasePR: ""
       releaseVersion: ""
       releaseTagName: ""
-      spyfallAppId: ""
-      spyfallFirebaseDistributionLink: ""
+      oddoneoutAppId: ""
+      oddoneoutFirebaseDistributionLink: ""
       firebaseDistributionDebugApkKey: "null"
       firebaseDistributionReleaseApkKey: "null"
       releaseNotesFile: ""
-      spyfallDebugApkPath: ""
-      spyfallReleaseApkPath: ""
-      spyfallReleaseAabPath: ""
+      oddoneoutDebugApkPath: ""
+      oddoneoutReleaseApkPath: ""
+      oddoneoutReleaseAabPath: ""
       pullRequestLink: ""
       GOOGLE_APPLICATION_CREDENTIALS: "app/src/release/service-account-key.json"
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
@@ -75,41 +75,41 @@ jobs:
         id: createassets
         run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isReleasePR }} ${{ github.env }} spyfall.keystore ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
 
-      - name: Upload Spyfall Release Signed Apk
+      - name: Upload Release Signed Apk
         if: ${{ env.isReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: Spyfall Release Apk
-          path: ${{ env.spyfallReleaseApkPath }}
+          name: Release Apk
+          path: ${{ env.oddoneoutReleaseApkPath }}
 
-      - name: Upload Spyfall Release Signed Aab
+      - name: Upload Release Signed Aab
         if: ${{ env.isReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: Spyfall Release aab
-          path: ${{ env.spyfallReleaseAabPath }}
+          name: Release aab
+          path: ${{ env.oddoneoutReleaseAabPath }}
 
-      - name: Upload Spyfall Debug Apk
+      - name: Upload Debug Apk
         if: ${{ env.isReleasePR == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: Spyfall Debug Apk
-          path: ${{ env.spyfallDebugApkPath }}
+          name: Debug Apk
+          path: ${{ env.oddoneoutDebugApkPath }}
 
-      - name: Deploy Spyfall Debug Asset to Firebase
+      - name: Deploy Debug Asset to Firebase
         if: ${{ env.isReleasePR == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false firebaseDistributionDebugApkKey ${{ env.spyfallDebugApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false firebaseDistributionDebugApkKey ${{ env.oddoneoutDebugApkPath }}
 
-      - name: Deploy Spyfall Release Asset to Firebase
+      - name: Deploy Release Asset to Firebase
         if: ${{ env.isReleasePR == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.spyfallAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true firebaseDistributionReleaseApkKey ${{ env.spyfallReleaseApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true firebaseDistributionReleaseApkKey ${{ env.oddoneoutReleaseApkPath }}
 
-      - name: Update Spyfall Draft Release
+      - name: Update Draft Release
         if: ${{ env.isReleasePR == 'true' }}
-        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ env.releaseNotesFile }} ${{ env.spyfallReleaseAabPath }} ${{ env.spyfallReleaseApkPath }} ${{ env.spyfallDebugApkPath }}
+        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ env.releaseNotesFile }} ${{ env.oddoneoutReleaseAabPath }} ${{ env.oddoneoutReleaseApkPath }} ${{ env.oddoneoutDebugApkPath }}
 
       - name: Update PR Comment
-        run: ./scripts/ci/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.firebaseDistributionReleaseApkKey }} ${{ env.firebaseDistributionDebugApkKey }} ${{ env.spyfallFirebaseDistributionLink }} ${{ github.run_number }} ${{ env.releaseTagName }}
+        run: ./scripts/ci/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.firebaseDistributionReleaseApkKey }} ${{ env.firebaseDistributionDebugApkKey }} ${{ env.oddoneoutFirebaseDistributionLink }} ${{ github.run_number }} ${{ env.releaseTagName }}
 
   style:
     runs-on: [ ubuntu-latest ]

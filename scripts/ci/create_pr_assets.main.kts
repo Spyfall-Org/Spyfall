@@ -4,7 +4,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
-import java.util.Base64
 import java.util.Properties
 
 val red = "\u001b[31m"
@@ -33,7 +32,7 @@ if (isHelpCall || args.size < argCount) {
                
                Usage: ./create_pr_assets.main.kts <is-release> <env-file-path> <signingKeyBase64> <keystorePassword> <keystoreAlias> <signingKey>
                
-                <is-release> - true if this script is being called from a spyfall release pr
+                <is-release> - true if this script is being called from a oddoneout release pr
                 <env-file-path> - The env file path output to  
                 <signingKeyBase64> - the keystore in base 64 format
                 <keyStorePassword> - password for keystore
@@ -61,8 +60,8 @@ fun main() {
 
     val isCIBuild = System.getenv("CI") == "true"
 
-    val spyfallVersionName = getAppVersionName()
-    val spyfallVersionCode = getAppVersionCode()
+    val versionName = getAppVersionName()
+    val versionCode = getAppVersionCode()
 
 
     if (isRelease) {
@@ -70,17 +69,17 @@ fun main() {
         printGreen("Assembling all debug assets")
         runGradleCommand("assembleDebug")
 
-        renameSpyfallDebugAssets(spyfallVersionName, outputEnvFile, spyfallVersionCode)
+        renameDebugAssets(versionName, outputEnvFile, versionCode)
 
-        printGreen("Assembling all spyfall release assets")
+        printGreen("Assembling all release assets")
         runGradleCommand(":app:bundleRelease")
         runGradleCommand(":app:assembleRelease")
 
-        signAndRenameSpyfallReleaseAssets(
-            spyfallVersionName,
+        signAndRenameReleaseAssets(
+            versionName,
             outputEnvFile,
             isCIBuild,
-            spyfallVersionCode,
+            versionCode,
             keystore,
             keystoreAlias,
             keystorePassword,
@@ -90,8 +89,8 @@ fun main() {
 }
 
 @Suppress("LongParameterList")
-fun signAndRenameSpyfallReleaseAssets(
-    spyfallVersionName: String,
+fun signAndRenameReleaseAssets(
+    versionName: String,
     envFile: File,
     isCIBuild: Boolean,
     buildNumber: String,
@@ -112,8 +111,8 @@ fun signAndRenameSpyfallReleaseAssets(
         keystorePassword,
         storeAlias,
         keyPassword,
-        "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.apk",
-        "spyfallReleaseApkPath",
+        "oddoneout-release-v$versionName-$signingSuffix-$buildNumber.apk",
+        "oddoneoutReleaseApkPath",
         envFile.path
     )
 
@@ -124,17 +123,17 @@ fun signAndRenameSpyfallReleaseAssets(
         keystorePassword,
         storeAlias,
         keyPassword,
-        "spyfall-release-v$spyfallVersionName-$signingSuffix-$buildNumber.aab",
-        "spyfallReleaseAabPath",
+        "oddoneout-release-v$versionName-$signingSuffix-$buildNumber.aab",
+        "oddoneoutReleaseAabPath",
         envFile.path
     )
 }
 
-fun renameSpyfallDebugAssets(spyfallVersionName: String, envFile: File, buildNumber: String) {
+fun renameDebugAssets(versionName: String, envFile: File, buildNumber: String) {
     setOutputAssetName(
         defaultPath = findApkFile("app/build/outputs/apk/debug"),
-        name = "spyfall-debug-v$spyfallVersionName-$buildNumber.apk",
-        outputName = "spyfallDebugApkPath",
+        name = "oddoneout-debug-v$versionName-$buildNumber.apk",
+        outputName = "oddoneoutlDebugApkPath",
         envFile = envFile
     )
 }

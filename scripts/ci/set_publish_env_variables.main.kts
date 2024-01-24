@@ -22,8 +22,7 @@ fun main() {
 
 @Suppress("UseCheckOrError")
 fun getAppName(tagName: String) = when {
-    tagName.contains("spyfall") -> "spyfall"
-    tagName.contains("werewolf") -> "werewolf"
+    tagName.contains("oddoneout") -> "oddoneout"
     else -> throw IllegalStateException(
         "Could not extract app name from tag $tagName. Please make sure tag name are formatted correctly."
     )

@@ -34,7 +34,7 @@ if (isHelpCall) {
         If you are running this locally you will need to get the key store info from our google drive
         https://drive.google.com/drive/folders/1EtwJrbEPPOlhpdFh7yNHwOv20HMrF8KJ 
         
-        and make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false
+        and make sure that the gradle.property com.oddoneout.releaseDebugSigningEnabled is set to false
         
         Usage: ./sign_app.main.kts [assetPath] [keyStoreFile] [storePassword] [keyAlias] [keyPassword] [outputFileName] [outputKey*] [envFile*]
         [assetPath] - path to apk or aab to sign
@@ -69,7 +69,7 @@ fun main() {
         """
             This asset is already signed by a debug signing config. 
             
-            Please make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false BEFORE
+            Please make sure that the gradle.property com.oddoneout.releaseDebugSigningEnabled is set to false BEFORE
             assembling the release. 
             
             Otherwise all release builds will automatically be signed with the debug signing config
@@ -127,7 +127,7 @@ fun signApk(
     if (output.contains("Error") || output.contains("Exception")) {
         printRed("""
             README: The signing of the APK did not succeed. 
-            Please make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false BEFORE
+            Please make sure that the gradle.property com.oddoneout.releaseDebugSigningEnabled is set to false BEFORE
             assembling the release. 
             Otherwise all release builds will automatically be signed with the debug signing config
         """.trimIndent())
@@ -164,7 +164,7 @@ fun signAab(
     if (output.contains("Error") || output.contains("Exception")) {
         printRed("""
             README: The signing of the AAB did not succeed. 
-            Please make sure that the gradle.property com.spyfall.releaseDebugSigningEnabled is set to false BEFORE
+            Please make sure that the gradle.property com.oddoneout.releaseDebugSigningEnabled is set to false BEFORE
             building the release. 
             Otherwise all release builds will automatically be signed with the debug signing config
         """.trimIndent())

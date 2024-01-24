@@ -40,7 +40,7 @@ reader.close()
 
 // Update the value of the "versionName" property
 val currentVersionName = properties.getProperty("versionName").toString()
-printGreen("current version name for spyfall is $currentVersionName")
+printGreen("current version name is $currentVersionName")
 
 properties.setProperty("versionName", newVersionName)
 
@@ -55,12 +55,11 @@ writer.write("""
     # The version code matches the CI build number, this helps us distinguish between multiple builds of the same
     # version name
     # The version name is set by the set_version_name script which is triggered by a github action
-    # To learn more you can read the documentation here: https://spyfall-org.github.io/how-to/release/
     
 """.trimIndent())
 writer.newLine()
 properties.store(writer, null)
 writer.close()
 
-printGreen("Spyfall version name successfully set to $newVersionName")
+printGreen("version name successfully set to $newVersionName")
 
