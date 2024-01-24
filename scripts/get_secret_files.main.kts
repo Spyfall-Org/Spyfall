@@ -127,9 +127,12 @@ fun getFiles() {
         .setApplicationName("Odd One Out")
         .build()
 
+    println("Current working directory: ${System.getProperty("user.dir")}")
+
     var successfulFetches = 0
     fileInfoList.forEach {
         try {
+
             it.pathsToStore.forEach { path ->
                 val file = File(path)
                 if (!file.isFile) {
