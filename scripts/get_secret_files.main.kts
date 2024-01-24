@@ -112,6 +112,7 @@ fun getFiles() {
     var successfulFetches = 0
     fileInfoList.forEach {
         val driveFile = drive.files().get(it.id).execute()
+        File(it.pathToStore).createNewFile()
 
         if (driveFile.mimeType == "application/json") {
             val outputStream = ByteArrayOutputStream()
