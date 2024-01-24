@@ -76,7 +76,9 @@ class UserRepositoryImpl @Inject constructor(
     private val userIdFlow = flow {
         getUserId()
             .onSuccess {
-                firebaseAnalytics.setUserId(it)
+                Try {
+                    firebaseAnalytics.setUserId(it)
+                }
                 emit(it)
             }
             .onFailure {

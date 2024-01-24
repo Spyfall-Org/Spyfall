@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.game
+package oddoneout.core
 
 interface GenerateLocalUUID {
     operator fun invoke(): String

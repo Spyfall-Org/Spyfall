@@ -39,8 +39,7 @@ class OddOneOutApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // TODO look into permission requesting for analytics collection
-        firebaseAnalytics.setAnalyticsCollectionEnabled(BuildConfig.DEBUG)
+        firebaseAnalytics.setAnalyticsCollectionEnabled(true)
         firebaseAnalytics.setSessionTimeoutDuration(
             SessionRepository.SESSION_MAXIMUM_TIME_AWAY.inWholeMilliseconds
         )

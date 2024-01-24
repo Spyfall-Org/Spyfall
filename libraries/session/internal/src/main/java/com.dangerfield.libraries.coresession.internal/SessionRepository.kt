@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
 import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
+import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.storage.datastore.distinctKeyFlow
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.Session
@@ -23,18 +24,24 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
 import oddoneout.core.ApplicationStateRepository
+import oddoneout.core.ForegroundState
+import oddoneout.core.GenerateLocalUUID
 import oddoneout.core.Try
 import oddoneout.core.getOrElse
 import oddoneout.core.logOnError
 import oddoneout.core.throwIfDebug
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @Singleton
 class SessionRepository @Inject constructor(
@@ -51,9 +58,22 @@ class SessionRepository @Inject constructor(
     val sessionFlow: Flow<Session> get() = sharedSessionFlow
 
     // TODO investigate when this doesnt load, have some fallback, have some tracking
-    private val sessionIdFlow = applicationStateRepository
+    private val sessionIdFlow: Flow<Long> = applicationStateRepository
         .foregroundStateFlow()
-        .map { firebaseAnalytics.sessionId.await() }
+        .map {
+            val sessionId = tryWithTimeout(5.seconds) {
+                Try {
+                    firebaseAnalytics.sessionId.await()!!
+                }
+            }
+                .logOnError()
+                .getOrElse {
+                    Timber.d("SessionRepository: session id failed. generating local session id")
+                    DEFAULT_SESSION_ID
+                }
+
+           sessionId
+        }
         .filterNotNull()
 
     private val activeGameAdapter = moshi.adapter(ActiveGame::class.java)
@@ -132,6 +152,7 @@ class SessionRepository @Inject constructor(
     companion object {
         private val ACTIVE_GAME_KEY = stringPreferencesKey("active_game")
         private val SESSION_DATA_KEY = stringPreferencesKey("session_data")
+        private val DEFAULT_SESSION_ID = 12345678910L
 
         /**
          * The maximum amount of time the application can be in the background before the

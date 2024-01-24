@@ -6,13 +6,13 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.GenerateLocalUUID
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
+import oddoneout.core.GenerateLocalUUID
 import oddoneout.core.Try
 import oddoneout.core.developerSnackIfDebug
 import oddoneout.core.failure

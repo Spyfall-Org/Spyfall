@@ -1,6 +1,6 @@
-package com.dangerfield.libraries.game.internal
+package com.dangerfield.libraries.corecommon.internal
 
-import com.dangerfield.libraries.game.GenerateLocalUUID
+import oddoneout.core.GenerateLocalUUID
 import se.ansman.dagger.auto.AutoBind
 import java.util.UUID
 import javax.inject.Inject

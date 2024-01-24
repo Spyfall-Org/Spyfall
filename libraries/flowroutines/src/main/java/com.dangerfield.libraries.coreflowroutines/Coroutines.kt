@@ -68,8 +68,10 @@ fun CoroutineScope.childSupervisorScope(context: CoroutineContext = EmptyCorouti
     childScopeInternal(context, ::SupervisorJob)
 
 
-
-private inline fun CoroutineScope.childScopeInternal(context: CoroutineContext, job: (Job?) -> Job): CoroutineScope {
+private inline fun CoroutineScope.childScopeInternal(
+    context: CoroutineContext,
+    job: (Job?) -> Job
+): CoroutineScope {
     require(context[Job] == null) {
         "You cannot pass a job, it will be created for you"
     }
@@ -81,7 +83,10 @@ private inline fun CoroutineScope.childScopeInternal(context: CoroutineContext, 
  * within the specified [duration].
  */
 @OptIn(ExperimentalContracts::class)
-suspend fun <T> tryWithTimeout(duration: Duration, block: suspend CoroutineScope.() -> Try<T>): Try<T> {
+suspend fun <T> tryWithTimeout(
+    duration: Duration,
+    block: suspend CoroutineScope.() -> Try<T>
+): Try<T> {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return try {
         withTimeout(duration, block)
@@ -125,7 +130,10 @@ fun <T : Any, R> Flow<T>.mapWithPrevious(transform: (oldItem: T?, newItem: T) ->
  *
  * For the first item then [initialItem] will be used
  */
-fun <I, T : I, R> Flow<T>.mapWithPrevious(initialItem: I, transform: (oldItem: I, newItem: T) -> R): Flow<R> = flow {
+fun <I, T : I, R> Flow<T>.mapWithPrevious(
+    initialItem: I,
+    transform: (oldItem: I, newItem: T) -> R
+): Flow<R> = flow {
     var previous: I = initialItem
     collect { value ->
         emit(transform(previous, value))
