@@ -146,14 +146,15 @@ fun getFiles() {
                     FileOutputStream(path)
                 }
 
-                outputFiles.forEach {
-                    outputStream.writeTo(it)
+                outputFiles.forEach { output ->
+                    outputStream.writeTo(output)
                 }
             }
 
             successfulFetches += 1
         } catch (t: Throwable) {
             printRed(t.message ?: "Error getting file ${it.pathsToStore}")
+            t.printStackTrace()
         }
     }
 
