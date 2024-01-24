@@ -4,6 +4,7 @@ import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
+import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Pack
@@ -27,6 +28,7 @@ class CreateSingleDeviceGame @Inject constructor(
     private val getGamePlayLocations: GetGamePlayLocations,
     private val clock: Clock,
     private val generateAccessCode: GenerateAccessCode,
+    private val gameConfig: GameConfig,
     private val updateActiveGame: UpdateActiveGame,
     private val clearActiveGame: ClearActiveGame,
     private val session: Session,
@@ -86,7 +88,7 @@ class CreateSingleDeviceGame @Inject constructor(
             packNames = packs.map { it.name },
             isBeingStarted = false,
             players = playersWithRoles,
-            timeLimitMins = timeLimit,
+            timeLimitMins = if (gameConfig.forceShortGames) -1 else timeLimit,
             startedAt = null,
             locationOptionNames = locations.map { it.name },
             videoCallLink = null,

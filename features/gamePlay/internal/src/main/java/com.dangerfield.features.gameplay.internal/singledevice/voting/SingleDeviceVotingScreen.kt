@@ -16,10 +16,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.ads.OddOneOutAd
@@ -32,6 +32,7 @@ import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.VerticalSpacerS1000
 import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
@@ -41,6 +42,7 @@ import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
+import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
@@ -60,6 +62,7 @@ fun SingleDeviceVotingScreen(
     onSeeResultsClicked: () -> Unit,
     onPreviousPlayerClicked: () -> Unit,
     onEndGameClicked: () -> Unit,
+    onRestartGameClicked: () -> Unit
 ) {
     var shouldShowExitDialog by remember { mutableStateOf(false) }
     var isVotingOptionsHidden by remember { mutableStateOf(true) }
@@ -83,6 +86,8 @@ fun SingleDeviceVotingScreen(
             onSeeResultsClicked = onSeeResultsClicked,
             isVotingOptionsHidden = isVotingOptionsHidden,
             onIsVotingOptionsHiddenChanged = { isVotingOptionsHidden = it },
+            onRestartGameClicked = onRestartGameClicked,
+            onEndGameClicked = onEndGameClicked
         )
 
         if (shouldShowExitDialog) {
@@ -130,6 +135,8 @@ private fun VotingScreenContent(
     onSubmitLocationVoteClicked: (currentPlayerId: String, location: String) -> Unit,
     isLastPlayer: Boolean,
     onSeeResultsClicked: () -> Unit,
+    onRestartGameClicked: () -> Unit,
+    onEndGameClicked: () -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -288,6 +295,31 @@ private fun VotingScreenContent(
                     typographyToken = OddOneOutTheme.typography.Display.D1100,
                 )
             }
+
+            VerticalSpacerS800()
+
+            Text(text = dictionaryString(R.string.app_or_text))
+
+            VerticalSpacerS800()
+
+            Button(
+                onClick = onRestartGameClicked,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = dictionaryString(R.string.singeDeviceGame_restart_action))
+            }
+
+            VerticalSpacerS1000()
+
+            Button(
+                type = ButtonType.Regular,
+                onClick = onEndGameClicked,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = dictionaryString(R.string.singleDeviceInfo_endGame_action))
+            }
+
+            VerticalSpacerS1000()
         }
     }
 }
@@ -314,6 +346,7 @@ private fun PreviewSingleDeviceVotingScreen() {
             isFirstPlayer = false,
             onPreviousPlayerClicked = { -> },
             onEndGameClicked = { -> },
+            onRestartGameClicked = {}
         )
     }
 }

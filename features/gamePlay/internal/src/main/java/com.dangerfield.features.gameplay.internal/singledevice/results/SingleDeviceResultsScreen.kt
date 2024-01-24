@@ -181,7 +181,7 @@ private fun ResultsScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onRestartClicked
             ) {
-                Text(text = dictionaryString(R.string.singeDeviceGameResults_restart_action))
+                Text(text = dictionaryString(R.string.singeDeviceGame_restart_action))
             }
 
             Spacer(modifier = Modifier.height(Spacing.S800))

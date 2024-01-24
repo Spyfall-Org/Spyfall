@@ -241,7 +241,9 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
 
                 ObserveWithLifecycle(flow = viewModel.events) { event ->
                     when (event) {
-                        SingleDeviceVotingViewModel.Event.GameKilled -> router.goBack()
+                        SingleDeviceVotingViewModel.Event.GameKilled -> router.popBackTo(
+                            welcomeNavigationRoute
+                        )
                         SingleDeviceVotingViewModel.Event.GameReset -> router.goBack()
                     }
                 }
@@ -282,6 +284,11 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
                             SingleDeviceVotingViewModel.Action.EndGame
                         )
                     },
+                    onRestartGameClicked = {
+                        viewModel.takeAction(
+                            SingleDeviceVotingViewModel.Action.ResetGame
+                        )
+                    }
                 )
             }
 

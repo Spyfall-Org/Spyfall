@@ -59,6 +59,7 @@
     <string name="app_show_action">Show</string>
     <string name="app_hide_action">Hide</string>
     <string name="app_oddOneOut_label">odd one out</string>
+    <string name="app_or_text">or</string>
 
     <!-- /////////////////////    Welcome Strings   /////////////////////-->
     <string name="welcome_intro_header">Welcome to</string>
@@ -218,7 +219,7 @@
     <string name="singleDeviceGameResults_oddOneOutVotes_text">{correct} votes out of {total}</string>
     <string name="singleDeviceGameResults_location_header">The Secret Location:</string>
     <string name="singeDeviceGameResults_locationGuessed_header">Guessed: {location}</string>
-    <string name="singeDeviceGameResults_restart_action">Restart Game</string>
+    <string name="singeDeviceGame_restart_action">Restart Game</string>
     <string name="singeDeviceGameResults_endGame_action">End Game</string>
     <string name="singleDevice_handToPlayer_header">Hand the device to {name}</string>
     <string name="roleReveal_starterInstructions_text">Click \"show\" to see your role.\n\n When everyone is ready, click start game to begin.</string>
