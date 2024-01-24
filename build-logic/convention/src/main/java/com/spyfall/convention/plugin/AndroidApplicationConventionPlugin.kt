@@ -55,6 +55,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 }
 
                 buildTypes.forEach {
+
+                    it.buildConfigField("IS_QA", it.name == "qa")
+
                     val isLocalReleaseBuild = !it.isDebuggable && !BuildEnvironment.isCIBuild
                     val releaseDebugSigningEnabled =
                         loadGradleProperty("com.spyfall.releaseDebugSigningEnabled").toBoolean()

@@ -152,7 +152,7 @@ class SessionRepository @Inject constructor(
     companion object {
         private val ACTIVE_GAME_KEY = stringPreferencesKey("active_game")
         private val SESSION_DATA_KEY = stringPreferencesKey("session_data")
-        private val DEFAULT_SESSION_ID = 12345678910L
+        private const val DEFAULT_SESSION_ID = 12345678910L
 
         /**
          * The maximum amount of time the application can be in the background before the

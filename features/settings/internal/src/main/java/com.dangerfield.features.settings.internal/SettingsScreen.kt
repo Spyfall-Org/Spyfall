@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.libraries.dictionary.dictionaryString
+import com.dangerfield.libraries.ui.LocalBuildInfo
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
@@ -22,7 +23,7 @@ import com.dangerfield.oddoneoout.features.settings.internal.R
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     versionName: String,
-    isDebug: Boolean = false,
+    isQaOptionEnabled: Boolean = false,
     onThemeOptionClicked: () -> Unit = { },
     onQaOptionClicked: () -> Unit = { },
     onStatsClicked: () -> Unit = { },
@@ -69,7 +70,7 @@ fun SettingsScreen(
                 leadingIcon = SpyfallIcon.Graph(null),
             )
 
-            if (isDebug) {
+            if (isQaOptionEnabled) {
                 SettingsOption(
                     text = dictionaryString(R.string.settings_qaMenu_label),
                     onClick = onQaOptionClicked,
@@ -109,7 +110,7 @@ private fun PreviewSettingsScreen() {
     PreviewContent {
         SettingsScreen(
             versionName = "X.Y.Z",
-            isDebug = true
+            isQaOptionEnabled = true
         )
     }
 }

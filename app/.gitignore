@@ -5,4 +5,6 @@ src/debug/service-account-key.json
 src/google-services.json
 src/debug/google-services.json
 src/release/google-services.json
+src/qa/service-account-key.json
+src/qa/google-services.json
 

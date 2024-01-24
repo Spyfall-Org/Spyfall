@@ -20,6 +20,7 @@ import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import com.dangerfield.spyfall.startup.MainActivityViewModel
 import com.dangerfield.spyfall.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import oddoneout.core.BuildInfo
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -35,6 +36,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var adsConfig: AdsConfig
+
+    @Inject
+    lateinit var buildInfo: BuildInfo
 
     @Inject
     lateinit var metricsTracker: MetricsTracker
@@ -88,6 +92,7 @@ class MainActivity : ComponentActivity() {
                 adsConfig = adsConfig,
                 metricsTracker = metricsTracker,
                 dictionary = dictionary,
+                buildInfo = buildInfo,
                 legalAcceptanceState = state.legalAcceptanceState,
                 languageSupportLevel = state.languageSupportLevel
             )

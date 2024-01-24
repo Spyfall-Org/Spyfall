@@ -27,14 +27,36 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        val release = getByName("release") {
+            isMinifyEnabled = true
             setProguardFiles(
                 listOf(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
                 )
             )
+        }
+
+        /*
+        qa builds should match release builds as much as possible
+        some notes differences (not exhaustive):
+        - test ad unit ids
+        - debug log tree is planted
+        - app suffix id is qa (so that actual release and debug can also be installed)
+         */
+        create("qa") {
+            // Enable all the optimizations from release build through initWith(release).
+            initWith(release)
+            matchingFallbacks.add("release")
+            // Debug key signing is available to everyone.
+            signingConfig = signingConfigs.getByName("debug")
+            setProguardFiles(
+                listOf(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            )
+            isMinifyEnabled = true
         }
     }
 

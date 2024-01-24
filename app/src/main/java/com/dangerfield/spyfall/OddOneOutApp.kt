@@ -56,6 +56,7 @@ import com.dangerfield.libraries.navigation.floatingwindow.getFloatingWindowNavi
 import com.dangerfield.libraries.navigation.internal.NavControllerRouter
 import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.libraries.session.DarkModeConfig
+import com.dangerfield.libraries.ui.LocalBuildInfo
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.Snackbar
@@ -65,10 +66,10 @@ import com.dangerfield.libraries.ui.components.toSnackbarData
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import kotlinx.coroutines.flow.receiveAsFlow
+import oddoneout.core.BuildInfo
 import oddoneout.core.Message
 import oddoneout.core.UserMessagePresenter
 import spyfallx.ui.color.background
-
 
 @Suppress("MagicNumber")
 @Composable
@@ -81,6 +82,7 @@ fun OddOneOutApp(
     metricsTracker: MetricsTracker,
     legalAcceptanceState: LegalAcceptanceState?,
     dictionary: Dictionary,
+    buildInfo: BuildInfo,
     appState: AppState = rememberAppState(networkMonitor = networkMonitor),
     isUpdateRequired: Boolean,
     hasBlockingError: Boolean,
@@ -136,6 +138,7 @@ fun OddOneOutApp(
         LocalAdsConfig provides adsConfig,
         LocalMetricsTracker provides metricsTracker,
         LocalDictionary provides dictionary,
+        LocalBuildInfo provides buildInfo,
     ) {
         OddOneOutTheme(
             isDarkMode = shouldShowDarkMode,

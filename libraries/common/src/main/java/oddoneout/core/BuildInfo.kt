@@ -10,6 +10,7 @@ data class BuildInfo(
     val versionCode: Int,
     val versionName: String,
     val packageName: String,
+    val buildType: BuildType
 ) {
     val playStorePackageName = packageName
         .split(".")
@@ -17,4 +18,10 @@ data class BuildInfo(
         .joinToString(".")
 
     val isDebug: Boolean = BuildConfig.DEBUG
+}
+
+enum class BuildType {
+    DEBUG,
+    RELEASE,
+    QA
 }

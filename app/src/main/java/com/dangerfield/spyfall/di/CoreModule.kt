@@ -7,6 +7,7 @@ import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
+import com.dangerfield.spyfall.free.BuildConfig
 import com.dangerfield.spyfall.free.BuildConfig.VERSION_CODE
 import com.dangerfield.spyfall.free.BuildConfig.VERSION_NAME
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -21,6 +22,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import oddoneout.core.BuildInfo
+import oddoneout.core.BuildType
 import java.time.Clock
 import javax.inject.Singleton
 
@@ -79,7 +81,12 @@ object CoreModule {
         BuildInfo(
             versionCode = VERSION_CODE,
             versionName = VERSION_NAME,
-            packageName = context.packageName
+            packageName = context.packageName,
+            buildType = when {
+                BuildConfig.DEBUG -> BuildType.DEBUG
+                BuildConfig.IS_QA -> BuildType.QA
+                else -> BuildType.RELEASE
+            }
         )
 
     @Provides

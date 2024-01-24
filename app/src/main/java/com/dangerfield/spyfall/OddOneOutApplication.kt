@@ -31,7 +31,7 @@ class OddOneOutApplication : Application() {
     private val lifecycle get() = ProcessLifecycleOwner.get().lifecycle
 
     init {
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG || BuildConfig.IS_QA) {
             Timber.plant(Timber.DebugTree())
         }
     }

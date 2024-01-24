@@ -27,6 +27,7 @@ import com.dangerfield.oddoneoout.features.settings.internal.R
 import kotlinx.coroutines.flow.map
 import se.ansman.dagger.auto.AutoBindIntoSet
 import oddoneout.core.BuildInfo
+import oddoneout.core.BuildType
 import javax.inject.Inject
 
 @AutoBindIntoSet
@@ -49,7 +50,10 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
 
             SettingsScreen(
                 versionName = buildInfo.versionName,
-                isDebug = buildInfo.isDebug,
+                isQaOptionEnabled = buildInfo.buildType in listOf(
+                    BuildType.DEBUG,
+                    BuildType.QA
+                ),
                 onQaOptionClicked = router::navigateToQa,
                 onNavigateBack = router::goBack,
                 onThemeOptionClicked = router::navigateToColorPicker,

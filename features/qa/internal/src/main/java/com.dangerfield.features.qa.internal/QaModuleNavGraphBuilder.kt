@@ -10,6 +10,8 @@ import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
+import com.dangerfield.libraries.ui.LocalBuildInfo
+import oddoneout.core.BuildType
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
@@ -21,6 +23,14 @@ class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
             route = qaNavigationRoute.navRoute,
             arguments = qaNavigationRoute.navArguments
         ) {
+
+            val buildInfo = LocalBuildInfo.current
+
+            if (buildInfo.buildType !in listOf(BuildType.DEBUG, BuildType.DEBUG)) {
+                router.goBack()
+                return@composable
+            }
+
             val viewModel: QaViewModel = hiltViewModel()
             val state by viewModel.state.collectAsStateWithLifecycle()
 
