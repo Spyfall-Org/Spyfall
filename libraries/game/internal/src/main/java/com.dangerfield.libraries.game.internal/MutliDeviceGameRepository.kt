@@ -245,6 +245,7 @@ class MutliDeviceGameRepository @Inject constructor(
         ).logOnError()
     }
 
+    @Suppress("ReturnCount")
     override suspend fun submitOddOneOutVote(
         accessCode: String,
         voterId: String,
@@ -270,7 +271,6 @@ class MutliDeviceGameRepository @Inject constructor(
     }
 
     companion object {
-        private const val GameSubscriptionTimeout = 5_000L
         const val name = "MultiDeviceGameRepository"
     }
 }
