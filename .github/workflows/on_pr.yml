@@ -44,9 +44,6 @@ jobs:
           name: "service_key.json"
           json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
 
-      - name: Print Files
-        run: ./scripts/ci/print-file-tree.sh
-
       - name: Download Secret Files
         run: ./scripts/get_secret_files.main.kts service_key.json
 

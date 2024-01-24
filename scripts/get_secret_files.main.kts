@@ -12,9 +12,12 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.ServiceAccountCredentials
+import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStreamReader
 
 // These file ids can be found in the url of the sharable google drive links to these files
 data class FileInfo(val id: String, val pathsToStore: List<String>)
@@ -129,6 +132,8 @@ fun getFiles() {
 
     println("Current working directory: ${System.getProperty("user.dir")}")
 
+    ls()
+
     var successfulFetches = 0
     fileInfoList.forEach {
         try {
@@ -167,6 +172,20 @@ fun getFiles() {
         printRed("DID NOT Download all secret files")
         @Suppress("TooGenericExceptionThrown")
         throw Exception("See Message Above")
+    }
+}
+
+fun ls() {
+    try {
+        val process = Runtime.getRuntime().exec("ls -la")
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+
+        var line: String?
+        while (reader.readLine().also { line = it } != null) {
+            println(line)
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
     }
 }
 
