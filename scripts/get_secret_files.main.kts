@@ -175,6 +175,7 @@ fun getFiles() {
     }
 }
 
+@Suppress("PrintStackTrace")
 fun ls() {
     try {
         val process = Runtime.getRuntime().exec("ls -la")
