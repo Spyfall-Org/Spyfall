@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout
+package com.dangerfield.spyfall
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout.startup
+package com.dangerfield.spyfall.startup
 
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
@@ -15,8 +15,8 @@ import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.session.ThemeConfig
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.color.ThemeColor
-import com.dangerfield.oddoneout.startup.MainActivityViewModel.Action
-import com.dangerfield.oddoneout.startup.MainActivityViewModel.State
+import com.dangerfield.spyfall.startup.MainActivityViewModel.Action
+import com.dangerfield.spyfall.startup.MainActivityViewModel.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred

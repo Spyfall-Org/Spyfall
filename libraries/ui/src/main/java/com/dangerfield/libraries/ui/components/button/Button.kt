@@ -62,7 +62,7 @@ fun Button(
         ButtonStyle.Filled -> null
         ButtonStyle.Outlined -> {
             val targetColor = when {
-                !enabled -> OddOneOutTheme.colorScheme.surfaceDisabled
+                !enabled -> OddOneOutTheme.colorScheme.borderDisabled
                 else -> when (type) {
                     ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
                     ButtonType.Regular -> OddOneOutTheme.colorScheme.onBackground

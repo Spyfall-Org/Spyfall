@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout
+package com.dangerfield.spyfall
 
 import android.app.Activity
 import android.content.Context
@@ -63,7 +63,7 @@ import com.dangerfield.libraries.ui.components.isDebugMessage
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.toSnackbarData
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import com.dangerfield.oddoneout.navigation.NavBuilderRegistry
+import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import kotlinx.coroutines.flow.receiveAsFlow
 import oddoneout.core.Message
 import oddoneout.core.UserMessagePresenter

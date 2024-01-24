@@ -42,7 +42,9 @@ android {
         viewBinding = true
     }
 
-    namespace = "com.dangerfield.oddoneout"
+    // a relic of the past. We unfortunately need to keep this namespace to avoid breaking
+    // playstore listings and firestore db access
+    namespace = "com.dangerfield.spyfall.free"
 }
 
 dependencies {

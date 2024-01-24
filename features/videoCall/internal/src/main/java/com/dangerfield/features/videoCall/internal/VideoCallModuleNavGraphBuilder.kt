@@ -32,6 +32,10 @@ class VideoCallModuleNavGraphBuilder @Inject constructor(
 
             VideoLinkBottomSheet(
                 link = link,
+                onVideoLinkClicked = {
+                    router.dismissSheet(it)
+                    router.openWebLink(link, openInApp = false)
+                },
                 onDismiss = router::dismissSheet
             )
         }

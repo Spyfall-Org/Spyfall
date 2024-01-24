@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +19,9 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
@@ -35,6 +39,9 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessor
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.getBoldUnderlinedSpan
+import com.dangerfield.libraries.ui.getSpannableLink
+import com.dangerfield.libraries.ui.makeLink
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.videocall.internal.R
 import kotlinx.coroutines.delay
 
@@ -44,6 +51,7 @@ fun VideoLinkBottomSheet(
     modifier: Modifier = Modifier,
     bottomSheetState: BottomSheetState = rememberBottomSheetState(),
     link: String,
+    onVideoLinkClicked: (BottomSheetState) -> Unit = {},
     onDismiss: (BottomSheetState) -> Unit
 ) {
     val chooserTitle = dictionaryString(R.string.video_openWith_header)
@@ -72,12 +80,12 @@ fun VideoLinkBottomSheet(
         },
         content = {
             ScrollingColumnWithFadingEdge {
-                val annotatedString = getBoldUnderlinedSpan(
+                val annotatedDescription = getBoldUnderlinedSpan(
                     fullString = dictionaryString(R.string.videoLink_detailDialogDescription_text),
                     boldString = dictionaryString(R.string.videoLink_beCareful_label)
                 )
 
-                Text(text = annotatedString)
+                Text(text = annotatedDescription)
 
                 VerticalSpacerS800()
 
@@ -100,7 +108,16 @@ fun VideoLinkBottomSheet(
                     HorizontalSpacerS600()
 
                     SelectionContainer {
-                        Text(text = link)
+
+                        val annotatedLink = link
+                            .getSpannableLink(linkText = link, url = link)
+
+                        ClickableText(
+                            modifier = modifier.fillMaxWidth(),
+                            text = annotatedLink,
+                            onClick = { onVideoLinkClicked(bottomSheetState) },
+                            style = OddOneOutTheme.typography.Body.B700.style.copy(color = OddOneOutTheme.colorScheme.text.color),
+                        )
                     }
                 }
             }

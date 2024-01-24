@@ -29,24 +29,24 @@ class SingleDeviceGameMetricTracker @Inject constructor(
 ) {
 
     fun trackGameStarted(
-        game: Game,
+        game: Game?,
     ) {
         metricsTracker.log(
             Metric.Event.Custom(
                 MetricConstants.GAME_STARTED,
                 bundleOf(
                     GAME_TYPE to SINGLE_DEVICE_GAME,
-                    MetricConstants.ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    MetricConstants.ACCESS_CODE to game?.accessCode,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                 )
             )
         )
     }
 
     fun trackGameStartFailure(
-        game: Game,
+        game: Game?,
         throwable: Throwable
     ) {
         metricsTracker.log(
@@ -54,10 +54,10 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                 MetricConstants.GAME_START_ERROR,
                 bundleOf(
                     GAME_TYPE to SINGLE_DEVICE_GAME,
-                    MetricConstants.ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    MetricConstants.ACCESS_CODE to game?.accessCode,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                     ERROR_MESSAGE to throwable.message
                 )
             )
@@ -65,7 +65,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
     }
 
     fun trackGameEnded(
-        game: Game,
+        game: Game?,
         timeRemainingMillis: Long
     ) {
         metricsTracker.log(
@@ -74,16 +74,16 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to SINGLE_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                 )
             )
         )
     }
 
     fun trackGameRestarted(
-        game: Game,
+        game: Game?,
         timeRemainingMillis: Long
     ) {
         metricsTracker.log(
@@ -92,16 +92,16 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to SINGLE_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                 )
             )
         )
     }
 
     fun trackGameRestartError(
-        game: Game,
+        game: Game?,
         timeRemainingMillis: Long
     ) {
         metricsTracker.log(
@@ -110,9 +110,9 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to SINGLE_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                 )
             )
         )

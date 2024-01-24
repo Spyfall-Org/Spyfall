@@ -22,13 +22,16 @@ import com.dangerfield.libraries.session.ClearActiveGame
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import oddoneout.core.developerSnackIfDebug
 import oddoneout.core.doNothing
 import oddoneout.core.getOrElse
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
@@ -45,7 +48,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
     private var currentPlayerRoleIndex = 0
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
 
-    private val gameFlow: SharedFlow<Game> = gameRepository
+    private val gameFlow: SharedFlow<Game?> = gameRepository
         .getGameFlow(accessCode)
         .shareIn(
             scope = viewModelScope,
@@ -54,8 +57,11 @@ class SingleDeviceVotingViewModel @Inject constructor(
         )
 
     private val allPlayers = LazySuspend {
-        gameFlow.first().players.mapIndexed { index, player ->
+        getGame()?.players?.mapIndexed { index, player ->
             player.toDisplayable(index == 0)
+        } ?: emptyList<DisplayablePlayer>().also {
+            Timber.e("No players found for game")
+            developerSnackIfDebug { "No players found for game" }
         }
     }
 
@@ -188,12 +194,12 @@ class SingleDeviceVotingViewModel @Inject constructor(
         }
     }
 
-    private suspend fun recordResult(
+    private fun recordResult(
         gameState: GameState.VotingEnded
     ) {
         if (!hasRecordedResult.getAndSet(true)) {
             singleDeviceGameMetricTracker.trackVotingEnded(
-                timeLimitMins = getGame().timeLimitMins,
+                timeLimitMins = gameState.timeLimitMins,
                 gameState = gameState
             )
         }
@@ -243,7 +249,10 @@ class SingleDeviceVotingViewModel @Inject constructor(
             }
     }
 
-    private suspend fun getGame() = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
+    private suspend fun getGame() =
+        gameFlow.replayCache.firstOrNull()
+            ?: gameFlow.filterNotNull().firstOrNull()
+            ?: gameRepository.getGame(accessCode).getOrNull()
 
     data class State(
         val currentPlayer: DisplayablePlayer?,

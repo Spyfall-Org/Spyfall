@@ -65,7 +65,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
     }
 
     fun trackGameEnded(
-        game: Game,
+        game: Game?,
         timeRemainingMillis: Long
     ) {
         metricsTracker.log(
@@ -74,17 +74,17 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
-                    ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    ACCESS_CODE to game?.accessCode,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                 )
             )
         )
     }
 
     fun trackGameRestarted(
-        game: Game,
+        game: Game?,
         timeRemainingMillis: Long
     ) {
         metricsTracker.log(
@@ -93,17 +93,17 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
-                    ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    ACCESS_CODE to game?.accessCode,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                 )
             )
         )
     }
 
     fun trackGameRestartError(
-        game: Game,
+        game: Game?,
         timeRemainingMillis: Long
     ) {
         metricsTracker.log(
@@ -112,10 +112,10 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
-                    ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
-                    PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    ACCESS_CODE to game?.accessCode,
+                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    PLAYER_COUNT to game?.players?.size,
+                    LOCATION to game?.locationName,
                 )
             )
         )

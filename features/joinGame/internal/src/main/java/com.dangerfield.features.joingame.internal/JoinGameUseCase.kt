@@ -3,7 +3,7 @@ package com.dangerfield.features.joingame.internal
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.game.GameError
+import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.GenerateLocalUUID
@@ -98,8 +98,8 @@ class JoinGameUseCase @Inject constructor(
 
     private fun Throwable.toJoinGameError(): Throwable = when (this) {
         is JoinGameError -> this
-        is GameError.IncompatibleVersion -> JoinGameError.IncompatibleVersion(isCurrentLower = isCurrentLower)
-        is GameError.GameNotFound -> JoinGameError.GameNotFound
+        is GameDataSourcError.IncompatibleVersion -> JoinGameError.IncompatibleVersion(isCurrentLower = isCurrentLower)
+        is GameDataSourcError.GameNotFound -> JoinGameError.GameNotFound
         else -> JoinGameError.UnknownError(this)
     }
 

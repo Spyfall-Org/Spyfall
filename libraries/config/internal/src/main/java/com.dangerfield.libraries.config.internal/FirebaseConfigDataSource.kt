@@ -20,6 +20,7 @@ class FirebaseConfigDataSource
     private val firebaseFirestore: FirebaseFirestore,
 ) : ConfigDataSource {
 
+    // TODO add targeted overrides for specific users, locales, etc.
     // TODO consider exposing a flow and using a document observer to observe changes
     // every active session everywhere would be observing that document, not sure if thats great.
     override suspend fun getConfig(): Try<AppConfigMap> = Try {

@@ -16,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -166,8 +165,8 @@ private fun GamePlayScreenContent(
     onResetGameClicked: () -> Unit,
     onEndGameClicked: () -> Unit
 ) {
-    var selectedPlayerForVote by rememberSaveable { mutableStateOf<DisplayablePlayer?>(null) }
-    var selectedLocationForVote by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedPlayerForVote by remember { mutableStateOf<DisplayablePlayer?>(null) }
+    var selectedLocationForVote by remember { mutableStateOf<String?>(null) }
     val hasSelectedVote: Boolean = selectedPlayerForVote != null || selectedLocationForVote != null
     var isRoleHidden by remember { mutableStateOf(false) }
 

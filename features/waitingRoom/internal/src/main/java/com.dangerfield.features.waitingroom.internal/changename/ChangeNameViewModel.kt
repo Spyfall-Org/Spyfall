@@ -6,15 +6,17 @@ import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewMo
 import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewModel.Event
 import com.dangerfield.features.waitingroom.internal.changename.ChangeNameViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.Session
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import oddoneout.core.allOrNone
 import javax.inject.Inject
@@ -28,16 +30,17 @@ class ChangeNameViewModel @Inject constructor(
     private val session: Session
 ) : SEAViewModel<State, Event, Action>() {
 
-    private val accessCode: String?
+    private val accessCode: String
         get() = savedStateHandle.navArgument(changeNameAccessCodeArgument)
+            ?: session.activeGame?.accessCode
+            ?: ""
 
-    private val currentGamePlayers = gameRepository
-        .getGameFlow(accessCode ?: "")
-        .map { game -> game.players }
+    private val gameFlow: SharedFlow<Game?> = gameRepository
+        .getGameFlow(accessCode)
         .shareIn(
             scope = viewModelScope,
-            replay = 1,
-            started = SharingStarted.WhileSubscribed(5_000)
+            started = SharingStarted.Eagerly,
+            replay = 1
         )
 
     override val initialState = State(
@@ -57,17 +60,21 @@ class ChangeNameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun allPlayers() = currentGamePlayers.replayCache.firstOrNull()
-        ?: currentGamePlayers.first()
-
     private suspend fun handleNameChangeSubmit(
         action: Action.SubmitNameChange
     ) {
+        val game = getGame()
+
+        if (game == null) {
+            updateState { it.copy(didSomethingGoWrong = true) }
+            return
+        }
+
         allOrNone(
             accessCode,
             session.activeGame?.userId
         ) { accessCode, userId ->
-            val allPlayers = allPlayers()
+            val allPlayers = game.players
             val mePlayer = allPlayers.firstOrNull { it.id == userId }
             val notMePlayers = allPlayers.filter { it != mePlayer }
             val isNameTaken = notMePlayers.any { it.userName == action.name }
@@ -111,8 +118,16 @@ class ChangeNameViewModel @Inject constructor(
     private suspend fun updateName(name: String) {
         updateState { it.copy(name = name) } // prevent lag
 
-        val notMePlayers =
-            allPlayers().filter { it.id != session.activeGame?.userId }
+        val game = getGame()
+
+        if (game == null) {
+            updateState { it.copy(didSomethingGoWrong = true) }
+            return
+        }
+
+        val players = game.players
+
+        val notMePlayers = players.filter { it.id != session.activeGame?.userId }
 
         val isNameTaken = notMePlayers.any { it.userName == name }
 
@@ -127,6 +142,11 @@ class ChangeNameViewModel @Inject constructor(
             )
         }
     }
+
+    private suspend fun getGame() =
+        gameFlow.replayCache.firstOrNull()
+            ?: gameFlow.filterNotNull().firstOrNull()
+            ?: gameRepository.getGame(accessCode).getOrNull()
 
     sealed class Event {
         data object NameChanged : Event()

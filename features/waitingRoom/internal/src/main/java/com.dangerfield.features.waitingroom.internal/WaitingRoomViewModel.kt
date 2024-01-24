@@ -7,25 +7,33 @@ import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Action
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Event
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.Game
-import com.dangerfield.libraries.game.GameError
+import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
+import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.ui.showMessage
+import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import oddoneout.core.Message
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.logOnError
 import oddoneout.core.throwIfDebug
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,6 +44,8 @@ class WaitingRoomViewModel @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val startGameUseCase: StartGameUseCase,
     private val session: Session,
+    private val dictionary: Dictionary,
+    private val clearActiveGame: ClearActiveGame,
     private val leaveGameUseCase: LeaveGameUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : SEAViewModel<State, Event, Action>() {
@@ -59,7 +69,7 @@ class WaitingRoomViewModel @Inject constructor(
         videoCallLink = null
     )
 
-    private val gameFlow: SharedFlow<Game> = gameRepository
+    private val gameFlow: SharedFlow<Game?> = gameRepository
         .getGameFlow(accessCode)
         .shareIn(
             scope = viewModelScope,
@@ -82,17 +92,29 @@ class WaitingRoomViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getGame() =
+        gameFlow.replayCache.firstOrNull()
+            ?: gameFlow.filterNotNull().firstOrNull()
+            ?: gameRepository.getGame(accessCode).getOrNull()
+
+
     private suspend fun leaveGame() {
-        val game = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
+        val game = getGame()
+
+        if (game == null) {
+            Timber.d("Game is null in WaitingRoom while leaving game")
+            sendEvent(Event.LeftGame)
+            return
+        }
 
         leaveGameUseCase.invoke(
             game = game,
             id = meUserId,
             isGameBeingStarted = state.value.isLoadingStart
         )
-            .onSuccess { sendEvent(Event.LeftGame) }
+            .eitherWay { sendEvent(Event.LeftGame) }
             .onFailure {
-                if (it is GameError.TriedToLeaveStartedGame) {
+                if (it is GameDataSourcError.TriedToLeaveStartedGameDataSourc) {
                     sendEvent(Event.TriedToLeaveStartedGame)
                 }
             }
@@ -101,7 +123,21 @@ class WaitingRoomViewModel @Inject constructor(
 
     private suspend fun startGame() {
         updateState { it.copy(isLoadingStart = true) }
-        val game = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
+
+        val game = getGame()
+
+        if (game == null) {
+            showMessage(
+                message =
+                Message(
+                    message = dictionary.getString(R.string.waitingRoom_forcedRemovalError_text),
+                    autoDismiss = false
+                )
+            )
+            leaveGame()
+            return
+        }
+
         startGameUseCase(
             accessCode = accessCode,
             players = game.players,
@@ -138,6 +174,13 @@ class WaitingRoomViewModel @Inject constructor(
                         }
 
                         is GameState.Starting -> updateState { it.copy(isLoadingStart = true) }
+                        is GameState.DoesNotExist -> {
+                            clearActiveGame.invoke()
+                            // game could not exist if the user was removed or left, wait
+                            // in case they are still in the process of leaving
+                            delay(1000)
+                            sendEvent(Event.LeftGame)
+                        }
                         is GameState.Waiting -> updateState { state ->
                             val mePlayer =
                                 gameState.players.find { it.id == session.activeGame?.userId }

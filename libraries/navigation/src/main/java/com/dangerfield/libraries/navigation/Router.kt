@@ -7,7 +7,7 @@ interface Router {
     val currentRouteName: String?
     fun navigate(filledRoute: Route.Filled)
     fun goBack()
-    fun openWebLink(url: String)
+    fun openWebLink(url: String, openInApp: Boolean = true)
     fun popBackTo(route: Route.Template, inclusive: Boolean = false)
     fun dismissSheet(sheetState: BottomSheetState)
     fun ifStillOn(backStackEntry: NavBackStackEntry, action: Router.() -> Unit)

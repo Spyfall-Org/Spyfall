@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout
+package com.dangerfield.spyfall
 
 import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -6,6 +6,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.dangerfield.features.ads.ui.initializeAds
 import com.dangerfield.libraries.coresession.internal.SessionRepository
 import com.dangerfield.libraries.logging.RemoteLogger
+import com.dangerfield.spyfall.free.BuildConfig
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings

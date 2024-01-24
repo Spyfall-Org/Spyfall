@@ -16,7 +16,9 @@ import com.dangerfield.libraries.session.ClearActiveGame
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,7 +34,7 @@ class SingleDeviceInfoViewModel @Inject constructor(
     private val accessCode: String
         get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
 
-    private val gameFlow: SharedFlow<Game> = gameRepository
+    private val gameFlow: SharedFlow<Game?> = gameRepository
         .getGameFlow(accessCode)
         .shareIn(
             scope = viewModelScope,
@@ -61,8 +63,10 @@ class SingleDeviceInfoViewModel @Inject constructor(
         )
     }
 
-    private suspend fun getGame() = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
-
+    private suspend fun getGame() =
+        gameFlow.replayCache.firstOrNull()
+            ?: gameFlow.filterNotNull().firstOrNull()
+            ?: gameRepository.getGame(accessCode).getOrNull()
 
     sealed class Action {
         object EndGame : Action()

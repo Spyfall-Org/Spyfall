@@ -2,7 +2,7 @@ package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
-import com.dangerfield.libraries.game.GameError
+import com.dangerfield.libraries.game.GameDataSourcError
 import oddoneout.core.Try
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class GameMapSerializer @Inject constructor(
 
         return if (version != CURRENT_GAME_MODEL_VERSION) {
             Try.Failure(
-                GameError.IncompatibleVersion(
+                GameDataSourcError.IncompatibleVersion(
                     isCurrentLower = version > CURRENT_GAME_MODEL_VERSION,
                     current = CURRENT_GAME_MODEL_VERSION,
                     other = version

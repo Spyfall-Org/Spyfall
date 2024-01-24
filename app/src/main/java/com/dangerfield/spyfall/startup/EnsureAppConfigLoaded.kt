@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout.startup
+package com.dangerfield.spyfall.startup
 
 import com.dangerfield.libraries.config.AppConfigRepository
 import kotlinx.coroutines.flow.first

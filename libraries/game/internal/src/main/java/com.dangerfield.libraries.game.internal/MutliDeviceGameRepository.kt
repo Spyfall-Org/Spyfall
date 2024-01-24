@@ -2,8 +2,8 @@ package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.game.Game
-import com.dangerfield.libraries.game.GameError
-import com.dangerfield.libraries.game.GameError.TriedToLeaveStartedGame
+import com.dangerfield.libraries.game.GameDataSourcError
+import com.dangerfield.libraries.game.GameDataSourcError.TriedToLeaveStartedGameDataSourc
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.LocationPackRepository
@@ -15,9 +15,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.Try
@@ -34,7 +36,6 @@ import javax.inject.Named
 @AutoBind
 class MutliDeviceGameRepository @Inject constructor(
     private val gameDataSource: GameDataSource,
-    private val clock: Clock,
     private val getGamePlayLocations: GetGamePlayLocations,
     private val locationPackRepository: LocationPackRepository,
     @ApplicationScope private val applicationScope: CoroutineScope
@@ -42,23 +43,64 @@ class MutliDeviceGameRepository @Inject constructor(
 
     private val currentGameAccessCodeState = MutableStateFlow<String?>(null)
 
-    private val currentGameFlow: StateFlow<Game?> = currentGameAccessCodeState
-        .filterNotNull()
-        .flatMapLatest {
-            gameDataSource.subscribeToGame(it).getOrNull() ?: flowOf(null)
-        }
-        .filterNotNull()
-        .stateIn(
-            scope = applicationScope,
-            started = SharingStarted.WhileSubscribed(GameSubscriptionTimeout),
-            initialValue = null
-        )
+    sealed class GamePresence {
+        data class Present(val game: Game) : GamePresence()
+        data class Absent(val accessCode: String) : GamePresence()
 
-    override fun getGameFlow(accessCode: String): Flow<Game> {
+        fun gameOrNull(): Game? = when (this) {
+            is Present -> game
+            else -> null
+        }
+    }
+
+    /**
+     * Flow based on the current access code that subscribes to the game with that access code
+     * and emits the game wrapped in its presence.
+     */
+    private val currentGameFlow: StateFlow<GamePresence?> =
+        currentGameAccessCodeState
+            .filterNotNull()
+            .flatMapLatest { accessCode ->
+                gameDataSource.subscribeToGame(accessCode)
+                    .filter {
+                        // if there is an error parsing ignore it.
+                        it.isSuccess || it.getExceptionOrNull() is GameDataSourcError.GameNotFound
+                    }
+                    .map {
+                        val game = it.getOrNull()
+
+                        if (game != null) {
+                            GamePresence.Present(game)
+                        } else {
+                            GamePresence.Absent(accessCode)
+                        }
+                    }
+            }
+            .stateIn(
+                scope = applicationScope,
+                started = SharingStarted.Eagerly,
+                initialValue = null
+            )
+
+    /**
+     * Returns a flow of the game with the provided access code
+     * Null if game does not exist.
+     */
+    override fun getGameFlow(accessCode: String): Flow<Game?> {
         if (currentGameAccessCodeState.value != accessCode) {
             currentGameAccessCodeState.value = accessCode
         }
-        return currentGameFlow.filterNotNull()
+
+        // wait for values relevant to the access code.
+        return currentGameFlow
+            .filterNotNull()
+            .filter { gamePresence ->
+                when (gamePresence) {
+                    is GamePresence.Present -> gamePresence.game.accessCode == accessCode
+                    is GamePresence.Absent -> gamePresence.accessCode == accessCode
+                }
+            }
+            .map { it.gameOrNull() }
     }
 
     override suspend fun create(game: Game): Try<Unit> = Try {
@@ -81,8 +123,7 @@ class MutliDeviceGameRepository @Inject constructor(
             .logOnError()
 
     override suspend fun removeUser(accessCode: String, username: String): Try<Unit> {
-        val currentGame = currentGameFlow.value.takeIf { it?.accessCode == accessCode }
-            ?: gameDataSource.getGame(accessCode).getOrNull()
+        val currentGame = getGameFlow(accessCode).first() ?: gameDataSource.getGame(accessCode).getOrNull()
 
         return when {
             currentGame == null || currentGame.accessCode != accessCode -> {
@@ -90,7 +131,7 @@ class MutliDeviceGameRepository @Inject constructor(
                 gameDataSource.removePlayer(accessCode, username)
             }
 
-            currentGame.isBeingStarted -> TriedToLeaveStartedGame.failure()
+            currentGame.isBeingStarted -> TriedToLeaveStartedGameDataSourc.failure()
             currentGame.players.size == 1 -> gameDataSource.delete(accessCode)
             else -> gameDataSource.removePlayer(accessCode, username)
         }.logOnError()
@@ -100,7 +141,7 @@ class MutliDeviceGameRepository @Inject constructor(
         return gameDataSource.getGame(accessCode).fold(
             onSuccess = { true.success() },
             onFailure = {
-                if (it is GameError.GameNotFound) {
+                if (it is GameDataSourcError.GameNotFound) {
                     false.success()
                 } else {
                     it.failure()
@@ -117,20 +158,26 @@ class MutliDeviceGameRepository @Inject constructor(
     override suspend fun setGameIsBeingStarted(
         accessCode: String,
         isBeingStarted: Boolean
-    ): Try<Unit> =
-        if (gameDataSource.getGame(accessCode).getOrThrow().isBeingStarted == isBeingStarted) {
-            StartGameError.GameAlreadyStarted.failure()
+    ): Try<Unit> {
+
+        val currentGame = getGameFlow(accessCode).first()
+            ?: gameDataSource.getGame(accessCode).getOrNull()
+            ?: return illegalState("Game is null when setting starting")
+
+        return if (currentGame.isBeingStarted == isBeingStarted) {
+            StartGameError.GameDataSourcAlreadyStarted.failure()
         } else {
             gameDataSource.setGameBeingStarted(accessCode, isBeingStarted)
         }
             .logOnError()
+    }
 
     override suspend fun start(accessCode: String): Try<Unit> {
-        return gameDataSource.setStartedAt(accessCode, clock.millis()).logOnError()
+        return gameDataSource.setStartedAt(accessCode).logOnError()
     }
 
     override suspend fun reset(accessCode: String): Try<Unit> {
-        val currentGame = currentGameFlow.value.takeIf { it?.accessCode == accessCode }
+        val currentGame = getGameFlow(accessCode).first()
             ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalState("Game is null when resetting")
 
@@ -186,11 +233,15 @@ class MutliDeviceGameRepository @Inject constructor(
         voterId: String,
         location: String
     ): Try<Unit> {
-        val game = currentGameFlow.value ?: return illegalState("Game is null when voting")
+
+        val currentGame = getGameFlow(accessCode).first()
+            ?: gameDataSource.getGame(accessCode).getOrNull()
+            ?: return illegalState("Game is null when submitting vote")
+
         return gameDataSource.setPlayerVotedCorrectly(
             accessCode = accessCode,
             playerId = voterId,
-            votedCorrectly = location == game.locationName
+            votedCorrectly = location == currentGame.locationName
         ).logOnError()
     }
 
@@ -199,9 +250,14 @@ class MutliDeviceGameRepository @Inject constructor(
         voterId: String,
         voteId: String
     ): Try<Boolean> {
-        val oddOneOut = currentGameFlow.value
-            ?.players
-            ?.find { it.isOddOneOut }
+
+        val currentGame = getGameFlow(accessCode).first()
+            ?: gameDataSource.getGame(accessCode).getOrNull()
+            ?: return illegalState("Game is null when submitting vote")
+
+        val oddOneOut = currentGame
+            .players
+            .find { it.isOddOneOut }
             ?: return illegalState("Could not pull Odd One Out From Game")
 
         return gameDataSource.setPlayerVotedCorrectly(

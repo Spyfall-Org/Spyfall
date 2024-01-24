@@ -1,7 +1,5 @@
 package com.dangerfield.features.welcome.internal
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.welcome.internal.WelcomeViewModel.Action
 import com.dangerfield.features.welcome.internal.WelcomeViewModel.Event
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
@@ -12,12 +10,9 @@ import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.SessionFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.first
 import oddoneout.core.developerSnackIfDebug
 import oddoneout.core.withBackoffRetry
 import javax.inject.Inject
@@ -25,6 +20,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
+    private val sessionFlow: SessionFlow,
     private val session: Session,
     private val clearActiveGame: ClearActiveGame,
     @Named(MultiDeviceRepositoryName) private val multiDeviceGameRepository: GameRepository,
@@ -43,23 +39,13 @@ class WelcomeViewModel @Inject constructor(
         }
     }
 
-
-    val dummyState = flow {
-        emit(1)
-        delay(1000)
-        emit(2)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = 0
-    )
-
     /*
     TODO cleanup I could probably have a provider of the repo that changes based on the sessions active game being online or
     not
      */
     private suspend fun checkForActiveGame() {
-        val activeGame = session.activeGame
+        val activeGame = sessionFlow.first().activeGame
+
         if (activeGame != null) {
             withBackoffRetry(
                 retries = 3,

@@ -53,6 +53,12 @@
     <string name="app_cancel_action">Cancel</string>
     <string name="app_open_action">Open</string>
     <string name="app_bullet_point">•</string>
+    <string name="app_location_label">location</string>
+    <string name="app_oops_text">Oops!</string>
+    <string name="app_end_game_action">End Game</string>
+    <string name="app_show_action">Show</string>
+    <string name="app_hide_action">Hide</string>
+    <string name="app_oddOneOut_label">odd one out</string>
 
     <!-- /////////////////////    Welcome Strings   /////////////////////-->
     <string name="welcome_intro_header">Welcome to</string>
@@ -63,9 +69,12 @@
     <!-- /////////////////////    Waiting Room Strings   /////////////////////-->
     <string name="waitingRoom_waiting_header">Waiting for players…</string>
     <string name="waitingRoom_accessCode_header">Access Code:</string>
+    <string name="waitingRoom_confirmStart_action">Start Game</string>
     <string name="waitingRoom_joinVideo_a11y">Join game video call</string>
     <string name="waitingRoom_startGame_action">Start Game</string>
     <string name="waitingRoom_leaveGame_action">Leave Game</string>
+    <string name="waitingRoom_tooFewPlayersDialog_header">Are you sure you want to start the game?</string>
+    <string name="waitingRoom_tooFewPlayersDialog_body">You have less than {min} players. A game with this few players is not recommended.</string>
     <string name="waitingRoom_leaveGameDialog_header">Leaving so soon?</string>
     <string name="waitingRoom_leaveGameDialog_text">You are leaving the game and will be removed if you continue.</string>
     <string name="waitingRoom_cannotLeaveGame_text">Cannot Leave a started game</string>
@@ -76,6 +85,7 @@
     <string name="videoCall_detailDialog_title">Video Link</string>
     <string name="videoLink_detailDialogDescription_text">The creator of this game has added a video link to make it easier to play with anyone anywhere. \n\nBut PLEASE remember, be careful opening links from strangers over the internet.</string>
     <string name="videoLink_beCareful_label">be careful</string>
+    <string name="waitingRoom_forcedRemovalError_text">We\'re sorry there was a problem. Unfortunately we had to remove you from the game. Please join and try again.</string>
     <string name="videoLink_copyLink_a11y">Copy Link</string>
     <string name="videoLink_infoDialog_title">Add video calling to your game</string>
     <string name="videoLink_infoDialogBody_text">You can add a video link when creating your game to make it easier to play with anyone anywhere. When a player joins the game they will also have access to this link.</string>
@@ -224,8 +234,6 @@
     <string name="roleReveal_nameInvalidLengthError_text">Name must be between {min} and {max} characters</string>
     <string name="roleReveal_nameTakenError_text">Name is taken</string>
     <string name="singleDeviceVoting_Instructions_text">Click \"show\" to see your voting options. The last player will be able to reveal the results.</string>
-    <string name="app_show_action">Show</string>
-    <string name="app_hide_action">Hide</string>
     <string name="singleDeviceVoting_locationVoting_header">Which location were you at?</string>
     <string name="singleDeviceVoting_oddOneOutVoting_header">Who is the odd one out?</string>
     <string name="singleDeviceVoting_seeResults_action">See Results</string>
@@ -237,7 +245,6 @@
     <string name="singleDeviceEndGameDialog_cancel_action">Cancel</string>
     <string name="endOrGoBack_dialog_header">End the game or go back?</string>
     <string name="endOrGoBack_description_text">Going back will show the previous players details, ending will delete the game.</string>
-    <string name="app_end_game_action">End Game</string>
     <string name="endOrGoBack_goBack_action">Go Back</string>
     <string name="endOrGoBack_cancel_action">Cancel</string>
     <string name="gamePlay_leaveDialog_header">Are you sure?</string>
@@ -254,8 +261,6 @@
     <string name="gamePlay_voteForLocation_header">Which location are you at?</string>
     <string name="gamePlay_locations_header">Locations:</string>
     <string name="gamePlay_correctAnswer_header">The actual {type}:</string>
-    <string name="app_location_label">location</string>
-    <string name="app_oddOneOut_label">odd one out</string>
     <string name="gamePlay_voteForOddOneOut_header">Which player is the odd one out?</string>
     <string name="gamePlay_players_header">Players:</string>
     <string name="gameResults_youWon_text">You won!</string>
@@ -305,4 +310,5 @@
     <!-- /////////////////////    Blocking Error Strings   /////////////////////-->
     <string name="blockingError_screen_header">This is embarrassing</string>
     <string name="blockingError_error_body">We seem to have an uncaught bug in our app. Please try killing the app and starting again.</string>
+    <string name="waitingRoom_tooManyPlayersDialog_body">Looks like somehow there are more than {max} players in this room. {numToLeave} players will need to leave before the game can be started.</string>
 </resources>

@@ -255,7 +255,7 @@ class NewGameViewModel @Inject constructor(
             val truncatedNumber = numOfPlayers.take(2)
 
             val numberOfPlayersState = if (truncatedNumber.toIntOrNull() == null ||
-                truncatedNumber.toInt() !in gameConfig.minPlayers..gameConfig.maxPlayers
+                truncatedNumber.toIntOrNull() !in gameConfig.minPlayers..gameConfig.maxPlayers
             ) {
                 Invalid(
                     truncatedNumber,
@@ -278,7 +278,7 @@ class NewGameViewModel @Inject constructor(
         // we only allow the user to type 2 digits
         val truncatedNumber = timeLimit.take(2)
 
-        val timeLimitState = if (truncatedNumber.toInt() !in gameConfig.minTimeLimit..gameConfig.maxTimeLimit ||
+        val timeLimitState = if (truncatedNumber.toIntOrNull() !in gameConfig.minTimeLimit..gameConfig.maxTimeLimit ||
             truncatedNumber.toIntOrNull() == null
         ) {
             Invalid(

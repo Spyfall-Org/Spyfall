@@ -11,6 +11,7 @@ import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
 import java.time.Clock
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @AutoBind
@@ -20,15 +21,16 @@ class MapToGameStateUseCaseImpl @Inject constructor(
     private val session: Session
 ) : MapToGameStateUseCase {
 
-    private fun remainingMillis(startedAt: Long, timeLimitMins: Int): Long {
-        val currentTimeMillis = clock.millis()
-        val timeLimitInMillis = if (gameConfig.forceShortGames) {
-            10.seconds.inWholeMilliseconds.toInt()
+    private fun remainingMillis(startedAtMillis: Long, timeLimitMins: Int): Long {
+        val timeLimitInMillis = if (timeLimitMins == -1) {
+            10.seconds.inWholeMilliseconds
         } else {
-            timeLimitMins * 60 * 1000
+            timeLimitMins.minutes.inWholeMilliseconds
         }
 
-        return timeLimitInMillis - (currentTimeMillis - startedAt)
+        val elapsedMillis: Long = clock.millis() - startedAtMillis
+        val remainingMillis = timeLimitInMillis - elapsedMillis
+        return remainingMillis
     }
 
     @Suppress("LongMethod")
@@ -87,7 +89,7 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                     && game.players.everyoneHasVoted()
             -> {
                 val result = calculateGameResult(game)
-                val mePlayer = game.player(session.activeGame?.userId)
+                val mePlayer = game.player(session.activeGame?.userId) ?: return GameState.Unknown(game = game)
 
                 GameState.VotingEnded(
                     accessCode = accessCode,
@@ -97,10 +99,12 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                     startedAt = startedAt,
                     location = game.locationName,
                     videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() },
-                    didMePlayerWin = mePlayer?.let {
+                    timeLimitMins = game.timeLimitMins,
+                    mePlayer = mePlayer,
+                    didMePlayerWin = mePlayer.let {
                         (it.isOddOneOut && result == GameResult.OddOneOutWon)
                                 || (!it.isOddOneOut && result == GameResult.PlayersWon)
-                    } ?: false
+                    }
                 )
             }
 

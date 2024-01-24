@@ -4,7 +4,9 @@ import spyfallx.core.common.BuildConfig
 import timber.log.Timber
 import kotlin.coroutines.cancellation.CancellationException
 
-
+/**
+ * We do not catch fatals, they should be considered not ignorable.
+ */
 fun Throwable.nonFatalOrThrow(): Throwable = if (this.isFatal.not()) this else throw this
 
 val Throwable.isFatal: Boolean
@@ -17,25 +19,21 @@ class DebugException(message: String) : Exception(message)
 
 fun throwIfDebug(throwable: Throwable) {
     if (BuildConfig.DEBUG) {
-        val throwable = DebugException(throwable.message.orEmpty())
-        throw throwable
+        throw DebugException(throwable.message.orEmpty())
     }
 }
 
 fun throwIfDebug(lazyMessage: () -> Any) {
-    val message = lazyMessage()
     if (BuildConfig.DEBUG) {
-        val throwable = DebugException(message.toString())
-        throw throwable
+        throw DebugException(lazyMessage().toString())
     }
-    Timber.e(message.toString())
+    Timber.e(lazyMessage().toString())
 }
 
 fun developerSnackIfDebug(
     autoDismiss: Boolean = false,
     lazyMessage: () -> Any
 ) {
-    val message = lazyMessage()
     if (BuildConfig.DEBUG) {
         UserMessagePresenter.showDeveloperMessage(
             Message(
@@ -43,13 +41,11 @@ fun developerSnackIfDebug(
             )
         )
     }
-    Timber.i(message.toString())
+    Timber.i(lazyMessage().toString())
 }
 
 inline fun checkInDebug(value: Boolean, lazyMessage: () -> Any) {
     if (!value) {
-        val message = lazyMessage()
-        val throwable = DebugException(message.toString())
-        if (BuildConfig.DEBUG) throw throwable
+        if (BuildConfig.DEBUG) throw DebugException(lazyMessage().toString())
     }
 }

@@ -25,7 +25,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -46,7 +47,7 @@ class GamePlayViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val metricsTracker: MultiDeviceGameMetricsTracker,
     session: Session,
-    ) : SEAViewModel<State, Event, Action>() {
+) : SEAViewModel<State, Event, Action>() {
 
     private val meUserId = session.activeGame?.userId ?: ""
     private val isSubscribedToGameFlow = AtomicBoolean(false)
@@ -64,7 +65,7 @@ class GamePlayViewModel @Inject constructor(
     private val timeLimitArg: Int?
         get() = savedStateHandle.navArgument<Int>(timeLimitArgument).takeIf { (it ?: 0) > 0 }
 
-    private val gameFlow: SharedFlow<Game> = gameRepository
+    private val gameFlow: SharedFlow<Game?> = gameRepository
         .getGameFlow(accessCode)
         .shareIn(
             scope = viewModelScope,
@@ -101,14 +102,12 @@ class GamePlayViewModel @Inject constructor(
     }
 
     private suspend fun endGame() {
-        gameRepository.end(accessCode)
-        // TODO cleanup consider having game repo clear active game and stuff
-        clearActiveGame()
-        sendEvent(Event.GameKilled)
         metricsTracker.trackGameEnded(
             game = getGame(),
             timeRemainingMillis = state.value.timeRemainingMillis
         )
+        gameRepository.end(accessCode)
+        sendEvent(Event.GameKilled)
     }
 
     private suspend fun resetGame() {
@@ -233,10 +232,12 @@ class GamePlayViewModel @Inject constructor(
         if (!hasRecordedResult.getAndSet(true)) {
             recordResult(gameState)
 
-            metricsTracker.trackVotingEnded(
-                timeLimitMins = getGame().timeLimitMins,
-                gameState = gameState
-            )
+            if (gameState.mePlayer.isHost) {
+                metricsTracker.trackVotingEnded(
+                    timeLimitMins = gameState.timeLimitMins,
+                    gameState = gameState
+                )
+            }
         }
     }
 
@@ -348,7 +349,10 @@ class GamePlayViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getGame() =  gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
+    private suspend fun getGame() =
+        gameFlow.replayCache.firstOrNull()
+            ?: gameFlow.filterNotNull().firstOrNull()
+            ?: gameRepository.getGame(accessCode).getOrNull()
 
     data class State(
         val isLoadingPlayers: Boolean,

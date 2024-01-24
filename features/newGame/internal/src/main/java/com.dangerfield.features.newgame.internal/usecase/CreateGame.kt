@@ -80,7 +80,7 @@ class CreateGame @Inject constructor(
             packNames = packs.map { it.name },
             isBeingStarted = false,
             players = listOf(currentPlayer),
-            timeLimitMins = timeLimit,
+            timeLimitMins = if (gameConfig.forceShortGames) -1 else timeLimit,
             startedAt = null,
             locationOptionNames = locations.map { it.name },
             videoCallLink = videoCallLink,

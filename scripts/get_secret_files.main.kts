@@ -20,24 +20,31 @@ import java.io.FileOutputStream
 // These file ids can be found in the url of the sharable google drive links to these files
 data class FileInfo(val id: String, val pathToStore: String)
 
+// TODO debug builds dont need the release stuff. Same for the service account keys.
+// Neither of these are used in day to day. Seems odd to require them to be installed.
+
+// Used to talk to the release firebase project
 val spyfallReleaseGoogleServicesFileInfo =
     FileInfo(
         id ="1UIP-nsDLazFCo-OIU3OzFjiBNTeyAjRc",
         pathToStore = "app/src/release/google-services.json"
     )
 
+// Used to talk to the debug firebase project
 val spyfallDebugGoogleServicesFileInfo =
     FileInfo(
         id ="12rbE9BCp8UkQ38_eE465tjI8O3VbYAzL",
         pathToStore = "app/src/debug/google-services.json"
     )
 
+// Used to make changes to the debug firestore project via scripts
 val spyfallDebugServiceAccountKeyFileInfo =
     FileInfo(
         id ="1wEDOUOW3-ULVAyWe3NRmIiF5s3K_E6Lq",
         pathToStore = "app/src/debug/service-account-key.json"
     )
 
+// Used to make changes to the release firestore project via scripts
 val spyfallReleaseServiceAccountKeyFileInfo =
     FileInfo(
         id ="13Q-z85mO3-5JVFhXmQ9191-N465-18PH",
@@ -66,7 +73,7 @@ fun printGreen(text: String) {
 val isHelpCall = args.isNotEmpty() && (args[0] == "-h" || args[0].contains("help"))
 if ( isHelpCall ) {
     printRed("""
-        This script collects every required google service.json file 
+        This script collects every required files to run the debug and release variants
         from google drive using a service account key file. You must either pass in the path to the service_key.json
         file or have it installed in the root directory. 
         

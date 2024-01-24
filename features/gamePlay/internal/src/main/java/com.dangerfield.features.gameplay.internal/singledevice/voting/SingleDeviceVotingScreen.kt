@@ -133,8 +133,8 @@ private fun VotingScreenContent(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
-    var selectedPlayerForVote by rememberSaveable { mutableStateOf<DisplayablePlayer?>(null) }
-    var selectedLocationForVote by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedPlayerForVote by remember { mutableStateOf<DisplayablePlayer?>(null) }
+    var selectedLocationForVote by remember { mutableStateOf<String?>(null) }
     val hasSelectedVote: Boolean = selectedPlayerForVote != null || selectedLocationForVote != null
 
     Screen(

@@ -49,7 +49,7 @@ class NavControllerRouter(
             .throwIfDebug()
     }
 
-    override fun openWebLink(url: String) {
+    override fun openWebLink(url: String, openInApp: Boolean) {
         Try { Uri.parse(url) }
             .map { uri ->
                 // add https if no scheme
@@ -60,12 +60,15 @@ class NavControllerRouter(
                 }
             }
             .map {
-                navHostController.context.openWebLinkFromContext(it)
+                if (openInApp) {
+                    navHostController.context.openWebLinkFromContext(it)
+                } else {
+                    navHostController.context.openWebLinkExternally(it)
+                }
             }
             .developerSnackOnError { "Could not open web link $url" }
             .logOnError()
     }
-
 
     override fun popBackTo(
         route: Route.Template,

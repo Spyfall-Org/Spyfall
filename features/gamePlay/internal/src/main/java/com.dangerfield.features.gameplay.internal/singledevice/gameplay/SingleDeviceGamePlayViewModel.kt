@@ -24,7 +24,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -58,7 +60,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
     private val timeLimitArg: Int?
         get() = savedStateHandle.navArgument<Int>(timeLimitArgument).takeIf { (it ?: 0) > 0 }
 
-    private val gameFlow: SharedFlow<Game> = gameRepository
+    private val gameFlow: SharedFlow<Game?> = gameRepository
         .getGameFlow(accessCode)
         .shareIn(
             scope = viewModelScope,
@@ -184,7 +186,10 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
             }
     }
 
-    private suspend fun getGame() = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
+    private suspend fun getGame() =
+        gameFlow.replayCache.firstOrNull()
+            ?: gameFlow.filterNotNull().firstOrNull()
+            ?: gameRepository.getGame(accessCode).getOrNull()
 
     data class State(
         val isTimeUp: Boolean,

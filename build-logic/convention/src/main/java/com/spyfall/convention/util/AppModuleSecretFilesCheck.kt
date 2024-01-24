@@ -8,9 +8,16 @@ import java.lang.System.getenv
 internal fun Project.checkForAppModuleSecretFiles() {
 
     val secretFiledNeeded = listOf(
+        // used to talk to release firebase project by app
         File("${project.projectDir}/src/release/google-services.json"),
+
+        // used to talk to release firebase project by scripts
         File("${project.projectDir}/src/release/service-account-key.json"),
+
+        // used to talk to debug firebase project by app
         File("${project.projectDir}/src/debug/google-services.json"),
+
+        // used to talk to debug firebase project by scripts
         File("${project.projectDir}/src/debug/service-account-key.json")
     )
 

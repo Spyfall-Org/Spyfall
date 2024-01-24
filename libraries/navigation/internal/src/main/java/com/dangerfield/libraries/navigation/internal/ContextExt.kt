@@ -1,6 +1,7 @@
 package com.dangerfield.libraries.navigation.internal
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
@@ -36,3 +37,20 @@ fun Context.openWebLinkFromContext(uri: Uri): Boolean =
         true
     }
         .getOrElse { false }
+
+
+fun Context.openWebLinkExternally(uri: Uri): Boolean {
+    return Try {
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            // Ensure that this intent can be handled
+            if (resolveActivity(packageManager) != null) {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            } else {
+                // No browser is installed, intent cannot be handled
+                return false
+            }
+        }
+        startActivity(intent)
+        true
+    }.getOrElse { false }
+}

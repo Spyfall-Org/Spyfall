@@ -24,12 +24,15 @@ import com.dangerfield.oddoneoout.features.gameplay.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import oddoneout.core.developerSnackIfDebug
 import oddoneout.core.doNothing
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
@@ -48,7 +51,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
     private var currentPlayerRoleIndex = 0
 
-    private val gameFlow: SharedFlow<Game> = gameRepository
+    private val gameFlow: SharedFlow<Game?> = gameRepository
         .getGameFlow(accessCode)
         .shareIn(
             scope = viewModelScope,
@@ -109,6 +112,12 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
 
     private suspend fun changeName(newName: String) {
         val id = state.value.currentPlayer?.id ?: return
+        val game = getGame()
+
+        if (game == null) {
+            Timber.e("Game is null when changing name")
+            return
+        }
 
         val isNameInvalidLength =
             newName.length !in gameConfig.minNameLength..gameConfig.maxNameLength
@@ -125,7 +134,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
                 )
             )
 
-            gameFlow.first().players.find { it.userName.lowercase() == newName.lowercase() } != null -> Invalid(
+            game.players.find { it.userName.lowercase() == newName.lowercase() } != null -> Invalid(
                 newName,
                 dictionary.getString(R.string.roleReveal_nameTakenError_text)
             )
@@ -222,7 +231,10 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         )
     }
 
-    private suspend fun getGame() = gameFlow.replayCache.firstOrNull() ?: gameFlow.first()
+    private suspend fun getGame() =
+        gameFlow.replayCache.firstOrNull()
+            ?: gameFlow.filterNotNull().firstOrNull()
+            ?: gameRepository.getGame(accessCode).getOrNull()
 
     private suspend fun loadPlayer(index: Int) {
 

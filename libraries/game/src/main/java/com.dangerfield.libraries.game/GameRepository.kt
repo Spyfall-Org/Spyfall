@@ -36,7 +36,7 @@ interface GameRepository {
 
     suspend fun updatePlayers(accessCode: String, players: List<Player>): Try<Unit>
 
-    fun getGameFlow(accessCode: String): Flow<Game>
+    fun getGameFlow(accessCode: String): Flow<Game?>
     suspend fun getGame(accessCode: String): Try<Game>
     suspend fun submitLocationVote(accessCode: String, voterId: String,  location: String): Try<Unit>
     suspend fun submitOddOneOutVote(accessCode: String, voterId: String, voteId: String): Try<Boolean>

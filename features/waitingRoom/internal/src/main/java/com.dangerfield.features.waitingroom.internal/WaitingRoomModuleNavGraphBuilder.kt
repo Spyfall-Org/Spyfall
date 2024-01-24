@@ -20,17 +20,20 @@ import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.dictionary.dictionaryString
+import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.floatingwindow.dialog
 import com.dangerfield.libraries.ui.showMessage
 import com.dangerfield.oddoneoout.features.waitingroom.internal.R
-import se.ansman.dagger.auto.AutoBindIntoSet
 import oddoneout.core.Message
+import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
+class WaitingRoomModuleNavGraphBuilder @Inject constructor(
+    private val gameConfig: GameConfig
+) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
 
@@ -83,7 +86,9 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
                 onStartGameClicked = { viewModel.takeAction(StartGame) },
                 onCallLinkButtonClicked = router::navigateToVideoCallBottomSheet,
                 onLeaveGameClicked = { viewModel.takeAction(LeaveGame) },
-                onChangeNameClicked = { router.navigateToChangeName(state.accessCode) }
+                onChangeNameClicked = { router.navigateToChangeName(state.accessCode) },
+                minPlayers = gameConfig.minPlayers,
+                maxPlayers = gameConfig.maxPlayers
             )
         }
 

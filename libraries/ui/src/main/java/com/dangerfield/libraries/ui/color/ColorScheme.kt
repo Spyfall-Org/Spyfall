@@ -43,6 +43,7 @@ class ColorScheme internal constructor(
     val backgroundOverlay: ColorToken.Color,
     val onBackground: ColorToken.Color,
     val border: ColorToken.Color,
+    val borderDisabled: ColorToken.Color,
 
     /* Texts */
     val text: ColorToken.Color,
@@ -78,6 +79,7 @@ class ColorScheme internal constructor(
             onBackground = ColorToken.Color("onBackground", ColorPrimitive.Black900),
             border = ColorToken.Color("border", ColorPrimitive.Black900),
             text = ColorToken.Color("text", ColorPrimitive.Black900),
+            borderDisabled = ColorToken.Color("border-disabled", ColorPrimitive.Black400),
         )
 
         fun darkMode(accentColor: ColorPrimitive = ColorPrimitive.CherryPop700) = ColorScheme(
@@ -97,6 +99,7 @@ class ColorScheme internal constructor(
             border = ColorToken.Color("border", ColorPrimitive.White900),
             text = ColorToken.Color("text", ColorPrimitive.White900),
             backgroundOverlay = ColorToken.Color("background-overlay", ColorPrimitive.Black400, alpha = 0.8f),
+            borderDisabled = ColorToken.Color("border-disabled", ColorPrimitive.Black300),
             )
     }
 }
@@ -229,7 +232,8 @@ private class ColorPreviewParameterProvider : PreviewParameterProvider<ColorPrev
                 colors = listOf(
                     ColorScheme::accent,
                     ColorScheme::onAccent,
-                    ColorScheme::border
+                    ColorScheme::border,
+                    ColorScheme::borderDisabled
                 )
             ),
         )

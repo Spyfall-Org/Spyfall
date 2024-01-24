@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout.startup
+package com.dangerfield.spyfall.startup
 
 import android.animation.ValueAnimator
 import android.app.Activity

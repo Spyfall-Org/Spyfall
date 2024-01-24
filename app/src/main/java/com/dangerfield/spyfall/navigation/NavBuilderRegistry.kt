@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout.navigation
+package com.dangerfield.spyfall.navigation
 
 import androidx.navigation.NavGraphBuilder
 import com.dangerfield.libraries.navigation.ModuleNavBuilder

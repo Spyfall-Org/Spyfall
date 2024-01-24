@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout.di
+package com.dangerfield.spyfall.di
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -7,9 +7,8 @@ import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
-import com.dangerfield.oddoneout.BuildConfig.VERSION_CODE
-import com.dangerfield.oddoneout.BuildConfig.VERSION_NAME
-import com.dangerfield.oddoneout.R
+import com.dangerfield.spyfall.free.BuildConfig.VERSION_CODE
+import com.dangerfield.spyfall.free.BuildConfig.VERSION_NAME
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

@@ -1,8 +1,9 @@
 package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.Game
-import com.dangerfield.libraries.game.GameError
+import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.Player
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
@@ -10,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.Try
@@ -18,6 +19,7 @@ import oddoneout.core.failure
 import oddoneout.core.logOnError
 import java.time.Clock
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.nanoseconds
 
 @AutoBind
 class FirestoreGameDataSource @Inject constructor(
@@ -34,17 +36,20 @@ class FirestoreGameDataSource @Inject constructor(
             .await()
     }
 
-    override suspend fun subscribeToGame(accessCode: String): Try<Flow<Game>> = Try {
+    /**
+     * Subscribes to the document and maps it to a game
+     * Returns failure if game is not found or if there is an error
+     */
+    override suspend fun subscribeToGame(accessCode: String): Flow<Try<Game>> =
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .snapshots(MetadataChanges.EXCLUDE)
-            .mapNotNull {
-                val data = it.data ?: return@mapNotNull null
-                gameSerializer.deserializeGame(data)
-                    .logOnError()
-                    .getOrNull()
+            .map {
+                val data =
+                    it.data ?: return@map GameDataSourcError.GameNotFound(accessCode).failure()
+
+                gameSerializer.deserializeGame(data).logOnError()
             }
-    }
 
     override suspend fun getGame(accessCode: String): Try<Game> = db
         .collection(GAMES_COLLECTION_KEY)
@@ -52,7 +57,7 @@ class FirestoreGameDataSource @Inject constructor(
         .get()
         .await()
         .let {
-            val data = it.data ?: return GameError.GameNotFound.failure()
+            val data = it.data ?: return GameDataSourcError.GameNotFound(accessCode).failure()
             gameSerializer.deserializeGame(data).logOnError()
         }
 
@@ -105,9 +110,9 @@ class FirestoreGameDataSource @Inject constructor(
             .await()
     }.ignoreValue()
 
-    override suspend fun setStartedAt(accessCode: String, startedAt: Long): Try<Unit> = Try {
+    override suspend fun setStartedAt(accessCode: String): Try<Unit> = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .activeUpdate(FieldPath.of(STARTED_AT_FIELD_KEY), startedAt)
+            .activeUpdate(FieldPath.of(STARTED_AT_FIELD_KEY), clock.millis())
             .await()
     }.ignoreValue()
 

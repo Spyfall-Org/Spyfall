@@ -1,4 +1,4 @@
-package com.dangerfield.oddoneout
+package com.dangerfield.spyfall
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -16,9 +16,9 @@ import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.coreflowroutines.collectWhileStarted
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.network.NetworkMonitor
-import com.dangerfield.oddoneout.navigation.NavBuilderRegistry
-import com.dangerfield.oddoneout.startup.MainActivityViewModel
-import com.dangerfield.oddoneout.startup.SplashScreenBuilder
+import com.dangerfield.spyfall.navigation.NavBuilderRegistry
+import com.dangerfield.spyfall.startup.MainActivityViewModel
+import com.dangerfield.spyfall.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject

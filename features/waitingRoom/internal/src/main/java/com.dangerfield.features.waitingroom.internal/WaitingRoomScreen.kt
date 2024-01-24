@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +48,8 @@ fun WaitingRoomScreen(
     modifier: Modifier = Modifier,
     accessCode: String,
     players: List<DisplayablePlayer>,
+    minPlayers: Int,
+    maxPlayers: Int,
     videoCallLink: String?,
     isLoadingRoom: Boolean,
     isLoadingStart: Boolean,
@@ -59,6 +60,8 @@ fun WaitingRoomScreen(
 ) {
     val scrollState = rememberScrollState()
     var showLeaveGameDialog by remember { mutableStateOf(false) }
+    var showTooFewPlayersDialog by remember { mutableStateOf(false) }
+    var showTooManyPlayersDialog by remember { mutableStateOf(false) }
 
     BackHandler {
         showLeaveGameDialog = !showLeaveGameDialog
@@ -83,7 +86,13 @@ fun WaitingRoomScreen(
                 players = players,
                 isLoadingStart = isLoadingStart,
                 onLeaveGameClicked = onLeaveGameClicked,
-                onStartGameClicked = onStartGameClicked,
+                onStartGameClicked = {
+                    when {
+                        players.size > maxPlayers -> showTooManyPlayersDialog = true
+                        players.size < minPlayers -> showTooFewPlayersDialog = true
+                        else -> onStartGameClicked()
+                    }
+                },
                 onChangeNameClicked = onChangeNameClicked
             )
 
@@ -91,6 +100,22 @@ fun WaitingRoomScreen(
                 WaitingRoomLeavingDialog(
                     onDismissRequest = { showLeaveGameDialog = false },
                     onLeaveConfirmed = onLeaveGameClicked
+                )
+            }
+
+            if (showTooFewPlayersDialog) {
+                TooFewPlayersDialog(
+                    onDismissRequest = { showTooFewPlayersDialog = false },
+                    onStartConfirmed = onStartGameClicked,
+                    minPlayers = minPlayers,
+                )
+            }
+
+            if (showTooManyPlayersDialog) {
+                TooManyPlayersDialog(
+                    onDismissRequest = { showTooManyPlayersDialog = false },
+                    maxPlayers = maxPlayers,
+                    playersSize = players.size
                 )
             }
         }
@@ -256,7 +281,9 @@ fun PreviewWaitingRoomScreen() {
             onCallLinkButtonClicked = { },
             onStartGameClicked = {},
             onLeaveGameClicked = {},
-            onChangeNameClicked = {}
+            onChangeNameClicked = {},
+            minPlayers = 3,
+            maxPlayers = 6
         )
     }
 }
