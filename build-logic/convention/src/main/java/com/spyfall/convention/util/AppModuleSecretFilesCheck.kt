@@ -14,6 +14,12 @@ internal fun Project.checkForAppModuleSecretFiles() {
         // used to talk to release firebase project by scripts
         File("${project.projectDir}/src/release/service-account-key.json"),
 
+        // used to talk to release firebase project by app for qa
+        File("${project.projectDir}/src/qa/google-services.json"),
+
+        // used to talk to release firebase project by scripts for qa
+        File("${project.projectDir}/src/qa/service-account-key.json"),
+
         // used to talk to debug firebase project by app
         File("${project.projectDir}/src/debug/google-services.json"),
 
