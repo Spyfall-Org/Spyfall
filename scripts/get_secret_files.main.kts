@@ -108,11 +108,17 @@ fun getFiles() {
     val transport: HttpTransport = NetHttpTransport()
     val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
 
-    val drive = Drive.Builder(transport, jsonFactory, HttpCredentialsAdapter(scopedCredentials)).build()
+    val drive = Drive.Builder(
+        transport,
+        jsonFactory,
+        HttpCredentialsAdapter(scopedCredentials)
+    )
+        .setApplicationName("Odd One Out")
+        .build()
+
     var successfulFetches = 0
     fileInfoList.forEach {
         val driveFile = drive.files().get(it.id).execute()
-        File(it.pathToStore).createNewFile()
 
         if (driveFile.mimeType == "application/json") {
             val outputStream = ByteArrayOutputStream()
