@@ -161,7 +161,7 @@ fun getFiles() {
 
             successfulFetches += 1
         } catch (t: Throwable) {
-            printRed(t.message ?: "Error getting file ${it.pathsToStore}")
+            printRed("Error getting file ${it.pathsToStore}")
             t.printStackTrace()
         }
     }
