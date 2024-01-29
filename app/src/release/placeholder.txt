@@ -1,0 +1,1 @@
+We need this file to keep the empty /release folder alive in github. Empty folders are collapsed.
