@@ -35,6 +35,8 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
+val googleServicesGsonPath = "app/src/debug/google-services.json"
+
 @Suppress("ComplexCondition", "MagicNumber")
 if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
     printRed(
@@ -113,8 +115,7 @@ fun setAppFirebaseLinks(writer: OutputStreamWriter) {
 }
 
 fun getAppId(): String {
-    val googleServicesPath = "app/google-services.json"
-    val googleServicesObject = Gson().fromJson(FileReader(googleServicesPath), GoogleServices::class.java)
+    val googleServicesObject = Gson().fromJson(FileReader(googleServicesGsonPath), GoogleServices::class.java)
     val appPackageName = getPackageName()
     val appId = googleServicesObject
         .client
@@ -128,8 +129,7 @@ fun getAppId(): String {
 }
 
 fun getFirebaseProjectId(): String {
-    val googleServicesPath = "app/google-services.json"
-    val googleServicesObject = Gson().fromJson(FileReader(googleServicesPath), GoogleServices::class.java)
+    val googleServicesObject = Gson().fromJson(FileReader(googleServicesGsonPath), GoogleServices::class.java)
     return googleServicesObject.project_info.project_id
 }
 
