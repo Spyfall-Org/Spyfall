@@ -211,6 +211,7 @@ fun runCommandLine(command: List<String>): String {
     if (output.isNotEmpty()) {
         println("\n\n$output\n\n")
         if (output.contains("Error:") || output.contains("error:")) {
+            printRed(output)
             throw IllegalStateException(error)
         }
     }
