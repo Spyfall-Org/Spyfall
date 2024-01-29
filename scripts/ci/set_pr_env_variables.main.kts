@@ -119,7 +119,7 @@ fun getAppId(): String {
     val appPackageName = getPackageName()
     val appId = googleServicesObject
         .client
-        .firstOrNull { it.client_info.android_client_info.package_name == appPackageName }
+        .firstOrNull { it.client_info.android_client_info.package_name.contains(appPackageName) }
         ?.client_info
         ?.mobilesdk_app_id
 
