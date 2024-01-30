@@ -11,12 +11,12 @@ import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 
 @Composable
-fun NewGameErrorDialog(
+fun LoadGameOptionsErrorDialog(
     onDismissRequest: () -> Unit
 ) {
 
     PageLogEffect(
-        route = route("new_game_error_dialog"),
+        route = route("load_game_error_dialog"),
         type = PageType.Dialog
     )
 
@@ -24,7 +24,7 @@ fun NewGameErrorDialog(
     BasicDialog(
         onDismissRequest = onDismissRequest,
         title = dictionaryString(R.string.app_somethingWentWrong_text),
-        description = dictionaryString(R.string.newGame_createGameError_body),
+        description = dictionaryString(R.string.newGame_loadGameError_body),
         primaryButtonText = dictionaryString(id = R.string.app_okay_action),
         onPrimaryButtonClicked =  onDismissRequest
     )
@@ -32,9 +32,9 @@ fun NewGameErrorDialog(
 
 @Composable
 @ThemePreviews
-private fun PreviewNewGameErrorDialog() {
+private fun PreviewLoadGameOptionsErrorDialog() {
     PreviewContent {
-        NewGameErrorDialog(
+        LoadGameOptionsErrorDialog(
             onDismissRequest = {},
         )
     }

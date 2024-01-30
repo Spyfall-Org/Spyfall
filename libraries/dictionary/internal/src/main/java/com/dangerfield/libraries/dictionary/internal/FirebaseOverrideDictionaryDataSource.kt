@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import oddoneout.core.BuildInfo
 import oddoneout.core.Try
+import oddoneout.core.tryAwait
 import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
 import java.util.Locale
@@ -48,8 +49,10 @@ class FirebaseOverrideDictionaryDataSource
         val localeDictionaryMap = firebaseFirestore.collection(DICTIONARY_COLLECTION_KEY)
             .document(buildInfo.versionName)
             .get()
-            .await()
-            .data
+            .tryAwait()
+            .let {
+                it.getOrNull()?.data
+            }
             ?.get(localeString)
             ?.let {
                 Try {

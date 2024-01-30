@@ -7,6 +7,7 @@ import kotlinx.coroutines.tasks.await
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.BuildInfo
 import oddoneout.core.Try
+import oddoneout.core.tryAwait
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,7 +29,8 @@ class FirebaseConfigDataSource
         val configMap = firebaseFirestore.collection(CONFIG_COLLECTION_KEY)
             .document(buildInfo.versionName)
             .get()
-            .await()
+            .tryAwait()
+            .getOrThrow()
             .data
             .also {
                 if (it.isNullOrEmpty()) {

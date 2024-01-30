@@ -160,6 +160,8 @@ sealed class Try<out T> {
 
         override fun ignoreValue(): Try<Unit> = this
 
+        override fun ignoreEverything(): Unit = Unit
+
         override fun toString(): String = "Try.Failure($exception)"
     }
 
@@ -167,6 +169,8 @@ sealed class Try<out T> {
         override val isSuccess = true
 
         override fun ignoreValue(): Try<Unit> = Success(Unit)
+
+        override fun ignoreEverything(): Unit = Unit
 
         override fun toString(): String = "Try.Success($value)"
     }
@@ -289,4 +293,7 @@ sealed class Try<out T> {
     }
 
     abstract fun ignoreValue(): Try<Unit>
+
+    abstract fun ignoreEverything(): Unit
+
 }

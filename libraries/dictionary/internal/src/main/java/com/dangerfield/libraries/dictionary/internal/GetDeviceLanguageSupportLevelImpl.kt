@@ -12,6 +12,7 @@ import kotlinx.coroutines.tasks.await
 import oddoneout.core.BuildInfo
 import oddoneout.core.Try
 import oddoneout.core.getOrElse
+import oddoneout.core.tryAwait
 import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
 import java.util.Locale
@@ -53,7 +54,8 @@ class GetDeviceLanguageSupportLevelImpl @Inject constructor(
         firebaseFirestore.collection(DICTIONARY_COLLECTION_KEY)
             .document(buildInfo.versionName)
             .get()
-            .await()
+            .tryAwait()
+            .getOrThrow()
             .data
             ?.get(SUPPORT_LEVEL_FIELD_KEY)
             ?.let {

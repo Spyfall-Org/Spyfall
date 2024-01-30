@@ -42,7 +42,6 @@ import com.dangerfield.libraries.analytics.LocalMetricsTracker
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.coreflowroutines.observeWithLifecycle
 import com.dangerfield.libraries.dictionary.Dictionary
-import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LocalDictionary
 import com.dangerfield.libraries.dictionary.internal.ui.navigateToLanguageSupportDialog
@@ -56,6 +55,7 @@ import com.dangerfield.libraries.navigation.floatingwindow.getFloatingWindowNavi
 import com.dangerfield.libraries.navigation.internal.NavControllerRouter
 import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.libraries.session.DarkModeConfig
+import com.dangerfield.libraries.ui.LocalAppState
 import com.dangerfield.libraries.ui.LocalBuildInfo
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.components.Screen
@@ -67,7 +67,6 @@ import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import kotlinx.coroutines.flow.receiveAsFlow
 import oddoneout.core.BuildInfo
-import oddoneout.core.Message
 import oddoneout.core.UserMessagePresenter
 import spyfallx.ui.color.background
 
@@ -83,7 +82,7 @@ fun OddOneOutApp(
     legalAcceptanceState: LegalAcceptanceState?,
     dictionary: Dictionary,
     buildInfo: BuildInfo,
-    appState: AppState = rememberAppState(networkMonitor = networkMonitor),
+    appState: OddOneOutAppState = rememberAppState(networkMonitor = networkMonitor),
     isUpdateRequired: Boolean,
     hasBlockingError: Boolean,
     languageSupportLevel: LanguageSupportLevel?
@@ -139,6 +138,7 @@ fun OddOneOutApp(
         LocalMetricsTracker provides metricsTracker,
         LocalDictionary provides dictionary,
         LocalBuildInfo provides buildInfo,
+        LocalAppState provides appState
     ) {
         OddOneOutTheme(
             isDarkMode = shouldShowDarkMode,

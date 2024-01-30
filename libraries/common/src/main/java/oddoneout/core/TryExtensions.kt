@@ -1,11 +1,13 @@
 @file:OptIn(ExperimentalContracts::class)
-
+@file:Suppress("TooManyFunctions")
 package oddoneout.core
 
+import com.google.android.gms.tasks.Task
 import oddoneout.core.Try.Failure
 import oddoneout.core.Try.Success
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.tasks.await
 import spyfallx.core.common.BuildConfig
 import timber.log.Timber
 import kotlin.contracts.ExperimentalContracts
@@ -303,3 +305,8 @@ inline fun <T> List<T>.firstFailureOrEmpty(
 
     return error?.let { Failure(it) } ?: Success(Unit)
 }
+
+suspend fun <T> Task<T>.tryAwait(): Try<T> = Try {
+    await()
+}
+

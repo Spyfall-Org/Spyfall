@@ -18,13 +18,13 @@ sealed class CreateGameError: Throwable() {
 sealed class Action {
     class UpdateName(val name: String) : Action()
     class UpdateVideoCallLink(val link: String) : Action()
-    object ResolveSomethingWentWrong : Action()
+    data object ResolveErrors : Action()
     class UpdateTimeLimit(val timeLimit: String) : Action()
     class UpdateGameType(val isSingleDevice: Boolean) : Action()
     class UpdateNumOfPlayers(val numOfPlayers: String) : Action()
     class SelectPack(val pack: DisplayablePack, val isSelected: Boolean) : Action()
     data object CreateGame : Action()
-    data object LoadPacks : Action()
+    data object Load : Action()
 }
 
 sealed class Event {
@@ -45,7 +45,8 @@ data class State(
     val isLoadingCreation: Boolean,
     val isSingleDevice: Boolean,
     val numberOfPlayersState: FieldState<String>,
-    val didSomethingGoWrong: Boolean = false,
+    val didCreationFail: Boolean = false,
+    val didLoadFail: Boolean = false,
     val formState: FormState,
 )
 

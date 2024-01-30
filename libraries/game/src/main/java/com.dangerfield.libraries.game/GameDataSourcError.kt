@@ -10,6 +10,8 @@ sealed class GameDataSourcError(message: String) : Throwable(message) {
         "Current Game Version $current it not compatible with received game version $other"
     )
 
+    class CouldNotConnect(val accessCode: String) : GameDataSourcError("Could not connect to backend. Access code: $accessCode")
+
     class GameNotFound(val accessCode: String) : GameDataSourcError("Game not found. Access code: $accessCode")
 
     data object TriedToLeaveStartedGameDataSourc : GameDataSourcError("Tried to leave a game that has already started")
