@@ -1,5 +1,5 @@
 @file:OptIn(ExperimentalContracts::class)
-
+@file:Suppress("TooManyFunctions")
 package oddoneout.core
 
 import com.google.android.gms.tasks.Task
