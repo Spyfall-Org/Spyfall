@@ -67,7 +67,7 @@ fun main() {
     if (isRelease) {
 
         printGreen("Assembling all debug assets")
-        runGradleCommand("assembleDebug")
+        runGradleCommand(":app:assembleDebug --debug")
 
         renameDebugAssets(versionName, outputEnvFile, versionCode)
 

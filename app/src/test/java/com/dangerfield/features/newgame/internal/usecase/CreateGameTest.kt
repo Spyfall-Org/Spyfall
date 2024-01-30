@@ -86,6 +86,7 @@ class CreateGameTest {
 
         every { gameConfig.maxTimeLimit } returns 15
         every { gameConfig.minTimeLimit } returns 1
+        every { gameConfig.forceShortGames } returns false
 
         coEvery { generateLocalUUID.invoke() } returns generatedId
         coEvery { updateActiveGame.invoke(any()) } returns Try.just(Unit)
