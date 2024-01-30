@@ -9,17 +9,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import oddoneout.core.AppState
 
 @Composable
 fun rememberAppState(
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-): AppState {
+): OddOneOutAppState {
     return remember(
         coroutineScope,
         networkMonitor,
     ) {
-        AppState(
+        OddOneOutAppState(
             networkMonitor,
             coroutineScope,
         )
@@ -27,12 +28,12 @@ fun rememberAppState(
 }
 
 @Stable
-class AppState(
+class OddOneOutAppState(
     networkMonitor: NetworkMonitor,
     val coroutineScope: CoroutineScope,
-) {
+): AppState {
 
-    val isOffline = networkMonitor.isOnline
+    override val isOffline = networkMonitor.isOnline
         .map(Boolean::not)
         .stateIn(
             scope = coroutineScope,

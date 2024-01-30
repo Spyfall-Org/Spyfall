@@ -4,6 +4,7 @@ import com.dangerfield.libraries.session.Session
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import oddoneout.core.Try
+import oddoneout.core.tryAwait
 import oddoneout.core.withBackoffRetry
 import java.time.Clock
 import java.time.LocalDateTime
@@ -49,7 +50,7 @@ class SendContactForm @Inject constructor(
                             "calendarDate" to localDateTime.format(dateFormatter),
                         )
                     )
-                    .await()
+                    .tryAwait()
             }.ignoreValue()
         }
     }

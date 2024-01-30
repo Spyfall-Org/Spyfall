@@ -10,10 +10,16 @@ import com.dangerfield.spyfall.free.BuildConfig
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.LocalCacheSettings
+import com.google.firebase.firestore.MemoryCacheSettings
+import com.google.firebase.firestore.firestoreSettings
 import dagger.hilt.android.HiltAndroidApp
 import oddoneout.core.ApplicationStateRepository
+import oddoneout.core.Try
+import oddoneout.core.logOnError
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Provider
 
 @HiltAndroidApp
 class OddOneOutApplication : Application() {
@@ -23,10 +29,10 @@ class OddOneOutApplication : Application() {
 
     // TODO see if initializing analytics or app check later or something would be better
     @Inject
-    lateinit var firebaseAnalytics: FirebaseAnalytics
+    lateinit var firebaseAnalytics: Provider<FirebaseAnalytics>
 
     @Inject
-    lateinit var firebaseFirestore: FirebaseFirestore
+    lateinit var firebaseFirestore: Provider<FirebaseFirestore>
 
     private val lifecycle get() = ProcessLifecycleOwner.get().lifecycle
 
@@ -38,11 +44,6 @@ class OddOneOutApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        firebaseAnalytics.setAnalyticsCollectionEnabled(true)
-        firebaseAnalytics.setSessionTimeoutDuration(
-            SessionRepository.SESSION_MAXIMUM_TIME_AWAY.inWholeMilliseconds
-        )
 
         lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: androidx.lifecycle.LifecycleOwner) {
@@ -58,15 +59,25 @@ class OddOneOutApplication : Application() {
 
         Timber.plant(RemoteLogger())
 
-        setupFireStoreSettings()
+        Try {
+            setupFireStore()
+        }
+            .logOnError()
 
         initializeAds()
     }
 
-    private fun setupFireStoreSettings() {
-        val settings = FirebaseFirestoreSettings.Builder()
-            .setPersistenceEnabled(false)
-            .build()
-        firebaseFirestore.firestoreSettings = settings
+    private fun setupFireStore() {
+        val analytics = firebaseAnalytics.get()
+        val firestore = firebaseFirestore.get()
+
+        analytics.setAnalyticsCollectionEnabled(true)
+        analytics.setSessionTimeoutDuration(
+            SessionRepository.SESSION_MAXIMUM_TIME_AWAY.inWholeMilliseconds
+        )
+
+        firestore.firestoreSettings = firestoreSettings {
+            isPersistenceEnabled = false
+        }
     }
 }

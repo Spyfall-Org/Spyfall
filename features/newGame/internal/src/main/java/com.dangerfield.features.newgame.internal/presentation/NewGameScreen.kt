@@ -27,6 +27,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.features.newgame.internal.presentation.model.FieldState
+import com.dangerfield.features.newgame.newGameNavigationRoute
+import com.dangerfield.libraries.analytics.PageLogEffect
+import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
@@ -71,15 +74,16 @@ fun NewGameScreen(
     onIsSingleDeviceUpdated: (Boolean) -> Unit,
     numOfPlayersState: FieldState<String>,
     isSingleDeviceModeEnabled: Boolean,
-    onNumOfPlayersUpdated: (String) -> Unit = {},
+    onNumOfPlayersUpdated: (String) -> Unit,
     packsState: FieldState<List<DisplayablePack>>,
-    didSomethingGoWrong: Boolean = false,
-    onSomethingWentWrongDismissed: () -> Unit = {},
+    didCreationFail: Boolean = false,
+    didLoadFail: Boolean = false,
+    onErrorDismissed: () -> Unit,
     videoCallLinkState: FieldState<String>,
-    onVideoCallLinkUpdated: (String) -> Unit = {},
-    onNavigateBack: () -> Unit = {},
-    onVideoCallLinkInfoClicked: () -> Unit = {},
-    onCreateGameClicked: () -> Unit = {},
+    onVideoCallLinkUpdated: (String) -> Unit,
+    onNavigateBack: () -> Unit,
+    onVideoCallLinkInfoClicked: () -> Unit,
+    onCreateGameClicked: () -> Unit,
     isLoadingCreation: Boolean,
 ) {
     val scrollState = rememberScrollState()
@@ -88,6 +92,11 @@ fun NewGameScreen(
     val keyboardState = rememberKeyboardState()
     var videoCallFieldHasFocus by remember { mutableStateOf(false) }
     var showPacksInfoBottomSheet by remember { mutableStateOf(false) }
+
+    PageLogEffect(
+        route = newGameNavigationRoute,
+        type = PageType.FullScreenPage
+    )
 
     LaunchedEffect(keyboardState, videoCallFieldHasFocus) {
         if (keyboardState.isOpen && videoCallFieldHasFocus) {
@@ -219,8 +228,12 @@ fun NewGameScreen(
             }
         }
 
-        if (didSomethingGoWrong) {
-            NewGameErrorDialog(onDismissRequest = onSomethingWentWrongDismissed)
+        if (didCreationFail) {
+            CantCreateGameErrorDialog(onDismissRequest = onErrorDismissed)
+        }
+
+        if (didLoadFail) {
+            LoadGameOptionsErrorDialog(onDismissRequest = onErrorDismissed)
         }
 
         if (showPacksInfoBottomSheet) {
@@ -532,13 +545,15 @@ fun PreviewNewGameScreen() {
             isSingleDeviceModeEnabled = true,
             onNumOfPlayersUpdated = { },
             packsState = FieldState.Valid(packs),
-            didSomethingGoWrong = false,
+            didCreationFail = false,
+            didLoadFail = false,
             videoCallLinkState = FieldState.Valid(""),
             onVideoCallLinkUpdated = {},
             onNavigateBack = { },
             onCreateGameClicked = { },
             isLoadingCreation = false,
             onVideoCallLinkInfoClicked = { -> },
+            onErrorDismissed = { -> },
         )
     }
 }

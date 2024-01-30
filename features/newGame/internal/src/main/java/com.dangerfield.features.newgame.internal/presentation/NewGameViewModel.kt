@@ -19,7 +19,6 @@ import com.dangerfield.features.newgame.internal.presentation.model.userName
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
-import com.dangerfield.libraries.coreflowroutines.launchOnStart
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
@@ -61,7 +60,6 @@ class NewGameViewModel @Inject constructor(
         for (action in actions) handleAction(action)
     }
         .map { it.withFormValidation() }
-        .launchOnStart { loadPacks() }
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
@@ -72,7 +70,8 @@ class NewGameViewModel @Inject constructor(
                 videoCallLinkState = Idle(""),
                 isLoadingPacks = true,
                 isLoadingCreation = false,
-                didSomethingGoWrong = false,
+                didLoadFail = false,
+                didCreationFail = false,
                 formState = FormState.Idle,
                 isSingleDevice = false,
                 numberOfPlayersState = Idle(""),
@@ -89,28 +88,31 @@ class NewGameViewModel @Inject constructor(
         actions.trySend(Action.SelectPack(pack, isSelected))
 
     fun createGame() = actions.trySend(Action.CreateGame)
-    fun loadPacks() = actions.trySend(Action.LoadPacks)
+    fun load() = actions.trySend(Action.Load)
     fun updateVideoCallLink(link: String) = actions.trySend(Action.UpdateVideoCallLink(link))
-    fun resolveSomethingWentWrong() = actions.trySend(Action.ResolveSomethingWentWrong)
+    fun resolveSomethingWentWrong() = actions.trySend(Action.ResolveErrors)
     fun updateName(name: String) = actions.trySend(Action.UpdateName(name))
     fun updateTimeLimit(timeLimit: String) = actions.trySend(Action.UpdateTimeLimit(timeLimit))
 
     private suspend fun FlowCollector<State>.handleAction(action: Action) {
         when (action) {
             is Action.UpdateVideoCallLink -> handleUpdateVideoCallLink(action.link)
-            is Action.LoadPacks -> handleLoadPacks()
+            is Action.Load -> handleLoadPacks()
             is Action.CreateGame -> handleCreateGame()
             is Action.UpdateName -> handleUpdateName(action.name)
             is Action.UpdateTimeLimit -> handleUpdateTimeLimit(action.timeLimit)
             is Action.UpdateGameType -> handleUpdateGameType(action.isSingleDevice)
             is Action.UpdateNumOfPlayers -> handleUpdateNumOfPlayers(action.numOfPlayers)
             is Action.SelectPack -> handleSelectPack(action.pack, action.isSelected)
-            Action.ResolveSomethingWentWrong -> handleResolveSomethingWentWrong()
+            Action.ResolveErrors -> handleResolveErrors()
         }
     }
 
-    private suspend fun FlowCollector<State>.handleResolveSomethingWentWrong() {
-       updateState { it.copy(didSomethingGoWrong = false) }
+    private suspend fun FlowCollector<State>.handleResolveErrors() {
+       updateState { it.copy(
+           didLoadFail = false,
+           didCreationFail = false
+       ) }
     }
 
     private suspend fun FlowCollector<State>.handleCreateGame() {
@@ -155,7 +157,7 @@ class NewGameViewModel @Inject constructor(
             .logOnError()
             .onFailure {
                 newGameMetricsTracker.trackErrorCreatingGame(state.isSingleDevice, it)
-                updateState { it.copy(didSomethingGoWrong = true) }
+                updateState { it.copy(didCreationFail = true) }
             }
             .eitherWay {
                 updateState { it.copy(isLoadingCreation = false) }
@@ -329,7 +331,7 @@ class NewGameViewModel @Inject constructor(
                 updateState {
                     if (packs.isEmpty()) {
                         it.copy(
-                            didSomethingGoWrong = true,
+                            didLoadFail = true,
                             packsState = FieldState.Error()
                         )
                     } else {
@@ -339,7 +341,7 @@ class NewGameViewModel @Inject constructor(
             }.onFailure {
                 updateState {
                     it.copy(
-                        didSomethingGoWrong = true,
+                        didLoadFail = true,
                         packsState = FieldState.Error()
                     )
                 }

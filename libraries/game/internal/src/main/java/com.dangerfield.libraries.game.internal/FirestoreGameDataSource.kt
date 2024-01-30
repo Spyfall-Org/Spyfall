@@ -1,7 +1,10 @@
 package com.dangerfield.libraries.game.internal
 
+import com.dangerfield.libraries.coreflowroutines.mapTry
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameDataSourcError
+import com.dangerfield.libraries.game.GameDataSourcError.CouldNotConnect
+import com.dangerfield.libraries.game.GameDataSourcError.GameNotFound
 import com.dangerfield.libraries.game.Player
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
@@ -17,6 +20,7 @@ import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.Try
 import oddoneout.core.failure
 import oddoneout.core.logOnError
+import oddoneout.core.tryAwait
 import java.time.Clock
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.nanoseconds
@@ -30,10 +34,13 @@ class FirestoreGameDataSource @Inject constructor(
 ) : GameDataSource {
 
     override suspend fun setGame(game: Game) {
-        db.collection(GAMES_COLLECTION_KEY)
-            .document(game.accessCode)
-            .set(gameSerializer.serializeGame(game.withLastActiveAt()))
-            .await()
+        Try {
+            db.collection(GAMES_COLLECTION_KEY)
+                .document(game.accessCode)
+                .set(gameSerializer.serializeGame(game.withLastActiveAt()))
+                .await()
+        }
+            .logOnError()
     }
 
     /**
@@ -44,22 +51,28 @@ class FirestoreGameDataSource @Inject constructor(
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .snapshots(MetadataChanges.EXCLUDE)
+            .mapTry()
             .map {
-                val data =
-                    it.data ?: return@map GameDataSourcError.GameNotFound(accessCode).failure()
-
+                val document =
+                    it.getOrNull() ?: return@map CouldNotConnect(accessCode)
+                        .failure()
+                val data = document.data ?: return@map GameNotFound(accessCode)
+                    .failure()
                 gameSerializer.deserializeGame(data).logOnError()
             }
 
-    override suspend fun getGame(accessCode: String): Try<Game> = db
-        .collection(GAMES_COLLECTION_KEY)
-        .document(accessCode)
-        .get()
-        .await()
-        .let {
-            val data = it.data ?: return GameDataSourcError.GameNotFound(accessCode).failure()
-            gameSerializer.deserializeGame(data).logOnError()
-        }
+    override suspend fun getGame(accessCode: String): Try<Game> = Try {
+        db
+            .collection(GAMES_COLLECTION_KEY)
+            .document(accessCode)
+            .get()
+            .tryAwait()
+            .map {
+                val data = it.data ?: throw GameNotFound(accessCode)
+                val gameTry = gameSerializer.deserializeGame(data).logOnError()
+                gameTry.getOrThrow()
+            }.getOrThrow()
+    }
 
     /**
      * Players are stored as a map of id to player, so we need to remove the entry matching the id
@@ -68,7 +81,7 @@ class FirestoreGameDataSource @Inject constructor(
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY, id), FieldValue.delete())
-            .await()
+            .tryAwait()
     }.ignoreValue()
 
     // TODO maybe this shoudl update the individual fields and not set the entire user
@@ -76,29 +89,33 @@ class FirestoreGameDataSource @Inject constructor(
     override suspend fun updatePlayers(accessCode: String, list: List<Player>) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY), playerSerializer.serializePlayers(list))
-            .await()
+            .tryAwait()
     }.ignoreValue()
 
-    override suspend fun addPlayer(accessCode: String, player: Player) {
+    override suspend fun addPlayer(accessCode: String, player: Player) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(
                 FieldPath.of(PLAYERS_FIELD_KEY, player.id),
                 playerSerializer.serializePlayer(player),
             )
-            .await()
+            .tryAwait()
     }
+        .logOnError()
+        .ignoreEverything()
 
     override suspend fun changeName(accessCode: String, newName: String, id: String) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY, id, USERNAME_FIELD_KEY), newName)
-            .await()
+            .tryAwait()
     }.ignoreValue()
 
-    override suspend fun setLocation(accessCode: String, location: String) {
+    override suspend fun setLocation(accessCode: String, location: String) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(LOCATION_FIELD_KEY), location)
-            .await()
+            .tryAwait()
     }
+        .logOnError()
+        .ignoreEverything()
 
     override suspend fun delete(accessCode: String): Try<Unit> = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode).delete().await()
@@ -107,13 +124,13 @@ class FirestoreGameDataSource @Inject constructor(
     override suspend fun setGameBeingStarted(accessCode: String, isBeingStarted: Boolean) = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(IS_BEING_STARTED_KEY), isBeingStarted)
-            .await()
+            .tryAwait()
     }.ignoreValue()
 
     override suspend fun setStartedAt(accessCode: String): Try<Unit> = Try {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(STARTED_AT_FIELD_KEY), clock.millis())
-            .await()
+            .tryAwait()
     }.ignoreValue()
 
     override suspend fun setPlayerVotedCorrectly(
@@ -126,7 +143,7 @@ class FirestoreGameDataSource @Inject constructor(
                 FieldPath.of(PLAYERS_FIELD_KEY, playerId, VOTED_CORRECTLY_FIELD_KEY),
                 votedCorrectly
             )
-            .await()
+            .tryAwait()
     }.ignoreValue()
 
     private fun Game.withLastActiveAt(): Game = copy(lastActiveAt = clock.millis())

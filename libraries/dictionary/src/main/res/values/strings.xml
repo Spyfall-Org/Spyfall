@@ -74,6 +74,7 @@
     <string name="waitingRoom_joinVideo_a11y">Join game video call</string>
     <string name="waitingRoom_startGame_action">Start Game</string>
     <string name="waitingRoom_leaveGame_action">Leave Game</string>
+    <string name="waitingRoom_tooManyPlayersDialog_body">Looks like somehow there are more than {max} players in this room. {numToLeave} players will need to leave before the game can be started.</string>
     <string name="waitingRoom_tooFewPlayersDialog_header">Are you sure you want to start the game?</string>
     <string name="waitingRoom_tooFewPlayersDialog_body">You have less than {min} players. A game with this few players is not recommended.</string>
     <string name="waitingRoom_leaveGameDialog_header">Leaving so soon?</string>
@@ -147,6 +148,7 @@
 
 <!-- /////////////////////    New Game Strings   /////////////////////-->
     <string name="newGame_createGameError_body">We\'re sorry, something seems to have gone wrong creating this game, please try again</string>
+    <string name="newGame_loadGameError_body">Looks like we\'re having trouble getting the data needed to create a game. Please check your network connection and try again.</string>
     <string name="newGame_createGame_action">Create Game</string>
     <string name="newGame_newGameScreen_header">New Game</string>
     <string name="newGame_packs_header">Packs:</string>
@@ -167,6 +169,8 @@
     <string name="newGame_nameLengthError_text">Name must be between {min}-{max} characters</string>
     <string name="newGame_invalidLinkError_text">This link is not from one our recognized platforms, Click the info button for more info</string>
     <string name="newGame_startGame_action">Start Game</string>
+    <string name="newGame_offlineScreen_header">Looks like you are offline</string>
+    <string name="newGame_offlineNoSupport_text">We currently do not have support for offline games but we are working hard on adding it, please stay tuned for updates!</string>
     <string name="newGame_invalidNumOfPlayersError_text">Games can only have between {min} and {max} players.</string>
     <string name="newGame_invalidTimeLimit_text">Invalid time limit. Please type in a number between {min} and {max}.</string>
     <string name="newGame_noPacksSelectedError_text">You must select at least one pack</string>
@@ -311,5 +315,4 @@
     <!-- /////////////////////    Blocking Error Strings   /////////////////////-->
     <string name="blockingError_screen_header">This is embarrassing</string>
     <string name="blockingError_error_body">We seem to have an uncaught bug in our app. Please try killing the app and starting again.</string>
-    <string name="waitingRoom_tooManyPlayersDialog_body">Looks like somehow there are more than {max} players in this room. {numToLeave} players will need to leave before the game can be started.</string>
 </resources>
