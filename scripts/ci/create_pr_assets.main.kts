@@ -187,7 +187,7 @@ fun findAabFile(parentDirectoryPath: String): String {
         ?.absolutePath ?: throw Exception("No aab file found in directory $parentDirectoryPath")
 }
 
-fun runGradleCommand(command: String) = runCommandLine("./gradlew",command)
+fun runGradleCommand(command: String) = runCommandLine("./gradlew",command, "--debug")
 
 @Suppress("SpreadOperator")
 fun runCommandLine(command: String) = runCommandLine(command.split("\\s".toRegex()).toTypedArray().toList())
