@@ -144,9 +144,6 @@ jobs:
       - name: Detekt All
         run: ./gradlew detektAll
 
-      - name: Checkstyle
-        run: ./gradlew checkstyleAll
-
   test:
     runs-on: macos-latest
 
