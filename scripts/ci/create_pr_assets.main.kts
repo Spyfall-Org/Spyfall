@@ -140,22 +140,17 @@ fun renameDebugAssets(versionName: String, envFile: File, buildNumber: String) {
     )
 }
 
-fun getAppVersionName(): String {
-    val properties = Properties()
-    val reader = BufferedReader(FileReader("app.properties"))
-    properties.load(reader)
-    reader.close()
-    return properties.getProperty("versionName").toString()
+fun getAppVersionName(): String = File("app.properties").inputStream().use { inputStream ->
+    Properties().apply {
+        load(inputStream)
+    }.getProperty("versionName").toString()
 }
 
-fun getAppVersionCode(): String {
-    val properties = Properties()
-    val reader = BufferedReader(FileReader("app.properties"))
-    properties.load(reader)
-    reader.close()
-    return properties.getProperty("versionCode").toString()
+fun getAppVersionCode(): String = File("app.properties").inputStream().use { inputStream ->
+    Properties().apply {
+        load(inputStream)
+    }.getProperty("versionCode").toString()
 }
-
 
 fun setOutputAssetName(defaultPath: String, name: String, outputName: String, envFile: File) {
     val apkFile = File(defaultPath)
@@ -187,7 +182,7 @@ fun findAabFile(parentDirectoryPath: String): String {
         ?.absolutePath ?: throw Exception("No aab file found in directory $parentDirectoryPath")
 }
 
-fun runGradleCommand(command: String) = runCommandLine("./gradlew",command, "--debug")
+fun runGradleCommand(command: String) = runCommandLine("./gradlew",command)
 
 @Suppress("SpreadOperator")
 fun runCommandLine(command: String) = runCommandLine(command.split("\\s".toRegex()).toTypedArray().toList())
@@ -197,30 +192,21 @@ fun runCommandLine(vararg commands: String) = runCommandLine(commands.toList())
 fun runCommandLine(command: List<String>): String {
     val process = ProcessBuilder(command)
         .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .redirectErrorStream(true)
         .start()
 
-    val output = process.inputStream.bufferedReader().readText()
-    val error = process.errorStream.bufferedReader().readText()
-
-    if (error.isNotEmpty()) {
-        printRed("\n\n$error\n\n")
-        if (error.contains("Error:") || error.contains("error:")) {
-            throw IllegalStateException(error)
+    process.inputStream.bufferedReader().useLines { lines ->
+        lines.forEach { line ->
+            println(line)
         }
     }
 
-    if (output.isNotEmpty()) {
-        println("\n\n$output\n\n")
-        if (output.contains("Error:") || output.contains("error:")) {
-            printRed(output)
-            throw IllegalStateException(error)
-        }
+    val exitValue = process.waitFor()
+    if (exitValue != 0) {
+        throw IllegalStateException("Command $command failed with exit code $exitValue")
     }
 
-    process.waitFor()
-
-    return output
+    return "Command ${command.joinToString { " " }} executed successfully"
 }
 
 class FileDoesNoteExistError(path: String) : Exception("The file $path does not exist.")
