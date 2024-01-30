@@ -69,6 +69,8 @@ fun main() {
         printGreen("Assembling all debug assets")
         runGradleCommand(":app:assembleDebug")
 
+        printGreen("Finished with all all debug assets")
+
         renameDebugAssets(versionName, outputEnvFile, versionCode)
 
         printGreen("Assembling all release assets")
