@@ -19,6 +19,7 @@ import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.Stats
 import com.dangerfield.libraries.session.ThemeConfig
 import com.dangerfield.libraries.session.UpdateActiveGame
 import com.dangerfield.libraries.session.User
@@ -29,6 +30,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import oddoneout.core.GenerateLocalUUID
 import org.junit.Before
 import org.junit.Test
 import oddoneout.core.Try
@@ -71,6 +73,14 @@ class CreateGameTest {
             themeConfig = ThemeConfig(
                 colorConfig = ColorConfig.Random,
                 darkModeConfig = DarkModeConfig.Dark
+            ),
+            stats = Stats(
+                multiDeviceGamesPlayed = 34,
+                winsAsOddOne = listOf(),
+                winsAsPlayer = listOf(),
+                lossesAsOddOne = listOf(),
+                lossesAsPlayer = listOf(),
+                singleDeviceGamesPlayed = 34
             )
         )
 
