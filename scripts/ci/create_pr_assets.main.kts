@@ -135,7 +135,7 @@ fun renameDebugAssets(versionName: String, envFile: File, buildNumber: String) {
     setOutputAssetName(
         defaultPath = findApkFile("app/build/outputs/apk/debug"),
         name = "oddoneout-debug-v$versionName-$buildNumber.apk",
-        outputName = "oddoneoutlDebugApkPath",
+        outputName = "oddoneoutDebugApkPath",
         envFile = envFile
     )
 }
