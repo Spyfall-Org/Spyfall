@@ -29,7 +29,6 @@ fun main() {
     val outPutEnvFile = File(args[3])
     val outKey = args[4]
 
-    val aabContentType = "application/vnd.android.package-archive"
     val repo = getRepository(githubRepoInfo, githubToken)
     val release = repo.getReleaseByTagName(tagName)
 
@@ -41,11 +40,11 @@ fun main() {
     }
 
     val aabReleaseAsset = release.listAssets().firstOrNull {
-        it.contentType == aabContentType && it.name.contains("release") && it.name.contains("aab")
+        it.name.contains("release") && it.name.contains("aab")
     }
 
     val apkReleaseAsset = release.listAssets().firstOrNull {
-        it.contentType == aabContentType && it.name.contains("release") && it.name.contains("apk")
+       it.name.contains("release") && it.name.contains("apk")
     }
 
     val releaseAsset = aabReleaseAsset ?: apkReleaseAsset
