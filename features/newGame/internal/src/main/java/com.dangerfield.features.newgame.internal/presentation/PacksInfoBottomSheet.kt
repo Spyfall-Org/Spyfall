@@ -1,6 +1,5 @@
 package com.dangerfield.features.newgame.internal.presentation
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -11,11 +10,8 @@ import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.navigation.route
-import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
-import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
@@ -27,6 +23,8 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValu
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 
@@ -65,7 +63,6 @@ fun PacksInfoBottomSheet(
                             data = pack.locations
                         ) { _, item ->
                             BulletRow(modifier = Modifier.fillMaxWidth()) {
-                                HorizontalSpacerS600()
                                 Text(text = item.name)
                             }
                         }

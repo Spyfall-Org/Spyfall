@@ -108,13 +108,16 @@ fun setAppId(writer: OutputStreamWriter) {
 }
 
 fun setAppFirebaseLinks(writer: OutputStreamWriter) {
-    val projectId = getFirebaseProjectId()
+    val debugProjectId = getDebugFirebaseProjectId()
+    val releaseProjectId = getReleaseFirebaseProjectId()
     val packageName = getPackageName()
 
     @Suppress ("MaxLineLength")
-    val link = "https://console.firebase.google.com/u/0/project/${projectId}/appdistribution/app/android:${packageName}/releases"
+    val debugLink = "https://console.firebase.google.com/u/0/project/${debugProjectId}/appdistribution/app/android:${packageName}/releases"
+    val releaseLink = "https://console.firebase.google.com/u/0/project/${releaseProjectId}/appdistribution/app/android:${packageName}/releases"
 
-    writer.writeEnvValue("oddoneoutFirebaseDistributionLink", link)
+    writer.writeEnvValue("oddoneoutDebugFirebaseDistributionLink", debugLink)
+    writer.writeEnvValue("oddoneoutReleaseFirebaseDistributionLink", releaseLink)
 }
 
 fun getDebugAppId(): String {
@@ -145,8 +148,13 @@ fun getReleaseAppId(): String {
     return appId
 }
 
-fun getFirebaseProjectId(): String {
+fun getDebugFirebaseProjectId(): String {
     val googleServicesObject = Gson().fromJson(FileReader(googleServicesGsonPath), GoogleServices::class.java)
+    return googleServicesObject.project_info.project_id
+}
+
+fun getReleaseFirebaseProjectId(): String {
+    val googleServicesObject = Gson().fromJson(FileReader(releaseGoogleServicesGsonPath), GoogleServices::class.java)
     return googleServicesObject.project_info.project_id
 }
 

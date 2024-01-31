@@ -9,9 +9,7 @@ import java.util.Properties
 @Suppress("MagicNumber")
 fun main() {
     val envFile = File(args[0])
-    val tagName = args[1]
-
-    val packageName = getPackageName(getAppName(tagName))
+    val packageName = getPackageName()
 
     FileWriter(envFile, true).apply {
         write("packageName=$packageName")
@@ -20,20 +18,12 @@ fun main() {
      }
 }
 
-@Suppress("UseCheckOrError")
-fun getAppName(tagName: String) = when {
-    tagName.contains("oddoneout") -> "oddoneout"
-    else -> throw IllegalStateException(
-        "Could not extract app name from tag $tagName. Please make sure tag name are formatted correctly."
-    )
-}
-
-fun getPackageName(appName: String): String {
+fun getPackageName(): String {
     val properties = Properties()
     val reader = BufferedReader(FileReader("app.properties"))
     properties.load(reader)
     reader.close()
-    return properties.getProperty("$appName.packageName")
+    return properties.getProperty("packageName")
 }
 
 main()

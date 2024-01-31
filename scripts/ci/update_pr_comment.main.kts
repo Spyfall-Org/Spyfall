@@ -6,7 +6,6 @@
 import org.kohsuke.github.GHRelease
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
-import java.io.File
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -36,9 +35,10 @@ if (isHelpCall || args.size < minArgs) {
         [GITHUB_TOKEN] - token to interact with github provided by github actions as env variable or use PAT
         [PULL_NUMBER] - the number of the pull request
         [RUN_ID] - the number uniquely associated with this workflow run. Used to get artifacts url.
-        [APP_TESTER_DEBUG_LINK] - Link to the firebase app test for the debug build
         [APP_TESTER_RELEASE_LINK] - Link to the firebase app test for the release build
-        [APP_TESTER_FALLBACK_LINK] - Link to the firebase app tester general
+        [APP_TESTER_DEBUG_LINK] - Link to the firebase app test for the debug build
+        [APP_TESTER_DEBUG_FALLBACK_LINK] - Link to the firebase app tester debug general
+        [APP_TESTER_RELEASE_FALLBACK_LINK] - Link to the firebase app tester release general
         [RUN NUMBER] - the github run number
         [TAG_NAME] - Optional, The name of the tag associated with the draft release created for this PR
         
@@ -57,9 +57,10 @@ fun doWork() {
     val runID = args[3]
     val appTesterReleaseLink = args[4]
     val appTesterDebugLink = args[5]
-    val appTesterFallBackLink = args[6]
-    val runNumber = args[7]
-    val tagName = args.getOrNull(8)
+    val appTesterDebugFallBackLink = args[6]
+    val appTesterReleaseFallBackLink = args[7]
+    val runNumber = args[8]
+    val tagName = args.getOrNull(0)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
@@ -72,7 +73,8 @@ fun doWork() {
         releaseDraft,
         appTesterReleaseLink,
         appTesterDebugLink,
-        appTesterFallBackLink,
+        appTesterDebugFallBackLink,
+        appTesterReleaseFallBackLink,
         runNumber,
         tagName
     )
@@ -86,7 +88,8 @@ fun updatePRArtifactsComment(
     releaseDraft: GHRelease?,
     appTesterReleaseLink: String,
     appTesterDebugLink: String,
-    appTesterFallbackLink: String,
+    appTesterDebugFallbackLink: String,
+    appTesterReleaseFallBackLink: String,
     buildNumber: String,
     tagName: String?
 ) {
@@ -109,7 +112,8 @@ ${
     }
 ${
         (if (appTesterReleaseLink == "null" && appTesterDebugLink == "null") """
-- ##### [App Tester](${appTesterFallbackLink}) 
+- ##### [Debug App Tester](${appTesterDebugFallbackLink}) 
+- ##### [Release App Tester](${appTesterReleaseFallBackLink}) 
 """.trimIndent() else null) ?: ""
     }
 ${

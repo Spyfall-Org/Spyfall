@@ -37,7 +37,7 @@ if (isHelpCall || args.size < 3) {
         envFile: File where constants are held between ci jobs
         pullrequestLink: The string used to link the firebase release to teh initiating PR
         isRelease: Denotes if the PR that triggered this is a release PR
-        linkKey:
+        linkKey: env file key to store the link returned from the firebase upload
         assets: a comma separated list of asset keys used in the env file
     """.trimIndent()
     )
@@ -123,7 +123,7 @@ fun uploadToFirebaseAppDistribution(
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess {
             printGreen("Successfully uploaded apk to firebase app distribution")
-            val consoleLink = """https://console\\.firebase\\.google\\.com/[^\s]+"""
+            val consoleLink = "https:\\/\\/console\\.firebase\\.google\\.com\\/project\\/[^\\/]+\\/appdistribution\\/app\\/[^\\/]+\\/releases\\/[a-zA-Z0-9?=&]+\n"
                 .toRegex()
                 .find(it)
                 ?.groupValues
@@ -135,6 +135,7 @@ fun uploadToFirebaseAppDistribution(
                 printGreen("adding link for $linkKey\n\n$consoleLink")
                 writer.writeEnvValue(linkKey, consoleLink)
             } else {
+                printRed("No link found from upload response. $it")
                 writer.writeEnvValue(linkKey, "null")
             }
         }
