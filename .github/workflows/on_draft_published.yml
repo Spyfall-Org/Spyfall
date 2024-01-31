@@ -31,7 +31,7 @@ jobs:
           fi
 
       - name: Set Env Variables
-        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }} ${{ env.releaseTagName }}
+        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }}
 
       - name: Create Service Key Json
         id: create-json
