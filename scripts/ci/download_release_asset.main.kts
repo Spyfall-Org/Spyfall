@@ -33,6 +33,13 @@ fun main() {
     val repo = getRepository(githubRepoInfo, githubToken)
     val release = repo.getReleaseByTagName(tagName)
 
+    release.listAssets().forEach {
+        printGreen("""
+            Release asset: ${it.name}
+            type: ${it.contentType}
+        """.trimIndent())
+    }
+
     val aabReleaseAsset = release.listAssets().firstOrNull {
         it.contentType == aabContentType && it.name.contains("release") && it.name.contains("aab")
     }
