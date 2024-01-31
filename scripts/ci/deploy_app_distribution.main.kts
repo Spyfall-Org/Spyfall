@@ -33,6 +33,11 @@ if (isHelpCall || args.size < 3) {
         
         usage: ./deploy_app_distribution.main.kts <app_name> <app_id> <assets>
         app_id: The firebase app id for the app
+        firebaseToken: the token used to contact firebase. Stored as a secret on github
+        envFile: File where constants are held between ci jobs
+        pullrequestLink: The string used to link the firebase release to teh initiating PR
+        isRelease: Denotes if the PR that triggered this is a release PR
+        linkKey:
         assets: a comma separated list of asset keys used in the env file
     """.trimIndent()
     )

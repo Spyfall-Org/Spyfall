@@ -17,7 +17,7 @@ jobs:
       isReleasePR: ""
       releaseVersion: ""
       releaseTagName: ""
-      oddoneoutAppId: ""
+      oddoneoutDebugAppId: ""
       oddoneoutFirebaseDistributionLink: ""
       firebaseDistributionDebugApkKey: "null"
       firebaseDistributionReleaseApkKey: "null"
@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update Version Codes
-        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
+        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}${{ github.attempt_number }}
 
       - name: Create Service Key Json
         id: create-json
@@ -101,11 +101,11 @@ jobs:
 
       - name: Deploy Debug Asset to Firebase
         if: ${{ env.isReleasePR == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false firebaseDistributionDebugApkKey ${{ env.oddoneoutDebugApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutDebugAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false firebaseDistributionDebugApkKey ${{ env.oddoneoutDebugApkPath }}
 
       - name: Deploy Release Asset to Firebase
         if: ${{ env.isReleasePR == 'true' }}
-        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true firebaseDistributionReleaseApkKey ${{ env.oddoneoutReleaseApkPath }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutReleaseAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true firebaseDistributionReleaseApkKey ${{ env.oddoneoutReleaseApkPath }}
 
       - name: Update Draft Release
         if: ${{ env.isReleasePR == 'true' }}
