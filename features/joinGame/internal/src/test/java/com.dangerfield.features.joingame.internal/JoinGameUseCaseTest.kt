@@ -23,6 +23,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
+import oddoneout.core.GenerateLocalUUID
 import org.junit.Test
 import oddoneout.core.Try
 

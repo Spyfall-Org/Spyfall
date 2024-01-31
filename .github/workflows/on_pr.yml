@@ -80,21 +80,21 @@ jobs:
 
       - name: Upload Release Signed Apk
         if: ${{ env.isReleasePR == 'true' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Release Apk
           path: ${{ env.oddoneoutReleaseApkPath }}
 
       - name: Upload Release Signed Aab
         if: ${{ env.isReleasePR == 'true' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Release aab
           path: ${{ env.oddoneoutReleaseAabPath }}
 
       - name: Upload Debug Apk
         if: ${{ env.isReleasePR == 'true' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Debug Apk
           path: ${{ env.oddoneoutDebugApkPath }}
