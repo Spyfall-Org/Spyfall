@@ -33,16 +33,17 @@ if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains
     throw Exception("See Message Above")
 }
 
-val inputVersionCode = args[0]
+val runNumber = args[0]
+val attemptNumber = args[1]
 
+printGreen("Setting version code to $runNumber$attemptNumber")
 // Load the .properties file
 val properties = Properties()
 val reader = BufferedReader(FileReader("app.properties"))
 properties.load(reader)
 reader.close()
 
-properties.setProperty("versionCode", inputVersionCode)
-
+properties.setProperty("versionCode", "$runNumber$attemptNumber")
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app.properties"))
