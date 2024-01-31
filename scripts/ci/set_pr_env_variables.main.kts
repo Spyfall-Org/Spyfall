@@ -36,6 +36,8 @@ fun printGreen(text: String) {
 }
 
 val googleServicesGsonPath = "app/src/debug/google-services.json"
+val releaseGoogleServicesGsonPath = "app/src/release/google-services.json"
+
 
 @Suppress("ComplexCondition", "MagicNumber")
 if (args.size < 2 || args[0] == "-h" || args[0] == "--help" || args[0].contains("help")) {
@@ -101,7 +103,8 @@ fun setReleaseNotes(writer: OutputStreamWriter, pullNumber: String) {
 }
 
 fun setAppId(writer: OutputStreamWriter) {
-    writer.writeEnvValue("oddoneoutAppId", getAppId())
+    writer.writeEnvValue("oddoneoutDebugAppId", getDebugAppId())
+    writer.writeEnvValue("oddoneoutReleaseAppId", getReleaseAppId())
 }
 
 fun setAppFirebaseLinks(writer: OutputStreamWriter) {
@@ -114,8 +117,22 @@ fun setAppFirebaseLinks(writer: OutputStreamWriter) {
     writer.writeEnvValue("oddoneoutFirebaseDistributionLink", link)
 }
 
-fun getAppId(): String {
+fun getDebugAppId(): String {
     val googleServicesObject = Gson().fromJson(FileReader(googleServicesGsonPath), GoogleServices::class.java)
+    val appPackageName = getPackageName()
+    val appId = googleServicesObject
+        .client
+        .firstOrNull { it.client_info.android_client_info.package_name.contains(appPackageName) }
+        ?.client_info
+        ?.mobilesdk_app_id
+
+    check(appId != null) { "Could not find the app id from the google services file for the project" }
+
+    return appId
+}
+
+fun getReleaseAppId(): String {
+    val googleServicesObject = Gson().fromJson(FileReader(releaseGoogleServicesGsonPath), GoogleServices::class.java)
     val appPackageName = getPackageName()
     val appId = googleServicesObject
         .client
