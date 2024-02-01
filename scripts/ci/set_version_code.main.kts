@@ -25,7 +25,7 @@ if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains
         This script sets the version code. 
         Ci uses to distinguish app builds per workflow run
         
-        Usage: ./set_version_code.main.kts [versionCode] 
+        Usage: ./set_version_code.main.kts [run number]
         versionCode: 500, 543, ...
     """.trimIndent())
 
@@ -34,16 +34,15 @@ if (args.isEmpty() || args[0] == "-h" || args[0] == "--help" || args[0].contains
 }
 
 val runNumber = args[0]
-val attemptNumber = args[1]
 
-printGreen("Setting version code to $runNumber$attemptNumber")
+printGreen("Setting version code to $runNumber")
 // Load the .properties file
 val properties = Properties()
 val reader = BufferedReader(FileReader("app.properties"))
 properties.load(reader)
 reader.close()
 
-properties.setProperty("versionCode", "$runNumber$attemptNumber")
+properties.setProperty("versionCode", "$runNumber")
 
 // Save the .properties file
 val writer = BufferedWriter(FileWriter("app.properties"))

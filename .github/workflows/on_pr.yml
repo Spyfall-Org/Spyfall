@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update Version Code
-        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }} ${{ github.attempt_number }}
+        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
 
       - name: Create Service Key Json
         id: create-json
