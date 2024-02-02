@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalContracts::class)
 @file:Suppress("TooManyFunctions")
+
 package oddoneout.core
 
 import com.google.android.gms.tasks.Task
@@ -54,12 +55,13 @@ inline fun <T : Any> Collection<Try<T>>.failFast(): Try<List<T>> {
     return Try { this.map { it.getOrThrow() } }
 }
 
-fun <T> Try<T>.logOnError(message: String? = null): Try<T> = onFailure { Timber.e(it, message) }
+fun <T> Try<T>.logOnError(message: String? = null): Try<T> = onFailure {
+    Timber.e(DebugException(it, message))
+}
 
 fun <T> Try<T>.throwIfDebug(): Try<T> = onFailure {
     if (BuildConfig.DEBUG && this is Failure) {
-        Timber.e("THROWING DEBUG EXCEPTION: ${it.localizedMessage}")
-        throw it
+        throw DebugException(it)
     }
 }
 

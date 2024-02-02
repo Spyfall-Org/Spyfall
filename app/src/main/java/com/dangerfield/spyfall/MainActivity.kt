@@ -55,13 +55,14 @@ class MainActivity : ComponentActivity() {
     // TODO cleanup: Completely remove legacy code
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         var isLoading: Boolean by mutableStateOf(false)
 
         SplashScreenBuilder(this)
             .keepOnScreenWhile { isLoading }
             .build()
 
-        super.onCreate(savedInstanceState) // should be called after splash screen builder
 
         //WindowCompat.setDecorFitsSystemWindows(window, false)
 

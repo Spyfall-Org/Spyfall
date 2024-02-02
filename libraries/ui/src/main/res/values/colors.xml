@@ -14,6 +14,8 @@
     <color name="grey500">#EE323232</color>
 
 
+    <color name="splashBackground">#FFFFFF</color>
+
     <!--LEGACY COLORS -->
     <!--used for every views background -->
     <color name="colorBackground">@color/colorPrimary</color>

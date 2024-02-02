@@ -22,17 +22,17 @@ val Throwable.isFatal: Boolean
         else -> false
     }
 
-class DebugException(message: String) : Exception(message)
+class DebugException(e: Throwable? = null, message: String? = e?.localizedMessage) : Exception(message, e)
 
 fun throwIfDebug(throwable: Throwable) {
     if (BuildConfig.DEBUG) {
-        throw DebugException(throwable.message.orEmpty())
+        throw DebugException(message = throwable.message.orEmpty())
     }
 }
 
 fun throwIfDebug(lazyMessage: () -> Any) {
     if (BuildConfig.DEBUG) {
-        throw DebugException(lazyMessage().toString())
+        throw DebugException(message = lazyMessage().toString())
     }
     Timber.e(lazyMessage().toString())
 }
@@ -53,6 +53,6 @@ fun developerSnackIfDebug(
 
 inline fun checkInDebug(value: Boolean, lazyMessage: () -> Any) {
     if (!value) {
-        if (BuildConfig.DEBUG) throw DebugException(lazyMessage().toString())
+        if (BuildConfig.DEBUG) throw DebugException(message = lazyMessage().toString())
     }
 }
