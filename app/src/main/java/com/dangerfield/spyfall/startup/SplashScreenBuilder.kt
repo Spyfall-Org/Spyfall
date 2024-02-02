@@ -54,7 +54,7 @@ class SplashScreenBuilder(private val activity: Activity) {
     }
 
     @Suppress("MagicNumber")
-    private fun SplashScreenViewProvider.startIconRotation(): ValueAnimator? = Try {
+    private fun SplashScreenViewProvider.startIconRotation(): ValueAnimator? = try {
         val animator = ValueAnimator.ofFloat(0f, 360f)
         animator.addUpdateListener { animation ->
             iconView.rotation = animation.animatedValue as Float
@@ -64,5 +64,8 @@ class SplashScreenBuilder(private val activity: Activity) {
         animator.repeatMode = ValueAnimator.RESTART
         animator.start()
         animator
-    }.getOrNull()
+    } catch (t: Throwable) {
+        Timber.e("SplashScreenBuilder: Failed to start icon rotation: $t")
+        null
+    }
 }
