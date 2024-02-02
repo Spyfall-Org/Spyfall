@@ -53,7 +53,7 @@ class SplashScreenBuilder(private val activity: Activity) {
         }
     }
 
-    @Suppress("MagicNumber")
+    @Suppress("MagicNumber", "TooGenericExceptionCaught")
     private fun SplashScreenViewProvider.startIconRotation(): ValueAnimator? = try {
         val animator = ValueAnimator.ofFloat(0f, 360f)
         animator.addUpdateListener { animation ->
