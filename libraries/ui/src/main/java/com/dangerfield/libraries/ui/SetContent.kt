@@ -9,21 +9,6 @@ import androidx.customview.poolingcontainer.isWithinPoolingContainer
 import androidx.customview.poolingcontainer.removePoolingContainerListener
 import androidx.lifecycle.findViewTreeLifecycleOwner
 
-//fun Context.setContent(
-//    accentColor: ColorPrimitive = ColorPrimitive.CherryPop700,
-//    viewCompositionStrategy: ViewCompositionStrategy = ViewCompositionStrategy.Dynamic,
-//    content: @Composable () -> Unit,
-//) = ComposeView(this).apply {
-//    setViewCompositionStrategy(viewCompositionStrategy)
-//    setContent {
-//        SpyfallTheme(
-//            isDarkMode = isSystemInDarkTheme(),
-//            accentColor = accentColor
-//        ) {
-//            content()
-//        }
-//    }
-//}
 
 /**
  * A [ViewCompositionStrategy] that tries to determine the best strategy dynamically.

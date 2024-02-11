@@ -17,7 +17,6 @@ import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.ColorConfig
-import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.Stats
 import com.dangerfield.libraries.session.ThemeConfig
@@ -31,9 +30,9 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import oddoneout.core.GenerateLocalUUID
+import oddoneout.core.Try
 import org.junit.Before
 import org.junit.Test
-import oddoneout.core.Try
 import java.time.Clock
 
 class CreateGameTest {
@@ -72,7 +71,6 @@ class CreateGameTest {
             languageCode = "en",
             themeConfig = ThemeConfig(
                 colorConfig = ColorConfig.Random,
-                darkModeConfig = DarkModeConfig.Dark
             ),
             stats = Stats(
                 multiDeviceGamesPlayed = 34,
