@@ -128,7 +128,7 @@ internal fun BasicButton(
             }
 
             if (enabled && style == ButtonStyle.Filled) {
-                drawShineSquiggles(buttonSize = size)
+                drawShineSquiggles()
             }
         }
     }
@@ -136,9 +136,7 @@ internal fun BasicButton(
 
 
 @Composable
-private fun BoxScope.drawShineSquiggles(
-    buttonSize: ButtonSize
-) {
+private fun BoxScope.drawShineSquiggles() {
     val density = LocalDensity.current
 
     Canvas(modifier = Modifier.Companion.matchParentSize()) {

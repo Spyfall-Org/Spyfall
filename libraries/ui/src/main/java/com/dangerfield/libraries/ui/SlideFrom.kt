@@ -1,17 +1,18 @@
 package com.dangerfield.libraries.ui
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
 
 enum class SlideFrom {
     LEFT, RIGHT
 }
 
+@Suppress("UnusedPrivateMember")
 @Composable
 fun SlideInContent(
     modifier: Modifier = Modifier,

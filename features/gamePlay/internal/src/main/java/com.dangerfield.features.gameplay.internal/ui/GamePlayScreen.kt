@@ -289,7 +289,7 @@ private fun VoteButton(
             }
         } else {
             Button(
-                enabled = selectedPlayer != null || selectedLocation != null,
+                enabled = hasSelectedVote,
                 modifier = Modifier.fillMaxWidth(),
                 style = ButtonStyle.Filled,
                 onClick = {

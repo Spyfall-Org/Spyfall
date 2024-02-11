@@ -105,7 +105,7 @@ fun ChangeNameDialog(
                     val isSubmitEnabled = !isNameTaken && !isInvalidLength
                     Button(
                         style = ButtonStyle.Filled,
-                        enabled = !isNameTaken && !isInvalidLength,
+                        enabled = isSubmitEnabled,
                         modifier = Modifier.fillMaxWidth(),
                         onClick = { onChangeNameClicked(name) },
                         type = ButtonType.Primary
