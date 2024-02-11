@@ -256,9 +256,9 @@
     <string name="rules_locationExample_text">Bank</string>
     <string name="rules_pointOne_text">Zu Beginn des Spiels erhält jeder Spieler einen geheimen Ort und eine Rolle an diesem Ort.</string>
     <string name="rules_pointTwo_text">Ein Spieler bekommt den geheimen Ort nicht zu sehen. Er ist der Außenseiter.</string>
-    <string name="rules_pointThree_text">Jeder stellt der Reihe nach Fragen über den geheimen Ort und seine Rolle dort.</string>
     <string name="rules_pointFour_text">Der Außenseiter versucht, den Ort herauszufinden, ohne zu offenbaren, dass er der Außenseiter ist.</string>
     <string name="rules_pointFive_text">Die Spieler versuchen herauszufinden, wer der Außenseiter ist, ohne den geheimen Ort zu verraten.</string>
+    <string name="rules_pointThree_text">Jeder ist abwechselnd dran, jemanden auszuwählen, um ihm eine Frage über den geheimen Ort und seine Rolle dort zu stellen.</string>
 
     <!-- ///////////////////// Blocking Error Strings /////////////////////-->
     <string name="blockingError_screen_header">Das ist peinlich</string>

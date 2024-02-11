@@ -295,7 +295,7 @@
     <string name="rules_locationExample_text">Bank</string>
     <string name="rules_pointOne_text">As the game starts, every player gets a secret location and a role at the location.</string>
     <string name="rules_pointTwo_text">One player doesn’t get to see the secret location. They are the Odd One Out.</string>
-    <string name="rules_pointThree_text">Everyone takes turns asking questions about the secret location and their role there.</string>
+    <string name="rules_pointThree_text">Everyone takes turns picking someone to ask a question to about the secret location and their role there.</string>
     <string name="rules_pointFour_text">The odd one out is trying to figure out the location without revealing that they are the odd one out.</string>
     <string name="rules_pointFive_text">The players are trying to figure out who the odd one out is without revealing the secret location.</string>
 

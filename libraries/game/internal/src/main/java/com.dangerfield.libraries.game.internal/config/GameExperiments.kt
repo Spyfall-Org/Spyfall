@@ -23,6 +23,9 @@ class IsSingleDeviceModeEnabled @Inject constructor(
     override val isDebugOnly: Boolean
         get() = false
 
+    override val default: Boolean
+        get() = true
+
     override fun resolveValue(): Boolean = appConfigMap.experiment(this)
 }
 
@@ -41,6 +44,9 @@ class IsVideoCallLinkEnabled @Inject constructor(
 
     override val isDebugOnly: Boolean
         get() = false
+
+    override val default: Boolean
+        get() = true
 
     override fun resolveValue(): Boolean = appConfigMap.experiment(this)
 }
