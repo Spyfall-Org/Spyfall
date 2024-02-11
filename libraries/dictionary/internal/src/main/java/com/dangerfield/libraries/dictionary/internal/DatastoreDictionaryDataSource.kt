@@ -39,7 +39,7 @@ class DatastoreDictionaryDataSource @Inject constructor(
     )
 
     private val dictionaryFlow = dataStore.withDistinctKeyFlow(DictionaryKey) { cachedDictionaryJson ->
-        deserializeDictionary(cachedDictionaryJson.orEmpty())
+        deserializeDictionary(cachedDictionaryJson)
     }
         .filterNotNull()
         .shareIn(
@@ -48,9 +48,8 @@ class DatastoreDictionaryDataSource @Inject constructor(
             replay = 1
         )
 
-    private fun deserializeDictionary(cachedDictionaryJson: String) = Try {
-        val map = jsonAdapter.fromJson(cachedDictionaryJson)
-        checkNotNull(map) { "Map parsed to null: \n $cachedDictionaryJson" }
+    private fun deserializeDictionary(cachedDictionaryJson: String?) = Try {
+        val map = cachedDictionaryJson?.let { jsonAdapter.fromJson(it) } ?: emptyMap()
         Timber.d("Emitting dictionary from data store: \n $cachedDictionaryJson")
         OverrideDictionary(
             context = context,

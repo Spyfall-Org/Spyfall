@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.Try
 import oddoneout.core.getOrElse
+import oddoneout.core.readJson
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -59,10 +60,7 @@ class ConfigOverrideRepositoryImpl @Inject constructor(
     }
 
     private fun deserializeConfigOverrides(json: String?): Try<List<ConfigOverride<Any>>> = Try {
-        val elementType = Types.newParameterizedType(ConfigOverride::class.java, Any::class.java)
-        val listType = Types.newParameterizedType(List::class.java, elementType)
-        val jsonAdapter = moshi.adapter<List<ConfigOverride<Any>>>(listType)
-        jsonAdapter.fromJson(json!!)!!
+        json?.let { moshi.readJson<List<ConfigOverride<Any>>>(it) } ?: emptyList()
     }
 
     private fun serializeConfigOverrides(overrides: List<ConfigOverride<Any>>): String {

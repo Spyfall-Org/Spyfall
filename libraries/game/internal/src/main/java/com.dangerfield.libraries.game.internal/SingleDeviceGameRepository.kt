@@ -50,10 +50,12 @@ class SingleDeviceGameRepository
         .distinctKeyFlow(gamePreferenceKey)
         .map {
             it?.let { json ->
-                Try { jsonAdapter.fromJson(json) }.throwIfDebug().getOrNull()
+                Try { jsonAdapter.fromJson(json) }
+                    .logOnError()
+                    .throwIfDebug()
+                    .getOrNull()
             }
         }
-
         .stateIn(
             applicationScope,
             SharingStarted.Eagerly,

@@ -75,7 +75,7 @@ fun Button(
         contentPadding = when (style) {
             ButtonStyle.Filled  -> PaddingValues(
                 horizontal = Spacing.S1000,
-                vertical = Spacing.S600
+                vertical = Spacing.S700
             )
             ButtonStyle.NoBackground -> PaddingValues(
                 horizontal = Spacing.S200,

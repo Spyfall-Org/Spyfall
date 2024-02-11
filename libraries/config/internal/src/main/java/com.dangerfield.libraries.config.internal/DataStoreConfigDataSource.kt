@@ -39,7 +39,7 @@ class DataStoreConfigDataSource @Inject constructor(
     )
 
     private val configFlow = dataStore.withDistinctKeyFlow(ConfigKey) { storedConfigString ->
-        deserializeConfig(storedConfigString.orEmpty())
+        deserializeConfig(storedConfigString)
     }
         .filterNotNull()
         .shareIn(
@@ -48,9 +48,8 @@ class DataStoreConfigDataSource @Inject constructor(
             replay = 1
         )
 
-    private fun deserializeConfig(storedConfigString: String) = Try {
-        val map = jsonAdapter.fromJson(storedConfigString)
-        checkNotNull(map) { "Map parsed to null: \n $storedConfigString" }
+    private fun deserializeConfig(storedConfigString: String?) = Try {
+        val map = storedConfigString?.let { jsonAdapter.fromJson(it) } ?: emptyMap<String, Any>()
         Timber.d("Emitting config from data store: \n $storedConfigString")
         BasicMapBasedAppConfigMapMap(map)
     }
