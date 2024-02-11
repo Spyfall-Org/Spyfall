@@ -17,7 +17,7 @@ import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.forcedupdate.internal.R
 
@@ -56,7 +56,7 @@ fun ForcedUpdateScreen(
                 Button(
                     onClick = onOpenAppStoreClicked,
                     modifier = Modifier.fillMaxWidth(),
-                    type = ButtonType.Accent
+                    type = ButtonType.Primary
                 ) {
                     Text(text = dictionaryString(R.string.forcedUpdate_openStore_action))
                 }

@@ -15,8 +15,8 @@ import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
@@ -46,7 +46,7 @@ fun EndOrGoBackDialog(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onEndGame,
-                    type = ButtonType.Accent
+                    type = ButtonType.Primary
                 ) {
                     Text(text = dictionaryString(R.string.app_end_game_action))
                 }
@@ -54,7 +54,7 @@ fun EndOrGoBackDialog(
                 VerticalSpacerS800()
 
                 Button(
-                    type = ButtonType.Regular,
+                    type = ButtonType.Secondary,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onGoBack
                 ) {
@@ -76,7 +76,7 @@ fun EndOrGoBackDialog(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun SEndOrGoBackDialogPreview() {
     PreviewContent {
         EndOrGoBackDialog(

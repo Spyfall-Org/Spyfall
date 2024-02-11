@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme

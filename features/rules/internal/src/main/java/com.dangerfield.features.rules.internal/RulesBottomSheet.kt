@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
@@ -21,8 +19,8 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.dragHandleTopAc
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.rules.internal.R
 
@@ -166,7 +164,7 @@ private fun Body(text: String) {
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewRulesScreen() {
     PreviewContent {
         val sheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)

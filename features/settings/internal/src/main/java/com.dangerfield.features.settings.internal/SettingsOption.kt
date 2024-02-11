@@ -1,6 +1,5 @@
 package com.dangerfield.features.settings.internal
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,14 +8,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.dangerfield.libraries.ui.components.icon.Icon
-import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
-import com.dangerfield.libraries.ui.preview.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.bounceClick
+import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.IconSize
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
-
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun SettingsOption(
     text: @Composable () -> Unit,
@@ -28,7 +27,7 @@ fun SettingsOption(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .bounceClick { onClick() }
             .padding(vertical = Spacing.S500,),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -61,7 +60,7 @@ fun SettingsOption(
 
 
 @Composable
-@ThemePreviews
+@Preview
 fun PreviewSettingsOption() {
     PreviewContent(showBackground = true) {
         SettingsOption(
@@ -73,7 +72,7 @@ fun PreviewSettingsOption() {
 }
 
 @Composable
-@ThemePreviews
+@Preview
 fun PreviewSettingsOptionTrailing() {
     PreviewContent(showBackground = true) {
         SettingsOption(

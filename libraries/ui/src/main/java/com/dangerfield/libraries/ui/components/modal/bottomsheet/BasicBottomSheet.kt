@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
@@ -72,7 +72,7 @@ fun BasicBottomSheet(
 @Composable
 @Preview
 private fun PreviewBasicBottomSheetCloseButton() {
-    PreviewContent(isDarkMode = true) {
+    PreviewContent() {
         BasicBottomSheet(
             state = rememberBottomSheetState(BottomSheetValue.Expanded),
             onDismissRequest = { -> },
@@ -81,8 +81,8 @@ private fun PreviewBasicBottomSheetCloseButton() {
             topContent = { Text(text = "Top Content") },
             content = {
                 Column {
-                    Text(text = "content".repeat(10))
-                    Text(text = "is good".repeat(10))
+                    Text(text = "content".repeat(100))
+                    Text(text = "is good".repeat(100))
                 }
             },
             bottomContent = {

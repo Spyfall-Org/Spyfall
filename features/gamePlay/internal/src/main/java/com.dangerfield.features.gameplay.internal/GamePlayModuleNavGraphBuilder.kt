@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dangerfield.features.gameplay.gameHelpRoute
 import com.dangerfield.features.gameplay.gamePlayScreenRoute
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.LoadGamePlay
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.SubmitLocationVote
@@ -15,13 +16,12 @@ import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.Submi
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameKilled
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameReset
 import com.dangerfield.features.gameplay.internal.help.GameHelpBottomSheet
-import com.dangerfield.features.gameplay.internal.help.gameHelpRoute
-import com.dangerfield.features.gameplay.internal.help.navigateToGameHelp
 import com.dangerfield.features.gameplay.internal.ui.GamePlayScreen
 import com.dangerfield.features.gameplay.internal.voting.VotingBottomSheet
 import com.dangerfield.features.gameplay.internal.voting.hasVotedArgument
 import com.dangerfield.features.gameplay.internal.voting.navigateToVotingInfo
 import com.dangerfield.features.gameplay.internal.voting.votingInfoRoute
+import com.dangerfield.features.gameplay.navigateToGameHelp
 import com.dangerfield.features.videoCall.navigateToVideoCallBottomSheet
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.features.welcome.welcomeNavigationRoute
@@ -38,7 +38,6 @@ import javax.inject.Inject
 @AutoBindIntoSet
 class GamePlayModuleNavGraphBuilder @Inject constructor(
 ) : ModuleNavBuilder {
-
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
 
         composable(
@@ -48,6 +47,7 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
 
             val viewModel = hiltViewModel<GamePlayViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
+            val context = LocalContext.current
 
             PageLogEffect(
                 route = gamePlayScreenRoute,
@@ -80,7 +80,10 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
                 location = state.location,
                 hasMePlayerSubmittedVote = state.isVoteSubmitted,
                 gameResult = state.gameResult,
-                onTimeToVote = router::navigateToVotingInfo,
+                onTimeToVote = {
+                    playDingSound(context)
+                    router.navigateToVotingInfo()
+                },
                 onResetGameClicked = {
                     viewModel.takeAction(GamePlayViewModel.Action.ResetGame)
                 },

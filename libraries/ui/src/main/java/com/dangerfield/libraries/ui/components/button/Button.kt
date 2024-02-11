@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.coroutines.delay
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.ColorToken
@@ -60,19 +60,6 @@ fun Button(
 
     val borderColor = when (style) {
         ButtonStyle.Filled -> null
-        ButtonStyle.Outlined -> {
-            val targetColor = when {
-                !enabled -> OddOneOutTheme.colorScheme.borderDisabled
-                else -> when (type) {
-                    ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
-                    ButtonType.Regular -> OddOneOutTheme.colorScheme.onBackground
-                }
-            }
-            key(type) {
-                animateColorTokenAsState(targetColor, label = "BorderColorAnimation")
-            }.value
-        }
-
         ButtonStyle.NoBackground -> null
     }
 
@@ -86,11 +73,14 @@ fun Button(
         size = size,
         style = style,
         contentPadding = when (style) {
-            ButtonStyle.Filled,
-            ButtonStyle.Outlined,
-            -> size.padding(hasIcon = icon != null)
-
-            ButtonStyle.NoBackground -> PaddingValues(Spacing.S200)
+            ButtonStyle.Filled  -> PaddingValues(
+                horizontal = Spacing.S1000,
+                vertical = Spacing.S600
+            )
+            ButtonStyle.NoBackground -> PaddingValues(
+                horizontal = Spacing.S200,
+                vertical = Spacing.S500
+            )
         },
         enabled = enabled,
         interactionSource = interactionSource,
@@ -99,8 +89,8 @@ fun Button(
 }
 
 enum class ButtonType {
-    Accent,
-    Regular,
+    Primary,
+    Secondary,
 }
 
 enum class ButtonSize {
@@ -110,7 +100,6 @@ enum class ButtonSize {
 
 enum class ButtonStyle {
     Filled,
-    Outlined,
     NoBackground,
 }
 
@@ -129,7 +118,7 @@ fun ProvideButtonConfig(
     )
 }
 
-private val LocalButtonType = compositionLocalOf { ButtonType.Accent }
+private val LocalButtonType = compositionLocalOf { ButtonType.Primary }
 internal val LocalButtonSize = compositionLocalOf { ButtonSize.Large }
 private val LocalButtonStyle = compositionLocalOf { ButtonStyle.Filled }
 
@@ -140,7 +129,6 @@ private fun ButtonType.backgroundColor(
     enabled: Boolean,
 ): ColorToken.Color? = when (style) {
     ButtonStyle.Filled -> filledBackgroundColorToken(enabled)
-    ButtonStyle.Outlined -> null
     ButtonStyle.NoBackground -> null
 }
 
@@ -149,8 +137,8 @@ private fun ButtonType.backgroundColor(
 private fun ButtonType.filledBackgroundColorToken(enabled: Boolean) = when {
     !enabled -> OddOneOutTheme.colorScheme.surfaceDisabled
     else -> when (this) {
-        ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
-        ButtonType.Regular -> OddOneOutTheme.colorScheme.surfaceSecondary
+        ButtonType.Primary -> OddOneOutTheme.colorScheme.accent
+        ButtonType.Secondary -> OddOneOutTheme.colorScheme.surfaceSecondary
     }
 }
 
@@ -161,24 +149,16 @@ private fun ButtonType.contentColor(style: ButtonStyle, enabled: Boolean): Color
         ButtonStyle.Filled -> when {
             !enabled -> OddOneOutTheme.colorScheme.onSurfaceDisabled
             else -> when (this) {
-                ButtonType.Accent -> OddOneOutTheme.colorScheme.onAccent
-                ButtonType.Regular -> OddOneOutTheme.colorScheme.text
-            }
-        }
-
-        ButtonStyle.Outlined -> when {
-            !enabled -> OddOneOutTheme.colorScheme.textDisabled
-            else -> when (this) {
-                ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
-                ButtonType.Regular -> OddOneOutTheme.colorScheme.text
+                ButtonType.Primary -> OddOneOutTheme.colorScheme.onAccent
+                ButtonType.Secondary -> OddOneOutTheme.colorScheme.text
             }
         }
 
         ButtonStyle.NoBackground -> when {
             !enabled -> OddOneOutTheme.colorScheme.textDisabled
             else -> when (this) {
-                ButtonType.Accent -> OddOneOutTheme.colorScheme.accent
-                ButtonType.Regular -> OddOneOutTheme.colorScheme.text
+                ButtonType.Primary -> OddOneOutTheme.colorScheme.accent
+                ButtonType.Secondary -> OddOneOutTheme.colorScheme.text
             }
         }
     }
@@ -190,7 +170,6 @@ private fun ButtonPreview(
 ) {
     PreviewContent(
         contentPadding = PaddingValues(Spacing.S200),
-        isDarkMode = state.inverse,
         themeColor = ColorPrimitive.CherryPop700,
         showBackground = true,
         modifier = Modifier
@@ -229,20 +208,23 @@ private fun ButtonPreview(
                 }
             }
 
-            Text(text = "Button Size: ${state.size}", typographyToken = OddOneOutTheme.typography.Display.D1000)
-            Text(text = "Mode:" + if (state.inverse) "Dark" else "Light", typographyToken = OddOneOutTheme.typography.Display.D1000)
-
+            Text(
+                text = "Button Size: ${state.size}",
+                typographyToken = OddOneOutTheme.typography.Display.D1000
+            )
 
             Row {
                 ProvideTextConfig(OddOneOutTheme.typography.Heading.H700) {
-                    Text("Accent", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
-                    Text("Regular", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                    Text("Primary", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                    Text("Secondary", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
                     Text("Disabled", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
                 }
             }
             for (style in ButtonStyle.values()) {
                 ButtonRows(style = style, fill = false)
-                ButtonRows(style = style, fill = true)
+                if (style != ButtonStyle.NoBackground) {
+                    ButtonRows(style = style, fill = true)
+                }
             }
         }
     }
@@ -273,7 +255,7 @@ private fun ButtonRow(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                button(ButtonType.Accent, icon, false)
+                button(ButtonType.Primary, icon, false)
             }
         }
     }
@@ -285,21 +267,17 @@ private fun ButtonRow(
 }
 
 private data class ButtonPreviewParameter(
-    val inverse: Boolean,
     val size: ButtonSize,
 )
 
 private class ButtonPreviewParameterProvider : PreviewParameterProvider<ButtonPreviewParameter> {
     override val values: Sequence<ButtonPreviewParameter>
-        get() = sequenceOf(false, true)
-            .flatMap { inverse ->
-                ButtonSize.values()
-                    .asSequence()
-                    .map { size ->
-                        ButtonPreviewParameter(
-                            inverse = inverse,
-                            size = size
-                        )
-                    }
+        get() = ButtonSize.values()
+            .asSequence()
+            .map { size ->
+                ButtonPreviewParameter(
+                    size = size
+                )
             }
+
 }

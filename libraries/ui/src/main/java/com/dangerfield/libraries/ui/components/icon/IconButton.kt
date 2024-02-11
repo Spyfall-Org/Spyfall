@@ -21,9 +21,10 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.bounceClick
 import spyfallx.ui.color.ColorToken
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
@@ -47,7 +48,7 @@ fun IconButton(
     @Composable
     fun Button(modifier: Modifier) {
         Surface(
-            modifier = modifier,
+            modifier = modifier.bounceClick(mutableInteractionSource = interactionSource),
             contentPadding = PaddingValues(padding),
             color = backgroundColor,
             contentColor = iconColor,
@@ -137,7 +138,7 @@ private fun PreviewIconButtons() {
 @Preview(device = "spec:shape=Normal,width=1200,height=400,unit=dp,dpi=150")
 @Composable
 private fun PreviewIconButtonsBackground() {
-    PreviewContent(showBackground = true, isDarkMode = true) {
+    PreviewContent(showBackground = true) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(16.dp),

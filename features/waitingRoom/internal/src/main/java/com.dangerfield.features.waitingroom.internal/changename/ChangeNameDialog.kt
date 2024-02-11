@@ -12,7 +12,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.button.Button
@@ -104,11 +104,11 @@ fun ChangeNameDialog(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     val isSubmitEnabled = !isNameTaken && !isInvalidLength
                     Button(
-                        style = if (isSubmitEnabled) ButtonStyle.Filled else ButtonStyle.Outlined,
+                        style = ButtonStyle.Filled,
                         enabled = !isNameTaken && !isInvalidLength,
                         modifier = Modifier.fillMaxWidth(),
                         onClick = { onChangeNameClicked(name) },
-                        type = ButtonType.Accent
+                        type = ButtonType.Primary
                     ) {
                         Text(text = dictionaryString(R.string.app_submit_action))
                     }
@@ -116,7 +116,7 @@ fun ChangeNameDialog(
                     VerticalSpacerS800()
 
                     Button(
-                        type = ButtonType.Regular,
+                        type = ButtonType.Secondary,
                         modifier = Modifier.fillMaxWidth(), onClick = onDismissRequest
                     ) {
                         Text(text = dictionaryString(R.string.app_cancel_action))
@@ -147,7 +147,7 @@ private fun ChangeNameDialogPreview() {
 @Composable
 @Preview
 private fun ChangeNameDialogPreviewDarkError() {
-    PreviewContent(isDarkMode = true) {
+    PreviewContent() {
         ChangeNameDialog(
             name = "",
             onNameUpdated = { },

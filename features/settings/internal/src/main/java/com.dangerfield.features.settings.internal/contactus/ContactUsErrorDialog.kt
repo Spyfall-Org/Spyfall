@@ -3,7 +3,7 @@ package com.dangerfield.features.settings.internal.contactus
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.oddoneoout.features.settings.internal.R
 

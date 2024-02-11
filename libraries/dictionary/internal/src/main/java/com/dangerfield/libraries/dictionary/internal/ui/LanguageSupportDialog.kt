@@ -11,7 +11,7 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.oddoneoout.libraries.dictionary.internal.R
 
 @Composable
@@ -50,7 +50,7 @@ fun LanguageSupportDialog(
         bottomContent = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
-                    type = ButtonType.Accent,
+                    type = ButtonType.Primary,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
@@ -77,7 +77,6 @@ private fun LanguageSupportDialogPreview() {
 @Composable
 private fun LanguageSupportDialogPartialPreview() {
     PreviewContent(
-        isDarkMode = true
     ) {
         LanguageSupportDialog(
             onDismissRequest = { -> },

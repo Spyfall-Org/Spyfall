@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.thenIf
 import com.dangerfield.libraries.ui.typography.Typography
@@ -62,43 +62,23 @@ class ColorScheme internal constructor(
 
     ) {
     internal companion object {
-        fun lightMode(accentColor: ColorPrimitive = ColorPrimitive.CherryPop700) = ColorScheme(
-            accent = ColorToken.Color("accent", accentColor),
-            onAccent = ColorToken.Color("accent", accentColor.onColorPrimitive),
-            shadow = ColorToken.Color("shadow", ColorPrimitive.Black800),
-            textDisabled = ColorToken.Color("text-disabled", ColorPrimitive.Black500),
-            textWarning = ColorToken.Color("text-warning", ColorPrimitive.CherryPop700),
-            surfacePrimary = ColorToken.Color("surface-primary", ColorPrimitive.Black300),
-            onSurfacePrimary = ColorToken.Color("onsurface-primary", ColorPrimitive.Black700),
-            surfaceSecondary = ColorToken.Color("surface-secondary", ColorPrimitive.White900),
-            onSurfaceSecondary = ColorToken.Color("onsurface-secondary", ColorPrimitive.Black300),
-            surfaceDisabled = ColorToken.Color("surface-disabled", ColorPrimitive.Black200),
-            onSurfaceDisabled = ColorToken.Color("onsurface-disabled", ColorPrimitive.Black600),
-            background = ColorToken.Color("background", ColorPrimitive.White900),
-            backgroundOverlay = ColorToken.Color("background-overlay", ColorPrimitive.Black400, alpha = 0.8f),
-            onBackground = ColorToken.Color("onBackground", ColorPrimitive.Black900),
-            border = ColorToken.Color("border", ColorPrimitive.Black900),
-            text = ColorToken.Color("text", ColorPrimitive.Black900),
-            borderDisabled = ColorToken.Color("border-disabled", ColorPrimitive.Black400),
-        )
-
         fun darkMode(accentColor: ColorPrimitive = ColorPrimitive.CherryPop700) = ColorScheme(
             accent = ColorToken.Color("accent", accentColor),
             onAccent = ColorToken.Color("accent", accentColor.onColorPrimitive),
             shadow = ColorToken.Color("shadow", ColorPrimitive.Black800),
-            textDisabled = ColorToken.Color("text-disabled", ColorPrimitive.Black600),
+            textDisabled = ColorToken.Color("text-disabled", ColorPrimitive.Black400),
             textWarning = ColorToken.Color("text-warning", ColorPrimitive.CherryPop700),
-            surfacePrimary = ColorToken.Color("surface-primary", ColorPrimitive.Black800),
+            surfacePrimary = ColorToken.Color("surface-primary", ColorPrimitive.Purple500),
             onSurfacePrimary = ColorToken.Color("onsurface-primary", ColorPrimitive.White900),
-            surfaceSecondary = ColorToken.Color("surface-secondary", ColorPrimitive.Black800),
+            surfaceSecondary = ColorToken.Color("surface-secondary", ColorPrimitive.Purple700),
             onSurfaceSecondary = ColorToken.Color("onsurface-secondary", ColorPrimitive.White900),
-            surfaceDisabled = ColorToken.Color("surface-disabled", ColorPrimitive.Black200),
+            surfaceDisabled = ColorToken.Color("surface-disabled", ColorPrimitive.Black400),
             onSurfaceDisabled = ColorToken.Color("onsurface-disabled", ColorPrimitive.Black600),
-            background = ColorToken.Color("background", ColorPrimitive.Black700),
+            background = ColorToken.Color("background", ColorPrimitive.Purple900),
             onBackground = ColorToken.Color("onBackground", ColorPrimitive.White900),
             border = ColorToken.Color("border", ColorPrimitive.White900),
             text = ColorToken.Color("text", ColorPrimitive.White900),
-            backgroundOverlay = ColorToken.Color("background-overlay", ColorPrimitive.Black400, alpha = 0.8f),
+            backgroundOverlay = ColorToken.Color("background-overlay", ColorPrimitive.Black900, alpha = 0.7f),
             borderDisabled = ColorToken.Color("border-disabled", ColorPrimitive.Black300),
             )
     }
@@ -133,17 +113,16 @@ private val ColorToken.designSystemName: String
         is ColorToken.Gradient -> primitive.designSystemName
     }
 
-@Preview(device = "spec:shape=Normal,width=1200,height=3000,unit=dp,dpi=150")
+@Preview(device = "spec:shape=Normal,width=600,height=3000,unit=dp,dpi=150")
 @Composable
 private fun ColorTokenPreview(
     @PreviewParameter(ColorPreviewParameterProvider::class) parameter: ColorPreviewParameter,
 ) {
     @Composable
     fun PreviewCard(
-        isDarkMode: Boolean,
         modifier: Modifier = Modifier,
     ) {
-        PreviewCard(isDarkMode = isDarkMode, modifier = modifier) {
+        PreviewCard(modifier = modifier) {
             parameter.colors.forEachIndexed { index, color ->
                 if (index > 0) {
                     Spacer(Modifier.height(12.dp))
@@ -178,14 +157,8 @@ private fun ColorTokenPreview(
             Column(Modifier.padding(Spacing.S500)) {
                 Text(parameter.name, style = OddOneOutTheme.typography.Heading.H900.style)
                 Spacer(Modifier.height(Spacing.S500))
-                Row(Modifier.fillMaxWidth()) {
-                    Box(Modifier.weight(1f), propagateMinConstraints = true) {
-                        PreviewCard(isDarkMode = false)
-                    }
-                    Spacer(Modifier.width(12.dp))
-                    Box(Modifier.weight(1f), propagateMinConstraints = true) {
-                        PreviewCard(isDarkMode = true)
-                    }
+                Row(Modifier) {
+                    PreviewCard()
                 }
             }
         }
@@ -241,16 +214,15 @@ private class ColorPreviewParameterProvider : PreviewParameterProvider<ColorPrev
 
 @Composable
 private fun PreviewCard(
-    isDarkMode: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    OddOneOutTheme(isDarkMode = isDarkMode) {
+    OddOneOutTheme() {
         CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides LocalContentColor.current.color) {
             Column(
                 modifier
                     .background(
-                        color = (if (isDarkMode) ColorPrimitive.Black800 else ColorPrimitive.Black200).color,
+                        color = ColorPrimitive.Black800.color,
                         shape = RoundedCornerShape(24.dp)
                     )
                     .padding(40.dp)

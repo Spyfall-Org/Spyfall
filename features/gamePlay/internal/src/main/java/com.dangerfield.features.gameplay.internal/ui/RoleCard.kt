@@ -13,7 +13,7 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
@@ -28,6 +28,7 @@ import com.dangerfield.oddoneoout.features.gameplay.internal.R
 // Lots of logic in this view, but it's all pretty simple.
 @Composable
 fun RoleCard(
+    modifier: Modifier = Modifier,
     role: String,
     isTheOddOneOut: Boolean,
     isVisible: Boolean = false,
@@ -36,7 +37,7 @@ fun RoleCard(
     onHideShowClicked: () -> Unit
 ) {
     SubcomposeLayout(
-        modifier = Modifier.padding(horizontal = Spacing.S800),
+        modifier = modifier.padding(horizontal = Spacing.S800),
     ) { constraints ->
         val buttonPlaceable = subcompose(0) {
             Button(size = ButtonSize.Small, onClick = onHideShowClicked) {

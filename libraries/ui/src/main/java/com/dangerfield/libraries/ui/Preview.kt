@@ -1,8 +1,6 @@
-package com.dangerfield.libraries.ui.preview
+package com.dangerfield.libraries.ui
 
-import android.content.res.Configuration
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,17 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.LocalDictionary
 import com.dangerfield.libraries.dictionary.applyArgs
 import com.dangerfield.libraries.ui.color.ColorPrimitive
+import com.dangerfield.libraries.ui.color.ThemeColor
+import com.dangerfield.libraries.ui.theme.OddOneOutTheme
+import oddoneout.core.Try
 import spyfallx.ui.R
 import spyfallx.ui.color.background
-import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import com.dangerfield.libraries.ui.color.ThemeColor
-import oddoneout.core.Try
 import spyfallx.ui.thenIf
 
 /**
@@ -32,7 +29,6 @@ import spyfallx.ui.thenIf
 @Composable
 fun PreviewContent(
     modifier: Modifier = Modifier,
-    isDarkMode: Boolean = isSystemInDarkTheme(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     showBackground: Boolean = true,
     themeColor: ColorPrimitive = ThemeColor.entries.random().colorPrimitive,
@@ -60,7 +56,7 @@ fun PreviewContent(
         LocalContext provides context,
         LocalDictionary provides previewDictionary,
     ) {
-        OddOneOutTheme(isDarkMode = isDarkMode, themeColor = themeColor) {
+        OddOneOutTheme(themeColor = themeColor) {
             Box(
                 modifier = modifier
                     .thenIf(showBackground) { background(OddOneOutTheme.colorScheme.background) }
@@ -71,11 +67,3 @@ fun PreviewContent(
         }
     }
 }
-
-/**
- * Multipreview annotation that represents light and dark themes. Add this annotation to a
- * composable to render the both themes.
- */
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Light theme")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark theme")
-annotation class ThemePreviews

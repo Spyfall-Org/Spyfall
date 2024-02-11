@@ -2,13 +2,11 @@ package com.dangerfield.features.videoCall.internal
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
-import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
@@ -20,8 +18,8 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValu
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessory
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.oddoneoout.features.videocall.internal.R
 
 @Composable
@@ -67,8 +65,7 @@ fun VideoCallInfoBottomSheet(
         bottomContent = {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.S800),
+                    .fillMaxWidth(),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
                 Text(text = dictionaryString(R.string.app_okay_action))
@@ -78,7 +75,7 @@ fun VideoCallInfoBottomSheet(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewVideoCallLinkInfoDialog() {
     val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {
@@ -98,7 +95,7 @@ private fun PreviewVideoCallLinkInfoDialog() {
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewVideoCallLinkInfoDialogEmpty() {
     val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {

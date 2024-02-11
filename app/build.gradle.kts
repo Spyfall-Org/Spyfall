@@ -1,3 +1,5 @@
+import com.spyfall.convention.util.buildConfigField
+
 plugins {
     id("spyfall.android.application")
     id("com.google.firebase.crashlytics")
@@ -48,6 +50,7 @@ android {
             // Enable all the optimizations from release build through initWith(release).
             initWith(release)
             matchingFallbacks.add("release")
+            buildConfigField("IS_QA", true)
             // Debug key signing is available to everyone.
             signingConfig = signingConfigs.getByName("debug")
             setProguardFiles(

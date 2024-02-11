@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.icon.LargeIcon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import spyfallx.ui.thenIf
@@ -47,6 +47,12 @@ sealed class ColorPrimitive(val color: Color) {
     data object Black300: ColorPrimitive(Color(0xFFEEEEEE))
     data object Black200: ColorPrimitive(Color(0xFFF6F6F6))
     data object Black100: ColorPrimitive(Color(0xFFFBFBFB))
+    data object Purple900: ColorPrimitive(Color(0xFF270B68))
+    data object Purple700: ColorPrimitive(Color(0xFF422091))
+    data object Purple500: ColorPrimitive(Color(0xFF4C27A3))
+    data object Purple400: ColorPrimitive(Color(0xFF5B35B4))
+    data object Purple300: ColorPrimitive(Color(0xFF784CDF))
+    data object Purple100: ColorPrimitive(Color(0xFFA179FF))
     data object White900: ColorPrimitive(Color(0xFFFFFFFF))
     data object GrapeJelly500: ColorPrimitive(Color(0xFF9533C7))
     data object SkyDive400: ColorPrimitive(Color(0xFF00A0EF))
@@ -74,6 +80,15 @@ fun getColorPrimitive(family: String, weight: Int): ColorPrimitive? {
             300 -> ColorPrimitive.Black300
             200 -> ColorPrimitive.Black200
             100 -> ColorPrimitive.Black100
+            else -> null
+        }
+
+        "Purple" -> when (weight) {
+            900 -> ColorPrimitive.Purple900
+            500 -> ColorPrimitive.Purple500
+            400 -> ColorPrimitive.Purple400
+            300 -> ColorPrimitive.Purple300
+            100 -> ColorPrimitive.Purple100
             else -> null
         }
         "White" -> when (weight) {
@@ -108,21 +123,21 @@ val ColorPrimitive.designSystemName: String
     get() = this.toString().lowercase()
         .replace(Regex("""([A-Za-z]+)(\d+)"""), """color-$1-$2""")
 
-enum class ColorGradientPrimitive(val from: ColorPrimitive, val to: ColorPrimitive) {
-    Dark(ColorPrimitive.FromColor(Color.Black), ColorPrimitive.Black800),
-    Light(ColorPrimitive.Black100, ColorPrimitive.Black200);
-
+sealed class ColorGradientPrimitive(val from: ColorPrimitive, val to: ColorPrimitive) {
+    object Dark: ColorGradientPrimitive(ColorPrimitive.FromColor(Color.Black), ColorPrimitive.Black800)
+    object Light: ColorGradientPrimitive(ColorPrimitive.Black100, ColorPrimitive.Black200)
+    class FromTo(from: ColorPrimitive, to: ColorPrimitive): ColorGradientPrimitive(from, to)
     val colorOn: Color = from.onColorPrimitive.color
 }
 
 val ColorGradientPrimitive.designSystemName: String
-    get() = "color-gradient-${name.lowercase()}"
+    get() = "color-gradient-${this.javaClass.simpleName.lowercase()}"
 
 @Preview(device = "spec:shape=Normal,width=1680,height=2838,unit=dp,dpi=100")
 @Composable
 private fun ColorPrimitivesPreview() {
     val weights = (900 downTo 100 step 100).toList()
-    val families = listOf("Black", "White", "GrapeJelly", "SkyDive", "MintyFresh", "TangerineTwist", "CherryPop")
+    val families = listOf("Black", "White", "Purple", "GrapeJelly", "SkyDive", "MintyFresh", "TangerineTwist", "CherryPop")
     val columnCount = weights.size + 1
     PreviewContent(showBackground = true) {
         LazyVerticalGrid(
@@ -155,8 +170,21 @@ private fun ColorPrimitivesPreview() {
             item {
                 PreviewRowTitle("Gradients", modifier = Modifier.padding(6.dp))
             }
-            val spanCount = weights.size / ColorGradientPrimitive.values().size
-            for (gradient in ColorGradientPrimitive.values()) {
+
+            val gradients = listOf(
+                ColorGradientPrimitive.Dark,
+                ColorGradientPrimitive.Light,
+                ColorGradientPrimitive.FromTo(ColorPrimitive.Black900, ColorPrimitive.Black100),
+                ColorGradientPrimitive.FromTo(ColorPrimitive.Purple900, ColorPrimitive.Purple100),
+                ColorGradientPrimitive.FromTo(ColorPrimitive.GrapeJelly500, ColorPrimitive.Black100),
+                ColorGradientPrimitive.FromTo(ColorPrimitive.SkyDive400, ColorPrimitive.Black100),
+                ColorGradientPrimitive.FromTo(ColorPrimitive.MintyFresh300, ColorPrimitive.Black100),
+                ColorGradientPrimitive.FromTo(ColorPrimitive.TangerineTwist600, ColorPrimitive.Black100),
+                ColorGradientPrimitive.FromTo(ColorPrimitive.CherryPop700, ColorPrimitive.Black100),
+            )
+
+            val spanCount = weights.size / gradients.size
+            for (gradient in gradients) {
                 item(span = { GridItemSpan(spanCount) }) {
                     GradientCard(gradient, modifier = Modifier.padding(6.dp))
                 }
@@ -182,7 +210,7 @@ private fun ColorCard(
 
     val colorPrimitive = getColorPrimitive(family, weight)
     val shape = RoundedCornerShape(4.dp)
-    val border = Modifier.border(1.dp, ColorPrimitive.Black400.color, shape)
+    val border = Modifier.border(1.dp, ColorPrimitive.White900.color, shape)
     val background = if (colorPrimitive == null) {
         border
     } else {
@@ -199,7 +227,7 @@ private fun ColorCard(
     ) {
         val textStyle = TextStyle(
             fontSize = 14.sp,
-            color = colorPrimitive?.onColorPrimitive?.color ?: ColorPrimitive.Black500.color
+            color = colorPrimitive?.onColorPrimitive?.color ?: ColorPrimitive.White900.color
         )
         if (colorPrimitive == null) {
             LargeIcon(spyfallIcon = SpyfallIcon.Close(""))
@@ -264,7 +292,7 @@ private fun GradientCard(
 private fun PreviewHeaderItem(
     text: String,
     modifier: Modifier = Modifier,
-    color: ColorPrimitive = ColorPrimitive.Black800,
+    color: ColorPrimitive = ColorPrimitive.White900,
 ) {
     Text(
         text = text,
@@ -282,7 +310,7 @@ private fun PreviewRowTitle(
     Text(
         text = text,
         fontSize = 20.sp,
-        color = ColorPrimitive.Black800.color,
+        color = ColorPrimitive.White900.color,
         fontWeight = FontWeight.Bold,
         modifier = modifier.height(68.dp)
     )

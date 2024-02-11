@@ -28,7 +28,7 @@ import com.dangerfield.features.gameplay.internal.Fake
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.ui.HorizontalSpacerS800
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
@@ -262,7 +262,7 @@ private fun GamePlayScreenContent(
         Spacer(modifier = Modifier.height(Spacing.S800))
 
         Button(
-            type = ButtonType.Regular,
+            type = ButtonType.Secondary,
             modifier = Modifier.fillMaxWidth(),
             onClick = onEndGameClicked
         ) {
@@ -291,7 +291,7 @@ private fun VoteButton(
             Button(
                 enabled = selectedPlayer != null || selectedLocation != null,
                 modifier = Modifier.fillMaxWidth(),
-                style = if (hasSelectedVote) ButtonStyle.Filled else ButtonStyle.Outlined,
+                style = ButtonStyle.Filled,
                 onClick = {
                     if (selectedPlayer != null) {
                         onSubmitPlayerVoteClicked(selectedPlayer.id)

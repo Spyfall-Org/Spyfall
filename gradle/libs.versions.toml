@@ -1,6 +1,6 @@
 [versions]
 androidxActivity = "1.8.0"
-androidxComposeBom = "2023.10.01"
+androidxComposeBom = "2024.02.00"
 androidxComposeCompiler = "1.5.8" # used in [AndroidComposeExt]
 androidxCoreSplashscreen = "1.0.1"
 androidDesugarJdkLibs = "2.0.4"
@@ -44,7 +44,7 @@ material = "1.10.0"
 browser = "1.6.0"
 customviewPoolingcontainer = "1.0.0"
 uiTooling = "1.5.3"
-uiToolingPreviewAndroid = "1.5.4"
+uiToolingPreviewAndroid = "1.6.1"
 navigationRuntimeKtx = "2.7.6"
 firebaseFirestoreKtx = "24.10.0"
 core = "1.12.0"
@@ -53,6 +53,7 @@ navigationCommonKtx = "2.7.6"
 material3Android = "1.2.0-alpha12"
 material3 = "1.1.2"
 androidx-browser = "1.7.0"
+uiToolingVersion = "1.6.1"
 
 [libraries]
 # AndroidX
@@ -107,8 +108,13 @@ androidx-compose-material3-windowSizeClass = { group = "androidx.compose.materia
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 androidx-compose-runtime-tracing = { group = "androidx.compose.runtime", name = "runtime-tracing", version.ref = "androidxComposeRuntimeTracing" }
 androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+androidx-customview-poolingcontainer = { group = "androidx.customview", name = "customview-poolingcontainer", version.ref = "customviewPoolingcontainer" }
+
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
@@ -217,15 +223,13 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
-androidx-customview-poolingcontainer = { group = "androidx.customview", name = "customview-poolingcontainer", version.ref = "customviewPoolingcontainer" }
-androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
-androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 core = { group = "androidx.core", name = "core", version.ref = "core" }
 androidx-navigation-safe-args-generator = { group = "androidx.navigation", name = "navigation-safe-args-generator", version.ref = "navigationSafeArgsGenerator" }
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

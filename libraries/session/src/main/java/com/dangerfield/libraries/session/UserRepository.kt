@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     fun getUserFlow(): Flow<User>
-    suspend fun updateDarkModeConfig(darkModeConfig: DarkModeConfig)
     suspend fun updateColorConfig(colorConfig: ColorConfig)
 
     suspend fun addUsersGameResult(

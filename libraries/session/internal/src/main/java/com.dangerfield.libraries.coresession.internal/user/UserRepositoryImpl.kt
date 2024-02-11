@@ -7,7 +7,6 @@ import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
 import com.dangerfield.libraries.storage.datastore.distinctKeyFlow
 import com.dangerfield.libraries.session.ColorConfig
-import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.GameKey
 import com.dangerfield.libraries.session.Stats
 import com.dangerfield.libraries.session.ThemeConfig
@@ -63,16 +62,6 @@ class UserRepositoryImpl @Inject constructor(
             } ?: ColorConfig.Random
         }
 
-    private val darkModeConfigFlow = dataStore
-        .distinctKeyFlow(DarkModeConfigKey)
-        .map { cachedValue ->
-            cachedValue?.let { string ->
-                Try { DarkModeConfig.valueOf(string) }
-                    .getOrNull()
-                    ?: DarkModeConfig.System
-            } ?: DarkModeConfig.System
-        }
-
     private val userIdFlow = flow {
         getUserId()
             .onSuccess {
@@ -90,16 +79,14 @@ class UserRepositoryImpl @Inject constructor(
     private val userFlow = combine(
         userIdFlow,
         colorConfigFlow,
-        darkModeConfigFlow,
         meGameStatsDao.getGameResultsFlow(),
         meGameStatsDao.getGamePlayedFlow(),
-    ) { userId, colorConfig, darkModeConfig, meGameResults, meGamesPlayed ->
+    ) { userId, colorConfig, meGameResults, meGamesPlayed ->
         User(
             id = userId,
             languageCode = Locale.getDefault().language,
             themeConfig = ThemeConfig(
                 colorConfig = colorConfig,
-                darkModeConfig = darkModeConfig
             ),
             stats = Stats(
                 multiDeviceGamesPlayed = meGamesPlayed.filter { !it.wasSingleDevice }.size,
@@ -130,10 +117,6 @@ class UserRepositoryImpl @Inject constructor(
     )
 
     override fun getUserFlow(): Flow<User> = userFlow
-
-    override suspend fun updateDarkModeConfig(darkModeConfig: DarkModeConfig) {
-        cache(DarkModeConfigKey, darkModeConfig.name)
-    }
 
     override suspend fun updateColorConfig(colorConfig: ColorConfig) {
         cache(ColorConfigKey, when (colorConfig) {
@@ -204,10 +187,8 @@ class UserRepositoryImpl @Inject constructor(
         private const val RandomColorConfigValue = "RANDOM"
         private val defaultThemeConfig = ThemeConfig(
             colorConfig = ColorConfig.Random,
-            darkModeConfig = DarkModeConfig.System
         )
 
         private val ColorConfigKey = stringPreferencesKey("theme_color")
-        private val DarkModeConfigKey = stringPreferencesKey("dark_mode_config")
     }
 }

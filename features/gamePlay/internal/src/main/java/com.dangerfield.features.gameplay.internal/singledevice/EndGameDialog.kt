@@ -14,8 +14,8 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
@@ -44,7 +44,7 @@ fun EndGameDialog(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onEndGame,
-                    type = ButtonType.Accent
+                    type = ButtonType.Primary
                 ) {
                     Text(text = dictionaryString(R.string.singleDeviceEndGameDialog_end_action))
                 }
@@ -52,7 +52,7 @@ fun EndGameDialog(
                 VerticalSpacerS800()
 
                 Button(
-                    type = ButtonType.Regular,
+                    type = ButtonType.Secondary,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
@@ -64,7 +64,7 @@ fun EndGameDialog(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun SingleDeviceEndGameDialogPreview() {
     PreviewContent {
         EndGameDialog(

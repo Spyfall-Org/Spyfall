@@ -9,7 +9,6 @@ import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.session.ColorConfig
-import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.session.EnsureSessionLoaded
 import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.session.ThemeConfig
@@ -46,7 +45,6 @@ class MainActivityViewModel @Inject constructor(
     override val initialState = State(
         isUpdateRequired = false,
         accentColor = ThemeColor.entries.random().colorPrimitive,
-        darkModeConfig = DarkModeConfig.System,
         isBlockingLoad = true,
         hasBlockingError = false,
         languageSupportLevel = null,
@@ -84,7 +82,6 @@ class MainActivityViewModel @Inject constructor(
                     it.copy(
                         isBlockingLoad = false,
                         accentColor = colorPrimitive,
-                        darkModeConfig = session.user.themeConfig.darkModeConfig,
                         languageSupportLevel = null
                     )
                 }
@@ -123,7 +120,6 @@ class MainActivityViewModel @Inject constructor(
                 updateState { state ->
                     state.copy(
                         accentColor = colorPrimitive,
-                        darkModeConfig = config.darkModeConfig
                     )
                 }
             }
@@ -177,7 +173,6 @@ class MainActivityViewModel @Inject constructor(
         val isBlockingLoad: Boolean,
         val isUpdateRequired: Boolean,
         val accentColor: ColorPrimitive,
-        val darkModeConfig: DarkModeConfig,
         val hasBlockingError: Boolean,
         val legalAcceptanceState: LegalAcceptanceState?,
         val languageSupportLevel: LanguageSupportLevel?

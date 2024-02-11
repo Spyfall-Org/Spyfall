@@ -23,18 +23,22 @@ internal fun Project.configureAndroidCompose(
 
         dependencies {
             val bom = libs.androidx.compose.bom
+
             add("implementation", platform(bom))
             add("implementation", libs.androidx.compose.runtime)
             add("implementation", libs.androidx.lifecycle.runtimeCompose)
             add("implementation", libs.androidx.lifecycle)
-            //   add("implementation", libs.androidx.lifecycle.viewModelCompose)
-           // add("implementation", libs.androidx.navigation.runtime.ktx)
             add("implementation", libs.hilt.navigation.compose)
             add("implementation", libs.androidx.navigation.compose)
             add("androidTestImplementation", platform(bom))
+
             // Add ComponentActivity to debug manifest
             add("debugImplementation", libs.androidx.compose.ui.testManifest)
             add("debugImplementation", libs.androidx.compose.ui.tooling)
+            add("implementation", libs.androidx.ui.tooling.preview.android)
+            add("implementation", libs.androidx.customview.poolingcontainer)
+            add("implementation", libs.androidx.compose.ui.tooling.preview)
+
             // Screenshot Tests on JVM
             add("testImplementation", libs.robolectric)
             add("testImplementation", libs.roborazzi)
@@ -42,7 +46,6 @@ internal fun Project.configureAndroidCompose(
             add("implementation", libs.androidx.compose.foundation)
             add("implementation", libs.androidx.compose.foundation.layout)
             add("implementation", libs.androidx.compose.runtime.livedata)
-            add("implementation", libs.androidx.compose.ui.tooling.preview)
             add("implementation", libs.androidx.compose.ui.util)
         }
 

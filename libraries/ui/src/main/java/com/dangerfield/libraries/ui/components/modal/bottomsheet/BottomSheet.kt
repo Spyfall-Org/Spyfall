@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.dangerfield.libraries.ui.Elevation
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Sizes
 import com.dangerfield.libraries.ui.align

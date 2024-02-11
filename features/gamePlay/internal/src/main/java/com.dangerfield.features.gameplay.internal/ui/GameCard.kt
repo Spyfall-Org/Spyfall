@@ -2,7 +2,6 @@ package com.dangerfield.features.gameplay.internal.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,14 +23,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.components.BadgedBox
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.bounceClick
 import spyfallx.ui.circleBackground
 import spyfallx.ui.thenIf
 
@@ -73,21 +73,21 @@ fun GameCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .thenIf(isSelectedForVote) {
-                        border(
-                            width = 2.dp,
-                            shape = radius.shape,
-                            color = OddOneOutTheme.colorScheme.accent.color
-                        )
-                    }
-                    .clickable {
-                        if (!isClickEnabled) return@clickable
+                    .bounceClick {
+                        if (!isClickEnabled) return@bounceClick
 
                         if (isDisplayingForSelection) {
                             onSelectedForVote()
                         } else {
                             isMarkedOff = !isMarkedOff
                         }
+                    }
+                    .thenIf(isSelectedForVote) {
+                        border(
+                            width = 2.dp,
+                            shape = radius.shape,
+                            color = OddOneOutTheme.colorScheme.accent.color
+                        )
                     },
             ) {
                 Row(
@@ -127,7 +127,7 @@ private fun FirstBadge(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewGameCard() {
     PreviewContent {
         Column(
@@ -148,7 +148,7 @@ private fun PreviewGameCard() {
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewGameCardSelected() {
     PreviewContent {
         Column(

@@ -5,8 +5,8 @@ import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.route
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 
@@ -31,7 +31,7 @@ fun LoadGameOptionsErrorDialog(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewLoadGameOptionsErrorDialog() {
     PreviewContent {
         LoadGameOptionsErrorDialog(

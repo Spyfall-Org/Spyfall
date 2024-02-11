@@ -50,6 +50,17 @@ class IsSingleDeviceVotingAdEnabledFlag @Inject constructor(
 }
 
 @AutoBindIntoSet
+class AreAllAdsDisabled @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Boolean>() {
+    override val displayName: String = "Disable All Ads"
+    override val path: String = "ads.disableAllAds"
+    override val default: Boolean = false
+    override val showInQADashboard = true
+    override fun resolveValue(): Boolean = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
 class IsSingleDeviceResultsAdEnabledFlag @Inject constructor(
     private val appConfigMap: AppConfigMap
 ) : ConfiguredValue<Boolean>() {

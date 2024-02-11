@@ -3,7 +3,6 @@
 package com.dangerfield.features.newgame.internal.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,13 +25,14 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dangerfield.libraries.ui.Elevation
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.bounceClick
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import spyfallx.ui.color.background
 
@@ -47,6 +47,9 @@ fun GamePackItem(
 ) {
     Box(
         modifier = modifier
+            .bounceClick {
+                onClick(!isSelected)
+            }
             .elevation(
                 elevation = Elevation.Fixed,
                 shape = Radii.Card.shape,
@@ -54,9 +57,6 @@ fun GamePackItem(
                 shadowColor = OddOneOutTheme.colorScheme.shadow
             )
             .fillMaxWidth()
-            .clickable {
-                onClick(!isSelected)
-            }
     ) {
 
         var shouldPlayCheckAnimation by remember { mutableStateOf(false) }

@@ -1,15 +1,8 @@
 package com.dangerfield.spyfall
 
-import android.app.Activity
-import android.content.Context
-import android.graphics.Color
-import android.os.Build
-import android.view.View
-import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -54,7 +46,6 @@ import com.dangerfield.libraries.navigation.floatingwindow.FloatingWindowNavigat
 import com.dangerfield.libraries.navigation.floatingwindow.getFloatingWindowNavigator
 import com.dangerfield.libraries.navigation.internal.NavControllerRouter
 import com.dangerfield.libraries.network.NetworkMonitor
-import com.dangerfield.libraries.session.DarkModeConfig
 import com.dangerfield.libraries.ui.LocalAppState
 import com.dangerfield.libraries.ui.LocalBuildInfo
 import com.dangerfield.libraries.ui.color.ColorPrimitive
@@ -74,7 +65,6 @@ import spyfallx.ui.color.background
 @Composable
 fun OddOneOutApp(
     accentColor: ColorPrimitive,
-    darkModeConfig: DarkModeConfig,
     navBuilderRegistry: NavBuilderRegistry,
     networkMonitor: NetworkMonitor,
     adsConfig: AdsConfig,
@@ -92,18 +82,6 @@ fun OddOneOutApp(
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val isDeviceInDarkMode = isSystemInDarkTheme()
-
-    val shouldShowDarkMode = when (darkModeConfig) {
-        DarkModeConfig.System -> isDeviceInDarkMode
-        DarkModeConfig.Dark -> true
-        DarkModeConfig.Light -> false
-    }
-
-    LaunchedEffect(shouldShowDarkMode, isDeviceInDarkMode) {
-        setStatusBarColor(context = context, shouldBeDark = shouldShowDarkMode)
-    }
 
     val router = remember {
         NavControllerRouter(
@@ -141,7 +119,6 @@ fun OddOneOutApp(
         LocalAppState provides appState
     ) {
         OddOneOutTheme(
-            isDarkMode = shouldShowDarkMode,
             themeColor = accentColor
         ) {
             Screen(
@@ -218,34 +195,5 @@ fun OddOneOutApp(
                 }
             }
         }
-    }
-}
-
-private fun setStatusBarColor(shouldBeDark: Boolean, context: Context) {
-    val window = (context as Activity).window
-    val statusBarColor = if (shouldBeDark) Color.BLACK else Color.WHITE
-    window.statusBarColor = statusBarColor
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val controller = window.insetsController
-        if (shouldBeDark) {
-            controller?.setSystemBarsAppearance(
-                0,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
-        } else {
-            controller?.setSystemBarsAppearance(
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
-        }
-    } else {
-        var flags = window.decorView.systemUiVisibility
-        flags = if (shouldBeDark) {
-            flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        } else {
-            flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
-        window.decorView.systemUiVisibility = flags
     }
 }

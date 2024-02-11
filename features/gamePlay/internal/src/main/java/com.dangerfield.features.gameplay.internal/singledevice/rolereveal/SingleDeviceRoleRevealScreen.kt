@@ -29,10 +29,10 @@ import com.dangerfield.features.gameplay.internal.ui.GamePlayGrid
 import com.dangerfield.features.gameplay.internal.ui.RoleCard
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.FieldState
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
@@ -42,10 +42,12 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
+import com.dangerfield.libraries.ui.pulsate
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import spyfallx.ui.thenIf
 
 @Composable
 fun SingleDevicePlayerRoleScreen(
@@ -66,6 +68,7 @@ fun SingleDevicePlayerRoleScreen(
     var shouldShowExitDialog by remember { mutableStateOf(false) }
     var isRoleHidden by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
+    var hasPlayerClickedShow by remember { mutableStateOf(false) }
 
     BackHandler {
         shouldShowExitDialog = !shouldShowExitDialog
@@ -81,13 +84,18 @@ fun SingleDevicePlayerRoleScreen(
             onNameUpdated = onNameUpdated,
             locationOptions = locationOptions,
             onStartGameClicked = onStartGameClicked,
+            hasPlayerClickedShow = hasPlayerClickedShow,
             isRoleVisible = !isRoleHidden,
             hideRoleField = { isRoleHidden = true },
-            showRoleField = { isRoleHidden = false },
+            showRoleField = {
+                isRoleHidden = false
+                hasPlayerClickedShow = true
+            },
             loadNextPlayer = {
                 isRoleHidden = true
                 coroutineScope.launch {
                     scrollState.animateScrollTo(0)
+                    hasPlayerClickedShow = false
                     // wait for role to hide
                     delay(100)
                     onNextPlayerClicked()
@@ -100,7 +108,7 @@ fun SingleDevicePlayerRoleScreen(
                 !isFirstPlayer -> {
                     EndOrGoBackDialog(
                         onDismissRequest = { shouldShowExitDialog = false },
-                        onEndGame = onEndGameClicked ,
+                        onEndGame = onEndGameClicked,
                         onGoBack = {
                             isRoleHidden = true
                             shouldShowExitDialog = false
@@ -134,6 +142,7 @@ private fun RoleRevealScreenContent(
     location: String?,
     scrollState: ScrollState,
     isRoleVisible: Boolean,
+    hasPlayerClickedShow: Boolean,
     nameFieldState: FieldState<String?>,
     onNameUpdated: (String) -> Unit,
     locationOptions: List<String>,
@@ -196,13 +205,14 @@ private fun RoleRevealScreenContent(
                 VerticalSpacerS1200()
 
                 RoleCard(
+                    modifier = Modifier.thenIf(!hasPlayerClickedShow) { pulsate() },
                     role = currentPlayer.role,
                     isTheOddOneOut = currentPlayer.isOddOneOut,
                     location = location,
                     text = if (currentPlayer.isOddOneOut) dictionaryString(R.string.roleReveal_dontGetFoundOut_text) else null,
                     isVisible = isRoleVisible,
                     onHideShowClicked = {
-                        if(!isRoleVisible) showRoleField() else hideRoleField()
+                        if (!isRoleVisible) showRoleField() else hideRoleField()
                     }
                 )
 
@@ -270,14 +280,14 @@ private fun RoleRevealScreenContent(
 
                 VerticalSpacerS1200()
 
-                val areButtonsEnabled =
-                    nameFieldState is FieldState.Valid || nameFieldState is FieldState.Idle
+                val areButtonsEnabled = hasPlayerClickedShow &&
+                    (nameFieldState is FieldState.Valid || nameFieldState is FieldState.Idle)
 
                 if (isLastPlayer) {
                     Button(
                         onClick = onStartGameClicked,
                         modifier = Modifier.fillMaxWidth(),
-                        style = if (areButtonsEnabled) ButtonStyle.Filled else ButtonStyle.Outlined,
+                        style = ButtonStyle.Filled,
                         enabled = areButtonsEnabled,
                     ) {
                         Text(text = dictionaryString(R.string.roleReveal_startGame_action))
@@ -285,7 +295,7 @@ private fun RoleRevealScreenContent(
                 } else {
                     Button(
                         onClick = loadNextPlayer,
-                        style = if (areButtonsEnabled) ButtonStyle.Filled else ButtonStyle.Outlined,
+                        style = ButtonStyle.Filled,
                         enabled = areButtonsEnabled,
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -308,7 +318,7 @@ private fun RoleRevealScreenContent(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewSingleDevicePlayerRoleScreen() {
     PreviewContent {
         SingleDevicePlayerRoleScreen(

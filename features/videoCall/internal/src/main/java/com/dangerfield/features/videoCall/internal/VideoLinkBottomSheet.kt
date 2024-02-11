@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable
@@ -19,15 +18,11 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.icon.IconButton
@@ -40,7 +35,6 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomS
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.getBoldUnderlinedSpan
 import com.dangerfield.libraries.ui.getSpannableLink
-import com.dangerfield.libraries.ui.makeLink
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.videocall.internal.R
 import kotlinx.coroutines.delay
@@ -125,9 +119,7 @@ fun VideoLinkBottomSheet(
         bottomContent = {
             if (canOpenVideoLink) {
                 Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(Spacing.S800),
+                    modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         onDismiss(bottomSheetState)
                         context.startActivity(chooser)
@@ -141,7 +133,7 @@ fun VideoLinkBottomSheet(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun VideoLinkBottomSheetPreview() {
     PreviewContent {
         val sheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)

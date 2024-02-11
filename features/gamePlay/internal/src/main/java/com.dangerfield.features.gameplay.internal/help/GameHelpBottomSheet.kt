@@ -2,18 +2,16 @@ package com.dangerfield.features.gameplay.internal.help
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.Spacing
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.VerticalSpacerS100
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
-import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BasicBottomSheet
@@ -92,8 +90,7 @@ fun GameHelpBottomSheet(
         bottomContent = {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.S800),
+                    .fillMaxWidth(),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
                 Text(text = dictionaryString(id = R.string.app_okay_action))
@@ -118,7 +115,7 @@ private fun Body(text: String) {
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewGameHelpBottomSheet() {
     val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {

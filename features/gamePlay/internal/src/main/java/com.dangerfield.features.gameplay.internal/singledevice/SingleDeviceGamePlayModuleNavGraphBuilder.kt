@@ -13,6 +13,7 @@ import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.millisToMMss
 import com.dangerfield.features.gameplay.internal.navigateToSingleDevicePlayerRoleRoute
+import com.dangerfield.features.gameplay.internal.playDingSound
 import com.dangerfield.features.gameplay.internal.singleDevicePlayerRoleRoute
 import com.dangerfield.features.gameplay.internal.singleDeviceVotingParentRoute
 import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayScreen
@@ -166,6 +167,7 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
             val viewModel = hiltViewModel<SingleDeviceGamePlayViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
             val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
+            val context = LocalContext.current
 
             PageLogEffect(
                 route = singleDeviceGamePlayRoute,
@@ -192,6 +194,7 @@ class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
                 timeRemaining = state.timeRemainingMillis.millisToMMss(),
                 isTimeUp = state.isTimeUp,
                 onTimeToVote = {
+                    playDingSound(context)
                     router.navigateToSingleDeviceVoting(accessCode)
                 },
                 onRestartGameClicked = {

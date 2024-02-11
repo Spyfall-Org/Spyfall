@@ -33,8 +33,8 @@ import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
@@ -212,7 +212,7 @@ fun NewGameScreen(
                     }
                 } else {
                     Button(
-                        style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
+                        style = ButtonStyle.Filled,
                         enabled = isFormValid,
                         onClick = {
                             focusManager.clearFocus()
@@ -488,7 +488,7 @@ private fun VideoCallLink(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 fun PreviewNewGameScreen() {
     PreviewContent {

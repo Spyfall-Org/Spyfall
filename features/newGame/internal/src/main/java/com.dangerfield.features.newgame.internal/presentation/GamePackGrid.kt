@@ -1,16 +1,18 @@
 package com.dangerfield.features.newgame.internal.presentation
 
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.libraries.game.Pack
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.color.ThemeColor
@@ -27,7 +29,7 @@ fun GamePackGrid(
         horizontalSpacing = Spacing.S300,
         itemContent = { index, gamePack ->
             GamePackItem(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight().heightIn(min = 100.dp),
                 colorPrimitive = ThemeColor.entries.toTypedArray()
                     .let { it[index % it.size] }.colorPrimitive,
                 type = gamePack.type,
@@ -42,7 +44,7 @@ fun GamePackGrid(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewGamePackGrid() {
     PreviewContent {
         var packs by remember {

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import spyfallx.ui.color.ColorToken
@@ -237,7 +237,7 @@ internal fun TypographyToken.toStyle(color: ColorToken.Color?, textDecoration: T
     style.copy(
         color = color.takeOrElse { LocalTextConfig.current.color }.takeOrElse { LocalContentColor.current }.color,
         textDecoration = textDecoration,
-        textAlign = textAlign
+        textAlign = textAlign ?: TextAlign.Start
     )
 
 

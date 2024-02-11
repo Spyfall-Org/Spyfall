@@ -8,8 +8,8 @@ import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.route
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
@@ -49,7 +49,7 @@ fun TooFewPlayersDialog(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onStartConfirmed,
-                    type = ButtonType.Accent
+                    type = ButtonType.Primary
                 ) {
                     Text(text = dictionaryString(R.string.waitingRoom_confirmStart_action))
                 }
@@ -57,7 +57,7 @@ fun TooFewPlayersDialog(
                 VerticalSpacerS800()
 
                 Button(
-                    type = ButtonType.Regular,
+                    type = ButtonType.Secondary,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
@@ -69,7 +69,7 @@ fun TooFewPlayersDialog(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun StartConfirmationDialogPreview() {
     PreviewContent {
         TooFewPlayersDialog(

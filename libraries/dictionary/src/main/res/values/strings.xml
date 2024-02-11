@@ -287,10 +287,6 @@
     <string name="colorPicker_theme_header">Theme</string>
     <string name="colorPicker_color_header">Color</string>
     <string name="colorPicker_random_label">Random</string>
-    <string name="colorPicker_darkMode_header">Dark Mode</string>
-    <string name="colorPicker_darkMode_system">System</string>
-    <string name="colorPicker_darkMode_light">Light</string>
-    <string name="colorPicker_darkMode_dark">Dark</string>
 
     <!-- /////////////////////    Rules Strings   /////////////////////-->
     <string name="rules_bottomSheet_header">Rules</string>

@@ -16,8 +16,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.VerticalSpacerS500
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
@@ -78,7 +77,7 @@ fun InputField(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewInputField() {
     PreviewContent {
         InputField(

@@ -25,7 +25,8 @@ import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.DisplayablePlayer
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.HorizontalSpacerS800
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
@@ -36,7 +37,9 @@ import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
+import com.dangerfield.libraries.ui.components.icon.CircularIcon
 import com.dangerfield.libraries.ui.components.icon.IconButton
+import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
@@ -56,6 +59,7 @@ fun WaitingRoomScreen(
     onChangeNameClicked: () -> Unit,
     onStartGameClicked: () -> Unit,
     onLeaveGameClicked: () -> Unit,
+    onHelpClicked: () -> Unit,
     onCallLinkButtonClicked: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -72,6 +76,19 @@ fun WaitingRoomScreen(
         topBar = {
             Column {
                 AdBanner(ad = OddOneOutAd.WaitingRoomBanner)
+                VerticalSpacerS500()
+                Row {
+                    Spacer(modifier = Modifier.weight(1f))
+                    CircularIcon(
+                        icon = SpyfallIcon.Question(""),
+                        iconSize = IconSize.Medium,
+                        padding = Spacing.S200,
+                        backgroundColor = OddOneOutTheme.colorScheme.surfacePrimary,
+                        contentColor = OddOneOutTheme.colorScheme.onSurfacePrimary,
+                        onClick = onHelpClicked
+                    )
+                    HorizontalSpacerS800()
+                }
             }
         }
     ) {
@@ -195,7 +212,7 @@ private fun WaitingRoomScreenContent(
         if (!isLoadingStart) {
 
             Button(
-                type = ButtonType.Accent,
+                type = ButtonType.Primary,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onStartGameClicked
             ) {
@@ -207,7 +224,7 @@ private fun WaitingRoomScreenContent(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onLeaveGameClicked,
-                type = ButtonType.Regular
+                type = ButtonType.Secondary
             ) {
                 Text(text = dictionaryString(R.string.waitingRoom_leaveGame_action))
             }
@@ -283,7 +300,8 @@ fun PreviewWaitingRoomScreen() {
             onLeaveGameClicked = {},
             onChangeNameClicked = {},
             minPlayers = 3,
-            maxPlayers = 6
+            maxPlayers = 6,
+            onHelpClicked = {}
         )
     }
 }

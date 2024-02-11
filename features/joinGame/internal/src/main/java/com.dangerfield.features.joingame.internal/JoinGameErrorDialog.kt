@@ -9,7 +9,7 @@ import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.oddoneoout.features.joingame.internal.R
 
 @Composable

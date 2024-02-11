@@ -44,10 +44,6 @@ class ColorPickerModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
                 selectedColorConfig = state.colorConfig,
                 onDismiss = router::goBack,
                 colorConfigs = colorConfigs,
-                selectedDarkModeConfig = state.darkModeConfig,
-                onDarkModeConfigSelected = {
-                    viewModel.takeAction(ColorPickerViewModel.Action.UpdateDarkModeConfig(it))
-                }
             )
         }
     }

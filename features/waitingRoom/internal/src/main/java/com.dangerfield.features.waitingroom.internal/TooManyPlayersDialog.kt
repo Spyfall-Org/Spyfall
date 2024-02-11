@@ -12,8 +12,8 @@ import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.modal.BasicDialog
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 
 @Composable
@@ -49,7 +49,7 @@ fun TooManyPlayersDialog(
         bottomContent = {
             Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
                 Button(
-                    type = ButtonType.Accent,
+                    type = ButtonType.Primary,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onDismissRequest
                 ) {
@@ -61,7 +61,7 @@ fun TooManyPlayersDialog(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun TooManyPlayersDialogPreview() {
     PreviewContent {
         TooManyPlayersDialog(

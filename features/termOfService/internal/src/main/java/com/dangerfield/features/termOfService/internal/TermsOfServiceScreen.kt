@@ -17,22 +17,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.HorizontalSpacerS200
 import com.dangerfield.libraries.ui.HorizontalSpacerS500
 import com.dangerfield.libraries.ui.Sizes
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS800
-import com.dangerfield.libraries.ui.color.ProvideContentColor
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.checkbox.Checkbox
 import com.dangerfield.libraries.ui.components.checkbox.rememberCheckboxState
-import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.makeLink
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.termofservice.internal.R
 
@@ -100,7 +96,7 @@ fun TermsOfServiceScreen(
             VerticalSpacerS1200()
 
             Button(
-                style = if (checkboxState.checked) ButtonStyle.Filled else ButtonStyle.Outlined,
+                style = ButtonStyle.Filled,
                 enabled = checkboxState.checked,
                 onClick = {
                     focusManager.clearFocus()
@@ -176,7 +172,7 @@ fun LinksSection(
     )
 }
 
-@ThemePreviews
+@Preview
 @Composable
 private fun PreviewBlockingErrorScreen() {
     PreviewContent {

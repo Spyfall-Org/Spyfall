@@ -35,20 +35,25 @@ class SplashScreenBuilder(private val activity: Activity) {
 
         internalSplashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
 
-            val animator =  splashScreenViewProvider.startIconRotation()
+            Try {
 
-            (activity as? LifecycleOwner)?.lifecycleScope?.launch {
-                var isSplashScreenUp = keepOnScreenCondition()
-                while (isSplashScreenUp) {
-                    delay(500)
-                    isSplashScreenUp = keepOnScreenCondition()
+                val animator = splashScreenViewProvider.startIconRotation()
+
+                (activity as? LifecycleOwner)?.lifecycleScope?.launch {
+                    var isSplashScreenUp = keepOnScreenCondition()
+                    while (isSplashScreenUp) {
+                        delay(500)
+                        isSplashScreenUp = keepOnScreenCondition()
+                    }
+
+                    animator?.pause()
+                    splashScreenViewProvider.remove()
+                } ?: run {
+                    splashScreenViewProvider.remove()
+                    Timber.e("SplashScreenBuilder: Activity is not a lifecycle owner, splash screen will be removed")
                 }
-
-                animator?.pause()
+            }.onFailure {
                 splashScreenViewProvider.remove()
-            } ?: run {
-                splashScreenViewProvider.remove()
-                Timber.e("SplashScreenBuilder: Activity is not a lifecycle owner, splash screen will be removed")
             }
         }
     }

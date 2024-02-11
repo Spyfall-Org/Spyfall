@@ -1,7 +1,6 @@
 package com.dangerfield.features.newgame.internal.presentation
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.analytics.PageLogEffect
@@ -11,7 +10,6 @@ import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
-import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
@@ -23,8 +21,8 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValu
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 
@@ -77,8 +75,7 @@ fun PacksInfoBottomSheet(
         bottomContent = {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.S800),
+                    .fillMaxWidth(),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
                 Text(text = dictionaryString(id = R.string.app_okay_action))
@@ -88,7 +85,7 @@ fun PacksInfoBottomSheet(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewPackDetailsBottomSheet() {
     val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     val exampleLocations = listOf(

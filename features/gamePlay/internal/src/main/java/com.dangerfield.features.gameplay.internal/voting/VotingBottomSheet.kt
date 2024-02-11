@@ -2,11 +2,9 @@ package com.dangerfield.features.gameplay.internal.voting
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.button.Button
@@ -18,8 +16,8 @@ import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessor
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
 @Composable
@@ -46,9 +44,7 @@ fun VotingBottomSheet(
         content = { VotingExplanationBlock(hasVoted) },
         bottomContent = {
             Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.S800),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = { onDismiss(bottomSheetState) }
             ) {
                 Text(text = dictionaryString(id = R.string.app_okay_action))
@@ -79,7 +75,7 @@ fun VotingExplanationBlock(hasVoted: Boolean = false) {
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewVotingBottomSheet() {
     val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {

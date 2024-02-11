@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dangerfield.features.gameplay.navigateToGameHelp
 import com.dangerfield.features.gameplay.navigateToGamePlayScreen
 import com.dangerfield.features.videoCall.navigateToVideoCallBottomSheet
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Action.LeaveGame
@@ -86,6 +87,7 @@ class WaitingRoomModuleNavGraphBuilder @Inject constructor(
                 onStartGameClicked = { viewModel.takeAction(StartGame) },
                 onCallLinkButtonClicked = router::navigateToVideoCallBottomSheet,
                 onLeaveGameClicked = { viewModel.takeAction(LeaveGame) },
+                onHelpClicked = router::navigateToGameHelp,
                 onChangeNameClicked = { router.navigateToChangeName(state.accessCode) },
                 minPlayers = gameConfig.minPlayers,
                 maxPlayers = gameConfig.maxPlayers

@@ -8,10 +8,10 @@ import com.dangerfield.features.qa.internal.QaViewModel.DisplayableConfigValue
 import com.dangerfield.features.qa.internal.QaViewModel.DisplayableExperiment
 import com.dangerfield.features.qa.internal.item.QASwitchItem
 import com.dangerfield.features.qa.internal.item.QaInfoItem
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
@@ -134,7 +134,6 @@ private fun ExperimentsList(
                                 Text(text = description)
                             }
                         },
-                        isDebug = item.isDebugOnly
                     )
                 }
 
@@ -158,7 +157,7 @@ private fun ExperimentsList(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 fun PreviewQaScreen() {
     PreviewContent {
         QaScreen(

@@ -12,7 +12,7 @@ import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 

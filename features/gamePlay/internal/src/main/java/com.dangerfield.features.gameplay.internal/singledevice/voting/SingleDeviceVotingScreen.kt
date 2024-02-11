@@ -19,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.ads.OddOneOutAd
@@ -29,11 +28,11 @@ import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
 import com.dangerfield.features.gameplay.internal.singledevice.EndOrGoBackDialog
 import com.dangerfield.features.gameplay.internal.ui.GamePlayGrid
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1000
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
@@ -272,7 +271,7 @@ private fun VotingScreenContent(
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        style = if (hasSelectedVote) ButtonStyle.Filled else ButtonStyle.Outlined,
+                        style = ButtonStyle.Filled ,
                         enabled = hasSelectedVote,
                     ) {
                         Text(
@@ -312,7 +311,7 @@ private fun VotingScreenContent(
             VerticalSpacerS1000()
 
             Button(
-                type = ButtonType.Regular,
+                type = ButtonType.Secondary,
                 onClick = onEndGameClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -325,7 +324,7 @@ private fun VotingScreenContent(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewSingleDeviceVotingScreen() {
     PreviewContent {
         SingleDeviceVotingScreen(

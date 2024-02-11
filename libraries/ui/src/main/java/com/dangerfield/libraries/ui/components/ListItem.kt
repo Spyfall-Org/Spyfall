@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.icon.Icon
@@ -58,7 +58,7 @@ fun ListItem(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 fun PreviewSettingsOption() {
     PreviewContent(showBackground = true) {
         ListItem(

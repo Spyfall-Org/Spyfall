@@ -1,6 +1,5 @@
 package com.dangerfield.spyfall
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -77,8 +76,6 @@ class MainActivity : ComponentActivity() {
 
     private fun setAppContent() {
         setContent {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
             val state by mainActivityViewModel.state.collectAsStateWithLifecycle()
 
             // TODO make the app still usable when there is an error.
@@ -88,7 +85,6 @@ class MainActivity : ComponentActivity() {
                 isUpdateRequired = state.isUpdateRequired,
                 hasBlockingError = state.hasBlockingError,
                 accentColor = state.accentColor,
-                darkModeConfig = state.darkModeConfig,
                 networkMonitor = networkMonitor,
                 adsConfig = adsConfig,
                 metricsTracker = metricsTracker,

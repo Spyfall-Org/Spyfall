@@ -20,10 +20,10 @@ import com.dangerfield.features.ads.ui.AdBanner
 import com.dangerfield.features.ads.OddOneOutAd
 import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS800
 import com.dangerfield.libraries.ui.components.Screen
@@ -174,7 +174,7 @@ private fun GamePlayScreenContent(
                 Spacer(modifier = Modifier.height(Spacing.S800))
 
                 Button(
-                    type = ButtonType.Regular,
+                    type = ButtonType.Secondary,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onEndGameClicked
                 ) {
@@ -188,7 +188,7 @@ private fun GamePlayScreenContent(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun SingleDeviceGamePlayScreenPreview() {
     PreviewContent {
         SingleDeviceGamePlayScreen(

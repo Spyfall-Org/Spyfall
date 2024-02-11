@@ -115,7 +115,7 @@ complexity:
     threshold: 600
   LongMethod:
     active: true
-    ignoreAnnotated: ['Preview', 'Composable', 'ThemePreviews']
+    ignoreAnnotated: ['Preview', 'Composable', 'Preview']
     threshold: 120
   LongParameterList:
     active: true
@@ -540,7 +540,7 @@ style:
     maxJumpCount: 1
   MagicNumber:
     active: false
-    ignoreAnnotated: ['Composable', 'Preview', 'ThemePreviews' ]
+    ignoreAnnotated: ['Composable', 'Preview', 'Preview' ]
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
     ignoreNumbers:
       - '-1'
@@ -644,7 +644,7 @@ style:
     active: true
   UnusedPrivateMember:
     active: true
-    ignoreAnnotated: ['Preview', 'ThemePreviews']
+    ignoreAnnotated: ['Preview', 'Preview']
     allowedNames: '(_|ignored|expected|serialVersionUID)'
   UseAnyOrNoneInsteadOfFind:
     active: false

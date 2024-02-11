@@ -26,7 +26,7 @@ class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
 
             val buildInfo = LocalBuildInfo.current
 
-            if (buildInfo.buildType !in listOf(BuildType.DEBUG, BuildType.DEBUG)) {
+            if (buildInfo.buildType !in listOf(BuildType.DEBUG, BuildType.QA)) {
                 router.goBack()
                 return@composable
             }

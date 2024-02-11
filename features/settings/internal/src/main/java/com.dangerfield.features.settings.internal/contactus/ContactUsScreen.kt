@@ -42,13 +42,13 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.components.header.Header
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
+import com.dangerfield.libraries.ui.bounceClick
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
@@ -280,9 +280,6 @@ private fun Form(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            if (isFormValid) {
-                                onSubmitClicked()
-                            }
                             focusManager.clearFocus()
                         }
                     )
@@ -301,7 +298,7 @@ private fun Form(
             }
         } else {
             Button(
-                style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
+                style = ButtonStyle.Filled,
                 enabled = isFormValid,
                 onClick = {
                     focusManager.clearFocus()
@@ -344,7 +341,7 @@ private fun ContactTypeOption(
 
     Row(
         modifier = Modifier
-            .clickable(interactionSource, rememberRipple()) {
+            .bounceClick(interactionSource, rememberRipple()) {
                 state.onClicked()
             }
             .fillMaxWidth()
@@ -393,7 +390,7 @@ private fun FormField(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewSettingsScreen() {
     PreviewContent {
         ContactUsScreen(

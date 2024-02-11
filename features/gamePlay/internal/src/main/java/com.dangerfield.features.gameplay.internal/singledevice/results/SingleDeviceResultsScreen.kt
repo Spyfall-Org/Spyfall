@@ -37,8 +37,8 @@ import com.dangerfield.libraries.ui.components.icon.CircularIcon
 import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
@@ -187,7 +187,7 @@ private fun ResultsScreenContent(
             Spacer(modifier = Modifier.height(Spacing.S800))
 
             Button(
-                type = ButtonType.Regular,
+                type = ButtonType.Secondary,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onEndGameClicked
             ) {
@@ -231,7 +231,7 @@ private fun TextCard(oddOneOutName: String) {
 }
 
 @Composable
-@ThemePreviews
+@Preview
 fun SingleDeviceResultsScreenPreview() {
     PreviewContent {
         SingleDeviceResultsScreen(

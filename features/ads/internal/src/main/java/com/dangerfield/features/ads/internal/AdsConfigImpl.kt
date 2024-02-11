@@ -14,7 +14,8 @@ class AdsConfigImpl @Inject constructor(
     private val isSingleDeviceResultsAdEnabledFlag: IsSingleDeviceResultsAdEnabledFlag,
     private val isRoleRevealAdEnabledFlag: IsRoleRevealAdEnabledFlag,
     private val isGameRestartInterstitialAdEnabledFlag: IsGameRestartInterstitialAdEnabledFlag,
-    private val gameResetInterstitialAdFrequencyConfig: GameResetInterstitialAdFrequency
+    private val gameResetInterstitialAdFrequencyConfig: GameResetInterstitialAdFrequency,
+    private val areAllAdsDisabled: AreAllAdsDisabled
 ) : AdsConfig {
     override val isWaitingRoomAdEnabled: Boolean
         get() = isWaitingRoomAdEnabledFlag.value
@@ -40,13 +41,14 @@ class AdsConfigImpl @Inject constructor(
     override val gameRestInterstitialAdFrequency: Int
         get() = gameResetInterstitialAdFrequencyConfig.value
 
-    override fun isAdEnabled(ad: OddOneOutAd) = when(ad) {
-        OddOneOutAd.SingleDeviceVoting -> isSingleDeviceVotingAdEnabled
-        OddOneOutAd.SingleDeviceResults -> isSingleDeviceResultsAdEnabled
-        OddOneOutAd.RoleRevealBanner -> isRoleRevealAdEnabled
-        OddOneOutAd.WaitingRoomBanner -> isWaitingRoomAdEnabled
-        OddOneOutAd.MultiPlayerGamePlayBanner -> isMultiPlayerGamePlayAdEnabled
-        OddOneOutAd.SingleDeviceGamePlayBanner -> isSingleDeviceGamePlayAdEnabled
-        OddOneOutAd.GameRestartInterstitial -> isGameRestartInterstitialAdEnabled
-    }
+    override fun isAdEnabled(ad: OddOneOutAd) = if (areAllAdsDisabled.value) false else
+        when (ad) {
+            OddOneOutAd.SingleDeviceVoting -> isSingleDeviceVotingAdEnabled
+            OddOneOutAd.SingleDeviceResults -> isSingleDeviceResultsAdEnabled
+            OddOneOutAd.RoleRevealBanner -> isRoleRevealAdEnabled
+            OddOneOutAd.WaitingRoomBanner -> isWaitingRoomAdEnabled
+            OddOneOutAd.MultiPlayerGamePlayBanner -> isMultiPlayerGamePlayAdEnabled
+            OddOneOutAd.SingleDeviceGamePlayBanner -> isSingleDeviceGamePlayAdEnabled
+            OddOneOutAd.GameRestartInterstitial -> isGameRestartInterstitialAdEnabled
+        }
 }

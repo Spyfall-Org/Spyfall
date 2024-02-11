@@ -14,9 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.ui.preview.PreviewContent
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Spacing
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerS1000
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
@@ -93,7 +93,7 @@ private fun SingleDeviceInfoScreenContent(
             VerticalSpacerS1000()
 
             Button(
-                type = ButtonType.Regular,
+                type = ButtonType.Secondary,
                 onClick = onEndGameClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -106,7 +106,7 @@ private fun SingleDeviceInfoScreenContent(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 fun SingleDeviceInfoScreenPreview() {
     PreviewContent {
         SingleDeviceInfoScreen(

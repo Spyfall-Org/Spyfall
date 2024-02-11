@@ -32,8 +32,8 @@ import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.InputField
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.oddoneoout.features.joingame.internal.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -169,7 +169,7 @@ private fun JoinGameScreenContent(
                 Button(
                     onClick = onJoinGameClicked,
                     modifier = Modifier.fillMaxWidth(),
-                    style = if (isFormValid) ButtonStyle.Filled else ButtonStyle.Outlined,
+                    style = ButtonStyle.Filled,
                     enabled = isFormValid,
                 ) {
                     Text(text = dictionaryString(R.string.joinGame_join_action))
@@ -181,7 +181,7 @@ private fun JoinGameScreenContent(
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 fun PreviewJoinGameScreen() {
     PreviewContent() {

@@ -16,14 +16,15 @@ import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
+import com.dangerfield.libraries.ui.bounceClick
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.preview.PreviewContent
-import com.dangerfield.libraries.ui.preview.ThemePreviews
+import com.dangerfield.libraries.ui.PreviewContent
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.settings.internal.R
 
@@ -173,6 +174,7 @@ private fun Card(
     content: @Composable () -> Unit
 ) {
     Surface(
+        modifier = Modifier.bounceClick(scaleDown = 0.9f),
         color = OddOneOutTheme.colorScheme.surfacePrimary,
         contentColor = OddOneOutTheme.colorScheme.onSurfacePrimary,
         elevation = Elevation.Fixed,
@@ -184,7 +186,7 @@ private fun Card(
 }
 
 @Composable
-@ThemePreviews
+@Preview
 private fun PreviewSettingsScreen() {
     PreviewContent {
         StatsScreen(
