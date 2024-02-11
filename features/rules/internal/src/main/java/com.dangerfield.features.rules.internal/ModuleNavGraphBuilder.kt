@@ -25,7 +25,7 @@ class ModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
             )
 
             RulesBottomSheet(
-                onDismissRequest = router::dismissSheet
+                onDismiss = router::dismissSheet
             )
         }
     }

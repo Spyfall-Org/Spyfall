@@ -70,8 +70,10 @@ class OddOneOutApplication : Application() {
     private fun setupFireStore() {
         val analytics = firebaseAnalytics.get()
         val firestore = firebaseFirestore.get()
+        val shouldCollectAnalytics = !BuildConfig.IS_QA
 
-        analytics.setAnalyticsCollectionEnabled(true)
+        analytics.setAnalyticsCollectionEnabled(shouldCollectAnalytics)
+
         analytics.setSessionTimeoutDuration(
             SessionRepository.SESSION_MAXIMUM_TIME_AWAY.inWholeMilliseconds
         )

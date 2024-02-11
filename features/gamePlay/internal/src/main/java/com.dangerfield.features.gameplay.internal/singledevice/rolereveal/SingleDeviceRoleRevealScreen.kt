@@ -26,7 +26,7 @@ import com.dangerfield.features.gameplay.internal.DisplayablePlayer
 import com.dangerfield.features.gameplay.internal.singledevice.EndGameDialog
 import com.dangerfield.features.gameplay.internal.singledevice.EndOrGoBackDialog
 import com.dangerfield.features.gameplay.internal.ui.GamePlayGrid
-import com.dangerfield.features.gameplay.internal.ui.RoleCard
+import com.dangerfield.features.gameplay.RoleCard
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.PreviewContent

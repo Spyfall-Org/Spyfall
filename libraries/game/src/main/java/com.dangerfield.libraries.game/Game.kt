@@ -21,6 +21,7 @@ data class Game(
      * This location key that is randomly chosen from the list of locations of the chosen packs
      * It is assigned by the creator of the game
      */
+    // TODO I may change this to secret
     val locationName: String,
 
     /**

@@ -1,151 +1,139 @@
-@file:Suppress("MaxLineLength")
 package com.dangerfield.features.rules.internal
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.dangerfield.features.gameplay.RoleCard
 import com.dangerfield.libraries.dictionary.dictionaryString
+import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
-import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS100
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.VerticalSpacerS800
+import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BasicBottomSheet
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetState
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.BottomSheetValue
-import com.dangerfield.libraries.ui.components.modal.bottomsheet.dragHandleTopAccessory
+import com.dangerfield.libraries.ui.components.modal.bottomsheet.iconTopAccessory
 import com.dangerfield.libraries.ui.components.modal.bottomsheet.rememberBottomSheetState
 import com.dangerfield.libraries.ui.components.text.BulletRow
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.PreviewContent
-import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.rules.internal.R
 
 @Composable
 fun RulesBottomSheet(
-    onDismissRequest: (BottomSheetState) -> Unit,
     modifier: Modifier = Modifier,
-    sheetState: BottomSheetState = rememberBottomSheetState(),
+    bottomSheetState: BottomSheetState = rememberBottomSheetState(),
+    onDismiss: (BottomSheetState) -> Unit
 ) {
+
     BasicBottomSheet(
-        onDismissRequest = { onDismissRequest(sheetState) },
+        onDismissRequest = { onDismiss(bottomSheetState) },
+        state = bottomSheetState,
+        topAccessory = iconTopAccessory(icon = SpyfallIcon.Question(null)),
         modifier = modifier,
-        state = sheetState,
-        showCloseButton = true,
-        topAccessory = dragHandleTopAccessory(),
         topContent = {
-            Text(text = dictionaryString(R.string.rules_bottomSheet_header))
+            Text(text = dictionaryString(R.string.gamePlayHelp_howToPlay_header))
         },
         content = {
-            RulesContent()
-        }
-    )
-}
+            ScrollingColumnWithFadingEdge {
 
-@Composable
-private fun RulesContent() {
-    ScrollingColumnWithFadingEdge(
-        Modifier.padding(horizontal = Spacing.S800)
-    ) {
-        Body(text = dictionaryString(R.string.rules_tldr_text))
-        VerticalSpacerS800()
+                BulletRow {
+                    Body(text = dictionaryString(R.string.rules_pointOne_text))
+                }
 
-        val overviewTexts = dictionaryString(R.string.rules_overviewSectionParts_text).split("\n")
-        Section(title = dictionaryString(R.string.rules_overview_header)) {
-            overviewTexts.forEachIndexed { index, it ->
-                Body(text = it)
-                if (index != overviewTexts.lastIndex) {
+                RoleCard(
+                    modifier = Modifier.scale(0.6f),
+                    role = dictionaryString(R.string.rules_roleExample_text),
+                    text = dictionaryString(id = R.string.gamePlay_playerRoleTip_text),
+                    location = dictionaryString(R.string.rules_locationExample_text),
+                    isTheOddOneOut = false,
+                    isVisible = true,
+                    onHideShowClicked = { -> },
+                )
+
+                BulletRow {
+                    Body(text = dictionaryString(R.string.rules_pointTwo_text))
+                }
+
+                VerticalSpacerS800()
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_people_odd_one_out),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                )
+
+                VerticalSpacerS800()
+
+                BulletRow {
+                    Body(text = dictionaryString(R.string.rules_pointThree_text))
+                }
+
+
+                VerticalSpacerS800()
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_people_question),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                )
+
+                VerticalSpacerS800()
+
+                BulletRow {
+                    Body(text = dictionaryString(R.string.rules_pointFour_text))
+                }
+
+                VerticalSpacerS500()
+
+                BulletRow {
+                    Body(text = dictionaryString(R.string.rules_pointFive_text))
+                }
+
+                VerticalSpacerS1200()
+
+                SubTitle(text = dictionaryString(R.string.rules_howToWinSection_header))
+
+                VerticalSpacerS500()
+                val howToWinBullets =
+                    dictionaryString(R.string.rules_howToWinSectionBullets_text).split("\n")
+
+                howToWinBullets.forEach {
+                    BulletRow {
+                        Body(text = it)
+                    }
+
                     VerticalSpacerS500()
                 }
+
+                VerticalSpacerS1200()
+            }
+        },
+        bottomContent = {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = { onDismiss(bottomSheetState) }
+            ) {
+                Text(text = dictionaryString(id = R.string.app_okay_action))
             }
         }
-
-        Section(title = dictionaryString(R.string.rules_gettingStartedSection_header)) {
-            SubTitle(dictionaryString(R.string.rules_joinAGameSection_header))
-
-            val joinAGameBullets = dictionaryString(R.string.rules_joinAGameBullets_text).split("\n")
-            joinAGameBullets.forEach { s ->
-                BulletRow {
-                    Body(text = s)
-                }
-                VerticalSpacerS500()
-            }
-
-            VerticalSpacerS500()
-
-            SubTitle(dictionaryString(R.string.rules_createAGameSection_header))
-
-            val createAGameBullets = dictionaryString(R.string.rules_createAGameBullets_text).split("\n")
-            createAGameBullets.forEach {
-                BulletRow {
-                    Body(text = it)
-                }
-            }
-        }
-
-        Section(title = dictionaryString(R.string.rules_gamePlaySection_header)) {
-
-            Body(text = dictionaryString(R.string.rules_gamePlayWhatsVisible_header))
-
-            VerticalSpacerS500()
-
-            val whatsVisibleBullets = dictionaryString(R.string.rules_gamePlayWhatsVisibleBullets_text).split("\n")
-
-            whatsVisibleBullets.forEach {
-                BulletRow {
-                    Body(text = it)
-                }
-            }
-
-            VerticalSpacerS500()
-
-            SubTitle(text = dictionaryString(R.string.rules_theGoalSection_header))
-
-            val goalBullets = dictionaryString(R.string.rules_goalBullets_text).split("\n")
-            goalBullets.forEach {
-                Body(text = it)
-                VerticalSpacerS500()
-            }
-
-            SubTitle(text = dictionaryString(R.string.rules_questioningSection_header))
-
-            Body(text = dictionaryString(R.string.rules_questioningSection_body))
-
-            VerticalSpacerS800()
-
-            SubTitle(text = dictionaryString(R.string.rules_howToWinSection_header))
-
-            val howToWinBullets = dictionaryString(R.string.rules_howToWinSectionBullets_text).split("\n")
-
-            howToWinBullets.forEach {
-                BulletRow {
-                    Body(text = it)
-                }
-
-                VerticalSpacerS500()
-            }
-        }
-    }
-}
-
-@Composable
-private fun Section(title: String, content: @Composable () -> Unit) {
-    Column {
-        Title(text = title)
-        VerticalSpacerS800()
-        content()
-        VerticalSpacerS1200()
-    }
-}
-
-@Composable
-private fun Title(text: String) {
-    Column {
-        Text(text = text, typographyToken = OddOneOutTheme.typography.Heading.H800)
-    }
+    )
 }
 
 @Composable
@@ -165,12 +153,13 @@ private fun Body(text: String) {
 
 @Composable
 @Preview
-private fun PreviewRulesScreen() {
+private fun PreviewRulesBottomSheet() {
+    val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
     PreviewContent {
-        val sheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
         RulesBottomSheet(
-            sheetState = sheetState,
-            onDismissRequest = {}
+            bottomSheetState = bottomSheetState,
+            onDismiss = { }
+
         )
     }
 }

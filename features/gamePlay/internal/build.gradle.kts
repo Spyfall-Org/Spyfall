@@ -20,6 +20,7 @@ dependencies {
     implementation(projects.features.ads)
     implementation(projects.features.ads.ui)
     implementation(projects.features.welcome)
+    implementation(projects.features.rules)
     implementation(projects.features.waitingRoom)
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)

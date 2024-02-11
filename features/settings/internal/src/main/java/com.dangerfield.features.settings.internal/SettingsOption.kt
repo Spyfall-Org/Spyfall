@@ -16,6 +16,8 @@ import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.PreviewContent
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.ui.rememberRipple
+
 @Composable
 fun SettingsOption(
     text: @Composable () -> Unit,
@@ -27,7 +29,7 @@ fun SettingsOption(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .bounceClick { onClick() }
+            .bounceClick(indication = rememberRipple()) { onClick() }
             .padding(vertical = Spacing.S500,),
         verticalAlignment = Alignment.CenterVertically
     ) {

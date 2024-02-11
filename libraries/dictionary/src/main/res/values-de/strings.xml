@@ -250,26 +250,26 @@
     <string name="colorPicker_random_label">Zufällig</string>
 
     <!-- ///////////////////// Rules Strings /////////////////////-->
-    <string name="rules_bottomSheet_header">Regeln</string>
-    <string name="rules_tldr_text">Odd one out ist ein Spiel aus Täuschung, Irreführung und Deduktion.</string>
-    <string name="rules_overview_header">Überblick:</string>
-    <string name="rules_overviewSectionParts_text">Zu Beginn des Spiels erhält jeder Spieler eine Rolle an einem geheimen Ort, außer einem Spieler, der im Dunkeln gelassen wird (der Außenseiter).\nDie Spieler stellen einander abwechselnd Fragen über den Ort und ihre Rolle, um den Außenseiter zu identifizieren, ohne den Ort preiszugeben.\nDer Außenseiter muss mitspielen, so tun, als ob er den Ort kennt, während er versucht, ihn zu erschließen, ohne als der Außenseiter entdeckt zu werden.</string>
-    <string name="rules_gettingStartedSection_header">Erste Schritte</string>
-    <string name="rules_joinAGameSection_header">Einem Spiel beitreten</string>
-    <string name="rules_joinAGameBullets_text">Um einem Spiel beizutreten, musst du den Zugangscode eines bestehenden Spiels haben. Diesen kannst du vom Spieler erhalten, der es erstellt hat.</string>
-    <string name="rules_createAGameSection_header">Ein Spiel erstellen</string>
-    <string name="rules_createAGameBullets_text"><![CDATA[<b>Ortspakete auswählen:</b> Jedes Paket enthält eine einzigartige Menge an Orten und Rollen zum Spielen.\n<b>Zeitlimit wählen:</b> Wähle, wie lange Spieler Zeit haben, ihr Ziel zu erreichen. 5 Minuten werden für die meisten Spiele empfohlen.\n<b>Regulär oder Einzelgerät:</b> Wähle, ob jeder auf seinem eigenen Gerät spielt oder auf einem gemeinsamen Gerät unter den Spielern.\nSobald ein Spiel erstellt ist, wird ein Zugangscode generiert, damit andere Spieler dem Spiel beitreten können. Sobald alle Spieler bereit sind, kann jeder das Spiel starten.]]></string>
-    <string name="rules_gamePlaySection_header">Spielablauf:</string>
-    <string name="rules_gamePlayWhatsVisible_header">Sobald das Spiel beginnt, werden die Spieler sehen können:</string>
-    <string name="rules_gamePlayWhatsVisibleBullets_text">Den zufällig gewählten Ort und ihre Rolle (es sei denn, sie sind der Außenseiter)\nDen Countdown des Zeitlimits\nEine Liste aller Spieler und möglicher Spielorte</string>
-    <string name="rules_theGoalSection_header">Das Ziel</string>
-    <string name="rules_goalBullets_text"><![CDATA[<b>Spieler:</b> Den Außenseiter zu identifizieren, ohne den Ort preiszugeben.\n<b>Der Außenseiter:</b> Den Ort zu identifizieren, ohne zu verraten, dass er der Außenseiter ist.]]></string>
-    <string name="rules_questioningSection_header">Befragung</string>
-    <string name="rules_questioningSection_body">Spieler stellen einander abwechselnd Fragen über den Ort und ihre Rolle.\n\nDie Fragen und Antworten sollten vage genug sein, um den Ort nicht vor dem Außenseiter zu enthüllen, aber spezifisch genug, um den Außenseiter zu identifizieren. Der Außenseiter muss mitspielen und versuchen, nicht entdeckt zu werden, während er versucht, den Ort zu erschließen.\n\nEin Spieler wird zufällig ausgewählt, um zu beginnen</string>
     <string name="rules_howToWinSection_header">Wie man gewinnt</string>
     <string name="rules_howToWinSectionBullets_text">Zu jedem Zeitpunkt kann der Außenseiter beschließen, sich zu offenbaren und den Ort zu erraten. Wenn sie falsch liegen, gewinnen die Spieler, andernfalls gewinnt der Außenseiter.\nZu jedem Zeitpunkt können die Spieler beschließen, das Spiel zu stoppen und zu raten, wer der Außenseiter ist. Wenn sie richtig raten, gewinnen die Spieler, andernfalls offenbart sich der Außenseiter und gewinnt.\nNachdem der Timer abgelaufen ist, müssen die Spieler sich einigen, jemanden zu beschuldigen, der Außenseiter zu sein. Nach der Beschuldigung offenbart sich der Außenseiter. Wenn die Spieler falsch beschuldigt haben, gewinnt der Außenseiter, Wenn die Spieler richtig beschuldigt haben, dann hat der Außenseiter die Chance, das Spiel durch richtiges Erraten des Ortes unentschieden zu gestalten, andernfalls gewinnen die Spieler.</string>
+    <string name="rules_roleExample_text">Bankangestellter</string>
+    <string name="rules_locationExample_text">Bank</string>
+    <string name="rules_pointOne_text">Zu Beginn des Spiels erhält jeder Spieler einen geheimen Ort und eine Rolle an diesem Ort.</string>
+    <string name="rules_pointTwo_text">Ein Spieler bekommt den geheimen Ort nicht zu sehen. Er ist der Außenseiter.</string>
+    <string name="rules_pointThree_text">Jeder stellt der Reihe nach Fragen über den geheimen Ort und seine Rolle dort.</string>
+    <string name="rules_pointFour_text">Der Außenseiter versucht, den Ort herauszufinden, ohne zu offenbaren, dass er der Außenseiter ist.</string>
+    <string name="rules_pointFive_text">Die Spieler versuchen herauszufinden, wer der Außenseiter ist, ohne den geheimen Ort zu verraten.</string>
 
     <!-- ///////////////////// Blocking Error Strings /////////////////////-->
     <string name="blockingError_screen_header">Das ist peinlich</string>
     <string name="blockingError_error_body">Es scheint, dass wir einen unerfassten Fehler in unserer App haben. Bitte versuche, die App zu beenden und erneut zu starten.</string>
+
+    <string name="app_privacyPolicy_text">Datenschutzrichtlinie</string>
+    <string name="app_termsOfService_text">Nutzungsbedingungen</string>
+    <string name="termsOfService_screen_header">Noch eine kurze Sache…</string>
+    <string name="termsOfService_links_text">Bitte lesen Sie vor dem Fortfahren unsere {termsOfService} und {privacyPolicy} und stimmen Sie diesen zu</string>
+    <string name="termsOfService_confirmation_text">Ich habe die Nutzungsbedingungen und die Datenschutzrichtlinie gelesen und stimme diesen zu</string>
+    <string name="termsOfService_accept_action">Akzeptieren</string>
+    <string name="termsOfService_description_text">Bei der Nutzung von Odd One Out können wir Daten sammeln, die für die Funktionalität der App relevant sind. Um dies zu tun, benötigen wir Ihre ausdrückliche Zustimmung zur Speicherung und Verarbeitung dieser Daten.</string>
+
 </resources>

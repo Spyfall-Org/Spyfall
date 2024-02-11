@@ -11,6 +11,7 @@ android {
 }
 dependencies {
     implementation(projects.features.rules)
+    implementation(projects.features.gamePlay)
     implementation(projects.libraries.common)
     implementation(projects.libraries.dictionary)
     implementation(projects.libraries.analytics)

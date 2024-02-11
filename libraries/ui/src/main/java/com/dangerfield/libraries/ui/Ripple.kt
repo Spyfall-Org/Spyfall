@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.Dp
 fun rememberRipple(
     bounded: Boolean = true,
     radius: Dp = Dp.Unspecified,
-    color: Color = Color.Unspecified
+    color: Color = Color.White.copy(alpha = 0.2f)
 ): Indication {
     return RememberMaterialRipple(
         bounded = bounded,

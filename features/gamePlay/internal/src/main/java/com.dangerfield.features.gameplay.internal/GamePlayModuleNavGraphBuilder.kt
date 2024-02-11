@@ -8,20 +8,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dangerfield.features.gameplay.gameHelpRoute
 import com.dangerfield.features.gameplay.gamePlayScreenRoute
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.LoadGamePlay
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.SubmitLocationVote
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Action.SubmitOddOneOutVote
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameKilled
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event.GameReset
-import com.dangerfield.features.gameplay.internal.help.GameHelpBottomSheet
 import com.dangerfield.features.gameplay.internal.ui.GamePlayScreen
 import com.dangerfield.features.gameplay.internal.voting.VotingBottomSheet
 import com.dangerfield.features.gameplay.internal.voting.hasVotedArgument
 import com.dangerfield.features.gameplay.internal.voting.navigateToVotingInfo
 import com.dangerfield.features.gameplay.internal.voting.votingInfoRoute
-import com.dangerfield.features.gameplay.navigateToGameHelp
+import com.dangerfield.features.rules.navigateToRules
 import com.dangerfield.features.videoCall.navigateToVideoCallBottomSheet
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.features.welcome.welcomeNavigationRoute
@@ -74,7 +72,7 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
                 isTimeUp = state.isTimeUp,
                 onVotingQuestionClicked = router::navigateToVotingInfo,
                 isLoadingVote = state.isLoadingVoteSubmit,
-                onGamePlayQuestionClicked = router::navigateToGameHelp,
+                onGamePlayQuestionClicked = router::navigateToRules,
                 onSubmitPlayerVoteClicked = { viewModel.takeAction(SubmitOddOneOutVote(id = it)) },
                 onSubmitLocationVoteClicked = { viewModel.takeAction(SubmitLocationVote(location = it)) },
                 location = state.location,
@@ -111,21 +109,6 @@ class GamePlayModuleNavGraphBuilder @Inject constructor(
             VotingBottomSheet(
                 onDismiss = router::dismissSheet,
                 hasVoted = hasVoted
-            )
-        }
-
-        bottomSheet(
-            route = gameHelpRoute.navRoute,
-            arguments = gameHelpRoute.navArguments
-        ) {
-
-            PageLogEffect(
-                route = gameHelpRoute,
-                type = PageType.BottomSheet
-            )
-
-            GameHelpBottomSheet(
-                onDismiss = router::dismissSheet
             )
         }
     }

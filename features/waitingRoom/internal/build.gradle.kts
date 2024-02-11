@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.features.waitingRoom)
     implementation(projects.features.videoCall)
     implementation(projects.features.gamePlay)
+    implementation(projects.features.rules)
     implementation(projects.features.ads.ui)
     implementation(projects.libraries.common)
     implementation(projects.libraries.dictionary)

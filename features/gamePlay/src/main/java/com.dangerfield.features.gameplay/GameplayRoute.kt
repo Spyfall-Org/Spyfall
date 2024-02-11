@@ -68,13 +68,3 @@ val singleDeviceGamePlayRoute = route("single_device_game_play") {
     argument(accessCodeArgument)
     argument(timeLimitArgument)
 }
-
-
-fun Router.navigateToGameHelp() {
-    navigate(
-        gameHelpRoute.noArgRoute()
-    )
-}
-
-val gameHelpRoute = route("in_game_help_bottom_sheet")
-
