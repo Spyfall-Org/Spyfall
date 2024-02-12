@@ -19,7 +19,7 @@ class DefaultIsUpdateRequired @Inject constructor(
     override suspend operator fun invoke(): Flow<Boolean> =
         appConfigFlow.map {
             val minVersionCode = it.value(minVersionCodeValue)
-            Timber.d("Min Version Code Received: $minVersionCodeValue() | build version: ${buildInfo.versionCode} | Is update required: $it")
+            Timber.d("Min Version Code Received: ${minVersionCodeValue.value} | build version: ${buildInfo.versionCode} | Is update required: $it")
             buildInfo.versionCode < minVersionCode
         }
 }

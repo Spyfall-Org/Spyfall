@@ -36,7 +36,7 @@ class FirebaseConfigDataSource
                 if (it.isNullOrEmpty()) {
                     Timber.d("No document config found for ${buildInfo.versionName} in the collection $CONFIG_COLLECTION_KEY")
                 } else {
-                    Timber.d("Document config found for ${buildInfo.versionName} was: \n $it")
+                    Timber.d("firebase Document config found for ${buildInfo.versionName} was: \n $it")
                 }
             }
             .orEmpty()
