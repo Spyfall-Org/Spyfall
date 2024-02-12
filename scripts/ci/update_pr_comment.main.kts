@@ -8,6 +8,7 @@ import org.kohsuke.github.GHRelease
 import org.kohsuke.github.GHRepository
 import okhttp3.OkHttpClient
 import org.kohsuke.github.extras.okhttp3.OkHttpConnector
+import org.kohsuke.github.GitHubBuilder
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
