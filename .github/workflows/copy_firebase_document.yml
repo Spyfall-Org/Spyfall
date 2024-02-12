@@ -6,14 +6,22 @@ on:
         description: 'Path Document to copy (ie "config-android/1.2.5")'
         required: true
       environment_to_copy_from:
-        description: 'Environment to copy from (ie "debug, release")'
+        type: choice
         required: true
+        description: 'Environment to copy from (ie "debug, release")'
+        options:
+          - debug
+          - release
       document_to_copy_to:
         description: 'Path Document to copy to (ie "config-android/1.2.6")'
         required: true
       environment_to_copy_to:
-        description: 'Environment to copy from (ie "debug, release")'
+        type: choice
         required: true
+        description: 'Environment to copy from (ie "debug, release")'
+        options:
+          - debug
+          - release
       double_check:
         description: 'Have you double checked that everything is correct? Type "hamburger" to confirm.'
         required: true
