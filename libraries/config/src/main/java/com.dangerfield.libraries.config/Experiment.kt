@@ -34,8 +34,7 @@ abstract class Experiment<out T : Any> {
      * }
      * ```
      */
-    open val id: String
-        get() = javaClass.simpleName.replaceFirstChar { it.lowercase(Locale.getDefault()) }
+    abstract val id: String
 
     /**
      * The value for the experiment when the experiment is OFF

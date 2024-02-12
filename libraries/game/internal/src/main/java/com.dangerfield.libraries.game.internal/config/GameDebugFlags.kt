@@ -13,6 +13,8 @@ class ForceShortGames @Inject constructor(
     override val displayName: String
         get() = "Force Short Games"
 
+    override val id: String = "forceShortGames"
+
     override val description: String
         get() = "When on games will be forces to be 10 seconds long"
 

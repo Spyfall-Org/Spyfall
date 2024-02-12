@@ -14,6 +14,8 @@ class IsSingleDeviceModeEnabled @Inject constructor(
     override val displayName: String
         get() = "Single Device Mode"
 
+    override val id: String = "isSingleDeviceModeEnabled"
+
     override val control: Boolean
         get() = false
 
@@ -35,6 +37,9 @@ class IsVideoCallLinkEnabled @Inject constructor(
 ): Experiment<Boolean>() {
     override val displayName: String
         get() = "Video Call Links Enabled"
+
+    override val id: String
+        get() = "isVideoCallLinkEnabled"
 
     override val control: Boolean
         get() = false
@@ -88,6 +93,9 @@ class IsPublicGamingEnabled @Inject constructor(
 ): Experiment<Boolean>() {
     override val displayName: String
         get() = "Public Gaming"
+
+    override val id: String
+        get() = "isPublicGamingEnabled"
 
     override val description: String
         get() = "Create games open to anyone to join, video link required."
