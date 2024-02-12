@@ -159,8 +159,8 @@ These assets are automatically generated on pull requests. Some links may not wo
 
 fun getRepository(githubRepoInfo: String, githubToken: String): GHRepository =
     GitHub
-        .connectUsingOAuth(githubToken)
         .withConnector(OkHttpConnector(OkHttpClient()))
+        .connectUsingOAuth(githubToken)
         .getRepository(githubRepoInfo)
 
 doWork()
