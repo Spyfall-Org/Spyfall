@@ -1,0 +1,57 @@
+{
+  "packName": "Landmarks Pack 1",
+  "locations": [
+    {
+      "locationName": "The Great Pyramid of Giza",
+      "roles": ["Pharaoh", "Scribe", "Pyramid Builder", "Priest", "Merchant", "Explorer", "Archaeologist", "Tourist", "Historian"]
+    },
+    {
+      "locationName": "The Eiffel Tower",
+      "roles": ["Tourist", "Painter", "Engineer", "Street Performer", "Photographer", "Local Student", "Waiter", "Fashion Designer", "Romantic Couple"]
+    },
+    {
+      "locationName": "The Statue of Liberty",
+      "roles": ["Tour Guide", "Immigrant", "Photographer", "Historian", "Park Ranger", "Artist", "Student", "Activist", "Street Vendor"]
+    },
+    {
+      "locationName": "The Colosseum",
+      "roles": ["Gladiator", "Senator", "Merchant", "Tourist", "Historian", "Archaeologist", "Pickpocket", "Actor", "Guide"]
+    },
+    {
+      "locationName": "The Great Wall of China",
+      "roles": ["Emperor", "Soldier", "Builder", "Mongol Invader", "Farmer", "Historian", "Tourist", "Photographer", "Teacher"]
+    },
+    {
+      "locationName": "Machu Picchu",
+      "roles": ["Inca Emperor", "Priest", "Farmer", "Explorer", "Archaeologist", "Tourist", "Historian", "Photographer", "Hiker"]
+    },
+    {
+      "locationName": "Taj Mahal",
+      "roles": ["Mughal Emperor", "Princess", "Architect", "Tourist", "Historian", "Photographer", "Gardener", "Poet", "Guide"]
+    },
+    {
+      "locationName": "Stonehenge",
+      "roles": ["Druid Priest", "Celtic Warrior", "Archaeologist", "Tourist", "Historian", "Photographer", "Pagan Worshipper", "Alien Enthusiast", "Hiker"]
+    },
+    {
+      "locationName": "Sydney Opera House",
+      "roles": ["Opera Singer", "Architect", "Tourist", "Photographer", "Ballet Dancer", "Musician", "Guide", "Art Critic", "Street Performer"]
+    },
+    {
+      "locationName": "Mount Everest",
+      "roles": ["Climber", "Sherpa", "Photographer", "Documentary Filmmaker", "Geologist", "Tourist", "Environmental Scientist", "Historian", "Adventurer"]
+    },
+    {
+      "locationName": "Venice Canals",
+      "roles": ["Gondolier", "Tourist", "Artist", "Local Resident", "Historian", "Photographer", "Street Vendor", "Chef", "Museum Guide"]
+    },
+    {
+      "locationName": "The Louvre Museum",
+      "roles": ["Tourist", "Art Historian", "Thief", "Painter", "Student", "Photographer", "Curator", "Security Guard", "Guide"]
+    },
+    {
+      "locationName": "Times Square",
+      "roles": ["Tourist", "Street Performer", "Broadway Actor", "Photographer", "Shop Owner", "Local Resident", "Police Officer", "Journalist", "Food Vendor"]
+    }
+  ]
+}

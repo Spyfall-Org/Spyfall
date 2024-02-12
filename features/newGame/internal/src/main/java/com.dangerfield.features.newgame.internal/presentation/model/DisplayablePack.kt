@@ -1,6 +1,7 @@
 package com.dangerfield.features.newgame.internal.presentation.model
 
 import androidx.core.text.isDigitsOnly
+import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.Pack
 
 data class DisplayablePack(

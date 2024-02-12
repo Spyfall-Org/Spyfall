@@ -44,11 +44,13 @@ fun RoleCard(
         onHideShowClicked = onHideShowClicked,
         isVisible = isVisible,
         role = {
-            BoldPrefixedText(
-                boldText = dictionaryString(R.string.roleCard_role_label),
-                regularText = role,
-                textAlign = TextAlign.Center,
-            )
+            role.takeIf { it.isNotEmpty() }?.let {
+                BoldPrefixedText(
+                    boldText = dictionaryString(R.string.roleCard_role_label),
+                    regularText = role,
+                    textAlign = TextAlign.Center,
+                )
+            }
         },
         location = {
             if (location != null && !isTheOddOneOut) {
@@ -170,7 +172,24 @@ private fun PreviewRoleCardPlayer() {
         Column(Modifier.padding(vertical = 50.dp)) {
             RoleCard(
                 role = "Something that takes up space",
-                text = "Fine the odd one out",
+                text = "Find the odd one out",
+                location = "Some longer location name",
+                isTheOddOneOut = false,
+                isVisible = true,
+                onHideShowClicked = { -> },
+            )
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewRoleCardPlayerNoRole() {
+    PreviewContent(showBackground = true) {
+        Column(Modifier.padding(vertical = 50.dp)) {
+            RoleCard(
+                role = "",
+                text = "Find the odd one out",
                 location = "Some longer location name",
                 isTheOddOneOut = false,
                 isVisible = true,

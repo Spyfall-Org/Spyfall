@@ -28,6 +28,10 @@ class GetGamePlayLocationsImpl @Inject constructor(
             gameConfig.locationsPerGame
         }
 
+        if (numOfLocationsToChoose > totalLocations) {
+            return Try.just(packBank.flatten().toList().shuffled())
+        }
+
         while (gamePlayLocations.size < numOfLocationsToChoose) {
             if (iteration > totalLocations) {
                 return IllegalStateException(

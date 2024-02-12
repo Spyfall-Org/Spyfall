@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.features.newgame.internal.presentation.model.FieldState
 import com.dangerfield.features.newgame.newGameNavigationRoute
@@ -34,7 +35,7 @@ import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.HorizontalSpacerS600
 import com.dangerfield.libraries.ui.PreviewContent
-import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.VerticalSpacerS1200
 import com.dangerfield.libraries.ui.VerticalSpacerS500
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
@@ -43,15 +44,14 @@ import com.dangerfield.libraries.ui.components.Switch
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.header.Header
+import com.dangerfield.libraries.ui.components.icon.IconButton
+import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.AsteriskText
 import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.components.icon.IconButton
-import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.isOpen
 import com.dangerfield.libraries.ui.rememberKeyboardState
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import kotlinx.coroutines.launch
 
@@ -238,7 +238,7 @@ fun NewGameScreen(
 
         if (showPacksInfoBottomSheet) {
             PacksInfoBottomSheet(
-                packs = packsState.backingValue?.map { it.pack } ?: emptyList(),
+                packs = packsState.backingValue ?: emptyList(),
                 onDismiss = {
                     coroutineScope.launch {
                         it.hide()

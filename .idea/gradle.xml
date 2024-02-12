@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/build-logic" name="build-logic">
+                <projects>
+                  <project path="$PROJECT_DIR$/build-logic" />
+                  <project path="$PROJECT_DIR$/build-logic/convention" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/build-logic" />
+            <option value="$PROJECT_DIR$/build-logic/convention" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/ads" />
+            <option value="$PROJECT_DIR$/features/ads/internal" />
+            <option value="$PROJECT_DIR$/features/ads/ui" />
+            <option value="$PROJECT_DIR$/features/blockingError" />
+            <option value="$PROJECT_DIR$/features/blockingError/internal" />
+            <option value="$PROJECT_DIR$/features/colorPicker" />
+            <option value="$PROJECT_DIR$/features/colorPicker/internal" />
+            <option value="$PROJECT_DIR$/features/forcedUpdate" />
+            <option value="$PROJECT_DIR$/features/forcedUpdate/internal" />
+            <option value="$PROJECT_DIR$/features/gamePlay" />
+            <option value="$PROJECT_DIR$/features/gamePlay/internal" />
+            <option value="$PROJECT_DIR$/features/joinGame" />
+            <option value="$PROJECT_DIR$/features/joinGame/internal" />
+            <option value="$PROJECT_DIR$/features/newGame" />
+            <option value="$PROJECT_DIR$/features/newGame/internal" />
+            <option value="$PROJECT_DIR$/features/qa" />
+            <option value="$PROJECT_DIR$/features/qa/internal" />
+            <option value="$PROJECT_DIR$/features/rules" />
+            <option value="$PROJECT_DIR$/features/rules/internal" />
+            <option value="$PROJECT_DIR$/features/settings" />
+            <option value="$PROJECT_DIR$/features/settings/internal" />
+            <option value="$PROJECT_DIR$/features/splash" />
+            <option value="$PROJECT_DIR$/features/termOfService" />
+            <option value="$PROJECT_DIR$/features/termOfService/internal" />
+            <option value="$PROJECT_DIR$/features/videoCall" />
+            <option value="$PROJECT_DIR$/features/videoCall/internal" />
+            <option value="$PROJECT_DIR$/features/waitingRoom" />
+            <option value="$PROJECT_DIR$/features/waitingRoom/internal" />
+            <option value="$PROJECT_DIR$/features/welcome" />
+            <option value="$PROJECT_DIR$/features/welcome/internal" />
+            <option value="$PROJECT_DIR$/libraries" />
+            <option value="$PROJECT_DIR$/libraries/analytics" />
+            <option value="$PROJECT_DIR$/libraries/analytics/internal" />
+            <option value="$PROJECT_DIR$/libraries/common" />
+            <option value="$PROJECT_DIR$/libraries/common/internal" />
+            <option value="$PROJECT_DIR$/libraries/config" />
+            <option value="$PROJECT_DIR$/libraries/config/internal" />
+            <option value="$PROJECT_DIR$/libraries/dictionary" />
+            <option value="$PROJECT_DIR$/libraries/dictionary/internal" />
+            <option value="$PROJECT_DIR$/libraries/flowroutines" />
+            <option value="$PROJECT_DIR$/libraries/game" />
+            <option value="$PROJECT_DIR$/libraries/game/internal" />
+            <option value="$PROJECT_DIR$/libraries/logging" />
+            <option value="$PROJECT_DIR$/libraries/logging/internal" />
+            <option value="$PROJECT_DIR$/libraries/navigation" />
+            <option value="$PROJECT_DIR$/libraries/navigation/internal" />
+            <option value="$PROJECT_DIR$/libraries/network" />
+            <option value="$PROJECT_DIR$/libraries/network/internal" />
+            <option value="$PROJECT_DIR$/libraries/resources" />
+            <option value="$PROJECT_DIR$/libraries/resources/internal" />
+            <option value="$PROJECT_DIR$/libraries/session" />
+            <option value="$PROJECT_DIR$/libraries/session/internal" />
+            <option value="$PROJECT_DIR$/libraries/session/storage" />
+            <option value="$PROJECT_DIR$/libraries/storage" />
+            <option value="$PROJECT_DIR$/libraries/storage/internal" />
+            <option value="$PROJECT_DIR$/libraries/test" />
+            <option value="$PROJECT_DIR$/libraries/test/internal" />
+            <option value="$PROJECT_DIR$/libraries/ui" />
+            <option value="$PROJECT_DIR$/libraries/ui/internal" />
+          </set>
+        </option>
+        <option name="resolveExternalAnnotations" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

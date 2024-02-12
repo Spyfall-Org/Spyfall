@@ -45,6 +45,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.text.TextConfig
 import com.dangerfield.libraries.ui.innerShadow
 import com.dangerfield.libraries.ui.PreviewContent
+import com.dangerfield.libraries.ui.Radius
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import spyfallx.ui.color.ColorToken
 import spyfallx.ui.then
@@ -136,7 +137,7 @@ internal fun BasicButton(
 
 
 @Composable
-private fun BoxScope.drawShineSquiggles() {
+private fun BoxScope.drawShineSquiggles(radius: Radius = Radii.Button) {
     val density = LocalDensity.current
 
     Canvas(modifier = Modifier.Companion.matchParentSize()) {
@@ -144,7 +145,7 @@ private fun BoxScope.drawShineSquiggles() {
         val height = this.size.height
 
         val cornerRadiusOffset = calculateCornerOffset(
-            Radii.Button.cornerSize,
+            radius.cornerSize,
             density,
             width,
             height
@@ -153,7 +154,7 @@ private fun BoxScope.drawShineSquiggles() {
         val topRightSquiggle =
             Path().apply {
                 val topRightStart = Point(
-                    width - cornerRadiusOffset.x - 13.dp.toPx(),
+                    width - cornerRadiusOffset.x - 15.dp.toPx(),
                     cornerRadiusOffset.y - 3.dp.toPx()
                 )
 
@@ -210,7 +211,7 @@ private fun BoxScope.drawShineSquiggles() {
     }
 }
 
-private fun calculateCornerOffset(
+fun calculateCornerOffset(
     cornerSize: CornerSize,
     density: Density,
     contentWidth: Float,
