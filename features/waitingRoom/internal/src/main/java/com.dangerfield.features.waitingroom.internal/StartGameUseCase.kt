@@ -3,17 +3,21 @@ package com.dangerfield.features.waitingroom.internal
 import androidx.core.os.bundleOf
 import com.dangerfield.libraries.analytics.Metric
 import com.dangerfield.libraries.analytics.MetricsTracker
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Player
+import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 import oddoneout.core.Try
+import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Named
 
 class StartGameUseCase @Inject constructor(
     private val packsPackRepository: LocationPackRepository,
     private val metricsTracker: MetricsTracker,
+    private val dictionary: Dictionary,
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository
 ) {
 
@@ -34,12 +38,20 @@ class StartGameUseCase @Inject constructor(
 
         // TODO cleanup
         // this logic is hella repeated, maybe an AssignRolesUseCase?
-        val shuffledRoles = packsPackRepository.getRoles(locationName).getOrThrow().shuffled()
+        val roles = packsPackRepository.getRoles(locationName).getOrThrow()
+        val shuffledRolesQueue = LinkedList(roles.shuffled())
+        val defaultRole = roles.first()
+
         val shuffledPlayers = players.shuffled()
         val oddOneOutIndex = shuffledPlayers.indices.random()
 
         val shuffledPlayersWithRoles = shuffledPlayers.mapIndexed { index, player ->
-            val role = if (index == oddOneOutIndex) "The Odd One Out" else shuffledRoles[index]
+            val role = if (index == oddOneOutIndex) {
+                dictionary.getString(R.string.app_theOddOneOutRole_text)
+            } else {
+                shuffledRolesQueue.poll() ?: defaultRole
+            }
+
             player.copy(role = role, isOddOneOut = index == oddOneOutIndex)
         }
 

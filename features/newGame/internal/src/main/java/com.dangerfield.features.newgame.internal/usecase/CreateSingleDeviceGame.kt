@@ -17,7 +17,10 @@ import com.dangerfield.libraries.session.UpdateActiveGame
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import oddoneout.core.Try
 import oddoneout.core.developerSnackIfDebug
+import timber.log.Timber
 import java.time.Clock
+import java.util.LinkedList
+import java.util.Stack
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,7 +50,8 @@ class CreateSingleDeviceGame @Inject constructor(
         val locations = getGamePlayLocations(packs = packs, isSingleDevice = true).getOrThrow()
         val location = locations.random()
         val userId = session.user.id ?: UUID.randomUUID().toString()
-        val shuffledRoles = location.roles.shuffled()
+        val shuffledRoles = LinkedList(location.roles.shuffled())
+        val defaultRole = location.roles.first()
 
         val host = Player(
             id = userId,
@@ -77,7 +81,8 @@ class CreateSingleDeviceGame @Inject constructor(
             val role = if (index == oddOneOutIndex) {
                 dictionary.getString(R.string.app_theOddOneOutRole_text)
             } else {
-                shuffledRoles[index]
+                Timber.e("Had to use a default role for a player, this should not happen")
+                shuffledRoles.poll() ?: defaultRole
             }
 
             player.copy(role = role, isOddOneOut = index == oddOneOutIndex)

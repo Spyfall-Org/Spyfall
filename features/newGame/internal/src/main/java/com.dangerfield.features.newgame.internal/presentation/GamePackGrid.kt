@@ -32,8 +32,7 @@ fun GamePackGrid(
                 modifier = Modifier.fillMaxHeight().heightIn(min = 100.dp),
                 colorPrimitive = ThemeColor.entries.toTypedArray()
                     .let { it[index % it.size] }.colorPrimitive,
-                type = gamePack.type,
-                number = gamePack.number,
+                packName = gamePack.type,
                 isSelected = gamePack.isSelected,
                 onClick = {
                     onPackSelected(gamePack, it)
