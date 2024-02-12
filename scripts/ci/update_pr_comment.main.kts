@@ -60,7 +60,7 @@ fun doWork() {
     val appTesterDebugFallBackLink = args[6]
     val appTesterReleaseFallBackLink = args[7]
     val runNumber = args[8]
-    val tagName = args.getOrNull(0)
+    val tagName = args.getOrNull(10)
 
     val repo = getRepository(githubRepoInfo, githubToken)
 
