@@ -56,6 +56,7 @@ import spyfallx.ui.then
 fun GamePackItem(
     modifier: Modifier = Modifier,
     packName: String,
+    number: Int?,
     isSelected: Boolean = false,
     onClick: (isSelected: Boolean) -> Unit,
     colorPrimitive: ColorPrimitive,
@@ -68,8 +69,8 @@ fun GamePackItem(
     ) {
 
         var shouldPlayCheckAnimation by remember { mutableStateOf(false) }
-
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.check_animation))
+        val numberText = number?.let { if (it > 1) " ($it)" else "" } ?: ""
 
         LaunchedEffect(isSelected) {
             if (isSelected) {
@@ -102,7 +103,7 @@ fun GamePackItem(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 5.dp, vertical = 15.dp),
-                text = packName,
+                text = packName + numberText,
                 typographyToken = OddOneOutTheme.typography.Heading.H600,
                 textAlign = TextAlign.Center,
                 colorPrimitive = colorPrimitive.onColorPrimitive,
@@ -212,6 +213,7 @@ private fun PreviewGamePackItem() {
                 colorPrimitive = ColorPrimitive.GrapeJelly500,
                 packName = "Standard  Extra Special Super Pack",
                 onClick = {},
+                number = 1
             )
         }
     }
@@ -227,6 +229,7 @@ private fun PreviewGamePackItemSmall() {
                 colorPrimitive = ColorPrimitive.GrapeJelly500,
                 packName = "Standard  Extra Special Super Pack",
                 onClick = {},
+                number = 1
             )
         }
     }

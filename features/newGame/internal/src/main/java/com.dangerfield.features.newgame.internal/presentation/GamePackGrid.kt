@@ -34,6 +34,7 @@ fun GamePackGrid(
                     .let { it[index % it.size] }.colorPrimitive,
                 packName = gamePack.type,
                 isSelected = gamePack.isSelected,
+                number = gamePack.number.toIntOrNull(),
                 onClick = {
                     onPackSelected(gamePack, it)
                 }
