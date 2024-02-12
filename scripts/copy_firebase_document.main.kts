@@ -67,12 +67,13 @@ fun doWork() {
                 please run ./scripts/get_secret_files.main.kts to get all the secret files.
             """.trimIndent()
         )
-        return
+        throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
+
     }
 
     if (envOne !in listOf("release", "debug") || envTwo !in listOf("release", "debug") ) {
         printRed("Invalid environments [$envOne, ${envTwo}]. Please use either release or debug")
-        return
+        throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
     }
 
     val releaseDb = getDb(releaseServiceAccountJsonFile.absolutePath)
@@ -96,7 +97,7 @@ fun doWork() {
 
     if (documentOneData == null) {
         printRed("Document $documentPathOne does not exist in $envOne db")
-        return
+        throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
     } else {
         printGreen("Initiating copy...")
         uploadPath.set(documentOneData).get()

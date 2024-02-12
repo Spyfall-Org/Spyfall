@@ -27,16 +27,25 @@ on:
         required: true
         
 jobs:
-  createrelease:
+  copy_document:
     runs-on: ubuntu-latest
     steps:
-
       - name: Check Double Check
         run: |
           if [ "${{ github.event.inputs.double_check }}" != "hamburger" ]; then
             echo "You didn't type 'hamburger' to confirm. Exiting."
             exit 1
           fi
+
+      - name: Create Service Key Json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "service_key.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Download Secret Files
+        run: ./scripts/get_secret_files.main.kts service_key.json
 
       - name: Check out the main branch
         uses: actions/checkout@v3
