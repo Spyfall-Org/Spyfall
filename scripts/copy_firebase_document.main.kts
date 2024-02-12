@@ -6,6 +6,7 @@
 @file:DependsOn("com.google.firebase:firebase-admin:9.1.1")
 @file:DependsOn("com.google.gms:google-services:4.3.14")
 @file:DependsOn("com.google.auth:google-auth-library-oauth2-http:1.14.0")
+@file:Suppress("TooGenericExceptionThrown", "ThrowsCount")
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
@@ -47,7 +48,6 @@ if (isHelpCall) {
     """.trimIndent()
     )
 
-    @Suppress("TooGenericExceptionThrown")
     throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
 }
 
@@ -67,24 +67,19 @@ fun doWork() {
                 please run ./scripts/get_secret_files.main.kts to get all the secret files.
             """.trimIndent()
         )
-        return
+        throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
+
     }
 
     if (envOne !in listOf("release", "debug") || envTwo !in listOf("release", "debug") ) {
         printRed("Invalid environments [$envOne, ${envTwo}]. Please use either release or debug")
-        return
+        throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
     }
 
     val releaseDb = getDb(releaseServiceAccountJsonFile.absolutePath)
     val debugDb = getDb(debugServiceAccountJsonFile.absolutePath)
 
-    printGreen("You will be copying $documentPathOne from $envOne db to $documentPathTwo document in $envTwo db. \n\nAre you sure you want to continue? (y/n)")
-
-    val response = readLine()
-    if (response != "y") {
-        printRed("Aborted")
-        return
-    }
+    printGreen("You will be copying $documentPathOne from $envOne db to $documentPathTwo document in $envTwo db.")
 
     val documentOne = if (envOne == "release") {
         releaseDb.document(documentPathOne).get().get()
@@ -102,7 +97,7 @@ fun doWork() {
 
     if (documentOneData == null) {
         printRed("Document $documentPathOne does not exist in $envOne db")
-        return
+        throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
     } else {
         printGreen("Initiating copy...")
         uploadPath.set(documentOneData).get()
