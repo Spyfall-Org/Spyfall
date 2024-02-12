@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import oddoneout.core.Try
 import timber.log.Timber
+import java.lang.NullPointerException
 
 class SplashScreenBuilder(private val activity: Activity) {
     private var keepOnScreenCondition: () -> Boolean = { true }
@@ -62,7 +63,13 @@ class SplashScreenBuilder(private val activity: Activity) {
     private fun SplashScreenViewProvider.startIconRotation(): ValueAnimator? = try {
         val animator = ValueAnimator.ofFloat(0f, 360f)
         animator.addUpdateListener { animation ->
-            iconView.rotation = animation.animatedValue as Float
+            try {
+                if (iconView != null) {
+                    iconView.rotation = animation.animatedValue as Float
+                }
+            } catch (t: Throwable) {
+                Timber.e("SplashScreenBuilder: icon view was null. Exception caught: $t")
+            }
         }
         animator.duration = 1000 // duration for one rotation
         animator.repeatCount = ValueAnimator.INFINITE
@@ -70,7 +77,7 @@ class SplashScreenBuilder(private val activity: Activity) {
         animator.start()
         animator
     } catch (t: Throwable) {
-        Timber.e("SplashScreenBuilder: Failed to start icon rotation: $t")
+        Timber.e("SplashScreenBuilder: Failed to start icon rotation. Exception caught: $t")
         null
     }
 }
