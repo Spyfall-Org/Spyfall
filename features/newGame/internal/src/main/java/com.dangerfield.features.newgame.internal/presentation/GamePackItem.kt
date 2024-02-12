@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -81,7 +82,7 @@ fun GamePackItem(
                 .matchParentSize()
                 .offset(y = 3.dp)
                 .clip(Radii.Card.shape)
-                .background(Color.Black.copy(alpha = 1f)) // Darker shade for the elevation effect
+                .background(Color.Black.copy(alpha = 0.3f)) // Darker shade for the elevation effect
         )
 
         Box(
@@ -100,6 +101,7 @@ fun GamePackItem(
             contentAlignment = Alignment.Center
         ) {
             Text(
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 15.dp),
                 text = packName,
                 typographyToken = OddOneOutTheme.typography.Heading.H600,
                 textAlign = TextAlign.Center,
@@ -146,16 +148,16 @@ fun BoxScope.drawShineSquiggles(radius: Radius = Radii.Card) {
         val topRightSquiggle =
             Path().apply {
                 val topRightStart = Point(
-                    width - cornerRadiusOffset.x - 20.dp.toPx(),
+                    width - cornerRadiusOffset.x - 15.dp.toPx(),
                     cornerRadiusOffset.y.dp.toPx()
                 )
 
                 moveTo(topRightStart.x, topRightStart.y)
 
-                val bottomOfSquiggle = topRightStart.offset(x = 10.dp.toPx(), y = 15.dp.toPx())
+                val bottomOfSquiggle = topRightStart.offset(x = 10.dp.toPx(), y = 10.dp.toPx())
 
                 val arcControl =
-                    topRightStart.midpoint(bottomOfSquiggle).offset(x = 15.dp.toPx(), y = -10.dp.toPx())
+                    topRightStart.midpoint(bottomOfSquiggle).offset(x = 5.dp.toPx(), y = -4.dp.toPx())
 
 
                 quadraticBezierTo(
@@ -163,7 +165,7 @@ fun BoxScope.drawShineSquiggles(radius: Radius = Radii.Card) {
                     bottomOfSquiggle.x, bottomOfSquiggle.y
                 )
 
-                val control2 = arcControl.offset(-2.dp.toPx(), 4.dp.toPx())
+                val control2 = arcControl.offset(-2.dp.toPx(), 1.dp.toPx())
 
                 quadraticBezierTo(
                     control2.x, control2.y,
@@ -207,6 +209,21 @@ private fun PreviewGamePackItem() {
         Box(modifier = Modifier.padding(25.dp)) {
             GamePackItem(
                 modifier = Modifier.height(100.dp),
+                colorPrimitive = ColorPrimitive.GrapeJelly500,
+                packName = "Standard  Extra Special Super Pack",
+                onClick = {},
+            )
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewGamePackItemSmall() {
+    PreviewContent(showBackground = true) {
+        Box(modifier = Modifier.padding(25.dp)) {
+            GamePackItem(
+                modifier = Modifier.height(100.dp).width(80.dp),
                 colorPrimitive = ColorPrimitive.GrapeJelly500,
                 packName = "Standard  Extra Special Super Pack",
                 onClick = {},
