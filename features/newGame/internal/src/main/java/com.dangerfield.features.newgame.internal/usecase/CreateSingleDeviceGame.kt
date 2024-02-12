@@ -68,7 +68,7 @@ class CreateSingleDeviceGame @Inject constructor(
                         Player(
                             id = UUID.randomUUID().toString(),
                             role = null,
-                            userName = "Player $it",
+                            userName = "${dictionary.getString(R.string.app_player_text)} $it",
                             isHost = false,
                             isOddOneOut = false,
                             votedCorrectly = null
