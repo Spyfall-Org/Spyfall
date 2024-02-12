@@ -148,7 +148,7 @@ private fun ResultsScreenContent(
                     R.string.singleDeviceGameResults_oddOneOutVotes_text,
                     mapOf(
                         "correct" to correctOddOneOutVoteCount.toString(),
-                        "total" to totalPlayerCount.toString()
+                        "total" to (totalPlayerCount - 1).toString()
                     )
                 ),
                 typographyToken = OddOneOutTheme.typography.Body.B800

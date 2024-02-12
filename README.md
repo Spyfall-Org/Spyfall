@@ -1,6 +1,7 @@
 # Odd One Out
 
-![Frame 4](https://github.com/oddoneoutgame/OddOneOut/assets/45648517/29d3ee86-a425-4b27-b2ce-812baa74855c)
+
+![Frame 11](https://github.com/oddoneoutgame/OddOneOut/assets/45648517/622341ae-20a9-4a7a-91be-d1abb1145230)
 
 
 Odd One Out is a multiplayer game in which one person is assigned to be the odd one out while 

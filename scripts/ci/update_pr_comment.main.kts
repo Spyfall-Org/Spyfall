@@ -1,11 +1,14 @@
 #!/usr/bin/env kotlin
 
 @file:Import("util/GithubActionsUtil.main.kts")
-@file:DependsOn("org.kohsuke:github-api:1.125")
+@file:DependsOn("org.kohsuke:github-api:1.318")
+@file:DependsOn("com.squareup.okhttp3:okhttp:4.12.0")
 
 import org.kohsuke.github.GHRelease
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
+import okhttp3.OkHttpClient
+import org.kohsuke.github.extras.okhttp3.OkHttpConnector
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -155,6 +158,9 @@ These assets are automatically generated on pull requests. Some links may not wo
 }
 
 fun getRepository(githubRepoInfo: String, githubToken: String): GHRepository =
-    GitHub.connectUsingOAuth(githubToken).getRepository(githubRepoInfo)
+    GitHub
+        .connectUsingOAuth(githubToken)
+        .withConnector(OkHttpConnector(OkHttpClient()))
+        .getRepository(githubRepoInfo)
 
 doWork()
