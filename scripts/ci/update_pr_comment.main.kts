@@ -6,7 +6,6 @@
 
 import org.kohsuke.github.GHRelease
 import org.kohsuke.github.GHRepository
-import org.kohsuke.github.GitHub
 import okhttp3.OkHttpClient
 import org.kohsuke.github.extras.okhttp3.OkHttpConnector
 
@@ -158,9 +157,10 @@ These assets are automatically generated on pull requests. Some links may not wo
 }
 
 fun getRepository(githubRepoInfo: String, githubToken: String): GHRepository =
-    GitHub
+    GitHubBuilder()
         .withConnector(OkHttpConnector(OkHttpClient()))
-        .connectUsingOAuth(githubToken)
+        .withOAuthToken(githubToken)
+        .build()
         .getRepository(githubRepoInfo)
 
 doWork()

@@ -6,6 +6,7 @@
 @file:DependsOn("com.google.firebase:firebase-admin:9.1.1")
 @file:DependsOn("com.google.gms:google-services:4.3.14")
 @file:DependsOn("com.google.auth:google-auth-library-oauth2-http:1.14.0")
+@file:Suppress("TooGenericExceptionCaught")
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
@@ -47,7 +48,6 @@ if (isHelpCall) {
     """.trimIndent()
     )
 
-    @Suppress("TooGenericExceptionThrown")
     throw Exception(if (isHelpCall) "See Message Above" else "MUST PROVIDE ALL ARGUMENTS")
 }
 
