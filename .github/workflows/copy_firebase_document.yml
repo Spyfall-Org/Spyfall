@@ -1,0 +1,39 @@
+name: Copy Firebase Document
+on:
+  workflow_dispatch:
+    inputs:
+      document_to_copy_from:
+        description: 'Path Document to copy (ie "config-android/1.2.5")'
+        required: true
+      environment_to_copy_from:
+        description: 'Environment to copy from (ie "debug, release")'
+        required: true
+      document_to_copy_to:
+        description: 'Path Document to copy to (ie "config-android/1.2.6")'
+        required: true
+      environment_to_copy_to:
+        description: 'Environment to copy from (ie "debug, release")'
+        required: true
+      double_check:
+        description: 'Have you double checked that everything is correct? Type "hamburger" to confirm.'
+        required: true
+        
+jobs:
+  createrelease:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check Double Check
+        run: |
+          if [ "${{ github.event.inputs.double_check }}" != "hamburger" ]; then
+            echo "You didn't type 'hamburger' to confirm. Exiting."
+            exit 1
+          fi
+
+      - name: Check out the main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Copy Document
+        run: ./scripts/copy_firebase_document.main.kts ${{ github.event.inputs.document_to_copy_from }} ${{ github.event.inputs.environment_to_copy_from }} ${{ github.event.inputs.document_to_copy_to }} ${{ github.event.inputs.environment_to_copy_to }}

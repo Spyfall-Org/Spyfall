@@ -78,13 +78,7 @@ fun doWork() {
     val releaseDb = getDb(releaseServiceAccountJsonFile.absolutePath)
     val debugDb = getDb(debugServiceAccountJsonFile.absolutePath)
 
-    printGreen("You will be copying $documentPathOne from $envOne db to $documentPathTwo document in $envTwo db. \n\nAre you sure you want to continue? (y/n)")
-
-    val response = readLine()
-    if (response != "y") {
-        printRed("Aborted")
-        return
-    }
+    printGreen("You will be copying $documentPathOne from $envOne db to $documentPathTwo document in $envTwo db.")
 
     val documentOne = if (envOne == "release") {
         releaseDb.document(documentPathOne).get().get()
