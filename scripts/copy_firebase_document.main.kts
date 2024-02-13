@@ -28,6 +28,8 @@ fun printGreen(text: String) {
     println(green + text + reset)
 }
 
+val isCIBuild = System.getenv("CI") == "true"
+
 fun printYellow(text: String) {
     println(yellow + text + reset)
 }
@@ -80,6 +82,11 @@ fun doWork() {
     val debugDb = getDb(debugServiceAccountJsonFile.absolutePath)
 
     printGreen("You will be copying $documentPathOne from $envOne db to $documentPathTwo document in $envTwo db.")
+
+    if (!isCIBuild) {
+        printYellow("Press enter to continue")
+        readLine()
+    }
 
     val documentOne = if (envOne == "release") {
         releaseDb.document(documentPathOne).get().get()

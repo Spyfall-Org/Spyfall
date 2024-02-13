@@ -24,6 +24,8 @@ fun printRed(text: String) {
     println(red + text + reset)
 }
 
+val isCIBuild = System.getenv("CI") == "true"
+
 fun printGreen(text: String) {
     println(green + text + reset)
 }
@@ -79,6 +81,11 @@ fun doWork() {
     val debugDb = getDb(debugServiceAccountJsonFile.absolutePath)
 
     printGreen("You will be copying $collectionToCopy from $envOne db to $collectionToCopyTo in $envTwo db.")
+
+    if (!isCIBuild) {
+        printYellow("Press enter to continue")
+        readLine()
+    }
 
     val collectionOne = if (envOne == "release") {
         releaseDb.collection(collectionToCopy).get().get()
