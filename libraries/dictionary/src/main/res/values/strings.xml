@@ -40,7 +40,22 @@
         If the device language is not supported we show a dialog explaining our support level
     -->
 
-    <!-- /////////////////////    App Wide String Strings   /////////////////////-->
+    <!--
+    Context on the game:
+    Odd One Out is a fun game to play with your friends.
+    After choosing packs and starting a game everyone is assigned a role at a location except
+    for the Odd One Out who is kept in the dark. Everyone takes turns asking slightly revealing
+    questions. The Odd One Out's goal is to figure out the location. The other players have a
+    goal of figuring out who the Odd One Out is. When the time runs out, every player submits
+    their guess. After the Odd One Out reveals themself, they may guess the location.
+
+    Users can play the game in two ways:
+    1. Pass and Play: Game is played on one device passed around
+    2. Room: Game is played with each player on their own device and they join a room with an access code
+
+    App Wide String:
+    String used throughout the app in multiple screens/contexts.
+    -->
     <string name="app_name_text">Odd One Out</string>
     <string name="app_tryAgainErrorDialog_header">Lets try that again</string>
     <string name="app_submit_action">Submit</string>
@@ -61,13 +76,25 @@
     <string name="app_oddOneOut_label">odd one out</string>
     <string name="app_or_text">or</string>
 
-    <!-- /////////////////////    Welcome Strings   /////////////////////-->
+    <!--
+    Welcome Screen Strings:
+    This is the landing page of the app, users will have options to start a new game or
+    join an existing one
+    -->
     <string name="welcome_intro_header">Welcome to</string>
     <string name="welcome_newGame_action">New Game</string>
     <string name="welcome_join_action">Join Game</string>
     <string name="welcome_rules_action">Rules</string>
 
-    <!-- /////////////////////    Waiting Room Strings   /////////////////////-->
+    <!--
+    Waiting Room Screen Strings:
+    Users land on this page when starting a game with a room (not pass and play).
+    On this screen users can view the rules, access code, other players joining the game
+    and they will have an option to start the game or leave the room.
+
+    Also users can click the video call button if theres a video call link added to the game
+    this will open a bottom sheet to show the user details about the video call
+    -->
     <string name="waitingRoom_waiting_header">Waiting for players…</string>
     <string name="waitingRoom_accessCode_header">Access Code:</string>
     <string name="waitingRoom_confirmStart_action">Start Game</string>
@@ -94,7 +121,10 @@
     <string name="video_openWith_header">Open with</string>
     <string name="videoLink_infoDialogSafety_header">To ensure user safety we only accept links from the following platforms:</string>
 
-    <!-- /////////////////////    Stats Strings   /////////////////////-->
+    <!--
+    Stats Screen Strings:
+    Users will be able to view their game stats on this screen.
+    -->
     <string name="stats_infoNote_body">Games results are not collected when players vote amongst themselves instead of in the app. Because of this the stats here may not fully represent wins and losses.</string>
     <string name="stats_totalGamesPlayed_header">Total Games Played:</string>
     <string name="stats_infoNote_label">Note</string>
@@ -108,7 +138,10 @@
     <string name="stats_singleDeviceGames_header">Single Device Games</string>
     <string name="stats_singleDeviceTotalGamesPlayed_header">Total Games Played:</string>
 
-    <!-- /////////////////////    Settings Strings   /////////////////////-->
+    <!--
+    Settings Screen Strings:
+    Users will be able to change the theme of the app, view stats, contact us and view the about page
+    -->
     <string name="settings_theme_label">Change Theme</string>
     <string name="settings_stats_header">Stats</string>
     <string name="settings_about_label">About</string>

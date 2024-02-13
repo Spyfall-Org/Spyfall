@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="appLanguageCode">pt</string>
+
     <string name="app_name_text">Odd One Out</string>
     <string name="app_tryAgainErrorDialog_header">Vamos tentar novamente</string>
     <string name="app_submit_action">Enviar</string>
