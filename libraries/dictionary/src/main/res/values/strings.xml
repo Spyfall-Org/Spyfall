@@ -326,7 +326,7 @@
     <string name="rules_howToWinSectionBullets_text">At any point the odd one out can reveal themselves and guess the location. If they are wrong, the players win otherwise the odd one out wins.\nAt any point the players can stop the game and guess who the odd one out is. If they guess correctly the players win, otherwise the odd one out revels themselves and wins.\nAfter the timer runs out, the players vote on who the odd one out is. If the majority of players vote wrong, the odd one out wins, If the players votes correctly then they win unless the odd one out guesses the location correctly and ties the game.</string>
     <string name="rules_roleExample_text">Bank Teller</string>
     <string name="rules_locationExample_text">Bank</string>
-    <string name="rules_pointOne_text">As the game starts, every player gets the secret word. .</string>
+    <string name="rules_pointOne_text">As the game starts, every player gets the secret word.</string>
     <string name="rules_pointTwo_text">One player doesn’t get to see the secret location. They are the Odd One Out.</string>
     <string name="rules_pointThree_text">Everyone takes turns picking someone to ask a question to about the secret location and their role there.</string>
     <string name="rules_pointFour_text">The odd one out is trying to figure out the location without revealing that they are the odd one out.</string>
