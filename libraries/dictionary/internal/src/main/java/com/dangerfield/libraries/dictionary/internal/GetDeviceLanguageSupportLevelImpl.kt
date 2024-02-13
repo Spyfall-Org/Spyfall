@@ -28,7 +28,7 @@ class GetDeviceLanguageSupportLevelImpl @Inject constructor(
     private val appLanguage: String
         get() = applicationContext.getString(R.string.appLanguageCode)
 
-    private val deviceLocale = Locale.getDefault()
+    private val deviceLocale: Locale get() = Locale.getDefault()
 
     override suspend fun invoke(): LanguageSupportLevel = if (!isDeviceLanguageSupported()) {
         LanguageSupportLevel.NotSupported(deviceLocale)

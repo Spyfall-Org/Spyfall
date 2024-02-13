@@ -14,6 +14,7 @@ import oddoneout.core.BuildInfo
 import oddoneout.core.readJson
 import oddoneout.core.toJson
 import se.ansman.dagger.auto.AutoBind
+import timber.log.Timber
 import javax.inject.Inject
 
 private val LanguageSupportMessagesKey = stringPreferencesKey("language_support_messages")
@@ -50,7 +51,15 @@ class ShouldShowLanguageSupportMessageImpl @Inject constructor(
             is LanguageSupportLevel.Unknown -> false
         }
 
+        Timber.d("Can show language support message: $canShow")
+
         if (!canShow) return false
+
+        Timber.d("""
+            Checking if language support message has been shown
+            | language: ${languageSupportLevel.locale.language} 
+            | support level: ${languageSupportLevel.name}  
+            | version code: ${buildInfo.versionCode}""".trimIndent())
 
         val language = languageSupportLevel.locale.language
         val messagesShown = dataStore.getValue(LanguageSupportMessagesKey) {
@@ -61,7 +70,9 @@ class ShouldShowLanguageSupportMessageImpl @Inject constructor(
             it.language == language
                     && it.languageSupportLevel == languageSupportLevel.name
                     && it.versionCode == buildInfo.versionCode
-        } ?: true
+        } ?: false
+
+        Timber.d("Has shown language support message already: $hasShownAlready")
 
         return !hasShownAlready
     }
