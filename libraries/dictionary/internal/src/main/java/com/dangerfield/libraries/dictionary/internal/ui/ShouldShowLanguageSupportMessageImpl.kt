@@ -8,6 +8,7 @@ import com.dangerfield.libraries.dictionary.LanguageSupportMessageShown
 import com.dangerfield.libraries.dictionary.ShouldShowLanguageSupportMessage
 import com.dangerfield.libraries.storage.datastore.cache
 import com.dangerfield.libraries.storage.datastore.getValue
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import oddoneout.core.BuildInfo
 import oddoneout.core.readJson
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 private val LanguageSupportMessagesKey = stringPreferencesKey("language_support_messages")
 
+@JsonClass(generateAdapter = true)
 data class MessageShown(
     val versionCode: Int,
     val languageSupportLevel: String,
@@ -55,13 +57,13 @@ class ShouldShowLanguageSupportMessageImpl @Inject constructor(
             moshi.readJson<List<MessageShown>>(it)
         }
 
-        val shouldShow = messagesShown?.any {
+        val hasShownAlready = messagesShown?.any {
             it.language == language
                     && it.languageSupportLevel == languageSupportLevel.name
                     && it.versionCode == buildInfo.versionCode
         } ?: true
 
-        return shouldShow
+        return !hasShownAlready
     }
 }
 
