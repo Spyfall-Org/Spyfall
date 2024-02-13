@@ -154,7 +154,7 @@
     <string name="newGame_packs_header">Packs:</string>
     <string name="newGame_packsDescription_text">Choose which packs you want to play with</string>
     <string name="newGame_packsInfo_a11y">Packs Information</string>
-    <string name="newGame_singleDevice_label">Single Device Mode</string>
+    <string name="newGame_singleDevice_label">Pass and Play</string>
     <string name="newGame_singleDeviceDescription_text">Pass the device around to each player</string>
     <string name="newGame_gameLength_header">Game Length:</string>
     <string name="newGame_gameLengthDescription_text">How many minutes should each round last:</string>
@@ -310,7 +310,7 @@
     <string name="termsOfService_links_text">Before continuing please read and agree to our {termsOfService} and {privacyPolicy}</string>
     <string name="termsOfService_confirmation_text">I have read and agree to the Terms of Service and Privacy Policy</string>
     <string name="termsOfService_accept_action">Accept</string>
-    <string name="termsOfService_description_text">When using odd one out we may collect data relevant to the app\'s functionality. In order to do this we need your explicit consent to store and process this data.</string>
+    <string name="termsOfService_description_text">When using Odd One Out we may collect data relevant to the app\'s functionality. In order to do this we need your explicit consent to store and process this data.</string>
     <string name="create_your_own_coming_soon">Create your own\n(coming soon)</string>
 
 </resources>

@@ -116,7 +116,7 @@
     <string name="newGame_packs_header">Pakete:</string>
     <string name="newGame_packsDescription_text">Wählen Sie, mit welchen Paketen Sie spielen möchten</string>
     <string name="newGame_packsInfo_a11y">Informationen zu Paketen</string>
-    <string name="newGame_singleDevice_label">Einzelgerätemodus</string>
+    <string name="newGame_singleDevice_label">Weitergeben und Spielen</string>
     <string name="newGame_singleDeviceDescription_text">Geben Sie das Gerät reihum an jeden Spieler weiter</string>
     <string name="newGame_gameLength_header">Spielzeit:</string>
     <string name="newGame_gameLengthDescription_text">Wie viele Minuten soll jede Runde dauern:</string>
