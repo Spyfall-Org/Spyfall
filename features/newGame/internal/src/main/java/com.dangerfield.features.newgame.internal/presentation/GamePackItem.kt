@@ -49,21 +49,26 @@ import com.dangerfield.libraries.ui.elevation
 import com.dangerfield.libraries.ui.innerShadow
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.newgame.internal.R
+import spyfallx.ui.color.ColorToken
 import spyfallx.ui.color.background
 import spyfallx.ui.then
+import spyfallx.ui.thenIf
 
 @Composable
 fun GamePackItem(
     modifier: Modifier = Modifier,
     packName: String,
     number: Int?,
+    isEnabled : Boolean = true,
     isSelected: Boolean = false,
     onClick: (isSelected: Boolean) -> Unit,
     colorPrimitive: ColorPrimitive,
 ) {
     Box(
         modifier = modifier
-            .bounceClick { onClick(!isSelected) }
+            .thenIf(isEnabled) {
+                bounceClick { onClick(!isSelected) }
+            }
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
@@ -78,41 +83,48 @@ fun GamePackItem(
             }
         }
 
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .offset(y = 3.dp)
-                .clip(Radii.Card.shape)
-                .background(Color.Black.copy(alpha = 0.3f)) // Darker shade for the elevation effect
-        )
+        if (isEnabled) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .offset(y = 3.dp)
+                    .clip(Radii.Card.shape)
+                    .background(Color.Black.copy(alpha = 0.3f)) // Darker shade for the elevation effect
+            )
+        }
 
         Box(
             modifier = Modifier
                 .matchParentSize()
                 .clip(Radii.Card.shape)
-                .background(colorPrimitive)
-                .innerShadow(
-                    cornersRadius = 10.dp,
-                    color = Color.White.copy(alpha = 0.5f),
-                    spread = 0.dp,
-                    offsetY = 5.dp,
-                    offsetX = -5.dp
-                )
+                .background(if (isEnabled) colorPrimitive.color else OddOneOutTheme.colorScheme.surfaceDisabled.color)
+                .thenIf(isEnabled) {
+                    innerShadow(
+                        cornersRadius = 10.dp,
+                        color = Color.White.copy(alpha = 0.5f),
+                        spread = 0.dp,
+                        offsetY = 5.dp,
+                        offsetX = -5.dp
+                    )
+                }
                 .semantics { role = Role.Button },
             contentAlignment = Alignment.Center
         ) {
+
             Text(
                 modifier = Modifier.padding(horizontal = 5.dp, vertical = 15.dp),
                 text = packName + numberText,
                 typographyToken = OddOneOutTheme.typography.Heading.H600,
                 textAlign = TextAlign.Center,
-                colorPrimitive = colorPrimitive.onColorPrimitive,
+                color = if (isEnabled) ColorToken.Color("", colorPrimitive.onColorPrimitive) else OddOneOutTheme.colorScheme.onSurfaceDisabled,
             )
         }
 
-        drawShineSquiggles(radius = Radii.Card)
+        if (isEnabled) {
+            drawShineSquiggles(radius = Radii.Card)
+        }
 
-        if (isSelected) {
+        if (isSelected && isEnabled) {
             Box {
                 Box(
                     modifier = Modifier
@@ -213,6 +225,23 @@ private fun PreviewGamePackItem() {
                 colorPrimitive = ColorPrimitive.GrapeJelly500,
                 packName = "Standard  Extra Special Super Pack",
                 onClick = {},
+                number = 1
+            )
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewGamePackItemDisabled() {
+    PreviewContent(showBackground = true) {
+        Box(modifier = Modifier.padding(25.dp)) {
+            GamePackItem(
+                modifier = Modifier.height(100.dp),
+                colorPrimitive = ColorPrimitive.GrapeJelly500,
+                packName = "Standard  Extra Special Super Pack",
+                onClick = {},
+                isEnabled = false,
                 number = 1
             )
         }

@@ -55,7 +55,7 @@ fun PacksInfoBottomSheet(
                     VerticalSpacerS800()
                     packs.forEach { pack ->
                         val numberText =
-                            pack.number.toIntOrNull()?.let { if (it > 1) " ($it)" else "" } ?: ""
+                            pack.number?.toIntOrNull()?.let { if (it > 1) " ($it)" else "" } ?: ""
 
                         Text(
                             text = pack.type + numberText,

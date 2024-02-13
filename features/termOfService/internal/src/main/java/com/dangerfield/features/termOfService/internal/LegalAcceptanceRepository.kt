@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.features.termOfService.LegalAcceptanceState
+import com.dangerfield.libraries.storage.datastore.cache
 import com.dangerfield.libraries.storage.datastore.distinctKeyFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -28,20 +29,10 @@ class LegalAcceptanceRepository @Inject constructor(
     fun getAcceptanceStateFlow(): Flow<LegalAcceptanceState> = acceptanceStateFlow
 
     suspend fun updateAcceptanceState(legalAcceptanceState: LegalAcceptanceState?) {
-        cache(LegalStateKey, legalAcceptanceState?.name ?: "")
-    }
-
-    private suspend fun cache(key:  Preferences.Key<String>, value: String) {
-        dataStore.updateData {
-            it.toMutablePreferences()
-                .apply {
-                    this[key] = value
-                }
-        }
+        dataStore.cache(LegalStateKey, legalAcceptanceState?.name ?: "")
     }
 
     companion object {
         private val LegalStateKey = stringPreferencesKey("legal_state")
-
     }
 }

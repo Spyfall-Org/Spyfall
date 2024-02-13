@@ -23,6 +23,7 @@ import com.dangerfield.libraries.ui.Elevation
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.Radii
 import com.dangerfield.libraries.ui.Sizes
+import com.dangerfield.libraries.ui.Spacing
 import com.dangerfield.libraries.ui.align
 import com.dangerfield.libraries.ui.clip
 import com.dangerfield.libraries.ui.color.LocalColorScheme
@@ -38,9 +39,9 @@ import com.dangerfield.libraries.ui.rememberWithKey
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.withSize
 import kotlinx.coroutines.launch
-import com.dangerfield.libraries.ui.Spacing
 import spyfallx.ui.color.background
 import spyfallx.ui.inset
+
 
 /**
  * A bottom sheet component is a bottom sheet like component that is used to display content in a sheet that slides in
@@ -64,8 +65,6 @@ fun BottomSheet(
     val contentColor = OddOneOutTheme.colorScheme.onBackground
     val shape = bottomSheetShape(topAccessory)
 
-    val systemBarVerticalInsets: WindowInsets =  WindowInsets.systemBars.only(WindowInsetsSides.Vertical)
-
     ModalBottomSheet(
         modifier = Modifier
             .offset {
@@ -88,7 +87,7 @@ fun BottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = state.sheetState,
         shape = shape,
-        windowInsets = systemBarVerticalInsets,
+        windowInsets = BottomSheetDefaults.windowInsets,
         containerColor = backgroundColor.color,
         scrimColor = OddOneOutTheme.colorScheme.backgroundOverlay.color,
         tonalElevation = 0.dp,

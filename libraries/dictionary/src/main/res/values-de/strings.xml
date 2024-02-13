@@ -123,6 +123,7 @@
     <string name="newGame_numOfPlayers_header">Anzahl der Spieler</string>
     <string name="newGame_numOfPlayers_hint">{min}-{max}</string>
     <string name="newGame_userName_header">Benutzername:</string>
+    <string name="create_your_own_coming_soon">Erstelle deinen eigenen\n(bald verfügbar)</string>
     <string name="newGame_userName_hint">Wählen Sie einen Benutzernamen:</string>
     <string name="newGame_videoCall_header">Videoanruf-Link:</string>
     <string name="newGame_videCallDescription_text">Fügen Sie einen Videoanruf-Link ein, falls Sie einen haben:</string>
@@ -264,6 +265,7 @@
     <string name="blockingError_screen_header">Das ist peinlich</string>
     <string name="blockingError_error_body">Es scheint, dass wir einen unerfassten Fehler in unserer App haben. Bitte versuche, die App zu beenden und erneut zu starten.</string>
 
+    <!-- ///////////////////// TERMS OF SERVICE /////////////////////-->
     <string name="app_privacyPolicy_text">Datenschutzrichtlinie</string>
     <string name="app_termsOfService_text">Nutzungsbedingungen</string>
     <string name="termsOfService_screen_header">Noch eine kurze Sache…</string>

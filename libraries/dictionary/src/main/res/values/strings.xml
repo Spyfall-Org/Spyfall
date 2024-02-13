@@ -311,5 +311,6 @@
     <string name="termsOfService_confirmation_text">I have read and agree to the Terms of Service and Privacy Policy</string>
     <string name="termsOfService_accept_action">Accept</string>
     <string name="termsOfService_description_text">When using odd one out we may collect data relevant to the app\'s functionality. In order to do this we need your explicit consent to store and process this data.</string>
+    <string name="create_your_own_coming_soon">Create your own\n(coming soon)</string>
 
 </resources>

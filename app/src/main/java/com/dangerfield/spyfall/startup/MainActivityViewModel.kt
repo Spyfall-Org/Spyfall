@@ -8,6 +8,8 @@ import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
+import com.dangerfield.libraries.dictionary.LanguageSupportMessageShown
+import com.dangerfield.libraries.dictionary.ShouldShowLanguageSupportMessage
 import com.dangerfield.libraries.session.ColorConfig
 import com.dangerfield.libraries.session.EnsureSessionLoaded
 import com.dangerfield.libraries.session.SessionFlow
@@ -39,7 +41,9 @@ class MainActivityViewModel @Inject constructor(
     private val isAppUpdateRequired: IsAppUpdateRequired,
     private val getLegalAcceptanceState: GetLegalAcceptanceState,
     private val sessionFlow: SessionFlow,
-    private val getLanguageSupportLevel: GetDeviceLanguageSupportLevel
+    private val getLanguageSupportLevel: GetDeviceLanguageSupportLevel,
+    private val shouldShowLanguageSupportMessage: ShouldShowLanguageSupportMessage,
+    private val languageSupportMessageShown: LanguageSupportMessageShown,
 ) : SEAViewModel<State, Unit, Action>() {
 
     override val initialState = State(
@@ -47,7 +51,7 @@ class MainActivityViewModel @Inject constructor(
         accentColor = ThemeColor.entries.random().colorPrimitive,
         isBlockingLoad = true,
         hasBlockingError = false,
-        languageSupportLevel = null,
+        languageSupportLevelMessage = null,
         legalAcceptanceState = null
     )
 
@@ -58,6 +62,7 @@ class MainActivityViewModel @Inject constructor(
     override suspend fun handleAction(action: Action) {
         when (action) {
             Action.LoadApp -> loadApp()
+            is Action.MarkLanguageSupportLevelMessageShown -> languageSupportMessageShown(action.languageSupportLevel)
         }
     }
 
@@ -82,7 +87,7 @@ class MainActivityViewModel @Inject constructor(
                     it.copy(
                         isBlockingLoad = false,
                         accentColor = colorPrimitive,
-                        languageSupportLevel = null
+                        languageSupportLevelMessage = null
                     )
                 }
 
@@ -106,8 +111,11 @@ class MainActivityViewModel @Inject constructor(
 
     private suspend fun getLanguageSupport() {
         val languageSupportLevel = getLanguageSupportLevel()
-        updateState {
-            it.copy(languageSupportLevel = languageSupportLevel)
+        val shouldShow = shouldShowLanguageSupportMessage(languageSupportLevel)
+        if (shouldShow) {
+            updateState {
+                it.copy(languageSupportLevelMessage = LanguageSupportLevelMessage(languageSupportLevel))
+            }
         }
     }
 
@@ -167,6 +175,7 @@ class MainActivityViewModel @Inject constructor(
 
     sealed class Action {
         data object LoadApp : Action()
+        data class MarkLanguageSupportLevelMessageShown(val languageSupportLevel: LanguageSupportLevel) : Action()
     }
 
     data class State(
@@ -175,6 +184,10 @@ class MainActivityViewModel @Inject constructor(
         val accentColor: ColorPrimitive,
         val hasBlockingError: Boolean,
         val legalAcceptanceState: LegalAcceptanceState?,
-        val languageSupportLevel: LanguageSupportLevel?
+        val languageSupportLevelMessage: LanguageSupportLevelMessage?
+    )
+
+    data class LanguageSupportLevelMessage(
+        val languageSupportLevel: LanguageSupportLevel
     )
 }

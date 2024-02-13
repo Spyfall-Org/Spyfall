@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="appLanguageCode">pt</string>
+    <string name="app_name_text">Impostor Entre Nós</string>
+    <string name="app_tryAgainErrorDialog_header">Vamos tentar novamente</string>
+    <string name="app_submit_action">Enviar</string>
+    <string name="app_somethingWentWrong_text">Algo deu errado</string>
+    <string name="app_okay_action">Ok</string>
+    <string name="app_required_label">Obrigatório</string>
+    <string name="app_player_text">Jogador</string>
+    <string name="app_theOddOneOutRole_text">O Impostor</string>
+    <string name="app_leave_action">Sair</string>
+    <string name="app_cancel_action">Cancelar</string>
+    <string name="app_open_action">Abrir</string>
+    <string name="app_bullet_point">•</string>
+    <string name="app_location_label">localização</string>
+    <string name="app_oops_text">Ops!</string>
+    <string name="app_end_game_action">Terminar Jogo</string>
+    <string name="app_show_action">Mostrar</string>
+    <string name="app_hide_action">Esconder</string>
+    <string name="app_oddOneOut_label">impostor</string>
+    <string name="app_or_text">ou</string>
+
+    <string name="welcome_intro_header">Bem-vindo(a) a</string>
+    <string name="welcome_newGame_action">Novo Jogo</string>
+    <string name="welcome_join_action">Entrar em Jogo</string>
+    <string name="welcome_rules_action">Regras</string>
+    <string name="waitingRoom_waiting_header">Aguardando jogadores…</string>
+    <string name="waitingRoom_accessCode_header">Código de Acesso:</string>
+    <string name="waitingRoom_confirmStart_action">Iniciar Jogo</string>
+    <string name="waitingRoom_joinVideo_a11y">Entrar na chamada de vídeo do jogo</string>
+    <string name="waitingRoom_startGame_action">Iniciar Jogo</string>
+    <string name="waitingRoom_leaveGame_action">Sair do Jogo</string>
+    <string name="waitingRoom_tooManyPlayersDialog_body">Parece que há mais de {max} jogadores na sala. {numToLeave} jogadores precisarão sair antes de iniciar o jogo.</string>
+    <string name="waitingRoom_tooFewPlayersDialog_header">Tem certeza de que deseja iniciar o jogo?</string>
+    <string name="waitingRoom_tooFewPlayersDialog_body">Você tem menos de {min} jogadores. Um jogo com tão poucos jogadores não é recomendado.</string>
+    <string name="waitingRoom_leaveGameDialog_header">Saindo tão cedo?</string>
+    <string name="waitingRoom_leaveGameDialog_text">Você está saindo do jogo e será removido se continuar.</string>
+    <string name="waitingRoom_cannotLeaveGame_text">Não é possível sair de um jogo iniciado</string>
+    <string name="changeName_dialog_header">Mudar Nome</string>
+    <string name="changeName_invalidLength_text">O nome deve ter entre {min} e {max} caracteres</string>
+    <string name="changeName_inputHint_label">Digite um novo nome</string>
+    <string name="changeName_usernameTakenError_text">Esse nome de usuário já foi escolhido por outro jogador.</string>
+
+    <string name="videoCall_detailDialog_title">Link de Vídeo</string>
+    <string name="videoLink_detailDialogDescription_text">O criador deste jogo adicionou um link de vídeo para tornar mais fácil jogar com qualquer pessoa em qualquer lugar. \n\nMas POR FAVOR lembre-se, tenha cuidado ao abrir links de estranhos na internet.</string>
+    <string name="videoLink_beCareful_label">tenha cuidado</string>
+    <string name="waitingRoom_forcedRemovalError_text">Desculpe, houve um problema. Infelizmente, tivemos que remover você do jogo. Por favor, entre novamente e tente de novo.</string>
+    <string name="videoLink_copyLink_a11y">Copiar Link</string>
+    <string name="videoLink_infoDialog_title">Adicione chamada de vídeo ao seu jogo</string>
+
+</resources>

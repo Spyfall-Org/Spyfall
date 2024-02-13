@@ -50,7 +50,7 @@ sealed class ColorToken {
 
     @Immutable
     @Suppress("MemberNameEqualsClassName")
-    class Color internal constructor(
+    class Color constructor(
         override val name: String,
         internal val primitive: ColorPrimitive,
         val color: ComposeColor = primitive.color,

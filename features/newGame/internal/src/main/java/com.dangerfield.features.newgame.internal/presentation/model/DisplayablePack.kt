@@ -7,7 +7,8 @@ import com.dangerfield.libraries.game.Pack
 data class DisplayablePack(
     val pack: Pack,
     val isSelected: Boolean = false,
-    val number: String = pack.name.split(" ").first { it.isDigitsOnly() },
+    val isEnabled: Boolean = true,
+    val number: String? = pack.name.split(" ").firstOrNull() { it.isDigitsOnly() },
     val type: String = pack.name.split(" ").filter { !it.isDigitsOnly() }.joinToString(" "),
 )
 

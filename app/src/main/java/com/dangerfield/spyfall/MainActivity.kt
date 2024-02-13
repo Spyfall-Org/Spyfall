@@ -46,6 +46,9 @@ class MainActivity : ComponentActivity() {
     lateinit var dictionary: Dictionary
 
     @Inject
+    lateinit var splashScreenBuilder: SplashScreenBuilder
+
+    @Inject
     lateinit var gameResetInterstitialAd: InterstitialAd<GameRestartInterstitial>
 
     @Inject
@@ -58,12 +61,9 @@ class MainActivity : ComponentActivity() {
 
         var isLoading: Boolean by mutableStateOf(false)
 
-        SplashScreenBuilder(this)
+        splashScreenBuilder
             .keepOnScreenWhile { isLoading }
-            .build()
-
-
-        //WindowCompat.setDecorFitsSystemWindows(window, false)
+            .build(this)
 
         // Delay set content so we can animate splash screen views
         collectWhileStarted(mainActivityViewModel.state) { state ->
@@ -91,7 +91,10 @@ class MainActivity : ComponentActivity() {
                 dictionary = dictionary,
                 buildInfo = buildInfo,
                 legalAcceptanceState = state.legalAcceptanceState,
-                languageSupportLevel = state.languageSupportLevel
+                languageSupportLevelMessage = state.languageSupportLevelMessage,
+                onLanguageSupportLevelMessageShown = {
+                    mainActivityViewModel.takeAction(MainActivityViewModel.Action.MarkLanguageSupportLevelMessageShown(it))
+                }
             )
         }
 

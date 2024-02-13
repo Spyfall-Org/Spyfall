@@ -6,7 +6,9 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -20,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -56,6 +59,7 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.components.toSnackbarData
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
+import com.dangerfield.spyfall.startup.MainActivityViewModel
 import kotlinx.coroutines.flow.receiveAsFlow
 import oddoneout.core.BuildInfo
 import oddoneout.core.UserMessagePresenter
@@ -70,12 +74,13 @@ fun OddOneOutApp(
     adsConfig: AdsConfig,
     metricsTracker: MetricsTracker,
     legalAcceptanceState: LegalAcceptanceState?,
+    onLanguageSupportLevelMessageShown: (LanguageSupportLevel) -> Unit,
+    languageSupportLevelMessage: MainActivityViewModel.LanguageSupportLevelMessage?,
     dictionary: Dictionary,
     buildInfo: BuildInfo,
     appState: OddOneOutAppState = rememberAppState(networkMonitor = networkMonitor),
     isUpdateRequired: Boolean,
     hasBlockingError: Boolean,
-    languageSupportLevel: LanguageSupportLevel?
 ) {
     val navController = rememberNavController(FloatingWindowNavigator())
     val coroutineScope = rememberCoroutineScope()
@@ -160,7 +165,6 @@ fun OddOneOutApp(
 
                     // TODO fix the padding with bottom sheets and text fields
                     NavHost(
-                        // modifier = Modifier.imePadding(),
                         navController = router.navHostController,
                         startDestination = startingRoute.navRoute,
                         enterTransition = { fadeInToStartAnim() },
@@ -174,15 +178,14 @@ fun OddOneOutApp(
                         )
                     }
 
-                    LaunchedEffect(languageSupportLevel) {
-                        val shouldShowLanguageSupportMessage =
-                            languageSupportLevel is LanguageSupportLevel.NotSupported
-                                    || languageSupportLevel is LanguageSupportLevel.PartiallySupported
+                    LaunchedEffect(languageSupportLevelMessage) {
+                        if (languageSupportLevelMessage != null) {
 
-                        if (languageSupportLevel != null && shouldShowLanguageSupportMessage) {
+                            onLanguageSupportLevelMessageShown(languageSupportLevelMessage.languageSupportLevel)
+
                             router.navigateToLanguageSupportDialog(
-                                supportLevelName = languageSupportLevel.name,
-                                languageDisplayName = languageSupportLevel.locale.displayLanguage
+                                supportLevelName = languageSupportLevelMessage.languageSupportLevel.name,
+                                languageDisplayName = languageSupportLevelMessage.languageSupportLevel.locale.displayLanguage
                             )
                         }
                     }

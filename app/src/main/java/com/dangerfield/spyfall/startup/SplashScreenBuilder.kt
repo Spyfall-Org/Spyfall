@@ -8,11 +8,15 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import oddoneout.core.BuildInfo
 import oddoneout.core.Try
 import timber.log.Timber
 import java.lang.NullPointerException
+import javax.inject.Inject
 
-class SplashScreenBuilder(private val activity: Activity) {
+class SplashScreenBuilder @Inject constructor(
+    private val buildInfo: BuildInfo
+) {
     private var keepOnScreenCondition: () -> Boolean = { true }
     private var showLoadingCondition: () -> Boolean = { true }
     private lateinit var internalSplashScreen: androidx.core.splashscreen.SplashScreen
@@ -28,36 +32,42 @@ class SplashScreenBuilder(private val activity: Activity) {
     }
 
     @Suppress("MagicNumber")
-    fun build() {
+    fun build(activity: Activity) = Try {
         internalSplashScreen = activity.installSplashScreen()
 
-        // relies onsetOnExitAnimationListener to keep on screen
-        internalSplashScreen.setKeepOnScreenCondition { false }
+        if (buildInfo.deviceName.contains("OnePlus", ignoreCase = true)) {
+            // oneplus devices have issues with splash screens setOnExitAnimationListener which
+            // we rely on for manually animating the splash screen
+            internalSplashScreen.setKeepOnScreenCondition(keepOnScreenCondition)
+        } else {
+            // relies onsetOnExitAnimationListener to keep on screen
+            internalSplashScreen.setKeepOnScreenCondition { false }
 
-        internalSplashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
+            internalSplashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
 
-            Try {
+                Try {
 
-                val animator = splashScreenViewProvider.startIconRotation()
+                    val animator = splashScreenViewProvider.startIconRotation()
 
-                (activity as? LifecycleOwner)?.lifecycleScope?.launch {
-                    var isSplashScreenUp = keepOnScreenCondition()
-                    while (isSplashScreenUp) {
-                        delay(500)
-                        isSplashScreenUp = keepOnScreenCondition()
+                    (activity as? LifecycleOwner)?.lifecycleScope?.launch {
+                        var isSplashScreenUp = keepOnScreenCondition()
+                        while (isSplashScreenUp) {
+                            delay(500)
+                            isSplashScreenUp = keepOnScreenCondition()
+                        }
+
+                        animator?.pause()
+                        splashScreenViewProvider.remove()
+                    } ?: run {
+                        splashScreenViewProvider.remove()
+                        Timber.e("SplashScreenBuilder: Activity is not a lifecycle owner, splash screen will be removed")
                     }
-
-                    animator?.pause()
+                }.onFailure {
                     splashScreenViewProvider.remove()
-                } ?: run {
-                    splashScreenViewProvider.remove()
-                    Timber.e("SplashScreenBuilder: Activity is not a lifecycle owner, splash screen will be removed")
                 }
-            }.onFailure {
-                splashScreenViewProvider.remove()
             }
         }
-    }
+    }.onFailure { Timber.e("SplashScreenBuilder: Failed to build splash screen. Exception caught: $it")}
 
     @Suppress("MagicNumber", "TooGenericExceptionCaught")
     private fun SplashScreenViewProvider.startIconRotation(): ValueAnimator? = try {

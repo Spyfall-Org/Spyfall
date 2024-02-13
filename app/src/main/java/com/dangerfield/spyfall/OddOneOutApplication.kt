@@ -9,9 +9,6 @@ import com.dangerfield.libraries.logging.RemoteLogger
 import com.dangerfield.spyfall.free.BuildConfig
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.google.firebase.firestore.LocalCacheSettings
-import com.google.firebase.firestore.MemoryCacheSettings
 import com.google.firebase.firestore.firestoreSettings
 import dagger.hilt.android.HiltAndroidApp
 import oddoneout.core.ApplicationStateRepository

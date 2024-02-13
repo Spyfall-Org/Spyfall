@@ -17,15 +17,11 @@ sealed class Try<out T> {
     val isFailure: Boolean
         get() = !isSuccess
 
-    @OptIn(ExperimentalContracts::class)
-    inline fun <Output> fold(
-        onFailure: (left: Throwable) -> Output,
-        onSuccess: (right: T) -> Output
-    ): Output {
-        contract {
-            callsInPlace(onFailure, InvocationKind.AT_MOST_ONCE)
-            callsInPlace(onSuccess, InvocationKind.AT_MOST_ONCE)
-        }
+    inline fun <R> fold(
+        onFailure: (left: Throwable) -> R,
+        onSuccess: (right: T) -> R
+    ): R {
+
         return when (this) {
             is Success -> onSuccess(value)
             is Failure -> onFailure(exception)
@@ -49,7 +45,7 @@ sealed class Try<out T> {
     ): B = fold(errorHandler, successHandler)
 
     @OptIn(ExperimentalContracts::class)
-    inline fun <Output> flatMap(f: (right: T) -> Try<Output>): Try<Output> {
+    inline fun <R> flatMap(f: (right: T) -> Try<R>): Try<R> {
         contract {
             callsInPlace(f, InvocationKind.AT_MOST_ONCE)
         }
@@ -60,14 +56,14 @@ sealed class Try<out T> {
     }
 
     @OptIn(ExperimentalContracts::class)
-    inline fun <Output> map(f: (right: T) -> Output): Try<Output> {
+    inline fun <R> map(f: (right: T) -> R): Try<R> {
         contract {
             callsInPlace(f, InvocationKind.AT_MOST_ONCE)
         }
         return flatMap { Success(f(it)) }
     }
 
-    inline fun <Output> mapNotNull(f: (right: T) -> Output?): Try<Output> {
+    inline fun <R> mapNotNull(f: (right: T) -> R?): Try<R> {
         contract {
             callsInPlace(f, InvocationKind.AT_MOST_ONCE)
         }
@@ -202,93 +198,6 @@ sealed class Try<out T> {
                     t.nonFatalOrThrow().failure()
                 }
             }
-        }
-
-        suspend inline fun <InputA, InputB, Output> parTraverseEither(
-            deferredA: TryDeferred<InputA>,
-            deferredB: TryDeferred<InputB>,
-            handler: (InputA, InputB) -> Output
-        ): Try<Output> {
-            val tryA = deferredA.await()
-            val tryB = deferredB.await()
-            return when {
-                tryA is Failure -> tryA
-                tryB is Failure -> tryB
-                else -> handler(
-                    tryA.getOrThrow(),
-                    tryB.getOrThrow()
-                ).success()
-            }
-        }
-
-        suspend inline fun <InputA, InputB, Output> parZip(
-            deferredA: TryDeferred<InputA>,
-            deferredB: TryDeferred<InputB>,
-            handler: (InputA, InputB) -> Output
-        ): Try<Output> {
-            val tryA = deferredA.await()
-            val tryB = deferredB.await()
-            return when {
-                tryA is Failure -> tryA
-                tryB is Failure -> tryB
-                else -> handler(
-                    tryA.getOrThrow(),
-                    tryB.getOrThrow()
-                ).success()
-            }
-        }
-
-        suspend inline fun <InputA, InputB, InputC, Output> parZip(
-            deferredA: TryDeferred<InputA>,
-            deferredB: TryDeferred<InputB>,
-            deferredC: TryDeferred<InputC>,
-            handler: (InputA, InputB, InputC) -> Output
-        ): Try<Output> {
-            val tryA = deferredA.await()
-            val tryB = deferredB.await()
-            val tryC = deferredC.await()
-            return when {
-                tryA is Failure -> tryA
-                tryB is Failure -> tryB
-                tryC is Failure -> tryC
-                else -> handler(
-                    tryA.getOrThrow(),
-                    tryB.getOrThrow(),
-                    tryC.getOrThrow()
-                ).success()
-            }
-        }
-
-        suspend inline fun <InputA, InputB, InputC, InputD, Output> parZip(
-            deferredA: TryDeferred<InputA>,
-            deferredB: TryDeferred<InputB>,
-            deferredC: TryDeferred<InputC>,
-            deferredD: TryDeferred<InputD>,
-            handler: (InputA, InputB, InputC, InputD) -> Output
-        ): Try<Output> {
-            val tryA = deferredA.await()
-            val tryB = deferredB.await()
-            val tryC = deferredC.await()
-            val tryD = deferredD.await()
-            return when {
-                tryA is Failure -> tryA
-                tryB is Failure -> tryB
-                tryC is Failure -> tryC
-                tryD is Failure -> tryD
-                else -> handler(
-                    tryA.getOrThrow(),
-                    tryB.getOrThrow(),
-                    tryC.getOrThrow(),
-                    tryD.getOrThrow()
-                ).success()
-            }
-        }
-    }
-
-    inline fun validate(validation: (T) -> Unit): Try<T> = flatMap {
-        Try {
-            validation(it)
-            it
         }
     }
 

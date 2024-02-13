@@ -15,6 +15,7 @@
 
 
     <color name="splashBackground">#FF270B68</color>
+    <color name="backgroundDarker">#14033A</color>
 
     <!--LEGACY COLORS -->
     <!--used for every views background -->
