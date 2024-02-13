@@ -22,6 +22,9 @@ jobs:
       - name: Change version name
         run: ./scripts/ci/set_version_name.main.kts ${{ github.event.inputs.versionName }}
 
+      - name: Update Version Code
+        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
+
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v5
         with:

@@ -13,7 +13,6 @@ import com.spyfall.convention.util.getVersionCode
 import com.spyfall.convention.util.getVersionName
 import com.spyfall.convention.util.libs
 import com.spyfall.convention.util.loadGradleProperty
-import com.spyfall.convention.util.printRed
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

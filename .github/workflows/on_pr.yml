@@ -35,7 +35,9 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
 
+      # Release PRs update the version code before making the PR, all others will need to update in the CI build
       - name: Update Version Code
+        if: ${{ env.isReleasePR != 'true' }}
         run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
 
       - name: Create Service Key Json
