@@ -15,6 +15,7 @@ android {
 dependencies {
     implementation(projects.libraries.dictionary)
     implementation(projects.libraries.storage)
+    implementation(projects.libraries.config)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.analytics)
     implementation(projects.libraries.navigation)

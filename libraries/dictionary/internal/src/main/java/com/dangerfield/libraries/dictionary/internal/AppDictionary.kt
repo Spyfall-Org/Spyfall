@@ -12,7 +12,7 @@ import oddoneout.core.Try
  */
 class AppDictionary(
     private val defaultDictionary: Dictionary,
-    private val overrideDictionary: Dictionary?,
+    private val overrideDictionary: Dictionary,
     private val buildInfo: BuildInfo,
     private val context: Context
 ) : Dictionary {
@@ -23,7 +23,7 @@ class AppDictionary(
      * returns the resource name as a string in debug and empty string otherwise
      */
     override fun getString(key: Int, args: Map<String, String>): String {
-        val value = Try { overrideDictionary?.getString(key, args) }.getOrNull()
+        val value = Try { overrideDictionary.getString(key, args) }.getOrNull()
             ?: Try { defaultDictionary.getString(key, args) }.getOrNull()
             ?: context.resources.getResourceEntryName(key).takeIf { buildInfo.isDebug }
             ?: ""
@@ -31,7 +31,7 @@ class AppDictionary(
     }
 
     override fun getOptionalString(key: Int, args: Map<String, String>): String? {
-        val value = Try { overrideDictionary?.getString(key, args) }.getOrNull()
+        val value = Try { overrideDictionary.getString(key, args) }.getOrNull()
             ?: Try { defaultDictionary.getString(key, args) }.getOrNull()
         return value?.applyArgs(args)
     }

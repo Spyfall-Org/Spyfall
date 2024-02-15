@@ -3,12 +3,10 @@ package com.dangerfield.libraries.dictionary.internal
 import android.content.Context
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
-import com.dangerfield.libraries.dictionary.internal.FirebaseOverrideDictionaryDataSource.Companion.DICTIONARY_COLLECTION_KEY
 import com.dangerfield.libraries.dictionary.supportLevelNameMap
 import com.dangerfield.oddoneoout.libraries.dictionary.internal.R
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.tasks.await
 import oddoneout.core.BuildInfo
 import oddoneout.core.Try
 import oddoneout.core.getOrElse
@@ -20,8 +18,7 @@ import javax.inject.Inject
 
 @AutoBind
 class GetDeviceLanguageSupportLevelImpl @Inject constructor(
-    private val firebaseFirestore: FirebaseFirestore,
-    private val buildInfo: BuildInfo,
+    private val languageSupportLevel: CurrentLanguageSupportLevelString,
     @ApplicationContext private val applicationContext: Context
 ) : GetDeviceLanguageSupportLevel {
 
@@ -50,20 +47,8 @@ class GetDeviceLanguageSupportLevelImpl @Inject constructor(
         Timber.d("isDeviceLanguageSupported: $it")
     }
 
-    private suspend fun getLanguageSupportLevel(locale: Locale): Try<LanguageSupportLevel> = Try {
-        firebaseFirestore.collection(DICTIONARY_COLLECTION_KEY)
-            .document(buildInfo.versionName)
-            .get()
-            .tryAwait()
-            .getOrThrow()
-            .data
-            ?.get(SUPPORT_LEVEL_FIELD_KEY)
-            ?.let {
-                Try {
-                    val supportLevelMap = (it as Map<String, String>)
-                    supportLevelMap[locale.language]
-                }.getOrNull()
-            }
+    private fun getLanguageSupportLevel(locale: Locale): Try<LanguageSupportLevel> = Try {
+        languageSupportLevel.value
             .let {
                 val clazz = supportLevelNameMap[it]
                 when (clazz) {
@@ -73,9 +58,5 @@ class GetDeviceLanguageSupportLevelImpl @Inject constructor(
                     else -> LanguageSupportLevel.NotSupported(locale)
                 }
             }
-    }
-
-    companion object {
-        private const val SUPPORT_LEVEL_FIELD_KEY = "supportLevels"
     }
 }

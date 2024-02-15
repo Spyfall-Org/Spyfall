@@ -1,4 +1,4 @@
-package com.dangerfield.libraries.dictionary.internal.ui
+package com.dangerfield.libraries.dictionary.internal
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
