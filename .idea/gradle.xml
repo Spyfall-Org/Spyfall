@@ -32,6 +32,8 @@
             <option value="$PROJECT_DIR$/features/blockingError/internal" />
             <option value="$PROJECT_DIR$/features/colorPicker" />
             <option value="$PROJECT_DIR$/features/colorPicker/internal" />
+            <option value="$PROJECT_DIR$/features/consent" />
+            <option value="$PROJECT_DIR$/features/consent/internal" />
             <option value="$PROJECT_DIR$/features/forcedUpdate" />
             <option value="$PROJECT_DIR$/features/forcedUpdate/internal" />
             <option value="$PROJECT_DIR$/features/gamePlay" />
@@ -47,8 +49,6 @@
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/settings/internal" />
             <option value="$PROJECT_DIR$/features/splash" />
-            <option value="$PROJECT_DIR$/features/termOfService" />
-            <option value="$PROJECT_DIR$/features/termOfService/internal" />
             <option value="$PROJECT_DIR$/features/videoCall" />
             <option value="$PROJECT_DIR$/features/videoCall/internal" />
             <option value="$PROJECT_DIR$/features/waitingRoom" />

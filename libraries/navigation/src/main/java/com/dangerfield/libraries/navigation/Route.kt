@@ -214,8 +214,6 @@ fun fillRoute(template: Route.Template, block: Route.Template.Filler.() -> Unit)
     return filler.build()
 }
 
-
-
 fun route(block: Route.Builder.() -> Unit): Route.Template {
     val builder = Route.Builder()
     builder.block()

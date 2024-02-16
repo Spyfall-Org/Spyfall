@@ -1,28 +1,13 @@
 package com.dangerfield.libraries.config
 
+import oddoneout.core.getValueForPath
 import spyfallx.core.common.BuildConfig
 
 abstract class AppConfigMap {
 
     abstract val map: Map<String, *>
 
-    /**
-     * Method to obtain int values since numbers are parsed into doubles by default
-     */
-    fun intValue(value: ConfiguredValue<Int>): Int =
-        value<Number>(value).toInt()
-
-    /**
-     * Method to obtain long values since numbers are parsed into doubles by default
-     */
-    fun longValue(value: ConfiguredValue<Long>): Long =
-        value<Number>(value).toLong()
-
-    /**
-     * Method to obtain double values.
-     */
-    fun doubleValue(value: ConfiguredValue<Double>): Double =
-        value<Number>(value).toDouble()
+    inline fun <reified T : Any> get(path: String): T? = map.getValueForPath<T>(fullPath = path)
 
     /**
      * Get the value at [rootPath] + path.

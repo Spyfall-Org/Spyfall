@@ -26,7 +26,8 @@ class FirebaseConfigDataSource
     // every active session everywhere would be observing that document, not sure if thats great.
     override suspend fun getConfig(): Try<AppConfigMap> = Try {
         Timber.d("Fetching config for ${buildInfo.versionName}")
-        val configMap = firebaseFirestore.collection(CONFIG_COLLECTION_KEY)
+        val configMap = firebaseFirestore
+            .collection(CONFIG_COLLECTION_KEY)
             .document(buildInfo.versionName)
             .get()
             .tryAwait()

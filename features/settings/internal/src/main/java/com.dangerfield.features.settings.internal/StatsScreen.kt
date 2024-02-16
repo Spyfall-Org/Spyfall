@@ -104,14 +104,14 @@ fun StatsScreen(
                     Text(
                         text = dictionaryString(
                             R.string.stats_gamesYouveWonAsOddOneOut_label,
-                            mapOf("gamesWon" to gamesWonAsOddOne.toString())
+                            "gamesWon" to gamesWonAsOddOne.toString()
                         ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
                     Text(
                         text = dictionaryString(
                             R.string.stats_gamesYouveWonAsPlayer_label,
-                            mapOf("gamesWon" to gamesWonAsPlayer.toString())
+                            "gamesWon" to gamesWonAsPlayer.toString()
                         ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
@@ -124,14 +124,14 @@ fun StatsScreen(
                     Text(
                         text = dictionaryString(
                             R.string.stats_gamesYouveLostAsOddOneOut_label,
-                            mapOf("gamesLost" to gamesLostAsOddOne.toString())
+                            "gamesLost" to gamesLostAsOddOne.toString()
                         ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )
                     Text(
                         text = dictionaryString(
                             R.string.stats_gamesYouveLostAsPlayer_label,
-                            mapOf("gamesLost" to gamesLostAsPlayer.toString())
+                            "gamesLost" to gamesLostAsPlayer.toString()
                         ),
                         typographyToken = OddOneOutTheme.typography.Body.B700
                     )

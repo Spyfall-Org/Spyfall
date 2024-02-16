@@ -40,7 +40,7 @@ fun TooFewPlayersDialog(
             Text(
                 text = dictionaryString(
                     R.string.waitingRoom_tooFewPlayersDialog_body,
-                    mapOf("min" to minPlayers.toString())
+                    "min" to minPlayers.toString()
                 )
             )
         },

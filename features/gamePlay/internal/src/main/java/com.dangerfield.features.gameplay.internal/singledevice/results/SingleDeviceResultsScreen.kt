@@ -146,10 +146,8 @@ private fun ResultsScreenContent(
             Text(
                 text = dictionaryString(
                     R.string.singleDeviceGameResults_oddOneOutVotes_text,
-                    mapOf(
-                        "correct" to correctOddOneOutVoteCount.toString(),
-                        "total" to (totalPlayerCount - 1).toString()
-                    )
+                    "correct" to correctOddOneOutVoteCount.toString(),
+                    "total" to (totalPlayerCount - 1).toString()
                 ),
                 typographyToken = OddOneOutTheme.typography.Body.B800
             )
@@ -168,7 +166,7 @@ private fun ResultsScreenContent(
                 Text(
                     text = dictionaryString(
                         R.string.singeDeviceGameResults_locationGuessed_header,
-                        mapOf("location" to oddOneOutLocationGuess)
+                        "location" to oddOneOutLocationGuess
                     ),
                     typographyToken = OddOneOutTheme.typography.Body.B800
                 )

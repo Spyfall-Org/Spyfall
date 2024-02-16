@@ -17,3 +17,9 @@ interface Dictionary {
 
     fun getOptionalString(@StringRes key: Int, args: Map<String,String> = emptyMap()): String?
 }
+
+fun Dictionary.getString(@StringRes key: Int, vararg args: Pair<String,String>): String {
+    return getString(key, args.toMap())
+}
+
+

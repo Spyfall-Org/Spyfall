@@ -24,12 +24,12 @@ fun LanguageSupportDialog(
     val message = if (isUnsupported) {
         dictionaryString(
             R.string.languageSupport_unsupportedDialog_body,
-            mapOf("language" to language)
+            "language" to language
         )
     } else {
         dictionaryString(
             R.string.languageSupport_partialSupportDialog_body,
-            mapOf("language" to language)
+            "language" to language
         )
     }
 
@@ -40,7 +40,7 @@ fun LanguageSupportDialog(
             Text(
                 text = dictionaryString(
                     R.string.languageSupport_dialog_header,
-                    mapOf("language" to language)
+                    "language" to language
                 )
             )
         },

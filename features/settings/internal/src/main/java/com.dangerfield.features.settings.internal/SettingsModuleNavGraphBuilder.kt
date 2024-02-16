@@ -1,11 +1,14 @@
 package com.dangerfield.features.settings.internal
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.colorpicker.navigateToColorPicker
+import com.dangerfield.features.consent.OpenConsentForm
+import com.dangerfield.features.consent.ShouldShowPrivacyOption
 import com.dangerfield.features.qa.navigateToQa
 import com.dangerfield.features.settings.internal.contactus.ContactUsScreen
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel
@@ -24,17 +27,22 @@ import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.session.Stats
 import com.dangerfield.oddoneoout.features.settings.internal.R
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.flow.map
-import se.ansman.dagger.auto.AutoBindIntoSet
+import kotlinx.coroutines.launch
 import oddoneout.core.BuildInfo
 import oddoneout.core.BuildType
+import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
+@ActivityScoped
 class SettingsModuleNavGraphBuilder @Inject constructor(
     private val buildInfo: BuildInfo,
     private val sessionFlow: SessionFlow,
-    private val dictionary: Dictionary
+    private val dictionary: Dictionary,
+    private val shouldShowPrivacyOption: ShouldShowPrivacyOption,
+    private val openConsentForm: OpenConsentForm
 ) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -64,6 +72,8 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
         }
 
         composable(aboutRoute.navRoute) {
+            val scope = rememberCoroutineScope()
+
             PageLogEffect(
                 route = aboutRoute,
                 type = PageType.FullScreenPage
@@ -72,9 +82,13 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
             AboutScreen(
                 versionName = buildInfo.versionName,
                 onNavigateBack = router::goBack,
+                shouldShowConsentFormOption = shouldShowPrivacyOption(),
                 onPrivacyPolicyClicked = { router.openWebLink(dictionary.getString(R.string.about_privacyPolicy_link)) },
                 onTermsOfServiceClicked = { router.openWebLink(dictionary.getString(R.string.about_termsOfService_link)) },
-                onThirdPartyServicesClicked = { router.openWebLink(dictionary.getString(R.string.about_thirdPartyServices_link)) }
+                onThirdPartyServicesClicked = { router.openWebLink(dictionary.getString(R.string.about_thirdPartyServices_link)) },
+                onManageConsentClicked = {
+                    scope.launch { openConsentForm() }
+                },
             )
         }
 

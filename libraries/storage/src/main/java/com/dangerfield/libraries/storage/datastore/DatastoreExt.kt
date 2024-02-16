@@ -2,6 +2,7 @@ package com.dangerfield.libraries.storage.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -48,5 +49,21 @@ suspend fun <T> DataStore<Preferences>.getValue(
         }
         .firstOrNull()
 }
+
+fun <T> DataStore<Preferences>.getValueFlow(
+    key: Preferences.Key<String>,
+    default: T? = null,
+    fromString: (String) -> T?,
+): Flow<T?> {
+    return distinctKeyFlow(key)
+        .map { cachedValue ->
+            cachedValue?.let { string ->
+                Try { fromString(string) }
+                    .getOrNull()
+                    ?: default
+            } ?: default
+        }
+}
+
 
 

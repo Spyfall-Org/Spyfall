@@ -117,6 +117,7 @@ dependencies {
 
     // ads
     implementation(libs.google.play.services.ads)
+    implementation(libs.user.messaging.platform)
 
     /**
      * Project Modules
@@ -177,8 +178,8 @@ dependencies {
 	implementation(projects.libraries.analytics.internal)
 	implementation(projects.libraries.dictionary)
 	implementation(projects.libraries.dictionary.internal)
-	implementation(projects.features.termOfService)
-	implementation(projects.features.termOfService.internal)
+	implementation(projects.features.consent)
+	implementation(projects.features.consent.internal)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     testImplementation(libs.androidx.test.junit)

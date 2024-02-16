@@ -79,10 +79,8 @@ fun ChangeNameDialog(
                     val errorText = when {
                         isInvalidLength -> dictionaryString(
                             R.string.changeName_invalidLength_text,
-                            mapOf(
-                                "min" to minNameLength.toString(),
-                                "max" to maxNameLength.toString()
-                            )
+                            "min" to minNameLength.toString(),
+                            "max" to maxNameLength.toString()
                         )
 
                         isNameTaken -> dictionaryString(R.string.changeName_usernameTakenError_text)

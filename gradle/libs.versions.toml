@@ -203,6 +203,8 @@ ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.re
 # Lint
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
+# GDP
+user-messaging-platform = "com.google.android.ump:user-messaging-platform:2.2.0"
 # Testing
 
 #Testing

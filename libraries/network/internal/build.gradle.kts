@@ -5,6 +5,7 @@ plugins {
 spyfall {
     flowroutines()
     daggerHilt()
+    firebase()
 }
 
 android {

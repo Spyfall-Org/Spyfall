@@ -91,7 +91,7 @@ fun SettingsScreen(
             Text(
                 text = dictionaryString(id = R.string.app_name_text) + dictionaryString(
                     R.string.settings_version_label,
-                    mapOf("version" to versionName)
+                    "version" to versionName
                 ),
                 modifier = Modifier
                     .fillMaxWidth(),

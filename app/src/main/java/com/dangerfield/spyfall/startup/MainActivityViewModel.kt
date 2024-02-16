@@ -1,9 +1,11 @@
 package com.dangerfield.spyfall.startup
 
+import android.app.Activity
 import androidx.lifecycle.viewModelScope
+import com.dangerfield.features.consent.ConsentStatus
+import com.dangerfield.features.consent.ConsentStatusRepository
 import com.dangerfield.features.forcedupdate.IsAppUpdateRequired
-import com.dangerfield.features.termOfService.GetLegalAcceptanceState
-import com.dangerfield.features.termOfService.LegalAcceptanceState
+import com.dangerfield.libraries.config.AppConfigFlow
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import oddoneout.core.Try
+import oddoneout.core.doNothing
 import oddoneout.core.failFast
 import oddoneout.core.logOnError
 import javax.inject.Inject
@@ -39,11 +42,13 @@ class MainActivityViewModel @Inject constructor(
     private val ensureAppConfigLoaded: EnsureAppConfigLoaded,
     private val ensureSessionLoaded: EnsureSessionLoaded,
     private val isAppUpdateRequired: IsAppUpdateRequired,
-    private val getLegalAcceptanceState: GetLegalAcceptanceState,
+    private val consentStatusRepository: ConsentStatusRepository,
     private val sessionFlow: SessionFlow,
     private val getLanguageSupportLevel: GetDeviceLanguageSupportLevel,
     private val shouldShowLanguageSupportMessage: ShouldShowLanguageSupportMessage,
     private val languageSupportMessageShown: LanguageSupportMessageShown,
+    private val appConfigFlow: AppConfigFlow,
+    private val isInMaintenanceMode: IsInMaintenanceMode
 ) : SEAViewModel<State, Unit, Action>() {
 
     override val initialState = State(
@@ -52,7 +57,8 @@ class MainActivityViewModel @Inject constructor(
         isBlockingLoad = true,
         hasBlockingError = false,
         languageSupportLevelMessage = null,
-        legalAcceptanceState = null
+        consentStatus = null,
+        isInMaintenanceMode = false
     )
 
     init {
@@ -63,6 +69,16 @@ class MainActivityViewModel @Inject constructor(
         when (action) {
             Action.LoadApp -> loadApp()
             is Action.MarkLanguageSupportLevelMessageShown -> languageSupportMessageShown(action.languageSupportLevel)
+            is Action.LoadConsentStatus -> listenForConsentStatusUpdates(action)
+        }
+    }
+
+    private fun listenForConsentStatusUpdates(action: Action.LoadConsentStatus) {
+        viewModelScope.launch {
+            consentStatusRepository.getStatusFlow(action.activity)
+                .collectLatest { status ->
+                    updateState { it.copy(consentStatus = status) }
+                }
         }
     }
 
@@ -91,58 +107,57 @@ class MainActivityViewModel @Inject constructor(
                     )
                 }
 
-                viewModelScope.launch {
-                    listenForAppUpdateRequired()
-                }
-
-                viewModelScope.launch {
-                    listenForConfigUpdates()
-                }
-
-                viewModelScope.launch {
-                    getLanguageSupport()
-                }
-
-                viewModelScope.launch {
-                    listenForLegalAcceptanceState()
-                }
+                listenForAppUpdateRequired()
+                listenForSessionUpdates()
+                getLanguageSupport()
+                listenForConfigUpdates()
             }
     }
 
     private suspend fun getLanguageSupport() {
-        val languageSupportLevel = getLanguageSupportLevel()
-        val shouldShow = shouldShowLanguageSupportMessage(languageSupportLevel)
-        if (shouldShow) {
-            updateState {
-                it.copy(languageSupportLevelMessage = LanguageSupportLevelMessage(languageSupportLevel))
+        viewModelScope.launch {
+            val languageSupportLevel = getLanguageSupportLevel()
+            val shouldShow = shouldShowLanguageSupportMessage(languageSupportLevel)
+            if (shouldShow) {
+                updateState {
+                    it.copy(
+                        languageSupportLevelMessage = LanguageSupportLevelMessage(
+                            languageSupportLevel
+                        )
+                    )
+                }
             }
         }
     }
 
-    private suspend fun listenForConfigUpdates() {
-        sessionFlow
-            .map { it.user.themeConfig }
-            .distinctUntilChanged()
-            .collectLatest { config ->
-                val colorPrimitive = getSessionColorPrimitive(config)
-                updateState { state ->
-                    state.copy(
-                        accentColor = colorPrimitive,
-                    )
+    private suspend fun listenForSessionUpdates() {
+        viewModelScope.launch {
+            sessionFlow
+                .map { it.user.themeConfig }
+                .distinctUntilChanged()
+                .collectLatest { config ->
+                    val colorPrimitive = getSessionColorPrimitive(config)
+                    updateState { state ->
+                        state.copy(
+                            accentColor = colorPrimitive,
+                        )
+                    }
                 }
-            }
+        }
     }
 
-    private suspend fun listenForLegalAcceptanceState() {
-        getLegalAcceptanceState()
-            .distinctUntilChanged()
-            .collectLatest { legalAcceptanceState ->
-                updateState { state ->
-                    state.copy(
-                       legalAcceptanceState = legalAcceptanceState
-                    )
+    private suspend fun listenForConfigUpdates() {
+        viewModelScope.launch {
+            appConfigFlow
+                .distinctUntilChanged()
+                .collectLatest { _ ->
+                    updateState { state ->
+                        state.copy(
+                            isInMaintenanceMode = isInMaintenanceMode(),
+                        )
+                    }
                 }
-            }
+        }
     }
 
     private fun getSessionColorPrimitive(themeConfig: ThemeConfig): ColorPrimitive {
@@ -175,7 +190,9 @@ class MainActivityViewModel @Inject constructor(
 
     sealed class Action {
         data object LoadApp : Action()
-        data class MarkLanguageSupportLevelMessageShown(val languageSupportLevel: LanguageSupportLevel) : Action()
+        data class LoadConsentStatus(val activity: Activity) : Action()
+        data class MarkLanguageSupportLevelMessageShown(val languageSupportLevel: LanguageSupportLevel) :
+            Action()
     }
 
     data class State(
@@ -183,7 +200,8 @@ class MainActivityViewModel @Inject constructor(
         val isUpdateRequired: Boolean,
         val accentColor: ColorPrimitive,
         val hasBlockingError: Boolean,
-        val legalAcceptanceState: LegalAcceptanceState?,
+        val consentStatus: ConsentStatus?,
+        val isInMaintenanceMode: Boolean,
         val languageSupportLevelMessage: LanguageSupportLevelMessage?
     )
 

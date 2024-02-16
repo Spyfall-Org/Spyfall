@@ -177,7 +177,7 @@ private fun RoleRevealScreenContent(
                 Text(
                     text = dictionaryString(
                         R.string.singleDevice_handToPlayer_header,
-                        mapOf("name" to currentPlayer.name)
+                        "name" to currentPlayer.name
                     ),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,

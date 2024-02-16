@@ -3,6 +3,7 @@ package com.dangerfield.features.joingame.internal
 import com.dangerfield.features.joingame.internal.JoinGameUseCase.JoinGameError
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.oddoneoout.features.joingame.internal.R
@@ -110,7 +111,7 @@ class JoinGameViewModel @Inject constructor(
                         input = it.accessCodeState.value,
                         errorMessage = dictionary.getString(
                             R.string.joinGame_invalidAccessCodeError_text,
-                            mapOf("length" to "${joinGameError.requiredLength}")
+                            "length" to "${joinGameError.requiredLength}"
                         )
                     )
                 )
@@ -120,10 +121,8 @@ class JoinGameViewModel @Inject constructor(
                         input = it.userNameState.value,
                         errorMessage = dictionary.getString(
                             R.string.joinGame_userNameFieldInvalidError_text,
-                            mapOf(
-                                "min" to "${joinGameError.min}",
-                                "max" to "${joinGameError.max}"
-                            )
+                            "min" to "${joinGameError.min}",
+                            "max" to "${joinGameError.max}"
                         )
                     )
                 )
@@ -163,7 +162,7 @@ class JoinGameViewModel @Inject constructor(
                         input = accessCode,
                         errorMessage = dictionary.getString(
                             R.string.joinGame_accessCodeLengthError_text,
-                            mapOf("length" to "${gameConfig.accessCodeLength}")
+                            "length" to "${gameConfig.accessCodeLength}"
                         )
                     )
                 }
@@ -182,11 +181,8 @@ class JoinGameViewModel @Inject constructor(
                     input = userName,
                     errorMessage = dictionary.getString(
                         R.string.joinGame_nameLengthError_text,
-                        mapOf(
-                            "min" to "${gameConfig.minNameLength}",
-                            "max" to "${gameConfig.maxNameLength}"
-
-                        )
+                        "min" to "${gameConfig.minNameLength}",
+                        "max" to "${gameConfig.maxNameLength}"
                     )
                 )
             }

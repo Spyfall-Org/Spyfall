@@ -335,6 +335,7 @@
     <!-- /////////////////////    Blocking Error Strings   /////////////////////-->
     <string name="blockingError_screen_header">This is embarrassing</string>
     <string name="blockingError_error_body">We seem to have an uncaught bug in our app. Please try killing the app and starting again.</string>
+    <string name="blockingError_maintenenceMode_body">We are doing some quick restructuring. The app will be temporarily unavailable while we work on it. We expect to be back up and running in the next 30 mins.</string>
 
     <!-- /////////////////////    TERMS OF SERVICE   /////////////////////-->
     <string name="app_privacyPolicy_text">Privacy Policy</string>
@@ -343,7 +344,7 @@
     <string name="termsOfService_links_text">Before continuing please read and agree to our {termsOfService} and {privacyPolicy}</string>
     <string name="termsOfService_confirmation_text">I have read and agree to the Terms of Service and Privacy Policy</string>
     <string name="termsOfService_accept_action">Accept</string>
-    <string name="termsOfService_description_text">When using Odd One Out we may collect data relevant to the app\'s functionality. In order to do this we need your explicit consent to store and process this data.</string>
+    <string name="termsOfService_description_text">When using Odd One Out we may collect data relevant for the app\'s functionality and for advertisers. In order to do this we need your explicit consent to store and process this data.</string>
     <string name="create_your_own_coming_soon">Create your own\n(coming soon)</string>
 
 </resources>

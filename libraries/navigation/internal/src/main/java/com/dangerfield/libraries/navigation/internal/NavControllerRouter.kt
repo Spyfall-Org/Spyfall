@@ -1,7 +1,6 @@
 package com.dangerfield.libraries.navigation.internal
 
 import android.net.Uri
-import android.util.Log
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.dangerfield.libraries.navigation.Route
@@ -15,6 +14,7 @@ import oddoneout.core.Try
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.logOnError
 import oddoneout.core.throwIfDebug
+import timber.log.Timber
 
 class NavControllerRouter(
     val navHostController: NavHostController,
@@ -28,7 +28,7 @@ class NavControllerRouter(
         navHostController
             .currentBackStackEntryFlow
             .onEach {
-                Log.d("NavControllerRouter", "backstack: ${it.destination.route}")
+                Timber.d("backstack: ${it.destination.route}")
             }
             .launchIn(coroutineScope)
     }

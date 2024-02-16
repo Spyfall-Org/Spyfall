@@ -368,15 +368,13 @@ private fun CorrectAnswer(
         Text(
             text = dictionaryString(
                 R.string.gamePlay_correctAnswer_header,
-                mapOf(
-                    "type" to if (isVotingOnLocation) {
-                        dictionaryString(R.string.app_location_label)
-                    } else {
-                        dictionaryString(
-                            R.string.app_oddOneOut_label
-                        )
-                    }
-                )
+                "type" to if (isVotingOnLocation) {
+                    dictionaryString(R.string.app_location_label)
+                } else {
+                    dictionaryString(
+                        R.string.app_oddOneOut_label
+                    )
+                }
             ),
             typographyToken = OddOneOutTheme.typography.Display.D800
         )

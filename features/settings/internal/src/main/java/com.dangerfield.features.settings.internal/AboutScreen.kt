@@ -22,10 +22,12 @@ import com.dangerfield.oddoneoout.features.settings.internal.R
 fun AboutScreen(
     modifier: Modifier = Modifier,
     versionName: String,
-    onPrivacyPolicyClicked: () -> Unit = { },
-    onTermsOfServiceClicked: () -> Unit = { },
-    onThirdPartyServicesClicked: () -> Unit = { },
-    onNavigateBack: () -> Unit = { },
+    shouldShowConsentFormOption: Boolean,
+    onManageConsentClicked: () -> Unit,
+    onPrivacyPolicyClicked: () -> Unit,
+    onTermsOfServiceClicked: () -> Unit,
+    onThirdPartyServicesClicked: () -> Unit ,
+    onNavigateBack: () -> Unit,
 ) {
     Screen(
         modifier = modifier,
@@ -60,6 +62,14 @@ fun AboutScreen(
                 trailingIcon = SpyfallIcon.ChevronRight(null),
             )
 
+            if (shouldShowConsentFormOption) {
+                SettingsOption(
+                    text = "Consent Form",
+                    onClick = onManageConsentClicked,
+                    trailingIcon = SpyfallIcon.ChevronRight(null),
+                )
+            }
+
             VerticalSpacerS1200()
 
             Text(
@@ -74,7 +84,7 @@ fun AboutScreen(
             Text(
                 text = dictionaryString(id = R.string.app_name_text) + dictionaryString(
                     R.string.settings_version_label,
-                    mapOf("version" to versionName)
+                    "version" to versionName
                 ),
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -92,10 +102,12 @@ private fun PreviewSettingsScreen() {
     PreviewContent {
         AboutScreen(
             versionName = "X.Y.Z",
+            onManageConsentClicked = {},
             onPrivacyPolicyClicked = { -> },
             onTermsOfServiceClicked = { -> },
             onThirdPartyServicesClicked = { -> },
             onNavigateBack = { -> },
+            shouldShowConsentFormOption = true
         )
     }
 }

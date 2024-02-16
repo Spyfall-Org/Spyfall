@@ -36,7 +36,9 @@ import oddoneout.core.GenerateLocalUUID
 import oddoneout.core.Try
 import oddoneout.core.getOrElse
 import oddoneout.core.logOnError
+import oddoneout.core.readJson
 import oddoneout.core.throwIfDebug
+import oddoneout.core.toJson
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -50,8 +52,8 @@ class SessionRepository @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val firebaseAnalytics: FirebaseAnalytics,
     private val datastore: DataStore<Preferences>,
+    private val moshi: Moshi,
     applicationStateRepository: ApplicationStateRepository,
-    moshi: Moshi,
 ) {
 
     val session = LazySession()
@@ -76,16 +78,10 @@ class SessionRepository @Inject constructor(
         }
         .filterNotNull()
 
-    private val activeGameAdapter = moshi.adapter(ActiveGame::class.java)
-    private val sessionDataAdapter = moshi.adapter(SessionData::class.java)
-
     private val activeGameFlow: Flow<ActiveGame?> = datastore.distinctKeyFlow(ACTIVE_GAME_KEY)
             .map {
                 it?.let {
-                    Try { activeGameAdapter.fromJson(it) }
-                        .logOnError()
-                        .throwIfDebug()
-                        .getOrNull()
+                    moshi.readJson<ActiveGame>(it)
                 }
             }
 
@@ -119,13 +115,10 @@ class SessionRepository @Inject constructor(
 
     suspend fun updateActiveGame(activeGame: ActiveGame?) {
         applicationScope.childSupervisorScope(dispatcherProvider.io).launch {
-            datastore.edit {
-                it[ACTIVE_GAME_KEY] = Try {
-                    activeGameAdapter.toJson(activeGame)
-                }
-                    .logOnError()
-                    .throwIfDebug()
-                    .getOrElse { "" }
+            datastore.edit { prefs ->
+                prefs[ACTIVE_GAME_KEY] = activeGame?.let { game ->
+                    moshi.toJson(game)
+                } ?: ""
             }
         }
     }
@@ -136,7 +129,7 @@ class SessionRepository @Inject constructor(
 
     private suspend fun getCachedSessionData(id: Long): SessionData? =
         datastore.data.first()[SESSION_DATA_KEY]?.let {
-            val sessionData = Try { sessionDataAdapter.fromJson(it) }.throwIfDebug().getOrNull()
+            val sessionData = Try { moshi.readJson<SessionData>(it) }.throwIfDebug().getOrNull()
             if (sessionData?.id == id) sessionData else null
         }
 
@@ -145,7 +138,7 @@ class SessionRepository @Inject constructor(
             id = id,
             startedAt = System.currentTimeMillis()
         )
-        datastore.edit { it[SESSION_DATA_KEY] = sessionDataAdapter.toJson(sessionData) }
+        datastore.edit { it[SESSION_DATA_KEY] = moshi.toJson(sessionData) }
         return sessionData
     }
 

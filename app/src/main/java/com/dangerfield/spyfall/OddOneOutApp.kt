@@ -6,9 +6,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -22,16 +20,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.LocalAdsConfig
 import com.dangerfield.features.blockingerror.blockingErrorRoute
+import com.dangerfield.features.blockingerror.maintenanceRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
-import com.dangerfield.features.termOfService.LegalAcceptanceState
-import com.dangerfield.features.termOfService.termOfServiceRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.analytics.LocalMetricsTracker
 import com.dangerfield.libraries.analytics.MetricsTracker
@@ -40,6 +36,7 @@ import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LocalDictionary
 import com.dangerfield.libraries.dictionary.internal.ui.navigateToLanguageSupportDialog
+import com.dangerfield.libraries.navigation.BlockingScreenRouter
 import com.dangerfield.libraries.navigation.fadeInToEndAnim
 import com.dangerfield.libraries.navigation.fadeInToStartAnim
 import com.dangerfield.libraries.navigation.fadeOutToEndAnim
@@ -72,8 +69,9 @@ fun OddOneOutApp(
     navBuilderRegistry: NavBuilderRegistry,
     networkMonitor: NetworkMonitor,
     adsConfig: AdsConfig,
+    blockingScreenRouter: BlockingScreenRouter,
+    isInMaintenanceMode: Boolean,
     metricsTracker: MetricsTracker,
-    legalAcceptanceState: LegalAcceptanceState?,
     onLanguageSupportLevelMessageShown: (LanguageSupportLevel) -> Unit,
     languageSupportLevelMessage: MainActivityViewModel.LanguageSupportLevelMessage?,
     dictionary: Dictionary,
@@ -87,6 +85,10 @@ fun OddOneOutApp(
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
+    val blockingScreenToShow by blockingScreenRouter
+        .routes
+        .receiveAsFlow()
+        .collectAsStateWithLifecycle(initialValue = null)
 
     val router = remember {
         NavControllerRouter(
@@ -95,11 +97,13 @@ fun OddOneOutApp(
         )
     }
 
+
     val startingRoute = when {
-        legalAcceptanceState == LegalAcceptanceState.NotAccepted -> termOfServiceRoute
-        isUpdateRequired -> forcedUpdateNavigationRoute
-        hasBlockingError -> blockingErrorRoute
-        else -> welcomeNavigationRoute
+        isUpdateRequired -> forcedUpdateNavigationRoute.noArgRoute()
+        isInMaintenanceMode -> maintenanceRoute.noArgRoute()
+        hasBlockingError -> blockingErrorRoute.noArgRoute()
+        blockingScreenToShow != null -> blockingScreenToShow ?: welcomeNavigationRoute.noArgRoute()
+        else -> welcomeNavigationRoute.noArgRoute()
     }
 
     LaunchedEffect(Unit) {
@@ -166,7 +170,7 @@ fun OddOneOutApp(
                     // TODO fix the padding with bottom sheets and text fields
                     NavHost(
                         navController = router.navHostController,
-                        startDestination = startingRoute.navRoute,
+                        startDestination = startingRoute.route,
                         enterTransition = { fadeInToStartAnim() },
                         exitTransition = { fadeOutToStartAnim() },
                         popEnterTransition = { fadeInToEndAnim() },

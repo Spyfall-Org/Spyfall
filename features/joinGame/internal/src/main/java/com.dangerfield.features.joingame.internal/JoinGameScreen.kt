@@ -122,9 +122,7 @@ private fun JoinGameScreenContent(
                 title = dictionaryString(R.string.joinGame_accessCode_header),
                 hint = dictionaryString(
                     R.string.joinGame_accessCode_hint,
-                    mapOf(
-                        "length" to accessCodeLength.toString()
-                    )
+                    "length" to accessCodeLength.toString()
                 ),
                 shouldShowErrorWhileTyping = false,
                 focusRequester = accessCodeFocusRequester,

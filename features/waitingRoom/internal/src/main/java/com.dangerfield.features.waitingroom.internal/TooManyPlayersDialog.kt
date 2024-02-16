@@ -39,10 +39,8 @@ fun TooManyPlayersDialog(
             Text(
                 text = dictionaryString(
                     R.string.waitingRoom_tooManyPlayersDialog_body,
-                    mapOf(
-                        "max" to maxPlayers.toString(),
-                        "numToLeave" to (playersSize - maxPlayers).toString()
-                    )
+                    "max" to maxPlayers.toString(),
+                    "numToLeave" to (playersSize - maxPlayers).toString()
                 )
             )
         },

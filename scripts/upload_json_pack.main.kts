@@ -35,14 +35,14 @@ if (isHelpCall) {
     printRed(
         """
                This script takes in a json file and uploads it to the debug db as a new pack 
-               Usage: ./scripts/upload_json_ack.main.kts 
+               Usage: ./scripts/upload_json_pack.main.kts [languageCode] [version]
                Place pack details in the file called pack_to_upload.json in the scripts folder
                
                {
-                  "packName": "Pack Name",
+                  "name": "Pack Name",
                   "locations": [
                          {
-                            "locationName": "Location Name",
+                            "location": "Location Name",
                             "roles": ["role", "role", "role"...]
                           }
                   ]
@@ -55,6 +55,8 @@ if (isHelpCall) {
 }
 
 fun doWork() {
+    val languageCode = args[0]
+    val version = args[1]
     val debugServiceAccountJsonFile = File("app/src/debug/service-account-key.json")
 
     if (!debugServiceAccountJsonFile.isFile) {
@@ -66,29 +68,27 @@ fun doWork() {
     }
 
     val debugDb = getDb(debugServiceAccountJsonFile.absolutePath)
-    val jsonFilePath = "scripts/pack_to_upload.json"
-    val collectionPath = "packs"
+    val jsonFilePath = "scripts/location_pack_to_upload.json"
     val json = FileReader(jsonFilePath).readText()
     val pack = Gson().fromJson(json, Pack::class.java)
-    val packMap = pack.locations.map {
+    val packMap = pack.items.map {
         it.locationName to it.roles
     }.toMap()
 
-    val doesPackExist = debugDb.collection(collectionPath).document(pack.packName).get().get().exists()
+    printGreen("Creating new pack: ${pack.items} in debug db")
 
-    if (doesPackExist) {
-        printGreen("Adding to already existing pack: ${pack.packName} in debug db")
-        debugDb.collection(collectionPath)
-            .document(pack.packName)
-            .update(packMap)
-            .get()
-    } else {
-        printGreen("Creating new pack: ${pack.packName} in debug db")
-        debugDb.collection(collectionPath)
-            .document(pack.packName)
-            .set(packMap)
-            .get()
-    }
+    debugDb.collection("versioned-packs")
+        .document(version)
+        .collection(languageCode)
+        .document()
+        .set(
+            mapOf(
+                "type" to "location",
+                "name" to pack.name,
+            )
+        )
+        .get()
+
 }
 
 data class Location(
@@ -97,8 +97,8 @@ data class Location(
 )
 
 data class Pack(
-    val packName: String,
-    val locations: List<Location>
+    val name: String,
+    val items: List<Location>
 )
 
 @Suppress("TooGenericExceptionCaught")

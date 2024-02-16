@@ -2,8 +2,8 @@ package com.dangerfield.libraries.dictionary.internal
 
 import android.content.Context
 import com.dangerfield.libraries.dictionary.Dictionary
-import com.dangerfield.libraries.dictionary.applyArgs
 import dagger.hilt.android.qualifiers.ApplicationContext
+import oddoneout.core.applyArgs
 import javax.inject.Inject
 
 /**

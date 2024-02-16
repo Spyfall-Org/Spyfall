@@ -10,6 +10,7 @@ import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.Single
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
@@ -127,10 +128,8 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
                 newName,
                 dictionary.getString(
                     R.string.roleReveal_nameInvalidLengthError_text,
-                    mapOf(
-                        "min" to gameConfig.minNameLength.toString(),
-                        "max" to gameConfig.maxNameLength.toString()
-                    )
+                    "min" to gameConfig.minNameLength.toString(),
+                    "max" to gameConfig.maxNameLength.toString()
                 )
             )
 

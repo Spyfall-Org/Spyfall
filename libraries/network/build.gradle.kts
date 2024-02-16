@@ -4,6 +4,7 @@ plugins {
 
 spyfall {
     flowroutines()
+    firebase()
 }
 
 android {

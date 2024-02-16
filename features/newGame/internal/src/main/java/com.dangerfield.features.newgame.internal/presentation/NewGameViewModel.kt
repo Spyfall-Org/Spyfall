@@ -20,6 +20,7 @@ import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
 import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.oddoneoout.features.newgame.internal.R
@@ -109,10 +110,12 @@ class NewGameViewModel @Inject constructor(
     }
 
     private suspend fun FlowCollector<State>.handleResolveErrors() {
-       updateState { it.copy(
-           didLoadFail = false,
-           didCreationFail = false
-       ) }
+        updateState {
+            it.copy(
+                didLoadFail = false,
+                didCreationFail = false
+            )
+        }
     }
 
     private suspend fun FlowCollector<State>.handleCreateGame() {
@@ -207,15 +210,17 @@ class NewGameViewModel @Inject constructor(
 
     private suspend fun FlowCollector<State>.handleUpdateName(name: String) {
         val nameState = when {
-            name.isEmpty() -> Invalid(name, dictionary.getString(R.string.newGame_blankNameError_text))
+            name.isEmpty() -> Invalid(
+                name,
+                dictionary.getString(R.string.newGame_blankNameError_text)
+            )
+
             name.length !in gameConfig.minNameLength..gameConfig.maxNameLength -> Invalid(
                 name,
                 dictionary.getString(
                     R.string.newGame_nameLengthError_text,
-                    mapOf(
-                        "min" to gameConfig.minNameLength.toString(),
-                        "max" to gameConfig.maxNameLength.toString()
-                    )
+                    "min" to gameConfig.minNameLength.toString(),
+                    "max" to gameConfig.maxNameLength.toString()
                 )
             )
 
@@ -269,8 +274,7 @@ class NewGameViewModel @Inject constructor(
                         )
                     )
                 )
-            }
-            else Valid(truncatedNumber)
+            } else Valid(truncatedNumber)
 
             it.copy(numberOfPlayersState = numberOfPlayersState)
 
@@ -280,21 +284,21 @@ class NewGameViewModel @Inject constructor(
         // we only allow the user to type 2 digits
         val truncatedNumber = timeLimit.take(2)
 
-        val timeLimitState = if (truncatedNumber.toIntOrNull() !in gameConfig.minTimeLimit..gameConfig.maxTimeLimit ||
-            truncatedNumber.toIntOrNull() == null
-        ) {
-            Invalid(
-                truncatedNumber,
-                dictionary.getString(
-                    R.string.newGame_invalidTimeLimit_text,
-                    mapOf(
-                        "min" to gameConfig.minTimeLimit.toString(),
-                        "max" to gameConfig.maxTimeLimit.toString()
+        val timeLimitState =
+            if (truncatedNumber.toIntOrNull() !in gameConfig.minTimeLimit..gameConfig.maxTimeLimit ||
+                truncatedNumber.toIntOrNull() == null
+            ) {
+                Invalid(
+                    truncatedNumber,
+                    dictionary.getString(
+                        R.string.newGame_invalidTimeLimit_text,
+                        mapOf(
+                            "min" to gameConfig.minTimeLimit.toString(),
+                            "max" to gameConfig.maxTimeLimit.toString()
+                        )
                     )
                 )
-            )
-        }
-        else Valid(truncatedNumber)
+            } else Valid(truncatedNumber)
 
         updateState {
             it.copy(timeLimitState = timeLimitState)
@@ -315,8 +319,12 @@ class NewGameViewModel @Inject constructor(
                 }
             }
             if (updatedPacks.none { it.isSelected }) {
-                state.copy(packsState = Invalid(updatedPacks,
-                    dictionary.getString(R.string.newGame_noPacksSelectedError_text)))
+                state.copy(
+                    packsState = Invalid(
+                        updatedPacks,
+                        dictionary.getString(R.string.newGame_noPacksSelectedError_text)
+                    )
+                )
             } else {
                 state.copy(packsState = Valid(updatedPacks))
             }

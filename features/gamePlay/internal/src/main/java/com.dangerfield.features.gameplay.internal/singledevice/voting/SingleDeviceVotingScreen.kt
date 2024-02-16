@@ -167,7 +167,7 @@ private fun VotingScreenContent(
                 Text(
                     text = dictionaryString(
                         id = R.string.singleDevice_handToPlayer_header,
-                        mapOf("name" to currentPlayer.name)
+                        "name" to currentPlayer.name
                     ),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,

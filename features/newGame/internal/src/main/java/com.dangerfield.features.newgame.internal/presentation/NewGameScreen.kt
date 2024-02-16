@@ -413,10 +413,9 @@ private fun NumOfPlayersField(
             placeholder = {
                 Text(
                     text = dictionaryString(
-                        id = R.string.newGame_numOfPlayers_hint, mapOf(
-                            "min" to minPlayers.toString(),
-                            "max" to maxPlayers.toString()
-                        )
+                        id = R.string.newGame_numOfPlayers_hint,
+                        "min" to minPlayers.toString(),
+                        "max" to maxPlayers.toString()
                     )
                 )
             },

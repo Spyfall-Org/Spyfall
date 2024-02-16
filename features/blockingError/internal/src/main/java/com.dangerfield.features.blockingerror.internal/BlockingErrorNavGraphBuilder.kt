@@ -3,6 +3,7 @@ package com.dangerfield.features.blockingerror.internal
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.blockingerror.blockingErrorRoute
+import com.dangerfield.features.blockingerror.maintenanceRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
@@ -26,6 +27,19 @@ class BlockingErrorNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
             )
 
             BlockingErrorScreen()
+        }
+
+        composable(
+            route = maintenanceRoute.navRoute,
+            arguments = maintenanceRoute.navArguments
+        ) {
+
+            PageLogEffect(
+                route = maintenanceRoute,
+                type = PageType.FullScreenPage
+            )
+
+            MaintenanceModeScreen()
         }
     }
 }

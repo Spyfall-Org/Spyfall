@@ -12,11 +12,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.LocalDictionary
-import com.dangerfield.libraries.dictionary.applyArgs
 import com.dangerfield.libraries.ui.color.ColorPrimitive
 import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import oddoneout.core.Try
+import oddoneout.core.applyArgs
 import spyfallx.ui.R
 import spyfallx.ui.color.background
 import spyfallx.ui.thenIf
