@@ -2,7 +2,11 @@ package com.dangerfield.features.consent.internal
 
 import android.app.Activity
 import android.content.Context
-import com.dangerfield.features.consent.ConsentStatus.*
+import com.dangerfield.features.consent.ConsentStatus.ConsentDenied
+import com.dangerfield.features.consent.ConsentStatus.ConsentGiven
+import com.dangerfield.features.consent.ConsentStatus.ConsentNeeded
+import com.dangerfield.features.consent.ConsentStatus.ConsentNotNeeded
+import com.dangerfield.features.consent.ConsentStatus.Unknown
 import com.dangerfield.features.consent.OpenConsentForm
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
@@ -11,7 +15,6 @@ import oddoneout.core.getOrElse
 import oddoneout.core.logOnError
 import oddoneout.core.throwIfDebug
 import se.ansman.dagger.auto.AutoBind
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 

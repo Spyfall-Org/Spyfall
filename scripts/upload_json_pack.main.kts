@@ -71,9 +71,6 @@ fun doWork() {
     val jsonFilePath = "scripts/location_pack_to_upload.json"
     val json = FileReader(jsonFilePath).readText()
     val pack = Gson().fromJson(json, Pack::class.java)
-    val packMap = pack.items.map {
-        it.locationName to it.roles
-    }.toMap()
 
     printGreen("Creating new pack: ${pack.items} in debug db")
 

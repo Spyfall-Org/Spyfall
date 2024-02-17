@@ -134,6 +134,7 @@ class Path internal constructor(){
      * cannot call field unless its following a document or another field
      * cannot call collection unless its first or following a document
      */
+    @Suppress("ThrowsCount")
     internal fun validate() {
         steps.forEachIndexed { index, segment ->
             if(index == 0) {
