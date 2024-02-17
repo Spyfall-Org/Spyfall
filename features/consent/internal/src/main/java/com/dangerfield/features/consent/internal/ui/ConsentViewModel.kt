@@ -11,7 +11,6 @@ import com.dangerfield.features.consent.ConsentStatus.Unknown
 import com.dangerfield.features.consent.internal.GDRPConsentManager
 import com.dangerfield.features.consent.internal.InHouseConsentManager
 import com.dangerfield.features.consent.internal.ui.ConsentViewModel.Action
-import com.dangerfield.features.consent.internal.ui.ConsentViewModel.Event
 import com.dangerfield.features.consent.internal.ui.ConsentViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +23,7 @@ import javax.inject.Inject
 class ConsentViewModel @Inject constructor(
     private val gdrpConsentManager: GDRPConsentManager,
     private val inHouseConsentManager: InHouseConsentManager
-): SEAViewModel<State, Event, Action>() {
+): SEAViewModel<State, Unit, Action>() {
 
     override val initialState = State(
         shouldShowInHouseConsentMessage = false,
@@ -72,10 +71,6 @@ class ConsentViewModel @Inject constructor(
 
     fun onInHouseConsentGiven() {
         takeAction(Action.UpdateInHouseConsentStatus(ConsentGiven))
-    }
-
-    sealed class Event {
-
     }
 
     sealed class Action {

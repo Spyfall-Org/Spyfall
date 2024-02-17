@@ -28,7 +28,8 @@ import com.dangerfield.features.ads.LocalAdsConfig
 import com.dangerfield.features.blockingerror.blockingErrorRoute
 import com.dangerfield.features.blockingerror.maintenanceRoute
 import com.dangerfield.features.consent.ConsentStatus
-import com.dangerfield.features.consent.ConsentStatus.*
+import com.dangerfield.features.consent.ConsentStatus.ConsentDenied
+import com.dangerfield.features.consent.ConsentStatus.ConsentNeeded
 import com.dangerfield.features.consent.consentRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
@@ -39,7 +40,6 @@ import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LocalDictionary
 import com.dangerfield.libraries.dictionary.internal.ui.navigateToLanguageSupportDialog
-import com.dangerfield.libraries.navigation.BlockingScreenRouter
 import com.dangerfield.libraries.navigation.fadeInToEndAnim
 import com.dangerfield.libraries.navigation.fadeInToStartAnim
 import com.dangerfield.libraries.navigation.fadeOutToEndAnim
