@@ -8,21 +8,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.components.ListItem
+import com.dangerfield.libraries.ui.components.button.Button
+import com.dangerfield.libraries.ui.components.button.ButtonSize
 import com.dangerfield.libraries.ui.components.text.ProvideTextConfig
 import com.dangerfield.libraries.ui.components.text.Text
-import com.dangerfield.libraries.ui.components.icon.Icon
-import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
-fun QaInfoItem(
+fun QaActionItem(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    actionText: String,
     enabled: Boolean = true,
-    isDebug: Boolean = false,
     supportingText: (@Composable () -> Unit)? = null,
-    trailingContent: (@Composable () -> Unit)? = null,
-    headlineContent: @Composable () -> Unit,
+    headline: @Composable () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     ListItem(
@@ -33,8 +32,11 @@ fun QaInfoItem(
             onClick = onClick ?: {}
         ),
         trailingContent = {
-            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B500) {
-                trailingContent?.invoke()
+            Button(
+                size = ButtonSize.ExtraSmall,
+                onClick = { onClick?.invoke() }
+            ) {
+                Text(text = actionText)
             }
         },
         supportingContent = {
@@ -42,22 +44,28 @@ fun QaInfoItem(
                 supportingText?.invoke()
             }
         },
-        leadingContent = {
-              if (isDebug) {
-                  Icon(spyfallIcon = SpyfallIcon.Bug(""))
-              }
-        },
-        headlineContent = headlineContent
+        headlineContent = {
+            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Heading.H700) {
+                headline.invoke()
+            }
+        }
     )
 }
 
 @Preview
 @Composable
-private fun PreviewQaInfoItemItem() {
+private fun PreviewQaActionItem() {
     PreviewContent {
-        QaInfoItem {
-            Text("Title")
-        }
+        QaActionItem(
+            onClick = { -> },
+            actionText = "Reset",
+            supportingText = {
+                Text(text = "resets something to default value")
+            },
+            headline = {
+                Text(text = "Reset something")
+            }
+        )
     }
 }
 

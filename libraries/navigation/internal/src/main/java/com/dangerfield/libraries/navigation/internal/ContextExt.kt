@@ -8,6 +8,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.dangerfield.oddoneoout.libraries.navigation.internal.R
 import oddoneout.core.Try
 import oddoneout.core.getOrElse
+import oddoneout.core.logOnError
 
 fun Context.openWebLinkFromContext(uri: Uri): Boolean =
     Try {
@@ -36,6 +37,7 @@ fun Context.openWebLinkFromContext(uri: Uri): Boolean =
         customTabsIntent.launchUrl(this, uri)
         true
     }
+        .logOnError()
         .getOrElse { false }
 
 

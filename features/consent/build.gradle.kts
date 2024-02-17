@@ -4,6 +4,7 @@ plugins {
 
 spyfall {
     compose()
+    daggerHilt()
 }
 
 android {
@@ -11,6 +12,7 @@ android {
 }
 dependencies {
     implementation(projects.libraries.common)
+    implementation(projects.libraries.config)
     implementation(projects.libraries.navigation)
     implementation(projects.libraries.ui)
     implementation(libs.user.messaging.platform)

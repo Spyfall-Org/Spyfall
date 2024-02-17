@@ -12,6 +12,7 @@ import com.dangerfield.libraries.ui.PreviewContent
 import com.dangerfield.libraries.ui.ScrollingColumnWithFadingEdge
 import com.dangerfield.libraries.ui.Spacing
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.features.qa.internal.item.QaActionItem
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.text.Text
@@ -21,8 +22,10 @@ import com.dangerfield.libraries.ui.components.text.Text
 fun QaScreen(
     configuredValues: List<DisplayableConfigValue>,
     experiments: List<DisplayableExperiment>,
+    consentExperiments: List<DisplayableExperiment>,
     modifier: Modifier = Modifier,
     sessionId: String? = null,
+    onResetConsent: () -> Unit,
     onExperimentOverride: (DisplayableExperiment, Any) -> Unit = { _, _ -> },
     onConfigValueOverride: (DisplayableConfigValue, Any) -> Unit = { _, _ -> },
     onNavigateBack: () -> Unit = {}
@@ -47,6 +50,22 @@ fun QaScreen(
                         Text(text = "Session ID: $sessionId")
                     }
                 }
+            }
+
+            QaSection(title = "Consent") {
+                QaActionItem(
+                    actionText = "Reset",
+                    onClick = onResetConsent,
+                    enabled = true,
+                    headline = {
+                        Text(text = "Rest GDRP Consent")
+                    }
+                )
+
+                ExperimentsList(
+                    experiments = consentExperiments,
+                    onExperimentOverride = onExperimentOverride
+                )
             }
 
             if (experiments.isNotEmpty()) {
@@ -163,7 +182,9 @@ fun PreviewQaScreen() {
         QaScreen(
             configuredValues = Fakes.displayableConfigValues,
             experiments = Fakes.displayableExperiments,
-            sessionId = "1234"
+            sessionId = "1234",
+            consentExperiments = Fakes.consentExperiments,
+            onResetConsent = {}
         )
     }
 }

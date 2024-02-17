@@ -2,10 +2,8 @@ package com.dangerfield.features.consent.internal
 
 import android.app.Activity
 import com.dangerfield.features.consent.ConsentStatus
+import com.dangerfield.features.consent.ForceEEAConsentLocation
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.coreflowroutines.DispatcherProvider
-import com.dangerfield.libraries.coreflowroutines.childSupervisorScope
-import com.dangerfield.libraries.ui.getBoldSpan
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.ump.ConsentDebugSettings
@@ -22,8 +20,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import oddoneout.core.BuildInfo
 import oddoneout.core.Try
 import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.getOrElse
 import oddoneout.core.logOnError
-import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -53,8 +51,11 @@ class GDRPConsentManager @Inject constructor(
         }
     }
 
-    suspend fun updateConsentStatus(activity: Activity, status: ConsentStatus) {
+    suspend fun updateConsentStatus(activity: Activity, consentInformation: ConsentInformation) {
+        val status = consentInformation.toConsentStatus()
         consentStatusFlow.value = status
+
+        // get the updated info and check if it matches the status we were provided
         getConsentStatus(activity, dispatch = false).getOrNull()?.let { expectedStatus ->
             if (expectedStatus != status) {
                 val message =
@@ -65,7 +66,13 @@ class GDRPConsentManager @Inject constructor(
         }
     }
 
-    suspend fun getConsentStatus(
+    fun resetConsentStatus(activity: Activity) {
+        if (!buildInfo.isDebug && !buildInfo.isQA) return
+        val consentInformation = UserMessagingPlatform.getConsentInformation(activity)
+        consentInformation.reset()
+    }
+
+    private suspend fun getConsentStatus(
         activity: Activity,
         dispatch: Boolean = true
     ): Try<ConsentStatus> = Try {
@@ -122,38 +129,12 @@ class GDRPConsentManager @Inject constructor(
         }
     }
 
-
-    fun showConsentForm(activity: Activity) = Try {
+    fun shouldShowSettingsOption(activity: Activity): Boolean = Try {
         val consentInformation = UserMessagingPlatform.getConsentInformation(activity)
-
-        UserMessagingPlatform.loadAndShowConsentFormIfRequired(
-            activity
-        ) { loadAndShowError ->
-
-            Timber.e(
-                """
-                    Consent Form Dismissed:
-                    Error Present: ${loadAndShowError != null}
-                    Error Message: ${loadAndShowError?.message}
-                    Error Code: ${loadAndShowError?.errorCode}
-                    Can Request Ads: ${consentInformation.canRequestAds()}
-                    ConsentStatus: ${
-                    when (consentInformation.consentStatus) {
-                        ConsentInformation.ConsentStatus.UNKNOWN -> "UNKNOWN"
-                        ConsentInformation.ConsentStatus.REQUIRED -> "REQUIRED"
-                        ConsentInformation.ConsentStatus.NOT_REQUIRED -> "NOT_REQUIRED"
-                        ConsentInformation.ConsentStatus.OBTAINED -> "OBTAINED"
-                        else -> "UNKNOWN"
-                    }
-                }
-                """.trimIndent()
-            )
-
-            applicationScope.launch {
-                updateConsentStatus(activity = activity, status = consentInformation.toConsentStatus())
-            }
-        }
-    }.logOnError()
+        consentInformation.privacyOptionsRequirementStatus == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
+    }
+        .logOnError()
+        .getOrElse { false }
 
     private fun ConsentInformation.toConsentStatus() = when (consentStatus) {
         ConsentInformation.ConsentStatus.REQUIRED -> ConsentStatus.ConsentNeeded
@@ -169,7 +150,6 @@ class GDRPConsentManager @Inject constructor(
 
         else -> ConsentStatus.Unknown
     }
-
 
     private fun initializeAds(activity: Activity) = Try {
         if (hasInitializedAds.getAndSet(true)) return@Try

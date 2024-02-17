@@ -95,8 +95,8 @@ internal fun BasicButton(
                                 cornersRadius = 50.dp,
                                 color = Color.White.copy(alpha = 0.5f),
                                 spread = 0.dp,
-                                offsetY = 3.dp,
-                                offsetX = -3.dp
+                                offsetY = BackgroundOffsetY,
+                                offsetX = BackgroundOffsetX
                             )
                         } else {
                             this
@@ -135,6 +135,9 @@ internal fun BasicButton(
     }
 }
 
+private val BackgroundOffsetX = -3.dp
+private val BackgroundOffsetY = 3.dp
+
 
 @Composable
 private fun BoxScope.drawShineSquiggles(radius: Radius = Radii.Button) {
@@ -153,32 +156,28 @@ private fun BoxScope.drawShineSquiggles(radius: Radius = Radii.Button) {
 
         val topRightSquiggle =
             Path().apply {
-                val topRightStart = Point(
-                    width - cornerRadiusOffset.x - 15.dp.toPx(),
-                    cornerRadiusOffset.y - 3.dp.toPx()
-                )
-
-                val topRightCorner = Point(
-                    width - cornerRadiusOffset.x,
+                val topOfSquiggle = Point(
+                    width - cornerRadiusOffset.x - 14.dp.toPx(),
                     cornerRadiusOffset.y
                 )
 
-                moveTo(topRightStart.x, topRightStart.y)
+                val bottomOfSquiggle = topOfSquiggle.offset(x = 10.dp.toPx(), y = 8.dp.toPx())
 
-                val bottomOfSquiggle = topRightStart.offset(x = 15.dp.toPx(), y = 20.dp.toPx())
+                val arcControl =
+                    topOfSquiggle.midpoint(bottomOfSquiggle).offset(x = 2.dp.toPx(), y = -1.dp.toPx())
 
-                val arcControl = topRightCorner
+                moveTo(topOfSquiggle.x, topOfSquiggle.y)
 
                 quadraticBezierTo(
                     arcControl.x, arcControl.y,
                     bottomOfSquiggle.x, bottomOfSquiggle.y
                 )
 
-                val control2 = topRightCorner.offset(-2.dp.toPx(), 4.dp.toPx())
+                val control2 = arcControl.offset(2.dp.toPx(), -2.dp.toPx())
 
                 quadraticBezierTo(
                     control2.x, control2.y,
-                    topRightStart.x, topRightStart.y
+                    topOfSquiggle.x, topOfSquiggle.y
                 )
             }
 
@@ -189,7 +188,9 @@ private fun BoxScope.drawShineSquiggles(radius: Radius = Radii.Button) {
             )
 
             moveTo(bottomLeftStart.x, bottomLeftStart.y)
+
             val topOfSquiggle = bottomLeftStart.offset(x = -10.dp.toPx(), y = -10.dp.toPx())
+
             val arcControl =
                 bottomLeftStart.midpoint(topOfSquiggle).offset(x = -5.dp.toPx(), y = 5.dp.toPx())
 
@@ -237,16 +238,28 @@ private fun ButtonSize.textConfig(style: ButtonStyle): TextConfig = when (this) 
         ButtonStyle.Filled -> LargeButtonTextConfig
         ButtonStyle.NoBackground -> LargeTextButtonTextConfig
     }
+
+    ButtonSize.ExtraSmall -> when (style) {
+        ButtonStyle.Filled -> ExtraSmallButtonTextConfig
+        ButtonStyle.NoBackground -> ExtraSmallButtonTextConfig
+    }
 }
 
 internal fun ButtonSize.padding(hasIcon: Boolean): PaddingValues =
     when (this) {
         ButtonSize.Small -> if (hasIcon) SmallButtonWithIconPadding else SmallButtonPadding
         ButtonSize.Large -> if (hasIcon) LargeButtonWithIconPadding else LargeButtonPadding
+        ButtonSize.ExtraSmall -> if (hasIcon) ExtraSmallButtonWithIconPadding else ExtraSmallButtonPadding
     }
 
 private val SmallButtonTextConfig = TextConfig(
     typographyToken = OddOneOutTheme.typography.Label.L600,
+    overflow = TextOverflow.Ellipsis,
+    maxLines = 1
+)
+
+private val ExtraSmallButtonTextConfig = TextConfig(
+    typographyToken = OddOneOutTheme.typography.Label.L400,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
@@ -263,6 +276,11 @@ private val LargeButtonTextConfig = TextConfig(
     maxLines = 1
 )
 
+
+private val LargeButtonVerticalPadding = Spacing.S700
+private val SmallButtonVerticalPadding = Spacing.S500
+private val ExtraButtonVerticalPadding = Spacing.S500
+
 private val LargeTextButtonTextConfig = TextConfig(
     typographyToken = OddOneOutTheme.typography.Body.B700.SemiBold,
     overflow = TextOverflow.Ellipsis,
@@ -271,26 +289,38 @@ private val LargeTextButtonTextConfig = TextConfig(
 
 private val LargeButtonPadding = PaddingValues(
     horizontal = Spacing.S900,
-    vertical = Spacing.S600
+    vertical = LargeButtonVerticalPadding
 )
 
 private val LargeButtonWithIconPadding = PaddingValues(
+    top = LargeButtonVerticalPadding,
+    bottom = LargeButtonVerticalPadding,
     start = Spacing.S700,
-    top = Spacing.S500,
     end = Spacing.S900,
-    bottom = Spacing.S500
 )
 
 private val SmallButtonPadding = PaddingValues(
     horizontal = Spacing.S800,
-    vertical = Spacing.S500
+    vertical = SmallButtonVerticalPadding
 )
 
 private val SmallButtonWithIconPadding = PaddingValues(
     start = Spacing.S600,
-    top = Spacing.S300,
+    top = SmallButtonVerticalPadding,
     end = Spacing.S800,
-    bottom = Spacing.S300
+    bottom = SmallButtonVerticalPadding
+)
+
+private val ExtraSmallButtonPadding = PaddingValues(
+    horizontal = Spacing.S600,
+    vertical = ExtraButtonVerticalPadding
+)
+
+private val ExtraSmallButtonWithIconPadding = PaddingValues(
+    start = Spacing.S500,
+    top = ExtraButtonVerticalPadding,
+    end = Spacing.S500,
+    bottom = ExtraButtonVerticalPadding
 )
 
 private val ButtonIconSpacing = Spacing.S200
@@ -318,6 +348,7 @@ private fun BasicButtonPreview() {
                 backgroundColor = OddOneOutTheme.colorScheme.accent,
                 contentColor = OddOneOutTheme.colorScheme.onAccent
             )
+
         }
     }
 }

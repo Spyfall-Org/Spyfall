@@ -7,8 +7,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.colorpicker.navigateToColorPicker
-import com.dangerfield.features.consent.OpenConsentForm
-import com.dangerfield.features.consent.ShouldShowPrivacyOption
+import com.dangerfield.features.consent.OpenGDRPConsentForm
+import com.dangerfield.features.consent.ShouldShowGDRPSettingsOption
 import com.dangerfield.features.qa.navigateToQa
 import com.dangerfield.features.settings.internal.contactus.ContactUsScreen
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel
@@ -41,8 +41,8 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
     private val buildInfo: BuildInfo,
     private val sessionFlow: SessionFlow,
     private val dictionary: Dictionary,
-    private val shouldShowPrivacyOption: ShouldShowPrivacyOption,
-    private val openConsentForm: OpenConsentForm
+    private val shouldShowGDRPSettingsOption: ShouldShowGDRPSettingsOption,
+    private val openGDRPConsentForm: OpenGDRPConsentForm
 ) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -82,12 +82,12 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
             AboutScreen(
                 versionName = buildInfo.versionName,
                 onNavigateBack = router::goBack,
-                shouldShowConsentFormOption = shouldShowPrivacyOption(),
+                shouldShowConsentFormOption = shouldShowGDRPSettingsOption(),
                 onPrivacyPolicyClicked = { router.openWebLink(dictionary.getString(R.string.about_privacyPolicy_link)) },
                 onTermsOfServiceClicked = { router.openWebLink(dictionary.getString(R.string.about_termsOfService_link)) },
                 onThirdPartyServicesClicked = { router.openWebLink(dictionary.getString(R.string.about_thirdPartyServices_link)) },
                 onManageConsentClicked = {
-                    scope.launch { openConsentForm() }
+                    scope.launch { openGDRPConsentForm(onlyIfNeeded = false) }
                 },
             )
         }

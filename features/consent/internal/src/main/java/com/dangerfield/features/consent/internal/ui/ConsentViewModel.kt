@@ -3,7 +3,11 @@ package com.dangerfield.features.consent.internal.ui
 import android.app.Activity
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.consent.ConsentStatus
-import com.dangerfield.features.consent.ConsentStatus.*
+import com.dangerfield.features.consent.ConsentStatus.ConsentDenied
+import com.dangerfield.features.consent.ConsentStatus.ConsentGiven
+import com.dangerfield.features.consent.ConsentStatus.ConsentNeeded
+import com.dangerfield.features.consent.ConsentStatus.ConsentNotNeeded
+import com.dangerfield.features.consent.ConsentStatus.Unknown
 import com.dangerfield.features.consent.internal.GDRPConsentManager
 import com.dangerfield.features.consent.internal.InHouseConsentManager
 import com.dangerfield.features.consent.internal.ui.ConsentViewModel.Action
@@ -31,7 +35,6 @@ class ConsentViewModel @Inject constructor(
     override suspend fun handleAction(action: Action) {
         when(action) {
             is Action.LoadConsentStatus ->  observeConsentStatus(action)
-            is Action.OpenGDRPConsentForm -> gdrpConsentManager.showConsentForm(action.activity)
             is Action.UpdateInHouseConsentStatus -> inHouseConsentManager.updateConsentStatus(action.status)
         }
     }
@@ -67,10 +70,6 @@ class ConsentViewModel @Inject constructor(
         takeAction(Action.LoadConsentStatus(activity))
     }
 
-    fun openGDRPConsentForm(activity: Activity) {
-        takeAction(Action.OpenGDRPConsentForm(activity))
-    }
-
     fun onInHouseConsentGiven() {
         takeAction(Action.UpdateInHouseConsentStatus(ConsentGiven))
     }
@@ -81,7 +80,6 @@ class ConsentViewModel @Inject constructor(
 
     sealed class Action {
         data class LoadConsentStatus(val activity: Activity): Action()
-        data class OpenGDRPConsentForm(val activity: Activity): Action()
         data class UpdateInHouseConsentStatus(val status: ConsentStatus): Action()
     }
 

@@ -12,6 +12,7 @@ android {
 }
 dependencies {
     implementation(projects.features.qa)
+    implementation(projects.features.consent)
     implementation(projects.libraries.common)
     implementation(projects.libraries.session)
     implementation(projects.libraries.analytics)

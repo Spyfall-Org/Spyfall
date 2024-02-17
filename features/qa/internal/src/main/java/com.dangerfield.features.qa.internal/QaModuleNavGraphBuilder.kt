@@ -1,5 +1,7 @@
 package com.dangerfield.features.qa.internal
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -8,15 +10,21 @@ import androidx.navigation.compose.composable
 import com.dangerfield.features.qa.qaNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
+import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.ui.LocalBuildInfo
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import oddoneout.core.BuildType
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
+@ActivityScoped
+class QaModuleNavGraphBuilder @Inject constructor(
+    @ActivityContext private val context: Context
+) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(
@@ -55,7 +63,9 @@ class QaModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
                     )
                 },
                 onNavigateBack = router::goBack,
-                sessionId = state.sessionId
+                sessionId = state.sessionId,
+                consentExperiments = state.consentExperiments,
+                onResetConsent = { viewModel.resetConsent(context as Activity) }
             )
         }
     }

@@ -8,9 +8,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dangerfield.features.consent.OpenGDRPConsentForm
 import com.dangerfield.features.consent.consentRoute
-import com.dangerfield.features.consent.internal.ui.ConsentViewModel
-import com.dangerfield.features.consent.internal.ui.InHouseConsentScreen
 import com.dangerfield.libraries.dictionary.LocalDictionary
 import com.dangerfield.libraries.navigation.ModuleNavBuilder
 import com.dangerfield.libraries.navigation.Router
@@ -24,6 +23,7 @@ import javax.inject.Inject
 @ActivityScoped
 class ModuleNavGraphBuilder @Inject constructor(
     @ActivityContext private val context: Context,
+    private val openGDRPConsentForm: OpenGDRPConsentForm
 ) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -42,7 +42,7 @@ class ModuleNavGraphBuilder @Inject constructor(
 
             LaunchedEffect(state.shouldShowGDRPConsentMessage) {
                 if (state.shouldShowGDRPConsentMessage) {
-                    viewModel.openGDRPConsentForm(context )
+                    openGDRPConsentForm(onlyIfNeeded = true)
                 }
             }
 

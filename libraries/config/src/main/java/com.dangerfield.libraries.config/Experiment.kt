@@ -1,7 +1,6 @@
 package com.dangerfield.libraries.config
 
 import se.ansman.dagger.auto.BindGenericAs
-import java.util.Locale
 
 /**
  * Represents an experiment being conducted.
@@ -61,7 +60,7 @@ abstract class Experiment<out T : Any> {
     val path : String
         get() = "experiments.$id"
 
-    open val showInQADashboard: Boolean = true
+    open val showInQaExperiments: Boolean = true
 
     val value: T
         get() = resolveValue()

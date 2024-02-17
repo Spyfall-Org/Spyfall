@@ -22,6 +22,16 @@ object Fakes {
         )
     )
 
+    val consentExperiments = listOf(
+        QaViewModel.DisplayableExperiment(
+            name = "Force Some Consent Thing",
+            path = "some_path",
+            value =  false,
+            description = "Some description",
+            isDebugOnly = true
+        )
+    )
+
     val displayableExperiments = listOf(
         QaViewModel.DisplayableExperiment(
             name = "Some Name",

@@ -72,16 +72,6 @@ fun Button(
         icon = icon,
         size = size,
         style = style,
-        contentPadding = when (style) {
-            ButtonStyle.Filled  -> PaddingValues(
-                horizontal = Spacing.S1000,
-                vertical = Spacing.S700
-            )
-            ButtonStyle.NoBackground -> PaddingValues(
-                horizontal = Spacing.S200,
-                vertical = Spacing.S500
-            )
-        },
         enabled = enabled,
         interactionSource = interactionSource,
         content = content
@@ -95,7 +85,8 @@ enum class ButtonType {
 
 enum class ButtonSize {
     Large,
-    Small
+    Small,
+    ExtraSmall
 }
 
 enum class ButtonStyle {

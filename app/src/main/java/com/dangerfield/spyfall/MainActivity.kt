@@ -15,7 +15,7 @@ import com.dangerfield.features.ads.ui.InterstitialAd
 import com.dangerfield.features.consent.ConsentStatus.ConsentGiven
 import com.dangerfield.features.consent.ConsentStatus.ConsentNotNeeded
 import com.dangerfield.features.consent.ConsentStatus.Unknown
-import com.dangerfield.features.consent.OpenConsentForm
+import com.dangerfield.features.consent.OpenGDRPConsentForm
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.coreflowroutines.collectWhileStarted
 import com.dangerfield.libraries.dictionary.Dictionary
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
     lateinit var metricsTracker: MetricsTracker
 
     @Inject
-    lateinit var openConsentForm: OpenConsentForm
+    lateinit var openGDRPConsentForm: OpenGDRPConsentForm
 
     @Inject
     lateinit var dictionary: Dictionary

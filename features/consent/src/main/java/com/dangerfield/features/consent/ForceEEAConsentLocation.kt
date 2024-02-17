@@ -1,10 +1,9 @@
-package com.dangerfield.features.consent.internal
+package com.dangerfield.features.consent
 
 import com.dangerfield.libraries.config.AppConfigMap
 import com.dangerfield.libraries.config.Experiment
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
-
 
 @AutoBindIntoSet
 class ForceEEAConsentLocation @Inject constructor(
@@ -19,10 +18,13 @@ class ForceEEAConsentLocation @Inject constructor(
         get() = "Forces the EEA consent experience."
 
     override val control: Boolean
-        get() = false
+        get() = true
+
+    override val showInQaExperiments: Boolean
+        get() = false // will manually show in consent section
 
     override val test: Boolean
-        get() = true
+        get() = false
 
     override val isDebugOnly: Boolean
         get() = true

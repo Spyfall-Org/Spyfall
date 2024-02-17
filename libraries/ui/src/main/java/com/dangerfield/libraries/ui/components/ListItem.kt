@@ -25,7 +25,7 @@ fun ListItem(
     modifier: Modifier = Modifier,
     onClickItem: () -> Unit = {},
     supportingContent: @Composable (() -> Unit)? = null,
-    leadingContent: @Composable (() -> Unit)? = null,
+    leadingContent: @Composable (() -> Unit) = {},
     trailingContent: @Composable (() -> Unit)? = null,
     headlineContent: @Composable () -> Unit,
 ) {
@@ -36,12 +36,17 @@ fun ListItem(
             .padding(vertical = Spacing.S500),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        leadingContent?.let {
+        leadingContent.let {
             it()
             Spacer(modifier = Modifier.width(Spacing.S500))
         }
+
         Column(modifier = Modifier.weight(1f)) {
-            headlineContent()
+            ProvideTextConfig(
+                typographyToken = OddOneOutTheme.typography.Heading.H700
+            ) {
+                headlineContent()
+            }
             ProvideTextConfig(
                 typographyToken = OddOneOutTheme.typography.Body.B600
             ) {
@@ -80,4 +85,25 @@ fun PreviewSettingsOption() {
         )
     }
 }
+
+@Composable
+@Preview
+fun PreviewSettingsOptionNoLeading() {
+    PreviewContent(showBackground = true) {
+        ListItem(
+            headlineContent =
+            {
+                Text(text = "Headline")
+            },
+            supportingContent = {
+                Text(text = "Supporting")
+            },
+
+            trailingContent = {
+                Icon(SpyfallIcon.Android("Android"))
+            }
+        )
+    }
+}
+
 
