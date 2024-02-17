@@ -50,6 +50,14 @@ abstract class SEAViewModel<S, E, A> : ViewModel() {
             .throwIfDebug()
     }
 
+    protected suspend fun setState(state: S) {
+        Try {
+            _state.value = state
+        }
+            .logOnError("Could not set state")
+            .throwIfDebug()
+    }
+
     protected abstract suspend fun handleAction(action: A)
 
 }

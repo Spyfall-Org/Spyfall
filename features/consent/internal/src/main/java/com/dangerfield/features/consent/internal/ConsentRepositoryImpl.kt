@@ -6,6 +6,7 @@ import com.dangerfield.features.consent.ConsentStatusRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import se.ansman.dagger.auto.AutoBind
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,6 +21,9 @@ class ConsentRepositoryImpl @Inject constructor(
         gdrpConsentManager.getConsentStatusFlow(activity),
         inHouseConsentManager.getConsentStatusFlow()
     ) { gdrpConsentStatus, inHouseConsentStatus ->
+
+        Timber.d("gdrpConsentStatus: ${gdrpConsentStatus.name}, inHouseConsentStatus: ${inHouseConsentStatus.name}")
+
         when(gdrpConsentStatus) {
             ConsentStatus.ConsentGiven -> ConsentStatus.ConsentGiven
             ConsentStatus.ConsentDenied -> ConsentStatus.ConsentDenied

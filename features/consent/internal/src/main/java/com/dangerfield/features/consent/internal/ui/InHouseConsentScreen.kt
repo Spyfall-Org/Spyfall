@@ -1,4 +1,4 @@
-package com.dangerfield.features.consent.internal
+package com.dangerfield.features.consent.internal.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

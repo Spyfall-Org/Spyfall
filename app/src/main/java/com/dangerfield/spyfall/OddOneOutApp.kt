@@ -27,6 +27,9 @@ import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.LocalAdsConfig
 import com.dangerfield.features.blockingerror.blockingErrorRoute
 import com.dangerfield.features.blockingerror.maintenanceRoute
+import com.dangerfield.features.consent.ConsentStatus
+import com.dangerfield.features.consent.ConsentStatus.*
+import com.dangerfield.features.consent.consentRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.analytics.LocalMetricsTracker
@@ -69,9 +72,9 @@ fun OddOneOutApp(
     navBuilderRegistry: NavBuilderRegistry,
     networkMonitor: NetworkMonitor,
     adsConfig: AdsConfig,
-    blockingScreenRouter: BlockingScreenRouter,
     isInMaintenanceMode: Boolean,
     metricsTracker: MetricsTracker,
+    consentStatus: ConsentStatus?,
     onLanguageSupportLevelMessageShown: (LanguageSupportLevel) -> Unit,
     languageSupportLevelMessage: MainActivityViewModel.LanguageSupportLevelMessage?,
     dictionary: Dictionary,
@@ -85,10 +88,6 @@ fun OddOneOutApp(
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
-    val blockingScreenToShow by blockingScreenRouter
-        .routes
-        .receiveAsFlow()
-        .collectAsStateWithLifecycle(initialValue = null)
 
     val router = remember {
         NavControllerRouter(
@@ -97,12 +96,11 @@ fun OddOneOutApp(
         )
     }
 
-
     val startingRoute = when {
         isUpdateRequired -> forcedUpdateNavigationRoute.noArgRoute()
         isInMaintenanceMode -> maintenanceRoute.noArgRoute()
         hasBlockingError -> blockingErrorRoute.noArgRoute()
-        blockingScreenToShow != null -> blockingScreenToShow ?: welcomeNavigationRoute.noArgRoute()
+        consentStatus in listOf(ConsentDenied, ConsentNeeded) -> consentRoute.noArgRoute()
         else -> welcomeNavigationRoute.noArgRoute()
     }
 

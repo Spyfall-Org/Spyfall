@@ -12,19 +12,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.OddOneOutAd.GameRestartInterstitial
 import com.dangerfield.features.ads.ui.InterstitialAd
-import com.dangerfield.features.consent.ConsentStatus
+import com.dangerfield.features.consent.ConsentStatus.ConsentGiven
+import com.dangerfield.features.consent.ConsentStatus.ConsentNotNeeded
+import com.dangerfield.features.consent.ConsentStatus.Unknown
 import com.dangerfield.features.consent.OpenConsentForm
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.coreflowroutines.collectWhileStarted
 import com.dangerfield.libraries.dictionary.Dictionary
-import com.dangerfield.libraries.navigation.BlockingScreenRouter
 import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.spyfall.navigation.NavBuilderRegistry
 import com.dangerfield.spyfall.startup.MainActivityViewModel
 import com.dangerfield.spyfall.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import oddoneout.core.BuildInfo
-import oddoneout.core.doNothing
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -44,9 +44,6 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var buildInfo: BuildInfo
-
-    @Inject
-    lateinit var blockingScreenRouter: BlockingScreenRouter
 
     @Inject
     lateinit var metricsTracker: MetricsTracker
@@ -96,15 +93,8 @@ class MainActivity : ComponentActivity() {
             val state by mainActivityViewModel.state.collectAsStateWithLifecycle()
 
             LaunchedEffect(state.consentStatus) {
-                when (state.consentStatus) {
-                    ConsentStatus.ConsentDenied,
-                    ConsentStatus.ConsentNeeded -> openConsentForm()
-
-                    ConsentStatus.ConsentGiven,
-                    ConsentStatus.ConsentNotNeeded,
-                    ConsentStatus.Unknown -> loadInterstitialAd()
-
-                    null -> doNothing()
+                if (state.consentStatus in listOf(ConsentGiven, ConsentNotNeeded, Unknown)) {
+                    loadInterstitialAd()
                 }
             }
 
@@ -113,12 +103,12 @@ class MainActivity : ComponentActivity() {
                 isUpdateRequired = state.isUpdateRequired,
                 hasBlockingError = state.hasBlockingError,
                 accentColor = state.accentColor,
-                blockingScreenRouter = blockingScreenRouter,
                 networkMonitor = networkMonitor,
                 adsConfig = adsConfig,
                 metricsTracker = metricsTracker,
                 dictionary = dictionary,
                 buildInfo = buildInfo,
+                consentStatus = state.consentStatus,
                 isInMaintenanceMode = state.isInMaintenanceMode,
                 languageSupportLevelMessage = state.languageSupportLevelMessage,
                 onLanguageSupportLevelMessageShown = {

@@ -4,14 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.features.consent.ConsentStatus
-import com.dangerfield.features.consent.needInHouseConsentRoute
-import com.dangerfield.libraries.navigation.BlockingScreenRouter
 import com.dangerfield.libraries.storage.datastore.cache
-import com.dangerfield.libraries.storage.datastore.getValue
 import com.dangerfield.libraries.storage.datastore.getValueFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,7 +23,6 @@ import javax.inject.Singleton
 @Singleton
 class InHouseConsentManager @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val blockingScreenRouter: BlockingScreenRouter
 ) {
 
     private val consentStatusFlow: Flow<ConsentStatus> = dataStore
@@ -44,10 +41,6 @@ class InHouseConsentManager @Inject constructor(
     suspend fun getConsentStatus(): ConsentStatus = consentStatusFlow.first()
 
     fun getConsentStatusFlow(): Flow<ConsentStatus> = consentStatusFlow
-
-    fun showConsentForm() {
-        blockingScreenRouter.goToBlockingScreen(needInHouseConsentRoute.noArgRoute())
-    }
 
     suspend fun updateConsentStatus(consentStatus: ConsentStatus) {
         val inHouseConsentStatus = when (consentStatus) {

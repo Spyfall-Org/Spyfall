@@ -16,6 +16,7 @@ import com.google.android.ump.UserMessagingPlatform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import oddoneout.core.BuildInfo
@@ -39,11 +40,11 @@ class GDRPConsentManager @Inject constructor(
 
     private val hasInitializedAds = AtomicBoolean(false)
 
-    private val consentStatusFlow = MutableStateFlow(ConsentStatus.Unknown)
+    private val consentStatusFlow = MutableStateFlow<ConsentStatus?>(null)
 
     fun getConsentStatusFlow(activity: Activity): Flow<ConsentStatus> {
         refreshStatus(activity)
-        return consentStatusFlow
+        return consentStatusFlow.filterNotNull()
     }
 
     private fun refreshStatus(activity: Activity) {
@@ -56,7 +57,8 @@ class GDRPConsentManager @Inject constructor(
         consentStatusFlow.value = status
         getConsentStatus(activity, dispatch = false).getOrNull()?.let { expectedStatus ->
             if (expectedStatus != status) {
-                val message = "Status given: $status does not match expected status: $expectedStatus"
+                val message =
+                    "Status given: $status does not match expected status: $expectedStatus"
                 Timber.e(message)
                 developerSnackIfDebug { message }
             }
@@ -98,7 +100,6 @@ class GDRPConsentManager @Inject constructor(
         params: ConsentRequestParameters,
     ): ConsentStatus {
         return suspendCancellableCoroutine { continuation ->
-
             consentInformation.requestConsentInfoUpdate(
                 activity,
                 params,
@@ -106,33 +107,11 @@ class GDRPConsentManager @Inject constructor(
                     if (consentInformation.canRequestAds()) {
                         initializeAds(activity)
                     }
-                    val status = when (consentInformation.consentStatus) {
-                        ConsentInformation.ConsentStatus.REQUIRED -> ConsentStatus.ConsentNeeded
-                        ConsentInformation.ConsentStatus.NOT_REQUIRED -> ConsentStatus.ConsentNeeded
-                        ConsentInformation.ConsentStatus.UNKNOWN -> ConsentStatus.Unknown
-                        ConsentInformation.ConsentStatus.OBTAINED -> {
-                            if (consentInformation.canRequestAds()) {
-                                ConsentStatus.ConsentGiven
-                            } else {
-                                ConsentStatus.ConsentDenied
-                            }.also {
-                                Timber.d(
-                                    """
-                                UMP Value: Consent obtained
-                                Consent form present: ${consentInformation.isConsentFormAvailable}
-                                consentInformation.canRequestAds: ${consentInformation.canRequestAds()}
-                                consentInformation.privacyOptionsRequirementStatus: ${consentInformation.privacyOptionsRequirementStatus.name}
-                            """.trimIndent()
-                                )
-                            }
-                        }
-
-                        else -> ConsentStatus.Unknown
-                    }
-                    continuation.resume(status)
+                    Timber.d("Loading GDRP Consent status")
+                    continuation.resume(consentInformation.toConsentStatus())
                 },
                 { requestConsentError: FormError ->
-                    Timber.d("Consent update failed: ${requestConsentError.message}")
+                    Timber.d("GDRP Consent Status Load failed: ${requestConsentError.message}")
                     continuation.resumeWithException(
                         ConsentFormError(requestConsentError.message)
                     )
@@ -143,13 +122,14 @@ class GDRPConsentManager @Inject constructor(
         }
     }
 
+
     fun showConsentForm(activity: Activity) = Try {
-        Timber.d("Showing GDRP Consent form")
         val consentInformation = UserMessagingPlatform.getConsentInformation(activity)
 
-        UserMessagingPlatform.showPrivacyOptionsForm(
+        UserMessagingPlatform.loadAndShowConsentFormIfRequired(
             activity
         ) { loadAndShowError ->
+
             Timber.e(
                 """
                     Consent Form Dismissed:
@@ -168,8 +148,28 @@ class GDRPConsentManager @Inject constructor(
                 }
                 """.trimIndent()
             )
+
+            applicationScope.launch {
+                updateConsentStatus(activity = activity, status = consentInformation.toConsentStatus())
+            }
         }
     }.logOnError()
+
+    private fun ConsentInformation.toConsentStatus() = when (consentStatus) {
+        ConsentInformation.ConsentStatus.REQUIRED -> ConsentStatus.ConsentNeeded
+        ConsentInformation.ConsentStatus.NOT_REQUIRED -> ConsentStatus.ConsentNotNeeded
+        ConsentInformation.ConsentStatus.UNKNOWN -> ConsentStatus.Unknown
+        ConsentInformation.ConsentStatus.OBTAINED -> {
+            if (canRequestAds()) {
+                ConsentStatus.ConsentGiven
+            } else {
+                ConsentStatus.ConsentDenied
+            }
+        }
+
+        else -> ConsentStatus.Unknown
+    }
+
 
     private fun initializeAds(activity: Activity) = Try {
         if (hasInitializedAds.getAndSet(true)) return@Try
