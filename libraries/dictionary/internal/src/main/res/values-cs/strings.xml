@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="languageSupport_unsupportedDialog_body">Omlouváme se, ale zatím nemáme podporu pro {language}.\n\nPokud byste nám chtěli pomoci přeložit a přidat podporu pro tuto jazykovou verzi, prosím, kontaktujte nás pomocí kontaktního formuláře v nastavení aplikace. Děkujeme\!</string>
+    <string name="languageSupport_partialSupportDialog_body">Momentálně pracujeme na zlepšení naší podpory pro {language}.\n\nNěkterá slova, která vidíte, nemusí být dokonale přeložena. Pokud si všimnete jakýchkoli chyb, dejte nám vědět prostřednictvím kontaktního formuláře v nastavení aplikace. Děkujeme\!</string>
+    <string name="languageSupport_dialog_header">Mluvíte {language}?</string>
+    <string name="languageSupport_okay_label">Dobře</string>
+</resources>

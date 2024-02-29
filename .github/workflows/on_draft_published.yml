@@ -1,0 +1,53 @@
+name: Publish To Play Store
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: 'Tag that the release was published under.'
+        required: true
+
+jobs:
+  uploadrelease:
+    env:
+      releaseAssetPath: ""
+      packageName: ""
+      releaseTagName: ""
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set Tag Name
+        run: |
+          if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
+            echo "releaseTagName=${{ github.event.inputs.tagName }}" >> $GITHUB_ENV
+          else
+            echo "releaseTagName=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set Env Variables
+        run: ./scripts/ci/set_publish_env_variables.main.kts ${{ github.env }}
+
+      - name: Create Service Key Json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "google-play-service-key.json"
+          json: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+
+      - name: Download Release Asset
+        run: ./scripts/ci/download_release_asset.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ github.env }} "releaseAssetPath"
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          status: draft
+          track: production
+          serviceAccountJson: "google-play-service-key.json"
+          packageName: ${{ env.packageName }}
+          releaseFiles: ${{ env.releaseAssetPath }}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="languageSupport_unsupportedDialog_body">Rất tiếc, chúng tôi chưa hỗ trợ {language}.\n\nNếu bạn muốn giúp chúng tôi dịch và thêm hỗ trợ cho ngôn ngữ này, vui lòng liên hệ với chúng tôi thông qua mẫu liên hệ trong cài đặt ứng dụng. Cảm ơn bạn\!</string>
+    <string name="languageSupport_partialSupportDialog_body">Chúng tôi đang nỗ lực cải thiện hỗ trợ cho {language}.\n\nMột số từ bạn thấy có thể chưa được dịch một cách chính xác. Nếu bạn phát hiện bất kỳ sai sót nào, xin hãy thông báo cho chúng tôi qua mẫu liên hệ trong cài đặt ứng dụng. Cảm ơn bạn\!</string>
+    <string name="languageSupport_dialog_header">Bạn có nói {language} không?</string>
+    <string name="languageSupport_okay_label">Được</string>
+</resources>

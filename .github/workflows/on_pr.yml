@@ -1,0 +1,185 @@
+name: Pull Request Workflow
+
+on:
+  # Triggers the workflow for pull requests into any (**) base branch
+  pull_request:
+    branches:
+      - "**"
+
+# ensures only 1 of these workflows can exist on a PR at a time. Cancels old ones when new ones are triggered
+concurrency:
+  group: pr-workflow-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    env:
+      isReleasePR: ""
+      releaseVersion: ""
+      releaseTagName: ""
+      oddoneoutDebugAppId: ""
+      oddoneoutDebugFirebaseDistributionLink: ""
+      oddoneoutReleaseFirebaseDistributionLink: ""
+      firebaseDistributionDebugApkKey: "null"
+      firebaseDistributionReleaseApkKey: "null"
+      releaseNotesFile: ""
+      oddoneoutDebugApkPath: ""
+      oddoneoutReleaseApkPath: ""
+      oddoneoutReleaseAabPath: ""
+      pullRequestLink: ""
+      GOOGLE_APPLICATION_CREDENTIALS: "app/src/release/service-account-key.json"
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      # Release PRs update the version code before making the PR, all others will need to update in the CI build
+      - name: Update Version Code
+        if: ${{ env.isReleasePR != 'true' }}
+        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
+
+      - name: Create Service Key Json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "service_key.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Download Secret Files
+        run: ./scripts/get_secret_files.main.kts service_key.json
+
+      - name: Set Env Variables
+        run: ./scripts/ci/set_pr_env_variables.main.kts ${{ github.event.pull_request.head.ref }} ${{ github.env }} ${{ github.event.pull_request.number }}
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Copy Gradle Properties File
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Create Keystore
+        if: ${{ env.isReleasePR == 'true' }}
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > release.keystore.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > spyfall.keystore
+
+      - name: Create Assets
+        if: ${{ env.isReleasePR == 'true' }}
+        id: createassets
+        run: ./scripts/ci/create_pr_assets.main.kts ${{ env.isReleasePR }} ${{ github.env }} spyfall.keystore ${{ secrets.KEYSTORE_PASSWORD }} ${{ secrets.KEYALIAS }} ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Release Signed Apk
+        if: ${{ env.isReleasePR == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Release Apk
+          path: ${{ env.oddoneoutReleaseApkPath }}
+
+      - name: Upload Release Signed Aab
+        if: ${{ env.isReleasePR == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Release aab
+          path: ${{ env.oddoneoutReleaseAabPath }}
+
+      - name: Upload Debug Apk
+        if: ${{ env.isReleasePR == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Debug Apk
+          path: ${{ env.oddoneoutDebugApkPath }}
+
+      - name: Deploy Debug Asset to Firebase
+        if: ${{ env.isReleasePR == 'true' }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutDebugAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} false firebaseDistributionDebugApkKey ${{ env.oddoneoutDebugApkPath }}
+
+      - name: Deploy Release Asset to Firebase
+        if: ${{ env.isReleasePR == 'true' }}
+        run: ./scripts/ci/deploy_app_distribution.main.kts ${{ env.oddoneoutReleaseAppId }} ${{ secrets.FIREBASE_TOKEN }} ${{ github.env }} ${{ env.pullRequestLink }} true firebaseDistributionReleaseApkKey ${{ env.oddoneoutReleaseApkPath }}
+
+      - name: Update Draft Release
+        if: ${{ env.isReleasePR == 'true' }}
+        run: ./scripts/ci/update_release_draft.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ env.releaseTagName }} ${{ env.releaseNotesFile }} ${{ env.oddoneoutReleaseAabPath }} ${{ env.oddoneoutReleaseApkPath }} ${{ env.oddoneoutDebugApkPath }}
+
+      - name: Update PR Comment
+        run: ./scripts/ci/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.firebaseDistributionReleaseApkKey }} ${{ env.firebaseDistributionDebugApkKey }} ${{ env.oddoneoutDebugFirebaseDistributionLink }} ${{ env.oddoneoutReleaseFirebaseDistributionLink }} ${{ github.run_number }} ${{ env.releaseTagName }}
+
+  style:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Create service key json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "service_key.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Download secret files
+        run: ./scripts/get_secret_files.main.kts service_key.json
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Detekt All
+        run: ./gradlew detektAll
+
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Create service key json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "service_key.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Download secret files
+        run: ./scripts/get_secret_files.main.kts service_key.json
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Copy  gradle properties file
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Unit tests
+        run: ./gradlew test --stacktrace

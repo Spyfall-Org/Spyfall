@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="medium_animation">400</integer>
+    <integer name="short_animation">250</integer>
+
+    <integer name="fading_edge_animation">750</integer>
+
+    <integer name="minimum_height">92</integer>
+    <integer name="maximum_height">214</integer>
+</resources>
