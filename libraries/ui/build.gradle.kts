@@ -29,6 +29,7 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.features.ads)
     api(projects.libraries.dictionary)
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 }
 
 android {

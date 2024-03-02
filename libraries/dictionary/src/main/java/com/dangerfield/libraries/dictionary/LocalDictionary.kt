@@ -12,5 +12,5 @@ val LocalDictionary = staticCompositionLocalOf<Dictionary> {
 @Composable
 fun dictionaryString(@StringRes id: Int, vararg args: Pair<String,String>): String {
     val dictionary = LocalDictionary.current
-    return remember { dictionary.getString(id, args.toMap()) }
+    return remember(args) { dictionary.getString(id, args.toMap()) }
 }

@@ -44,7 +44,7 @@ fun NewGameOfflineScreen(
 
             Text(
                 text = dictionaryString(R.string.newGame_offlineNoSupport_text),
-                typographyToken = OddOneOutTheme.typography.Body.B700
+                typography = OddOneOutTheme.typography.Body.B700
             )
 
         }

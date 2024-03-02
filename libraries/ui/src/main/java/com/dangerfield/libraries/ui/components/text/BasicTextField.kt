@@ -29,9 +29,9 @@ fun BasicTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    typographyToken: TypographyResource = LocalTextConfig.current.typographyToken
+    typographyToken: TypographyResource = LocalTextConfig.current.typography
         ?: OddOneOutTheme.typography.Default,
-    color: Color = OddOneOutTheme.colors.onBackground.color,
+    color: Color = OddOneOutTheme.colors.text.color,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,

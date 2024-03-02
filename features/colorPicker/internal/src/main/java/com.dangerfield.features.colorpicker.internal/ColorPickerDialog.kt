@@ -59,7 +59,7 @@ fun ColorPickerDialog(
             Column {
                 Text(
                     text = dictionaryString(R.string.colorPicker_color_header),
-                    typographyToken = OddOneOutTheme.typography.Heading.H800
+                    typography = OddOneOutTheme.typography.Heading.H800
                 )
 
                 VerticalSpacerD500()
@@ -92,7 +92,7 @@ fun ColorPickerDialog(
                         if (item is ColorConfig.Random) {
                             Text(
                                 text = dictionaryString(R.string.colorPicker_random_label),
-                                typographyToken = OddOneOutTheme.typography.Body.B400.Bold,
+                                typography = OddOneOutTheme.typography.Body.B400.Bold,
                                 colorResource = OddOneOutTheme.colors.background,
                             )
                         }

@@ -145,11 +145,11 @@ private fun MakeLinkPreview() {
                 "http://www.thisisurl.com"
             )
 
-            Text(makeLink, typographyToken = OddOneOutTheme.typography.Display.D1100)
+            Text(makeLink, typography = OddOneOutTheme.typography.Display.D1100)
 
             VerticalSpacerD800()
 
-            Text(makeURL, typographyToken = OddOneOutTheme.typography.Body.B600)
+            Text(makeURL, typography = OddOneOutTheme.typography.Body.B600)
 
         }
     }

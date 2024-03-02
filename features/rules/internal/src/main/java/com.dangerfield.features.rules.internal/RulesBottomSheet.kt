@@ -139,7 +139,7 @@ fun RulesBottomSheet(
 @Composable
 private fun SubTitle(text: String) {
     Column {
-        Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B700.Bold)
+        Text(text = text, typography = OddOneOutTheme.typography.Body.B700.Bold)
         VerticalSpacerD100()
     }
 }
@@ -147,7 +147,7 @@ private fun SubTitle(text: String) {
 @Composable
 private fun Body(text: String) {
     Column {
-        Text(text = text, typographyToken = OddOneOutTheme.typography.Body.B600)
+        Text(text = text, typography = OddOneOutTheme.typography.Body.B600)
     }
 }
 

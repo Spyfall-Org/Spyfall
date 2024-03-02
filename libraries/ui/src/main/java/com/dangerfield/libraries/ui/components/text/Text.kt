@@ -8,9 +8,14 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorProducer
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,7 +35,7 @@ fun Text(
     text: String,
     modifier: Modifier = Modifier,
     colorResource: ColorResource? = null,
-    typographyToken: TypographyResource = LocalTextConfig.current.typographyToken ?: OddOneOutTheme.typography.Default,
+    typography: TypographyResource = LocalTextConfig.current.typography ?: OddOneOutTheme.typography.Default,
     textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
     textAlign: TextAlign? = LocalTextConfig.current.textAlign,
     onTextLayout: (TextLayoutResult) -> Unit = {},
@@ -39,10 +44,12 @@ fun Text(
     maxLines: Int = LocalTextConfig.current.maxLines ?: Int.MAX_VALUE,
     minLines: Int = LocalTextConfig.current.minLines ?: 1,
 ) {
+    val style = typography.toStyle(colorResource, textDecoration, textAlign)
+
     BasicText(
         text = text.parseHtml(),
         modifier = modifier,
-        style = typographyToken.toStyle(colorResource, textDecoration, textAlign),
+        style = style,
         overflow = overflow,
         onTextLayout = onTextLayout,
         softWrap = softWrap,
@@ -61,7 +68,7 @@ internal fun ProvideTextConfig(
 
 @Composable
 fun ProvideTextConfig(
-    typographyToken: TypographyResource? = null,
+    typography: TypographyResource? = null,
     color: ColorResource? = null,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
@@ -74,7 +81,7 @@ fun ProvideTextConfig(
     ProvideTextConfig(
         config = LocalTextConfig.current.merge(
             color = color,
-            typographyToken = typographyToken,
+            typography = typography,
             textDecoration = textDecoration,
             textAlign = textAlign,
             overflow = overflow,
@@ -92,7 +99,7 @@ fun Text(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
     color: ColorResource? = null,
-    typographyToken: TypographyResource = LocalTextConfig.current.typographyToken ?: OddOneOutTheme.typography.Default,
+    typography: TypographyResource = LocalTextConfig.current.typography ?: OddOneOutTheme.typography.Default,
     textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
     textAlign: TextAlign? = LocalTextConfig.current.textAlign,
     onTextLayout: (TextLayoutResult) -> Unit = {},
@@ -104,7 +111,7 @@ fun Text(
     BasicText(
         text = text,
         modifier = modifier,
-        style = typographyToken.toStyle(color, textDecoration, textAlign),
+        style = typography.toStyle(color, textDecoration, textAlign),
         overflow = overflow,
         onTextLayout = onTextLayout,
         softWrap = softWrap,
@@ -119,7 +126,7 @@ fun Text(
     @StringRes text: Int,
     modifier: Modifier = Modifier,
     color: ColorResource? = null,
-    typographyToken: TypographyResource = LocalTextConfig.current.typographyToken ?: OddOneOutTheme.typography.Default,
+    typography: TypographyResource = LocalTextConfig.current.typography ?: OddOneOutTheme.typography.Default,
     textDecoration: TextDecoration = LocalTextConfig.current.textDecoration ?: TextDecoration.None,
     textAlign: TextAlign? = LocalTextConfig.current.textAlign,
     onTextLayout: (TextLayoutResult) -> Unit = {},
@@ -133,7 +140,7 @@ fun Text(
         text = dictionaryString(text).parseHtml(),
         modifier = modifier,
         color = color,
-        typographyToken = typographyToken,
+        typography = typography,
         textDecoration = textDecoration,
         textAlign = textAlign,
         onTextLayout = onTextLayout,
@@ -149,7 +156,7 @@ internal val LocalTextConfig = compositionLocalOf { TextConfig.Default }
 internal val DefaultTextOverflow = TextOverflow.Ellipsis
 
 internal data class TextConfig(
-    val typographyToken: TypographyResource? = null,
+    val typography: TypographyResource? = null,
     val color: ColorResource  = ColorResource.Unspecified,
     val textDecoration: TextDecoration? = null,
     val textAlign: TextAlign? = null,
@@ -168,7 +175,7 @@ internal data class TextConfig(
             this == Default -> other
             else ->
                 merge(
-                    typographyToken = other.typographyToken,
+                    typography = other.typography,
                     color = other.color,
                     textDecoration = other.textDecoration,
                     textAlign = other.textAlign,
@@ -180,7 +187,7 @@ internal data class TextConfig(
         }
 
     fun merge(
-        typographyToken: TypographyResource?,
+        typography: TypographyResource?,
         color: ColorResource? = null,
         textDecoration: TextDecoration?,
         textAlign: TextAlign?,
@@ -190,7 +197,7 @@ internal data class TextConfig(
         minLines: Int?,
     ): TextConfig =
         TextConfig(
-            typographyToken = typographyToken ?: this.typographyToken,
+            typography = typography ?: this.typography,
             color = color ?: this.color,
             textDecoration = textDecoration ?: this.textDecoration,
             textAlign = textAlign ?: this.textAlign,
@@ -202,13 +209,18 @@ internal data class TextConfig(
 }
 
 @Composable
-internal fun TypographyResource.toStyle(color: ColorResource?, textDecoration: TextDecoration?, textAlign: TextAlign?) =
-    style.copy(
-        color = color?.color?.takeOrElse { LocalTextConfig.current.color.color}?.takeOrElse { LocalContentColor.current.onColorResource.color } ?: ColorResource.White900.color,
+internal fun TypographyResource.toStyle(color: ColorResource?, textDecoration: TextDecoration?, textAlign: TextAlign?): TextStyle {
+    val fallbackColor = LocalTextConfig.current.color.takeOrElse(LocalContentColor.current.takeOrElse(OddOneOutTheme.colors.text))
+
+    return style.copy(
+        color = color?.takeOrElse(fallbackColor)?.color ?: fallbackColor.color,
         textDecoration = textDecoration,
         textAlign = textAlign ?: TextAlign.Start
     )
+}
 
+
+private fun ColorResource.takeOrElse(default: ColorResource): ColorResource = this.takeIf { it.color.isSpecified } ?: default
 
 @Preview
 @Composable
@@ -220,3 +232,30 @@ private fun TextPreview() {
         Text(LoremIpsum(2).values.first())
     }
 }
+
+@Preview
+@Composable
+private fun TextPreviewProvided() {
+    Preview(
+        contentPadding = PaddingValues(Dimension.D500),
+        showBackground = true
+    ) {
+        ProvideTextConfig(
+            config = TextConfig(
+                typography = OddOneOutTheme.typography.Default
+                .copy(
+                    fontWeight = FontWeight.ExtraLight
+                ),
+                color = OddOneOutTheme.colors.accent,
+                textDecoration = TextDecoration.Underline,
+                textAlign = TextAlign.Start,
+                maxLines = 1,
+            )
+        ) {
+            Text(
+                LoremIpsum(2).values.first(),
+            )
+        }
+    }
+}
+

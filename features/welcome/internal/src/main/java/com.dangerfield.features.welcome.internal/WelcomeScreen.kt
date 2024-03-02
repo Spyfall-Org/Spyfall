@@ -146,7 +146,7 @@ private fun WelcomeText() {
     ) {
         Text(
             text = dictionaryString(R.string.welcome_intro_header),
-            typographyToken = OddOneOutTheme.typography.Display.D1000,
+            typography = OddOneOutTheme.typography.Display.D1000,
             textAlign = TextAlign.Start
         )
 

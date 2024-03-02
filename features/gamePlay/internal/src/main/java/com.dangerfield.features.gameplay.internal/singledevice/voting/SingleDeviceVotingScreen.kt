@@ -172,7 +172,7 @@ private fun VotingScreenContent(
                     ),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    typographyToken = OddOneOutTheme.typography.Display.D1100
+                    typography = OddOneOutTheme.typography.Display.D1100
                 )
 
                 VerticalSpacerD800()
@@ -181,7 +181,7 @@ private fun VotingScreenContent(
                     text = dictionaryString(R.string.singleDeviceVoting_Instructions_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    typographyToken = OddOneOutTheme.typography.Body.B700
+                    typography = OddOneOutTheme.typography.Body.B700
                 )
 
                 VerticalSpacerD1200()
@@ -292,7 +292,7 @@ private fun VotingScreenContent(
                     text = dictionaryString(R.string.singleDeviceVoting_loading_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    typographyToken = OddOneOutTheme.typography.Display.D1100,
+                    typography = OddOneOutTheme.typography.Display.D1100,
                 )
             }
 

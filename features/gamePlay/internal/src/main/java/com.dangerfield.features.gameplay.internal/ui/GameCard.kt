@@ -117,7 +117,7 @@ private fun FirstBadge(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                typographyToken = OddOneOutTheme.typography.Label.L700,
+                typography = OddOneOutTheme.typography.Label.L700,
                 modifier = Modifier.circleBackground(OddOneOutTheme.colors.accent.color, 2.dp),
                 text = "1st",
                 colorResource = OddOneOutTheme.colors.onAccent

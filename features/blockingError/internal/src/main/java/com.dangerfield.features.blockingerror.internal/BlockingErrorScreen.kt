@@ -35,13 +35,13 @@ fun BlockingErrorScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.10f))
             Text(
                 text = dictionaryString(R.string.blockingError_screen_header),
-                typographyToken = OddOneOutTheme.typography.Display.D1000,
+                typography = OddOneOutTheme.typography.Display.D1000,
                 modifier = Modifier.padding(horizontal = Dimension.D500),
                 textAlign = TextAlign.Center
             )
             Text(
                 text = dictionaryString(R.string.blockingError_error_body),
-                typographyToken = OddOneOutTheme.typography.Body.B700,
+                typography = OddOneOutTheme.typography.Body.B700,
                 modifier = Modifier.padding(horizontal = Dimension.D500),
                 textAlign = TextAlign.Center
             )

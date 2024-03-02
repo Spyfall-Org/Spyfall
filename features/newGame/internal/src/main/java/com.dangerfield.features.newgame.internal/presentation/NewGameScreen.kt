@@ -274,7 +274,7 @@ private fun FormField(
             if (formFieldState is FieldState.Invalid && (!hasFocus || showErrorWhenNotFocused)) {
                 Text(
                     text = formFieldState.errorMessage,
-                    typographyToken = OddOneOutTheme.typography.Body.B500,
+                    typography = OddOneOutTheme.typography.Body.B500,
                     colorResource = OddOneOutTheme.colors.textWarning
                 )
             }
@@ -302,7 +302,7 @@ private fun PacksField(
                 }
                 Text(
                     text = dictionaryString(R.string.newGame_packsDescription_text),
-                    typographyToken = OddOneOutTheme.typography.Body.B500
+                    typography = OddOneOutTheme.typography.Body.B500
                 )
             }
 
@@ -342,7 +342,7 @@ private fun SingleDeviceField(
             )
             Text(
                 text = dictionaryString(R.string.newGame_singleDeviceDescription_text),
-                typographyToken = OddOneOutTheme.typography.Body.B500
+                typography = OddOneOutTheme.typography.Body.B500
             )
         }
 
@@ -368,7 +368,7 @@ private fun GameLengthField(
             }
             Text(
                 text = dictionaryString(R.string.newGame_gameLengthDescription_text),
-                typographyToken = OddOneOutTheme.typography.Body.B500,
+                typography = OddOneOutTheme.typography.Body.B500,
             )
         }
 
@@ -463,7 +463,7 @@ private fun VideoCallLink(
                 )
                 Text(
                     text = dictionaryString(R.string.newGame_videCallDescription_text),
-                    typographyToken = OddOneOutTheme.typography.Body.B500
+                    typography = OddOneOutTheme.typography.Body.B500
                 )
             }
 

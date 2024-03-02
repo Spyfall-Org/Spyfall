@@ -133,7 +133,7 @@ private fun ResultsScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 text = winnerText,
                 textAlign = TextAlign.Center,
-                typographyToken = OddOneOutTheme.typography.Display.D1200
+                typography = OddOneOutTheme.typography.Display.D1200
             )
 
             VerticalSpacerD1200()
@@ -152,7 +152,7 @@ private fun ResultsScreenContent(
                     "correct" to correctOddOneOutVoteCount.toString(),
                     "total" to (totalPlayerCount - 1).toString()
                 ),
-                typographyToken = OddOneOutTheme.typography.Body.B800
+                typography = OddOneOutTheme.typography.Body.B800
             )
 
             VerticalSpacerD1200()
@@ -171,7 +171,7 @@ private fun ResultsScreenContent(
                         R.string.singeDeviceGameResults_locationGuessed_header,
                         "location" to oddOneOutLocationGuess
                     ),
-                    typographyToken = OddOneOutTheme.typography.Body.B800
+                    typography = OddOneOutTheme.typography.Body.B800
                 )
             }
             VerticalSpacerD1200()

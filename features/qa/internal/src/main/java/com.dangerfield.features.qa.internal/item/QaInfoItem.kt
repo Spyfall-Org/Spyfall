@@ -33,12 +33,12 @@ fun QaInfoItem(
             onClick = onClick ?: {}
         ),
         trailingContent = {
-            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B500) {
+            ProvideTextConfig(typography = OddOneOutTheme.typography.Body.B500) {
                 trailingContent?.invoke()
             }
         },
         supportingContent = {
-            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B600) {
+            ProvideTextConfig(typography = OddOneOutTheme.typography.Body.B600) {
                 supportingText?.invoke()
             }
         },

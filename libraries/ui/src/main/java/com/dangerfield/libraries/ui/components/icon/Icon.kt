@@ -97,7 +97,7 @@ private fun IconPreview() {
                     spyfallIcon = SpyfallIcon.Check("check")
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "${it.name} Icon", typographyToken = OddOneOutTheme.typography.Body.B500
+                Text(text = "${it.name} Icon", typography = OddOneOutTheme.typography.Body.B500
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }

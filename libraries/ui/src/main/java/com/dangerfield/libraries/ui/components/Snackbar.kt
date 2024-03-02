@@ -93,7 +93,7 @@ fun Snackbar(
 
                     Text(
                         text = message,
-                        typographyToken = OddOneOutTheme.typography.Body.B600,
+                        typography = OddOneOutTheme.typography.Body.B600,
                     )
                 }
 

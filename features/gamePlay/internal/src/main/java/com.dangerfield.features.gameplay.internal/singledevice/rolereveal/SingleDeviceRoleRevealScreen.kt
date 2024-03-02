@@ -183,7 +183,7 @@ private fun RoleRevealScreenContent(
                     ),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    typographyToken = OddOneOutTheme.typography.Display.D1100
+                    typography = OddOneOutTheme.typography.Display.D1100
                 )
 
                 VerticalSpacerD800()
@@ -193,14 +193,14 @@ private fun RoleRevealScreenContent(
                         text = dictionaryString(R.string.roleReveal_starterInstructions_text),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
                 } else {
                     Text(
                         text = dictionaryString(R.string.roleReveal_instructions_text),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
                 }
 
@@ -253,7 +253,7 @@ private fun RoleRevealScreenContent(
                         text = nameFieldState.errorMessage,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Start,
-                        typographyToken = OddOneOutTheme.typography.Body.B500,
+                        typography = OddOneOutTheme.typography.Body.B500,
                         colorResource = OddOneOutTheme.colors.textWarning
                     )
                 }
@@ -264,7 +264,7 @@ private fun RoleRevealScreenContent(
                         text = dictionaryString(R.string.roleReveal_changeNameSuccess_text),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.fillMaxWidth(),
-                        typographyToken = OddOneOutTheme.typography.Body.B500,
+                        typography = OddOneOutTheme.typography.Body.B500,
                         colorResource = ColorResource.MintyFresh300
                     )
                 }
@@ -312,7 +312,7 @@ private fun RoleRevealScreenContent(
                     text = dictionaryString(R.string.roleReveal_loading_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    typographyToken = OddOneOutTheme.typography.Display.D1100
+                    typography = OddOneOutTheme.typography.Display.D1100
                 )
             }
         }
@@ -325,7 +325,7 @@ private fun PreviewSingleDevicePlayerRoleScreen() {
     Preview {
         SingleDevicePlayerRoleScreen(
             currentPlayer = DisplayablePlayer(
-                name = "Player 1",
+                name = "Player 7",
                 id = "",
                 role = "The Odd One Out",
                 isFirst = false,

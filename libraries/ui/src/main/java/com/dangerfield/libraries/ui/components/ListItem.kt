@@ -43,12 +43,12 @@ fun ListItem(
 
         Column(modifier = Modifier.weight(1f)) {
             ProvideTextConfig(
-                typographyToken = OddOneOutTheme.typography.Heading.H700
+                typography = OddOneOutTheme.typography.Heading.H700
             ) {
                 headlineContent()
             }
             ProvideTextConfig(
-                typographyToken = OddOneOutTheme.typography.Body.B600
+                typography = OddOneOutTheme.typography.Body.B600
             ) {
                 supportingContent?.let { it() }
             }

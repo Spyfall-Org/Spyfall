@@ -72,7 +72,7 @@ fun RoleCard(
             if (text != null) {
                 Text(
                     text = text,
-                    typographyToken = OddOneOutTheme.typography.Body.B800,
+                    typography = OddOneOutTheme.typography.Body.B800,
                     textAlign = TextAlign.Center
                 )
             }

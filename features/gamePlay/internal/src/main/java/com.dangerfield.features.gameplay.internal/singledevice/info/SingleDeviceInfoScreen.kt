@@ -76,7 +76,7 @@ private fun SingleDeviceInfoScreenContent(
 
             Text(
                 text = dictionaryString(R.string.singleDeviceInfo_gameInfo_text),
-                typographyToken = OddOneOutTheme.typography.Body.B700
+                typography = OddOneOutTheme.typography.Body.B700
             )
 
             VerticalSpacerD1200()

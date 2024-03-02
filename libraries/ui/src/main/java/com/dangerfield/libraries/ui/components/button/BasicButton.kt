@@ -39,7 +39,6 @@ import com.dangerfield.libraries.ui.Radius
 import com.dangerfield.libraries.ui.StandardBorderWidth
 import com.dangerfield.libraries.ui.bounceClick
 import com.dangerfield.libraries.ui.color.ColorResource
-import com.dangerfield.libraries.ui.color.ProvideContentColor
 import com.dangerfield.libraries.ui.components.Surface
 import com.dangerfield.libraries.ui.components.icon.SmallIcon
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
@@ -254,25 +253,25 @@ internal fun ButtonSize.padding(hasIcon: Boolean): PaddingValues =
     }
 
 private val SmallButtonTextConfig = TextConfig(
-    typographyToken = OddOneOutTheme.typography.Label.L600,
+    typography = OddOneOutTheme.typography.Label.L600,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val ExtraSmallButtonTextConfig = TextConfig(
-    typographyToken = OddOneOutTheme.typography.Label.L400,
+    typography = OddOneOutTheme.typography.Label.L400,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val SmallTextButtonTextConfig = TextConfig(
-    typographyToken = OddOneOutTheme.typography.Body.B600.SemiBold,
+    typography = OddOneOutTheme.typography.Body.B600.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
 
 private val LargeButtonTextConfig = TextConfig(
-    typographyToken = OddOneOutTheme.typography.Label.L800.SemiBold,
+    typography = OddOneOutTheme.typography.Label.L800.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )
@@ -283,7 +282,7 @@ private val SmallButtonVerticalPadding = Dimension.D500
 private val ExtraButtonVerticalPadding = Dimension.D500
 
 private val LargeTextButtonTextConfig = TextConfig(
-    typographyToken = OddOneOutTheme.typography.Body.B700.SemiBold,
+    typography = OddOneOutTheme.typography.Body.B700.SemiBold,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1
 )

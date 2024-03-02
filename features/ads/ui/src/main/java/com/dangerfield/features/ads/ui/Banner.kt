@@ -66,7 +66,7 @@ private fun PreviewAd() {
     ) {
         Text(
             text = "Preview Ad",
-            typographyToken = OddOneOutTheme.typography.Body.B700.Bold,
+            typography = OddOneOutTheme.typography.Body.B700.Bold,
             colorResource = OddOneOutTheme.colors.text,
         )
     }

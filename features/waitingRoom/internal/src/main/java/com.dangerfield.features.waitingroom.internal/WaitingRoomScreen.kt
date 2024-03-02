@@ -169,7 +169,7 @@ private fun WaitingRoomScreenContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = dictionaryString(R.string.waitingRoom_waiting_header),
-            typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
+            typography = OddOneOutTheme.typography.Display.D1000.Bold
         )
 
         VerticalSpacerD1000()
@@ -177,14 +177,14 @@ private fun WaitingRoomScreenContent(
         Row {
             Text(
                 text = dictionaryString(R.string.waitingRoom_accessCode_header),
-                typographyToken = OddOneOutTheme.typography.Default.Bold
+                typography = OddOneOutTheme.typography.Default.Bold
             )
             Spacer(modifier = Modifier.width(Dimension.D500))
             SelectionContainer {
                 Text(
                     modifier = Modifier.weight(1f),
                     text = accessCode,
-                    typographyToken = OddOneOutTheme.typography.Default
+                    typography = OddOneOutTheme.typography.Default
                 )
             }
             Spacer(modifier = Modifier.weight(1f))

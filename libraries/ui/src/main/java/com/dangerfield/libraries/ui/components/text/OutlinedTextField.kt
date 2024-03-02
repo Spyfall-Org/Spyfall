@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.Radii
+import com.dangerfield.libraries.ui.color.ColorResource
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.typography.TypographyResource
 
@@ -33,7 +34,7 @@ fun OutlinedTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    typographyToken: TypographyResource = LocalTextConfig.current.typographyToken
+    typographyToken: TypographyResource = LocalTextConfig.current.typography
         ?: OddOneOutTheme.typography.Default,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
@@ -82,8 +83,8 @@ fun OutlinedTextField(
                 placeholder = {
                     ProvideTextConfig(
                         config = TextConfig(
-                            typographyToken = typographyToken.copy(
-                                fontWeight = FontWeight.Normal
+                            typography = typographyToken.copy(
+                                fontWeight = FontWeight.ExtraLight
                             ),
                             color = OddOneOutTheme.colors.textDisabled,
                             textDecoration = TextDecoration.Underline,

@@ -39,7 +39,7 @@ class Colors internal constructor(
             accent = accentColor,
             onAccent = accentColor.onColorResource,
             shadow = ColorResource.Black800,
-            textDisabled = ColorResource.Black400,
+            textDisabled = ColorResource.PurpleGray300,
             textWarning = ColorResource.CherryPop700,
             surfacePrimary = ColorResource.Purple500,
             onSurfacePrimary = ColorResource.White900,
@@ -51,7 +51,7 @@ class Colors internal constructor(
             onBackground = ColorResource.White900,
             border = ColorResource.White900,
             text = ColorResource.White900,
-            backgroundOverlay = ColorResource.Black900.copyWith(alpha = 0.7f),
+            backgroundOverlay = ColorResource.Black900_A_70,
             borderDisabled = ColorResource.Black300,
             )
     }
@@ -65,3 +65,4 @@ fun ProvideContentColor(color: ColorResource, content: @Composable () -> Unit) {
         content = content
     )
 }
+

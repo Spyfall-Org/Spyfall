@@ -184,7 +184,7 @@ private fun Form(
         AsteriskText {
             Text(
                 text = "(${dictionaryString(R.string.app_required_label)})",
-                typographyToken = OddOneOutTheme.typography.Body.B700
+                typography = OddOneOutTheme.typography.Body.B700
             )
         }
         VerticalSpacerD800()
@@ -333,7 +333,7 @@ private fun ContactTypeOption(
         Text(
             reasonString,
             modifier = Modifier.weight(1f),
-            typographyToken = OddOneOutTheme.typography.Body.B700
+            typography = OddOneOutTheme.typography.Body.B700
         )
 
         NewRadioButton(
@@ -367,7 +367,7 @@ private fun FormField(
             if (formFieldState is FieldState.Invalid && (!hasFocus || showErrorWhenNotFocused)) {
                 Text(
                     text = formFieldState.errorMessage,
-                    typographyToken = OddOneOutTheme.typography.Body.B500,
+                    typography = OddOneOutTheme.typography.Body.B500,
                     colorResource = OddOneOutTheme.colors.textWarning
                 )
             }

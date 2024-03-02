@@ -106,7 +106,7 @@ fun GamePackItem(
             Text(
                 modifier = Modifier.padding(horizontal = 5.dp, vertical = 15.dp),
                 text = packName + numberText,
-                typographyToken = OddOneOutTheme.typography.Heading.H600,
+                typography = OddOneOutTheme.typography.Heading.H600,
                 textAlign = TextAlign.Center,
                 colorResource = if (isEnabled) colorResource.onColorResource else OddOneOutTheme.colors.onSurfaceDisabled,
             )

@@ -93,7 +93,7 @@ fun ChangeNameDialog(
                         Text(
                             text = errorText,
                             colorResource = OddOneOutTheme.colors.textWarning,
-                            typographyToken = OddOneOutTheme.typography.Label.L700
+                            typography = OddOneOutTheme.typography.Label.L700
                         )
                     }
                 }

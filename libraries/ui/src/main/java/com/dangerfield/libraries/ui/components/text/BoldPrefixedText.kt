@@ -24,7 +24,7 @@ fun BoldPrefixedText(
        Text(
            textAlign = textAlign,
            text = string,
-           typographyToken = typography
+           typography = typography
        )
     }
 }

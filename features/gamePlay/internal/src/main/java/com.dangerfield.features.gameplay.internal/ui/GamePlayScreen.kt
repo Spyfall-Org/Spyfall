@@ -341,7 +341,7 @@ private fun LocationsList(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = text,
-            typographyToken = OddOneOutTheme.typography.Display.D800
+            typography = OddOneOutTheme.typography.Display.D800
         )
 
         VerticalSpacerD500()
@@ -383,7 +383,7 @@ private fun CorrectAnswer(
                     )
                 }
             ),
-            typographyToken = OddOneOutTheme.typography.Display.D800
+            typography = OddOneOutTheme.typography.Display.D800
         )
 
         VerticalSpacerD500()
@@ -417,7 +417,7 @@ private fun PlayerList(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = text,
-            typographyToken = OddOneOutTheme.typography.Display.D800
+            typography = OddOneOutTheme.typography.Display.D800
         )
 
         VerticalSpacerD500()
@@ -506,7 +506,7 @@ private fun Header(
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
         text = headerText,
-        typographyToken = OddOneOutTheme.typography.Display.D1100
+        typography = OddOneOutTheme.typography.Display.D1100
     )
 }
 

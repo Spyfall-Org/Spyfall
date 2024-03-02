@@ -56,14 +56,14 @@ fun InHouseConsentScreen(
 
             Text(
                 text = dictionaryString(id = R.string.termsOfService_screen_header),
-                typographyToken = OddOneOutTheme.typography.Display.D1000
+                typography = OddOneOutTheme.typography.Display.D1000
             )
 
             VerticalSpacerD1200()
 
             Text(
                 text = dictionaryString(R.string.termsOfService_description_text),
-                typographyToken = OddOneOutTheme.typography.Body.B700
+                typography = OddOneOutTheme.typography.Body.B700
             )
 
             VerticalSpacerD800()
@@ -96,7 +96,7 @@ fun InHouseConsentScreen(
                 HorizontalSpacerD500()
                 Text(
                     text = dictionaryString(R.string.termsOfService_confirmation_text),
-                    typographyToken = OddOneOutTheme.typography.Body.B600
+                    typography = OddOneOutTheme.typography.Body.B600
                 )
             }
 

@@ -37,7 +37,7 @@ fun Header(
 ) {
     MaterialTopAppBar(
         title = {
-            Text(text = title, typographyToken = typographyToken)
+            Text(text = title, typography = typographyToken)
         },
         modifier = modifier
             .thenIf(liftOnScroll) { elevateOnScroll(scrollState)},

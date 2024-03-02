@@ -31,7 +31,7 @@ fun OfflineBar(isOffline: Boolean) {
         ) {
             Text(
                 text = dictionaryString(R.string.odd_one_out_is_offline),
-                typographyToken = OddOneOutTheme.typography.Body.B700,
+                typography = OddOneOutTheme.typography.Body.B700,
                 colorResource = OddOneOutTheme.colors.text,
             )
         }

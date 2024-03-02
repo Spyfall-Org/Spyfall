@@ -38,7 +38,7 @@ fun ConsentLoadingScreen() {
                 Text(
                     text = "Loading Consent Form...",
                     textAlign = TextAlign.Center,
-                    typographyToken = OddOneOutTheme.typography.Display.D1000
+                    typography = OddOneOutTheme.typography.Display.D1000
                 )
 
                 VerticalSpacerD1000()

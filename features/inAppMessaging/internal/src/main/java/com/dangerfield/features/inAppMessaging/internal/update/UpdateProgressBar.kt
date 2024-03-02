@@ -38,7 +38,7 @@ fun ProgressRow(
             modifier = Modifier
         ) {
             ProvideTextConfig(
-                typographyToken = OddOneOutTheme.typography.Body.B600,
+                typography = OddOneOutTheme.typography.Body.B600,
                 color = OddOneOutTheme.colors.onAccent
             ) {
                 content()

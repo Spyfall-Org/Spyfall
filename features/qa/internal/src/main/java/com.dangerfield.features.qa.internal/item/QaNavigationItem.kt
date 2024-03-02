@@ -45,7 +45,7 @@ fun QANavigationItem(
             }
         },
         supportingContent = {
-            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B600) {
+            ProvideTextConfig(typography = OddOneOutTheme.typography.Body.B600) {
                 supportingText?.invoke()
             }
         },

@@ -69,7 +69,7 @@ fun InputField(
         if (fieldState is FieldState.Invalid && (!hasFocus || shouldShowErrorWhileTyping)) {
             Text(
                 text = fieldState.errorMessage,
-                typographyToken = OddOneOutTheme.typography.Body.B500,
+                typography = OddOneOutTheme.typography.Body.B500,
                 colorResource = OddOneOutTheme.colors.textWarning
             )
         }

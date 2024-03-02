@@ -77,7 +77,7 @@ fun AboutScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                typographyToken = OddOneOutTheme.typography.Body.B700,
+                typography = OddOneOutTheme.typography.Body.B700,
                 colorResource = OddOneOutTheme.colors.textDisabled
             )
 
@@ -89,7 +89,7 @@ fun AboutScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                typographyToken = OddOneOutTheme.typography.Body.B700,
+                typography = OddOneOutTheme.typography.Body.B700,
                 colorResource = OddOneOutTheme.colors.textDisabled
             )
         }

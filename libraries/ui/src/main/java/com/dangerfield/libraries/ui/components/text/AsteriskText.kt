@@ -13,7 +13,7 @@ fun AsteriskText(text: @Composable () -> Unit) {
         HorizontalSpacerD200()
         Text(
             text = "*",
-            typographyToken = OddOneOutTheme.typography.Display.D800,
+            typography = OddOneOutTheme.typography.Display.D800,
             colorResource = ColorResource.CherryPop700
         )
     }

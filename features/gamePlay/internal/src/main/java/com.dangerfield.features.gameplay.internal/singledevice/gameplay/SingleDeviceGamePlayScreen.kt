@@ -108,7 +108,7 @@ private fun GamePlayScreenContent(
 
                 Text(
                     text = timeRemaining,
-                    typographyToken = OddOneOutTheme.typography.Display.D1400,
+                    typography = OddOneOutTheme.typography.Display.D1400,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
@@ -117,14 +117,14 @@ private fun GamePlayScreenContent(
 
                 Text(
                     text = dictionaryString(R.string.singleDeviceGame_inGamePlayDescription_text),
-                    typographyToken = OddOneOutTheme.typography.Body.B800,
+                    typography = OddOneOutTheme.typography.Body.B800,
                 )
 
                 VerticalSpacerD800()
 
                 Text(
                     text = dictionaryString(R.string.singleDeviceGame_inGamePlayExamples_header),
-                    typographyToken = OddOneOutTheme.typography.Body.B800.Bold,
+                    typography = OddOneOutTheme.typography.Body.B800.Bold,
                 )
 
                 VerticalSpacerD800()
@@ -132,7 +132,7 @@ private fun GamePlayScreenContent(
                 BulletRow {
                     Text(
                         text = dictionaryString(R.string.singleDeviceGame_inGamePlayExampleOne_text),
-                        typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
+                        typography = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
 
@@ -141,7 +141,7 @@ private fun GamePlayScreenContent(
                 BulletRow {
                     Text(
                         text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayExampleTwo_text),
-                        typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
+                        typography = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
 
@@ -150,7 +150,7 @@ private fun GamePlayScreenContent(
                 BulletRow {
                     Text(
                         text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayExampleThree_text),
-                        typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
+                        typography = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
 
@@ -159,7 +159,7 @@ private fun GamePlayScreenContent(
                 BulletRow {
                     Text(
                         text = dictionaryString(R.string.singleDeviceGamePlay_inGamePlayExampleFour_text),
-                        typographyToken = OddOneOutTheme.typography.Body.B800.Italic,
+                        typography = OddOneOutTheme.typography.Body.B800.Italic,
                     )
                 }
 

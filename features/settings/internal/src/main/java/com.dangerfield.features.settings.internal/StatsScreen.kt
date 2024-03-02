@@ -64,7 +64,7 @@ fun StatsScreen(
                 HorizontalSpacerD200()
                 Text(
                     text = dictionaryString(R.string.stats_infoNote_label),
-                    typographyToken = OddOneOutTheme.typography.Body.B700,
+                    typography = OddOneOutTheme.typography.Body.B700,
                     colorResource = OddOneOutTheme.colors.onSurfacePrimary
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -74,7 +74,7 @@ fun StatsScreen(
 
             Text(
                 text = dictionaryString(R.string.stats_infoNote_body),
-                typographyToken = OddOneOutTheme.typography.Body.B700,
+                typography = OddOneOutTheme.typography.Body.B700,
                 colorResource = OddOneOutTheme.colors.onSurfacePrimary
             )
 
@@ -82,7 +82,7 @@ fun StatsScreen(
 
             Text(
                 text = dictionaryString(R.string.stats_multiDeviceGames_header),
-                typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
+                typography = OddOneOutTheme.typography.Display.D1000.Bold
             )
 
             VerticalSpacerD800()
@@ -96,7 +96,7 @@ fun StatsScreen(
 
                     Text(
                         text = "$totalMultiDeviceGamesPlayed",
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
 
                     VerticalSpacerD800()
@@ -108,14 +108,14 @@ fun StatsScreen(
                             R.string.stats_gamesYouveWonAsOddOneOut_label,
                             "gamesWon" to gamesWonAsOddOne.toString()
                         ),
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
                     Text(
                         text = dictionaryString(
                             R.string.stats_gamesYouveWonAsPlayer_label,
                             "gamesWon" to gamesWonAsPlayer.toString()
                         ),
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
 
 
@@ -128,14 +128,14 @@ fun StatsScreen(
                             R.string.stats_gamesYouveLostAsOddOneOut_label,
                             "gamesLost" to gamesLostAsOddOne.toString()
                         ),
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
                     Text(
                         text = dictionaryString(
                             R.string.stats_gamesYouveLostAsPlayer_label,
                             "gamesLost" to gamesLostAsPlayer.toString()
                         ),
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
                 }
             }
@@ -144,7 +144,7 @@ fun StatsScreen(
 
             Text(
                 text = dictionaryString(R.string.stats_singleDeviceGames_header),
-                typographyToken = OddOneOutTheme.typography.Display.D1000.Bold
+                typography = OddOneOutTheme.typography.Display.D1000.Bold
             )
 
             VerticalSpacerD800()
@@ -159,7 +159,7 @@ fun StatsScreen(
 
                     Text(
                         text = "$totalSingleDeviceGamesPlayed",
-                        typographyToken = OddOneOutTheme.typography.Body.B700
+                        typography = OddOneOutTheme.typography.Body.B700
                     )
                 }
             }

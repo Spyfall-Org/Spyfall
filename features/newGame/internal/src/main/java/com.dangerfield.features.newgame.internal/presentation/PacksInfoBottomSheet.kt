@@ -64,7 +64,7 @@ fun PacksInfoBottomSheet(
 
                         Text(
                             text = pack.type + numberText,
-                            typographyToken = OddOneOutTheme.typography.Default
+                            typography = OddOneOutTheme.typography.Default
                         )
                         VerticalSpacerD500()
                         NonLazyVerticalGrid(

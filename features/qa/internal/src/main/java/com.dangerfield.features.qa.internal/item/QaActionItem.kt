@@ -40,12 +40,12 @@ fun QaActionItem(
             }
         },
         supportingContent = {
-            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Body.B600) {
+            ProvideTextConfig(typography = OddOneOutTheme.typography.Body.B600) {
                 supportingText?.invoke()
             }
         },
         headlineContent = {
-            ProvideTextConfig(typographyToken = OddOneOutTheme.typography.Heading.H700) {
+            ProvideTextConfig(typography = OddOneOutTheme.typography.Heading.H700) {
                 headline.invoke()
             }
         }

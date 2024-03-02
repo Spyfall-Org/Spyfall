@@ -33,7 +33,7 @@ fun ForcedUpdateScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.10f))
             Text(
                 text = dictionaryString(R.string.forcedUpdate_update_header),
-                typographyToken = OddOneOutTheme.typography.Display.D1000,
+                typography = OddOneOutTheme.typography.Display.D1000,
                 modifier = Modifier.padding(horizontal = Dimension.D500),
                 textAlign = TextAlign.Center
             )
@@ -42,7 +42,7 @@ fun ForcedUpdateScreen(
 
             Text(
                 text = dictionaryString(R.string.forcedUpdate_message_text),
-                typographyToken = OddOneOutTheme.typography.Body.B700,
+                typography = OddOneOutTheme.typography.Body.B700,
                 modifier = Modifier.padding(horizontal = Dimension.D500),
                 textAlign = TextAlign.Center
             )
