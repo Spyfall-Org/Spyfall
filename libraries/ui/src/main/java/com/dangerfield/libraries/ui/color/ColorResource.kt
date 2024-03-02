@@ -33,6 +33,7 @@ import com.dangerfield.libraries.ui.VerticalSpacerD100
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
+@Suppress("ClassNaming")
 sealed class ColorResource(val color: Color, val designSystemName: String) {
     data object Unspecified: ColorResource(Color.Unspecified, "color-unspecified")
     data object Black900: ColorResource(Color(0xFF000000), "color-black-900")
