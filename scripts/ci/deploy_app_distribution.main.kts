@@ -55,7 +55,7 @@ fun main() {
     val versionCode = getAppVersionCode()
     val versionName = getAppVersionName()
 
-    val testerFilePath = "app/src/release/testers.txt"
+    val testerFilePath: String = "app/src/release/testers.txt"
     val serviceAccountPath = "app/src/release/service-account-key.json"
 
     installNode()
@@ -92,7 +92,7 @@ fun main() {
 fun uploadToFirebaseAppDistribution(
     appId: String,
     apkPath: String,
-    testerFilePath,
+    testerFilePath: String,
     pullRequestLink: String,
     isRelease: Boolean,
     versionName: String,
