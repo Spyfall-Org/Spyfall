@@ -55,16 +55,12 @@ class LocationPackRepositoryImpl @Inject constructor(
     private suspend fun loadPacks() = Try {
         Timber.d("Loading packs")
         firebaseFirestore
-            .collection("versioned-packs")
-            .document(packsVersion().toString())
-            .collection(Locale.getDefault().language)
-            .whereEqualTo("type", "location")
+            .collection("packs")
             .get()
             .await()
             .documents
-            .first()
-            .let {
-                packParser.parsePacks(it.id, it.data!!).getOrElse { emptyList() }
+            .mapNotNull {
+                packParser.parsePack(it.id, it.data).getOrNull()
             }
     }
         .logOnFailure()

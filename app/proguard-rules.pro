@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 -dontwarn org.apiguardian.api.API$Status
 -dontwarn org.apiguardian.api.API
+-dontwarn com.google.auto.service.AutoService
