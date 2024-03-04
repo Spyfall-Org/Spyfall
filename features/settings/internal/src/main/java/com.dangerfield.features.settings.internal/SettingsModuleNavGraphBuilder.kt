@@ -53,6 +53,7 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
     private val isReferralFeatureEnabled: IsReferralFeatureEnabled
 ) : ModuleNavBuilder {
 
+    @Suppress("LongMethod")
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(
             route = settingsNavigationRoute.navRoute,
