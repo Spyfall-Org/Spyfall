@@ -3,7 +3,6 @@ package com.dangerfield.libraries.game.internal
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.LocationPack
 import com.dangerfield.libraries.game.LocationPackRepository
-import com.dangerfield.libraries.game.PacksVersion
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import oddoneout.core.Try
@@ -11,14 +10,12 @@ import oddoneout.core.logOnFailure
 import oddoneout.core.success
 import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
-import java.util.Locale
 import javax.inject.Inject
 
 @AutoBind
 class LocationPackRepositoryImpl @Inject constructor(
     private val packParser: PackParser,
     private val firebaseFirestore: FirebaseFirestore,
-    private val packsVersion: PacksVersion
 ) : LocationPackRepository {
 
     private var locationPacks: List<LocationPack> = emptyList()
