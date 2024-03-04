@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.androidx.test.junit)
     implementation(libs.androidx.datastore)
+    implementation(projects.libraries.config)
 
     // api to expose these dependencies to dependants
     api(libs.mockk)
