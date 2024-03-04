@@ -48,7 +48,7 @@ val releaseServiceAccountKeyFileInfo =
 // Used to talk to the debug firebase project
 val debugGoogleServicesFileInfo =
     FileInfo(
-        id = "12rbE9BCp8UkQ38_eE465tjI8O3VbYAzL",
+        id = "1HBLCflA6ny4WvpX7sEbX-gTlPDWzBuix",
         pathsToStore = listOf("app/src/debug/google-services.json")
     )
 
