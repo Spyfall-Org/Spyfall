@@ -28,7 +28,7 @@ data class FileInfo(val id: String, val pathsToStore: List<String>)
 // Used to talk to the release firebase project
 val releaseGoogleServicesFileInfo =
     FileInfo(
-        id = "1UIP-nsDLazFCo-OIU3OzFjiBNTeyAjRc",
+        id = "1NWENohv1NSjL211zsu4tBuFg-57-x95r",
         pathsToStore = listOf(
             "app/src/release/google-services.json",
             "app/src/qa/google-services.json",
