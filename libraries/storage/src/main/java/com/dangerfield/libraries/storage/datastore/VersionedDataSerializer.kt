@@ -121,7 +121,7 @@ class VersionedDataSerializer<T : Any>(
 
 @Suppress("FunctionName")
 @OptIn(ExperimentalStdlibApi::class)
-inline fun <reified T : Any> VersionedJsonSerializer(
+inline fun <reified T : Any> VersionedDataSerializer(
     moshi: Moshi,
     noinline defaultValue: () -> T,
     migrations: List<VersionedDataSerializer.Migration> = emptyList(),

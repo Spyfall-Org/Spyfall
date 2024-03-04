@@ -75,7 +75,7 @@ data class TypographyResource internal constructor(
         )
 }
 
-class Typography {
+class Typography internal constructor(){
     val Display = DisplayTypography()
     val Heading = HeadingTypography()
     val Body = BodyTypography()

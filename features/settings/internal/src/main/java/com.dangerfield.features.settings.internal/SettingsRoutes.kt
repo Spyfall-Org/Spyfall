@@ -16,8 +16,14 @@ fun Router.navigateToContactUs() {
     navigate(contactUsRoute.noArgRoute())
 }
 
+fun Router.navigateToReferral() {
+    navigate(referralCode.noArgRoute())
+}
+
 val aboutRoute = route("about")
 
 val stats = route("stats")
+
+val referralCode = route("referralCode")
 
 val contactUsRoute = route("contact_us")

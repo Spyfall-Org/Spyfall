@@ -23,12 +23,14 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     versionName: String,
     isQaOptionEnabled: Boolean = false,
+    isReferralFeatureEnabled: Boolean,
     onThemeOptionClicked: () -> Unit = { },
     onQaOptionClicked: () -> Unit = { },
     onStatsClicked: () -> Unit = { },
     onAboutOptionClicked: () -> Unit = { },
     onNavigateBack: () -> Unit = { },
     onContactUsClicked: () -> Unit = { },
+    onReferralClicked: () -> Unit = { }
 ) {
     Screen(
         modifier = modifier,
@@ -68,6 +70,14 @@ fun SettingsScreen(
                 onClick = onStatsClicked,
                 leadingIcon = SpyfallIcon.Graph(null),
             )
+
+            if  (isReferralFeatureEnabled) {
+                SettingsOption(
+                    text = "Referral",
+                    onClick = onReferralClicked,
+                    leadingIcon = SpyfallIcon.Person(null),
+                )
+            }
 
             if (isQaOptionEnabled) {
                 SettingsOption(
@@ -109,7 +119,8 @@ private fun PreviewSettingsScreen() {
     Preview {
         SettingsScreen(
             versionName = "X.Y.Z",
-            isQaOptionEnabled = true
+            isQaOptionEnabled = true,
+            isReferralFeatureEnabled = true
         )
     }
 }

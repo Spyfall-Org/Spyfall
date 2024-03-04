@@ -26,18 +26,18 @@ fun Button(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,
 ) {
-    val backgroundColor = type.backgroundColor(style, enabled)?.let { targetColor ->
+    val backgroundColor = backgroundColor(type, style, enabled)?.let { targetColor ->
         key(type, style) {
             animateColorResourceAsState(
                 targetValue = targetColor,
-                label = "BackgroundColorAnimation"
+                label = "Background_Color_Anim"
             )
         }.value
     }
     val contentColor by key(type, style) {
         animateColorResourceAsState(
             targetValue = type.contentColor(style, enabled),
-            label = "ContentColorAnimation"
+            label = "Content_Color_Anim"
         )
     }
 
@@ -98,11 +98,12 @@ private val LocalButtonStyle = compositionLocalOf { ButtonStyle.Background }
 
 @Composable
 @ReadOnlyComposable
-private fun ButtonType.backgroundColor(
+private fun backgroundColor(
+    type: ButtonType,
     style: ButtonStyle,
     enabled: Boolean,
 ): ColorResource? = when (style) {
-    ButtonStyle.Background -> filledBackgroundColorToken(enabled)
+    ButtonStyle.Background -> type.filledBackgroundColorToken(enabled)
     ButtonStyle.NoBackground -> null
 }
 

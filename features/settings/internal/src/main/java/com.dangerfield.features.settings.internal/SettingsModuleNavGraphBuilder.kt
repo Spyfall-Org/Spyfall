@@ -1,6 +1,7 @@
 package com.dangerfield.features.settings.internal
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -11,6 +12,8 @@ import com.dangerfield.features.colorpicker.navigateToColorPicker
 import com.dangerfield.features.consent.OpenGDRPConsentForm
 import com.dangerfield.features.consent.ShouldShowGDRPSettingsOption
 import com.dangerfield.features.qa.navigateToQa
+import com.dangerfield.features.settings.internal.referral.ReferralViewModel.Action.Redeem
+import com.dangerfield.features.settings.internal.referral.ReferralViewModel.Action.UpdateReferralCodeField
 import com.dangerfield.features.settings.internal.contactus.ContactUsScreen
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action.DismissSomethingWentWrong
@@ -19,6 +22,9 @@ import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.A
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action.UpdateEmail
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action.UpdateMessage
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action.UpdateName
+import com.dangerfield.features.settings.internal.referral.IsReferralFeatureEnabled
+import com.dangerfield.features.settings.internal.referral.ReferralScreen
+import com.dangerfield.features.settings.internal.referral.ReferralViewModel
 import com.dangerfield.features.settings.settingsNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
@@ -43,7 +49,8 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
     private val sessionFlow: SessionFlow,
     private val dictionary: Dictionary,
     private val shouldShowGDRPSettingsOption: ShouldShowGDRPSettingsOption,
-    private val openGDRPConsentForm: OpenGDRPConsentForm
+    private val openGDRPConsentForm: OpenGDRPConsentForm,
+    private val isReferralFeatureEnabled: IsReferralFeatureEnabled
 ) : ModuleNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
@@ -68,7 +75,9 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
                 onThemeOptionClicked = router::navigateToColorPicker,
                 onAboutOptionClicked = router::navigateToAbout,
                 onStatsClicked = router::navigateToStats,
-                onContactUsClicked = router::navigateToContactUs
+                onContactUsClicked = router::navigateToContactUs,
+                onReferralClicked = router::navigateToReferral,
+                isReferralFeatureEnabled = remember { isReferralFeatureEnabled() }
             )
         }
 
@@ -154,6 +163,29 @@ class SettingsModuleNavGraphBuilder @Inject constructor(
                 gamesWonAsOddOne = statsState.winsAsOddOne.count(),
                 totalMultiDeviceGamesPlayed = statsState.multiDeviceGamesPlayed,
                 totalSingleDeviceGamesPlayed = statsState.singleDeviceGamesPlayed,
+            )
+        }
+
+        composable(referralCode.navRoute) {
+            val viewModel = hiltViewModel<ReferralViewModel>()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
+            PageLogEffect(
+                route = referralCode,
+                type = PageType.FullScreenPage
+            )
+
+            ReferralScreen(
+                meReferralCode = state.meReferralCode,
+                meRedemptionStatus = state.meRedemptionStatus,
+                referralCodeFieldState = state.referralCodeFieldState,
+                featureMessage = state.featureMessage,
+                isFormValid = state.isFormValid,
+                maxRedemptions = state.maxRedemptions,
+                isLoading = state.isLoading,
+                onRedeemClicked = { viewModel.takeAction(Redeem(state.referralCodeFieldState.value.orEmpty())) },
+                onNavigateBack = router::goBack,
+                onReferralCodeFieldUpdated = { viewModel.takeAction(UpdateReferralCodeField(it)) }
             )
         }
     }

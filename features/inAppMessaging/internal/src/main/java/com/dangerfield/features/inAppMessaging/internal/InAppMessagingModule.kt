@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import com.dangerfield.features.inAppMessaging.internal.update.InAppUpdateMessage
 import com.dangerfield.libraries.storage.datastore.DataStoreProvider
-import com.dangerfield.libraries.storage.datastore.VersionedJsonSerializer
+import com.dangerfield.libraries.storage.datastore.VersionedDataSerializer
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.squareup.moshi.Moshi
@@ -33,7 +33,7 @@ object InAppMessagingModule {
         moshi: Moshi
         ): DataStore<List<InAppUpdateMessage>> {
         return dataStoreProvider.create(
-            serializer = VersionedJsonSerializer(
+            serializer = VersionedDataSerializer(
                 moshi = moshi,
                 defaultValue = { emptyList() }
             ),

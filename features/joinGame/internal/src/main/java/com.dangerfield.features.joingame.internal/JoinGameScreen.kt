@@ -124,7 +124,7 @@ private fun JoinGameScreenContent(
                     R.string.joinGame_accessCode_hint,
                     "length" to accessCodeLength.toString()
                 ),
-                shouldShowErrorWhileTyping = false,
+                hideErrorWhen = { _, _ -> false }, // always show when invalid
                 focusRequester = accessCodeFocusRequester,
                 fieldState = accessCodeState,
                 keyboardActions = KeyboardActions {
@@ -140,7 +140,7 @@ private fun JoinGameScreenContent(
             InputField(
                 title = dictionaryString(R.string.joinGame_usernameField_header),
                 hint = dictionaryString(R.string.joinGame_userNameField_hint),
-                shouldShowErrorWhileTyping = true,
+                hideErrorWhen = { _, _ -> false }, // always show when invalid
                 focusRequester = nameFocusRequester,
                 fieldState = userNameState,
                 onFieldUpdated = onUserNameChanged,

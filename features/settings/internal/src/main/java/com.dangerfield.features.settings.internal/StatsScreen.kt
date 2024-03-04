@@ -25,7 +25,9 @@ import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.Preview
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.ui.Card
 import com.dangerfield.libraries.ui.Dimension
+import com.dangerfield.libraries.ui.Radii.Card
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.settings.internal.R
 
@@ -167,23 +169,6 @@ fun StatsScreen(
             VerticalSpacerD1200()
 
         }
-    }
-}
-
-
-@Composable
-private fun Card(
-    content: @Composable () -> Unit
-) {
-    Surface(
-        modifier = Modifier.bounceClick(scaleDown = 0.9f),
-        color = OddOneOutTheme.colors.surfacePrimary,
-        contentColor = OddOneOutTheme.colors.onSurfacePrimary,
-        elevation = Elevation.Button,
-        radius = Radii.Card,
-        contentPadding = PaddingValues(Dimension.D1000)
-    ) {
-        content()
     }
 }
 
