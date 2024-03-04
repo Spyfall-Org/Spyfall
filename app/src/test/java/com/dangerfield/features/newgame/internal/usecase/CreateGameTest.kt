@@ -14,6 +14,7 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.LocationPack
+import com.dangerfield.libraries.game.PacksVersion
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.ColorConfig
@@ -22,6 +23,7 @@ import com.dangerfield.libraries.session.Stats
 import com.dangerfield.libraries.session.ThemeConfig
 import com.dangerfield.libraries.session.UpdateActiveGame
 import com.dangerfield.libraries.session.User
+import com.dangerfield.libraries.test.FakeConfiguredValue
 import com.dangerfield.libraries.test.isFailure
 import com.dangerfield.libraries.test.isSuccess
 import io.mockk.coEvery
@@ -105,7 +107,9 @@ class CreateGameTest {
         updateActiveGame = updateActiveGame,
         clearActiveGame = clearActiveGame,
         isRecognizedVideoCallLink = isRecognizedVideoCallLink,
-        packsVersion = mockk()
+        packsVersion = mockk<PacksVersion>().also {
+            every { it.invoke() } returns 0
+        }
     )
 
     @Test
@@ -326,6 +330,7 @@ class CreateGameTest {
 
             every { session.user.id } returns null
             coEvery { generateAccessCode.invoke() } returns Try.success(accessCode)
+            every { session.user.languageCode } returns "en"
 
             val packs = getFilledOutPacks()
 
@@ -361,6 +366,7 @@ class CreateGameTest {
 
         every { clock.millis() } returns lastActive
         every { session.user.id } returns currentUserId
+        every { session.user.languageCode } returns "en"
         coEvery { getGamePlayLocations.invoke(any()) } returns Try.success(locationsForGameplay)
 
         val result = createGame.invoke(
