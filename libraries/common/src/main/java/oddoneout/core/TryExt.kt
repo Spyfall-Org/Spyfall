@@ -19,6 +19,8 @@ fun <T> Try<T>.logOnFailure(message: String? = null): Try<T> = onFailure {
     Timber.e(DebugException(it, message))
 }
 
+fun <T> Try<T>.getExceptionOrNull(): Throwable? = exceptionOrNull()
+
 fun <T> Try<T>.throwIfDebug(): Try<T> = onFailure {
     if (BuildConfig.DEBUG && this.isFailure) {
         throw DebugException(it)

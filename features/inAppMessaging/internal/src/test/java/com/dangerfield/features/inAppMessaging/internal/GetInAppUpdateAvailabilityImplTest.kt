@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import oddoneout.core.BuildInfo
 import oddoneout.core.BuildType
+import oddoneout.core.Try
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,7 +47,7 @@ class GetInAppUpdateAvailabilityImplTest {
     }
     private val getAppUpdateInfo = mockk<GetAppUpdateInfo>().also {
         coEvery { it.invoke() } answers {
-            Try.Success(fakeInAppUpdateManager.fakeAppUpdateInfo()!!)
+            Try.success(fakeInAppUpdateManager.fakeAppUpdateInfo()!!)
         }
     }
 
