@@ -172,8 +172,6 @@ dependencies {
 	implementation(projects.features.videoCall.internal)
 	implementation(projects.libraries.network)
 	implementation(projects.libraries.network.internal)
-	implementation(projects.libraries.test)
-	implementation(projects.libraries.test.internal)
 	implementation(projects.libraries.storage.internal)
 	implementation(projects.libraries.session.storage)
 	implementation(projects.libraries.analytics)
