@@ -83,13 +83,8 @@ kotlin-std = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.r
 arch-fragment-navigation = "android.arch.navigation:navigation-fragment:1.0.0"
 arch-navigation-ui = "android.arch.navigation:navigation-ui:1.0.0"
 
-google-play-services-ads = "com.google.android.gms:play-services-ads:22.6.0"
-google-services = "com.google.gms:google-services:4.3.14"
-
-koin-core = "io.insert-koin:koin-core:3.1.6"
-koin-android = "io.insert-koin:koin-android:3.1.6"
-koin-testing = "io.insert-koin:koin-test:3.1.6"
-koin-junit = "io.insert-koin:koin-test-junit4:3.1.6"
+google-play-services-ads = "com.google.android.gms:play-services-ads-lite:22.6.0"
+google-services = "com.google.gms:google-services:4.4.1"
 
 javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 
@@ -202,7 +197,6 @@ detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", 
 
 # GDP
 user-messaging-platform = "com.google.android.ump:user-messaging-platform:2.2.0"
-# Testing
 
 #Testing
 assertk = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk" }

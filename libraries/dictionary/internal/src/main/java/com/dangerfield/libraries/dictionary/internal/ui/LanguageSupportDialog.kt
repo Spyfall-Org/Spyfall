@@ -67,20 +67,33 @@ private fun LanguageSupportDialogPreview() {
     Preview {
         LanguageSupportDialog(
             onDismissRequest = { -> },
-            language = "Spanish",
+            language = "English",
             isUnsupported = true
         )
     }
 }
 
-@Preview
+@Preview(locale = "fr")
 @Composable
-private fun LanguageSupportDialogPartialPreview() {
+private fun LanguageSupportDialogPartialPreviewFrench() {
     Preview(
     ) {
         LanguageSupportDialog(
             onDismissRequest = { -> },
-            language = "Dutch",
+            language = "French",
+            isUnsupported = false
+        )
+    }
+}
+
+@Preview(locale = "zh")
+@Composable
+private fun LanguageSupportDialogPartialPreviewZh() {
+    Preview(
+    ) {
+        LanguageSupportDialog(
+            onDismissRequest = { -> },
+            language = "Example",
             isUnsupported = false
         )
     }

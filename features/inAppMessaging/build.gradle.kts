@@ -13,6 +13,6 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.ui)
     implementation(projects.libraries.navigation)
-    api(libs.android.play.app.update)
-    api(libs.android.play.app.update.ktx)
+    implementation(libs.android.play.app.update)
+    implementation(libs.android.play.app.update.ktx)
 }

@@ -1,5 +1,7 @@
 package com.dangerfield.libraries.ui
 
+import android.content.res.Configuration
+import android.os.Build
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,6 +21,7 @@ import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import oddoneout.core.Try
 import oddoneout.core.applyArgs
 import spyfallx.ui.R
+import java.util.Locale
 
 /**
  * A composable that is suitable as the root for any composable preview

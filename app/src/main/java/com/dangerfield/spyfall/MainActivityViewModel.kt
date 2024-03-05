@@ -165,7 +165,7 @@ class MainActivityViewModel @Inject constructor(
                 listenForSessionUpdates()
                 getLanguageSupport()
                 listenForConfigUpdates()
-                checkForAppUpdate()
+                //checkForAppUpdate()
             }
     }
 
