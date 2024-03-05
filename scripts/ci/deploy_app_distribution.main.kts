@@ -124,7 +124,8 @@ fun uploadToFirebaseAppDistribution(
     runCatching { runCommandLine(uploadCommand) }
         .onSuccess {
             printGreen("Successfully uploaded apk to firebase app distribution")
-            val consoleLink = "https:\\/\\/console\\.firebase\\.google\\.com\\/project\\/[^\\/]+\\/appdistribution\\/app\\/[^\\/]+\\/releases\\/[a-zA-Z0-9?=&]+\n"
+
+            val consoleLink = "(https://console.firebase.google.com/[\\w/\\-.?=&]+)"
                 .toRegex()
                 .find(it)
                 ?.groupValues

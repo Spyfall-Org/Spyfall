@@ -35,7 +35,7 @@ dependencies {
     implementation(libs.moshi)
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("com.google.gms:google-services:4.3.14")
-    implementation("org.kohsuke:github-api:1.318")
+    implementation("org.kohsuke:github-api:1.319")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
