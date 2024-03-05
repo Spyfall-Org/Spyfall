@@ -1,6 +1,6 @@
 #!/usr/bin/env kotlin
 
-@file:DependsOn("org.kohsuke:github-api:1.125")
+@file:DependsOn("org.kohsuke:github-api:1.319")
 
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub

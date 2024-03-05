@@ -1,7 +1,7 @@
 #!/usr/bin/env kotlin
 
 @file:Import("util/GithubActionsUtil.main.kts")
-@file:DependsOn("org.kohsuke:github-api:1.318")
+@file:DependsOn("org.kohsuke:github-api:1.319")
 @file:DependsOn("com.squareup.okhttp3:okhttp:4.12.0")
 
 import org.kohsuke.github.GHRelease
