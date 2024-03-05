@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       versionName:
-        description: 'Version being released (ie 5.5.0)'
+        description: 'Version being released (current is 1.3.2)'
         required: true
 
 jobs:
