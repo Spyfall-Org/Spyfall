@@ -11,9 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.dangerfield.features.inAppMessaging.UpdateStatus
-import com.dangerfield.features.inAppMessaging.UpdateStatus.Downloaded
-import com.dangerfield.features.inAppMessaging.UpdateStatus.InvalidUpdateRequest
-import com.dangerfield.features.inAppMessaging.UpdateStatus.UpdateAvailable
 import com.dangerfield.libraries.coreflowroutines.waitFor
 import com.dangerfield.libraries.dictionary.internal.ui.navigateToLanguageSupportDialog
 import com.dangerfield.libraries.navigation.BuildNavHost
@@ -116,13 +113,13 @@ class MainActivity : ComponentActivity() {
 
     private fun handleInAppUpdateStatus(updateStatus: UpdateStatus) {
         when (updateStatus) {
-            is UpdateAvailable -> {
+            is UpdateStatus.UpdateAvailable -> {
                 if (updateStatus.shouldUpdate) {
                     mainActivityViewModel.startInAppUpdate(this@MainActivity, updateStatus)
                 }
             }
 
-            is Downloaded -> {
+            is UpdateStatus.Downloaded -> {
                 if (updateStatus.wasBackgroundUpdate) {
                     SnackBarPresenter.showMessage(
                         message = Message(
@@ -137,7 +134,7 @@ class MainActivity : ComponentActivity() {
             }
 
             is UpdateStatus.Failed,
-            InvalidUpdateRequest -> {
+            UpdateStatus.InvalidUpdateRequest -> {
                 SnackBarPresenter.showMessage(
                     message = Message(
                         message = "We encountered a problem upgrading. Please try again in the app store.",

@@ -14,10 +14,7 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
-    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
     implementation(libs.javax.inject)
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
@@ -29,7 +26,6 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.features.ads)
     api(projects.libraries.dictionary)
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 }
 
 android {

@@ -1,7 +1,4 @@
-import com.android.build.gradle.tasks.ProcessApplicationManifest.Companion.getArtifactName
 import com.spyfall.convention.util.buildConfigField
-import com.spyfall.convention.util.getVersionCode
-import com.spyfall.convention.util.getVersionName
 
 plugins {
     id("spyfall.android.application")
@@ -21,6 +18,12 @@ spyfall {
 
 android {
 
+    packaging {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        }
+    }
+
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -36,14 +39,14 @@ android {
     buildTypes {
         val release = getByName("release") {
             isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("debug")
+            isShrinkResources = true
+            isCrunchPngs = true
             setProguardFiles(
                 listOf(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
                 )
             )
-            ndk.debugSymbolLevel = "FULL"
         }
 
         /*
@@ -71,10 +74,6 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
-
     // a relic of the past. We unfortunately need to keep this namespace to avoid breaking
     // playstore listings and firestore db access
     namespace = "com.dangerfield.spyfall.free"
@@ -85,28 +84,26 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.legacy.support)
     implementation(libs.androidx.lifecycle.ext)
     implementation(libs.androidx.lifecycle.vm)
     implementation(libs.androidx.core)
     implementation(libs.kotlin.std)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.runner)
-    implementation(libs.androidx.recyclerview)
-    implementation(libs.arch.fragment.navigation)
-    implementation(libs.arch.navigation.ui)
-    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.moshi)
 
+    // dagger
     implementation(project.libs.dagger)
     implementation(project.libs.dagger.hilt.android)
+    implementation(project(":features:inAppMessaging"))
     kapt(project.libs.dagger.hilt.android.compiler)
 
     // ad mob
     implementation(libs.google.play.services.ads)
+
+    // in app update
+    implementation(libs.android.play.app.update)
+    implementation(libs.android.play.app.update.ktx)
 
     // firebase libraries
     implementation(libs.firebase.database)
@@ -119,9 +116,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.navigation.compose)
-
-    // lottie for animations
-    implementation(libs.lottie)
 
     // ads
     implementation(libs.google.play.services.ads)
@@ -178,8 +172,6 @@ dependencies {
 	implementation(projects.features.videoCall.internal)
 	implementation(projects.libraries.network)
 	implementation(projects.libraries.network.internal)
-	implementation(projects.libraries.test)
-	implementation(projects.libraries.test.internal)
 	implementation(projects.libraries.storage.internal)
 	implementation(projects.libraries.session.storage)
 	implementation(projects.libraries.analytics)
@@ -199,4 +191,6 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.arch.core)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.runner)
 }

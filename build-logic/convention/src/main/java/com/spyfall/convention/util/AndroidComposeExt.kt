@@ -39,7 +39,6 @@ internal fun Project.configureAndroidCompose(
             add("implementation", libs.androidx.customview.poolingcontainer)
             add("implementation", libs.androidx.compose.ui.tooling.preview)
 
-            // Screenshot Tests on JVM
             add("testImplementation", libs.robolectric)
 
             add("implementation", libs.androidx.compose.foundation)
