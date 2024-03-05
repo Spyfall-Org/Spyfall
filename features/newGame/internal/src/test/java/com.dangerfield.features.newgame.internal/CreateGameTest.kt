@@ -1,4 +1,4 @@
-package com.dangerfield.features.newgame.internal.usecase
+package com.dangerfield.features.newgame.internal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -6,6 +6,8 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import assertk.assertions.matchesPredicate
 import com.dangerfield.features.newgame.internal.presentation.model.CreateGameError
+import com.dangerfield.features.newgame.internal.usecase.CreateGame
+import com.dangerfield.features.newgame.internal.usecase.GenerateAccessCode
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
@@ -23,7 +25,6 @@ import com.dangerfield.libraries.session.Stats
 import com.dangerfield.libraries.session.ThemeConfig
 import com.dangerfield.libraries.session.UpdateActiveGame
 import com.dangerfield.libraries.session.User
-import com.dangerfield.libraries.test.FakeConfiguredValue
 import com.dangerfield.libraries.test.isFailure
 import com.dangerfield.libraries.test.isSuccess
 import io.mockk.coEvery

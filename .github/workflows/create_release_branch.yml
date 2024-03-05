@@ -25,6 +25,9 @@ jobs:
       - name: Update Version Code
         run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
 
+      - name: Update Create Release workflow
+        run: ./scripts/ci/rename_current_release_in_create_release_script.main.kts ${{ github.event.inputs.versionName }}
+
       - name: Create pull request into main
         uses: peter-evans/create-pull-request@v5
         with:

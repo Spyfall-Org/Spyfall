@@ -117,10 +117,6 @@ jobs:
       - name: Update PR Comment
         run: ./scripts/ci/update_pr_comment.main.kts "${GITHUB_REPOSITORY}" ${{ secrets.GITHUB_TOKEN }} ${{ github.event.pull_request.number }} "${GITHUB_RUN_ID}" ${{ env.firebaseDistributionReleaseApkKey }} ${{ env.firebaseDistributionDebugApkKey }} ${{ env.oddoneoutDebugFirebaseDistributionLink }} ${{ env.oddoneoutReleaseFirebaseDistributionLink }} ${{ github.run_number }} ${{ env.releaseTagName }}
 
-      - name: Update Create Release workflow
-        if: ${{ env.isReleasePR == 'true' }}
-        run: ./scripts/ci/rename_current_release_in_create_release_script.main.kts ${{ env.releaseVersion }}
-
   style:
     runs-on: [ ubuntu-latest ]
     steps:
