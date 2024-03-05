@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity() {
                     accentColor = state.accentColor,
                     consentStatus = state.consentStatus,
                     isInMaintenanceMode = state.isInMaintenanceMode,
-                  //  updateStatus = state.inAppUpdateStatus,
+                    updateStatus = state.inAppUpdateStatus,
                     buildNavHost = { buildNavHost(it) }
                 )
             }

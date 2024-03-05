@@ -21,6 +21,8 @@ import com.dangerfield.features.consent.ConsentStatus.ConsentDenied
 import com.dangerfield.features.consent.ConsentStatus.ConsentNeeded
 import com.dangerfield.features.consent.consentRoute
 import com.dangerfield.features.forcedupdate.forcedUpdateNavigationRoute
+import com.dangerfield.features.inAppMessaging.UpdateStatus
+import com.dangerfield.features.inAppMessaging.internal.update.DownloadProgressBar
 import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.coreflowroutines.observeWithLifecycle
 import com.dangerfield.libraries.network.internal.OfflineBar
@@ -40,7 +42,7 @@ fun OddOneOutApp(
     accentColor: ColorResource,
     isInMaintenanceMode: Boolean,
     consentStatus: ConsentStatus?,
-   // updateStatus: UpdateStatus?,
+    updateStatus: UpdateStatus?,
     isUpdateRequired: Boolean,
     hasBlockingError: Boolean,
     buildNavHost: @Composable (String) -> Unit
@@ -119,7 +121,7 @@ fun OddOneOutApp(
                 modifier = Modifier.padding(it)
             ) {
                 OfflineBar(isOffline)
-                //DownloadProgressBar(updateStatus)
+                DownloadProgressBar(updateStatus)
                 buildNavHost(startingRoute.route)
             }
         }
