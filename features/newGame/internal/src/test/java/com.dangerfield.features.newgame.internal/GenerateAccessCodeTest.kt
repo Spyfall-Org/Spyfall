@@ -1,7 +1,8 @@
-package com.dangerfield.features.newgame.internal.usecase
+package com.dangerfield.features.newgame.internal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.dangerfield.features.newgame.internal.usecase.GenerateAccessCode
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.test.isFailure
