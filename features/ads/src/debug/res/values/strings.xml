@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ads_mod_app_id" translatable="false">ca-app-pub-7008637445039253~6033749759</string>
+
+    <string name="interstitial_test_id" translatable="false">ca-app-pub-3940256099942544/5354046379</string>
+    <string name="banner_test_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+
+    <string name="single_device_voting_id" translate="false">@string/banner_test_id</string>
+    <string name="single_device_results_id" translate="false">@string/banner_test_id</string>
+    <string name="single_device_role_reveal_id" translate="false">@string/banner_test_id</string>
+    <string name="waiting_room_banner_id" translate="false">@string/banner_test_id</string>
+    <string name="multi_player_game_play_banner_id" translatable="false">@string/banner_test_id</string>
+    <string name="single_device_game_play_banner_id" translatable="false">@string/banner_test_id</string>
+    <string name="game_restart_interstitial_id" translatable="false">@string/interstitial_test_id</string>
+
+</resources>

@@ -1,0 +1,209 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>ComplexCondition:AnyExts.kt$one != null &amp;&amp; two != null &amp;&amp; three != null &amp;&amp; four != null</ID>
+    <ID>ComplexMethod:FeedbackHelper.kt$FeedbackHelper$private fun getOSString(code: Int): String</ID>
+    <ID>EmptyCatchBlock:RemoveUserTimer.kt$RemoveUserTimer${ }</ID>
+    <ID>EmptyClassBlock:Feedback.kt$Feedback${ }</ID>
+    <ID>EmptyClassBlock:JoinGameFragment.kt$JoinGameFragment${ }</ID>
+    <ID>EmptyClassBlock:NewGameFragment.kt$NewGameFragment${ }</ID>
+    <ID>EmptyFunctionBlock:WelcomeNavigatorImpl.kt$WelcomeNavigatorImpl${ }</ID>
+    <ID>ForbiddenComment:LegacySettingsFragment.kt$LegacySettingsFragment$//TODO: consider making a view model for this</ID>
+    <ID>ForbiddenComment:UIHelper.kt$UIHelper.Companion$//TODO: make dynamic by pulling from firebase and adding recycler views as needed</ID>
+    <ID>LongParameterList:UIHelper.kt$UIHelper.Companion$( context: Context, title: String, message: String, positiveText: String, positiveAction: (() -&gt; Unit), negativeText: String, negativeAction: (() -&gt; Unit), leftAlignText: Boolean = false )</ID>
+    <ID>MagicNumber:ChangeNameHelper.kt$ChangeNameHelper$25</ID>
+    <ID>MagicNumber:DBCleaner.kt$DBCleaner$1000</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$10</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$11</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$12</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$13</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$14</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$15</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$16</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$17</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$18</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$19</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$20</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$21</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$22</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$23</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$24</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$25</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$26</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$27</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$28</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$29</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$3</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$30</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$4</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$5</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$6</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$7</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$8</ID>
+    <ID>MagicNumber:FeedbackHelper.kt$FeedbackHelper$9</ID>
+    <ID>MagicNumber:GameViewModel.kt$GameViewModel$10000</ID>
+    <ID>MagicNumber:GameViewModel.kt$GameViewModel$60000</ID>
+    <ID>MagicNumber:GameViewModel.kt$GameViewModel.&lt;no name provided&gt;$1000</ID>
+    <ID>MagicNumber:GameViewModel.kt$GameViewModel.&lt;no name provided&gt;$60</ID>
+    <ID>MagicNumber:JoinGameViewModel.kt$JoinGameViewModel$25</ID>
+    <ID>MagicNumber:LegacyGameFragment.kt$LegacyGameFragment$96.0f</ID>
+    <ID>MagicNumber:LegacyJoinGameFragment.kt$LegacyJoinGameFragment$25</ID>
+    <ID>MagicNumber:LegacyJoinGameFragment.kt$LegacyJoinGameFragment$8</ID>
+    <ID>MagicNumber:LegacyNewGameFragment.kt$LegacyNewGameFragment$25</ID>
+    <ID>MagicNumber:LegacyNewGameFragment.kt$LegacyNewGameFragment$3</ID>
+    <ID>MagicNumber:LegacySettingsFragment.kt$LegacySettingsFragment$29</ID>
+    <ID>MagicNumber:LegacySettingsFragment.kt$LegacySettingsFragment$300</ID>
+    <ID>MagicNumber:LegacySettingsFragment.kt$LegacySettingsFragment$4</ID>
+    <ID>MagicNumber:NewGameViewModel.kt$NewGameViewModel$10</ID>
+    <ID>MagicNumber:NewGameViewModel.kt$NewGameViewModel$25</ID>
+    <ID>MagicNumber:RemoveUserTimer.kt$RemoveUserTimer$900000L</ID>
+    <ID>MagicNumber:Repository.kt$Repository$1000</ID>
+    <ID>MagicNumber:Repository.kt$Repository$14</ID>
+    <ID>MagicNumber:Repository.kt$Repository$3</ID>
+    <ID>MagicNumber:Repository.kt$Repository$5</ID>
+    <ID>MagicNumber:Repository.kt$Repository$6</ID>
+    <ID>MagicNumber:Repository.kt$Repository$7</ID>
+    <ID>MagicNumber:Repository.kt$Repository$8</ID>
+    <ID>MagicNumber:ReviewHelper.kt$ReviewHelper$10</ID>
+    <ID>MagicNumber:SavedSessionHelper.kt$SavedSessionHelper.&lt;no name provided&gt;$1000</ID>
+    <ID>MagicNumber:SpyfallRepository.kt$SpyfallRepository$1000</ID>
+    <ID>MagicNumber:WaitingViewModel.kt$WaitingViewModel$25</ID>
+    <ID>MaxLineLength:AnyExts.kt$fun</ID>
+    <ID>MaxLineLength:ColorChangeAdapter.kt$ColorChangeAdapter$class</ID>
+    <ID>MaxLineLength:Extensions.kt$suspend</ID>
+    <ID>MaxLineLength:Game.kt$Game$constructor() : this("", ArrayList&lt;String&gt;(),false,ArrayList&lt;String&gt;(),ArrayList&lt;Player&gt;(),0.0.toLong(),ArrayList&lt;String&gt;(), 0)</ID>
+    <ID>MaxLineLength:Game.kt$Game.Companion$return Game("", ArrayList&lt;String&gt;(),false,ArrayList&lt;String&gt;(),ArrayList&lt;Player&gt;(),0L ,ArrayList&lt;String&gt;(), 0)</ID>
+    <ID>MaxLineLength:GameViewsAdapter.kt$GameViewsAdapter$class</ID>
+    <ID>MaxLineLength:LegacyGameFragment.kt$LegacyGameFragment$//but right now it says: if the game has started, and im still on this screen, and something has changed..</ID>
+    <ID>MaxLineLength:LegacySettingsFragment.kt$LegacySettingsFragment$UIHelper.accentColor = if(chosenColor == Color.WHITE) UIHelper.accentColors.random() else chosenColor</ID>
+    <ID>MaxLineLength:LegacySettingsFragment.kt$LegacySettingsFragment$val editor =
+        requireContext().getSharedPreferences(resources.getString(com.dangerfield.oddoneout.R.string.shared_preferences),
+        MODE_PRIVATE).edit()</ID>
+    <ID>MaxLineLength:Migration.kt$*</ID>
+    <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_code), currentSession.accessCode)</ID>
+    <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_current_user), currentSession.currentUser)</ID>
+    <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$editor.putString(context.resources.getString(R.string.shared_preferences_session_previous_user), currentSession.previousUserName)</ID>
+    <ID>MaxLineLength:PreferencesHelper.kt$PreferencesHelper$return spyfallx.coregameapi.Session(accessCode = accessCode, currentUser = currentUser, game = Game.getEmptyGame(), previousUserName = prevUser)</ID>
+    <ID>MaxLineLength:Receiver.kt$Receiver$val networkInfo: NetworkInfo? = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo</ID>
+    <ID>MaxLineLength:RemoveUserTimer.kt$RemoveUserTimer$class</ID>
+    <ID>MaxLineLength:StartViewModel.kt$StartViewModel$class</ID>
+    <ID>MaxLineLength:WaitingPlayersAdapter.kt$WaitingPlayersAdapter$class</ID>
+    <ID>NewLineAtEndOfFile:AnyExts.kt$spyfallx.core.AnyExts.kt</ID>
+    <ID>NewLineAtEndOfFile:AppModule.kt$com.dangerfield.oddoneout.di.koinModules.AppModule.kt</ID>
+    <ID>NewLineAtEndOfFile:ChangeNameHelper.kt$com.dangerfield.oddoneout.ui.waiting.ChangeNameHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:ColorButton.kt$com.dangerfield.oddoneout.ui.settings.ColorButton.kt</ID>
+    <ID>NewLineAtEndOfFile:ColorChangeAdapter.kt$com.dangerfield.oddoneout.ui.settings.ColorChangeAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:Connectivity.kt$com.dangerfield.oddoneout.api.Connectivity.kt</ID>
+    <ID>NewLineAtEndOfFile:ConnectivityHelper.kt$com.dangerfield.oddoneout.util.ConnectivityHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:DBCleaner.kt$com.dangerfield.oddoneout.util.DBCleaner.kt</ID>
+    <ID>NewLineAtEndOfFile:Feedback.kt$com.dangerfield.oddoneout.models.Feedback.kt</ID>
+    <ID>NewLineAtEndOfFile:FeedbackHelper.kt$com.dangerfield.oddoneout.util.FeedbackHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:Game.kt$com.dangerfield.oddoneout.models.Game.kt</ID>
+    <ID>NewLineAtEndOfFile:Game.kt$Game.kt</ID>
+    <ID>NewLineAtEndOfFile:GamePrefs.kt$GamePrefs.kt</ID>
+    <ID>NewLineAtEndOfFile:GameRepository.kt$com.dangerfield.oddoneout.api.GameRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:GameRepository.kt$GameRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:GameService.kt$com.dangerfield.oddoneout.api.GameService.kt</ID>
+    <ID>NewLineAtEndOfFile:GameViewModel.kt$com.dangerfield.oddoneout.ui.game.GameViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:JoinGameViewModel.kt$com.dangerfield.oddoneout.ui.joinGame.JoinGameViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:LogHelper.kt$com.dangerfield.oddoneout.util.LogHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:MainActivity.kt$MainActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:MainModule.kt$com.dangerfield.oddoneout.di.koinModules.MainModule.kt</ID>
+    <ID>NewLineAtEndOfFile:Migration.kt$com.dangerfield.oddoneout.di.koinModules.Migration.kt</ID>
+    <ID>NewLineAtEndOfFile:NewGameViewModel.kt$com.dangerfield.oddoneout.ui.newGame.NewGameViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:PacksAdapter.kt$com.dangerfield.oddoneout.ui.newGame.PacksAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:Player.kt$Player.kt</ID>
+    <ID>NewLineAtEndOfFile:PreferencesHelper.kt$com.dangerfield.oddoneout.util.PreferencesHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:Receiver.kt$com.dangerfield.oddoneout.util.Receiver.kt</ID>
+    <ID>NewLineAtEndOfFile:RemoveUserTimer.kt$com.dangerfield.oddoneout.util.RemoveUserTimer.kt</ID>
+    <ID>NewLineAtEndOfFile:Repository.kt$com.dangerfield.oddoneout.api.Repository.kt</ID>
+    <ID>NewLineAtEndOfFile:Resource.kt$com.dangerfield.oddoneout.api.Resource.kt</ID>
+    <ID>NewLineAtEndOfFile:ReviewHelper.kt$com.dangerfield.oddoneout.util.ReviewHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:SavedSessionHelper.kt$com.dangerfield.oddoneout.util.SavedSessionHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:spyfallx.coregameapi.Session.kt$spyfallx.coregameapi.Session.kt</ID>
+    <ID>NewLineAtEndOfFile:SessionListenerHelper.kt$com.dangerfield.oddoneout.util.SessionListenerHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:SessionListenerService.kt$com.dangerfield.oddoneout.util.SessionListenerService.kt</ID>
+    <ID>NewLineAtEndOfFile:SessionUpdater.kt$com.dangerfield.oddoneout.util.SessionUpdater.kt</ID>
+    <ID>NewLineAtEndOfFile:SettingsModule.kt$com.dangerfield.oddoneout.di.koinModules.SettingsModule.kt</ID>
+    <ID>NewLineAtEndOfFile:SpyfallApp.kt$SpyfallApp.kt</ID>
+    <ID>NewLineAtEndOfFile:SpyfallRepository.kt$SpyfallRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:StartViewModel.kt$com.dangerfield.oddoneout.ui.start.StartViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:StateFlowExt.kt$spyfallx.ui.StateFlowExt.kt</ID>
+    <ID>NewLineAtEndOfFile:TesterSettingsFragment.kt$com.dangerfield.oddoneout.ui.testerSettings.TesterSettingsFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:ViewModelFactories.kt$com.dangerfield.oddoneout.util.ViewModelFactories.kt</ID>
+    <ID>NewLineAtEndOfFile:WaitingViewModel.kt$com.dangerfield.oddoneout.ui.waiting.WaitingViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:build.gradle.kts$.build.gradle.kts</ID>
+    <ID>PackageNaming:JoinGameFragment.kt$package com.dangerfield.oddoneout.welcome.join_game</ID>
+    <ID>PackageNaming:NewGameFragment.kt$package com.dangerfield.oddoneout.welcome.new_game</ID>
+    <ID>PrintStackTrace:Connectivity.kt$Connectivity$e</ID>
+    <ID>ReturnCount:PreferencesHelper.kt$PreferencesHelper$override fun getSavedSession(): spyfallx.coregameapi.Session?</ID>
+    <ID>SwallowedException:DBCleaner.kt$DBCleaner$e: Exception</ID>
+    <ID>SwallowedException:LegacySettingsFragment.kt$LegacySettingsFragment$e: ActivityNotFoundException</ID>
+    <ID>SwallowedException:RemoveUserTimer.kt$RemoveUserTimer$e: CancellationException</ID>
+    <ID>SwallowedException:ReviewHelper.kt$ReviewHelper$e: ActivityNotFoundException</ID>
+    <ID>SwallowedException:SavedSessionHelper.kt$SavedSessionHelper$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:DBCleaner.kt$DBCleaner$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:FireStoreService.kt$FireStoreService$e : Exception</ID>
+    <ID>TooGenericExceptionCaught:Repository.kt$Repository$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:SavedSessionHelper.kt$SavedSessionHelper$e: Exception</ID>
+    <ID>TooGenericExceptionThrown:Repository.kt$Repository$throw Exception("Empty Roles in assign roles function")</ID>
+    <ID>TooManyFunctions:Extensions.kt$com.dangerfield.oddoneout.util.Extensions.kt</ID>
+    <ID>TooManyFunctions:FireStoreService.kt$FireStoreService : GameService</ID>
+    <ID>TooManyFunctions:GameRepository.kt$GameRepository</ID>
+    <ID>TooManyFunctions:GameService.kt$GameService</ID>
+    <ID>TooManyFunctions:GameViewModel.kt$GameViewModel : ViewModelLifecycleObserver</ID>
+    <ID>TooManyFunctions:LegacyGameFragment.kt$LegacyGameFragment : Fragment</ID>
+    <ID>TooManyFunctions:LegacyNewGameFragment.kt$LegacyNewGameFragment : Fragment</ID>
+    <ID>TooManyFunctions:LegacyStartFragment.kt$LegacyStartFragment : Fragment</ID>
+    <ID>TooManyFunctions:LegacyWaitingFragment.kt$LegacyWaitingFragment : FragmentNameChangeEventFirer</ID>
+    <ID>TooManyFunctions:LogHelper.kt$LogHelper$Companion</ID>
+    <ID>TooManyFunctions:Repository.kt$Repository : GameRepositorySessionUpdater</ID>
+    <ID>TooManyFunctions:WaitingViewModel.kt$WaitingViewModel : ViewModel</ID>
+    <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$currentSession: spyfallx.coregameapi.Session</ID>
+    <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$it: Exception</ID>
+    <ID>UnusedPrivateMember:LogHelper.kt$LogHelper.Companion$newName: String</ID>
+    <ID>UtilityClassWithPublicConstructor:LogHelper.kt$LogHelper</ID>
+    <ID>UtilityClassWithPublicConstructor:UIHelper.kt$UIHelper</ID>
+    <ID>UtilityClassWithPublicConstructor:ViewModelUtils.kt$ViewModelUtils</ID>
+    <ID>VariableNaming:Constants.kt$Constants$val games_prod = "games"</ID>
+    <ID>VariableNaming:Constants.kt$Constants$val games_test = "games_test"</ID>
+    <ID>VariableNaming:GameViewsAdapter.kt$GameViewsAdapter.ViewHolder$val first_icon = view.ic_first</ID>
+    <ID>VariableNaming:GameViewsAdapter.kt$GameViewsAdapter.ViewHolder$val first_text = view.tv_first</ID>
+    <ID>WildcardImport:ChangeNameHelper.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:ChangeNameHelper.kt$import kotlinx.android.synthetic.main.dialog_change_name.view.*</ID>
+    <ID>WildcardImport:ColorChangeAdapter.kt$import android.view.*</ID>
+    <ID>WildcardImport:ColorChangeAdapter.kt$import kotlinx.android.synthetic.main.item_change_color.view.*</ID>
+    <ID>WildcardImport:Extensions.kt$import kotlinx.coroutines.*</ID>
+    <ID>WildcardImport:FeedbackHelper.kt$import kotlinx.android.synthetic.main.dialog_feedback.view.*</ID>
+    <ID>WildcardImport:GameViewModel.kt$import androidx.lifecycle.*</ID>
+    <ID>WildcardImport:GameViewsAdapter.kt$import kotlinx.android.synthetic.main.item_simple_card.view.*</ID>
+    <ID>WildcardImport:LegacyGameFragment.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:LegacyGameFragment.kt$import kotlinx.android.synthetic.main.fragment_game_legacy.*</ID>
+    <ID>WildcardImport:LegacyJoinGameFragment.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:LegacyJoinGameFragment.kt$import kotlinx.android.synthetic.main.fragment_join_game_legacy.*</ID>
+    <ID>WildcardImport:LegacyNewGameFragment.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:LegacyNewGameFragment.kt$import kotlinx.android.synthetic.main.fragment_new_game_legacy.*</ID>
+    <ID>WildcardImport:LegacySettingsFragment.kt$import kotlinx.android.synthetic.main.dialog_custom.*</ID>
+    <ID>WildcardImport:LegacySettingsFragment.kt$import kotlinx.android.synthetic.main.dialog_custom.view.*</ID>
+    <ID>WildcardImport:LegacySettingsFragment.kt$import kotlinx.android.synthetic.main.fragment_settings_legacy.*</ID>
+    <ID>WildcardImport:LegacyStartFragment.kt$import kotlinx.android.synthetic.main.fragment_start_legacy.*</ID>
+    <ID>WildcardImport:LegacyWaitingFragment.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:LegacyWaitingFragment.kt$import kotlinx.android.synthetic.main.fragment_waiting_legacy.*</ID>
+    <ID>WildcardImport:MainModule.kt$import com.dangerfield.oddoneout.api.*</ID>
+    <ID>WildcardImport:MainModule.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:Migration.kt$import com.dangerfield.oddoneout.api.*</ID>
+    <ID>WildcardImport:Migration.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:PacksAdapter.kt$import kotlinx.android.synthetic.main.item_pack.view.*</ID>
+    <ID>WildcardImport:RemoveUserTimer.kt$import kotlinx.coroutines.*</ID>
+    <ID>WildcardImport:Repository.kt$import com.dangerfield.oddoneout.models.*</ID>
+    <ID>WildcardImport:Repository.kt$import com.dangerfield.oddoneout.util.*</ID>
+    <ID>WildcardImport:Repository.kt$import kotlinx.coroutines.*</ID>
+    <ID>WildcardImport:SpyfallApp.kt$import org.koin.core.logger.Level.*</ID>
+    <ID>WildcardImport:TesterSettingsFragment.kt$import kotlinx.android.synthetic.main.fragment_tester_settings.*</ID>
+    <ID>WildcardImport:UIHelper.kt$import kotlinx.android.synthetic.main.dialog_custom.view.*</ID>
+    <ID>WildcardImport:UIHelper.kt$import kotlinx.android.synthetic.main.dialog_packs.view.*</ID>
+    <ID>WildcardImport:UIHelper.kt$import kotlinx.android.synthetic.main.dialog_review.view.*</ID>
+    <ID>WildcardImport:WaitingPlayersAdapter.kt$import kotlinx.android.synthetic.main.item_player_card.view.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

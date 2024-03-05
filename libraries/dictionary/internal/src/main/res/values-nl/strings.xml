@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="languageSupport_unsupportedDialog_body">Helaas bieden wij nog geen ondersteuning voor {language}.\n\nAls u ons wilt helpen om deze taal te vertalen en ondersteuning toe te voegen, neem dan contact met ons op via het contactformulier in de applicatie-instellingen. Dank u wel\!</string>
+    <string name="languageSupport_partialSupportDialog_body">Wij werken momenteel aan verbetering van onze ondersteuning voor {language}.\n\nSommige van de woorden die u ziet zijn mogelijk niet perfect vertaald. Als u fouten opmerkt, laat het ons dan weten via het contactformulier in de applicatie-instellingen. Dank u wel\!</string>
+    <string name="languageSupport_dialog_header">Spreekt u {language}?</string>
+    <string name="languageSupport_okay_label">Okay</string>
+</resources>

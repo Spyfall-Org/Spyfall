@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="appLanguageCode">de</string>
+
+    <!-- App Wide String Strings -->
+    <string name="app_name_text">Odd one out</string>
+    <string name="app_tryAgainErrorDialog_header">Versuchen wir es noch einmal</string>
+    <string name="app_submit_action">Absenden</string>
+    <string name="app_somethingWentWrong_text">Etwas ist schief gelaufen</string>
+    <string name="app_okay_action">Okay</string>
+    <string name="app_required_label">Erforderlich</string>
+    <string name="app_player_text">Spieler</string>
+    <string name="app_theOddOneOutRole_text">Der Außenseiter</string>
+    <string name="app_leave_action">Verlassen</string>
+    <string name="app_cancel_action">Abbrechen</string>
+    <string name="app_open_action">Öffnen</string>
+    <string name="app_bullet_point">•</string>
+    <string name="app_location_label">Standort</string>
+    <string name="app_oops_text">Ups!</string>
+    <string name="app_end_game_action">Spiel beenden</string>
+    <string name="app_show_action">Zeigen</string>
+    <string name="app_hide_action">Verbergen</string>
+    <string name="app_oddOneOut_label">Odd one out</string>
+    <string name="app_or_text">oder</string>
+
+    <!-- Welcome Strings -->
+    <string name="welcome_intro_header">Willkommen bei</string>
+    <string name="welcome_newGame_action">Neues Spiel</string>
+    <string name="welcome_join_action">Spiel beitreten</string>
+    <string name="welcome_rules_action">Regeln</string>
+
+    <!-- Waiting Room Strings -->
+    <string name="waitingRoom_waiting_header">Warten auf Spieler…</string>
+    <string name="waitingRoom_accessCode_header">Zugangscode:</string>
+    <string name="waitingRoom_confirmStart_action">Spiel starten</string>
+    <string name="waitingRoom_joinVideo_a11y">Am Videospielanruf teilnehmen</string>
+    <string name="waitingRoom_startGame_action">Spiel starten</string>
+    <string name="waitingRoom_leaveGame_action">Spiel verlassen</string>
+    <string name="waitingRoom_tooManyPlayersDialog_body">Es scheint, als gäbe es mehr als {max} Spieler in diesem Raum. {numToLeave} Spieler müssen das Spiel verlassen, bevor es gestartet werden kann.</string>
+    <string name="waitingRoom_tooFewPlayersDialog_header">Sind Sie sicher, dass Sie das Spiel starten möchten?</string>
+    <string name="waitingRoom_tooFewPlayersDialog_body">Sie haben weniger als {min} Spieler. Ein Spiel mit so wenigen Spielern wird nicht empfohlen.</string>
+    <string name="waitingRoom_leaveGameDialog_header">So schnell schon gehen?</string>
+    <string name="waitingRoom_leaveGameDialog_text">Sie verlassen das Spiel und werden entfernt, wenn Sie fortfahren.</string>
+    <string name="waitingRoom_cannotLeaveGame_text">Kann ein gestartetes Spiel nicht verlassen</string>
+    <string name="changeName_dialog_header">Namen ändern</string>
+    <string name="changeName_invalidLength_text">Der Name muss zwischen {min} und {max} Zeichen lang sein</string>
+    <string name="changeName_inputHint_label">Geben Sie einen neuen Namen ein</string>
+    <string name="changeName_usernameTakenError_text">Dieser Benutzername ist bereits von einem anderen Spieler vergeben.</string>
+    <string name="videoCall_detailDialog_title">Video-Link</string>
+    <string name="videoLink_detailDialogDescription_text">Der Ersteller dieses Spiels hat einen Video-Link hinzugefügt, um es einfacher zu machen, mit jedem überall zu spielen.\n\nAber BITTE denken Sie daran, vorsichtig zu sein, Links von Fremden im Internet zu öffnen.</string>
+    <string name="videoLink_beCareful_label">Seien Sie vorsichtig</string>
+    <string name="waitingRoom_forcedRemovalError_text">Es tut uns leid, es gab ein Problem. Leider mussten wir Sie aus dem Spiel entfernen. Bitte treten Sie erneut bei und versuchen Sie es wieder.</string>
+    <string name="videoLink_copyLink_a11y">Link kopieren</string>
+    <string name="videoLink_infoDialog_title">Fügen Sie Ihrem Spiel eine Videotelefonie hinzu</string>
+    <string name="videoLink_infoDialogBody_text">Sie können beim Erstellen Ihres Spiels einen Video-Link hinzufügen, um es einfacher zu machen, mit jedem überall zu spielen. Wenn ein Spieler dem Spiel beitritt, wird er ebenfalls Zugang zu diesem Link haben.</string>
+    <string name="video_openWith_header">Öffnen mit</string>
+    <string name="videoLink_infoDialogSafety_header">Um die Sicherheit der Nutzer zu gewährleisten, akzeptieren wir nur Links von folgenden Plattformen:</string>
+
+    <!-- Stats Strings -->
+    <string name="stats_infoNote_body">Spielergebnisse werden nicht gesammelt, wenn Spieler unter sich abstimmen, anstatt in der App. Deshalb repräsentieren die Statistiken hier möglicherweise nicht vollständig Siege und Niederlagen.</string>
+    <string name="stats_totalGamesPlayed_header">Insgesamt gespielte Spiele:</string>
+    <string name="stats_infoNote_label">Hinweis</string>
+    <string name="stats_multiDeviceGames_header">Mehrgeräte-Spiele</string>
+    <string name="stats_gamesYouveWon_header">Spiele, die Sie gewonnen haben:</string>
+    <string name="stats_gamesYouveWonAsOddOneOut_label">Als Außenseiter - {gamesWon}</string>
+    <string name="stats_gamesYouveWonAsPlayer_label">Als Spieler - {gamesWon}</string>
+    <string name="stats_gamesYouveLost_header">Spiele, die Sie verloren haben:</string>
+    <string name="stats_gamesYouveLostAsOddOneOut_label">Als Außenseiter - {gamesLost}</string>
+    <string name="stats_gamesYouveLostAsPlayer_label">Als Spieler - {gamesLost}</string>
+    <string name="stats_singleDeviceGames_header">Einzigeräte-Spiele</string>
+    <string name="stats_singleDeviceTotalGamesPlayed_header">Insgesamt gespielte Spiele:</string>
+
+    <!-- Settings Strings -->
+    <string name="settings_theme_label">Thema ändern</string>
+    <string name="settings_stats_header">Statistiken</string>
+    <string name="settings_about_label">Über</string>
+    <string name="settings_contactUs_label">Kontaktiere uns</string>
+    <string name="settings_stats_label">Statistiken</string>
+    <string name="settings_qaMenu_label">QA-Menü</string>
+    <string name="settings_version_label">" Version: {version}"</string>
+    <string name="settings_madeWithLove_text">Mit ❤️ gemacht</string>
+    <string name="settings_settingsScreen_header">Einstellungen</string>
+    <string name="settings_about_header">Über</string>
+    <string name="settings_contactUs_header">Kontaktiere uns</string>
+    <string name="about_consentForm_label">Einwilligungsformular</string>
+
+    <!-- About Strings -->
+    <string name="about_privacyPolicy_label">Datenschutzrichtlinie</string>
+    <string name="about_termsOfService_label">Nutzungsbedingungen</string>
+    <string name="about_thirdPartyServices_label">Drittanbieterdienste</string>
+    <string name="about_privacyPolicy_link">https://oddoneoutgame.github.io/odd-one-out/privacy-policy/</string>
+    <string name="about_termsOfService_link">https://oddoneoutgame.github.io/odd-one-out/terms-of-service/</string>
+    <string name="about_thirdPartyServices_link">https://oddoneoutgame.github.io/odd-one-out/third-party-services/</string>
+
+    <!-- Contact Us Strings -->
+    <string name="contactUs_errorSubmitting_body">Es sieht so aus, als sei beim Einreichen Ihres Formulars etwas schief gelaufen, bitte versuchen Sie es erneut.</string>
+    <string name="contactUs_invalidEmail_text">Bitte geben Sie eine gültige E-Mail-Adresse ein</string>
+    <string name="contactUs_invalidMessage_text">Bitte geben Sie eine Nachricht ein</string>
+    <string name="contactUs_invalidName_text">Bitte geben Sie einen Namen ein</string>
+    <string name="contactUs_submitSuccessMessage_text">Ihre Nachricht wurde an uns gesendet, danke, dass Sie uns helfen, das Erlebnis für alle zu verbessern!</string>
+    <string name="contactUs_reasonPrompt_text">Worüber möchten Sie uns kontaktieren?</string>
+    <string name="contactUs_nameField_header">Name</string>
+    <string name="contactUs_emailField_header">E-Mail</string>
+    <string name="contactUs_messageField_header">Nachricht</string>
+    <string name="contactUs_messageField_hint">Was möchten Sie uns mitteilen?</string>
+    <string name="contactUs_question_label">Frage</string>
+    <string name="contactUs_issue_label">Problem</string>
+    <string name="contactUs_feedback_label">Feedback</string>
+    <string name="contactUs_suggestion_label">Vorschlag</string>
+    <string name="contactUs_other_label">Anderes</string>
+
+    <!-- /////////////////////    New Game Strings   /////////////////////-->
+    <string name="newGame_createGameError_body">Es tut uns leid, beim Erstellen dieses Spiels ist etwas schief gelaufen. Bitte versuchen Sie es erneut.</string>
+    <string name="newGame_loadGameError_body">Es scheint, als hätten wir Probleme, die notwendigen Daten zum Erstellen eines Spiels zu bekommen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.</string>
+    <string name="newGame_createGame_action">Spiel erstellen</string>
+    <string name="newGame_newGameScreen_header">Neues Spiel</string>
+    <string name="newGame_packs_header">Pakete:</string>
+    <string name="newGame_packsDescription_text">Wählen Sie, mit welchen Paketen Sie spielen möchten</string>
+    <string name="newGame_packsInfo_a11y">Informationen zu Paketen</string>
+    <string name="newGame_singleDevice_label">Weitergeben und Spielen</string>
+    <string name="newGame_singleDeviceDescription_text">Geben Sie das Gerät reihum an jeden Spieler weiter</string>
+    <string name="newGame_gameLength_header">Spielzeit:</string>
+    <string name="newGame_gameLengthDescription_text">Wie viele Minuten soll jede Runde dauern:</string>
+    <string name="newGame_numOfPlayers_header">Anzahl der Spieler</string>
+    <string name="newGame_numOfPlayers_hint">{min}-{max}</string>
+    <string name="newGame_userName_header">Benutzername:</string>
+    <string name="create_your_own_coming_soon">Erstelle deinen eigenen\n(bald verfügbar)</string>
+    <string name="newGame_userName_hint">Wählen Sie einen Benutzernamen:</string>
+    <string name="newGame_videoCall_header">Videoanruf-Link:</string>
+    <string name="newGame_videCallDescription_text">Fügen Sie einen Videoanruf-Link ein, falls Sie einen haben:</string>
+    <string name="newGame_videoLinkInfo_a11y">Informationen zum Videoanruf-Link</string>
+    <string name="newGame_blankNameError_text">Name darf nicht leer sein</string>
+    <string name="newGame_nameLengthError_text">Name muss zwischen {min}-{max} Zeichen lang sein</string>
+    <string name="newGame_invalidLinkError_text">Dieser Link stammt nicht von einer unserer anerkannten Plattformen. Klicken Sie für mehr Infos auf die Info-Schaltfläche</string>
+    <string name="newGame_startGame_action">Spiel starten</string>
+    <string name="newGame_offlineScreen_header">Sieht so aus, als wären Sie offline</string>
+    <string name="newGame_offlineNoSupport_text">Wir unterstützen derzeit keine Offline-Spiele, arbeiten jedoch hart daran, dies hinzuzufügen. Bitte bleiben Sie dran für Updates!</string>
+    <string name="newGame_invalidNumOfPlayersError_text">Spiele können nur zwischen {min} und {max} Spielern haben.</string>
+    <string name="newGame_invalidTimeLimit_text">Ungültige Zeitbegrenzung. Bitte geben Sie eine Zahl zwischen {min} und {max} ein.</string>
+    <string name="newGame_noPacksSelectedError_text">Sie müssen mindestens ein Paket auswählen</string>
+    <string name="newGame_packsInfo_header">Wählen Sie Ihre Pakete</string>
+    <string name="packsInfo_packsDescription_text">Jedes Paket kommt mit einer Liste von Orten, die für Ihr Spiel gewählt werden können. Sie können so viele Pakete auswählen, wie Sie möchten.</string>
+
+    <!-- /////////////////////    Join Game Strings   /////////////////////-->
+    <string name="joinGame_versionErrorDialog_header">Sieht so aus, als bräuchte jemand ein Update</string>
+    <string name="joinGame_unknownErrorDialog_header">Hmmmm…</string>
+    <string name="joinGame_versionTooLowError_text">Dieses Spiel erfordert eine neuere Version der App. Bitte aktualisieren Sie, um diesem Spiel beizutreten.</string>
+    <string name="joinGame_versionTooHighError_text">Dieses Spiel wurde von jemandem mit einer älteren Version der App erstellt. Alle Spieler müssen aktualisieren und es erneut versuchen.</string>
+    <string name="joinGame_unknownError_text">Das ist peinlich, aber etwas ist schief gelaufen. Wir sind uns nicht ganz sicher, was. Bitte versuchen Sie es erneut.</string>
+    <string name="joinGame_update_action">Aktualisieren</string>
+    <string name="joinGame_accessCode_header">Zugangscode:</string>
+    <string name="joinGame_accessCode_hint">Geben Sie den {length}-stelligen Code ein</string>
+    <string name="joinGame_usernameField_header">Benutzername:</string>
+    <string name="joinGame_userNameField_hint">Wählen Sie einen Benutzernamen</string>
+    <string name="joinGame_join_action">Spiel beitreten</string>
+    <string name="joinGame_joinGameScreen_header">Spiel beitreten</string>
+    <string name="joinGame_accessCodeFieldEmpty_text">Bitte geben Sie einen Zugangscode ein</string>
+    <string name="joinGame_userNameFieldEmptError_text">Bitte geben Sie einen Benutzernamen ein</string>
+    <string name="joinGame_accessCodeNotFoundError_text">Spiel mit diesem Zugangscode wurde nicht gefunden</string>
+    <string name="joinGame_gameAlreadyStartedError_text">Spiel mit diesem Zugangscode wurde bereits gestartet</string>
+    <string name="joinGame_gameHasMaxPlayersError_text">Spiel mit diesem Zugangscode hat bereits die maximale Anzahl von Spielern</string>
+    <string name="joinGame_invalidAccessCodeError_text">Dieser Zugangscode scheint ungültig zu sein. Zugangscodes sollen {length} Zeichen lang sein.</string>
+    <string name="joinGame_userNameFieldInvalidError_text">Namen müssen zwischen {min} - {max} Zeichen lang sein.</string>
+    <string name="joinGame_userNameTakenError_text">Dieser Benutzername ist vergeben. Bitte versuchen Sie, sich etwas Originelleres zu überlegen.</string>
+    <string name="joinGame_accessCodeLengthError_text">Zugangscodes sind {length} Zeichen lang.</string>
+    <string name="joinGame_nameLengthError_text">Namen müssen zwischen {min} - {max} Zeichen lang sein.</string>
+
+    <!-- ///////////////////// Game Play Strings /////////////////////-->
+    <string name="gamePlayHelp_howToPlay_header">Wie man spielt</string>
+    <string name="singleDeviceGame_inGamePlayDescription_text">Stellt euch abwechselnd Fragen, die nur jemand am geheimen Ort kennen würde.\n\nAber achtet darauf, den Ort nicht vor dem Außenseiter zu enthüllen!</string>
+    <string name="singleDeviceGame_inGamePlayExamples_header">Beispiel:</string>
+    <string name="singleDeviceGame_inGamePlayExampleOne_text">Kommst du oft an diesen Ort?</string>
+    <string name="singleDeviceGamePlay_inGamePlayExampleTwo_text">Kann man an diesem Ort Geld verdienen?</string>
+    <string name="singleDeviceGamePlay_inGamePlayExampleThree_text">Muss man eine Uniform tragen?</string>
+    <string name="singleDeviceGamePlay_inGamePlayExampleFour_text">Könnte man Kinder an diesen Ort mitnehmen?</string>
+    <string name="singleDeviceGamePlay_inGamePlayRestart_action">Spiel neu starten</string>
+    <string name="singleDeviceGamePlay_inGamePlayEndGame_action">Spiel beenden</string>
+    <string name="singleDeviceInfo_gettingStarted_header">Erste Schritte</string>
+    <string name="singleDeviceInfo_gameInfo_text">Spiele auf einem einzelnen Gerät werden gespielt, indem jeder Spieler das Gerät herumreicht.\n\nWenn einem Spieler das Gerät gegeben wird, kann er seine Rolle und den Ort (wenn er nicht der Außenseiter ist) enthüllen.\n\nWenn fertig, sollte dieser Spieler den "Nächster Spieler"-Knopf drücken, bevor er das Gerät an den nächsten Spieler weitergibt.\n\nDer letzte Spieler wird in der Lage sein, das Spiel zu starten.</string>
+    <string name="singleDeviceInfo_startGame_action">Spiel starten</string>
+    <string name="singleDeviceInfo_endGame_action">Spiel beenden</string>
+    <string name="gameResults_tieResult_text">Es ist ein Unentschieden!</string>
+    <string name="gameResults">Der Außenseiter hat gewonnen!</string>
+    <string name="gameResults_playersWonResult_text">Die Spieler haben gewonnen!</string>
+    <string name="singleDeviceGameResults_oddOneOut_header">Der Außenseiter:</string>
+    <string name="singleDeviceGameResults_oddOneOutVotes_text">{correct} Stimmen von {total}</string>
+    <string name="singleDeviceGameResults_location_header">Der geheime Ort:</string>
+    <string name="singeDeviceGameResults_locationGuessed_header">Geraten: {location}</string>
+    <string name="singeDeviceGame_restart_action">Spiel neu starten</string>
+    <string name="singeDeviceGameResults_endGame_action">Spiel beenden</string>
+    <string name="singleDevice_handToPlayer_header">Gib das Gerät an {name}</string>
+    <string name="roleReveal_starterInstructions_text">Klicke auf "zeigen" um deine Rolle zu sehen.\n\n Wenn alle bereit sind, klicke auf Spiel starten um zu beginnen.</string>
+    <string name="roleReveal_instructions_text">Klicke auf "zeigen" um deine Rolle zu sehen.\n\n Wenn du bereit bist, klicke auf nächster Spieler und gib das Gerät an den nächsten Spieler weiter.</string>
+    <string name="roleReveal_dontGetFoundOut_text">Lass dich nicht erwischen!</string>
+    <string name="roleReveal_changeName_header">Merke dir, welcher Spieler du bist, oder ändere deinen Namen.</string>
+    <string name="roleReveal_changeName_hint">Neuen Namen eingeben</string>
+    <string name="roleReveal_changeNameSuccess_text">Name wird aktualisiert</string>
+    <string name="roleReveal_locations_header">Der Außenseiter (könnte du sein) wird denken, dass der Ort einer der folgenden ist:</string>
+    <string name="roleReveal_startGame_action">Spiel starten</string>
+    <string name="roleReveal_nextPlayer_action">Nächster Spieler</string>
+    <string name="roleReveal_loading_text">Lädt…</string>
+    <string name="roleReveal_nameInvalidLengthError_text">Name muss zwischen {min} und {max} Zeichen lang sein</string>
+    <string name="roleReveal_nameTakenError_text">Name ist vergeben</string>
+    <string name="singleDeviceVoting_Instructions_text">Klicke auf "zeigen" um deine Abstimmungsoptionen zu sehen. Der letzte Spieler wird in der Lage sein, die Ergebnisse aufzudecken.</string>
+    <string name="singleDeviceVoting_locationVoting_header">An welchem Ort warst du?</string>
+    <string name="singleDeviceVoting_oddOneOutVoting_header">Wer ist der Außenseiter?</string>
+    <string name="singleDeviceVoting_seeResults_action">Ergebnisse ansehen</string>
+    <string name="singleDeviceVoting_nextPlayer_action">Nächster Spieler</string>
+    <string name="singleDeviceVoting_loading_text">Lädt…</string>
+    <string name="singleDevice_endGameDialog_header">So früh schon beenden?</string>
+    <string name="singleDevice_endGameDialogDescription_text">Zurückgehen wird das Spiel löschen, bist du sicher, dass du fortfahren möchtest?</string>
+    <string name="singleDeviceEndGameDialog_end_action">Beenden</string>
+    <string name="singleDeviceEndGameDialog_cancel_action">Abbrechen</string>
+    <string name="endOrGoBack_dialog_header">Das Spiel beenden oder zurückgehen?</string>
+    <string name="endOrGoBack_description_text">Zurückgehen wird die Details der vorherigen Spieler anzeigen, Beenden wird das Spiel löschen.</string>
+    <string name="endOrGoBack_goBack_action">Zurückgehen</string>
+    <string name="endOrGoBack_cancel_action">Abbrechen</string>
+    <string name="gamePlay_leaveDialog_header">Bist du sicher?</string>
+    <string name="gamePlay_leaveDialog_body">Das Spiel zu verlassen wird es für alle Spieler beenden.</string>
+    <string name="gamePlay_leaveDialogLeave_action">Verlassen</string>
+    <string name="gamePlay_leaveGameDialogCancel_action">Abbrechen</string>
+    <string name="gamePlay_oddOneRoleTip_text">Lass dich nicht erwischen</string>
+    <string name="gamePlay_playerRoleTip_text">Finde den Außenseiter</string>
+    <string name="gamePlay_restart_action">Spiel neu starten</string>
+    <string name="gamePlay_end_action">Spiel beenden</string>
+    <string name="gamePlay_submitVote_action">Stimme abgeben</string>
+    <string name="gamePlay_votingOr_text">oder</string>
+    <string name="gamePlay_yourVote_header">Deine Stimme:</string>
+    <string name="gamePlay_voteForLocation_header">An welchem Ort befindest du dich?</string>
+    <string name="gamePlay_locations_header">Orte:</string>
+    <string name="gamePlay_correctAnswer_header">Die tatsächliche {type}:</string>
+    <string name="gamePlay_voteForOddOneOut_header">Welcher Spieler ist der Außenseiter?</string>
+    <string name="gamePlay_players_header">Spieler:</string>
+    <string name="gameResults_youWon_text">Du hast gewonnen!</string>
+    <string name="gameResults_countingVotes_text">Stimmen werden gezählt…</string>
+    <string name="gameResults_timeToVote_text">Zeit zum Abstimmen!</string>
+    <string name="roleCard_role_label">"Rolle: "</string>
+    <string name="roleCard_location_label">"Ort: "</string>
+    <string name="votingRules_alreadyVoted_header">Abstimmungsregeln</string>
+    <string name="votingRules_notVoted_header">Zeit zum Abstimmen!</string>
+    <string name="votingRules_whereToVote_header">Du kannst dies durch die App tun, indem du abstimmst, oder unter euch selbst, indem ihr darüber sprecht</string>
+    <string name="votingRules_rulePoints_text">Kommt zu einer Mehrheitsvereinbarung darüber, wen ihr alle für den Außenseiter haltet.\nSobald fertig (unabhängig davon, ob die Vermutung korrekt ist), muss der Außenseiter sich enthüllen und den Ort erraten.\nWenn die Mehrheit der Spieler den Außenseiter korrekt errät, gewinnen die Spieler.\nWenn der Außenseiter den Ort korrekt errät, gewinnt der Außenseiter.\nWenn beide Seiten gewinnen oder beide Seiten verlieren, endet das Spiel unentschieden!</string>
+
+    <!-- ///////////////////// Forced Update Strings /////////////////////-->
+    <string name="forcedUpdate_update_header">Wir haben einige aufregende Änderungen vorgenommen</string>
+    <string name="forcedUpdate_message_text">Bitte lade die neueste App-Version aus dem App Store herunter, um sie zu genießen.</string>
+    <string name="forcedUpdate_openStore_action">App Store öffnen</string>
+
+    <!-- ///////////////////// Color Picker Strings /////////////////////-->
+    <string name="colorPicker_theme_header">Thema</string>
+    <string name="colorPicker_color_header">Farbe</string>
+    <string name="colorPicker_random_label">Zufällig</string>
+
+    <!-- ///////////////////// Rules Strings /////////////////////-->
+    <string name="rules_howToWinSection_header">Wie man gewinnt</string>
+    <string name="rules_howToWinSectionBullets_text">Zu jedem Zeitpunkt kann der Außenseiter beschließen, sich zu offenbaren und den Ort zu erraten. Wenn sie falsch liegen, gewinnen die Spieler, andernfalls gewinnt der Außenseiter.\nZu jedem Zeitpunkt können die Spieler beschließen, das Spiel zu stoppen und zu raten, wer der Außenseiter ist. Wenn sie richtig raten, gewinnen die Spieler, andernfalls offenbart sich der Außenseiter und gewinnt.\nNachdem der Timer abgelaufen ist, müssen die Spieler sich einigen, jemanden zu beschuldigen, der Außenseiter zu sein. Nach der Beschuldigung offenbart sich der Außenseiter. Wenn die Spieler falsch beschuldigt haben, gewinnt der Außenseiter, Wenn die Spieler richtig beschuldigt haben, dann hat der Außenseiter die Chance, das Spiel durch richtiges Erraten des Ortes unentschieden zu gestalten, andernfalls gewinnen die Spieler.</string>
+    <string name="rules_roleExample_text">Bankangestellter</string>
+    <string name="rules_locationExample_text">Bank</string>
+    <string name="rules_pointOne_text">Zu Beginn des Spiels erhält jeder Spieler einen geheimen Ort und eine Rolle an diesem Ort.</string>
+    <string name="rules_pointTwo_text">Ein Spieler bekommt den geheimen Ort nicht zu sehen. Er ist der Außenseiter.</string>
+    <string name="rules_pointFour_text">Der Außenseiter versucht, den Ort herauszufinden, ohne zu offenbaren, dass er der Außenseiter ist.</string>
+    <string name="rules_pointFive_text">Die Spieler versuchen herauszufinden, wer der Außenseiter ist, ohne den geheimen Ort zu verraten.</string>
+    <string name="rules_pointThree_text">Jeder ist abwechselnd dran, jemanden auszuwählen, um ihm eine Frage über den geheimen Ort und seine Rolle dort zu stellen.</string>
+
+    <!-- ///////////////////// Blocking Error Strings /////////////////////-->
+    <string name="blockingError_screen_header">Das ist peinlich</string>
+    <string name="blockingError_error_body">Es scheint, dass wir einen unerfassten Fehler in unserer App haben. Bitte versuche, die App zu beenden und erneut zu starten.</string>
+    <string name="blockingError_maintenenceMode_body">Wir führen eine schnelle Umstrukturierung durch. Die App wird vorübergehend nicht verfügbar sein, während wir daran arbeiten. Wir erwarten, dass sie in den nächsten 30 Minuten wieder verfügbar sein wird.</string>
+
+
+    <!-- ///////////////////// TERMS OF SERVICE /////////////////////-->
+    <string name="app_privacyPolicy_text">Datenschutzrichtlinie</string>
+    <string name="app_termsOfService_text">Nutzungsbedingungen</string>
+    <string name="termsOfService_screen_header">Noch eine kurze Sache…</string>
+    <string name="termsOfService_links_text">Bitte lesen Sie vor dem Fortfahren unsere {termsOfService} und {privacyPolicy} und stimmen Sie diesen zu</string>
+    <string name="termsOfService_confirmation_text">Ich habe die Nutzungsbedingungen und die Datenschutzrichtlinie gelesen und stimme diesen zu</string>
+    <string name="termsOfService_accept_action">Akzeptieren</string>
+    <string name="termsOfService_description_text">Bei der Nutzung von Odd One Out können wir Daten sammeln, die für die Funktionalität der App relevant sind. Um dies zu tun, benötigen wir Ihre ausdrückliche Zustimmung zur Speicherung und Verarbeitung dieser Daten.</string>
+
+    <!-- ///////////////////// General error /////////////////////-->
+    <string name="generalError_title_text">Etwas ist schiefgelaufen</string>
+    <string name="generalError_description_text">Es scheint, als sei bei der Verarbeitung dieser Anfrage etwas schiefgelaufen. Stellen Sie sicher, dass Sie die neueste App-Version verwenden und/oder versuchen Sie es bitte erneut.</string>
+
+</resources>

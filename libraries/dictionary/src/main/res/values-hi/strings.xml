@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="appLanguageCode">hi</string>
+
+    <!-- App Wide Strings -->
+    <string name="app_name_text">Odd One Out</string>
+    <string name="app_tryAgainErrorDialog_header">फिर से कोशिश करें</string>
+    <string name="app_submit_action">जमा करें</string>
+    <string name="app_somethingWentWrong_text">कुछ गलत हो गया</string>
+    <string name="app_okay_action">ठीक है</string>
+    <string name="app_required_label">आवश्यक</string>
+    <string name="app_player_text">खिलाड़ी</string>
+    <string name="app_theOddOneOutRole_text">वह जो अलग है</string>
+    <string name="app_leave_action">छोड़ें</string>
+    <string name="app_cancel_action">रद्द करें</string>
+    <string name="app_open_action">खोलें</string>
+    <string name="app_bullet_point">•</string>
+    <string name="app_location_label">स्थान</string>
+    <string name="app_oops_text">उफ़!</string>
+    <string name="app_end_game_action">खेल समाप्त</string>
+    <string name="app_show_action">दिखाएँ</string>
+    <string name="app_hide_action">छिपाएँ</string>
+    <string name="app_oddOneOut_label">विचित्र एक</string>
+    <string name="app_or_text">या</string>
+
+    <!-- Welcome Screen Strings -->
+    <string name="welcome_intro_header">स्वागत है</string>
+    <string name="welcome_newGame_action">नया खेल</string>
+    <string name="welcome_join_action">खेल में शामिल हों</string>
+    <string name="welcome_rules_action">नियम</string>
+
+    <!-- Waiting Room Screen Strings -->
+    <string name="waitingRoom_waiting_header">खिलाड़ियों का इंतजार…</string>
+    <string name="waitingRoom_accessCode_header">पहुँच कोड:</string>
+    <string name="waitingRoom_confirmStart_action">खेल शुरू करें</string>
+    <string name="waitingRoom_joinVideo_a11y">खेल वीडियो कॉल में शामिल हों</string>
+    <string name="waitingRoom_startGame_action">खेल शुरू करें</string>
+    <string name="waitingRoom_leaveGame_action">खेल छोड़ें</string>
+    <string name="waitingRoom_tooManyPlayersDialog_body">प्रतीत होता है कि इस कमरे में {max} से अधिक खिलाड़ी हैं। खेल शुरू करने से पहले {numToLeave} खिलाड़ियों को छोड़ना होगा।</string>
+    <string name="waitingRoom_tooFewPlayersDialog_header">क्या आप वाकई खेल शुरू करना चाहते हैं?</string>
+    <string name="waitingRoom_tooFewPlayersDialog_body">आपके पास {min} से कम खिलाड़ी हैं। इतने कम खिलाड़ियों के साथ खेलने की सिफारिश नहीं की जाती है।</string>
+    <string name="waitingRoom_leaveGameDialog_header">इतनी जल्दी जा रहे हैं?</string>
+    <string name="waitingRoom_leaveGameDialog_text">आप खेल छोड़ रहे हैं और अगर आप जारी रखते हैं तो आपको हटा दिया जाएगा।</string>
+    <string name="waitingRoom_cannotLeaveGame_text">शुरू हो चुके खेल को छोड़ा नहीं जा सकता</string>
+    <string name="changeName_dialog_header">नाम बदलें</string>
+    <string name="changeName_invalidLength_text">{min} और {max} अक्षरों के बीच नाम होना चाहिए</string>
+    <string name="changeName_inputHint_label">नया नाम दर्ज करें</string>
+    <string name="changeName_usernameTakenError_text">वह उपयोगकर्ता नाम पहले से ही दूसरे खिलाड़ी द्वारा लिया जा चुका है।</string>
+    <string name="videoCall_detailDialog_title">वीडियो लिंक</string>
+    <string name="videoLink_detailDialogDescription_text">इस खेल के निर्माता ने कहीं भी किसी के साथ खेलना आसान बनाने के लिए एक वीडियो लिंक जोड़ा है। \n\nलेकिन कृपया याद रखें, इंटरनेट पर अजनबियों से लिंक खोलते समय सावधान रहें।</string>
+    <string name="videoLink_beCareful_label">सावधान रहें</string>
+    <string name="waitingRoom_forcedRemovalError_text">हमें खेद है कि कोई समस्या थी। दुर्भाग्य से हमें आपको खेल से हटाना पड़ा। कृपया फिर से शामिल हों और पुनः प्रयास करें।</string>
+    <string name="videoLink_copyLink_a11y">लिंक कॉपी करें</string>
+    <string name="videoLink_infoDialog_title">अपने खेल में वीडियो कॉलिंग जोड़ें</string>
+    <string name="videoLink_infoDialogBody_text">आप अपने खेल को बनाते समय एक वीडियो लिंक जोड़ सकते हैं ताकि कहीं भी किसी के साथ खेलना आसान हो सके। खेल में शामिल होने वाले खिलाड़ी के पास भी इस लिंक तक पहुँच होगी।</string>
+    <string name="video_openWith_header">के साथ खोलें</string>
+    <string name="videoLink_infoDialogSafety_header">उपयोगकर्ता सुरक्षा सुनिश्चित करने के लिए हम केवल निम्नलिखित प्लेटफार्मों से लिंक स्वीकार करते हैं:</string>
+
+    <!-- Stats Screen Strings -->
+    <string name="stats_infoNote_body">जब खिलाड़ी ऐप के बजाय आपस में मतदान करते हैं तो गेम के परिणाम एकत्रित नहीं किए जाते हैं। इस कारण से यहाँ के आँकड़े जीत और हार को पूरी तरह से प्रतिबिंबित नहीं कर सकते हैं।</string>
+    <string name="stats_totalGamesPlayed_header">कुल खेले गए गेम:</string>
+    <string name="stats_infoNote_label">नोट</string>
+    <string name="stats_multiDeviceGames_header">मल्टी डिवाइस गेम्स</string>
+    <string name="stats_gamesYouveWon_header">आपके जीते गेम:</string>
+    <string name="stats_gamesYouveWonAsOddOneOut_label">ओड वन आउट के रूप में - {gamesWon}</string>
+    <string name="stats_gamesYouveWonAsPlayer_label">खिलाड़ी के रूप में - {gamesWon}</string>
+    <string name="stats_gamesYouveLost_header">आपके हारे गेम:</string>
+    <string name="stats_gamesYouveLostAsOddOneOut_label">ओड वन आउट के रूप में - {gamesLost}</string>
+    <string name="stats_gamesYouveLostAsPlayer_label">खिलाड़ी के रूप में - {gamesLost}</string>
+    <string name="stats_singleDeviceGames_header">सिंगल डिवाइस गेम्स</string>
+    <string name="stats_singleDeviceTotalGamesPlayed_header">कुल खेले गए गेम:</string>
+
+    <!-- Settings Screen Strings -->
+    <string name="settings_theme_label">थीम बदलें</string>
+    <string name="settings_stats_header">आँकड़े</string>
+    <string name="settings_about_label">के बारे में</string>
+    <string name="settings_contactUs_label">हमसे संपर्क करें</string>
+    <string name="settings_stats_label">आँकड़े</string>
+    <string name="settings_qaMenu_label">QA मेनू</string>
+    <string name="settings_version_label">" संस्करण: {version}"</string>
+    <string name="settings_madeWithLove_text">❤️ के साथ बनाया गया</string>
+    <string name="settings_settingsScreen_header">सेटिंग्स</string>
+    <string name="settings_about_header">के बारे में</string>
+    <string name="settings_contactUs_header">हमसे संपर्क करें</string>
+    <string name="about_consentForm_label">सहमति फॉर्म</string>
+
+    <!-- About Strings -->
+    <string name="about_privacyPolicy_label">गोपनीयता नीति</string>
+    <string name="about_termsOfService_label">सेवा की शर्तें</string>
+    <string name="about_thirdPartyServices_label">तृतीय पक्ष सेवाएं</string>
+    <string name="about_privacyPolicy_link">https://oddoneoutgame.github.io/odd-one-out/privacy-policy/</string>
+    <string name="about_termsOfService_link">https://oddoneoutgame.github.io/odd-one-out/terms-of-service/</string>
+    <string name="about_thirdPartyServices_link">https://oddoneoutgame.github.io/odd-one-out/third-party-services/</string>
+
+    <!-- Contact Us Strings -->
+    <string name="contactUs_errorSubmitting_body">लगता है आपका फॉर्म सबमिट करते समय कुछ गलत हो गया, कृपया पुनः प्रयास करें।</string>
+    <string name="contactUs_invalidEmail_text">कृपया एक मान्य ईमेल पता दर्ज करें</string>
+    <string name="contactUs_invalidMessage_text">कृपया एक संदेश दर्ज करें</string>
+    <string name="contactUs_invalidName_text">कृपया एक नाम दर्ज करें</string>
+    <string name="contactUs_submitSuccessMessage_text">आपका संदेश हम तक पहुँच गया है, सभी के लिए अनुभव सुधारने में हमारी मदद करने के लिए धन्यवाद!</string>
+    <string name="contactUs_reasonPrompt_text">आप हमसे किस विषय पर संपर्क करना चाहते हैं?</string>
+    <string name="contactUs_nameField_header">नाम</string>
+    <string name="contactUs_emailField_header">ईमेल</string>
+    <string name="contactUs_messageField_header">संदेश</string>
+    <string name="contactUs_messageField_hint">आप हमें क्या बताना चाहते हैं?</string>
+    <string name="contactUs_question_label">प्रश्न</string>
+    <string name="contactUs_issue_label">समस्या</string>
+    <string name="contactUs_feedback_label">प्रतिक्रिया</string>
+    <string name="contactUs_suggestion_label">सुझाव</string>
+    <string name="contactUs_other_label">अन्य</string>
+
+    <!-- New Game Strings -->
+    <string name="newGame_createGameError_body">हमें खेद है, इस गेम को बनाते समय कुछ गलत हो गया, कृपया पुनः प्रयास करें</string>
+    <string name="newGame_loadGameError_body">लगता है हमें गेम बनाने के लिए आवश्यक डेटा प्राप्त करने में समस्या आ रही है। कृपया अपना नेटवर्क कनेक्शन जांचें और पुनः प्रयास करें।</string>
+    <string name="newGame_createGame_action">गेम बनाएँ</string>
+    <string name="newGame_newGameScreen_header">नया गेम</string>
+    <string name="newGame_packs_header">पैक्स:</string>
+    <string name="newGame_packsDescription_text">चुनें कि आप किन पैक्स के साथ खेलना चाहते हैं</string>
+    <string name="newGame_packsInfo_a11y">पैक्स की जानकारी</string>
+    <string name="newGame_singleDevice_label">पास और प्ले</string>
+    <string name="newGame_singleDeviceDescription_text">प्रत्येक खिलाड़ी को डिवाइस पास करें</string>
+    <string name="newGame_gameLength_header">गेम की लंबाई:</string>
+    <string name="newGame_gameLengthDescription_text">प्रत्येक राउंड कितने मिनट तक चलना चाहिए:</string>
+    <string name="newGame_numOfPlayers_header">खिलाड़ियों की संख्या</string>
+    <string name="newGame_numOfPlayers_hint">{min}-{max}</string>
+    <string name="newGame_userName_header">उपयोगकर्ता नाम:</string>
+    <string name="newGame_userName_hint">एक उपयोगकर्ता नाम चुनें:</string>
+    <string name="newGame_videoCall_header">वीडियो कॉल लिंक:</string>
+    <string name="newGame_videCallDescription_text">यदि आपके पास एक है तो वीडियो कॉल लिंक पेस्ट करें:</string>
+    <string name="newGame_videoLinkInfo_a11y">वीडियो कॉल लिंक जानकारी</string>
+    <string name="newGame_blankNameError_text">नाम खाली नहीं हो सकता</string>
+    <string name="newGame_nameLengthError_text">नाम {min}-{max} अक्षरों के बीच होना चाहिए</string>
+    <string name="newGame_invalidLinkError_text">यह लिंक हमारे मान्यता प्राप्त प्लेटफॉर्मों में से नहीं है, अधिक जानकारी के लिए जानकारी बटन पर क्लिक करें</string>
+    <string name="newGame_startGame_action">गेम शुरू करें</string>
+    <string name="newGame_offlineScreen_header">लगता है आप ऑफलाइन हैं</string>
+    <string name="newGame_offlineNoSupport_text">हम वर्तमान में ऑफलाइन गेम्स का समर्थन नहीं करते हैं लेकिन हम इसे जोड़ने के लिए कड़ी मेहनत कर रहे हैं, कृपया अपडेट्स के लिए बने रहें!</string>
+    <string name="newGame_invalidNumOfPlayersError_text">गेम्स केवल {min} से {max} खिलाड़ियों के बीच हो सकते हैं।</string>
+    <string name="newGame_invalidTimeLimit_text">अवैध समय सीमा। कृपया {min} से {max} के बीच एक संख्या टाइप करें।</string>
+    <string name="newGame_noPacksSelectedError_text">आपको कम से कम एक पैक चुनना होगा</string>
+    <string name="newGame_packsInfo_header">अपने पैक्स चुनें</string>
+    <string name="packsInfo_packsDescription_text">प्रत्येक पैक में आपके गेम के लिए चुने जा सकने वाले स्थानों की एक सूची होती है। आप जितने चाहें उतने पैक्स चुन सकते हैं।</string>
+
+    <!-- Join Game Strings -->
+    <string name="joinGame_versionErrorDialog_header">लगता है किसी को अपडेट की आवश्यकता है</string>
+    <string name="joinGame_unknownErrorDialog_header">हम्म्म…</string>
+    <string name="joinGame_versionTooLowError_text">इस गेम को खेलने के लिए ऐप के नए संस्करण की आवश्यकता है। कृपया इस गेम में शामिल होने के लिए अपडेट करें।</string>
+    <string name="joinGame_versionTooHighError_text">इस गेम को ऐप के पुराने संस्करण वाले किसी व्यक्ति द्वारा बनाया गया था। सभी खिलाड़ियों को अपडेट करना होगा और फिर से प्रयास करना होगा।</string>
+    <string name="joinGame_unknownError_text">यह शर्मनाक है, लेकिन कुछ गलत हो गया। हमें बिलकुल नहीं पता कि क्या। कृपया पुनः प्रयास करें।</string>
+    <string name="joinGame_update_action">अपडेट करें</string>
+    <string name="joinGame_accessCode_header">पहुँच कोड:</string>
+    <string name="joinGame_accessCode_hint">{length} अंकों का कोड दर्ज करें</string>
+    <string name="joinGame_usernameField_header">उपयोगकर्ता नाम:</string>
+    <string name="joinGame_userNameField_hint">एक उपयोगकर्ता नाम चुनें</string>
+    <string name="joinGame_join_action">गेम में शामिल हों</string>
+    <string name="joinGame_joinGameScreen_header">गेम में शामिल हों</string>
+    <string name="joinGame_accessCodeFieldEmpty_text">कृपया एक पहुँच कोड दर्ज करें</string>
+    <string name="joinGame_userNameFieldEmptError_text">कृपया एक उपयोगकर्ता नाम दर्ज करें</string>
+    <string name="joinGame_accessCodeNotFoundError_text">उस पहुँच कोड वाला गेम नहीं मिला</string>
+    <string name="joinGame_gameAlreadyStartedError_text">उस पहुँच कोड वाला गेम पहले से ही शुरू हो चुका है</string>
+    <string name="joinGame_gameHasMaxPlayersError_text">उस पहुँच कोड वाले गेम में पहले से ही अधिकतम संख्या में खिलाड़ी हैं</string>
+    <string name="joinGame_invalidAccessCodeError_text">वह पहुँच कोड अवैध प्रतीत होता है। पहुँच कोड {length} अक्षर लंबे होने चाहिए।</string>
+    <string name="joinGame_userNameFieldInvalidError_text">नाम {min} - {max} अक्षरों के बीच लंबे होने चाहिए।</string>
+    <string name="joinGame_userNameTakenError_text">वह उपयोगकर्ता नाम लिया जा चुका है। कृपया कुछ और मौलिक सोचें।</string>
+    <string name="joinGame_accessCodeLengthError_text">पहुँच कोड {length} अक्षर लंबे होते हैं।</string>
+    <string name="joinGame_nameLengthError_text">नाम {min} - {max} अक्षरों के बीच लंबे होने चाहिए।</string>
+
+    <string name="gamePlayHelp_howToPlay_header">कैसे खेलें</string>
+    <string name="singleDeviceGame_inGamePlayDescription_text">बारी-बारी से एक-दूसरे से ऐसे प्रश्न पूछें जिसे केवल गुप्त स्थान पर मौजूद व्यक्ति ही जान सकता है।\n\nलेकिन सुनिश्चित करें कि आप ओड वन आउट को स्थान का पता न चलने दें!</string>
+    <string name="singleDeviceGame_inGamePlayExamples_header">उदाहरण:</string>
+    <string name="singleDeviceGame_inGamePlayExampleOne_text">क्या आप अक्सर इस स्थान पर आते हैं?</string>
+    <string name="singleDeviceGamePlay_inGamePlayExampleTwo_text">क्या आप इस स्थान पर पैसे कमा सकते हैं?</string>
+    <string name="singleDeviceGamePlay_inGamePlayExampleThree_text">क्या आपको यहाँ वर्दी पहननी पड़ती है?</string>
+    <string name="singleDeviceGamePlay_inGamePlayExampleFour_text">क्या आप बच्चों को इस स्थान पर ले जा सकते हैं?</string>
+    <string name="singleDeviceGamePlay_inGamePlayRestart_action">गेम पुनः आरंभ करें</string>
+    <string name="singleDeviceGamePlay_inGamePlayEndGame_action">गेम समाप्त करें</string>
+    <string name="singleDeviceInfo_gettingStarted_header">शुरू करना</string>
+    <string name="singleDeviceInfo_gameInfo_text">एकल उपकरण गेम्स उस समय खेले जाते हैं जब प्रत्येक खिलाड़ी उपकरण को एक-दूसरे को पास करता है।\n\nउपकरण हाथ में लेने पर खिलाड़ी अपनी भूमिका और स्थान (यदि वे ओड वन आउट नहीं हैं) का खुलासा कर सकेगा।\n\nजब वह खिलाड़ी समाप्त कर लेता है, तो उसे अगले खिलाड़ी को उपकरण सौंपने से पहले \"अगला खिलाड़ी\" बटन दबाना चाहिए।\n\nअंतिम खिलाड़ी गेम शुरू करने में सक्षम होगा।</string>
+    <string name="singleDeviceInfo_startGame_action">गेम शुरू करें</string>
+    <string name="singleDeviceInfo_endGame_action">गेम समाप्त करें</string>
+    <string name="gameResults_tieResult_text">यह एक टाई है!</string>
+    <string name="gameResults">ओड वन आउट जीत गया!</string>
+    <string name="gameResults_playersWonResult_text">खिलाड़ियों ने जीत हासिल की!</string>
+    <string name="singleDeviceGameResults_oddOneOut_header">ओड वन आउट:</string>
+    <string name="singleDeviceGameResults_oddOneOutVotes_text">{correct} मतों में से {total}</string>
+    <string name="singleDeviceGameResults_location_header">गुप्त स्थान:</string>
+    <string name="singeDeviceGameResults_locationGuessed_header">अनुमानित: {location}</string>
+    <string name="singeDeviceGame_restart_action">गेम पुनः आरंभ करें</string>
+    <string name="singeDeviceGameResults_endGame_action">गेम समाप्त करें</string>
+    <string name="singleDevice_handToPlayer_header">उपकरण {name} को दें</string>
+    <string name="roleReveal_starterInstructions_text">अपनी भूमिका देखने के लिए \"दिखाएँ\" पर क्लिक करें।\n\n जब सभी तैयार हों, गेम शुरू करने के लिए शुरू करें पर क्लिक करें।</string>
+    <string name="roleReveal_instructions_text">अपनी भूमिका देखने के लिए \"दिखाएँ\" पर क्लिक करें।\n\n जब आप तैयार हों, अगला खिलाड़ी पर क्लिक करें और उपकरण को अगले खिलाड़ी को पास करें।</string>
+    <string name="roleReveal_dontGetFoundOut_text">पकड़े न जाएँ!</string>
+    <string name="roleReveal_changeName_header">याद रखें कि आप कौन खिलाड़ी हैं या अपना नाम बदलें।</string>
+    <string name="roleReveal_changeName_hint">नया नाम दर्ज करें</string>
+    <string name="roleReveal_changeNameSuccess_text">नाम अपडेट किया जाएगा</string>
+    <string name="roleReveal_locations_header">ओड वन आउट (शायद आप) सोचेगा कि स्थान निम्न में से एक है:</string>
+    <string name="roleReveal_startGame_action">गेम शुरू करें</string>
+    <string name="roleReveal_nextPlayer_action">अगला खिलाड़ी</string>
+    <string name="roleReveal_loading_text">लोड हो रहा है…</string>
+    <string name="roleReveal_nameInvalidLengthError_text">नाम {min} और {max} अक्षरों के बीच होना चाहिए</string>
+    <string name="roleReveal_nameTakenError_text">नाम लिया जा चुका है</string>
+    <string name="singleDeviceVoting_Instructions_text">अपने वोटिंग विकल्प देखने के लिए \"दिखाएँ\" पर क्लिक करें। अंतिम खिलाड़ी परिणाम देख सकेगा।</string>
+    <string name="singleDeviceVoting_locationVoting_header">आप किस स्थान पर थे?</string>
+    <string name="singleDeviceVoting_oddOneOutVoting_header">ओड वन आउट कौन है?</string>
+    <string name="singleDeviceVoting_seeResults_action">परिणाम देखें</string>
+    <string name="singleDeviceVoting_nextPlayer_action">अगला खिलाड़ी</string>
+    <string name="singleDeviceVoting_loading_text">लोड हो रहा है…</string>
+    <string name="singleDevice_endGameDialog_header">इतनी जल्दी समाप्त कर रहे हैं?</string>
+    <string name="singleDevice_endGameDialogDescription_text">वापस जाने से गेम हट जाएगा, क्या आप वाकई में जारी रखना चाहते हैं?</string>
+    <string name="singleDeviceEndGameDialog_end_action">समाप्त करें</string>
+    <string name="singleDeviceEndGameDialog_cancel_action">रद्द करें</string>
+    <string name="endOrGoBack_dialog_header">गेम समाप्त करें या वापस जाएँ?</string>
+    <string name="endOrGoBack_description_text">वापस जाने पर पिछले खिलाड़ी का विवरण दिखाई देगा, समाप्त करने से गेम हट जाएगा।</string>
+    <string name="endOrGoBack_goBack_action">वापस जाएँ</string>
+    <string name="endOrGoBack_cancel_action">रद्द करें</string>
+    <string name="gamePlay_leaveDialog_header">क्या आप सुनिश्चित हैं?</string>
+    <string name="gamePlay_leaveDialog_body">गेम छोड़ने से सभी खिलाड़ियों के लिए गेम समाप्त हो जाएगा।</string>
+    <string name="gamePlay_leaveDialogLeave_action">छोड़ें</string>
+    <string name="gamePlay_leaveGameDialogCancel_action">रद्द करें</string>
+    <string name="gamePlay_oddOneRoleTip_text">पकड़े न जाएँ</string>
+    <string name="gamePlay_playerRoleTip_text">ओड वन आउट को ढूँढें</string>
+    <string name="gamePlay_restart_action">गेम पुनः आरंभ करें</string>
+    <string name="gamePlay_end_action">गेम समाप्त करें</string>
+    <string name="gamePlay_submitVote_action">वोट सबमिट करें</string>
+    <string name="gamePlay_votingOr_text">या</string>
+    <string name="gamePlay_yourVote_header">आपका वोट:</string>
+    <string name="gamePlay_voteForLocation_header">आप किस स्थान पर हैं?</string>
+    <string name="gamePlay_locations_header">स्थान:</string>
+    <string name="gamePlay_correctAnswer_header">वास्तविक {type}:</string>
+    <string name="gamePlay_voteForOddOneOut_header">कौन सा खिलाड़ी ओड वन आउट है?</string>
+    <string name="gamePlay_players_header">खिलाड़ी:</string>
+    <string name="gameResults_youWon_text">आप जीत गए!</string>
+    <string name="gameResults_countingVotes_text">वोट गिने जा रहे हैं…</string>
+    <string name="gameResults_timeToVote_text">वोट करने का समय!</string>
+    <string name="roleCard_role_label">"भूमिका: "</string>
+    <string name="roleCard_location_label">"स्थान: "</string>
+    <string name="votingRules_alreadyVoted_header">वोटिंग नियम</string>
+    <string name="votingRules_notVoted_header">वोट करने का समय!</string>
+    <string name="votingRules_whereToVote_header">आप इसे ऐप के माध्यम से वोटिंग करके या आपस में बातचीत करके चुन सकते हैं</string>
+    <string name="votingRules_rulePoints_text">उस व्यक्ति पर एक सामूहिक सहमति बनाएं जिसे आप सभी ओड वन आउट समझते हैं।\nएक बार हो जाने के बाद (चाहे अनुमान सही हो या गलत) ओड वन आउट को खुद को प्रकट करना होगा और स्थान का अनुमान लगाना होगा।\nयदि खिलाड़ियों का बहुमत ओड वन आउट का सही अनुमान लगाता है तो खिलाड़ी जीत जाते हैं।\nयदि ओड वन आउट स्थान का सही अनुमान लगाता है तो ओड वन आउट जीत जाता है।\nयदि दोनों पक्ष जीतते हैं या दोनों हारते हैं तो गेम ड्रॉ में समाप्त होता है!</string>
+
+    <string name="forcedUpdate_update_header">हमने कुछ रोमांचक परिवर्तन किए हैं</string>
+    <string name="forcedUpdate_message_text">कृपया उनका आनंद लेने के लिए ऐप स्टोर से नवीनतम ऐप डाउनलोड करें।</string>
+    <string name="forcedUpdate_openStore_action">ऐप स्टोर खोलें</string>
+
+    <string name="colorPicker_theme_header">थीम</string>
+    <string name="colorPicker_color_header">रंग</string>
+    <string name="colorPicker_random_label">रैंडम</string>
+
+    <string name="rules_howToWinSection_header">कैसे जीतें</string>
+    <string name="rules_howToWinSectionBullets_text">किसी भी समय ओड वन आउट खुद को प्रकट कर सकता है और स्थान का अनुमान लगा सकता है। यदि वे गलत हैं, तो खिलाड़ी जीत जाते हैं अन्यथा ओड वन आउट जीत जाता है।\nकिसी भी समय खिलाड़ी गेम रोक सकते हैं और अनुमान लगा सकते हैं कि ओड वन आउट कौन है। यदि वे सही अनुमान लगाते हैं तो खिलाड़ी जीत जाते हैं, अन्यथा ओड वन आउट खुद को प्रकट करता है और जीत जाता है।\nटाइमर समाप्त होने के बाद, खिलाड़ी वोट करते हैं कि ओड वन आउट कौन है। यदि खिलाड़ियों का बहुमत गलत वोट करता है, तो ओड वन आउट जीत जाता है, यदि खिलाड़ियों के वोट सही होते हैं तब वे जीतते हैं जब तक कि ओड वन आउट स्थान का सही अनुमान न लगा ले और खेल टाई हो जाए।</string>
+    <string name="rules_roleExample_text">बैंक टेलर</string>
+    <string name="rules_locationExample_text">बैंक</string>
+    <string name="rules_pointOne_text">खेल शुरू होने पर, हर खिलाड़ी को गुप्त शब्द मिलता है।</string>
+    <string name="rules_pointTwo_text">एक खिलाड़ी को गुप्त स्थान नहीं दिखाया जाता है। वे ओड वन आउट हैं।</string>
+    <string name="rules_pointThree_text">हर कोई बारी-बारी से किसी को चुनकर गुप्त स्थान और वहां अपनी भूमिका के बारे में सवाल पूछता है।</string>
+    <string name="rules_pointFour_text">ओड वन आउट स्थान का पता लगाने की कोशिश कर रहा होता है बिना यह बताए कि वे ओड वन आउट हैं।</string>
+    <string name="rules_pointFive_text">खिलाड़ी यह पता लगाने की कोशिश कर रहे होते हैं कि ओड वन आउट कौन है बिना गुप्त स्थान का खुलासा किए।</string>
+
+    <string name="blockingError_screen_header">यह शर्मनाक है</string>
+    <string name="blockingError_error_body">हमारे ऐप में एक अपकैच्ड बग होने का प्रतीत होता है। कृपया ऐप को मार डालें और फिर से शुरू करें।</string>
+    <string name="blockingError_maintenenceMode_body">हम कुछ त्वरित पुनर्गठन कर रहे हैं। ऐप तब तक उपलब्ध नहीं होगा जब तक हम इस पर काम कर रहे हैं। हमें उम्मीद है कि अगले 30 मिनट में यह फिर से चालू हो जाएगा।</string>
+
+    <string name="app_privacyPolicy_text">गोपनीयता नीति</string>
+    <string name="app_termsOfService_text">सेवा की शर्तें</string>
+    <string name="termsOfService_screen_header">एक छोटी सी बात…</string>
+    <string name="termsOfService_links_text">जारी रखने से पहले कृपया हमारी {termsOfService} और {privacyPolicy} पढ़ें और सहमत हों</string>
+    <string name="termsOfService_confirmation_text">मैंने सेवा की शर्तों और गोपनीयता नीति को पढ़ लिया है और उससे सहमत हूँ</string>
+    <string name="termsOfService_accept_action">स्वीकार करें</string>
+    <string name="termsOfService_description_text">Odd One Out का उपयोग करते समय हम ऐप की कार्यक्षमता से संबंधित डेटा एकत्र कर सकते हैं। ऐसा करने के लिए हमें इस डेटा को संग्रहीत और प्रक्रिया करने के लिए आपकी स्पष्ट सहमति की आवश्यकता है।</string>
+    <string name="create_your_own_coming_soon">अपना खुद का बनाएं\n(जल्द आ रहा है)</string>
+
+    <!-- ///////////////////// General error /////////////////////-->
+    <string name="generalError_title_text">कुछ गलत हो गया</string>
+    <string name="generalError_description_text">लगता है इस अनुरोध को संसाधित करते समय कुछ गलत हो गया। सुनिश्चित करें कि आप ऐप के नवीनतम संस्करण पर हैं और/या कृपया पुनः प्रयास करें।</string>
+
+</resources>

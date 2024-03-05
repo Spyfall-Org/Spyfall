@@ -1,0 +1,38 @@
+name: Create Release
+on:
+  workflow_dispatch:
+    inputs:
+      versionName:
+        description: 'Version being released (ie 5.5.0)'
+        required: true
+
+jobs:
+  createrelease:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out the main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Validate inputs
+        run: ./scripts/ci/validate_release_inputs.main.kts ${{ github.event.inputs.versionName }}
+
+      - name: Change version name
+        run: ./scripts/ci/set_version_name.main.kts ${{ github.event.inputs.versionName }}
+
+      - name: Update Version Code
+        run: ./scripts/ci/set_version_code.main.kts ${{ github.run_number }}
+
+      - name: Create pull request into main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+          branch: release-oddoneout/v${{ github.event.inputs.versionName }}
+          commit-message: Prepare oddoneout release ${{ github.event.inputs.versionName }}
+          title: Odd One Out v${{ github.event.inputs.versionName }} into main
+          body: |
+            ## :rocket: This PR was created using the "Create Release Branch" workflow :rocket:
+            After the checks run, a release draft will be built and linked in a comment. Publishing the release draft will send the app bundle to the play store for distribution. 
+            After publishing the release draft, this PR should be merged manually.   
