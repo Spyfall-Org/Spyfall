@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import com.dangerfield.features.colorpicker.colorPickerRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.floatingwindow.dialog
 import com.dangerfield.libraries.session.ColorConfig.Random
@@ -17,10 +17,9 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class ColorPickerModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
+class ColorPickerFeatureNavGraphBuilder @Inject constructor() : FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
-
 
         dialog(
             route = colorPickerRoute.navRoute,
@@ -28,9 +27,7 @@ class ColorPickerModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder 
         ) {
 
             val viewModel = hiltViewModel<ColorPickerViewModel>()
-
             val state by viewModel.state.collectAsStateWithLifecycle()
-
             val colorConfigs = ThemeColor.entries.map { Specific(it) } + Random
 
             PageLogEffect(

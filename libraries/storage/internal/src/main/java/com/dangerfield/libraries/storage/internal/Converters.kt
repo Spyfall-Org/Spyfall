@@ -4,7 +4,7 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.dangerfield.libraries.session.GameKey
 import com.squareup.moshi.Moshi
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.readJson
 import oddoneout.core.toJson
@@ -17,14 +17,14 @@ class Converters @Inject constructor(
 
     @TypeConverter
     fun fromGameKey(key: GameKey?): String? {
-        return Try { moshi.toJson(key!!) }
+        return Catching { moshi.toJson(key!!) }
             .logOnFailure()
             .getOrNull()
     }
 
     @TypeConverter
     fun toGameKey(string: String?): GameKey? {
-        return Try {
+        return Catching {
             moshi.readJson<GameKey>(string!!)
         }
             .logOnFailure()

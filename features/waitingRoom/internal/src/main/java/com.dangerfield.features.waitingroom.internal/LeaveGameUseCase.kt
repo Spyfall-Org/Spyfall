@@ -8,7 +8,7 @@ import com.dangerfield.libraries.game.GameDataSourcError.TriedToLeaveStartedGame
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ClearActiveGame
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.failure
 import oddoneout.core.logOnFailure
@@ -24,7 +24,7 @@ class LeaveGameUseCase @Inject constructor(
         game: Game,
         id: String,
         isGameBeingStarted: Boolean
-    ): Try<Unit> {
+    ): Catching<Unit> {
         val playerLeaving = game.players.firstOrNull { it.id == id }
         return if (isGameBeingStarted) {
             failure(TriedToLeaveStartedGameDataSourc)

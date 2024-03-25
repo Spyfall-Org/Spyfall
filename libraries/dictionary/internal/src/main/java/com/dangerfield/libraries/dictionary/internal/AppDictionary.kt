@@ -3,7 +3,7 @@ package com.dangerfield.libraries.dictionary.internal
 import android.content.Context
 import com.dangerfield.libraries.dictionary.Dictionary
 import oddoneout.core.BuildInfo
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.applyArgs
 
 /**
@@ -23,16 +23,16 @@ class AppDictionary(
      * returns the resource name as a string in debug and empty string otherwise
      */
     override fun getString(key: Int, args: Map<String, String>): String {
-        val value = Try { overrideDictionary?.getString(key, args) }.getOrNull()
-            ?: Try { defaultDictionary.getString(key, args) }.getOrNull()
+        val value = Catching { overrideDictionary?.getString(key, args) }.getOrNull()
+            ?: Catching { defaultDictionary.getString(key, args) }.getOrNull()
             ?: context.resources.getResourceEntryName(key).takeIf { buildInfo.isDebug }
             ?: ""
         return value.applyArgs(args)
     }
 
     override fun getOptionalString(key: Int, args: Map<String, String>): String? {
-        val value = Try { overrideDictionary?.getString(key, args) }.getOrNull()
-            ?: Try { defaultDictionary.getString(key, args) }.getOrNull()
+        val value = Catching { overrideDictionary?.getString(key, args) }.getOrNull()
+            ?: Catching { defaultDictionary.getString(key, args) }.getOrNull()
         return value?.applyArgs(args)
     }
 

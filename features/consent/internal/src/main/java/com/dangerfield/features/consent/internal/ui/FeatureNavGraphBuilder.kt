@@ -15,31 +15,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dangerfield.features.blockingerror.navigateToBlockingError
-import com.dangerfield.features.consent.ConsentStatus
 import com.dangerfield.features.consent.OpenGDRPConsentForm
 import com.dangerfield.features.consent.consentRoute
 import com.dangerfield.libraries.dictionary.LocalDictionary
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
 import com.dangerfield.oddoneoout.features.consent.internal.R
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
-import kotlinx.coroutines.delay
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
 import se.ansman.dagger.auto.AutoBindIntoSet
-import timber.log.Timber
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 @AutoBindIntoSet
 @ActivityScoped
-class ModuleNavGraphBuilder @Inject constructor(
+class FeatureNavGraphBuilder @Inject constructor(
     @ActivityContext private val context: Context,
     private val openGDRPConsentForm: OpenGDRPConsentForm
-) : ModuleNavBuilder {
+) : FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(

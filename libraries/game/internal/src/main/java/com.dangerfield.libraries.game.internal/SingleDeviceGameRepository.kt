@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.doNothing
 import oddoneout.core.ignoreValue
@@ -55,7 +55,7 @@ class SingleDeviceGameRepository
         .distinctKeyFlow(gamePreferenceKey)
         .map {
             it?.let { json ->
-                Try { jsonAdapter.fromJson(json) }
+                Catching { jsonAdapter.fromJson(json) }
                     .logOnFailure()
                     .throwIfDebug()
                     .getOrNull()
@@ -67,7 +67,7 @@ class SingleDeviceGameRepository
             null
         )
 
-    override suspend fun create(game: Game): Try<Unit> = Try {
+    override suspend fun create(game: Game): Catching<Unit> = Catching {
         datastore.updateData {
             it.toMutablePreferences().apply {
                 val gameJson = jsonAdapter.toJson(game)
@@ -78,30 +78,30 @@ class SingleDeviceGameRepository
         .throwIfDebug()
         .ignoreValue()
 
-    override suspend fun join(accessCode: String, userId: String, userName: String): Try<Unit> =
-        Try {
+    override suspend fun join(accessCode: String, userId: String, userName: String): Catching<Unit> =
+        Catching {
             // single device games cannot be joined
             doNothing()
         }
 
-    override suspend fun removeUser(accessCode: String, username: String): Try<Unit> = Try {
+    override suspend fun removeUser(accessCode: String, username: String): Catching<Unit> = Catching {
         // single device games cannot remove players, theres no waiting screen
         doNothing()
     }
 
-    override suspend fun assignHost(accessCode: String, id: String): Try<Unit> {
-        return Try {
+    override suspend fun assignHost(accessCode: String, id: String): Catching<Unit> {
+        return Catching {
             // single device games dont have hosts or leaving
             doNothing()
         }
     }
 
-    override suspend fun doesGameExist(accessCode: String): Try<Boolean> = Try {
+    override suspend fun doesGameExist(accessCode: String): Catching<Boolean> = Catching {
         gameFlow.value?.accessCode == accessCode
     }
 
     override suspend fun end(accessCode: String) {
-        Try {
+        Catching {
             datastore.updateData {
                 it.toMutablePreferences().apply {
                     remove(gamePreferenceKey)
@@ -110,7 +110,7 @@ class SingleDeviceGameRepository
         }
     }
 
-    override suspend fun start(accessCode: String): Try<Unit> = Try {
+    override suspend fun start(accessCode: String): Catching<Unit> = Catching {
         updateGame {
             it.copy(startedAt = clock.millis())
         }
@@ -121,14 +121,14 @@ class SingleDeviceGameRepository
     override suspend fun setGameIsBeingStarted(
         accessCode: String,
         isBeingStarted: Boolean
-    ): Try<Unit> = Try {
+    ): Catching<Unit> = Catching {
         updateGame {
             it.copy(isBeingStarted = isBeingStarted)
         }
     }
 
     // TODO extract out logic shared from this
-    override suspend fun reset(accessCode: String): Try<Unit> = Try {
+    override suspend fun reset(accessCode: String): Catching<Unit> = Catching {
         val currentGame = gameFlow.value.takeIf { it?.accessCode == accessCode }
             ?: return illegalStateFailure { "Single Device Game is null when resetting" }
 
@@ -181,8 +181,8 @@ class SingleDeviceGameRepository
         .logOnFailure("Could not reset game")
         .throwIfDebug()
 
-    override suspend fun changeName(accessCode: String, newName: String, id: String): Try<Unit> =
-        Try {
+    override suspend fun changeName(accessCode: String, newName: String, id: String): Catching<Unit> =
+        Catching {
             updateGame {
                 it.copy(
                     players = it.players.map { player ->
@@ -196,7 +196,7 @@ class SingleDeviceGameRepository
             }
         }
 
-    override suspend fun updatePlayers(accessCode: String, players: List<Player>): Try<Unit> {
+    override suspend fun updatePlayers(accessCode: String, players: List<Player>): Catching<Unit> {
         return updateGame {
             it.copy(players = players)
         }.ignoreValue()
@@ -207,7 +207,7 @@ class SingleDeviceGameRepository
             .filterNotNull()
             .filter { it.accessCode == accessCode }
 
-    override suspend fun getGame(accessCode: String): Try<Game> = Try {
+    override suspend fun getGame(accessCode: String): Catching<Game> = Catching {
         gameFlow.value?.takeIf { it.accessCode == accessCode }!!
     }
 
@@ -215,7 +215,7 @@ class SingleDeviceGameRepository
         accessCode: String,
         voterId: String,
         location: String
-    ): Try<Unit> = Try {
+    ): Catching<Unit> = Catching {
         val game = gameFlow.value ?: return illegalStateFailure { "Game is null when voting" }
         updateGame {
             it.copy(players = it.players.map { player ->
@@ -233,7 +233,7 @@ class SingleDeviceGameRepository
         accessCode: String,
         voterId: String,
         voteId: String
-    ): Try<Boolean> = updateGame {
+    ): Catching<Boolean> = updateGame {
             val oddOneOutId = it.players.find { p -> p.isOddOneOut }?.id
                 ?: throw IllegalStateException("No odd one out")
 
@@ -251,11 +251,11 @@ class SingleDeviceGameRepository
 
     private fun Game.withUpdatedLastActiveAt() = copy(lastActiveAt = clock.millis())
 
-    private suspend fun updateGame(update: (Game) -> Game): Try<Game> {
+    private suspend fun updateGame(update: (Game) -> Game): Catching<Game> {
         val currentGame = gameFlow.value?.withUpdatedLastActiveAt()
             ?: return illegalStateFailure { "Offline Game not in state" }
 
-        return Try {
+        return Catching {
             val updatedGame = update(currentGame)
             datastore.updateData {
                 it.toMutablePreferences().apply {

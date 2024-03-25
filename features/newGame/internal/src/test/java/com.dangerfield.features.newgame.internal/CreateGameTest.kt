@@ -33,7 +33,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import oddoneout.core.GenerateLocalUUID
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.getExceptionOrNull
 import org.junit.Before
 import org.junit.Test
@@ -59,14 +59,14 @@ class CreateGameTest {
     @Before
     fun setup() {
         // sets up happy path
-        coEvery { generateAccessCode.invoke() } returns Try.success(generatedAccessCode)
+        coEvery { generateAccessCode.invoke() } returns Catching.success(generatedAccessCode)
 
         every { isRecognizedVideoCallLink.invoke(any()) } returns true
 
         coEvery { getGamePlayLocations.invoke(any()) } answers { call ->
             @Suppress("UNCHECKED_CAST")
             val locationPacks = (call.invocation.args[0] as List<LocationPack>)
-            Try.success(locationPacks.flatMap { it.locations }.shuffled().takeLast(5))
+            Catching.success(locationPacks.flatMap { it.locations }.shuffled().takeLast(5))
         }
 
         every { session.activeGame } returns null
@@ -91,9 +91,9 @@ class CreateGameTest {
         every { gameConfig.forceShortGames } returns false
 
         coEvery { generateLocalUUID.invoke() } returns generatedId
-        coEvery { updateActiveGame.invoke(any()) } returns Try.success(Unit)
-        coEvery { clearActiveGame.invoke() } returns Try.success(Unit)
-        coEvery { gameRepository.create(any()) } returns Try.success(Unit)
+        coEvery { updateActiveGame.invoke(any()) } returns Catching.success(Unit)
+        coEvery { clearActiveGame.invoke() } returns Catching.success(Unit)
+        coEvery { gameRepository.create(any()) } returns Catching.success(Unit)
         every { clock.millis() } returns 123456789L
     }
 
@@ -288,7 +288,7 @@ class CreateGameTest {
     @Test
     fun `GIVEN error generating access code WHEN creating THEN error`() = runTest {
         val someError = Error("some")
-        coEvery { generateAccessCode.invoke() } returns Try.failure(someError)
+        coEvery { generateAccessCode.invoke() } returns Catching.failure(someError)
 
         val packs = getFilledOutPacks()
 
@@ -308,7 +308,7 @@ class CreateGameTest {
     fun `GIVEN error getting locations WHEN creating THEN error`() = runTest {
         val someError = Error("cant get locations for some reason")
 
-        coEvery { getGamePlayLocations(any()) } returns Try.failure(someError)
+        coEvery { getGamePlayLocations(any()) } returns Catching.failure(someError)
 
         val packs = getFilledOutPacks()
 
@@ -330,7 +330,7 @@ class CreateGameTest {
             val accessCode = "444333"
 
             every { session.user.id } returns null
-            coEvery { generateAccessCode.invoke() } returns Try.success(accessCode)
+            coEvery { generateAccessCode.invoke() } returns Catching.success(accessCode)
             every { session.user.languageCode } returns "en"
 
             val packs = getFilledOutPacks()
@@ -368,7 +368,7 @@ class CreateGameTest {
         every { clock.millis() } returns lastActive
         every { session.user.id } returns currentUserId
         every { session.user.languageCode } returns "en"
-        coEvery { getGamePlayLocations.invoke(any()) } returns Try.success(locationsForGameplay)
+        coEvery { getGamePlayLocations.invoke(any()) } returns Catching.success(locationsForGameplay)
 
         val result = createGame.invoke(
             userName = "name",
@@ -417,7 +417,7 @@ class CreateGameTest {
         val someError = Error("some error")
         val packs = getFilledOutPacks()
 
-        coEvery { gameRepository.create(any()) } returns Try.failure(someError)
+        coEvery { gameRepository.create(any()) } returns Catching.failure(someError)
 
         val result = createGame.invoke(
             userName = "name",

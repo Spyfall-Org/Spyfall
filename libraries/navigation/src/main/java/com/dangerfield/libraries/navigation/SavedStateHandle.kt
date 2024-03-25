@@ -2,13 +2,13 @@ package com.dangerfield.libraries.navigation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NamedNavArgument
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.checkInDebug
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 
-fun <T : Any> SavedStateHandle.navArgument(navArgument: NamedNavArgument, checkExists: Boolean = true): T? = Try {
+fun <T : Any> SavedStateHandle.navArgument(navArgument: NamedNavArgument, checkExists: Boolean = true): T? = Catching {
     val value = get<T>(navArgument.name)
     if (checkExists) {
         checkInDebug(value != null
@@ -27,7 +27,7 @@ fun <T : Any> SavedStateHandle.navArgument(navArgument: NamedNavArgument, checkE
 
 
 fun SavedStateHandle.updateArg(navArgument: NamedNavArgument, value: Any?) {
-    Try {
+    Catching {
         set(navArgument.name, value)
     }
         .logOnFailure()

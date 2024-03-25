@@ -26,7 +26,7 @@ fun <T : Any> Map<String, *>.getValueForPath(fullPath: String, kClass: KClass<T>
 fun <T : Any> Map<String, *>.getValueRecursive(path: List<String>, clazz: Class<*> ): T? {
     if (path.size == 1) {
         val rawValue = this[path.first()] ?: return null
-        return Try {
+        return Catching {
             when (clazz) {
                 String::class.java -> rawValue.toString() as? T
                 Boolean::class.java -> rawValue.toString().toBoolean() as? T

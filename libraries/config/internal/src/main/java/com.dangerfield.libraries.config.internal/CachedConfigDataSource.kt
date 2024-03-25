@@ -2,7 +2,7 @@ package com.dangerfield.libraries.config.internal
 
 import com.dangerfield.libraries.config.AppConfigMap
 import kotlinx.coroutines.flow.Flow
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
 /**
  * Abstraction to encapsulate the logic behind the local storage of the app config.
@@ -14,7 +14,7 @@ interface CachedConfigDataSource {
      */
     fun getConfigFlow(): Flow<AppConfigMap>
 
-    suspend fun getConfig(): Try<AppConfigMap>
+    suspend fun getConfig(): Catching<AppConfigMap>
 
     /**
      * updates the locally stored app config

@@ -4,13 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeout
-import oddoneout.core.Try
-import oddoneout.core.failure
+import oddoneout.core.Catching
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -78,12 +73,12 @@ private inline fun CoroutineScope.childScopeInternal(
 @OptIn(ExperimentalContracts::class)
 suspend fun <T> tryWithTimeout(
     duration: Duration,
-    block: suspend CoroutineScope.() -> Try<T>
-): Try<T> {
+    block: suspend CoroutineScope.() -> Catching<T>
+): Catching<T> {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return try {
         withTimeout(duration, block)
     } catch (e: TimeoutCancellationException) {
-        Try.failure(e)
+        Catching.failure(e)
     }
 }

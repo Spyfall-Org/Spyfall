@@ -10,27 +10,27 @@ import spyfallx.core.common.BuildConfig
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
-inline fun <T> Try(f: () -> T): Try<T> = runCatching(f)
+inline fun <T> Catching(f: () -> T): Catching<T> = runCatching(f)
     .onFailure {
         if (it.shouldNotBeCaught) throw it
     }
 
-fun <T> Try<T>.logOnFailure(message: String? = null): Try<T> = onFailure {
+fun <T> Catching<T>.logOnFailure(message: String? = null): Catching<T> = onFailure {
     Timber.e(DebugException(it, message))
 }
 
-fun <T> Try<T>.getExceptionOrNull(): Throwable? = exceptionOrNull()
+fun <T> Catching<T>.getExceptionOrNull(): Throwable? = exceptionOrNull()
 
-fun <T> Try<T>.throwIfDebug(): Try<T> = onFailure {
+fun <T> Catching<T>.throwIfDebug(): Catching<T> = onFailure {
     if (BuildConfig.DEBUG && this.isFailure) {
         throw DebugException(it)
     }
 }
 
-fun <T> Try<T>.developerSnackOnError(
+fun <T> Catching<T>.developerSnackOnError(
     autoDismiss: Boolean = false,
     lazyMessage: () -> String,
-): Try<T> = onFailure {
+): Catching<T> = onFailure {
     if (BuildConfig.DEBUG && this.isFailure) {
         SnackBarPresenter.showDeveloperMessage(
             Message(
@@ -42,45 +42,45 @@ fun <T> Try<T>.developerSnackOnError(
 }
 
 inline fun illegalStateFailure(lazyMessage: () -> String) =
-    Try.failure<Nothing>(IllegalStateException(lazyMessage()))
+    Catching.failure<Nothing>(IllegalStateException(lazyMessage()))
 
-fun <T> Flow<T>.asResult(): Flow<Try<T>> = map {
-    Try { it }
+fun <T> Flow<T>.asCatching(): Flow<Catching<T>> = map {
+    Catching { it }
 }.catch { emit(Result.failure(it)) }
 
-suspend fun <T> Task<T>.awaitResult(): Try<T> = Try {
+suspend fun <T> Task<T>.awaitCatching(): Catching<T> = Catching {
     await()
 }
 
-fun <T> T.success(): Try<T> = Try.success(this)
-fun success(): Try<Unit> = Try.success(Unit)
+fun <T> T.success(): Catching<T> = Catching.success(this)
+fun success(): Catching<Unit> = Catching.success(Unit)
 
-fun failure(throwable: Throwable): Try<Nothing> = Try.failure(throwable)
+fun failure(throwable: Throwable): Catching<Nothing> = Catching.failure(throwable)
 
-inline fun <T> Try<T>.eitherWay(block: (Try<T>) -> Unit) = this.also(block)
+inline fun <T> Catching<T>.eitherWay(block: (Catching<T>) -> Unit) = this.also(block)
 
-fun <T> Try<T>.ignoreValue(): Try<Unit> = this.map { }
-fun <T> Try<T>.ignore() = doNothing()
+fun <T> Catching<T>.ignoreValue(): Catching<Unit> = this.map { }
+fun <T> Catching<T>.ignore() = doNothing()
 
-inline fun <T> Try<T>.mapFailure(f: (Throwable) -> Throwable): Try<T> {
+inline fun <T> Catching<T>.mapFailure(f: (Throwable) -> Throwable): Catching<T> {
     return when (val exception = exceptionOrNull()) {
         null -> this
         else -> Result.failure(f(exception))
     }
 }
 
-fun <T> Flow<T>.mapTry(): Flow<Try<T>> {
-    return this.map { Try { it } }.catch { emit(failure(it)) }
+fun <T> Flow<T>.mapTry(): Flow<Catching<T>> {
+    return this.map { Catching { it } }.catch { emit(failure(it)) }
 }
 
-inline fun <T> List<Try<T>>.failFast(): Try<T> {
+inline fun <T> List<Catching<T>>.failFast(): Catching<T> {
     return this.firstOrNull() { it.isFailure } ?: this.last()
 }
 
-inline fun <T, R> Try<T>.flatMap(f: (right: T) -> Try<R>): Try<R> {
+inline fun <T, R> Catching<T>.flatMap(f: (right: T) -> Catching<R>): Catching<R> {
     val exception = exceptionOrNull()
     return when {
-        exception != null -> Try.failure(exception)
+        exception != null -> Catching.failure(exception)
         else -> f(getOrThrow())
     }
 }
@@ -93,8 +93,8 @@ suspend inline fun <T> withBackoffRetry(
     initialDelayMillis: Long = 0.5.seconds.inWholeMilliseconds,
     maxDelayMillis: Long = 10.seconds.inWholeMilliseconds,
     factor: Double = 2.0,
-    block: (attempt: Int) -> Try<T>
-): Try<T> {
+    block: (attempt: Int) -> Catching<T>
+): Catching<T> {
 
     var currentDelay = initialDelayMillis
 

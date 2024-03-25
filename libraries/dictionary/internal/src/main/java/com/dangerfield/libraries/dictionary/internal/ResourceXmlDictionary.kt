@@ -3,7 +3,7 @@ package com.dangerfield.libraries.dictionary.internal
 import android.content.Context
 import com.dangerfield.libraries.dictionary.Dictionary
 import dagger.hilt.android.qualifiers.ApplicationContext
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.applyArgs
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +21,6 @@ class ResourceXmlDictionary @Inject constructor(
     }
 
     override fun getOptionalString(key: Int, args: Map<String,String>): String? {
-        return Try { applicationContext.getText(key).toString() }.getOrNull()?.applyArgs(args)
+        return Catching { applicationContext.getText(key).toString() }.getOrNull()?.applyArgs(args)
     }
 }

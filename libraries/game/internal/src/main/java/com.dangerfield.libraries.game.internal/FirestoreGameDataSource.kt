@@ -14,8 +14,8 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import oddoneout.core.Try
-import oddoneout.core.awaitResult
+import oddoneout.core.Catching
+import oddoneout.core.awaitCatching
 import oddoneout.core.failure
 import oddoneout.core.ignore
 import oddoneout.core.ignoreValue
@@ -37,7 +37,7 @@ class FirestoreGameDataSource @Inject constructor(
 ) : GameDataSource {
 
     override suspend fun setGame(game: Game) {
-        Try {
+        Catching {
             db.collection(GAMES_COLLECTION_KEY)
                 .document(game.accessCode)
                 .set(gameSerializer.serializeGame(game.withLastActiveAt()))
@@ -50,7 +50,7 @@ class FirestoreGameDataSource @Inject constructor(
      * Subscribes to the document and maps it to a game
      * Returns failure if game is not found or if there is an error
      */
-    override suspend fun subscribeToGame(accessCode: String): Flow<Try<Game>> =
+    override suspend fun subscribeToGame(accessCode: String): Flow<Catching<Game>> =
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .snapshots(MetadataChanges.EXCLUDE)
@@ -65,7 +65,7 @@ class FirestoreGameDataSource @Inject constructor(
                     Game update for access code: $accessCode
                     
                     ${
-                        Try {
+                        Catching {
                             moshi.toPrettyJson(data)
                         }.getOrNull() ?: "Could not parse data"
                     }
@@ -76,12 +76,12 @@ class FirestoreGameDataSource @Inject constructor(
                 gameSerializer.deserializeGame(data).logOnFailure()
             }
 
-    override suspend fun getGame(accessCode: String): Try<Game> = Try {
+    override suspend fun getGame(accessCode: String): Catching<Game> = Catching {
         db
             .collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .get()
-            .awaitResult()
+            .awaitCatching()
             .map {
                 val data = it.data ?: throw GameNotFound(accessCode)
                 val gameTry = gameSerializer.deserializeGame(data)
@@ -94,79 +94,79 @@ class FirestoreGameDataSource @Inject constructor(
     /**
      * Players are stored as a map of id to player, so we need to remove the entry matching the id
      */
-    override suspend fun removePlayer(accessCode: String, id: String) = Try {
+    override suspend fun removePlayer(accessCode: String, id: String) = Catching {
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY, id), FieldValue.delete())
-            .awaitResult()
+            .awaitCatching()
     }.ignoreValue()
 
     // TODO maybe this shoudl update the individual fields and not set the entire user
     // That user may change their name durring this.
-    override suspend fun updatePlayers(accessCode: String, list: List<Player>) = Try {
+    override suspend fun updatePlayers(accessCode: String, list: List<Player>) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY), playerSerializer.serializePlayers(list))
-            .awaitResult()
+            .awaitCatching()
     }.ignoreValue()
 
-    override suspend fun addPlayer(accessCode: String, player: Player) = Try {
+    override suspend fun addPlayer(accessCode: String, player: Player) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(
                 FieldPath.of(PLAYERS_FIELD_KEY, player.id),
                 playerSerializer.serializePlayer(player),
             )
-            .awaitResult()
+            .awaitCatching()
     }
         .logOnFailure()
         .ignore()
 
-    override suspend fun changeName(accessCode: String, newName: String, id: String) = Try {
+    override suspend fun changeName(accessCode: String, newName: String, id: String) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY, id, USERNAME_FIELD_KEY), newName)
-            .awaitResult()
+            .awaitCatching()
     }.ignoreValue()
 
-    override suspend fun setHost(accessCode: String, id: String) = Try {
+    override suspend fun setHost(accessCode: String, id: String) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY, id, IS_HOST_FIELD_KEY), id)
-            .awaitResult()
+            .awaitCatching()
     }.ignoreValue()
 
-    override suspend fun setLocation(accessCode: String, location: String) = Try {
+    override suspend fun setLocation(accessCode: String, location: String) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(LOCATION_FIELD_KEY), location)
-            .awaitResult()
+            .awaitCatching()
     }
         .logOnFailure()
         .ignore()
 
-    override suspend fun delete(accessCode: String): Try<Unit> = Try {
+    override suspend fun delete(accessCode: String): Catching<Unit> = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode).delete().await()
     }.ignoreValue()
 
-    override suspend fun setGameBeingStarted(accessCode: String, isBeingStarted: Boolean) = Try {
+    override suspend fun setGameBeingStarted(accessCode: String, isBeingStarted: Boolean) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(IS_BEING_STARTED_KEY), isBeingStarted)
-            .awaitResult()
+            .awaitCatching()
     }.ignoreValue()
 
-    override suspend fun setStartedAt(accessCode: String): Try<Unit> = Try {
+    override suspend fun setStartedAt(accessCode: String): Catching<Unit> = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(FieldPath.of(STARTED_AT_FIELD_KEY), clock.millis())
-            .awaitResult()
+            .awaitCatching()
     }.ignoreValue()
 
     override suspend fun setPlayerVotedCorrectly(
         accessCode: String,
         playerId: String,
         votedCorrectly: Boolean
-    ) = Try {
+    ) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(
                 FieldPath.of(PLAYERS_FIELD_KEY, playerId, VOTED_CORRECTLY_FIELD_KEY),
                 votedCorrectly
             )
-            .awaitResult()
+            .awaitCatching()
     }.ignoreValue()
 
     private fun Game.withLastActiveAt(): Game = copy(lastActiveAt = clock.millis())

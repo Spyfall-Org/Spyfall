@@ -3,8 +3,8 @@ package com.dangerfield.features.settings.internal.contactus
 import com.dangerfield.libraries.session.Session
 import com.google.firebase.firestore.FirebaseFirestore
 import oddoneout.core.BuildInfo
-import oddoneout.core.Try
-import oddoneout.core.awaitResult
+import oddoneout.core.Catching
+import oddoneout.core.awaitCatching
 import oddoneout.core.ignoreValue
 import oddoneout.core.withBackoffRetry
 import java.time.Clock
@@ -26,10 +26,10 @@ class SendContactForm @Inject constructor(
         email: String,
         message: String,
         contactReason: ContactReason
-    ): Try<Unit> {
+    ): Catching<Unit> {
 
         val timeZoneId = ZoneId.of("America/New_York")
-        val localDateTime = Try { LocalDateTime.ofInstant(clock.instant(), timeZoneId) }
+        val localDateTime = Catching { LocalDateTime.ofInstant(clock.instant(), timeZoneId) }
             .getOrNull()
             ?: LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault())
 
@@ -55,7 +55,7 @@ class SendContactForm @Inject constructor(
             firestore.collection(contactFormCollection())
                 .document(UUID.randomUUID().toString())
                 .set(data)
-                .awaitResult()
+                .awaitCatching()
                 .ignoreValue()
         }
     }

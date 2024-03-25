@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
@@ -34,7 +34,7 @@ class NavControllerRouter(
     }
 
     override fun navigate(filledRoute: Route.Filled) {
-        Try {
+        Catching {
             navHostController.navigate(filledRoute.route, filledRoute.navOptions())
         }
             .logOnFailure()
@@ -42,7 +42,7 @@ class NavControllerRouter(
     }
 
     override fun goBack() {
-        Try {
+        Catching {
             navHostController.popBackStack()
         }
             .logOnFailure()
@@ -50,7 +50,7 @@ class NavControllerRouter(
     }
 
     override fun openWebLink(url: String, openInApp: Boolean) {
-        Try { Uri.parse(url) }
+        Catching { Uri.parse(url) }
             .map { uri ->
                 // add https if no scheme
                 if (uri?.scheme.isNullOrEmpty()) {
@@ -74,7 +74,7 @@ class NavControllerRouter(
         route: Route.Template,
         inclusive: Boolean
     ) {
-        Try {
+        Catching {
             navHostController.popBackStack(route.navRoute, inclusive)
         }
             .logOnFailure()
@@ -84,7 +84,7 @@ class NavControllerRouter(
 
     override fun dismissSheet(sheetState: BottomSheetState) {
         if (sheetState.isVisible) {
-            Try {
+            Catching {
                 coroutineScope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {

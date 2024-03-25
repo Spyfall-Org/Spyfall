@@ -1,7 +1,5 @@
 package com.dangerfield.libraries.ui
 
-import android.content.res.Configuration
-import android.os.Build
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,10 +16,9 @@ import com.dangerfield.libraries.dictionary.LocalDictionary
 import com.dangerfield.libraries.ui.color.ColorResource
 import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.applyArgs
 import spyfallx.ui.R
-import java.util.Locale
 
 /**
  * A composable that is suitable as the root for any composable preview
@@ -45,11 +42,11 @@ fun Preview(
     }
 
     val previewDictionary = object : Dictionary {
-        override fun getString(key: Int, args: Map<String, String>): String = Try {
+        override fun getString(key: Int, args: Map<String, String>): String = Catching {
             context.getText(key).toString().applyArgs(args)
         }.getOrNull() ?: "DNE"
 
-        override fun getOptionalString(key: Int, args: Map<String, String>): String? = Try {
+        override fun getOptionalString(key: Int, args: Map<String, String>): String? = Catching {
             context.getText(key).toString().applyArgs(args)
         }.getOrNull()
     }

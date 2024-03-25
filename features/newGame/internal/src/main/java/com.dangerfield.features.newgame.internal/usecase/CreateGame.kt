@@ -16,7 +16,7 @@ import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
 import oddoneout.core.GenerateLocalUUID
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.developerSnackIfDebug
 import oddoneout.core.failure
 import java.time.Clock
@@ -42,7 +42,7 @@ class CreateGame @Inject constructor(
         locationPacks: List<LocationPack>,
         timeLimit: Int,
         videoCallLink: String?
-    ): Try<String> = when {
+    ): Catching<String> = when {
         locationPacks.isEmpty() -> failure(CreateGameError.PacksEmpty)
         timeLimit < gameConfig.minTimeLimit -> failure(CreateGameError.TimeLimitTooShort)
         timeLimit > gameConfig.maxTimeLimit -> failure(CreateGameError.TimeLimitTooLong)
@@ -61,7 +61,7 @@ class CreateGame @Inject constructor(
         locationPacks: List<LocationPack>,
         timeLimit: Int,
         videoCallLink: String?
-    ): Try<String> = Try {
+    ): Catching<String> = Catching {
         // TODO log metric on this so we can tell how many multi device games there are created
         checkForExistingSession()
 

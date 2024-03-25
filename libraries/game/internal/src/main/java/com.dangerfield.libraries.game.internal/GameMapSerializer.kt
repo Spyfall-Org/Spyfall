@@ -3,18 +3,18 @@ package com.dangerfield.libraries.game.internal
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameDataSourcError
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import javax.inject.Inject
 
 class GameMapSerializer @Inject constructor(
     private val playerSerializer: PlayerSerializer
 ) {
 
-    fun deserializeGame(map: Map<String, Any>): Try<Game> {
+    fun deserializeGame(map: Map<String, Any>): Catching<Game> {
         val version = (map[FirestoreGameDataSource.VERSION_FIELD_KEY] as? Number ?: 0).toInt()
 
         return if (version != CURRENT_GAME_MODEL_VERSION) {
-            Try.failure(
+            Catching.failure(
                 GameDataSourcError.IncompatibleVersion(
                     isCurrentLower = version > CURRENT_GAME_MODEL_VERSION,
                     current = CURRENT_GAME_MODEL_VERSION,
@@ -22,7 +22,7 @@ class GameMapSerializer @Inject constructor(
                 )
             )
         } else {
-            Try {
+            Catching {
                 Game(
                     accessCode = map[FirestoreGameDataSource.ACCESS_CODE_FIELD_KEY] as String,
                     isBeingStarted = map[FirestoreGameDataSource.IS_BEING_STARTED_KEY] as Boolean,

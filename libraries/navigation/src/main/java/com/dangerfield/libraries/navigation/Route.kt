@@ -6,7 +6,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavArgumentBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.checkInDebug
 import oddoneout.core.doNothing
 import oddoneout.core.logOnFailure
@@ -142,7 +142,7 @@ class Route internal constructor() {
                     "Route $navRoute does not support null values for argument ${argument.name}."
                 }
 
-                Try {
+                Catching {
                     when {
                         !navArguments.contains(argument) -> doNothing()
                         value == null -> filledRouteBuilder.removeArgument(argument)
@@ -191,7 +191,7 @@ class Route internal constructor() {
                         throwIfDebug { "Route $navRoute was not filled with argument ${it.name}" }
                     }
 
-                    Try {
+                    Catching {
                         filledRouteBuilder.removeArgument(it)
                     }
                         .logOnFailure()

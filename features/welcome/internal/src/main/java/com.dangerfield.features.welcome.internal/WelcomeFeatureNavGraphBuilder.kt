@@ -17,13 +17,13 @@ import com.dangerfield.features.welcome.welcomeNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class WelcomeModuleNavGraphBuilder @Inject constructor() : ModuleNavBuilder {
+class WelcomeFeatureNavGraphBuilder @Inject constructor() : FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(

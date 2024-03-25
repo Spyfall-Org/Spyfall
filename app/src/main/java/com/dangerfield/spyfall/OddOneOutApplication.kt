@@ -12,7 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestoreSettings
 import dagger.hilt.android.HiltAndroidApp
 import oddoneout.core.ApplicationStateRepository
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import timber.log.Timber
 import javax.inject.Inject
@@ -61,7 +61,7 @@ class OddOneOutApplication : Application() {
 
         Timber.plant(RemoteLogger())
 
-        Try {
+        Catching {
             setupFireStore()
         }
             .logOnFailure()

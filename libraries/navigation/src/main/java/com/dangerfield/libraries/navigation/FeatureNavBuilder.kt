@@ -11,7 +11,7 @@ import androidx.navigation.NavGraphBuilder
  * These builders should be bound into a set such that the app module can add all graphs to the
  * nav controller
  */
-interface ModuleNavBuilder {
+interface FeatureNavBuilder {
 
     fun NavGraphBuilder.buildNavGraph(router: Router)
 }

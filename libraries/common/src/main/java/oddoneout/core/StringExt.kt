@@ -7,7 +7,7 @@ package oddoneout.core
 fun String.applyArgs(args: Map<String,String>): String {
     var result = this
     args.forEach { (key, value) ->
-        Try {
+        Catching {
             result = result.replace("{$key}", value)
         }
             .logOnFailure()
@@ -18,7 +18,7 @@ fun String.applyArgs(args: Map<String,String>): String {
 fun String.applyArgs(vararg args: Pair<String,String>): String {
     var result = this
     args.forEach { (key, value) ->
-        Try {
+        Catching {
             result = result.replace("{$key}", value)
         }
             .logOnFailure()

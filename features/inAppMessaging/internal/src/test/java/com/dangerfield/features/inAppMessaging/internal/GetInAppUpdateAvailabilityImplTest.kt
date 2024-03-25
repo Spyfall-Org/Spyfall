@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import oddoneout.core.BuildInfo
 import oddoneout.core.BuildType
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -47,7 +47,7 @@ class GetInAppUpdateAvailabilityImplTest {
     }
     private val getAppUpdateInfo = mockk<GetAppUpdateInfo>().also {
         coEvery { it.invoke() } answers {
-            Try.success(fakeInAppUpdateManager.fakeAppUpdateInfo()!!)
+            Catching.success(fakeInAppUpdateManager.fakeAppUpdateInfo()!!)
         }
     }
 
@@ -76,7 +76,7 @@ class GetInAppUpdateAvailabilityImplTest {
     @Test
     fun `GIVEN getting app info fails, WHEN getting availability, THEN return failure`() =
         runTest {
-            coEvery { getAppUpdateInfo.invoke() } returns Try.failure(Exception("Failed to get app update info"))
+            coEvery { getAppUpdateInfo.invoke() } returns Catching.failure(Exception("Failed to get app update info"))
 
             val result = getInAppUpdateAvailabilityImpl()
 

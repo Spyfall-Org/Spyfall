@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 
@@ -21,7 +21,7 @@ inline fun <reified VM : ViewModel> NavBackStackEntry.viewModelScopedTo(
     // but remember worked
     // fall back to the parent route or the current route
     val fallbackScope = remember {
-        Try { destination.parent!!.route!! }
+        Catching { destination.parent!!.route!! }
             .logOnFailure("Could not get parent route to scope to from ${this.destination.route}")
             .throwIfDebug()
             .getOrElse { this.destination.route ?: "" }
@@ -31,7 +31,7 @@ inline fun <reified VM : ViewModel> NavBackStackEntry.viewModelScopedTo(
     }
 
     val backstackEntryScope = remember {
-        Try { router.getBackStackEntry(route) }
+        Catching { router.getBackStackEntry(route) }
             .throwIfDebug()
             .getOrElse { router.getBackStackEntry(fallbackScope) }
     }

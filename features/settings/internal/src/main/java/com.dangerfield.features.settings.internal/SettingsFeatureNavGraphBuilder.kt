@@ -29,7 +29,7 @@ import com.dangerfield.features.settings.settingsNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.Dictionary
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.session.SessionFlow
 import com.dangerfield.libraries.session.Stats
@@ -44,14 +44,14 @@ import javax.inject.Inject
 
 @AutoBindIntoSet
 @ActivityScoped
-class SettingsModuleNavGraphBuilder @Inject constructor(
+class SettingsFeatureNavGraphBuilder @Inject constructor(
     private val buildInfo: BuildInfo,
     private val sessionFlow: SessionFlow,
     private val dictionary: Dictionary,
     private val shouldShowGDRPSettingsOption: ShouldShowGDRPSettingsOption,
     private val openGDRPConsentForm: OpenGDRPConsentForm,
     private val isReferralFeatureEnabled: IsReferralFeatureEnabled
-) : ModuleNavBuilder {
+) : FeatureNavBuilder {
 
     @Suppress("LongMethod")
     override fun NavGraphBuilder.buildNavGraph(router: Router) {

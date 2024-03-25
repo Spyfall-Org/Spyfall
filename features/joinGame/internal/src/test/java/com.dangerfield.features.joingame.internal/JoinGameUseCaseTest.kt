@@ -15,7 +15,6 @@ import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
-import com.dangerfield.libraries.test.FakeConfiguredValue
 import com.dangerfield.libraries.test.isFailure
 import com.dangerfield.libraries.test.isSuccess
 import io.mockk.coEvery
@@ -25,7 +24,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import oddoneout.core.GenerateLocalUUID
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.getExceptionOrNull
 import org.junit.Test
 
@@ -74,7 +73,7 @@ class JoinGameUseCaseTest {
 
     private val session: Session = mockk(relaxed = true)
     private val gameRepository: GameRepository = mockk {
-        coEvery { join(any(), any(), any()) } returns Try.success(Unit)
+        coEvery { join(any(), any(), any()) } returns Catching.success(Unit)
     }
 
     private val generateLocalUUID: GenerateLocalUUID = mockk()
@@ -160,7 +159,7 @@ class JoinGameUseCaseTest {
 
             coEvery { gameRepository.join(any(), any(), any()) } coAnswers {
                 delay(6_000)
-                Try.success(Unit)
+                Catching.success(Unit)
             }
 
             val result = joinGameUseCase.invoke(
@@ -179,7 +178,7 @@ class JoinGameUseCaseTest {
         runTest {
             mockJoinableGame()
 
-            coEvery { gameRepository.join(any(), any(), any()) } returns Try.success(Unit)
+            coEvery { gameRepository.join(any(), any(), any()) } returns Catching.success(Unit)
 
             val result = joinGameUseCase.invoke(
                 accessCode = validAccessCode,
@@ -192,7 +191,7 @@ class JoinGameUseCaseTest {
     @Test
     fun `GIVEN valid access code and name WHEN game does not exist THEN failure should be returned`() =
         runTest {
-            coEvery { gameRepository.getGame(any()) } returns Try.failure(GameDataSourcError.GameNotFound("1234"))
+            coEvery { gameRepository.getGame(any()) } returns Catching.failure(GameDataSourcError.GameNotFound("1234"))
 
             coEvery { mapToGameStateUseCase(any(), any()) } returns GameState.DoesNotExist(
                 accessCode = fakeGame.accessCode
@@ -213,7 +212,7 @@ class JoinGameUseCaseTest {
     @Test
     fun `GIVEN valid access code and name WHEN game is already started THEN failure should be returned`() =
         runTest {
-            coEvery { gameRepository.getGame(any()) } returns Try.success(fakeGame)
+            coEvery { gameRepository.getGame(any()) } returns Catching.success(fakeGame)
 
             coEvery { mapToGameStateUseCase(any(), any()) } returns GameState.Started(
                 accessCode = fakeGame.accessCode,
@@ -345,7 +344,7 @@ class JoinGameUseCaseTest {
             mockJoinableGame()
 
             coEvery { gameRepository.join(any(), any(), any()) } coAnswers {
-                Try.failure(Error())
+                Catching.failure(Error())
             }
 
             val result = joinGameUseCase.invoke(
@@ -416,7 +415,7 @@ class JoinGameUseCaseTest {
             mockJoinableGame()
 
             coEvery { gameRepository.join(any(), any(), any()) } returns
-                    Try.failure(
+                    Catching.failure(
                         GameDataSourcError.IncompatibleVersion(
                             isCurrentLower = true,
                             current = 0,
@@ -439,7 +438,7 @@ class JoinGameUseCaseTest {
 
     private fun mockJoinableGame(game: Game? = null) {
         val finalGame = game ?: fakeGame
-        coEvery { gameRepository.getGame(any()) } returns Try.success(finalGame)
+        coEvery { gameRepository.getGame(any()) } returns Catching.success(finalGame)
 
         coEvery { mapToGameStateUseCase(any(), any()) } returns GameState.Waiting(
             accessCode = fakeGame.accessCode,

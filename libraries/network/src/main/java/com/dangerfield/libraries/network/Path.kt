@@ -1,6 +1,6 @@
 package com.dangerfield.libraries.network
 
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 
 class Path internal constructor(){
@@ -47,7 +47,7 @@ class Path internal constructor(){
         }
 
         internal fun build(): Path {
-            Try {
+            Catching {
                 path.validate()
             }
                 .logOnFailure()
@@ -69,7 +69,7 @@ class Path internal constructor(){
             }
 
             fun build(): Path {
-                Try {
+                Catching {
                     path.validate()
                 }
                     .logOnFailure()
@@ -86,7 +86,7 @@ class Path internal constructor(){
             }
 
             fun build(): Path {
-                Try {
+                Catching {
                     path.validate()
                 }
                     .logOnFailure()
@@ -103,7 +103,7 @@ class Path internal constructor(){
             }
 
             fun build(): Path {
-                Try {
+                Catching {
                     path.validate()
                 }
                     .logOnFailure()

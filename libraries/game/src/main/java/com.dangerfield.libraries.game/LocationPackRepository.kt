@@ -1,13 +1,13 @@
 package com.dangerfield.libraries.game
 
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
 interface LocationPackRepository {
-    suspend fun getPacks(): Try<List<LocationPack>>
+    suspend fun getPacks(): Catching<List<LocationPack>>
 
-    suspend fun getPack(packName: String): Try<LocationPack>
+    suspend fun getPack(packName: String): Catching<LocationPack>
 
-    suspend fun getLocations(packName: String): Try<List<Location>>
+    suspend fun getLocations(packName: String): Catching<List<Location>>
 
-    suspend fun getRoles(locationName: String): Try<List<String>>
+    suspend fun getRoles(locationName: String): Catching<List<String>>
 }

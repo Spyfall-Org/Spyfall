@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.failure
@@ -102,12 +102,12 @@ class MutliDeviceGameRepository @Inject constructor(
             .map { it.gameOrNull() }
     }
 
-    override suspend fun create(game: Game): Try<Unit> = Try {
+    override suspend fun create(game: Game): Catching<Unit> = Catching {
         gameDataSource.setGame(game)
     }
 
-    override suspend fun join(accessCode: String, userId: String, userName: String): Try<Unit> =
-        Try {
+    override suspend fun join(accessCode: String, userId: String, userName: String): Catching<Unit> =
+        Catching {
             gameDataSource.addPlayer(
                 accessCode, Player(
                     id = userId,
@@ -121,7 +121,7 @@ class MutliDeviceGameRepository @Inject constructor(
         }
             .logOnFailure()
 
-    override suspend fun removeUser(accessCode: String, username: String): Try<Unit> {
+    override suspend fun removeUser(accessCode: String, username: String): Catching<Unit> {
         val currentGame = getGameFlow(accessCode).first() ?: gameDataSource.getGame(accessCode).getOrNull()
 
         return when {
@@ -136,7 +136,7 @@ class MutliDeviceGameRepository @Inject constructor(
         }.logOnFailure()
     }
 
-    override suspend fun doesGameExist(accessCode: String): Try<Boolean> {
+    override suspend fun doesGameExist(accessCode: String): Catching<Boolean> {
         return gameDataSource.getGame(accessCode).fold(
             onSuccess = { true.success() },
             onFailure = {
@@ -150,7 +150,7 @@ class MutliDeviceGameRepository @Inject constructor(
             .logOnFailure()
     }
 
-    override suspend fun assignHost(accessCode: String, id: String): Try<Unit> {
+    override suspend fun assignHost(accessCode: String, id: String): Catching<Unit> {
         return gameDataSource.setHost(accessCode = accessCode, id = id)
             .logOnFailure()
     }
@@ -162,7 +162,7 @@ class MutliDeviceGameRepository @Inject constructor(
     override suspend fun setGameIsBeingStarted(
         accessCode: String,
         isBeingStarted: Boolean
-    ): Try<Unit> {
+    ): Catching<Unit> {
 
         val currentGame = getGameFlow(accessCode).first()
             ?: gameDataSource.getGame(accessCode).getOrNull()
@@ -176,11 +176,11 @@ class MutliDeviceGameRepository @Inject constructor(
             .logOnFailure()
     }
 
-    override suspend fun start(accessCode: String): Try<Unit> {
+    override suspend fun start(accessCode: String): Catching<Unit> {
         return gameDataSource.setStartedAt(accessCode).logOnFailure()
     }
 
-    override suspend fun reset(accessCode: String): Try<Unit> {
+    override suspend fun reset(accessCode: String): Catching<Unit> {
         val currentGame = getGameFlow(accessCode).first()
             ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalStateFailure { "Game is null when resetting" }
@@ -214,29 +214,29 @@ class MutliDeviceGameRepository @Inject constructor(
             locationOptionNames = newLocations,
             startedAt = null,
         )
-        return Try {
+        return Catching {
             gameDataSource.setGame(resetGame)
         }
             .logOnFailure()
             .developerSnackOnError { "Could not reset game" }
     }
 
-    override suspend fun changeName(accessCode: String, newName: String, id: String): Try<Unit> {
+    override suspend fun changeName(accessCode: String, newName: String, id: String): Catching<Unit> {
         return gameDataSource.changeName(accessCode, newName, id)
             .logOnFailure()
     }
 
-    override suspend fun updatePlayers(accessCode: String, players: List<Player>): Try<Unit> {
+    override suspend fun updatePlayers(accessCode: String, players: List<Player>): Catching<Unit> {
         return gameDataSource.updatePlayers(accessCode, players).logOnFailure()
     }
 
-    override suspend fun getGame(accessCode: String): Try<Game> = gameDataSource.getGame(accessCode)
+    override suspend fun getGame(accessCode: String): Catching<Game> = gameDataSource.getGame(accessCode)
 
     override suspend fun submitLocationVote(
         accessCode: String,
         voterId: String,
         location: String
-    ): Try<Unit> {
+    ): Catching<Unit> {
 
         val currentGame = getGameFlow(accessCode).first()
             ?: gameDataSource.getGame(accessCode).getOrNull()
@@ -254,7 +254,7 @@ class MutliDeviceGameRepository @Inject constructor(
         accessCode: String,
         voterId: String,
         voteId: String
-    ): Try<Boolean> {
+    ): Catching<Boolean> {
 
         val currentGame = getGameFlow(accessCode).first()
             ?: gameDataSource.getGame(accessCode).getOrNull()

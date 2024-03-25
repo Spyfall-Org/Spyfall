@@ -5,8 +5,8 @@ import com.dangerfield.libraries.config.AppConfigMap
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.BuildInfo
-import oddoneout.core.Try
-import oddoneout.core.awaitResult
+import oddoneout.core.Catching
+import oddoneout.core.awaitCatching
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -23,13 +23,13 @@ class FirebaseConfigDataSource
     // TODO add targeted overrides for specific users, locales, etc.
     // TODO consider exposing a flow and using a document observer to observe changes
     // every active session everywhere would be observing that document, not sure if thats great.
-    override suspend fun getConfig(): Try<AppConfigMap> = Try {
+    override suspend fun getConfig(): Catching<AppConfigMap> = Catching {
         Timber.d("Fetching config for ${buildInfo.versionName}")
         val configMap = firebaseFirestore
             .collection(CONFIG_COLLECTION_KEY)
             .document(buildInfo.versionName)
             .get()
-            .awaitResult()
+            .awaitCatching()
             .getOrThrow()
             .data
             .also {

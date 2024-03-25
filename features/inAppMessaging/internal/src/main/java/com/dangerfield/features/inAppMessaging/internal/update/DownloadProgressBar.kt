@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.dangerfield.libraries.ui.components.text.Text
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
 @Composable
 fun DownloadProgressBar(updateStatus: UpdateStatus?) {
@@ -23,7 +23,7 @@ fun DownloadProgressBar(updateStatus: UpdateStatus?) {
 
         val actualProgress = remember(status.bytesDownloaded, status.totalBytesToDownload) {
             if (status.totalBytesToDownload > 0) {
-                Try { status.bytesDownloaded.toFloat() / status.totalBytesToDownload.toFloat() }.getOrElse { 0f }
+                Catching { status.bytesDownloaded.toFloat() / status.totalBytesToDownload.toFloat() }.getOrElse { 0f }
             } else 0f
         }
 

@@ -9,7 +9,7 @@ import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.oddoneoout.features.waitingroom.internal.R
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.eitherWay
 import oddoneout.core.flatMap
 import java.util.LinkedList
@@ -33,7 +33,7 @@ class StartGameUseCase @Inject constructor(
         players: List<Player>,
         locationName: String,
         id: String,
-    ): Try<Unit> = Try {
+    ): Catching<Unit> = Catching {
         gameRepository
             .setGameIsBeingStarted(accessCode, true)
             .getOrThrow()

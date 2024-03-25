@@ -6,11 +6,11 @@ import android.net.Uri
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.dangerfield.oddoneoout.libraries.navigation.internal.R
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 
 fun Context.openWebLinkFromContext(uri: Uri): Boolean =
-    Try {
+    Catching {
         val builder = CustomTabsIntent.Builder()
 
         if (resources != null) {
@@ -41,7 +41,7 @@ fun Context.openWebLinkFromContext(uri: Uri): Boolean =
 
 
 fun Context.openWebLinkExternally(uri: Uri): Boolean {
-    return Try {
+    return Catching {
         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
             // Ensure that this intent can be handled
             if (resolveActivity(packageManager) != null) {

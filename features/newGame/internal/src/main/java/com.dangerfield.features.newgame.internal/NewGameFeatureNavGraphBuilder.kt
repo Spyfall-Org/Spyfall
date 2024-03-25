@@ -15,11 +15,9 @@ import com.dangerfield.features.newgame.internal.presentation.model.FormState
 import com.dangerfield.features.newgame.newGameNavigationRoute
 import com.dangerfield.features.videoCall.navigateToVideoCallLinkInfo
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
-import com.dangerfield.libraries.analytics.PageLogEffect
-import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.ui.LocalAppState
 import se.ansman.dagger.auto.AutoBindIntoSet
@@ -27,9 +25,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class NewGameModuleNavGraphBuilder @Inject constructor(
+class NewGameFeatureNavGraphBuilder @Inject constructor(
     private val gameConfig: GameConfig,
-) : ModuleNavBuilder {
+) : FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(

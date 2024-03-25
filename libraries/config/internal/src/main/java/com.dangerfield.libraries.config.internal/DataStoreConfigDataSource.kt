@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.shareIn
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.logOnFailure
 import timber.log.Timber
@@ -48,7 +48,7 @@ class DataStoreConfigDataSource @Inject constructor(
             replay = 1
         )
 
-    private fun deserializeConfig(storedConfigString: String?) = Try {
+    private fun deserializeConfig(storedConfigString: String?) = Catching {
         val map = storedConfigString?.let { jsonAdapter.fromJson(it) } ?: emptyMap<String, Any>()
         Timber.d("Emitting config from data store: \n $storedConfigString")
         BasicMapBasedAppConfigMapMap(map)
@@ -58,7 +58,7 @@ class DataStoreConfigDataSource @Inject constructor(
 
     override fun getConfigFlow(): Flow<AppConfigMap> = configFlow
 
-    override suspend fun getConfig(): Try<AppConfigMap> = Try {
+    override suspend fun getConfig(): Catching<AppConfigMap> = Catching {
         configFlow.replayCache.firstOrNull() ?: configFlow.first()
     }
 

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.readJson
 import javax.inject.Inject
@@ -58,7 +58,7 @@ class ConfigOverrideRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun deserializeConfigOverrides(json: String?): Try<List<ConfigOverride<Any>>> = Try {
+    private fun deserializeConfigOverrides(json: String?): Catching<List<ConfigOverride<Any>>> = Catching {
         json?.let { moshi.readJson<List<ConfigOverride<Any>>>(it) } ?: emptyList()
     }
 

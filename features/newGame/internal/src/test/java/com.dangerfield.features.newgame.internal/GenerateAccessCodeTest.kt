@@ -12,7 +12,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.getExceptionOrNull
 import org.junit.Before
 import org.junit.Test
@@ -32,7 +32,7 @@ class GenerateAccessCodeTest {
 
     @Test
     fun `GIVEN no game exists with generated code WHEN generating access code THEN success should return`() = runTest {
-        coEvery { gameRepository.doesGameExist(any()) } returns Try.success(false)
+        coEvery { gameRepository.doesGameExist(any()) } returns Catching.success(false)
 
         val result = generateAccessCode.invoke()
 
@@ -42,7 +42,7 @@ class GenerateAccessCodeTest {
     @Test
     fun `GIVEN game config WHEN generating access code THENlength should match config`() = runTest {
         every { gameConfig.accessCodeLength } returns 5
-        coEvery { gameRepository.doesGameExist(any()) } returns Try.success(false)
+        coEvery { gameRepository.doesGameExist(any()) } returns Catching.success(false)
 
         val result = generateAccessCode.invoke()
 
@@ -52,7 +52,7 @@ class GenerateAccessCodeTest {
 
     @Test
     fun `GIVEN generated code already exists WHEN generating access code THEN new code should be generated`() = runTest {
-        coEvery { gameRepository.doesGameExist(any()) } returns Try.success(true) andThen Try.success(false)
+        coEvery { gameRepository.doesGameExist(any()) } returns Catching.success(true) andThen Catching.success(false)
 
         val result = generateAccessCode.invoke()
 
@@ -64,7 +64,7 @@ class GenerateAccessCodeTest {
     @Test
     fun `GIVEN error checking existing game WHEN generating access code THEN failure should return`() = runTest {
         val exception = RuntimeException("Database error")
-        coEvery { gameRepository.doesGameExist(any()) } returns Try.failure(exception)
+        coEvery { gameRepository.doesGameExist(any()) } returns Catching.failure(exception)
 
         val result = generateAccessCode.invoke()
 

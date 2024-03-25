@@ -13,7 +13,7 @@ import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
 import oddoneout.core.GenerateLocalUUID
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.developerSnackIfDebug
 import oddoneout.core.failure
 import oddoneout.core.mapFailure
@@ -32,7 +32,7 @@ class JoinGameUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         accessCode: String, userName: String
-    ): Try<Game> {
+    ): Catching<Game> {
         checkForExistingSession()
         val userId = session.user.id ?: generateLocalUUID()
 
@@ -53,7 +53,7 @@ class JoinGameUseCase @Inject constructor(
 
     private suspend fun joinGame(
         accessCode: String, userName: String, userId: String
-    ): Try<Game> {
+    ): Catching<Game> {
         // TODO I think this is a problem
         val game = gameRepository.getGame(accessCode).getOrElse {
             return failure(it.toJoinGameError())

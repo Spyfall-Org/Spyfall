@@ -4,9 +4,8 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.LocationPack
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
-import oddoneout.core.failure
 import oddoneout.core.illegalStateFailure
 import oddoneout.core.throwIfDebug
 import javax.inject.Inject
@@ -18,7 +17,7 @@ class GetGamePlayLocationsImpl @Inject constructor(
     override operator fun invoke(
         locationPacks: List<LocationPack>,
         isSingleDevice: Boolean
-    ): Try<List<Location>> = Try {
+    ): Catching<List<Location>> = Catching {
 
         val gamePlayLocations = mutableSetOf<Location>()
         val packBank = locationPacks.map { it.locations.toMutableSet() }
@@ -33,7 +32,7 @@ class GetGamePlayLocationsImpl @Inject constructor(
         }
 
         if (numOfLocationsToChoose > totalLocations) {
-            return Try.success(packBank.flatten().toList().shuffled())
+            return Catching.success(packBank.flatten().toList().shuffled())
         }
 
         while (gamePlayLocations.size < numOfLocationsToChoose) {

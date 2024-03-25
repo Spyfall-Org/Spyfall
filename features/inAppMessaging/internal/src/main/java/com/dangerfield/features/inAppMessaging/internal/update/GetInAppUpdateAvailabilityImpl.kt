@@ -12,7 +12,7 @@ import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAI
 import com.google.android.play.core.ktx.installStatus
 import kotlinx.coroutines.flow.firstOrNull
 import oddoneout.core.BuildInfo
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
@@ -29,7 +29,7 @@ class GetInAppUpdateAvailabilityImpl @Inject constructor(
     private val buildInfo: BuildInfo
 ) : GetInAppUpdateAvailability {
 
-    override suspend fun invoke(): Try<InAppUpdateAvailability> {
+    override suspend fun invoke(): Catching<InAppUpdateAvailability> {
         return getAppUpdateInfo()
             .map { updateInfo ->
                 val isUpdateAvailable = updateInfo.updateAvailability() == UPDATE_AVAILABLE

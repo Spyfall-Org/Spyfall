@@ -23,7 +23,7 @@ import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.floatingwindow.dialog
 import com.dangerfield.libraries.ui.showMessage
@@ -33,9 +33,9 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class WaitingRoomModuleNavGraphBuilder @Inject constructor(
+class WaitingRoomFeatureNavGraphBuilder @Inject constructor(
     private val gameConfig: GameConfig
-) : ModuleNavBuilder {
+) : FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
 

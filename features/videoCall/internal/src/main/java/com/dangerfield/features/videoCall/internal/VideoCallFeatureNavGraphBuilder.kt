@@ -6,7 +6,7 @@ import com.dangerfield.features.videoCall.videoCallDetails
 import com.dangerfield.features.videoCall.videoLinkArgument
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.floatingwindow.bottomSheet
 import com.dangerfield.libraries.navigation.navArgument
@@ -14,9 +14,9 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class VideoCallModuleNavGraphBuilder @Inject constructor(
+class VideoCallFeatureNavGraphBuilder @Inject constructor(
     private val recognizedVideoCallingPlatforms: RecognizedVideoCallingPlatforms
-): ModuleNavBuilder {
+): FeatureNavBuilder {
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
 
         bottomSheet(

@@ -4,7 +4,7 @@ import android.content.Context
 import com.dangerfield.libraries.config.AppConfigMap
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.serialization.json.Json
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.eitherWay
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class FallbackConfigMapMapBased @Inject constructor(
     override val map: Map<String, Any> by lazy {
         val inputStream = context.assets.open("default_config.json")
 
-        Try {
+        Catching {
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)

@@ -1,10 +1,10 @@
 package com.dangerfield.features.consent
 
 import android.app.Activity
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
 interface OpenGDRPConsentForm {
-    suspend operator fun invoke(onlyIfNeeded: Boolean): Try<Unit>
+    suspend operator fun invoke(onlyIfNeeded: Boolean): Catching<Unit>
 }
 
 interface ShouldShowGDRPSettingsOption {

@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.doNothing
 import oddoneout.core.failFast
 import oddoneout.core.logOnFailure
@@ -280,7 +280,7 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    private val CoroutineScope.requiredStartupTasks: List<Deferred<Try<Unit>>>
+    private val CoroutineScope.requiredStartupTasks: List<Deferred<Catching<Unit>>>
         get() = listOf(
             async { ensureSessionLoaded() },
             async { ensureAppConfigLoaded() }

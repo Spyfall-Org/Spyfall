@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.allOrNone
 import oddoneout.core.checkInDebug
 import oddoneout.core.eitherWay
@@ -168,7 +168,7 @@ class NewGameViewModel @Inject constructor(
             }
     }
 
-    private suspend fun createSingleDeviceGame(state: State): Try<String> =
+    private suspend fun createSingleDeviceGame(state: State): Catching<String> =
         allOrNone(
             state.timeLimit(),
             state.numberOfPlayers(),
@@ -188,7 +188,7 @@ class NewGameViewModel @Inject constructor(
         """.trimIndent()
         }
 
-    private suspend fun createMultiDeviceGame(state: State): Try<String> = allOrNone(
+    private suspend fun createMultiDeviceGame(state: State): Catching<String> = allOrNone(
         state.timeLimit(),
         state.userName(),
         state.selectedPacks()
@@ -373,7 +373,7 @@ class NewGameViewModel @Inject constructor(
     }
 
     private suspend fun FlowCollector<State>.updateState(update: (State) -> State) {
-        Try {
+        Catching {
             val currentValue = state.value
             val nextValue = update(currentValue)
             emit(nextValue)

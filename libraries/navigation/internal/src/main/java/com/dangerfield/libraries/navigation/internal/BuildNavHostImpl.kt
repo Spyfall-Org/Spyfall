@@ -22,7 +22,7 @@ import javax.inject.Inject
 @AutoBind
 @Stable
 class BuildNavHostImpl @Inject constructor(
-    private val navBuilderRegistry: NavBuilderRegistry,
+    private val navGraphBuilder: NavGraphBuilder,
     private val delegatingRouter: DelegatingRouter
 ): BuildNavHost {
     @Composable
@@ -49,7 +49,7 @@ class BuildNavHostImpl @Inject constructor(
             popEnterTransition = { fadeInToEndAnim() },
             popExitTransition = { fadeOutToEndAnim() }
         ) {
-            navBuilderRegistry.registerNavBuilderForModule(navGraphBuilder = this)
+            navGraphBuilder.registerNavBuilderForModule(navGraphBuilder = this)
             delegatingRouter.setDelegate(actualRouter, lifecycle)
         }
 

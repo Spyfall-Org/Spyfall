@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import oddoneout.core.awaitResult
+import oddoneout.core.awaitCatching
 import oddoneout.core.logOnFailure
 import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
@@ -131,7 +131,7 @@ class StartInAppUpdateImpl @Inject constructor(
 
             statusChannel.trySend(UpdateStatus.WaitingUserAction)
 
-            updateTask.awaitResult()
+            updateTask.awaitCatching()
                 .onSuccess {
                     println("User action received")
                 }

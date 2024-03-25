@@ -3,7 +3,7 @@ package com.dangerfield.features.settings.internal.referral
 import androidx.datastore.core.DataStore
 import com.dangerfield.libraries.session.Session
 import kotlinx.coroutines.flow.firstOrNull
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
@@ -13,7 +13,7 @@ class GetMeReferralCode @Inject constructor(
     private val datastore: DataStore<Optional<ReferralCode>>,
     private val referralCodeLength: ReferralCodeLength,
 ){
-    suspend operator fun invoke(): ReferralCode = Try {
+    suspend operator fun invoke(): ReferralCode = Catching {
         val cachedValue = datastore.data.firstOrNull()
 
         if (cachedValue != null && cachedValue.isPresent) {

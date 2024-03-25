@@ -10,8 +10,7 @@ import androidx.navigation.compose.composable
 import com.dangerfield.features.qa.qaNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
-import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.ui.LocalBuildInfo
@@ -23,10 +22,10 @@ import javax.inject.Inject
 
 @AutoBindIntoSet
 @ActivityScoped
-class QaModuleNavGraphBuilder @Inject constructor(
+class QaFeatureNavGraphBuilder @Inject constructor(
     @ActivityContext private val context: Context,
     private val session: Session,
-) : ModuleNavBuilder {
+) : FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         composable(

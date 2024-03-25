@@ -17,7 +17,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.doNothing
 import oddoneout.core.findActivity
 import oddoneout.core.logOnFailure
@@ -36,7 +36,7 @@ class InterstitialAd<T : OddOneOutAd>(
 
     fun load(context: Context) {
         rewardInterstitialAd = applicationScope.async(dispatcherProvider.main) {
-            Try {
+            Catching {
                 loadRewardedInterstitialAd(context, ad.resId)
             }
                 .logOnFailure()

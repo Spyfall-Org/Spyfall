@@ -1,10 +1,10 @@
 package com.dangerfield.features.inAppMessaging
 
 import com.google.android.play.core.appupdate.AppUpdateInfo
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
 interface GetInAppUpdateAvailability {
-    suspend operator fun invoke(): Try<InAppUpdateAvailability>
+    suspend operator fun invoke(): Catching<InAppUpdateAvailability>
 }
 
 sealed class InAppUpdateAvailability {

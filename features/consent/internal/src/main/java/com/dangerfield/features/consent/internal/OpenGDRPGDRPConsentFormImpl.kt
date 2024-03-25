@@ -12,7 +12,7 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 import se.ansman.dagger.auto.AutoBind
@@ -27,8 +27,8 @@ class OpenGDRPGDRPConsentFormImpl @Inject constructor(
     private val gdrpConsentManager: GDRPConsentManager,
 ) : OpenGDRPConsentForm {
 
-    override suspend fun invoke(onlyIfNeeded: Boolean): Try<Unit> {
-        return Try {
+    override suspend fun invoke(onlyIfNeeded: Boolean): Catching<Unit> {
+        return Catching {
             Timber.d("Opening GDRP Consent Form")
             val activity = context as Activity
             val consentInformation = UserMessagingPlatform.getConsentInformation(activity)

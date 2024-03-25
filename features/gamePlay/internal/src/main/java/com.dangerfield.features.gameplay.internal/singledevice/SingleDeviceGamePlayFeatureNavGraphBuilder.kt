@@ -48,7 +48,7 @@ import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameResult
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.navigation.viewModelScopedTo
@@ -56,10 +56,10 @@ import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class SingleDeviceGamePlayModuleNavGraphBuilder @Inject constructor(
+class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
     private val interstitialAd: com.dangerfield.features.ads.ui.InterstitialAd<OddOneOutAd.GameRestartInterstitial>,
     private val adsConfig: AdsConfig
-) : ModuleNavBuilder {
+) : FeatureNavBuilder {
 
     // TODO should this be cached? is it okay to have it per session?
     private var numberOfRestarts = 0

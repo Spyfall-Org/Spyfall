@@ -27,8 +27,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
-import oddoneout.core.Try
-import oddoneout.core.awaitResult
+import oddoneout.core.Catching
+import oddoneout.core.awaitCatching
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.logOnFailure
 import oddoneout.core.withBackoffRetry
@@ -55,7 +55,7 @@ class UserRepositoryImpl @Inject constructor(
                 if (string == RandomColorConfigValue) {
                     ColorConfig.Random
                 } else {
-                    Try { ThemeColor.valueOf(string) }
+                    Catching { ThemeColor.valueOf(string) }
                         .getOrNull()
                         ?.let { ColorConfig.Specific(it) }
                         ?: ColorConfig.Random
@@ -66,7 +66,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userIdFlow = flow {
         getUserId()
             .onSuccess {
-                Try {
+                Catching {
                     firebaseAnalytics.setUserId(it)
                 }
                 emit(it)
@@ -167,16 +167,16 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun getUserId(): Try<String> = withBackoffRetry(
+    private suspend fun getUserId(): Catching<String> = withBackoffRetry(
         retries = 2,
         initialDelayMillis = 500L,
         maxDelayMillis = 10.seconds.inWholeMilliseconds,
         factor = 2.0,
     ) {
-        Try {
+        Catching {
             if (auth.currentUser == null) {
                tryWithTimeout(5.seconds) {
-                   auth.signInAnonymously().awaitResult()
+                   auth.signInAnonymously().awaitCatching()
                }.getOrNull()?.user?.uid ?: generateUserId()
             } else {
                 auth.currentUser?.uid ?: generateUserId()

@@ -1,8 +1,8 @@
 package com.dangerfield.libraries.config.internal
 
 import com.dangerfield.libraries.config.AppConfigMap
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
 interface ConfigDataSource {
-    suspend fun getConfig(): Try<AppConfigMap>
+    suspend fun getConfig(): Catching<AppConfigMap>
 }

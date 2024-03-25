@@ -4,14 +4,14 @@ import androidx.navigation.NavGraphBuilder
 import com.dangerfield.features.rules.rulesNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
-import com.dangerfield.libraries.navigation.ModuleNavBuilder
+import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.floatingwindow.bottomSheet
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
 @AutoBindIntoSet
-class ModuleNavGraphBuilder @Inject constructor(): ModuleNavBuilder {
+class FeatureNavGraphBuilder @Inject constructor(): FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {
         bottomSheet(

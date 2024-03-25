@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import oddoneout.core.ApplicationStateRepository
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.readJson
 import oddoneout.core.throwIfDebug
@@ -59,7 +59,7 @@ class SessionRepository @Inject constructor(
         .applicationState()
         .map {
             val sessionId = tryWithTimeout(5.seconds) {
-                Try {
+                Catching {
                     firebaseAnalytics.sessionId.await()!!
                 }
             }
@@ -124,7 +124,7 @@ class SessionRepository @Inject constructor(
 
     private suspend fun getCachedSessionData(id: Long): SessionData? =
         datastore.data.first()[SESSION_DATA_KEY]?.let {
-            val sessionData = Try { moshi.readJson<SessionData>(it) }.throwIfDebug().getOrNull()
+            val sessionData = Catching { moshi.readJson<SessionData>(it) }.throwIfDebug().getOrNull()
             if (sessionData?.id == id) sessionData else null
         }
 

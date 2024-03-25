@@ -15,7 +15,7 @@ import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
 import com.dangerfield.oddoneoout.features.newgame.internal.R
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.developerSnackIfDebug
 import timber.log.Timber
 import java.time.Clock
@@ -42,7 +42,7 @@ class CreateSingleDeviceGame @Inject constructor(
         locationPacks: List<LocationPack>,
         timeLimit: Int,
         numOfPlayers: Int,
-    ): Try<String> = Try {
+    ): Catching<String> = Catching {
         // TODO log metric on this so we can tell how many multi device games there are created
         checkForExistingSession()
 

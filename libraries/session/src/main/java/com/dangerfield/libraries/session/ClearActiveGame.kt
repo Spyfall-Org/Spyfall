@@ -1,7 +1,7 @@
 package com.dangerfield.libraries.session
 
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
 interface ClearActiveGame {
-    suspend operator fun invoke(): Try<Unit>
+    suspend operator fun invoke(): Catching<Unit>
 }

@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import oddoneout.core.Try
+import oddoneout.core.Catching
 
-suspend fun <T> DataStore<T>.tryUpdateData(transform: suspend (t: T) -> T): Try<T> = Try {
+suspend fun <T> DataStore<T>.tryUpdateData(transform: suspend (t: T) -> T): Catching<T> = Catching {
     updateData { transform(it) }
 }
 
@@ -41,7 +41,7 @@ suspend fun <T> DataStore<Preferences>.getValue(
     return distinctKeyFlow(key)
         .map { cachedValue ->
             cachedValue?.let { string ->
-                Try { fromString(string) }
+                Catching { fromString(string) }
                     .getOrNull()
                     ?: default
             } ?: default
@@ -57,7 +57,7 @@ fun <T> DataStore<Preferences>.getValueFlow(
     return distinctKeyFlow(key)
         .map { cachedValue ->
             cachedValue?.let { string ->
-                Try { fromString(string) }
+                Catching { fromString(string) }
                     .getOrNull()
                     ?: default
             } ?: default

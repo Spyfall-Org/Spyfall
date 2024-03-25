@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import oddoneout.core.BuildInfo
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ class SplashScreenBuilder @Inject constructor(
     }
 
     @Suppress("MagicNumber")
-    fun build(activity: Activity) = Try {
+    fun build(activity: Activity) = Catching {
         internalSplashScreen = activity.installSplashScreen()
 
         if (buildInfo.deviceName.contains("OnePlus", ignoreCase = true)) {
@@ -44,7 +44,7 @@ class SplashScreenBuilder @Inject constructor(
 
             internalSplashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
 
-                Try {
+                Catching {
 
                     val animator = splashScreenViewProvider.startIconRotation()
 

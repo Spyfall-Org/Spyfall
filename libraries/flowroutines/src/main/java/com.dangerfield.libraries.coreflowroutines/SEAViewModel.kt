@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 
@@ -43,7 +43,7 @@ abstract class SEAViewModel<S, E, A> : ViewModel() {
     //TODO cleanup this allows for global app updates, the flow collector method more or less meant you could
     // only update from within an action, which enforced UDF
     protected suspend fun updateState(update: suspend (S) -> S) {
-        Try {
+        Catching {
             _state.update { update(it) }
         }
             .logOnFailure("Could not update state")
@@ -51,7 +51,7 @@ abstract class SEAViewModel<S, E, A> : ViewModel() {
     }
 
     protected suspend fun setState(state: S) {
-        Try {
+        Catching {
             _state.value = state
         }
             .logOnFailure("Could not set state")

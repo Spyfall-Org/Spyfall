@@ -3,13 +3,13 @@ package com.dangerfield.libraries.navigation
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.checkInDebug
 import oddoneout.core.developerSnackOnError
 import oddoneout.core.logOnFailure
 
 inline fun <reified T : Any> NavBackStackEntry.navArgument(navArgument: NamedNavArgument): T? =
-    Try {
+    Catching {
         val argValue = when (navArgument.argument.type) {
             NavType.BoolType -> arguments?.getBoolean(navArgument.name)
             NavType.IntType -> arguments?.getInt(navArgument.name)

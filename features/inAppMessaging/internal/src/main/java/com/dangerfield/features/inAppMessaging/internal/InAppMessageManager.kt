@@ -11,7 +11,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import se.ansman.dagger.auto.AutoInitialize
 import timber.log.Timber
@@ -95,7 +95,7 @@ class InAppMessageManager @Inject constructor(
             for (message in messageQueue) {
                 var shouldTryToDisplay = true
                 while (shouldTryToDisplay && isActive) {
-                    Try {
+                    Catching {
                         displayLowPriorityMessage(message)
                     }
                         .onFailure {
@@ -123,7 +123,7 @@ class InAppMessageManager @Inject constructor(
             }
 
             if (isActive) {
-                Try {
+                Catching {
                     message.openMessage.invoke(router)
                 }
                     .onSuccess {
@@ -146,7 +146,7 @@ class InAppMessageManager @Inject constructor(
     }
 
     private suspend fun displayHighPriorityMessage(message: InAppMessage) {
-        val didInterrupt = Try { lowPriorityMessageJob?.second?.cancelAndJoin() }
+        val didInterrupt = Catching { lowPriorityMessageJob?.second?.cancelAndJoin() }
             .logOnFailure()
             .isSuccess
 

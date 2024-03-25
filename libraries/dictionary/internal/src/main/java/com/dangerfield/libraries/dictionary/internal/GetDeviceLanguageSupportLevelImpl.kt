@@ -6,7 +6,7 @@ import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.supportLevelNameMap
 import com.dangerfield.oddoneoout.libraries.dictionary.internal.R
 import dagger.hilt.android.qualifiers.ApplicationContext
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
 import java.util.Locale
@@ -43,7 +43,7 @@ class GetDeviceLanguageSupportLevelImpl @Inject constructor(
         Timber.d("isDeviceLanguageSupported: $it")
     }
 
-    private fun getLanguageSupportLevel(locale: Locale): Try<LanguageSupportLevel> = Try {
+    private fun getLanguageSupportLevel(locale: Locale): Catching<LanguageSupportLevel> = Catching {
         languageSupportLevel.value
             .let {
                 Timber.i("Language support level from config: $it")

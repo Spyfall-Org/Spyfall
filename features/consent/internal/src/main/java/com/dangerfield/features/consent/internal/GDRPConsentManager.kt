@@ -24,7 +24,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import oddoneout.core.ApplicationStateRepository
 import oddoneout.core.BuildInfo
 import oddoneout.core.ApplicationState
-import oddoneout.core.Try
+import oddoneout.core.Catching
 import oddoneout.core.developerSnackIfDebug
 import oddoneout.core.doNothing
 import oddoneout.core.logOnFailure
@@ -92,7 +92,7 @@ class GDRPConsentManager @Inject constructor(
     private suspend fun getConsentStatus(
         activity: Activity,
         dispatch: Boolean = true
-    ): Try<ConsentStatus> = Try {
+    ): Catching<ConsentStatus> = Catching {
         val consentInformation = UserMessagingPlatform.getConsentInformation(activity)
 
         val debugSettings = ConsentDebugSettings.Builder(activity)
@@ -146,15 +146,15 @@ class GDRPConsentManager @Inject constructor(
         }
     }
 
-    fun shouldShowSettingsOption(activity: Activity): Boolean = Try {
+    fun shouldShowSettingsOption(activity: Activity): Boolean = Catching {
         val consentInformation = UserMessagingPlatform.getConsentInformation(activity)
         consentInformation.privacyOptionsRequirementStatus == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
     }
         .logOnFailure()
         .getOrElse { false }
 
-    private fun initializeAds(activity: Activity) = Try {
-        if (hasInitializedAds.getAndSet(true)) return@Try
+    private fun initializeAds(activity: Activity) = Catching {
+        if (hasInitializedAds.getAndSet(true)) return@Catching
 
         Timber.d("Initializing Ads")
 
