@@ -17,7 +17,7 @@ import java.io.OutputStream
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
-class VersionedDataSerializer<T : Any>(
+class DatastoreSerializer<T : Any>(
     private val adapter: JsonAdapter<T>,
     defaultValue: () -> T,
     private val migrations: List<Migration> = emptyList(),
@@ -124,5 +124,5 @@ class VersionedDataSerializer<T : Any>(
 inline fun <reified T : Any> VersionedDataSerializer(
     moshi: Moshi,
     noinline defaultValue: () -> T,
-    migrations: List<VersionedDataSerializer.Migration> = emptyList(),
-): VersionedDataSerializer<T> = VersionedDataSerializer(moshi.adapter(typeOf<T>().javaType), defaultValue, migrations)
+    migrations: List<DatastoreSerializer.Migration> = emptyList(),
+): DatastoreSerializer<T> = DatastoreSerializer(moshi.adapter(typeOf<T>().javaType), defaultValue, migrations)

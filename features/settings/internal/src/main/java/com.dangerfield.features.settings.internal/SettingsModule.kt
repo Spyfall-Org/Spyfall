@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import com.dangerfield.features.settings.internal.referral.ReferralCode
 import com.dangerfield.libraries.storage.datastore.DataStoreProvider
 import com.dangerfield.libraries.storage.datastore.OptionalAdapterFactory
-import com.dangerfield.libraries.storage.datastore.VersionedDataSerializer
+import com.dangerfield.libraries.storage.datastore.DatastoreSerializer
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -35,7 +35,7 @@ object SettingsModule {
             moshi
         )
 
-        val serializer = VersionedDataSerializer<Optional<ReferralCode>>(
+        val serializer = DatastoreSerializer<Optional<ReferralCode>>(
             adapter = adapter,
             migrations = emptyList(),
             defaultValue = {
