@@ -1,4 +1,4 @@
-package com.spyfall.convention.util
+package com.spyfall.util
 
 import com.android.build.api.dsl.VariantDimension
 import org.gradle.api.provider.Provider

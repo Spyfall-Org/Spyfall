@@ -13,6 +13,11 @@ import oddoneout.core.Catching
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Custom handler for the native splash screen API.
+ * This class immediately sets keepOnScreenCondition to false so that we can run our own
+ * custom animation using setOnExitAnimationListener.
+ */
 class SplashScreenBuilder @Inject constructor(
     private val buildInfo: BuildInfo
 ) {

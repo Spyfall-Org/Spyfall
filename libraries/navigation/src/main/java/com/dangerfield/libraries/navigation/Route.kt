@@ -95,7 +95,7 @@ class Route internal constructor() {
     }
 
     /*
-    Immutable guarantees that the params of Template wont change but that instaead we would
+    Immutable guarantees that the params of Template wont change but that instaad we would
     just create a new object.
 
     We can only create templates through the Builder, which returns a new template

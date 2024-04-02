@@ -1,10 +1,8 @@
-package com.spyfall.convention.util
+package com.spyfall.util
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 /**
  * Configure Compose-specific options

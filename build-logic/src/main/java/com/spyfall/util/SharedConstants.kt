@@ -1,4 +1,4 @@
-package com.spyfall.convention.util
+package com.spyfall.util
 
 object SharedConstants {
     const val targetSdk = 34

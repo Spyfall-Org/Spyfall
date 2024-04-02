@@ -1,10 +1,10 @@
 
 plugins {
-    id("spyfall.android.library")
+    id("ooo.android.library")
     id("org.jetbrains.kotlin.android")
 }
 
-spyfall {
+oddOneOut {
     compose()
     flowroutines()
     optIn("androidx.compose.material3.ExperimentalMaterial3Api")

@@ -1,7 +1,6 @@
-package com.spyfall.convention.util
+package com.spyfall.util
 
 import org.gradle.api.Project
-import org.jetbrains.kotlin.gradle.utils.`is`
 import java.io.File
 import java.lang.System.getenv
 

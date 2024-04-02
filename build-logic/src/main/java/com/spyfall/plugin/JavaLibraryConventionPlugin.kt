@@ -1,7 +1,7 @@
-package com.spyfall.convention.plugin
+package com.spyfall.plugin
 
-import com.spyfall.convention.extension.SpyfallJavaExtention
-import com.spyfall.convention.util.configureKotlinJvm
+import com.spyfall.extension.JavaExtension
+import com.spyfall.util.configureKotlinJvm
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -9,13 +9,14 @@ class JavaLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
 
-            if (extensions.findByName("spyfall") == null) {
-                extensions.create("spyfall", SpyfallJavaExtention::class.java)
+            if (extensions.findByName("oddOneOut") == null) {
+                extensions.create("oddOneOut", JavaExtension::class.java)
             }
 
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.jvm")
             }
+
             configureKotlinJvm()
         }
     }

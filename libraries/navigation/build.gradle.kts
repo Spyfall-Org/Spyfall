@@ -1,9 +1,9 @@
 
 plugins {
-    id("spyfall.android.library")
+    id("ooo.android.library")
 }
 
-spyfall {
+oddOneOut {
     compose()
 }
 android {

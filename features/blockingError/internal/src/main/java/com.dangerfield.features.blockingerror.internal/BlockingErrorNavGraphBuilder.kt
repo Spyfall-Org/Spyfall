@@ -19,10 +19,11 @@ import dagger.hilt.android.scopes.ActivityScoped
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
+
 @AutoBindIntoSet
 @ActivityScoped
 class BlockingErrorNavGraphBuilder @Inject constructor(
-    @ActivityContext private val context: Context
+    @ActivityContext private val context: Context,
 ) : FeatureNavBuilder {
 
     override fun NavGraphBuilder.buildNavGraph(router: Router) {

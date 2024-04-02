@@ -1,8 +1,8 @@
 plugins {
-    id("spyfall.android.feature")
+    id("ooo.android.feature")
 }
 
-spyfall {
+oddOneOut {
     compose()
     flowroutines()
     daggerHilt(withProcessors = true)

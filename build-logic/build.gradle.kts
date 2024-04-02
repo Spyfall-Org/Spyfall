@@ -5,7 +5,6 @@ plugins {
     `java-gradle-plugin`
 }
 
-
 group = "com.dangerfield.oddoneoout.buildlogic"
 
 // Configure the build-logic plugins to target JDK 17
@@ -26,6 +25,7 @@ repositories {
     google()
     maven { url = uri("https://repo.maven.apache.org/maven2/") }
 }
+
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
@@ -43,26 +43,26 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "spyfall.android.application"
-            implementationClass = "com.spyfall.convention.plugin.AndroidApplicationConventionPlugin"
+            id = "ooo.android.application"
+            implementationClass = "com.spyfall.plugin.AndroidApplicationConventionPlugin"
         }
         register("androidLibrary") {
-            id = "spyfall.android.library"
-            implementationClass = "com.spyfall.convention.plugin.AndroidLibraryConventionPlugin"
+            id = "ooo.android.library"
+            implementationClass = "com.spyfall.plugin.AndroidLibraryConventionPlugin"
         }
         register("androidFeature") {
-            id = "spyfall.android.feature"
-            implementationClass = "com.spyfall.convention.plugin.AndroidFeatureConventionPlugin"
+            id = "ooo.android.feature"
+            implementationClass = "com.spyfall.plugin.AndroidFeatureConventionPlugin"
         }
 
         register("javaLibrary") {
-            id = "spyfall.java.library"
-            implementationClass = "com.spyfall.convention.plugin.JavaLibraryConventionPlugin"
+            id = "ooo.java.library"
+            implementationClass = "com.spyfall.plugin.JavaLibraryConventionPlugin"
         }
 
         register("androidDetekt") {
-            id = "spyfall.android.detekt"
-            implementationClass = "com.spyfall.convention.plugin.AndroidDetektConventionPlugin"
+            id = "ooo.android.detekt"
+            implementationClass = "com.spyfall.plugin.AndroidDetektConventionPlugin"
         }
     }
 }

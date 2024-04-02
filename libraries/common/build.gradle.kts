@@ -1,10 +1,10 @@
 plugins {
-    id("spyfall.android.library")
+    id("ooo.android.library")
     kotlin("plugin.parcelize")
     id("org.jetbrains.kotlin.android")
 }
 
-spyfall {
+oddOneOut {
     moshi()
     firebase()
 }

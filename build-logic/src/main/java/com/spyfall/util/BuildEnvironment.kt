@@ -1,4 +1,4 @@
-package com.spyfall.convention.util
+package com.spyfall.util
 
 /**
  * Utility to check if the current build is either executed on CI

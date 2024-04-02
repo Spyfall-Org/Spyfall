@@ -27,6 +27,11 @@ fun rememberAppState(
     }
 }
 
+/**
+ * app state exposed through [com.dangerfield.libraries.ui.LocalAppState]
+ * Should only contain fields that any individual screen might need to know without it being
+ * ui state but rather the state of the app. feel free to add more properties as needed.
+ */
 @Stable
 class OddOneOutAppState(
     networkMonitor: NetworkMonitor,

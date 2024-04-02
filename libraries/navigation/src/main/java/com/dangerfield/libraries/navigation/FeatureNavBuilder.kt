@@ -12,6 +12,5 @@ import androidx.navigation.NavGraphBuilder
  * nav controller
  */
 interface FeatureNavBuilder {
-
     fun NavGraphBuilder.buildNavGraph(router: Router)
 }

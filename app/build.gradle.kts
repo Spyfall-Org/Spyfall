@@ -1,7 +1,7 @@
-import com.spyfall.convention.util.buildConfigField
+import com.spyfall.util.buildConfigField
 
 plugins {
-    id("spyfall.android.application")
+    id("ooo.android.application")
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
     id("kotlin-kapt")
@@ -9,7 +9,7 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-spyfall {
+oddOneOut {
     compose()
     flowroutines()
     daggerHilt()

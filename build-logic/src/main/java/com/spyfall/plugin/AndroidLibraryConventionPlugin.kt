@@ -1,10 +1,10 @@
-package com.spyfall.convention.plugin
+package com.spyfall.plugin
 
 import com.android.build.gradle.LibraryExtension
-import com.spyfall.convention.extension.SpyfallFeatureExtension
-import com.spyfall.convention.util.SharedConstants
-import com.spyfall.convention.util.configureKotlinAndroid
-import com.spyfall.convention.util.libs
+import com.spyfall.extension.FeatureExtension
+import com.spyfall.util.SharedConstants
+import com.spyfall.util.configureKotlinAndroid
+import com.spyfall.util.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -15,7 +15,7 @@ import org.gradle.kotlin.dsl.dependencies
  * using the following syntax
  * ```kotlin
  * plugins {
- *     id("spyfall.android.library")
+ *     id("ooo.android.library")
  * }
  * ```
  * library modules should not depend on android specific frameworks.
@@ -24,8 +24,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
 
-            if (extensions.findByName("spyfall") == null) {
-                extensions.create("spyfall", SpyfallFeatureExtension::class.java)
+            if (extensions.findByName("oddOneOut") == null) {
+                extensions.create("oddOneOut", FeatureExtension::class.java)
             }
 
             /*

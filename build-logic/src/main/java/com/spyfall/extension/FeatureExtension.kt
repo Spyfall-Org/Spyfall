@@ -1,15 +1,15 @@
-package com.spyfall.convention.extension
+package com.spyfall.extension
 
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestExtension
 import com.google.devtools.ksp.gradle.KspExtension
-import com.spyfall.convention.util.SharedConstants
-import com.spyfall.convention.util.configureAndroidCompose
-import com.spyfall.convention.util.getModule
-import com.spyfall.convention.util.libs
-import com.spyfall.convention.util.optInKotlinMarkers
+import com.spyfall.util.SharedConstants
+import com.spyfall.util.configureAndroidCompose
+import com.spyfall.util.getModule
+import com.spyfall.util.libs
+import com.spyfall.util.optInKotlinMarkers
 import dev.zacsweers.moshix.ir.gradle.MoshiPluginExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -17,8 +17,8 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import javax.inject.Inject
 
-@SpyfallExtensionDsl
-abstract class SpyfallFeatureExtension {
+@OddOneOutExtensionDsl
+abstract class FeatureExtension {
     @get:Inject
     internal abstract val project: Project
 
@@ -73,9 +73,9 @@ abstract class SpyfallFeatureExtension {
                 Attempted to use compose outside of Application or Library project
                 make sure you've applied one of the following plugin to the calling projects build.gradle:
                 
-                id("spyfall.android.application")
-                id("spyfall.android.library")
-                id("spyfall.android.feature")
+                id("ooo.android.application")
+                id("ooo.android.library")
+                id("ooo.android.feature")
 
             """.trimIndent()
             )

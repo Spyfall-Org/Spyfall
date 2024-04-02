@@ -1,5 +1,5 @@
-package com.spyfall.convention.plugin
-import com.spyfall.convention.util.BuildEnvironment
+package com.spyfall.plugin
+import com.spyfall.util.BuildEnvironment
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.api.Plugin
 import org.gradle.api.Project

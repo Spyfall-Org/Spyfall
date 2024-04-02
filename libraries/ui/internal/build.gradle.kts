@@ -1,10 +1,10 @@
-import com.spyfall.convention.util.getModule
+import com.spyfall.util.getModule
 
 plugins {
-    id("spyfall.android.library")
+    id("ooo.android.library")
 }
 
-spyfall {
+oddOneOut {
     compose()
 }
 

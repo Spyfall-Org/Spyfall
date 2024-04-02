@@ -1,4 +1,4 @@
-package com.spyfall.convention.util
+package com.spyfall.util
 
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler

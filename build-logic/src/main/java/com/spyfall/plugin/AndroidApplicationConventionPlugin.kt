@@ -1,18 +1,18 @@
-package com.spyfall.convention.plugin
+package com.spyfall.plugin
 
 import com.android.build.api.dsl.ApplicationExtension
-import com.spyfall.convention.extension.SpyfallFeatureExtension
-import com.spyfall.convention.util.BuildEnvironment
-import com.spyfall.convention.util.SharedConstants
-import com.spyfall.convention.util.buildConfigField
-import com.spyfall.convention.util.checkForAppModuleSecretFiles
-import com.spyfall.convention.util.configureGitHooksCheck
-import com.spyfall.convention.util.configureKotlinAndroid
-import com.spyfall.convention.util.getPackageName
-import com.spyfall.convention.util.getVersionCode
-import com.spyfall.convention.util.getVersionName
-import com.spyfall.convention.util.libs
-import com.spyfall.convention.util.loadGradleProperty
+import com.spyfall.extension.FeatureExtension
+import com.spyfall.util.BuildEnvironment
+import com.spyfall.util.SharedConstants
+import com.spyfall.util.buildConfigField
+import com.spyfall.util.checkForAppModuleSecretFiles
+import com.spyfall.util.configureGitHooksCheck
+import com.spyfall.util.configureKotlinAndroid
+import com.spyfall.util.getPackageName
+import com.spyfall.util.getVersionCode
+import com.spyfall.util.getVersionName
+import com.spyfall.util.libs
+import com.spyfall.util.loadGradleProperty
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -27,7 +27,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
             }
 
-            extensions.create("spyfall", SpyfallFeatureExtension::class.java)
+            extensions.create("oddOneOut", FeatureExtension::class.java)
 
             extensions.configure<ApplicationExtension> {
 

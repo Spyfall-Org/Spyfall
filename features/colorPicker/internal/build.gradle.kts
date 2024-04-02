@@ -1,9 +1,9 @@
 
 plugins {
-    id("spyfall.android.feature")
+    id("ooo.android.feature")
 }
 
-spyfall {
+oddOneOut {
     daggerHilt()
     storage()
     compose()

@@ -1,4 +1,4 @@
-package com.spyfall.convention.util
+package com.spyfall.util
 
 const val RED = "\u001b[31m"
 const val GREEN = "\u001b[32m"

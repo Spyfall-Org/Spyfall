@@ -8,7 +8,9 @@ import oddoneout.core.throwIfDebug
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO cleanup feels like this should be in the app config library
+/**
+ * Ensure that the app config is loaded before the app starts
+ */
 @Singleton
 class EnsureAppConfigLoaded @Inject constructor(
     private val appConfigRepository: AppConfigRepository

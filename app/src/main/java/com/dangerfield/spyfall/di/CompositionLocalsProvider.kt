@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 /**
  * Provides all the composition locals for the app
- * If a module needs to provide a local, it should expose the local in the UI library and
- * bind the implementation to be injectable here. Then all composables will have access
+ * If a module needs to provide a local, it should define the local in its public module, implement it
+ * in its internal module and then inject the implementation to be provided here.
  */
 class CompositionLocalsProvider @Inject constructor(
     private val adsConfig: AdsConfig,

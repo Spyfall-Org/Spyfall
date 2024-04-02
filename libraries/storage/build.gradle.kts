@@ -1,9 +1,9 @@
 plugins {
-    id("spyfall.android.library")
+    id("ooo.android.library")
     id("org.jetbrains.kotlin.kapt")
 }
 
-spyfall {
+oddOneOut {
     flowroutines()
     daggerHilt()
     moshi()

@@ -1,5 +1,5 @@
 plugins {
-    id("spyfall.android.library")
+    id("ooo.android.library")
 }
 
 android {

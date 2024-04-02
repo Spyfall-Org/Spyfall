@@ -5,7 +5,10 @@ import com.dangerfield.libraries.config.ConfiguredValue
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
-
+/**
+ * This flag allows the app to be put into a mode where it will be temporarily unavailable.
+ * When true the user will see [com.dangerfield.features.blockingerror.internal.MaintenanceModeScreen]
+ */
 @AutoBindIntoSet
 class IsInMaintenanceMode @Inject constructor(
     private val appConfigMap: AppConfigMap

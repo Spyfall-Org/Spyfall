@@ -1,7 +1,7 @@
-package com.spyfall.convention.plugin
+package com.spyfall.plugin
 
-import com.spyfall.convention.extension.SpyfallFeatureExtension
-import com.spyfall.convention.util.libs
+import com.spyfall.extension.FeatureExtension
+import com.spyfall.util.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -11,11 +11,15 @@ import org.gradle.kotlin.dsl.dependencies
  * using the following syntax
  * ```kotlin
  * plugins {
- *     id("spyfall.android.feature")
+ *     id("ooo.android.feature")
  * }
  * ```
- * feature modules should not depend on other feature modules directly, instead
- * they should depend on that feature modules api.
+ * feature modules should not depend on other feature modules impls but rather on their
+ * public modules
+ *
+ * ex:
+ * DONT DO: implementation(project(":feature:feature1:impl"))
+ * DO: implementation(project(":feature:feature1"))
  */
 class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -23,12 +27,12 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
             // TODO cleanup truly need tp update the spyfall ext to be split into
             // what type of module it is. I could also do some huge cleanup on this module
-            if (extensions.findByName("spyfall") == null) {
-                extensions.create("spyfall", SpyfallFeatureExtension::class.java)
+            if (extensions.findByName("oddOneOut") == null) {
+                extensions.create("oddOneOut", FeatureExtension::class.java)
             }
 
             pluginManager.apply {
-                apply("spyfall.android.library")
+                apply("ooo.android.library")
             }
 
             // Libraries Shared Between All Features

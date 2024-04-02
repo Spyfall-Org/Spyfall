@@ -17,7 +17,7 @@ buildscript {
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.jvm) apply false
-    id("spyfall.android.detekt")
+    id("ooo.android.detekt")
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlinAndroid) apply false
 }

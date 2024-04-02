@@ -1,17 +1,17 @@
-package com.spyfall.convention.extension
+package com.spyfall.extension
 
 
-import com.spyfall.convention.util.getModule
-import com.spyfall.convention.util.libs
-import com.spyfall.convention.util.optInKotlinMarkers
+import com.spyfall.util.getModule
+import com.spyfall.util.libs
+import com.spyfall.util.optInKotlinMarkers
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import javax.inject.Inject
 
-@SpyfallExtensionDsl
-abstract class SpyfallJavaExtention {
+@OddOneOutExtensionDsl
+abstract class JavaExtension {
     @get:Inject
     internal abstract val project: Project
 
@@ -58,7 +58,6 @@ abstract class SpyfallJavaExtention {
             add("implementation", project.libs.firebase.storage)
             add("implementation", project.libs.firebase.database)
             add("implementation", project.libs.kotlinx.coroutines.play.services)
-
         }
     }
 
