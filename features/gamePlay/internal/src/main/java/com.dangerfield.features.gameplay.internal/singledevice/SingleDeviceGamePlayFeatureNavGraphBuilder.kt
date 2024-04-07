@@ -88,7 +88,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                 }
             }
 
-            ObserveWithLifecycle(viewModel.events) { event ->
+            ObserveWithLifecycle(viewModel.eventFlow) { event ->
                 when (event) {
                     SingleDeviceInfoViewModel.Event.GameEnded -> router.popBackTo(
                         welcomeNavigationRoute
@@ -117,7 +117,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
             val viewModel = hiltViewModel<SingleDeviceRoleRevealViewModel>()
             val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
             val timeLimit = it.navArgument<Int>(timeLimitArgument) ?: return@composable
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
             PageLogEffect(
                 route = singleDevicePlayerRoleRoute,
@@ -137,7 +137,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                 viewModel.takeAction(LoadGame)
             }
 
-            ObserveWithLifecycle(viewModel.events) { event ->
+            ObserveWithLifecycle(viewModel.eventFlow) { event ->
                 when (event) {
                     SingleDeviceRoleRevealViewModel.Event.GameKilled -> router.popBackTo(
                         welcomeNavigationRoute
@@ -165,7 +165,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
             arguments = singleDeviceGamePlayRoute.navArguments
         ) {
             val viewModel = hiltViewModel<SingleDeviceGamePlayViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
             val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
             val context = LocalContext.current
 
@@ -174,7 +174,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                 type = PageType.FullScreenPage
             )
 
-            ObserveWithLifecycle(flow = viewModel.events) { event ->
+            ObserveWithLifecycle(flow = viewModel.eventFlow) { event ->
                 when (event) {
                     is GameReset -> router.popBackTo(singleDeviceInfoRoute).also {
                         numberOfRestarts++
@@ -222,7 +222,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                     router = router
                 )
 
-                val state by viewModel.state.collectAsStateWithLifecycle()
+                val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
                 val accessCode = it.navArgument<String>(accessCodeArgument) ?: return@composable
 
@@ -242,7 +242,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                     }
                 }
 
-                ObserveWithLifecycle(flow = viewModel.events) { event ->
+                ObserveWithLifecycle(flow = viewModel.eventFlow) { event ->
                     when (event) {
                         SingleDeviceVotingViewModel.Event.GameKilled -> router.popBackTo(
                             welcomeNavigationRoute
@@ -305,7 +305,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                     router = router
                 )
 
-                val state by viewModel.state.collectAsStateWithLifecycle()
+                val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
                 PageLogEffect(
                     route = singleDeviceVotingResultsRoute,
@@ -316,7 +316,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                     viewModel.takeAction(SingleDeviceVotingViewModel.Action.LoadGame)
                 }
 
-                ObserveWithLifecycle(flow = viewModel.events) { event ->
+                ObserveWithLifecycle(flow = viewModel.eventFlow) { event ->
                     when (event) {
                         SingleDeviceVotingViewModel.Event.GameKilled -> router.popBackTo(
                             welcomeNavigationRoute

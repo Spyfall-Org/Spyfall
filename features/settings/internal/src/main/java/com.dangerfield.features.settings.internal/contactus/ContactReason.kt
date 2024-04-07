@@ -1,5 +1,9 @@
 package com.dangerfield.features.settings.internal.contactus
 
-enum class ContactReason {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class ContactReason : Parcelable {
     Question, Issue, Feedback, Suggestion, Other
 }

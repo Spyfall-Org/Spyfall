@@ -51,7 +51,7 @@ class WaitingRoomViewModel @Inject constructor(
     private val leaveGameUseCase: LeaveGameUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val gameConfig: GameConfig,
-) : SEAViewModel<State, Event, Action>() {
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
     private val isSubscribedToGameFlow = AtomicBoolean(false)
 
@@ -63,16 +63,6 @@ class WaitingRoomViewModel @Inject constructor(
 
     private val accessCode: String get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
 
-    override val initialState = State(
-        accessCode = accessCode,
-        players = emptyList(),
-        isLoadingRoom = true,
-        isLoadingStart = false,
-        didSomethingGoWrong = accessCode.isEmpty(),
-        videoCallLink = null,
-        canControlGame = false
-    )
-
     private val gameFlow: SharedFlow<Game?> = gameRepository
         .getGameFlow(accessCode)
         .shareIn(
@@ -81,18 +71,18 @@ class WaitingRoomViewModel @Inject constructor(
             replay = 1
         )
 
-    override suspend fun handleAction(action: Action) {
-        if (meUserId.isEmpty()) {
-            updateState {
-                it.copy(didSomethingGoWrong = true)
-            }
-        }
+    override suspend fun mapEachState(state: State): State {
+        return state.copy(
+            didSomethingGoWrong = meUserId.isEmpty()
+        )
+    }
 
+    override suspend fun handleAction(action: Action) {
         when (action) {
-            is Action.LoadRoom -> loadRoom()
-            is Action.ChangeName -> changeName(action.name, action.id)
-            Action.StartGame -> startGame()
-            Action.LeaveGame -> leaveGame()
+            is Action.LoadRoom -> action.loadRoom()
+            is Action.ChangeName -> action.changeName()
+            is Action.StartGame -> action.startGame()
+            is Action.LeaveGame -> action.leaveGame()
         }
     }
 
@@ -102,7 +92,7 @@ class WaitingRoomViewModel @Inject constructor(
             ?: gameRepository.getGame(accessCode).getOrNull()
 
 
-    private suspend fun leaveGame() {
+    private suspend fun Action.LeaveGame.leaveGame() {
         val game = getGame()
 
         if (game == null) {
@@ -114,7 +104,7 @@ class WaitingRoomViewModel @Inject constructor(
         leaveGameUseCase.invoke(
             game = game,
             id = meUserId,
-            isGameBeingStarted = state.value.isLoadingStart
+            isGameBeingStarted = stateFlow.value.isLoadingStart
         )
             .eitherWay { sendEvent(Event.LeftGame) }
             .onFailure {
@@ -125,7 +115,7 @@ class WaitingRoomViewModel @Inject constructor(
             .logOnFailure()
     }
 
-    private suspend fun startGame() {
+    private suspend fun Action.StartGame.startGame() {
         updateState { it.copy(isLoadingStart = true) }
 
         val game = getGame()
@@ -138,7 +128,7 @@ class WaitingRoomViewModel @Inject constructor(
                     autoDismiss = false
                 )
             )
-            leaveGame()
+            takeAction(Action.LeaveGame)
             return
         }
 
@@ -154,12 +144,12 @@ class WaitingRoomViewModel @Inject constructor(
             }
     }
 
-    private suspend fun changeName(name: String, id: String) {
+    private suspend fun  Action.ChangeName.changeName() {
         gameRepository.changeName(accessCode, name, id)
             .developerSnackOnError { "Error changing name" }
     }
 
-    private suspend fun loadRoom() {
+    private suspend fun Action.LoadRoom.loadRoom() {
         if (isSubscribedToGameFlow.getAndSet(true)) return
 
         viewModelScope.launch {
@@ -185,6 +175,7 @@ class WaitingRoomViewModel @Inject constructor(
                             delay(1000)
                             sendEvent(Event.LeftGame)
                         }
+
                         is GameState.Waiting -> updateState { state ->
                             val mePlayer =
                                 gameState.players.find { it.id == session.activeGame?.userId }
@@ -238,5 +229,15 @@ class WaitingRoomViewModel @Inject constructor(
         val isLoadingStart: Boolean,
         val didSomethingGoWrong: Boolean,
         val videoCallLink: String?
+    )
+
+    override fun initialState() = State(
+        accessCode = accessCode,
+        players = emptyList(),
+        isLoadingRoom = true,
+        canControlGame = false,
+        isLoadingStart = false,
+        didSomethingGoWrong = false,
+        videoCallLink = null
     )
 }

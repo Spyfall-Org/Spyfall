@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             // we do not set content loaded, this allows the splash screen to animate
-            mainActivityViewModel.state.waitFor { !it.isBlockingLoad }
+            mainActivityViewModel.stateFlow.waitFor { !it.isBlockingLoad }
             isLoading = false
             setAppContent()
             loadConsentStatus()
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
     private fun setAppContent() {
         setContent {
-            val state by mainActivityViewModel.state.collectAsStateWithLifecycle()
+            val state by mainActivityViewModel.stateFlow.collectAsStateWithLifecycle()
 
             LaunchedEffect(state.languageSupportLevelMessage) {
                 state.languageSupportLevelMessage?.let {

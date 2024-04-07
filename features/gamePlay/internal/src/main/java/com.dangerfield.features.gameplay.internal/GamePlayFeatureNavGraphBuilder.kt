@@ -44,7 +44,7 @@ class GamePlayFeatureNavGraphBuilder @Inject constructor(
         ) {
 
             val viewModel = hiltViewModel<GamePlayViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
             val context = LocalContext.current
 
             PageLogEffect(
@@ -52,7 +52,7 @@ class GamePlayFeatureNavGraphBuilder @Inject constructor(
                 type = PageType.FullScreenPage
             )
 
-            ObserveWithLifecycle(flow = viewModel.events) {
+            ObserveWithLifecycle(flow = viewModel.eventFlow) {
                 when (it) {
                     is GameReset -> router.navigateToWaitingRoom(accessCode = it.accessCode)
                     GameKilled -> router.popBackTo(welcomeNavigationRoute)

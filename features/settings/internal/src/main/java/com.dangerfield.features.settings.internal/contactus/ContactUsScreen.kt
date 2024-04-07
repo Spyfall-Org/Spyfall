@@ -56,6 +56,7 @@ import com.dangerfield.libraries.ui.components.text.OutlinedTextField
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.settings.internal.R
+import oddoneout.core.doNothing
 
 @Composable
 fun ContactUsScreen(
@@ -174,8 +175,7 @@ private fun Form(
     Column(
         modifier = Modifier
             .padding(horizontal = Dimension.D800)
-            .verticalScroll(scrollState)
-        ,
+            .verticalScroll(scrollState),
     ) {
 
         VerticalSpacerD800()
@@ -343,11 +343,31 @@ private fun ContactTypeOption(
     }
 }
 
+enum class ErrorBehavior {
+    /**
+     * If the error exists, show it
+     */
+    Show,
+    /**
+     * If the error exists and the field is not focused, show it
+     */
+    ShowIfNotFocused,
+
+    /**
+     * If the error exists and the field is focused, show it
+     */
+    ShowIfFocused,
+    /**
+     * Never show the error
+     */
+    DontShow
+}
+
 @Composable
 private fun FormField(
     formFieldState: FieldState<*>,
     isFieldVisible: Boolean = true,
-    showErrorWhenNotFocused: Boolean = false,
+    errorBehavior: ErrorBehavior = ErrorBehavior.Show,
     onFocusChanged: (Boolean) -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -364,12 +384,44 @@ private fun FormField(
 
             VerticalSpacerD500()
 
-            if (formFieldState is FieldState.Invalid && (!hasFocus || showErrorWhenNotFocused)) {
-                Text(
-                    text = formFieldState.errorMessage,
-                    typography = OddOneOutTheme.typography.Body.B500,
-                    colorResource = OddOneOutTheme.colors.textWarning
-                )
+            val errorText = formFieldState.error
+
+            when (errorBehavior) {
+                ErrorBehavior.Show -> {
+                    if (errorText != null) {
+                        Text(
+                            text = errorText,
+                            typography = OddOneOutTheme.typography.Body.B500,
+                            colorResource = OddOneOutTheme.colors.textWarning
+                        )
+                    }
+                }
+
+                ErrorBehavior.ShowIfFocused -> {
+                    if (
+                        errorText != null && hasFocus
+                    ) {
+                        Text(
+                            text = errorText,
+                            typography = OddOneOutTheme.typography.Body.B500,
+                            colorResource = OddOneOutTheme.colors.textWarning
+                        )
+                    }
+                }
+
+                ErrorBehavior.ShowIfNotFocused -> {
+                    if (
+                        errorText != null && !hasFocus
+                    ) {
+                        Text(
+                            text = errorText,
+                            typography = OddOneOutTheme.typography.Body.B500,
+                            colorResource = OddOneOutTheme.colors.textWarning
+                        )
+                    }
+                }
+
+                ErrorBehavior.DontShow -> doNothing()
             }
         }
     }

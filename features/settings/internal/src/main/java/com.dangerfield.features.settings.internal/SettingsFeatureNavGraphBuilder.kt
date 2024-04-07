@@ -111,7 +111,7 @@ class SettingsFeatureNavGraphBuilder @Inject constructor(
         composable(contactUsRoute.navRoute) {
 
             val viewModel = hiltViewModel<ContactUsViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
             PageLogEffect(
                 route = contactUsRoute,
@@ -169,7 +169,7 @@ class SettingsFeatureNavGraphBuilder @Inject constructor(
 
         composable(referralCode.navRoute) {
             val viewModel = hiltViewModel<ReferralViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
             PageLogEffect(
                 route = referralCode,

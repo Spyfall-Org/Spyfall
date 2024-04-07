@@ -9,7 +9,7 @@ import com.dangerfield.libraries.config.ConfigOverride
 import com.dangerfield.libraries.config.ConfigOverrideRepository
 import com.dangerfield.libraries.config.ConfiguredValue
 import com.dangerfield.libraries.config.Experiment
-import com.dangerfield.libraries.coreflowroutines.launchOnStart
+import com.dangerfield.libraries.coreflowroutines.onCollection
 import com.dangerfield.libraries.session.SessionFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import oddoneout.core.developerSnackIfDebug
 import javax.inject.Inject
 
 /*
@@ -42,7 +41,7 @@ class QaViewModel @Inject constructor(
     val state = flow {
         for (action in actions) handleAction(action)
     }
-        .launchOnStart {
+        .onCollection {
             sessionFlow.collectLatest {
                 updateSessionId(it.sessionId?.toString())
             }

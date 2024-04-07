@@ -1,6 +1,7 @@
 package com.dangerfield.features.consent.internal.ui
 
 import android.app.Activity
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.consent.ConsentStatus
 import com.dangerfield.features.consent.ConsentStatus.ConsentDenied
@@ -22,10 +23,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ConsentViewModel @Inject constructor(
     private val gdrpConsentManager: GDRPConsentManager,
-    private val inHouseConsentManager: InHouseConsentManager
-): SEAViewModel<State, Unit, Action>() {
+    private val inHouseConsentManager: InHouseConsentManager,
+    savedStateHandle: SavedStateHandle
+): SEAViewModel<State, Unit, Action>(savedStateHandle) {
 
-    override val initialState = State(
+    override fun initialState() = State(
         shouldShowInHouseConsentMessage = false,
         shouldShowGDRPConsentMessage = false,
         isLoading = true
@@ -33,7 +35,7 @@ class ConsentViewModel @Inject constructor(
 
     override suspend fun handleAction(action: Action) {
         when(action) {
-            is Action.LoadConsentStatus ->  observeConsentStatus(action)
+            is Action.LoadConsentStatus -> action.observeConsentStatus()
             is Action.UpdateInHouseConsentStatus -> inHouseConsentManager.updateConsentStatus(action.status)
             is Action.ForceGDRPConsent -> gdrpConsentManager.updateConsentStatus(
                 activity = action.activity,
@@ -42,9 +44,9 @@ class ConsentViewModel @Inject constructor(
         }
     }
 
-    private suspend fun observeConsentStatus(action: Action.LoadConsentStatus) = viewModelScope.launch {
+    private suspend fun  Action.LoadConsentStatus.observeConsentStatus() = viewModelScope.launch {
         combine(
-            gdrpConsentManager.getConsentStatusFlow(action.activity),
+            gdrpConsentManager.getConsentStatusFlow(activity),
             inHouseConsentManager.getConsentStatusFlow()
         ) { gdrpConsentStatus, inHouseConsentStatus ->
             val isGDRPConsentNeeded = gdrpConsentStatus == ConsentNeeded || gdrpConsentStatus == ConsentDenied
@@ -56,8 +58,8 @@ class ConsentViewModel @Inject constructor(
                 ),
                 isLoading = false
             )
-        }.collectLatest {
-            setState(it)
+        }.collectLatest {state ->
+            updateState { state }
         }
     }
 

@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
@@ -43,8 +42,8 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val userRepository: UserRepository,
-    private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
-    ) : SEAViewModel<State, Event, Action>() {
+    private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker,
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
     private val isSubscribedToGameFlow = AtomicBoolean(false)
 
@@ -68,20 +67,20 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
             replay = 1
         )
 
-    override val initialState = State(
+    override fun initialState() = State(
         isTimeUp = false,
         timeRemainingMillis = timeLimitArg?.minutes?.inWholeMilliseconds ?: 0
     )
 
     override suspend fun handleAction(action: Action) {
         when (action) {
-            Action.LoadGame -> loadGamePlay()
-            Action.EndGame -> endGame()
-            Action.ResetGame -> resetGame()
+            is Action.LoadGame -> action.loadGamePlay()
+            is Action.EndGame -> endGame()
+            is Action.ResetGame -> resetGame()
         }
     }
 
-    private suspend fun loadGamePlay() {
+    private suspend fun Action.LoadGame.loadGamePlay() {
         if (isSubscribedToGameFlow.getAndSet(true)) return
         viewModelScope.launch {
             combine(
@@ -111,7 +110,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateVotingGame() {
+    private suspend fun Action.LoadGame.updateVotingGame() {
         stopTimer()
         updateState { prev ->
             prev.copy(
@@ -121,7 +120,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateInProgressGame(gameState: GameState.Started) {
+    private suspend fun Action.LoadGame.updateInProgressGame(gameState: GameState.Started, ) {
         if (!isTimerRunning) startTimer()
 
         updateState { prev ->
@@ -167,7 +166,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         sendEvent(Event.GameKilled)
         singleDeviceGameMetricTracker.trackGameEnded(
             game = getGame(),
-            timeRemainingMillis = state.value.timeRemainingMillis
+            timeRemainingMillis = stateFlow.value.timeRemainingMillis
         )
     }
 

@@ -17,6 +17,13 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import javax.inject.Inject
 
+/*
+TODO split into
+App
+Feature
+AndroidLibrary
+JavaLibrary
+ */
 @OddOneOutExtensionDsl
 abstract class FeatureExtension {
     @get:Inject

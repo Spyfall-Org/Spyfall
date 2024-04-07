@@ -43,7 +43,7 @@ class FeatureNavGraphBuilder @Inject constructor(
         ) {
             val dictionary = LocalDictionary.current
             val viewModel = hiltViewModel<ConsentViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
             val activity = context as Activity
             var isLoadingGDRPConsent by remember { mutableStateOf(false) }
 

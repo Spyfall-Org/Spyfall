@@ -41,7 +41,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
-) : SEAViewModel<State, Event, Action>() {
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
     private var currentPlayerRoleIndex = 0
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
@@ -69,7 +69,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
     private val hasLoadedGame = AtomicBoolean(false)
     private val hasRecordedResult = AtomicBoolean(false)
 
-    override val initialState = State(
+    override fun initialState() = State(
         currentPlayer = null,
         isLastPlayer = false,
         locationOptions = emptyList(),
@@ -85,44 +85,49 @@ class SingleDeviceVotingViewModel @Inject constructor(
     )
 
     override suspend fun handleAction(action: Action) {
-        when (action) {
-            Action.LoadGame -> loadGame()
-            Action.EndGame -> endGame()
-            Action.ResetGame -> resetGame()
-            is Action.SubmitVoteForLocation -> submitVoteForLocation(action)
-            is Action.SubmitVoteForPlayer -> submitVoteForPlayer(action)
-            Action.WaitForResults -> updateState { state -> state.copy(isLoadingResult = true)  }
-            Action.PreviousPlayer -> loadPlayer(--currentPlayerRoleIndex)
+        with(action) {
+            when (action) {
+                is Action.LoadGame -> action.loadGame()
+                is Action.EndGame -> action.endGame()
+                is Action.ResetGame -> action.resetGame()
+                is Action.SubmitVoteForLocation -> action.submitVoteForLocation()
+                is Action.SubmitVoteForPlayer -> action.submitVoteForPlayer()
+                is Action.WaitForResults -> updateState { state -> state.copy(isLoadingResult = true)  }
+                is Action.PreviousPlayer -> loadPlayer(--currentPlayerRoleIndex)
+            }
         }
     }
 
-    private suspend fun submitVoteForLocation(action: Action.SubmitVoteForLocation) {
+    private suspend fun Action.SubmitVoteForLocation.submitVoteForLocation(
+    ) {
         loadPlayer(++currentPlayerRoleIndex)
         gameRepository.submitLocationVote(
             accessCode = accessCode,
-            voterId = action.voterId,
-            location = action.location,
+            voterId = voterId,
+            location = location,
         )
 
-        updateState { state -> state.copy(oddOneOutLocationGuess = action.location) }
+        updateState { state -> state.copy(oddOneOutLocationGuess = location) }
     }
 
-    private suspend fun submitVoteForPlayer(action: Action.SubmitVoteForPlayer) {
+    private suspend fun Action.SubmitVoteForPlayer.submitVoteForPlayer() {
         loadPlayer(++currentPlayerRoleIndex)
         gameRepository.submitOddOneOutVote(
             accessCode = accessCode,
-            voterId = action.voterId,
-            voteId = action.playerId
+            voterId = voterId,
+            voteId = playerId
         ).getOrElse { false }
     }
 
-    private fun loadGame() {
+    private fun Action.LoadGame.loadGame(
+    ) {
         if (hasLoadedGame.getAndSet(true)) return
         setInitialGameState()
         listenForGameUpdates()
     }
 
-    private fun setInitialGameState() {
+    private fun Action.LoadGame.setInitialGameState(
+    ) {
         viewModelScope.launch {
             gameRepository.getGame(accessCode)
                 .onSuccess { game ->
@@ -149,7 +154,8 @@ class SingleDeviceVotingViewModel @Inject constructor(
         }
     }
 
-    private fun listenForGameUpdates() {
+    private fun Action.LoadGame.listenForGameUpdates(
+    ) {
         viewModelScope.launch {
             gameFlow
                 .map { game ->
@@ -203,7 +209,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadPlayer(index: Int) {
+    private suspend fun Action.loadPlayer(index: Int, ) {
         val allPlayers = allPlayers.getValue()
         val player = playersToShowRoles.elementAtOrNull(index)
 
@@ -219,7 +225,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         }
     }
 
-    private suspend fun endGame() {
+    private suspend fun Action.EndGame.endGame() {
         gameRepository.end(accessCode)
         // TODO pack game ending behind a uses case and leave game for that matter.
         // not super sure I need a data source as well as a repository
@@ -232,7 +238,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         )
     }
 
-    private suspend fun resetGame() {
+    private suspend fun Action.ResetGame.resetGame() {
         gameRepository.reset(accessCode)
             .onSuccess {
                 singleDeviceGameMetricTracker.trackGameRestarted(
@@ -273,7 +279,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
     }
 
     sealed class Action {
-        data object LoadGame : Action()
+        object LoadGame : Action()
         data class SubmitVoteForPlayer(val voterId: String, val playerId: String) : Action()
         data object WaitForResults : Action()
         data class SubmitVoteForLocation(val voterId: String, val location: String) : Action()

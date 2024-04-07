@@ -2,6 +2,7 @@
 plugins {
     id("ooo.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 oddOneOut {

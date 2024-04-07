@@ -45,7 +45,7 @@ class WaitingRoomFeatureNavGraphBuilder @Inject constructor(
         ) {
 
             val viewModel = hiltViewModel<WaitingRoomViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
             val message = dictionaryString(R.string.waitingRoom_cannotLeaveGame_text)
 
             PageLogEffect(
@@ -53,7 +53,7 @@ class WaitingRoomFeatureNavGraphBuilder @Inject constructor(
                 type = PageType.FullScreenPage
             )
 
-            ObserveWithLifecycle(flow = viewModel.events) { event ->
+            ObserveWithLifecycle(flow = viewModel.eventFlow) { event ->
                 when (event) {
                     is WaitingRoomViewModel.Event.GameStarted -> {
                         router.navigateToGamePlayScreen(
@@ -102,14 +102,14 @@ class WaitingRoomFeatureNavGraphBuilder @Inject constructor(
         ) {
             val viewModel = hiltViewModel<ChangeNameViewModel>()
 
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
             PageLogEffect(
                 route = changeNameRoute,
                 type = PageType.Dialog
             )
 
-            ObserveWithLifecycle(flow = viewModel.events) { event ->
+            ObserveWithLifecycle(flow = viewModel.eventFlow) { event ->
                 when (event) {
                     is ChangeNameViewModel.Event.NameChanged -> router.goBack()
                 }

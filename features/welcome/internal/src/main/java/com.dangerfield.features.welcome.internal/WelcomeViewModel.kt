@@ -1,5 +1,6 @@
 package com.dangerfield.features.welcome.internal
 
+import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.welcome.internal.WelcomeViewModel.Action
 import com.dangerfield.features.welcome.internal.WelcomeViewModel.Event
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
@@ -26,9 +27,8 @@ class WelcomeViewModel @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val multiDeviceGameRepository: GameRepository,
     @Named(SingleDeviceRepositoryName) private val singleDeviceRepository: GameRepository,
     private val mapToGameState: MapToGameStateUseCase,
-) : SEAViewModel<Unit, Event, Action>() {
-
-    override val initialState = Unit
+    savedStateHandle: SavedStateHandle
+) : SEAViewModel<Unit, Event, Action>(savedStateHandle, Unit) {
 
     private val gameRepository: GameRepository
         get() = if (session.activeGame?.isSingleDevice == true) singleDeviceRepository else multiDeviceGameRepository

@@ -4,12 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.singledevice.SingleDeviceGameMetricTracker
-import com.dangerfield.features.gameplay.internal.singledevice.gameplay.SingleDeviceGamePlayViewModel
-import com.dangerfield.features.gameplay.internal.singledevice.voting.SingleDeviceVotingViewModel
+import com.dangerfield.features.gameplay.internal.singledevice.info.SingleDeviceInfoViewModel.Action
+import com.dangerfield.features.gameplay.internal.singledevice.info.SingleDeviceInfoViewModel.Event
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -17,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
@@ -29,7 +27,7 @@ class SingleDeviceInfoViewModel @Inject constructor(
     @Named(SingleDeviceRepositoryName) private val gameRepository: GameRepository,
     private val clearActiveGame: ClearActiveGame,
     private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker,
-): SEAViewModel<Unit,  SingleDeviceInfoViewModel.Event, SingleDeviceInfoViewModel.Action>() {
+): SEAViewModel<Unit, Event, Action>(savedStateHandle, Unit) {
 
     private val accessCode: String
         get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
@@ -41,8 +39,6 @@ class SingleDeviceInfoViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             replay = 1
         )
-
-    override val initialState = Unit
 
     override suspend fun handleAction(action: Action) {
         when(action) {

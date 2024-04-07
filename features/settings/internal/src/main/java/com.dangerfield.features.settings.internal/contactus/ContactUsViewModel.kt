@@ -1,5 +1,8 @@
 package com.dangerfield.features.settings.internal.contactus
 
+import android.os.Parcelable
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
@@ -7,6 +10,7 @@ import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.oddoneoout.features.settings.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.parcelize.Parcelize
 import oddoneout.core.eitherWay
 import javax.inject.Inject
 
@@ -14,9 +18,10 @@ import javax.inject.Inject
 class ContactUsViewModel @Inject constructor(
     private val sendContactForm: SendContactForm,
     private val dictionary: Dictionary,
-) : SEAViewModel<State, Nothing, Action>() {
+    savedStateHandle: SavedStateHandle
+) : SEAViewModel<State, Nothing, Action>(savedStateHandle) {
 
-    override val initialState = State(
+    override fun initialState() = State(
         isLoadingSubmit = false,
         contactReasonState = FieldState.Idle(null),
         nameFieldState = FieldState.Idle(""),
@@ -28,24 +33,31 @@ class ContactUsViewModel @Inject constructor(
     )
 
     override suspend fun handleAction(action: Action) {
-        when (action) {
-            Action.Submit -> handleSubmit()
-            is Action.UpdateContactReason -> updateContactReason(action.contactReason)
-            is Action.UpdateEmail -> updateEmail(action.email)
-            is Action.UpdateMessage -> updateMessage(action.message)
-            is Action.UpdateName -> updateName(action.name)
-            is Action.DismissSomethingWentWrong -> updateState { it.copy(didSubmitFail = false) }
+        with(action) {
+            when (this) {
+                is Action.Submit -> handleSubmit()
+                is Action.UpdateContactReason -> updateContactReason()
+                is Action.UpdateEmail -> updateEmail()
+                is Action.UpdateMessage -> updateMessage()
+                is Action.UpdateName -> updateName()
+                is Action.DismissSomethingWentWrong -> updateState { it.copy(didSubmitFail = false) }
+            }
         }
     }
 
-    private suspend fun updateContactReason(contactReason: ContactReason) {
+    private suspend fun Action.UpdateContactReason.updateContactReason() {
         updateState {
             it.copy(contactReasonState = FieldState.Valid(contactReason)).withFormValidation()
         }
     }
 
-    private suspend fun updateEmail(email: String) {
+    private suspend fun Action.UpdateEmail.updateEmail() {
         updateState {
+            // any typing will clear errors and show valid, the validation is debounced
+            it.copy(emailFieldState = FieldState.Valid(email)).withFormValidation()
+        }
+
+        debounceUpdateState(1000L) {
             val state = if (email.isNotEmpty() && email.isEmailFormat()) {
                 FieldState.Valid(email)
             } else {
@@ -54,11 +66,12 @@ class ContactUsViewModel @Inject constructor(
                     dictionary.getString(R.string.contactUs_invalidEmail_text)
                 )
             }
+
             it.copy(emailFieldState = state).withFormValidation()
         }
     }
 
-    private suspend fun updateMessage(message: String) {
+    private suspend fun Action.UpdateMessage.updateMessage() {
         updateState {
             val state = if (message.isNotEmpty()) {
                 FieldState.Valid(message)
@@ -72,7 +85,8 @@ class ContactUsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateName(name: String) {
+    private suspend fun Action.UpdateName.updateName(
+    ) {
         updateState {
             val state = if (name.isNotEmpty()) {
                 FieldState.Valid(name)
@@ -86,10 +100,10 @@ class ContactUsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleSubmit() {
-        if (!state.value.isFormValid) return
+    private suspend fun Action.handleSubmit() {
+        if (!stateFlow.value.isFormValid) return
         updateState { it.copy(isLoadingSubmit = true) }
-        val state = state.value
+        val state = stateFlow.value
 
         sendContactForm.invoke(
             name = state.nameFieldState.value.orEmpty(),
@@ -108,6 +122,30 @@ class ContactUsViewModel @Inject constructor(
             }
     }
 
+    private suspend fun handleSubmit(
+        update: ((State) -> State) -> Unit
+    ) {
+        if (!stateFlow.value.isFormValid) return
+        update { it.copy(isLoadingSubmit = true) }
+        val state = stateFlow.value
+
+        sendContactForm.invoke(
+            name = state.nameFieldState.value.orEmpty(),
+            email =  state.emailFieldState.value.orEmpty(),
+            message =  state.messageFieldState.value.orEmpty(),
+            contactReason = state.contactReasonState.value ?: ContactReason.Other
+        )
+            .onSuccess {
+                update { it.copy(wasFormSuccessfullySubmitted = true) }
+            }
+            .onFailure {
+                update { it.copy(didSubmitFail = true) }
+            }
+            .eitherWay {
+                update { it.copy(isLoadingSubmit = false) }
+            }
+    }
+
     private fun String.isEmailFormat(): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
@@ -120,6 +158,7 @@ class ContactUsViewModel @Inject constructor(
         return copy(isFormValid = isFormValid)
     }
 
+    @Parcelize
     data class State(
         val isLoadingSubmit: Boolean,
         val contactReasonState: FieldState<ContactReason?>,
@@ -129,7 +168,7 @@ class ContactUsViewModel @Inject constructor(
         val isFormValid: Boolean,
         val didSubmitFail: Boolean,
         val wasFormSuccessfullySubmitted: Boolean,
-    )
+    ) : Parcelable
 
     sealed class Action {
         data class UpdateEmail(val email: String) : Action()

@@ -42,7 +42,7 @@ class WelcomeFeatureNavGraphBuilder @Inject constructor() : FeatureNavBuilder {
                 type = PageType.FullScreenPage
             )
 
-            ObserveWithLifecycle(flow = viewModel.events) {
+            ObserveWithLifecycle(flow = viewModel.eventFlow) {
                 when (it) {
                     is WelcomeViewModel.Event.GameInProgressFound -> {
                         router.ifStillOn(backStackEntry) {

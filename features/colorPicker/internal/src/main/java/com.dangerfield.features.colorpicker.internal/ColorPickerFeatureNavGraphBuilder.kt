@@ -27,7 +27,7 @@ class ColorPickerFeatureNavGraphBuilder @Inject constructor() : FeatureNavBuilde
         ) {
 
             val viewModel = hiltViewModel<ColorPickerViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.stateFlow.collectAsStateWithLifecycle()
             val colorConfigs = ThemeColor.entries.map { Specific(it) } + Random
 
             PageLogEffect(

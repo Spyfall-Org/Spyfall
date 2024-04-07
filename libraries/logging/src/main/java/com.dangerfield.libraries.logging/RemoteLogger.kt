@@ -17,12 +17,8 @@ class RemoteLogger(private val crashlytics: FirebaseCrashlytics = FirebaseCrashl
             else -> "Unknown Priority"
         }
 
-        if (priority != null) {
-            crashlytics.log("priority: $p ${tag?.let { "| $it"}}: \n$message")
-        }
+        crashlytics.log("priority: $p ${tag?.let { "| $it"}}: \n$message")
 
-        if (t != null) {
-            crashlytics.recordException(t)
-        }
+        t?.let { crashlytics.recordException(it) }
     }
 }

@@ -1,5 +1,6 @@
 package com.dangerfield.features.colorpicker.internal
 
+import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.colorpicker.internal.ColorPickerViewModel.Action
 import com.dangerfield.features.colorpicker.internal.ColorPickerViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
@@ -12,19 +13,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ColorPickerViewModel @Inject constructor(
     private val updateColorConfig: UpdateColorConfig,
-    private val session: Session
-) : SEAViewModel<State, Unit, Action>() {
+    private val session: Session,
+    savedStateHandle: SavedStateHandle
+) : SEAViewModel<State, Unit, Action>(savedStateHandle) {
 
-    override val initialState = State(
+    override fun initialState() = State(
         colorConfig = session.user.themeConfig.colorConfig,
     )
 
     override suspend fun handleAction(action: Action) {
         when(action) {
             is Action.UpdateColorConfig -> {
-                updateState {
-                    it.copy(colorConfig = action.config)
-                }
+                action.updateState { it.copy(colorConfig = action.config) }
                 updateColorConfig(action.config)
             }
         }

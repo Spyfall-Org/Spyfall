@@ -29,7 +29,7 @@ class ChangeNameViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val gameConfig: GameConfig,
     private val session: Session
-) : SEAViewModel<State, Event, Action>() {
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
     private val accessCode: String
         get() = savedStateHandle.navArgument(changeNameAccessCodeArgument)
@@ -44,7 +44,7 @@ class ChangeNameViewModel @Inject constructor(
             replay = 1
         )
 
-    override val initialState = State(
+    override fun initialState() = State(
         name = "",
         isNameTaken = false,
         isNameInvalidLength = false,
@@ -55,15 +55,15 @@ class ChangeNameViewModel @Inject constructor(
     )
 
     override suspend fun handleAction(action: Action) {
-        when (action) {
-            is Action.SubmitNameChange -> handleNameChangeSubmit(action)
-            is Action.UpdateName -> updateName(action.name)
+        with(action) {
+            when (this) {
+                is Action.UpdateName -> updateName()
+                is Action.SubmitNameChange -> handleNameChangeSubmit()
+            }
         }
     }
 
-    private suspend fun handleNameChangeSubmit(
-        action: Action.SubmitNameChange
-    ) {
+    private suspend fun Action.SubmitNameChange.handleNameChangeSubmit() {
         val game = getGame()
 
         if (game == null) {
@@ -78,25 +78,27 @@ class ChangeNameViewModel @Inject constructor(
             val allPlayers = game.players
             val mePlayer = allPlayers.firstOrNull { it.id == userId }
             val notMePlayers = allPlayers.filter { it != mePlayer }
-            val isNameTaken = notMePlayers.any { it.userName == action.name }
-            val isAlreadyMyName = mePlayer?.userName == action.name
+            val isNameTaken = notMePlayers.any { it.userName == name }
+            val isAlreadyMyName = mePlayer?.userName == name
             val nameIsInvalidLength =
-                action.name.length !in gameConfig.minNameLength..gameConfig.maxNameLength
+                name.length !in gameConfig.minNameLength..gameConfig.maxNameLength
 
             when {
                 isAlreadyMyName -> sendEvent(Event.NameChanged)
                 nameIsInvalidLength -> updateState { it.copy(isNameInvalidLength = true) }
                 isNameTaken -> updateState { it.copy(isNameTaken = true) }
                 else -> submitNameChange(
-                    name = action.name,
                     userId = userId,
-                    accessCode = accessCode
+                    accessCode = accessCode,
                 )
             }
         } ?: updateState { it.copy(didSomethingGoWrong = true) }
     }
 
-    private suspend fun submitNameChange(name: String, userId: String, accessCode: String) {
+    private suspend fun Action.SubmitNameChange.submitNameChange(
+        userId: String,
+        accessCode: String,
+    ) {
         updateState { it.copy(isLoading = true) }
 
         gameRepository.changeName(
@@ -116,7 +118,8 @@ class ChangeNameViewModel @Inject constructor(
     }
 
     // TODO would be ideal to debounce this, not hiding errors while typing
-    private suspend fun updateName(name: String) {
+    private suspend fun Action.UpdateName.updateName(
+    ) {
         updateState { it.copy(name = name) } // prevent lag
 
         val game = getGame()

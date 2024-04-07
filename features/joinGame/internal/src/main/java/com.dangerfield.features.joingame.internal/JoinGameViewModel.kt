@@ -1,5 +1,6 @@
 package com.dangerfield.features.joingame.internal
 
+import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.joingame.internal.JoinGameUseCase.JoinGameError
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.dictionary.Dictionary
@@ -18,9 +19,10 @@ class JoinGameViewModel @Inject constructor(
     private val joinGame: JoinGameUseCase,
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
-) : SEAViewModel<State, Event, Action>() {
+    savedStateHandle: SavedStateHandle
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
-    override val initialState = State(
+    override fun initialState() = State(
         accessCodeState = FieldState.Idle(""),
         userNameState = FieldState.Idle(""),
         isLoading = false,
@@ -29,10 +31,10 @@ class JoinGameViewModel @Inject constructor(
 
     override suspend fun handleAction(action: Action) {
         when (action) {
-            Action.JoinGame -> handleJoinGame()
-            Action.RemoveSomethingWentWrong -> updateStateWithValidation { it.copy(unresolvableError = null) }
-            is Action.UpdateAccessCode -> handleUpdateAccessCode(action.accessCode)
-            is Action.UpdateUserName -> handleUpdateUserName(action.userName)
+            is Action.JoinGame -> action.handleJoinGame()
+            is Action.RemoveSomethingWentWrong -> action.updateState { it.copy(unresolvableError = null) }
+            is Action.UpdateAccessCode -> action.handleUpdateAccessCode()
+            is Action.UpdateUserName -> action.handleUpdateUserName()
         }
     }
 
@@ -44,11 +46,13 @@ class JoinGameViewModel @Inject constructor(
 
     fun joinGame() = takeAction(Action.JoinGame)
 
-    private suspend fun handleJoinGame() {
-        updateStateWithValidation { it.copy(isLoading = true) }
+    private suspend fun Action.JoinGame.handleJoinGame() {
+        updateState {
+            it.copy(isLoading = true)
+        }
 
-        val accessCodeValue = state.value.accessCodeState.value
-        val userNameValue = state.value.userNameState.value
+        val accessCodeValue = stateFlow.value.accessCodeState.value
+        val userNameValue = stateFlow.value.userNameState.value
 
         allOrNone(one = accessCodeValue, two = userNameValue) { accessCode, userName ->
             joinGame(
@@ -62,14 +66,14 @@ class JoinGameViewModel @Inject constructor(
                     if (throwable is JoinGameError) {
                         handleJoinGameError(throwable)
                     } else {
-                        updateStateWithValidation { it.copy(unresolvableError = UnresolvableError.UnknownError) }
+                        updateState { it.copy(unresolvableError = UnresolvableError.UnknownError) }
                     }
                 }
                 .logOnFailure()
                 .eitherWay {
-                    updateStateWithValidation { it.copy(isLoading = false) }
+                    updateState { it.copy(isLoading = false) }
                 }
-        } ?: updateStateWithValidation {
+        } ?: updateState {
             it.copy(
                 accessCodeState = FieldState.Invalid(
                     input = it.accessCodeState.value,
@@ -83,8 +87,8 @@ class JoinGameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleJoinGameError(joinGameError: JoinGameError) =
-        updateStateWithValidation {
+    private suspend fun Action.JoinGame.handleJoinGameError(joinGameError: JoinGameError) =
+        updateState {
             when (joinGameError) {
                 is JoinGameError.GameNotFound -> it.copy(
                     accessCodeState = FieldState.Invalid(
@@ -145,17 +149,16 @@ class JoinGameViewModel @Inject constructor(
             }
         }
 
-    private suspend fun updateStateWithValidation(update: suspend (State) -> State) = updateState {
-        val newState = update(it)
+    override suspend fun mapEachState(state: State): State {
 
-        val isFormValid = newState.accessCodeState is FieldState.Valid
-                && newState.userNameState is FieldState.Valid
+        val isFormValid = state.accessCodeState is FieldState.Valid
+                && state.userNameState is FieldState.Valid
 
-        newState.copy(isFormValid = isFormValid)
+        return state.copy(isFormValid = isFormValid)
     }
-
-    private suspend fun handleUpdateAccessCode(accessCode: String) =
-        updateStateWithValidation {
+    
+    private suspend fun Action.UpdateAccessCode.handleUpdateAccessCode() =
+        updateState {
             val state = when {
                 accessCode.isEmpty() -> FieldState.Idle(accessCode)
                 accessCode.length != gameConfig.accessCodeLength -> {
@@ -174,7 +177,7 @@ class JoinGameViewModel @Inject constructor(
             it.copy(accessCodeState = state)
         }
 
-    private suspend fun handleUpdateUserName(userName: String) = updateStateWithValidation {
+    private suspend fun Action.UpdateUserName.handleUpdateUserName() = updateState {
         val state = when {
             userName.isEmpty() -> FieldState.Idle(userName)
             userName.length !in gameConfig.minNameLength..gameConfig.maxNameLength -> {

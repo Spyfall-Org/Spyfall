@@ -50,7 +50,7 @@ class GamePlayViewModel @Inject constructor(
     private val metricsTracker: MultiDeviceGameMetricsTracker,
     private val gameConfig: GameConfig,
     session: Session,
-) : SEAViewModel<State, Event, Action>() {
+) :SEAViewModel<State, Event, Action>(savedStateHandle) {
 
     private val meUserId = session.activeGame?.userId ?: ""
     private val isSubscribedToGameFlow = AtomicBoolean(false)
@@ -77,7 +77,7 @@ class GamePlayViewModel @Inject constructor(
         )
 
     // TODO cleanup consider putting voting into a different screen
-    override val initialState = State(
+    override fun initialState() = State(
         players = emptyList(),
         locations = emptyList(),
         timeRemainingMillis = timeLimitArg?.minutes?.inWholeMilliseconds ?: 0,
@@ -97,18 +97,18 @@ class GamePlayViewModel @Inject constructor(
 
     override suspend fun handleAction(action: Action) {
         when (action) {
-            Action.LoadGamePlay -> loadGamePlay()
-            is Action.SubmitLocationVote -> submitLocationVote(action)
-            is Action.SubmitOddOneOutVote -> submitOddOneOutVote(action)
-            Action.ResetGame -> resetGame()
-            Action.EndGame -> endGame()
+            is Action.LoadGamePlay -> action.loadGamePlay()
+            is Action.SubmitLocationVote -> action.submitLocationVote()
+            is Action.SubmitOddOneOutVote -> action.submitOddOneOutVote()
+            is Action.ResetGame -> resetGame()
+            is Action.EndGame -> endGame()
         }
     }
 
     private suspend fun endGame() {
         metricsTracker.trackGameEnded(
             game = getGame(),
-            timeRemainingMillis = state.value.timeRemainingMillis
+            timeRemainingMillis = stateFlow.value.timeRemainingMillis
         )
         gameRepository.end(accessCode)
     }
@@ -118,25 +118,25 @@ class GamePlayViewModel @Inject constructor(
             .onSuccess {
                 metricsTracker.trackGameRestarted(
                     game = getGame(),
-                    timeRemainingMillis = state.value.timeRemainingMillis
+                    timeRemainingMillis = stateFlow.value.timeRemainingMillis
                 )
             }
             .onFailure {
                 metricsTracker.trackGameRestartError(
                     game = getGame(),
-                    timeRemainingMillis = state.value.timeRemainingMillis
+                    timeRemainingMillis = stateFlow.value.timeRemainingMillis
                 )
             }
             .logOnFailure()
             .throwIfDebug()
     }
 
-    private suspend fun submitOddOneOutVote(action: Action.SubmitOddOneOutVote) {
+    private suspend fun Action.SubmitOddOneOutVote.submitOddOneOutVote() {
         updateState { it.copy(isLoadingVoteSubmit = true) }
         gameRepository.submitOddOneOutVote(
             accessCode,
             voterId = meUserId,
-            voteId = action.id
+            voteId = id
         )
             .onSuccess {
                 updateState { it.copy(isVoteSubmitted = true) }
@@ -149,12 +149,12 @@ class GamePlayViewModel @Inject constructor(
             }
     }
 
-    private suspend fun submitLocationVote(action: Action.SubmitLocationVote) {
+    private suspend fun Action.SubmitLocationVote.submitLocationVote() {
         updateState { it.copy(isLoadingVoteSubmit = true) }
         gameRepository.submitLocationVote(
             accessCode,
             voterId = meUserId,
-            location = action.location
+            location = location
         )
             .onSuccess {
                 updateState { it.copy(isVoteSubmitted = true) }
@@ -168,7 +168,7 @@ class GamePlayViewModel @Inject constructor(
     }
 
     // TODO cleanup consider having individual functions gameRepository.getGameFlow.waitUntil(STATE)
-    private suspend fun loadGamePlay() {
+    private suspend fun Action.LoadGamePlay.loadGamePlay() {
         if (isSubscribedToGameFlow.getAndSet(true)) return
         viewModelScope.launch {
             combine(
@@ -190,15 +190,17 @@ class GamePlayViewModel @Inject constructor(
                     }
 
                     is GameState.Waiting -> sendEvent(Event.GameReset(accessCode))
-                    is GameState.Started -> updateInProgressGame(gameState)
-                    is GameState.Voting -> updateVotingGame(gameState)
-                    is GameState.VotingEnded -> updateVotingEndedGame(gameState)
+                    is GameState.Started -> updateStateInProgressGame(gameState)
+                    is GameState.Voting -> updateStateVotingGame(gameState)
+                    is GameState.VotingEnded -> updateStateVotingEndedGame(gameState)
                 }
             }
         }
     }
 
-    private suspend fun updateVotingEndedGame(gameState: GameState.VotingEnded) {
+    private suspend fun Action.LoadGamePlay.updateStateVotingEndedGame(
+        gameState: GameState.VotingEnded,
+    ) {
         stopTimer()
 
         val mePlayer = gameState.players.find { it.id == meUserId }
@@ -267,7 +269,9 @@ class GamePlayViewModel @Inject constructor(
         )
     }
 
-    private suspend fun updateVotingGame(gameState: GameState.Voting) {
+    private suspend fun Action.LoadGamePlay.updateStateVotingGame(
+        gameState: GameState.Voting,
+    ) {
         stopTimer()
 
         val mePlayer = gameState.players.find { it.id == meUserId }
@@ -305,7 +309,9 @@ class GamePlayViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateInProgressGame(gameState: GameState.Started) {
+    private suspend fun Action.LoadGamePlay.updateStateInProgressGame(
+        gameState: GameState.Started,
+    ) {
         if (!isTimerRunning) startTimer()
 
         val mePlayer = gameState.players.find { it.id == meUserId }

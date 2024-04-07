@@ -26,7 +26,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -47,7 +46,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
     private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
-) : SEAViewModel<State, Event, Action>() {
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
     private val playersToShowRoles: MutableSet<DisplayablePlayer> = LinkedHashSet()
     private var currentPlayerRoleIndex = 0
@@ -66,7 +65,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
 
     private val hasLoadedGame = AtomicBoolean(false)
 
-    override val initialState = State(
+    override fun initialState() = State(
         currentPlayer = null,
         location = null,
         isGameStarted = false,
@@ -78,21 +77,21 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
 
     override suspend fun handleAction(action: Action) {
         when (action) {
-            Action.LoadGame -> loadGame()
-            Action.LoadNextPlayer -> {
+            is Action.LoadGame -> action.loadGame()
+            is Action.LoadNextPlayer -> {
                 currentPlayerRoleIndex =
                     (currentPlayerRoleIndex + 1).coerceAtMost(playersToShowRoles.size - 1)
-                loadPlayer(currentPlayerRoleIndex)
+                loadPlayer(currentPlayerRoleIndex) { action.updateState(it) }
             }
 
-            Action.StartGame -> startGame()
-            is Action.UpdateName -> changeName(action.name)
-            Action.LoadPreviousPlayer -> {
+            is Action.StartGame -> startGame()
+            is Action.UpdateName -> action.changeName()
+            is Action.LoadPreviousPlayer -> {
                 currentPlayerRoleIndex = (currentPlayerRoleIndex - 1).coerceAtLeast(0)
-                loadPlayer(currentPlayerRoleIndex)
+                loadPlayer(currentPlayerRoleIndex) { action.updateState(it) }
             }
 
-            Action.EndGame -> endGame()
+            is Action.EndGame -> endGame()
         }
     }
 
@@ -111,8 +110,9 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
             }
     }
 
-    private suspend fun changeName(newName: String) {
-        val id = state.value.currentPlayer?.id ?: return
+    private suspend fun Action.UpdateName.changeName() {
+        val id = stateFlow.value.currentPlayer?.id ?: return
+        val newName = this.name
         val game = getGame()
 
         if (game == null) {
@@ -154,7 +154,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadGame() {
+    private suspend fun Action.LoadGame.loadGame() {
         if (hasLoadedGame.getAndSet(true)) return
 
         viewModelScope.launch {
@@ -177,7 +177,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
                     }
                     playersToShowRoles.clear()
                     playersToShowRoles.addAll(displayablePlayers)
-                    loadPlayer(currentPlayerRoleIndex)
+                    loadPlayer(currentPlayerRoleIndex) { updateState(it) }
                 }
         }
 
@@ -235,14 +235,17 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
             ?: gameFlow.filterNotNull().firstOrNull()
             ?: gameRepository.getGame(accessCode).getOrNull()
 
-    private suspend fun loadPlayer(index: Int) {
+    private suspend fun loadPlayer(
+        index: Int,
+        update: suspend ((State) -> State) -> Unit
+    ) {
 
-        updateState { it.copy(nameFieldState = FieldState.Idle("")) }
+        update { it.copy(nameFieldState = FieldState.Idle("")) }
 
         val player = playersToShowRoles.elementAtOrNull(index)
 
         if (player != null) {
-            updateState {
+            update {
                 it.copy(
                     currentPlayer = player,
                     isLastPlayer = index == playersToShowRoles.size - 1,

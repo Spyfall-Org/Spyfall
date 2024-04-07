@@ -1,6 +1,7 @@
 package com.dangerfield.spyfall
 
 import android.app.Activity
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.consent.ConsentStatus
 import com.dangerfield.features.consent.ConsentStatusRepository
@@ -59,15 +60,11 @@ class MainActivityViewModel @Inject constructor(
     private val isInMaintenanceMode: IsInMaintenanceMode,
     private val getInAppUpdateAvailability: GetInAppUpdateAvailability,
     private val startInAppUpdate: StartInAppUpdate,
-    private val completeInAppUpdate: CompleteInAppUpdate
-) : SEAViewModel<State, Unit, Action>() {
-
-    // TODO make a notification manager to handle all these dialogs I may or may not show.
-    // in app messages can likely have a handler that takes in a class wrapping the route and stuff
-    // and a priority and such.
-    private var inAppUpdateJob: Job? = null
-
-    override val initialState = State(
+    private val completeInAppUpdate: CompleteInAppUpdate,
+    savedStateHandle: SavedStateHandle
+) : SEAViewModel<State, Unit, Action>(
+    savedStateHandle,
+    State(
         isUpdateRequired = false,
         accentColor = ThemeColor.entries.random().colorResource,
         isBlockingLoad = true,
@@ -77,18 +74,26 @@ class MainActivityViewModel @Inject constructor(
         isInMaintenanceMode = false,
         inAppUpdateStatus = null
     )
+) {
 
+    // TODO make a notification manager to handle all these dialogs I may or may not show.
+    // in app messages can likely have a handler that takes in a class wrapping the route and stuff
+    // and a priority and such.
+    private var inAppUpdateJob: Job? = null
+    
     init {
         takeAction(Action.LoadApp)
     }
 
     override suspend fun handleAction(action: Action) {
-        when (action) {
-            Action.LoadApp -> loadApp()
-            is Action.MarkLanguageSupportLevelMessageShown -> languageSupportMessageShown(action.languageSupportLevel)
-            is Action.LoadConsentStatus -> listenForConsentStatusUpdates(action)
-            is Action.StartInAppUpdate -> launchInAppUpdate(action)
-            Action.CompleteInAppUpdate -> handleInstall()
+        with(action) {
+            when (this) {
+                is Action.LoadApp -> loadApp()
+                is Action.MarkLanguageSupportLevelMessageShown -> languageSupportMessageShown(languageSupportLevel)
+                is Action.LoadConsentStatus -> listenForConsentStatusUpdates()
+                is Action.StartInAppUpdate -> launchInAppUpdate()
+                is Action.CompleteInAppUpdate -> handleInstall()
+            }
         }
     }
 
@@ -103,7 +108,7 @@ class MainActivityViewModel @Inject constructor(
         takeAction(Action.CompleteInAppUpdate)
     }
 
-    private suspend fun MainActivityViewModel.handleInstall() {
+    private suspend fun Action.CompleteInAppUpdate.handleInstall() {
         updateState { it.copy(inAppUpdateStatus = UpdateStatus.Installing) }
         completeInAppUpdate()
             .onSuccess {
@@ -114,29 +119,29 @@ class MainActivityViewModel @Inject constructor(
             }
     }
 
-    private fun launchInAppUpdate(action: Action.StartInAppUpdate) {
+    private fun Action.StartInAppUpdate.launchInAppUpdate() {
         if (inAppUpdateJob?.isActive == true) return
         inAppUpdateJob = viewModelScope.launch {
             startInAppUpdate(
-                action.updateStatus.appUpdateInfo,
-                action.updateStatus.isForegroundUpdate,
-                action.activity
+                updateStatus.appUpdateInfo,
+                updateStatus.isForegroundUpdate,
+                activity
             ).collect { status ->
                 updateState { it.copy(inAppUpdateStatus = status) }
             }
         }
     }
 
-    private fun listenForConsentStatusUpdates(action: Action.LoadConsentStatus) {
+    private fun Action.LoadConsentStatus.listenForConsentStatusUpdates() {
         viewModelScope.launch {
-            consentStatusRepository.getStatusFlow(action.activity)
+            consentStatusRepository.getStatusFlow(activity)
                 .collectLatest { status ->
                     updateState { it.copy(consentStatus = status) }
                 }
         }
     }
 
-    private suspend fun loadApp() {
+    private suspend fun Action.LoadApp.loadApp() {
         tryWithTimeout(10.seconds) {
             requiredStartupTasks.awaitAll().failFast()
         }
@@ -146,7 +151,7 @@ class MainActivityViewModel @Inject constructor(
                     it.copy(
                         hasBlockingError = true,
                         isBlockingLoad = false
-                    )
+                    ) 
                 }
             }
             .onSuccess {
@@ -169,7 +174,7 @@ class MainActivityViewModel @Inject constructor(
             }
     }
 
-    private suspend fun checkForAppUpdate() {
+    private suspend fun Action.LoadApp.checkForAppUpdate() {
         viewModelScope.launch {
             getInAppUpdateAvailability()
                 .logOnFailure()
@@ -212,7 +217,7 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getLanguageSupport() {
+    private suspend fun Action.LoadApp.getLanguageSupport() {
         viewModelScope.launch {
             val languageSupportLevel = getLanguageSupportLevel()
             val shouldShow = shouldShowLanguageSupportMessage(languageSupportLevel)
@@ -228,7 +233,7 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    private suspend fun listenForSessionUpdates() {
+    private suspend fun Action.LoadApp.listenForSessionUpdates() {
         viewModelScope.launch {
             sessionFlow
                 .map { it.user.themeConfig }
@@ -244,7 +249,7 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    private suspend fun listenForConfigUpdates() {
+    private suspend fun Action.LoadApp.listenForConfigUpdates() {
         viewModelScope.launch {
             appConfigFlow
                 .distinctUntilChanged()
@@ -268,7 +273,7 @@ class MainActivityViewModel @Inject constructor(
         return colorPrimitive
     }
 
-    private fun listenForAppUpdateRequired() {
+    private fun Action.LoadApp.listenForAppUpdateRequired() {
         viewModelScope.launch {
             isAppUpdateRequired()
                 .distinctUntilChanged()
