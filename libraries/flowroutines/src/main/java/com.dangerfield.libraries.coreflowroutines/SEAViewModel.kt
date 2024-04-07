@@ -113,9 +113,16 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
     /**
      * Updates state in a debounced manner.
      *
-     * The update will not happen until the debounce time has without another call to
-     * `debounceUpdateState` from the same action. Every update from the same action
-     * will reset the debounce timer.
+     * The update will not happen until the debounce time has passed without another call to
+     * `debounceUpdateState` from the same action type. Every update from the same action
+     * type will reset the debounce timer.
+     *
+     * This can be useful if you have a bit of state that is updated frequently and there is
+     * work to be done on each update. This can help prevent unnecessary work from being done.
+     *
+     * Examples:
+     * - Search field state updates that trigger a network call.
+     * - Typing in a form field that triggers validation. (prevent error spam if the user is still typing)
      */
     suspend fun A.updateStateDebounced(debounceTime: Long = 500L, f: suspend (S) -> S) {
         val actionIdentifier = this::class.java.simpleName

@@ -1,5 +1,6 @@
 package com.dangerfield.features.settings.internal.contactus
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.Action
 import com.dangerfield.features.settings.internal.contactus.ContactUsViewModel.State
@@ -9,6 +10,7 @@ import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.oddoneoout.features.settings.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import oddoneout.core.eitherWay
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -91,7 +93,10 @@ class ContactUsViewModel @Inject constructor(
     }
 
     private suspend fun Action.handleSubmit() {
-        if (!state.isFormValid) return
+        if (!state.isFormValid) {
+            Timber.d( "Submit happened but Form is not valid")
+            return
+        }
         updateState { it.copy(isLoadingSubmit = true) }
 
         sendContactForm.invoke(
