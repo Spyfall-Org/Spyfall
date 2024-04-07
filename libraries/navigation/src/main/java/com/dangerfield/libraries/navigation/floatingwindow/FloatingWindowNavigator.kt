@@ -49,7 +49,7 @@ class FloatingWindowNavigator : Navigator<FloatingWindowNavigator.Destination>()
     }
 
     /**
-     * NavDestination specific to [DialogNavigator]
+     * NavDestination specific to [FloatingWindowNavigator]
      */
     @NavDestination.ClassType(Composable::class)
     class Destination(

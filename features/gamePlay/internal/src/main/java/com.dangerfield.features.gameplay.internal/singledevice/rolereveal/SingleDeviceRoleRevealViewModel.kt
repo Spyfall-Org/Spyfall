@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.doNothing
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
@@ -111,7 +111,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     }
 
     private suspend fun Action.UpdateName.changeName() {
-        val id = stateFlow.value.currentPlayer?.id ?: return
+        val id = state.currentPlayer?.id ?: return
         val newName = this.name
         val game = getGame()
 
@@ -190,7 +190,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
                         is GameState.Expired,
                         is GameState.Voting,
                         is GameState.VotingEnded,
-                        is GameState.Unknown -> developerSnackIfDebug {
+                        is GameState.Unknown -> showDebugSnack {
                             "Illegal game state ${gameState::class.java.simpleName}"
                         }
 

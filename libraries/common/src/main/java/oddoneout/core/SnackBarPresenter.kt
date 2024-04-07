@@ -2,13 +2,12 @@ package oddoneout.core
 
 import kotlinx.coroutines.channels.Channel
 import spyfallx.core.common.BuildConfig
-import timber.log.Timber
 
 object SnackBarPresenter {
 
     val messages: Channel<Message> = Channel(Channel.UNLIMITED)
 
-    fun showDeveloperMessage(message: Message) {
+    fun showDebugMessage(message: Message) {
         if (BuildConfig.DEBUG) {
             messages.trySend(message.copy(isDebug = true))
         }

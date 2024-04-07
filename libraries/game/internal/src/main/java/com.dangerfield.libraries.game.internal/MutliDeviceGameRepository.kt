@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
-import oddoneout.core.developerSnackOnError
+import oddoneout.core.debugSnackOnError
 import oddoneout.core.failure
 import oddoneout.core.illegalStateFailure
 import oddoneout.core.logOnFailure
@@ -218,7 +218,7 @@ class MutliDeviceGameRepository @Inject constructor(
             gameDataSource.setGame(resetGame)
         }
             .logOnFailure()
-            .developerSnackOnError { "Could not reset game" }
+            .debugSnackOnError { "Could not reset game" }
     }
 
     override suspend fun changeName(accessCode: String, newName: String, id: String): Catching<Unit> {

@@ -35,12 +35,12 @@ fun throwIfDebug(lazyMessage: () -> Any) {
     Timber.e(lazyMessage().toString())
 }
 
-fun developerSnackIfDebug(
+fun showDebugSnack(
     autoDismiss: Boolean = false,
     lazyMessage: () -> Any
 ) {
     if (BuildConfig.DEBUG) {
-        SnackBarPresenter.showDeveloperMessage(
+        SnackBarPresenter.showDebugMessage(
             Message(
                 message = lazyMessage().toString(),
                 autoDismiss = autoDismiss

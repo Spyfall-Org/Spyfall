@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 /**
  * A dictionary implementation that pulls from the xml strings packaged with the app
- * Packaged strings will be used by default unless overridden by a string in the dictionary
+ * Packaged strings will be used by default unless overridden by a string in the override dictionary
  */
 @Singleton
 class ResourceXmlDictionary @Inject constructor(

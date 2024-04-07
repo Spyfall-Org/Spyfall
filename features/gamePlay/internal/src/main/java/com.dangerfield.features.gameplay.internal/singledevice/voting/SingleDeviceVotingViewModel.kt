@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.doNothing
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
@@ -59,7 +59,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
             player.toDisplayable(index == 0)
         } ?: emptyList<DisplayablePlayer>().also {
             Timber.e("No players found for game")
-            developerSnackIfDebug { "No players found for game" }
+            showDebugSnack { "No players found for game" }
         }
     }
 
@@ -165,7 +165,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
                         is GameState.Expired,
                         is GameState.Started,
                         is GameState.Starting,
-                        is GameState.Unknown -> developerSnackIfDebug {
+                        is GameState.Unknown -> showDebugSnack {
                             "Illegal game state ${gameState::class.java.simpleName}"
                         }
 

@@ -21,7 +21,7 @@ import androidx.navigation.compose.LocalOwnersProvider
  *
  * Shows each [Destination] on the [FloatingWindowNavigator]'s back stack.
  *
- * Note that [SpyfallApp] should be the only called of this function.
+ * Note that [OddOneOutApp] should be the only caller of this function.
  */
 @Composable
 fun FloatingWindowHost(floatingWindowNavigator: FloatingWindowNavigator) {

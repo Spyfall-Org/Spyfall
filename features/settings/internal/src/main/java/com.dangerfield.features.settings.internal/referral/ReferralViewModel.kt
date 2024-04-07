@@ -42,7 +42,7 @@ class ReferralViewModel @Inject constructor(
 
                 is Action.Redeem -> {
                     val referralCode = referralCode
-                    if (referralCode == stateFlow.value.meReferralCode) {
+                    if (referralCode == state.meReferralCode) {
                         updateState {
                             it.copy(
                                 referralCodeFieldState = FieldState.Error("You can't redeem your own referral code"),

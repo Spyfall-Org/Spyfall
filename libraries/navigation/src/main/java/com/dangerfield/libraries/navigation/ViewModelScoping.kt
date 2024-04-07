@@ -9,17 +9,16 @@ import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 
+/**
+ * Retrieves a view model scoped to the route nav backstack entry.
+ * This is useful for scoping a view model to a nested graph to be shared between multiple destinations
+ */
 @Composable
 inline fun <reified VM : ViewModel> NavBackStackEntry.viewModelScopedTo(
     route: Route.Template,
     router: Router
 ): VM {
 
-    // TODO take the time to understand why rmember worked
-    // pretty sure when popping from a nested graph the parent gets killed before the kids
-    // which means when the kids tried to use the parents there was a problem.
-    // but remember worked
-    // fall back to the parent route or the current route
     val fallbackScope = remember {
         Catching { destination.parent!!.route!! }
             .logOnFailure("Could not get parent route to scope to from ${this.destination.route}")

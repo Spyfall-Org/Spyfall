@@ -9,7 +9,7 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ClearActiveGame
 import oddoneout.core.Catching
-import oddoneout.core.developerSnackOnError
+import oddoneout.core.debugSnackOnError
 import oddoneout.core.failure
 import oddoneout.core.logOnFailure
 import javax.inject.Inject
@@ -56,7 +56,7 @@ class LeaveGameUseCase @Inject constructor(
                     )
                 }
                 .logOnFailure()
-                .developerSnackOnError { "Error leaving game" }
+                .debugSnackOnError { "Error leaving game" }
         }
     }
 }

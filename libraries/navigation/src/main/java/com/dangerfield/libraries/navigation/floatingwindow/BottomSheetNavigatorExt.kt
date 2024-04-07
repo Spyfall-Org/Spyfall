@@ -39,6 +39,10 @@ fun NavGraphBuilder.bottomSheet(
 
 /**
  * Allows for a dialog to be shown as a destination in the navigation graph
+ * Uses a custom FloatingWindowNavigator to show the dialog instead of traditional DialogNavigator
+ * that wraps the content in a dialog.
+ *
+ * This allows for dialogs to be defined using the compose `Dialog` but still be navigated to
  */
 fun NavGraphBuilder.dialog(
     route: String,

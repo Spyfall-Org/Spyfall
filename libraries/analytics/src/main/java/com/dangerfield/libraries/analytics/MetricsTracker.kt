@@ -15,6 +15,10 @@ interface MetricsTracker {
 
 sealed class Metric(val extras: Bundle) {
 
+    /**
+     *  A Metric representing an event where the user sees something.
+     *  This could be a page, a view, or any other visual element.
+     */
     sealed class Impression(extras: Bundle) : Metric(extras) {
         class Page(
             val pageName: String,
@@ -28,6 +32,10 @@ sealed class Metric(val extras: Bundle) {
         ) : Impression(extras)
     }
 
+    /**
+     * A Metric representing an interaction with the UI.
+     * This could be a click, a swipe, or any other user action we care about.
+     */
     sealed class Interaction(extras: Bundle) : Metric(extras) {
         class Click(
             val itemName: String,
@@ -35,6 +43,10 @@ sealed class Metric(val extras: Bundle) {
         ) : Interaction(extras)
     }
 
+    /**
+     * A Metric representing an event that doesn't fit into the other categories.
+     * This could be a custom event, an error, or any other event we care about.
+     */
     sealed class Event(extras: Bundle) : Metric(extras) {
         class Custom(
             val eventName: String,
@@ -53,5 +65,5 @@ enum class PageType(val value: String) {
     FullScreenPage("screen"),
     Dialog("modal"),
     BottomSheet("sheet"),
-    OTHER("other")
+    Other("other")
 }

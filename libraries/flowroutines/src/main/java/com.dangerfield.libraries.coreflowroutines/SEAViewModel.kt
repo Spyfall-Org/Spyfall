@@ -1,6 +1,5 @@
 package com.dangerfield.libraries.coreflowroutines
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,14 +9,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import oddoneout.core.Catching
-import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 import java.util.concurrent.ConcurrentHashMap
@@ -67,18 +63,13 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
      * The flow exposing the state of the view model
      */
     val stateFlow: StateFlow<S>
-        get() = mutableStateFlow
-            .mapNotNull {
-                Catching { mapEachState(it) }
-                    .logOnFailure()
-                    .throwIfDebug()
-                    .getOrNull()
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = _initialState,
-            )
+        get() = mutableStateFlow.mapNotNull {
+            Catching { mapEachState(it) }.logOnFailure().throwIfDebug().getOrNull()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = _initialState,
+        )
 
     /**
      * The flow exposing events from the view mode
@@ -107,16 +98,16 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
 
     /**
      * Updates the state of the view model.
-     * This is the only way to update the state. Callers must have an action to update the state
+     * This is the only way to update the state.
+     *
+     * Callers must have an action to update the state, this helps maintain UDF.
      */
     suspend fun A.updateState(f: suspend (S) -> S) {
         Catching {
             mutableStateFlow.update {
                 f(it)
             }
-        }
-            .logOnFailure("Could not up state for: ${state::class.java.name}")
-            .throwIfDebug()
+        }.logOnFailure("Could not up state for: ${state::class.java.name}").throwIfDebug()
     }
 
     /**
@@ -126,7 +117,7 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
      * `debounceUpdateState` from the same action. Every update from the same action
      * will reset the debounce timer.
      */
-    suspend fun A.debounceUpdateState(debounceTime: Long = 500L, f: suspend (S) -> S) {
+    suspend fun A.updateStateDebounced(debounceTime: Long = 500L, f: suspend (S) -> S) {
         val actionIdentifier = this::class.java.simpleName
         val debouncedChannel = actionDebouncer[actionIdentifier]
 
@@ -135,11 +126,9 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
 
             actionDebouncer[actionIdentifier] = channel
 
-            channel
-                .receiveAsFlow()
+            channel.receiveAsFlow()
                 .debounce(debounceTime)
                 .collectIn(viewModelScope) {
-                    actionDebouncer.remove(actionIdentifier)
                     updateState(it)
                 }
         } else {
@@ -208,8 +197,7 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
     override fun onCleared() {
         Catching {
             savedStateHandle[StateKey] = state
-        }
-            .logOnFailure("Could not save state on clear for state: ${state::class.java.name}")
+        }.logOnFailure("Could not save state on clear for state: ${state::class.java.name}")
     }
 
     companion object {

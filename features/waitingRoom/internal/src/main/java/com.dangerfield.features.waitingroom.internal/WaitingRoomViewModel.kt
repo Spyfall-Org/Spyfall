@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import oddoneout.core.Message
-import oddoneout.core.developerSnackOnError
+import oddoneout.core.debugSnackOnError
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
@@ -104,7 +104,7 @@ class WaitingRoomViewModel @Inject constructor(
         leaveGameUseCase.invoke(
             game = game,
             id = meUserId,
-            isGameBeingStarted = stateFlow.value.isLoadingStart
+            isGameBeingStarted = state.isLoadingStart
         )
             .eitherWay { sendEvent(Event.LeftGame) }
             .onFailure {
@@ -138,7 +138,7 @@ class WaitingRoomViewModel @Inject constructor(
             locationName = game.locationName,
             id = meUserId
         )
-            .developerSnackOnError { "Error starting game" }
+            .debugSnackOnError { "Error starting game" }
             .eitherWay {
                 updateState { it.copy(isLoadingStart = false) }
             }
@@ -146,7 +146,7 @@ class WaitingRoomViewModel @Inject constructor(
 
     private suspend fun  Action.ChangeName.changeName() {
         gameRepository.changeName(accessCode, name, id)
-            .developerSnackOnError { "Error changing name" }
+            .debugSnackOnError { "Error changing name" }
     }
 
     private suspend fun Action.LoadRoom.loadRoom() {

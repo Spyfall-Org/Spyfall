@@ -46,7 +46,7 @@ fun Button(
         ButtonStyle.NoBackground -> null
     }
 
-    BasicButton(
+    SquiggleButton(
         backgroundColor = backgroundColor,
         borderColor = borderColor,
         contentColor = contentColor,

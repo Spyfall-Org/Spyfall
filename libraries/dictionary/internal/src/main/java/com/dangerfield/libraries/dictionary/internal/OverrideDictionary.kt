@@ -8,6 +8,7 @@ import javax.inject.Inject
 
 /**
  * A dictionary implementation with values that will be preferred over the default if they exist.
+ * These overrides come from backend.
  *
  * values are backed by a map of String to String with keys that correspond to the names of the
  * string resources locally

@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
@@ -92,7 +92,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
                 when (gameState) {
                     is GameState.Starting,
                     is GameState.Expired,
-                    is GameState.Unknown -> developerSnackIfDebug {
+                    is GameState.Unknown -> showDebugSnack {
                         "Illegal game state ${gameState::class.java.simpleName}"
                     }
 
@@ -166,7 +166,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         sendEvent(Event.GameKilled)
         singleDeviceGameMetricTracker.trackGameEnded(
             game = getGame(),
-            timeRemainingMillis = stateFlow.value.timeRemainingMillis
+            timeRemainingMillis = state.timeRemainingMillis
         )
     }
 

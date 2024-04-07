@@ -1,4 +1,3 @@
-import com.spyfall.util.getModule
 
 plugins {
     id("ooo.android.library")
@@ -12,5 +11,5 @@ android {
     namespace = "com.dangerfield.oddoneoout.ui.internal"
 }
 dependencies {
-    implementation(getModule("libraries:common"))
+    implementation(projects.libraries.common)
 }

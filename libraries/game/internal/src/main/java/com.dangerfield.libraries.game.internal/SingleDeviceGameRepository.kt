@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import oddoneout.core.Catching
-import oddoneout.core.developerSnackOnError
+import oddoneout.core.debugSnackOnError
 import oddoneout.core.doNothing
 import oddoneout.core.ignoreValue
 import oddoneout.core.illegalStateFailure
@@ -176,7 +176,7 @@ class SingleDeviceGameRepository
         return updateGame { game }
             .ignoreValue()
             .logOnFailure()
-            .developerSnackOnError { "Could not reset game" }
+            .debugSnackOnError { "Could not reset game" }
     }
         .logOnFailure("Could not reset game")
         .throwIfDebug()

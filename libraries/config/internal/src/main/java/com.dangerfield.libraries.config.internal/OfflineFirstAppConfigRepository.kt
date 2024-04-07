@@ -31,7 +31,7 @@ import se.ansman.dagger.auto.AutoBind
 import se.ansman.dagger.auto.AutoInitialize
 import oddoneout.core.ApplicationState
 import oddoneout.core.ApplicationStateRepository
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.doNothing
 import oddoneout.core.ignoreValue
 import oddoneout.core.withBackoffRetry
@@ -162,7 +162,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
                         cachedConfigDataSource.updateConfig(config)
                     }.onFailure { throwable ->
                         if (cachedConfigDataSource.getConfig().isFailure) {
-                            developerSnackIfDebug {
+                            showDebugSnack {
                                 "Failed to refresh app config, None Cached. Using Fallback."
                             }
                             Timber.d(
@@ -171,7 +171,7 @@ class OfflineFirstAppConfigRepository @Inject constructor(
                             )
                             cachedConfigDataSource.updateConfig(fallbackConfig)
                         } else {
-                            developerSnackIfDebug {
+                            showDebugSnack {
                                 "Failed to refresh app config, using cached config."
                             }
                             Timber.d(throwable, "Failed to refresh app config, using cached config")

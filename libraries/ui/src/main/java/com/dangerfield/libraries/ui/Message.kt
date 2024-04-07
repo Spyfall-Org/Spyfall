@@ -4,11 +4,11 @@ import oddoneout.core.Message
 import oddoneout.core.SnackBarPresenter
 
 fun showDeveloperMessage(developerMessage: Message) {
-    SnackBarPresenter.showDeveloperMessage(developerMessage)
+    SnackBarPresenter.showDebugMessage(developerMessage)
 }
 
 fun showDeveloperMessage(autoDismiss: Boolean = true, lazyMessage: () -> String) {
-    SnackBarPresenter.showDeveloperMessage(Message(lazyMessage(), autoDismiss))
+    SnackBarPresenter.showDebugMessage(Message(lazyMessage(), autoDismiss))
 }
 
 fun showMessage(message: Message) {

@@ -14,7 +14,7 @@ import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
 import oddoneout.core.GenerateLocalUUID
 import oddoneout.core.Catching
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.failure
 import oddoneout.core.mapFailure
 import javax.inject.Inject
@@ -118,7 +118,7 @@ class JoinGameUseCase @Inject constructor(
     private suspend fun checkForExistingSession() {
         if (session.activeGame != null) {
             clearActiveGame()
-            developerSnackIfDebug { "User is already in an existing game while joining a game." }
+            showDebugSnack { "User is already in an existing game while joining a game." }
         }
     }
 

@@ -12,6 +12,16 @@ import oddoneout.core.doNothing
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 
+/**
+ * Route is a class that represents a destination in a navigation graph.
+ * It can be used to define that destination (A Template) and it can be used to navigate to that
+ * destination. You can only use a Filled Route to navigate to a destination.
+ *
+ * Templates represent a declaration of a route to be filled when navigated to. Its the empty bucket
+ * that you fill with arguments when you want to navigate to a destination.
+ *
+ * Filled represents a route that has been filled with arguments and is ready to be navigated to.
+ */
 class Route internal constructor() {
 
     class Builder internal constructor() {

@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
@@ -108,7 +108,7 @@ class GamePlayViewModel @Inject constructor(
     private suspend fun endGame() {
         metricsTracker.trackGameEnded(
             game = getGame(),
-            timeRemainingMillis = stateFlow.value.timeRemainingMillis
+            timeRemainingMillis = state.timeRemainingMillis
         )
         gameRepository.end(accessCode)
     }
@@ -118,13 +118,13 @@ class GamePlayViewModel @Inject constructor(
             .onSuccess {
                 metricsTracker.trackGameRestarted(
                     game = getGame(),
-                    timeRemainingMillis = stateFlow.value.timeRemainingMillis
+                    timeRemainingMillis = state.timeRemainingMillis
                 )
             }
             .onFailure {
                 metricsTracker.trackGameRestartError(
                     game = getGame(),
-                    timeRemainingMillis = stateFlow.value.timeRemainingMillis
+                    timeRemainingMillis = state.timeRemainingMillis
                 )
             }
             .logOnFailure()
@@ -180,7 +180,7 @@ class GamePlayViewModel @Inject constructor(
                 when (gameState) {
                     is GameState.Starting,
                     is GameState.Expired,
-                    is GameState.Unknown -> developerSnackIfDebug {
+                    is GameState.Unknown -> showDebugSnack {
                         "Illegal game state ${gameState::class.java.simpleName}"
                     }
 

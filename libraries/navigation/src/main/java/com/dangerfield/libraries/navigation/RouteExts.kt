@@ -3,6 +3,9 @@ package com.dangerfield.libraries.navigation
 
 import androidx.navigation.NamedNavArgument
 
+// NOTE: ALL EXTENSIONS IN THIS FILE ARE USED INTERNALLY BY THE NAVIGATION LIBRARY
+// AND ARE NOT INTENDED FOR USE OUTSIDE OF THE LIBRARY
+
 /**
  * @return  true if the route contains any arguments
  * operates under the assumption that all routes are build with the RouteBuilder

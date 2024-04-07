@@ -25,7 +25,7 @@ import oddoneout.core.ApplicationStateRepository
 import oddoneout.core.BuildInfo
 import oddoneout.core.ApplicationState
 import oddoneout.core.Catching
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.doNothing
 import oddoneout.core.logOnFailure
 import timber.log.Timber
@@ -78,7 +78,7 @@ class GDRPConsentManager @Inject constructor(
                 val message =
                     "Status given: $status does not match expected status: $expectedStatus"
                 Timber.e(message)
-                developerSnackIfDebug { message }
+                showDebugSnack { message }
             }
         }
     }

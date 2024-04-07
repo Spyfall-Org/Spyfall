@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import oddoneout.core.Catching
-import oddoneout.core.developerSnackOnError
+import oddoneout.core.debugSnackOnError
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 import timber.log.Timber
@@ -66,7 +66,7 @@ class NavControllerRouter(
                     navHostController.context.openWebLinkExternally(it)
                 }
             }
-            .developerSnackOnError { "Could not open web link $url" }
+            .debugSnackOnError { "Could not open web link $url" }
             .logOnFailure()
     }
 

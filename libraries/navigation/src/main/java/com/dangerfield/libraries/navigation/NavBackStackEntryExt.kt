@@ -5,9 +5,17 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import oddoneout.core.Catching
 import oddoneout.core.checkInDebug
-import oddoneout.core.developerSnackOnError
+import oddoneout.core.debugSnackOnError
 import oddoneout.core.logOnFailure
 
+/**
+ * Gets a nav argument from a NavBackStackEntry. Prioritizes pulling from savedStateHandle,
+ * falls back to arguments
+ *
+ * @param navArgument the argument to get
+ *
+ *
+ */
 inline fun <reified T : Any> NavBackStackEntry.navArgument(navArgument: NamedNavArgument): T? =
     Catching {
         val argValue = when (navArgument.argument.type) {
@@ -35,6 +43,6 @@ inline fun <reified T : Any> NavBackStackEntry.navArgument(navArgument: NamedNav
 
         value
     }
-        .developerSnackOnError { "NavBackStackEntry did not have expected arg: ${navArgument.name}" }
+        .debugSnackOnError { "NavBackStackEntry did not have expected arg: ${navArgument.name}" }
         .logOnFailure()
         .getOrNull()

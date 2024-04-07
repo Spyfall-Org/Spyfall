@@ -17,7 +17,7 @@ import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UpdateActiveGame
 import oddoneout.core.GenerateLocalUUID
 import oddoneout.core.Catching
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.failure
 import java.time.Clock
 import javax.inject.Inject
@@ -110,7 +110,7 @@ class CreateGame @Inject constructor(
     private suspend fun checkForExistingSession() {
         if (session.activeGame != null) {
             clearActiveGame()
-            developerSnackIfDebug {
+            showDebugSnack {
                 "User is already in an existing game while creating a game."
             }
         }

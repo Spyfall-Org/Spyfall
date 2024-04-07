@@ -51,8 +51,8 @@ class JoinGameViewModel @Inject constructor(
             it.copy(isLoading = true)
         }
 
-        val accessCodeValue = stateFlow.value.accessCodeState.value
-        val userNameValue = stateFlow.value.userNameState.value
+        val accessCodeValue = state.accessCodeState.value
+        val userNameValue = state.userNameState.value
 
         allOrNone(one = accessCodeValue, two = userNameValue) { accessCode, userName ->
             joinGame(

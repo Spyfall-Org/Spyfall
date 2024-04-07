@@ -1,5 +1,3 @@
-import com.spyfall.util.getModule
-
 plugins {
     id("ooo.android.feature")
 }

@@ -14,7 +14,7 @@ import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.SessionFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
-import oddoneout.core.developerSnackIfDebug
+import oddoneout.core.showDebugSnack
 import oddoneout.core.withBackoffRetry
 import javax.inject.Inject
 import javax.inject.Named
@@ -58,7 +58,7 @@ class WelcomeViewModel @Inject constructor(
                     mapToGameState(game.accessCode, game)
                 }
                 .onSuccess {
-                    developerSnackIfDebug {
+                    showDebugSnack {
                         "Found game with state: ${it::class.java.simpleName}. Access code: ${activeGame.accessCode}"
                     }
 

@@ -3,7 +3,7 @@ package com.dangerfield.libraries.navigation
 import androidx.annotation.AnimRes
 import androidx.annotation.AnimatorRes
 
-public class NavAnimBuilder {
+class NavAnimBuilder {
     /**
      * The custom Animation or Animator resource for the enter animation.
      *

@@ -52,7 +52,7 @@ import com.dangerfield.libraries.ui.thenIf
 import kotlin.math.sqrt
 
 @Composable
-internal fun BasicButton(
+internal fun SquiggleButton(
     backgroundColor: ColorResource?,
     borderColor: ColorResource?,
     contentColor: ColorResource,
@@ -330,7 +330,7 @@ private val OutlinedButtonBorderWidth = StandardBorderWidth
 @Composable
 private fun LargeButton() {
     Preview {
-        BasicButton(
+        SquiggleButton(
             backgroundColor = OddOneOutTheme.colors.accent,
             borderColor = null,
             contentColor = OddOneOutTheme.colors.onAccent,
@@ -346,7 +346,7 @@ private fun LargeButton() {
 @Composable
 private fun SmallButton() {
     Preview {
-        BasicButton(
+        SquiggleButton(
             backgroundColor = OddOneOutTheme.colors.accent,
             borderColor = null,
             contentColor = OddOneOutTheme.colors.onAccent,
@@ -362,7 +362,7 @@ private fun SmallButton() {
 @Composable
 private fun ExtraSmallButton() {
     Preview {
-        BasicButton(
+        SquiggleButton(
             backgroundColor = OddOneOutTheme.colors.accent,
             borderColor = null,
             contentColor = OddOneOutTheme.colors.onAccent,
@@ -378,7 +378,7 @@ private fun ExtraSmallButton() {
 @Composable
 private fun LargeButtonNOBackgroun() {
     Preview {
-        BasicButton(
+        SquiggleButton(
             backgroundColor = null,
             borderColor = null,
             contentColor = OddOneOutTheme.colors.onAccent,

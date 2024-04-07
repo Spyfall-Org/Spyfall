@@ -9,8 +9,11 @@ val LocalDictionary = staticCompositionLocalOf<Dictionary> {
     error("No LocalDictionary provided")
 }
 
+/**
+ * Retrieves a string from the dictionary, throws an error if it doesn't exist
+ */
 @Composable
 fun dictionaryString(@StringRes id: Int, vararg args: Pair<String,String>): String {
     val dictionary = LocalDictionary.current
-    return remember(args) { dictionary.getString(id, args.toMap()) }
+    return remember(id, args) { dictionary.getString(id, args.toMap()) }
 }
