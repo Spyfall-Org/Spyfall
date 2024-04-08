@@ -29,4 +29,13 @@ fi
 
 
 #__________________________________Localization Sync. Check _______________________________________
-./scripts/check_localization_sync.main.kts
+projectRoot=$(git rev-parse --show-toplevel)
+
+kotlinScriptPath="$projectRoot/scripts/check_localization_sync.main.kts"
+
+if [ ! -f "$kotlinScriptPath" ]; then
+    echo "Kotlin script not found: $kotlinScriptPath"
+    exit 1
+fi
+
+kotlinc -script "$kotlinScriptPath" || exit $?
