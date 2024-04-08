@@ -1,5 +1,6 @@
 package com.dangerfield.features.joingame.internal
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.joingame.internal.JoinGameUseCase.JoinGameError
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
@@ -12,7 +13,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import oddoneout.core.allOrNone
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
+import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class JoinGameViewModel @Inject constructor(
@@ -54,13 +57,16 @@ class JoinGameViewModel @Inject constructor(
         val accessCodeValue = state.accessCodeState.value
         val userNameValue = state.userNameState.value
 
-        allOrNone(one = accessCodeValue, two = userNameValue) { accessCode, userName ->
+        allOrNone(
+            accessCodeValue,
+            userNameValue
+        ) { accessCode, userName ->
             joinGame(
                 accessCode = accessCode,
                 userName = userName
             )
                 .onSuccess {
-                    this@JoinGameViewModel.sendEvent(Event.GameJoined(accessCode))
+                    sendEvent(Event.GameJoined(accessCode))
                 }
                 .onFailure { throwable ->
                     if (throwable is JoinGameError) {
@@ -150,15 +156,19 @@ class JoinGameViewModel @Inject constructor(
         }
 
     override suspend fun mapEachState(state: State): State {
-
         val isFormValid = state.accessCodeState is FieldState.Valid
                 && state.userNameState is FieldState.Valid
 
+        Log.d("Elijah", "STATE UPDATED: \naccess code state is ${state.accessCodeState}\nusername state is ${state.userNameState}\nisFormValid is $isFormValid")
         return state.copy(isFormValid = isFormValid)
     }
     
-    private suspend fun Action.UpdateAccessCode.handleUpdateAccessCode() =
+    private suspend fun Action.UpdateAccessCode.handleUpdateAccessCode() {
         updateState {
+            it.copy(accessCodeState = FieldState.Valid(accessCode))
+        }
+
+        updateStateDebounced(1.seconds) {
             val state = when {
                 accessCode.isEmpty() -> FieldState.Idle(accessCode)
                 accessCode.length != gameConfig.accessCodeLength -> {
@@ -173,27 +183,34 @@ class JoinGameViewModel @Inject constructor(
 
                 else -> FieldState.Valid(accessCode)
             }
-
             it.copy(accessCodeState = state)
         }
+    }
 
-    private suspend fun Action.UpdateUserName.handleUpdateUserName() = updateState {
-        val state = when {
-            userName.isEmpty() -> FieldState.Idle(userName)
-            userName.length !in gameConfig.minNameLength..gameConfig.maxNameLength -> {
-                FieldState.Invalid(
-                    input = userName,
-                    errorMessage = dictionary.getString(
-                        R.string.joinGame_nameLengthError_text,
-                        "min" to "${gameConfig.minNameLength}",
-                        "max" to "${gameConfig.maxNameLength}"
-                    )
-                )
-            }
-
-            else -> FieldState.Valid(userName)
+    private suspend fun Action.UpdateUserName.handleUpdateUserName()
+    {
+        updateState {
+            it.copy(userNameState = FieldState.Valid(userName))
         }
 
-        it.copy(userNameState = state)
+        updateStateDebounced(1.seconds) {
+            val state = when {
+                userName.isEmpty() -> FieldState.Idle(userName)
+                userName.length !in gameConfig.minNameLength..gameConfig.maxNameLength -> {
+                    FieldState.Invalid(
+                        input = userName,
+                        errorMessage = dictionary.getString(
+                            R.string.joinGame_nameLengthError_text,
+                            "min" to "${gameConfig.minNameLength}",
+                            "max" to "${gameConfig.maxNameLength}"
+                        )
+                    )
+                }
+
+                else -> FieldState.Valid(userName)
+            }
+
+            it.copy(userNameState = state)
+        }
     }
 }

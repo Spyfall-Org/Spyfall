@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
+import kotlin.time.Duration
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * A view model that revolves around State (S), Events (E) and Actions (A)
@@ -50,26 +52,28 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
     private val events = Channel<E>(Channel.UNLIMITED)
     private val actionDebouncer = ConcurrentHashMap<String, Channel<suspend (S) -> S>>()
     private val _initialState: S by lazy { initialState() }
-
+    // Lazy so that we do not let initialState() from the child get called before the child is initialized
     private val mutableStateFlow: MutableStateFlow<S> by lazy {
         MutableStateFlow(
             Catching {
-                savedStateHandle.get<S>(StateKey)
+                savedStateHandle.get<S>(STATE_KEY)
             }.getOrNull() ?: _initialState
         )
     }
 
     /**
      * The flow exposing the state of the view model
+     * Lazy so that Mutable State flow doesnt get created before it needs to be
      */
-    val stateFlow: StateFlow<S>
-        get() = mutableStateFlow.mapNotNull {
+    val stateFlow: StateFlow<S> by lazy {
+        mutableStateFlow.mapNotNull {
             Catching { mapEachState(it) }.logOnFailure().throwIfDebug().getOrNull()
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = _initialState,
         )
+    }
 
     /**
      * The flow exposing events from the view mode
@@ -79,7 +83,7 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
     /**
      * The current state value
      */
-    val state: S get() = mutableStateFlow.value
+    val state: S get() = stateFlow.value
 
     init {
         viewModelScope.launch {
@@ -107,7 +111,9 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
             mutableStateFlow.update {
                 f(it)
             }
-        }.logOnFailure("Could not up state for: ${state::class.java.name}").throwIfDebug()
+        }
+            .logOnFailure("Could not up state for: ${state::class.java.name}")
+            .throwIfDebug()
     }
 
     /**
@@ -124,7 +130,7 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
      * - Search field state updates that trigger a network call.
      * - Typing in a form field that triggers validation. (prevent error spam if the user is still typing)
      */
-    suspend fun A.updateStateDebounced(debounceTime: Long = 500L, f: suspend (S) -> S) {
+    suspend fun A.updateStateDebounced(duration: Duration = 1.seconds, f: suspend (S) -> S) {
         val actionIdentifier = this::class.java.simpleName
         val debouncedChannel = actionDebouncer[actionIdentifier]
 
@@ -134,10 +140,12 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
             actionDebouncer[actionIdentifier] = channel
 
             channel.receiveAsFlow()
-                .debounce(debounceTime)
+                .debounce(duration.inWholeMilliseconds)
                 .collectIn(viewModelScope) {
                     updateState(it)
                 }
+
+            channel.trySend(f)
         } else {
             debouncedChannel.trySend(f)
         }
@@ -203,11 +211,11 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
 
     override fun onCleared() {
         Catching {
-            savedStateHandle[StateKey] = state
+            savedStateHandle[STATE_KEY] = state
         }.logOnFailure("Could not save state on clear for state: ${state::class.java.name}")
     }
 
     companion object {
-        private const val StateKey = "state"
+        private const val STATE_KEY = "state"
     }
 }

@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import oddoneout.core.eitherWay
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ContactUsViewModel @Inject constructor(
@@ -48,7 +49,7 @@ class ContactUsViewModel @Inject constructor(
             it.copy(emailFieldState = FieldState.Valid(email))
         }
 
-        updateStateDebounced(1000L) {
+        updateStateDebounced(1.seconds) {
             val state = if (email.isNotEmpty() && email.isEmailFormat()) {
                 FieldState.Valid(email)
             } else {

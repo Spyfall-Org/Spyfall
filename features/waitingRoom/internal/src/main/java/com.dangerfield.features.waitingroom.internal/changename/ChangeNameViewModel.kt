@@ -22,6 +22,7 @@ import oddoneout.core.allOrNone
 import oddoneout.core.eitherWay
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ChangeNameViewModel @Inject constructor(
@@ -64,18 +65,11 @@ class ChangeNameViewModel @Inject constructor(
     }
 
     private suspend fun Action.SubmitNameChange.handleNameChangeSubmit() {
-        val game = getGame()
-
-        if (game == null) {
-            updateState { it.copy(didSomethingGoWrong = true) }
-            return
-        }
-
         allOrNone(
+            getGame()?.players,
             accessCode,
             session.activeGame?.userId
-        ) { accessCode, userId ->
-            val allPlayers = game.players
+        ) { allPlayers, accessCode, userId ->
             val mePlayer = allPlayers.firstOrNull { it.id == userId }
             val notMePlayers = allPlayers.filter { it != mePlayer }
             val isNameTaken = notMePlayers.any { it.userName == name }
@@ -106,22 +100,12 @@ class ChangeNameViewModel @Inject constructor(
             newName = name,
             id = userId
         )
-            .onSuccess {
-                sendEvent(Event.NameChanged)
-            }
-            .onFailure {
-                updateState { it.copy(didSomethingGoWrong = true) }
-            }
-            .eitherWay {
-                updateState { it.copy(isLoading = false) }
-            }
+            .onSuccess { sendEvent(Event.NameChanged) }
+            .onFailure { updateState { it.copy(didSomethingGoWrong = true) } }
+            .eitherWay { updateState { it.copy(isLoading = false) } }
     }
 
-    // TODO would be ideal to debounce this, not hiding errors while typing
-    private suspend fun Action.UpdateName.updateName(
-    ) {
-        updateState { it.copy(name = name) } // prevent lag
-
+    private suspend fun Action.UpdateName.updateName() {
         val game = getGame()
 
         if (game == null) {
@@ -129,17 +113,15 @@ class ChangeNameViewModel @Inject constructor(
             return
         }
 
+        updateState { it.copy(name = name) }
+
         val players = game.players
-
         val notMePlayers = players.filter { it.id != session.activeGame?.userId }
-
         val isNameTaken = notMePlayers.any { it.userName == name }
-
         val nameIsInvalidLength = name.length !in gameConfig.minNameLength..gameConfig.maxNameLength
 
-        updateState {
+        updateStateDebounced(1.seconds) {
             it.copy(
-                name = name,
                 isNameTaken = isNameTaken,
                 isNameInvalidLength = nameIsInvalidLength,
                 didSomethingGoWrong = false,

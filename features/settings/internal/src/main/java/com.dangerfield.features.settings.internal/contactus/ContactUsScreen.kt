@@ -3,6 +3,7 @@ package com.dangerfield.features.settings.internal.contactus
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,11 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +50,7 @@ import com.dangerfield.libraries.ui.VerticalSpacerD1200
 import com.dangerfield.libraries.ui.VerticalSpacerD500
 import com.dangerfield.libraries.ui.VerticalSpacerD800
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
+import com.dangerfield.libraries.ui.components.FormField
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
@@ -340,90 +345,6 @@ private fun ContactTypeOption(
             selected = selected,
             onClick = null
         )
-    }
-}
-
-enum class ErrorBehavior {
-    /**
-     * If the error exists, show it
-     */
-    Show,
-    /**
-     * If the error exists and the field is not focused, show it
-     */
-    ShowIfNotFocused,
-
-    /**
-     * If the error exists and the field is focused, show it
-     */
-    ShowIfFocused,
-    /**
-     * Never show the error
-     */
-    DontShow
-}
-
-@Composable
-private fun FormField(
-    formFieldState: FieldState<*>,
-    isFieldVisible: Boolean = true,
-    errorBehavior: ErrorBehavior = ErrorBehavior.Show,
-    onFocusChanged: (Boolean) -> Unit = {},
-    content: @Composable () -> Unit
-) {
-    var hasFocus by remember { mutableStateOf(false) }
-
-    AnimatedVisibility(visible = isFieldVisible) {
-        Column {
-            Box(modifier = Modifier.onFocusChanged {
-                hasFocus = it.hasFocus
-                onFocusChanged(it.hasFocus)
-            }) {
-                content()
-            }
-
-            VerticalSpacerD500()
-
-            val errorText = formFieldState.error
-
-            when (errorBehavior) {
-                ErrorBehavior.Show -> {
-                    if (errorText != null) {
-                        Text(
-                            text = errorText,
-                            typography = OddOneOutTheme.typography.Body.B500,
-                            colorResource = OddOneOutTheme.colors.textWarning
-                        )
-                    }
-                }
-
-                ErrorBehavior.ShowIfFocused -> {
-                    if (
-                        errorText != null && hasFocus
-                    ) {
-                        Text(
-                            text = errorText,
-                            typography = OddOneOutTheme.typography.Body.B500,
-                            colorResource = OddOneOutTheme.colors.textWarning
-                        )
-                    }
-                }
-
-                ErrorBehavior.ShowIfNotFocused -> {
-                    if (
-                        errorText != null && !hasFocus
-                    ) {
-                        Text(
-                            text = errorText,
-                            typography = OddOneOutTheme.typography.Body.B500,
-                            colorResource = OddOneOutTheme.colors.textWarning
-                        )
-                    }
-                }
-
-                ErrorBehavior.DontShow -> doNothing()
-            }
-        }
     }
 }
 

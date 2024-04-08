@@ -15,7 +15,7 @@ fun Modifier.bounceClick(
     enabled: Boolean = true,
     mutableInteractionSource: MutableInteractionSource? = null,
     indication: Indication? = null,
-    scaleDown: Float = 0.70f,
+    scaleDown: Float = 0.90f,
     onClick: () -> Unit = {}
 ) = composed {
 

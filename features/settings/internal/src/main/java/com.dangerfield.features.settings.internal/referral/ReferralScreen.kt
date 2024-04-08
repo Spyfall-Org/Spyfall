@@ -22,6 +22,7 @@ import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerD1200
 import com.dangerfield.libraries.ui.VerticalSpacerD800
 import com.dangerfield.libraries.ui.components.CircularProgressIndicator
+import com.dangerfield.libraries.ui.components.ErrorBehavior
 import com.dangerfield.libraries.ui.components.HorizontalDivider
 import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
@@ -123,7 +124,7 @@ fun ReferralScreen(
                 title = "Redeem:",
                 subtitle = "Redeem another players code to earn you both rewards. You can only redeem ${maxRedemptions} codes.",
                 hint = "Enter a referral code",
-                hideErrorWhen = { _, _ -> false },
+                errorBehavior = ErrorBehavior.Show,
                 fieldState = referralCodeFieldState,
                 keyboardActions = KeyboardActions {
                     focusManager.clearFocus()
