@@ -10,6 +10,7 @@ import timber.log.Timber
 import java.io.InputStream
 import java.io.OutputStream
 
+@Suppress("TooGenericExceptionCaught")
 class DataStoreJsonSerializer<T>(
     override val defaultValue: T,
     private val provideJsonAdapter: () -> JsonAdapter<T>,

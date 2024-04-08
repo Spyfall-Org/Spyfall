@@ -19,6 +19,7 @@ import com.dangerfield.libraries.game.internal.config.PacksVersion
 import se.ansman.dagger.auto.AutoBind
 import javax.inject.Inject
 
+@Suppress("LongParameterList")
 @AutoBind
 class GameConfigImpl @Inject constructor(
     private val accessCodeLengthValue: AccessCodeLength,

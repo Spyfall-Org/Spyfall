@@ -1,12 +1,9 @@
 package com.dangerfield.libraries.dictionary.internal
 
-import android.content.Context
 import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.supportLevelNameMap
-import com.dangerfield.oddoneoout.libraries.dictionary.internal.R
-import dagger.hilt.android.qualifiers.ApplicationContext
 import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
@@ -16,7 +13,6 @@ import javax.inject.Inject
 @AutoBind
 class GetDeviceLanguageSupportLevelImpl @Inject constructor(
     private val languageSupportLevel: CurrentLanguageSupportLevelString,
-    @ApplicationContext private val applicationContext: Context,
     private val getAppLanguageCode: GetAppLanguageCode
 ) : GetDeviceLanguageSupportLevel {
 
