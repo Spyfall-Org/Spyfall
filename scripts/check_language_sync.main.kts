@@ -38,8 +38,7 @@ fun main() {
     val langDirs = resDir.listFiles { file -> file.isDirectory && file.name.startsWith("values") }
 
     val modifiedStringsFiles = (
-            "git diff --cached --name-only".runCommand()?.lines().orEmpty() +
-            "git diff --name-only".runCommand()?.lines().orEmpty()
+            "git diff --name-only HEAD origin/main".runCommand()?.lines().orEmpty()
             ).distinct()
         .filter { it.contains("res/values") && it.endsWith("strings.xml") }
 
@@ -52,7 +51,7 @@ fun main() {
     val modifiedStrings = mutableMapOf<String, MutableList<String>>()
     modifiedStringsFiles.forEach { filePath ->
         val lang = File(filePath).parentFile.name
-        "git diff --cached $filePath".runCommand()?.lines()
+        "git diff HEAD origin/main $filePath".runCommand()?.lines()
             ?.filter { it.startsWith("+") && it.contains("<string name=") }
             ?.forEach { line ->
                 Regex("name=\"([^\"]+)\"").find(line)?.groups?.get(1)?.value?.let { stringName ->
