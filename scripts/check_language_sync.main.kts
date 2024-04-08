@@ -30,8 +30,6 @@ val projectRoot = __FILE__.absolutePath.let {
  * in one language but not another.
  */
 fun main() {
-    printCyan("\n************Checking that any changed string have been updated in other languages*******\n")
-
     val resDir = File("$projectRoot/libraries/dictionary/src/main/res")
 
     if (!resDir.exists()) {

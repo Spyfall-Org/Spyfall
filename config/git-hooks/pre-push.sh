@@ -29,6 +29,9 @@ fi
 
 
 #__________________________________Localization Sync. Check _______________________________________
+
+echo "${CYAN} ************Checking that any changed string have been updated in all languages******"
+
 projectRoot=$(git rev-parse --show-toplevel)
 
 kotlinScriptPath="$projectRoot/scripts/check_language_sync.main.kts"
