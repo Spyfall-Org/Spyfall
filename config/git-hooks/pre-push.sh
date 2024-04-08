@@ -30,6 +30,7 @@ fi
 
 #__________________________________Localization Sync. Check _______________________________________
 
+echo "\n\n${CYAN} *****Checking String Changes Are Synced******\n\n"
 # Base directory for string resources
 RES_DIR="./dictionary/src/main/res"
 
@@ -44,7 +45,7 @@ MODIFIED_STRINGS_FILES=$(git diff --cached --name-only | grep 'res/values.*/stri
 # Check if any strings.xml files have been modified
 if [ -z "$MODIFIED_STRINGS_FILES" ]; then
     # No strings.xml modifications, proceed with the push
-    echo "\n${GREEN}All string resources are synchronized."
+    echo "\n\n${GREEN}All string resources are synchronized.\n\n"
     exit 0
 fi
 
