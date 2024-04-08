@@ -31,7 +31,7 @@ fi
 #__________________________________Localization Sync. Check _______________________________________
 projectRoot=$(git rev-parse --show-toplevel)
 
-kotlinScriptPath="$projectRoot/scripts/check_localization_sync.main.kts"
+kotlinScriptPath="$projectRoot/scripts/check_language_sync.main.kts"
 
 if [ ! -f "$kotlinScriptPath" ]; then
     echo "Kotlin script not found: $kotlinScriptPath"
