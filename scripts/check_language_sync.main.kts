@@ -28,7 +28,7 @@ val projectRoot = __FILE__.absolutePath.let {
 fun main() {
     printCyan("\n************Checking that any changed string have been updated in other languages*******\n")
 
-    val resDir = File("$projectRoot/dictionary/src/main/res")
+    val resDir = File("$projectRoot/libraries/dictionary/src/main/res")
 
     if (!resDir.exists()) {
         printRed("Res directory not found. ${resDir.absolutePath}")
