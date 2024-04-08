@@ -35,11 +35,7 @@ fun main() {
         exitProcess(1)
     }
 
-    println("All children of res dir: ${resDir.listFiles().joinToString(", ") { it.name }}")
-
     val langDirs = resDir.listFiles { file -> file.isDirectory && file.name.startsWith("values") }
-
-    println("Languages found: ${langDirs.joinToString { it.name }}")
 
     val modifiedStringsFiles = (
             "git diff --cached --name-only".runCommand()?.lines().orEmpty() +
