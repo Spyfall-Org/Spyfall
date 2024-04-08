@@ -25,6 +25,10 @@ val projectRoot = __FILE__.absolutePath.let {
     it.substring(0, it.indexOf("/OddOneOut") + "/OddOneOut".length)
 }
 
+/**
+ * This script is called by the pre-push script to check if any string resource have been changed
+ * in one language but not another.
+ */
 fun main() {
     printCyan("\n************Checking that any changed string have been updated in other languages*******\n")
 
@@ -64,7 +68,7 @@ fun main() {
     modifiedStrings.forEach { (stringName, langs) ->
         val missingUpdates = langDirs.map { it.name }.filterNot { langs.contains(it) }
         if (missingUpdates.isNotEmpty()) {
-            println("'$stringName' has been modified but not updated in: ${missingUpdates.joinToString(", ")}")
+            printRed("The String $stringName has been modified but not updated in: ${missingUpdates.joinToString(", ")}")
             inconsistenciesFound = true
         }
     }
