@@ -30,14 +30,14 @@ fun main() {
 
     val resDir = File("$projectRoot/dictionary/src/main/res")
 
-    val langDirs = resDir.listFiles { file -> file.isDirectory && file.name.startsWith("values") } ?: return
+    val langDirs = resDir.listFiles { file -> file.isDirectory && file.name.startsWith("values") }
 
     val modifiedStringsFiles = "git diff --cached --name-only".runCommand()?.lines()
         ?.filter { it.contains("res/values") && it.endsWith("strings.xml") }
         ?: listOf()
 
     if (modifiedStringsFiles.isEmpty()) {
-        println("No modifications in string resources detected.")
+        printGreen("No modifications in string resources detected.\n")
         return
     }
 
@@ -57,7 +57,7 @@ fun main() {
     modifiedStrings.forEach { (stringName, langs) ->
         val missingUpdates = langDirs.map { it.name }.filterNot { langs.contains(it) }
         if (missingUpdates.isNotEmpty()) {
-            println("The string '$stringName' has been modified but not updated in: ${missingUpdates.joinToString(", ")}")
+            println("'$stringName' has been modified but not updated in: ${missingUpdates.joinToString(", ")}")
             inconsistenciesFound = true
         }
     }
