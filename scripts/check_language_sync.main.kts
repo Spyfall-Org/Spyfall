@@ -3,11 +3,31 @@
 import java.io.File
 import kotlin.system.exitProcess
 
+val red = "\u001b[31m"
+val green = "\u001b[32m"
+val cyan = "\u001b[36m"
+val reset = "\u001b[0m"
+
+fun printRed(text: String) {
+    println(red + text + reset)
+}
+
+fun printCyan(text: String) {
+    println(cyan + text + reset)
+}
+
+fun printGreen(text: String) {
+    println(green + text + reset)
+}
+
+
 val projectRoot = __FILE__.absolutePath.let {
     it.substring(0, it.indexOf("/OddOneOut") + "/OddOneOut".length)
 }
 
 fun main() {
+    printCyan("\nChecking that any changed string have been updated in other languages...")
+
     val resDir = File("$projectRoot/dictionary/src/main/res")
 
     val langDirs = resDir.listFiles { file -> file.isDirectory && file.name.startsWith("values") } ?: return
@@ -43,10 +63,10 @@ fun main() {
     }
 
     if (inconsistenciesFound) {
-        println("String resources are not synchronized across all languages. Please make the necessary updates.")
+        printRed("String resources are not synchronized across all languages. Please make the necessary updates.")
         exitProcess(1)
     } else {
-        println("All modified string resources are synchronized across languages.")
+        printGreen("All modified string resources are synchronized across languages.")
     }
 }
 
