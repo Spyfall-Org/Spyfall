@@ -44,6 +44,7 @@ MODIFIED_STRINGS_FILES=$(git diff --cached --name-only | grep 'res/values.*/stri
 # Check if any strings.xml files have been modified
 if [ -z "$MODIFIED_STRINGS_FILES" ]; then
     # No strings.xml modifications, proceed with the push
+    echo "\n${GREEN}All string resources are synchronized."
     exit 0
 fi
 
