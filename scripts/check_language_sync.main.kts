@@ -32,9 +32,12 @@ fun main() {
 
     val langDirs = resDir.listFiles { file -> file.isDirectory && file.name.startsWith("values") }
 
-    val modifiedStringsFiles = "git diff --cached --name-only".runCommand()?.lines()
-        ?.filter { it.contains("res/values") && it.endsWith("strings.xml") }
-        ?: listOf()
+    val modifiedStringsFiles = (
+            "git diff --cached --name-only".runCommand()?.lines().orEmpty() +
+            "git diff --name-only".runCommand()?.lines().orEmpty()
+            ).distinct()
+        .filter { it.contains("res/values") && it.endsWith("strings.xml") }
+
 
     if (modifiedStringsFiles.isEmpty()) {
         printGreen("No modifications in string resources detected.\n")
