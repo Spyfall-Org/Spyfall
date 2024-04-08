@@ -34,7 +34,7 @@ fun main() {
 
     val modifiedStringsFiles = "git diff --cached --name-only".runCommand()?.lines()
         ?.filter { it.contains("res/values") && it.endsWith("strings.xml") }
-        ?: return
+        ?: listOf()
 
     if (modifiedStringsFiles.isEmpty()) {
         println("No modifications in string resources detected.")
