@@ -30,7 +30,7 @@ fi
 
 #__________________________________Localization Sync. Check _______________________________________
 
-echo "\n\n${CYAN} *****Checking String Changes Are Synced******\n\n"
+echo "\n${CYAN} *****Checking String Changes Are Synced******\n"
 # Base directory for string resources
 RES_DIR="./dictionary/src/main/res"
 
