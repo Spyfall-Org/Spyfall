@@ -30,6 +30,11 @@ fun main() {
 
     val resDir = File("$projectRoot/dictionary/src/main/res")
 
+    if (!resDir.exists()) {
+        printRed("Res directory not found. ${resDir.absolutePath}")
+        exitProcess(1)
+    }
+
     println("All children of res dir: ${resDir.listFiles().joinToString(", ") { it.name }}")
 
     val langDirs = resDir.listFiles { file -> file.isDirectory && file.name.startsWith("values") }
