@@ -74,7 +74,7 @@ fun main() {
     }
 
     if (inconsistenciesFound) {
-        printRed("String resources are not synchronized across all languages. Please make the necessary updates.")
+        printCyan("\nString resources are not synchronized across all languages. Please make the necessary updates.\n")
         exitProcess(1)
     } else {
         printGreen("All modified string resources are synchronized across languages.")
