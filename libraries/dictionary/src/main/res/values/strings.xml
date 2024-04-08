@@ -350,7 +350,7 @@
 
 
     <!-- /////////////////////    GENERAL ERROR   /////////////////////-->
-    <string name="generalError_title_text">Something did went wrong</string>
+    <string name="generalError_title_text">Something went wrong</string>
     <string name="generalError_description_text">Looks like something went wrong processing this request. Make sure you are on the latest app version and/or please try again.</string>
     <string name="odd_one_out_is_offline">Odd One Out is offline</string>
 

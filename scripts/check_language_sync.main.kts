@@ -26,7 +26,7 @@ val projectRoot = __FILE__.absolutePath.let {
 }
 
 fun main() {
-    printCyan("\nChecking that any changed string have been updated in other languages...")
+    printCyan("\n************Checking that any changed string have been updated in other languages*******\n")
 
     val resDir = File("$projectRoot/dictionary/src/main/res")
 
