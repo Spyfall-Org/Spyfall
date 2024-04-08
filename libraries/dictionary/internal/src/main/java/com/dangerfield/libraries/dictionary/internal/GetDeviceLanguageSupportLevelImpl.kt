@@ -1,6 +1,7 @@
 package com.dangerfield.libraries.dictionary.internal
 
 import android.content.Context
+import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
 import com.dangerfield.libraries.dictionary.LanguageSupportLevel
 import com.dangerfield.libraries.dictionary.supportLevelNameMap
@@ -15,11 +16,12 @@ import javax.inject.Inject
 @AutoBind
 class GetDeviceLanguageSupportLevelImpl @Inject constructor(
     private val languageSupportLevel: CurrentLanguageSupportLevelString,
-    @ApplicationContext private val applicationContext: Context
+    @ApplicationContext private val applicationContext: Context,
+    private val getAppLanguageCode: GetAppLanguageCode
 ) : GetDeviceLanguageSupportLevel {
 
     private val appLanguage: String
-        get() = applicationContext.getString(R.string.appLanguageCode)
+        get() = getAppLanguageCode()
 
     private val deviceLocale: Locale get() = Locale.getDefault()
 

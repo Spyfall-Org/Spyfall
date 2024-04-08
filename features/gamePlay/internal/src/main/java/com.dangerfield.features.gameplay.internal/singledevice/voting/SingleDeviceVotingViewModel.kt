@@ -92,7 +92,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
                 is Action.ResetGame -> action.resetGame()
                 is Action.SubmitVoteForLocation -> action.submitVoteForLocation()
                 is Action.SubmitVoteForPlayer -> action.submitVoteForPlayer()
-                is Action.WaitForResults -> updateState { state -> state.copy(isLoadingResult = true)  }
+                is Action.WaitForResults -> updateState { state -> state.copy(isLoadingResult = true) }
                 is Action.PreviousPlayer -> loadPlayer(--currentPlayerRoleIndex)
             }
         }
@@ -184,7 +184,8 @@ class SingleDeviceVotingViewModel @Inject constructor(
 
                             updateState { state ->
                                 state.copy(
-                                    correctGuessesForOddOneOut = gameState.players.filter { !it.isOddOneOut }.filter { it.votedCorrectly() }.size,
+                                    correctGuessesForOddOneOut = gameState.players.filter { !it.isOddOneOut }
+                                        .filter { it.votedCorrectly() }.size,
                                     totalPlayerCount = gameState.players.size,
                                     location = gameState.location,
                                     oddOneOutName = gameState.players.first { it.isOddOneOut }.userName,
@@ -209,7 +210,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         }
     }
 
-    private suspend fun Action.loadPlayer(index: Int, ) {
+    private suspend fun Action.loadPlayer(index: Int) {
         val allPlayers = allPlayers.getValue()
         val player = playersToShowRoles.elementAtOrNull(index)
 
@@ -248,8 +249,11 @@ class SingleDeviceVotingViewModel @Inject constructor(
             }.onFailure {
                 singleDeviceGameMetricTracker.trackGameRestartError(
                     game = getGame(),
-                    timeRemainingMillis = 0
+                    timeRemainingMillis = 0,
+                    error = it
                 )
+
+                sendEvent(Event.ResetFailed)
             }
     }
 
@@ -276,6 +280,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
     sealed class Event {
         data object GameKilled : Event()
         data object GameReset : Event()
+        data object ResetFailed : Event()
     }
 
     sealed class Action {
@@ -283,7 +288,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         data class SubmitVoteForPlayer(val voterId: String, val playerId: String) : Action()
         data object WaitForResults : Action()
         data class SubmitVoteForLocation(val voterId: String, val location: String) : Action()
-        data object PreviousPlayer: Action()
+        data object PreviousPlayer : Action()
         data object EndGame : Action()
         data object ResetGame : Action()
     }

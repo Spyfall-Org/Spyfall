@@ -15,4 +15,5 @@ interface GameConfig {
     val locationsPerSingleDeviceGame: Int
     val gameInactivityExpirationMins: Int
     val canNonHostsControlGame: Boolean
+    val packsVersion: Int
 }

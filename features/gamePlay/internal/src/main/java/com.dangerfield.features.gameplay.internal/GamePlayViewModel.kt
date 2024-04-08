@@ -92,7 +92,7 @@ class GamePlayViewModel @Inject constructor(
         isVoteSubmitted = false,
         gameResult = null,
         videoCallLink = null,
-        canControlGame = false
+        canControlGame = false,
     )
 
     override suspend fun handleAction(action: Action) {
@@ -100,7 +100,7 @@ class GamePlayViewModel @Inject constructor(
             is Action.LoadGamePlay -> action.loadGamePlay()
             is Action.SubmitLocationVote -> action.submitLocationVote()
             is Action.SubmitOddOneOutVote -> action.submitOddOneOutVote()
-            is Action.ResetGame -> resetGame()
+            is Action.ResetGame -> action.resetGame()
             is Action.EndGame -> endGame()
         }
     }
@@ -113,7 +113,7 @@ class GamePlayViewModel @Inject constructor(
         gameRepository.end(accessCode)
     }
 
-    private suspend fun resetGame() {
+    private suspend fun Action.ResetGame.resetGame() {
         gameRepository.reset(accessCode)
             .onSuccess {
                 metricsTracker.trackGameRestarted(
@@ -126,6 +126,8 @@ class GamePlayViewModel @Inject constructor(
                     game = getGame(),
                     timeRemainingMillis = state.timeRemainingMillis
                 )
+
+                sendEvent(Event.ResetFailed)
             }
             .logOnFailure()
             .throwIfDebug()
@@ -393,6 +395,7 @@ class GamePlayViewModel @Inject constructor(
     sealed class Event {
         data class GameReset(val accessCode: String) : Event()
         data object GameKilled : Event()
+        data object ResetFailed: Event()
     }
 
     sealed class Action {

@@ -23,11 +23,13 @@ import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.session.UserRepository
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -49,6 +51,7 @@ class NewGameViewModel @Inject constructor(
     private val createSingleDeviceGameUseCase: CreateSingleDeviceGame,
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
+    private val userRepository: UserRepository,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
     private val newGameMetricsTracker: NewGameMetricsTracker
 ) : ViewModel() {
@@ -333,7 +336,10 @@ class NewGameViewModel @Inject constructor(
     }
 
     private suspend fun FlowCollector<State>.handleLoadPacks() {
-        locationPackRepository.getPacks()
+        locationPackRepository.getPacks(
+            language = userRepository.getUserFlow().first().languageCode,
+            packsVersion = gameConfig.packsVersion
+        )
             .map { packs ->
                 packs.map { DisplayablePack(it) }
             }.onSuccess { packs ->

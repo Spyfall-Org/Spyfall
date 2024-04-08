@@ -32,6 +32,8 @@ class StartGameUseCase @Inject constructor(
         accessCode: String,
         players: List<Player>,
         locationName: String,
+        languageCode: String,
+        packsVersion: Int,
         id: String,
     ): Catching<Unit> = Catching {
         gameRepository
@@ -40,7 +42,12 @@ class StartGameUseCase @Inject constructor(
 
         // TODO cleanup
         // this logic is hella repeated, maybe an AssignRolesUseCase?
-        val roles = packsPackRepository.getRoles(locationName).getOrThrow()
+        val roles = packsPackRepository.getRoles(
+            language = languageCode,
+            packsVersion = packsVersion,
+            locationName = locationName,
+
+        ).getOrThrow()
         val shuffledRolesQueue = LinkedList(roles.shuffled())
         val defaultRole = roles.first()
 

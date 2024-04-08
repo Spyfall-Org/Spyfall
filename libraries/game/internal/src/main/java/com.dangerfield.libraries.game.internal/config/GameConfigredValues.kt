@@ -12,6 +12,7 @@ class AccessCodeLength @Inject constructor(
     override val displayName: String = "Access Code Length"
     override val path: String = "game.accessCodeLength"
     override val default: Int = 6
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -22,6 +23,7 @@ class MinNameLength @Inject constructor(
     override val displayName: String = "Minimum Name Length Length"
     override val path: String = "game.minNameLength"
     override val default: Int = 2
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -32,6 +34,7 @@ class MaxNameLength @Inject constructor(
     override val displayName: String = "Maximum Name Length Length"
     override val path: String = "game.maxNameLength"
     override val default: Int = 30
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -42,6 +45,7 @@ class MaxPlayers @Inject constructor(
     override val displayName: String = "Maximum Players"
     override val path: String = "game.maxPlayers"
     override val default: Int = 8
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -52,6 +56,7 @@ class MinPlayers @Inject constructor(
     override val displayName: String = "Min Players"
     override val path: String = "game.minPlayers"
     override val default: Int = 3
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -63,6 +68,7 @@ class InactivityExpirationMins @Inject constructor(
     override val path: String = "game.inactivityExpirationMins"
     override val default: Int = 30
     override val debugOverride: Int = 10
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -73,6 +79,7 @@ class LocationsPerGame @Inject constructor(
     override val displayName: String = "Locations Per Game"
     override val path: String = "game.locationsPerGame"
     override val default: Int = 12
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -83,6 +90,18 @@ class LocationsPerSingleDeviceGame @Inject constructor(
     override val displayName: String = "Locations Per Single Device Game"
     override val path: String = "game.locationsPerSingleDeviceGame"
     override val default: Int = 6
+    override val showInQADashboard: Boolean = true
+    override fun resolveValue(): Int = appConfigMap.value(this)
+}
+
+@AutoBindIntoSet
+class PacksVersion @Inject constructor(
+    private val appConfigMap: AppConfigMap
+) : ConfiguredValue<Int>() {
+    override val displayName: String = "Version of packs to be sued"
+    override val path: String = "game.packsVersion"
+    override val default: Int = 0
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -94,6 +113,7 @@ class MinTimeLimit @Inject constructor(
     override val path: String = "game.minTimeLimit"
     override val default: Int = 2
     override val debugOverride: Int = 1
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
 
@@ -104,9 +124,9 @@ class MaxTimeLimit @Inject constructor(
     override val displayName: String = "Max Game Time Limit"
     override val path: String = "game.maxTimeLimit"
     override val default: Int = 10
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }
-
 
 @AutoBindIntoSet
 class CanNonHostControlGame @Inject constructor(
@@ -116,6 +136,7 @@ class CanNonHostControlGame @Inject constructor(
     override val description: String = "If true, non hosts can start and reset games. Leaving/Ending games is always allowed."
     override val path: String = "game.canNonHostControlGame"
     override val default: Boolean = true
+    override val showInQADashboard: Boolean = true
     override fun resolveValue(): Boolean = appConfigMap.value(this)
 }
 

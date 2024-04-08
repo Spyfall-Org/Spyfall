@@ -15,6 +15,7 @@ import com.dangerfield.libraries.game.internal.config.MaxTimeLimit
 import com.dangerfield.libraries.game.internal.config.MinNameLength
 import com.dangerfield.libraries.game.internal.config.MinPlayers
 import com.dangerfield.libraries.game.internal.config.MinTimeLimit
+import com.dangerfield.libraries.game.internal.config.PacksVersion
 import se.ansman.dagger.auto.AutoBind
 import javax.inject.Inject
 
@@ -33,7 +34,8 @@ class GameConfigImpl @Inject constructor(
     private val isSingleDeviceModeEnabledExperiment: IsSingleDeviceModeEnabled,
     private val forceShortGamesFlag: ForceShortGames,
     private val isVideoCallLinkEnabledFlag: IsVideoCallLinkEnabled,
-    private val canNonHostControlGameValue: CanNonHostControlGame
+    private val canNonHostControlGameValue: CanNonHostControlGame,
+    private val packsVersionValue: PacksVersion,
     ): GameConfig {
 
     override val accessCodeLength: Int
@@ -77,4 +79,7 @@ class GameConfigImpl @Inject constructor(
 
     override val isVideoCallLinkEnabled: Boolean
         get() = isVideoCallLinkEnabledFlag()
+
+    override val packsVersion: Int
+        get() = packsVersionValue()
 }

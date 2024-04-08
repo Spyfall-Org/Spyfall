@@ -2,6 +2,7 @@ package com.dangerfield.features.newgame.internal.usecase
 
 import com.dangerfield.features.newgame.internal.presentation.model.CreateGameError
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
+import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
@@ -9,7 +10,6 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.LocationPack
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
-import com.dangerfield.libraries.game.PacksVersion
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -32,9 +32,9 @@ class CreateGame @Inject constructor(
     private val gameConfig: GameConfig,
     private val clock: Clock,
     private val session: Session,
+    private val getAppLanguageCode: GetAppLanguageCode,
     private val updateActiveGame: UpdateActiveGame,
     private val clearActiveGame: ClearActiveGame,
-    private val packsVersion: PacksVersion
 ) {
 
     suspend operator fun invoke(
@@ -89,8 +89,8 @@ class CreateGame @Inject constructor(
             version = CURRENT_GAME_MODEL_VERSION,
             accessCode = accessCode,
             lastActiveAt = clock.millis(),
-            languageCode = session.user.languageCode,
-            packsVersion = packsVersion()
+            languageCode = getAppLanguageCode(),
+            packsVersion = gameConfig.packsVersion
         )
 
         gameRepository.create(game)

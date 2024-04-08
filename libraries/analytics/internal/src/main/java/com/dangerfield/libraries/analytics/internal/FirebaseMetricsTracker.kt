@@ -87,7 +87,7 @@ class FirebaseMetricsTracker @Inject constructor(
         bundle.addSharedMetricValues()
 
         val bundleString = bundle.keySet().joinToString(", ") { "$it: ${bundle[it]}" }
-        Timber.i("Event: $key\n$bundleString")
+        Timber.i("Metrics Event: $key\n$bundleString")
 
         firebaseAnalytics.logEvent(key.toFirebaseKey(), bundle)
     }

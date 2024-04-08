@@ -8,6 +8,7 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
+import com.dangerfield.libraries.game.PacksMissingError
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.StartGameError
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +29,8 @@ import oddoneout.core.failure
 import oddoneout.core.illegalStateFailure
 import oddoneout.core.logOnFailure
 import oddoneout.core.success
+import timber.log.Timber
+import java.lang.IllegalStateException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -186,9 +189,14 @@ class MutliDeviceGameRepository @Inject constructor(
             ?: return illegalStateFailure { "Game is null when resetting" }
 
         val packs = locationPackRepository
-            .getPacks()
+            .getPacks(
+                language = currentGame.languageCode,
+                packsVersion = currentGame.packsVersion
+            )
             .getOrThrow()
             .filter { it.name in currentGame.packNames }
+            .takeIf { it.isNotEmpty() }
+            ?: throw PacksMissingError()
 
         val newLocations = getGamePlayLocations(packs)
             .getOrNull()

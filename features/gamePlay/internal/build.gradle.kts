@@ -17,6 +17,7 @@ dependencies {
     implementation(projects.libraries.analytics)
     implementation(projects.libraries.dictionary)
     implementation(projects.features.gamePlay)
+    implementation(projects.features.blockingError)
     implementation(projects.features.ads)
     implementation(projects.features.ads.ui)
     implementation(projects.features.welcome)

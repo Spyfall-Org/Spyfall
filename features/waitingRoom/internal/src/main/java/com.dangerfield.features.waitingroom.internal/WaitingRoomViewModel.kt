@@ -136,7 +136,9 @@ class WaitingRoomViewModel @Inject constructor(
             accessCode = accessCode,
             players = game.players,
             locationName = game.locationName,
-            id = meUserId
+            id = meUserId,
+            languageCode = game.languageCode,
+            packsVersion = game.packsVersion,
         )
             .debugSnackOnError { "Error starting game" }
             .eitherWay {

@@ -24,7 +24,7 @@ val generalErrorDialog = route("general_error_dialog") {
 }
 
 fun Router.navigateToGeneralErrorDialog(
-    errorClass: String?,
+    errorClass: String? = null,
 ) {
     this.navigate(
         fillRoute(generalErrorDialog) {

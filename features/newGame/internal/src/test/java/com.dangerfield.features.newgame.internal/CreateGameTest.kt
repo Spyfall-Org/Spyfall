@@ -16,7 +16,6 @@ import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.Location
 import com.dangerfield.libraries.game.LocationPack
-import com.dangerfield.libraries.game.PacksVersion
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.ColorConfig

@@ -122,7 +122,7 @@ abstract class FeatureExtension {
     open fun moshi(configure: MoshiPluginExtension.() -> Unit = {}) {
         project.plugins.apply("dev.zacsweers.moshix")
         // Needed for MoshiX
-      //  ksp()
+        ksp()
         project.dependencies {
             "implementation"(project.libs.moshi)
         }
@@ -131,7 +131,6 @@ abstract class FeatureExtension {
 
     fun serialization() {
         project.dependencies {
-
             add("implementation",project.libs.kotlinx.serialization.json)
         }
     }

@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.OddOneOutAd
+import com.dangerfield.features.blockingerror.navigateToGeneralErrorDialog
 import com.dangerfield.features.gameplay.accessCodeArgument
 import com.dangerfield.features.gameplay.internal.millisToMMss
 import com.dangerfield.features.gameplay.internal.navigateToSingleDevicePlayerRoleRoute
@@ -181,6 +182,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                     }
 
                     GameKilled -> router.popBackTo(welcomeNavigationRoute)
+                    SingleDeviceGamePlayViewModel.Event.ResetFailed -> router.navigateToGeneralErrorDialog()
                 }
             }
 
@@ -248,6 +250,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                             welcomeNavigationRoute
                         )
                         SingleDeviceVotingViewModel.Event.GameReset -> router.goBack()
+                        SingleDeviceVotingViewModel.Event.ResetFailed -> router.navigateToGeneralErrorDialog()
                     }
                 }
 
@@ -327,6 +330,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                                 numberOfRestarts++
                             }
                         }
+                        SingleDeviceVotingViewModel.Event.ResetFailed -> router.navigateToGeneralErrorDialog()
                     }
                 }
 

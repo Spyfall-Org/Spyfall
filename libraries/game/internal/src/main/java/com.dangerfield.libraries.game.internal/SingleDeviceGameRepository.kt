@@ -6,10 +6,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
+import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.LocationPackRepository
-import com.dangerfield.libraries.game.PacksVersion
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.session.Session
@@ -44,8 +44,8 @@ class SingleDeviceGameRepository
     private val clock: Clock,
     private val locationPackRepository: LocationPackRepository,
     private val getGamePlayLocations: GetGamePlayLocations,
+    private val gameConfig: GameConfig,
     @ApplicationScope private val applicationScope: CoroutineScope,
-    private val packsVersion: PacksVersion,
     private val session: Session,
     moshi: Moshi,
 ) : GameRepository {
@@ -133,7 +133,11 @@ class SingleDeviceGameRepository
             ?: return illegalStateFailure { "Single Device Game is null when resetting" }
 
         val packs = currentGame.packNames.mapNotNull { packName ->
-            locationPackRepository.getPack(packName)
+            locationPackRepository.getPack(
+                language = session.user.languageCode,
+                packsVersion = currentGame.packsVersion,
+                packName = packName
+            )
                 .throwIfDebug()
                 .getOrNull()
         }
@@ -169,7 +173,7 @@ class SingleDeviceGameRepository
             version = CURRENT_GAME_MODEL_VERSION,
             accessCode = accessCode,
             lastActiveAt = clock.millis(),
-            packsVersion = packsVersion(),
+            packsVersion = gameConfig.packsVersion,
             languageCode = session.user.languageCode
         )
 

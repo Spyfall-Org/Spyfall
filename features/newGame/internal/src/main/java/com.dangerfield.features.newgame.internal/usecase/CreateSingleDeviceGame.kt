@@ -7,7 +7,6 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
 import com.dangerfield.libraries.game.LocationPack
-import com.dangerfield.libraries.game.PacksVersion
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.session.ActiveGame
@@ -35,7 +34,6 @@ class CreateSingleDeviceGame @Inject constructor(
     private val clearActiveGame: ClearActiveGame,
     private val session: Session,
     private val dictionary: Dictionary,
-    private val packsVersion: PacksVersion,
 ) {
 
     suspend operator fun invoke(
@@ -100,7 +98,7 @@ class CreateSingleDeviceGame @Inject constructor(
             version = CURRENT_GAME_MODEL_VERSION,
             accessCode = accessCode,
             lastActiveAt = clock.millis(),
-            packsVersion = packsVersion(),
+            packsVersion = gameConfig.packsVersion,
             languageCode = session.user.languageCode
         )
 

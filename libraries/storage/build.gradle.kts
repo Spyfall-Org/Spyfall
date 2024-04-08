@@ -21,5 +21,6 @@ dependencies {
     api(libs.androidx.datastore)
     api(libs.androidx.datastore.core)
     api(project.libs.room)
+    api(libs.moshi)
     api(libs.kotlinx.serialization.json)
 }

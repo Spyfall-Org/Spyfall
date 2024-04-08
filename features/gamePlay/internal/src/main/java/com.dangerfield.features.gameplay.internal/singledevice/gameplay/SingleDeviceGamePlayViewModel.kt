@@ -69,7 +69,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
 
     override fun initialState() = State(
         isTimeUp = false,
-        timeRemainingMillis = timeLimitArg?.minutes?.inWholeMilliseconds ?: 0
+        timeRemainingMillis = timeLimitArg?.minutes?.inWholeMilliseconds ?: 0,
     )
 
     override suspend fun handleAction(action: Action) {
@@ -120,7 +120,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
         }
     }
 
-    private suspend fun Action.LoadGame.updateInProgressGame(gameState: GameState.Started, ) {
+    private suspend fun Action.LoadGame.updateInProgressGame(gameState: GameState.Started) {
         if (!isTimerRunning) startTimer()
 
         updateState { prev ->
@@ -180,8 +180,11 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
             }.onFailure {
                 singleDeviceGameMetricTracker.trackGameRestartError(
                     game = getGame(),
-                    timeRemainingMillis = 0
+                    timeRemainingMillis = 0,
+                    error = it
                 )
+
+                sendEvent(Event.ResetFailed)
             }
     }
 
@@ -192,7 +195,7 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
 
     data class State(
         val isTimeUp: Boolean,
-        val timeRemainingMillis: Long
+        val timeRemainingMillis: Long,
     )
 
     sealed class Action {
@@ -204,5 +207,6 @@ class SingleDeviceGamePlayViewModel @Inject constructor(
     sealed class Event {
         data object GameKilled : Event()
         data class GameReset(val accessCode: String) : Event()
+        data object ResetFailed : Event()
     }
 }

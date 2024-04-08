@@ -102,7 +102,8 @@ class SingleDeviceGameMetricTracker @Inject constructor(
 
     fun trackGameRestartError(
         game: Game?,
-        timeRemainingMillis: Long
+        timeRemainingMillis: Long,
+        error: Throwable
     ) {
         metricsTracker.log(
             Metric.Event.Custom(
@@ -113,6 +114,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
                     LOCATION to game?.locationName,
+                    ERROR_MESSAGE to error.message
                 )
             )
         )

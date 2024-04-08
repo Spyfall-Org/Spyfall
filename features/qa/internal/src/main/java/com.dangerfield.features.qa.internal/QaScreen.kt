@@ -95,14 +95,29 @@ fun QaScreen(
             }
 
             if (configuredValues.isNotEmpty()) {
-                QaSection(title = "Configured Values") {
+                val configGroups = configuredValues
+                    .groupBy { v -> v.path.substringBefore(".") }
+
+                val sections = configGroups.filter { g -> g.value.size > 1 }
+                val leftovers = configGroups.filter { g -> g.value.size <= 1 }.values.flatten()
+
+                QaSection(title = "Config Values") {
                     ConfigurableValuesList(
-                        configuredValues = configuredValues,
+                        configuredValues = leftovers,
                         onConfigValueOverride = onConfigValueOverride
                     )
                 }
-            }
 
+                sections.forEach { (path, configuredValues) ->
+                    QaSection(title = path.substringBefore(".") + " Config Values") {
+                        ConfigurableValuesList(
+                            configuredValues = configuredValues,
+                            onConfigValueOverride = onConfigValueOverride
+                        )
+                    }
+                }
+
+            }
         }
     }
 }
