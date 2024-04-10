@@ -79,6 +79,7 @@ fun main() {
     }
 }
 
+@Suppress("TooGenericExceptionCaught", "PrintStackTrace", "SpreadOperator")
 fun String.runCommand(workingDir: File = File(".")): String? =
     try {
         ProcessBuilder(*split(" ").toTypedArray())

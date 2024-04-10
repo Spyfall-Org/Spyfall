@@ -18,6 +18,7 @@ class JsonFallbackLocationPacksDataSource @Inject constructor(
     private val moshi: Moshi
 ) {
 
+    @Suppress("UnusedPrivateMember")
     fun loadFallbackPack(language: String): Catching<CachedLocationPack> {
         return Catching {
             val inputStream = context.resources.openRawResource(R.raw.fallback_location_packs_en)
