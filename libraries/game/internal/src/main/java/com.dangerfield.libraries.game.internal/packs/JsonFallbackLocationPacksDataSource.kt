@@ -13,6 +13,10 @@ import okio.buffer
 import okio.source
 import javax.inject.Inject
 
+/**
+ * A data source that loads location packs from a JSON file packaged with the application.
+ * This data should be very rarely used as we attempt to load from cache or network first.
+ */
 class JsonFallbackLocationPacksDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     private val moshi: Moshi
@@ -21,7 +25,12 @@ class JsonFallbackLocationPacksDataSource @Inject constructor(
     @Suppress("UnusedPrivateMember")
     fun loadFallbackPack(language: String): Catching<CachedLocationPack> {
         return Catching {
-            val inputStream = context.resources.openRawResource(R.raw.fallback_location_packs_en)
+            val resId = when (language) {
+                "en" -> R.raw.fallback_location_packs_en
+                "es" -> R.raw.fallback_location_packs_es
+                else -> R.raw.fallback_location_packs_en
+            }
+            val inputStream = context.resources.openRawResource(resId)
             val jsonAdapter = moshi.adapter(JsonLocationPacks::class.java)
             inputStream.source().buffer().use { source ->
                 val jsonLocationPacks = jsonAdapter.fromJson(source)!!

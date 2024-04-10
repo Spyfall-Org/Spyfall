@@ -10,6 +10,12 @@ import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 import javax.inject.Inject
 
+/**
+ * Every time we fetch a location pack we cache it so that next time we need that language/version combo
+ * we dont need to fetch again.
+ */
+//TODO implement a cleanup strategy for old location packs
+// can
 class CachedLocationPacksDataSource @Inject constructor(
     private val dataStore: DataStore<List<CachedLocationPack>>
 ) {
@@ -18,7 +24,7 @@ class CachedLocationPacksDataSource @Inject constructor(
         version: Int,
         langaugeCode: String
     ): Catching<CachedLocationPack> = Catching {
-        val data = dataStore.data.first()!!
+        val data = dataStore.data.first()
         data.first {
             it.version == version
                     && it.langaugeCode == langaugeCode

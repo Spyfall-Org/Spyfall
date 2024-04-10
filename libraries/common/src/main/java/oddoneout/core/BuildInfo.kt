@@ -21,9 +21,8 @@ data class BuildInfo(
         .joinToString(".")
 
     val isDebug: Boolean = buildType == BuildType.DEBUG
-
     val isQA: Boolean = buildType == BuildType.QA
-
+    val isRelease: Boolean = buildType == BuildType.RELEASE
 }
 
 enum class BuildType {

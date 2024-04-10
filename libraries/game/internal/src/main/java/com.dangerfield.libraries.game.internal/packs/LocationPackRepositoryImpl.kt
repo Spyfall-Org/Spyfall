@@ -114,7 +114,6 @@ class LocationPackRepositoryImpl @Inject constructor(
         }
     }.logOnFailure()
 
-
     override suspend fun getRoles(
         languageCode: String, version: Int, location: String
     ): Catching<List<String>> = getPacks(
