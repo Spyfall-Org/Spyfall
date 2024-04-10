@@ -50,4 +50,5 @@ To translate a string.... talk to chat gpt (sorry not sorry).
 
 # Adding an override
 Overrides come via the config. They are stored in a `dictionary_overrides` field as a simple mapping of resId to string.
-![Screenshot 2024-04-10 at 7.45.39 PM.png](..%2F..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2F5b%2Fzdfhv62d7tx6ggm053mvq1d40000gp%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_COJcSY%2FScreenshot%202024-04-10%20at%207.45.39%20PM.png)
+
+![](readme_images/config.png)
