@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -52,6 +53,7 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
     private val events = Channel<E>(Channel.UNLIMITED)
     private val actionDebouncer = ConcurrentHashMap<String, Channel<suspend (S) -> S>>()
     private val _initialState: S by lazy { initialState() }
+
     // Lazy so that we do not let initialState() from the child get called before the child is initialized
     private val mutableStateFlow: MutableStateFlow<S> by lazy {
         MutableStateFlow(
@@ -75,6 +77,13 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
         )
     }
 
+    // PROBLEM
+    /*
+    the state that the caller would get in updateState {} vs using state is different
+    state includes the each state mapping
+
+    updateState {} does not include the each state mapping
+     */
     /**
      * The flow exposing events from the view mode
      */
@@ -109,7 +118,8 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
     suspend fun A.updateState(f: suspend (S) -> S) {
         Catching {
             mutableStateFlow.update {
-                f(it)
+                val mappedValue = Catching { mapEachState(it) }.logOnFailure().throwIfDebug().getOrNull()
+                f(mappedValue ?: it)
             }
         }
             .logOnFailure("Could not up state for: ${state::class.java.name}")

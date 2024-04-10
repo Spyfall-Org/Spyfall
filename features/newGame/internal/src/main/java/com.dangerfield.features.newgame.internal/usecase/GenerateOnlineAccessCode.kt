@@ -8,7 +8,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class GenerateAccessCode @Inject constructor(
+class GenerateOnlineAccessCode @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val gameConfig: GameConfig
 ) {

@@ -7,6 +7,9 @@ import com.squareup.moshi.JsonClass
  * versions of the app are compatible to play together
  */
 const val CURRENT_GAME_MODEL_VERSION = 1
+
+const val CURRENT_PACKS_VERSION_FALLBACK = 0
+
 //TODO i should probably use the versioned moshi adapter for this
 @JsonClass(generateAdapter = true)
 data class Game(

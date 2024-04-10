@@ -2,6 +2,7 @@ package com.dangerfield.libraries.game.internal.config
 
 import com.dangerfield.libraries.config.AppConfigMap
 import com.dangerfield.libraries.config.ConfiguredValue
+import com.dangerfield.libraries.game.CURRENT_PACKS_VERSION_FALLBACK
 import se.ansman.dagger.auto.AutoBindIntoSet
 import javax.inject.Inject
 
@@ -100,7 +101,7 @@ class PacksVersion @Inject constructor(
 ) : ConfiguredValue<Int>() {
     override val displayName: String = "Version of packs to be sued"
     override val path: String = "game.packsVersion"
-    override val default: Int = 0
+    override val default: Int = CURRENT_PACKS_VERSION_FALLBACK
     override val showInQADashboard: Boolean = true
     override fun resolveValue(): Int = appConfigMap.value(this)
 }

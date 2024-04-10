@@ -2,7 +2,7 @@ package com.dangerfield.features.newgame.internal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.dangerfield.features.newgame.internal.usecase.GenerateAccessCode
+import com.dangerfield.features.newgame.internal.usecase.GenerateOnlineAccessCode
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.test.isFailure
@@ -23,11 +23,11 @@ class GenerateAccessCodeTest {
     private val gameConfig: GameConfig = mockk {
         every { accessCodeLength } returns 6
     }
-    private lateinit var generateAccessCode: GenerateAccessCode
+    private lateinit var generateAccessCode: GenerateOnlineAccessCode
 
     @Before
     fun setUp() {
-        generateAccessCode = GenerateAccessCode(gameRepository, gameConfig)
+        generateAccessCode = GenerateOnlineAccessCode(gameRepository, gameConfig)
     }
 
     @Test

@@ -34,6 +34,10 @@ class FirebaseLocationPacksDataSource @Inject constructor(
                         .getOrThrow()
                 }.flatten()
             }
+            .mapCatching {
+                check(it.isNotEmpty())
+                it
+            }
             .logOnFailure()
             .getOrThrow()
     }

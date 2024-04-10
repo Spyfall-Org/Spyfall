@@ -1,15 +1,11 @@
 package com.dangerfield.features.newgame.internal.presentation
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.newgame.internal.metrics.NewGameMetricsTracker
 import com.dangerfield.features.newgame.internal.presentation.model.Action
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
 import com.dangerfield.features.newgame.internal.presentation.model.Event
-import com.dangerfield.features.newgame.internal.presentation.model.FieldState
-import com.dangerfield.features.newgame.internal.presentation.model.FieldState.Idle
-import com.dangerfield.features.newgame.internal.presentation.model.FieldState.Invalid
-import com.dangerfield.features.newgame.internal.presentation.model.FieldState.Valid
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
 import com.dangerfield.features.newgame.internal.presentation.model.State
 import com.dangerfield.features.newgame.internal.presentation.model.numberOfPlayers
@@ -19,21 +15,23 @@ import com.dangerfield.features.newgame.internal.presentation.model.userName
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
+import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.coreflowroutines.collectInWithPrevious
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.game.LocationPacksResult.Hit
+import com.dangerfield.libraries.game.LocationPacksResult.Miss
+import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.libraries.session.UserRepository
+import com.dangerfield.libraries.ui.FieldState.Idle
+import com.dangerfield.libraries.ui.FieldState.Invalid
+import com.dangerfield.libraries.ui.FieldState.Valid
+import com.dangerfield.libraries.ui.isValid
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import oddoneout.core.Catching
 import oddoneout.core.allOrNone
 import oddoneout.core.checkInDebug
@@ -53,67 +51,61 @@ class NewGameViewModel @Inject constructor(
     private val dictionary: Dictionary,
     private val userRepository: UserRepository,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
-    private val newGameMetricsTracker: NewGameMetricsTracker
-) : ViewModel() {
+    private val newGameMetricsTracker: NewGameMetricsTracker,
+    private val networkMonitor: NetworkMonitor,
+    savedStateHandle: SavedStateHandle
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
-    // TODO rework this to allow for a debounce on the video call link
-    private val actions = Channel<Action>(Channel.UNLIMITED)
-    private val _events = Channel<Event>()
-    val events = _events.receiveAsFlow()
-
-    val state = flow {
-        for (action in actions) handleAction(action)
+    init {
+        takeAction(Action.Init)
     }
-        .map { it.withFormValidation() }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            State(
-                packsState = Idle(emptyList()),
-                timeLimitState = Valid("8"),
-                nameState = Idle(""),
-                videoCallLinkState = Idle(""),
-                isLoadingPacks = true,
-                isLoadingCreation = false,
-                didLoadFail = false,
-                didCreationFail = false,
-                formState = FormState.Idle,
-                isSingleDevice = false,
-                numberOfPlayersState = Idle(""),
-            )
-        )
 
-    fun updateGameType(isSingleDevice: Boolean) =
-        actions.trySend(Action.UpdateGameType(isSingleDevice))
+    override fun initialState() = State(
+        packsState = Idle(emptyList()),
+        timeLimitState = Valid("8"),
+        nameState = Idle(""),
+        videoCallLinkState = Idle(""),
+        isLoadingPacks = true,
+        isLoadingCreation = false,
+        didLoadFail = false,
+        didCreationFail = false,
+        formState = FormState.Idle,
+        isSingleDevice = false,
+        numberOfPlayersState = Idle(""),
+        isOffline = false
+    )
 
-    fun updateNumOfPlayers(numOfPlayers: String) =
-        actions.trySend(Action.UpdateNumOfPlayers(numOfPlayers))
-
-    fun selectPack(pack: DisplayablePack, isSelected: Boolean) =
-        actions.trySend(Action.SelectPack(pack, isSelected))
-
-    fun createGame() = actions.trySend(Action.CreateGame)
-    fun load() = actions.trySend(Action.Load)
-    fun updateVideoCallLink(link: String) = actions.trySend(Action.UpdateVideoCallLink(link))
-    fun resolveSomethingWentWrong() = actions.trySend(Action.ResolveErrors)
-    fun updateName(name: String) = actions.trySend(Action.UpdateName(name))
-    fun updateTimeLimit(timeLimit: String) = actions.trySend(Action.UpdateTimeLimit(timeLimit))
-
-    private suspend fun FlowCollector<State>.handleAction(action: Action) {
+    override suspend fun handleAction(action: Action) {
         when (action) {
-            is Action.UpdateVideoCallLink -> handleUpdateVideoCallLink(action.link)
-            is Action.Load -> handleLoadPacks()
-            is Action.CreateGame -> handleCreateGame()
-            is Action.UpdateName -> handleUpdateName(action.name)
-            is Action.UpdateTimeLimit -> handleUpdateTimeLimit(action.timeLimit)
-            is Action.UpdateGameType -> handleUpdateGameType(action.isSingleDevice)
-            is Action.UpdateNumOfPlayers -> handleUpdateNumOfPlayers(action.numOfPlayers)
-            is Action.SelectPack -> handleSelectPack(action.pack, action.isSelected)
-            Action.ResolveErrors -> handleResolveErrors()
+            is Action.LoadPacks -> action.loadPacks()
+            is Action.Init -> action.handleInit()
+            is Action.UpdateVideoCallLink -> action.handleUpdateVideoCallLink()
+            is Action.CreateGame -> action.handleCreateGame()
+            is Action.UpdateName -> action.handleUpdateName()
+            is Action.UpdateTimeLimit -> action.handleUpdateTimeLimit()
+            is Action.UpdateGameType -> action.handleUpdateGameType()
+            is Action.UpdateNumOfPlayers -> action.handleUpdateNumOfPlayers()
+            is Action.SelectPack -> action.handleSelectPack()
+            is Action.ResolveErrors -> action.handleResolveErrors()
         }
     }
 
-    private suspend fun FlowCollector<State>.handleResolveErrors() {
+    fun updateGameType(isSingleDevice: Boolean) =
+        takeAction(Action.UpdateGameType(isSingleDevice))
+
+    fun updateNumOfPlayers(numOfPlayers: String) =
+        takeAction(Action.UpdateNumOfPlayers(numOfPlayers))
+
+    fun selectPack(pack: DisplayablePack, isSelected: Boolean) =
+        takeAction(Action.SelectPack(pack, isSelected))
+
+    fun createGame() = takeAction(Action.CreateGame)
+    fun updateVideoCallLink(link: String) = takeAction(Action.UpdateVideoCallLink(link))
+    fun resolveSomethingWentWrong() = takeAction(Action.ResolveErrors)
+    fun updateName(name: String) = takeAction(Action.UpdateName(name))
+    fun updateTimeLimit(timeLimit: String) = takeAction(Action.UpdateTimeLimit(timeLimit))
+
+    private suspend fun Action.ResolveErrors.handleResolveErrors() {
         updateState {
             it.copy(
                 didLoadFail = false,
@@ -122,8 +114,7 @@ class NewGameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun FlowCollector<State>.handleCreateGame() {
-        val state = state.value
+    private suspend fun Action.CreateGame.handleCreateGame() {
         if (state.isLoadingCreation) return
 
         if (state.formState !is FormState.Valid) {
@@ -141,7 +132,7 @@ class NewGameViewModel @Inject constructor(
                         timeLimit = state.timeLimit() ?: 0,
                         playerCount = state.numberOfPlayers() ?: 0
                     )
-                    _events.trySend(Event.SingleDeviceGameCreated(accessCode))
+                    sendEvent(Event.SingleDeviceGameCreated(accessCode))
                 }
         } else {
             createMultiDeviceGame(state)
@@ -150,13 +141,13 @@ class NewGameViewModel @Inject constructor(
                         location = state.selectedPacks()?.firstOrNull()?.name ?: "unknown",
                         packs = state.selectedPacks()?.map { it.name } ?: emptyList(),
                         timeLimit = state.timeLimit() ?: 0,
-                        videoLink = state.videoCallLinkState.backingValue,
+                        videoLink = state.videoCallLinkState.value,
                         accessCode = accessCode
                     )
-                    _events.trySend(
+                    sendEvent(
                         Event.GameCreated(
                             accessCode,
-                            state.videoCallLinkState.takeIf { it.isValid() }?.backingValue
+                            state.videoCallLinkState.takeIf { it.isValid() }?.value
                         )
                     )
                 }
@@ -200,7 +191,7 @@ class NewGameViewModel @Inject constructor(
             userName = userName,
             locationPacks = selectedPacks,
             timeLimit = timeLimit,
-            videoCallLink = state.videoCallLinkState.backingValue
+            videoCallLink = state.videoCallLinkState.value
         )
         // TODO handle failures dude
     } ?: illegalStateFailure {
@@ -212,7 +203,7 @@ class NewGameViewModel @Inject constructor(
         """.trimIndent()
     }
 
-    private suspend fun FlowCollector<State>.handleUpdateName(name: String) {
+    private suspend fun Action.UpdateName.handleUpdateName() {
         val nameState = when {
             name.isEmpty() -> Invalid(
                 name,
@@ -233,8 +224,12 @@ class NewGameViewModel @Inject constructor(
         updateState { it.copy(nameState = nameState) }
     }
 
-    private suspend fun FlowCollector<State>.handleUpdateVideoCallLink(link: String) {
+    private suspend fun Action.UpdateVideoCallLink.handleUpdateVideoCallLink() {
         updateState {
+            it.copy(videoCallLinkState = Idle(link))
+        }
+
+        updateStateDebounced {
             val videoCallLinkState = if (link.isEmpty()) {
                 Idle(link)
             } else if (isRecognizedVideoCallLink(link)) {
@@ -249,14 +244,14 @@ class NewGameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun FlowCollector<State>.handleUpdateGameType(isSingleDevice: Boolean) {
+    private suspend fun Action.UpdateGameType.handleUpdateGameType() {
         checkInDebug(gameConfig.isSingleDeviceModeEnabled) {
             "Update game type was called but single device mode is not enabled"
         }
-        updateState { it.copy(isSingleDevice = isSingleDevice) }
+        updateState { it.copy(isSingleDevice = isSingleDevice || it.isOffline) }
     }
 
-    private suspend fun FlowCollector<State>.handleUpdateNumOfPlayers(numOfPlayers: String) =
+    private suspend fun Action.UpdateNumOfPlayers.handleUpdateNumOfPlayers() =
         updateState {
             checkInDebug(it.isSingleDevice) {
                 "Number of players was updated but game type is not single device"
@@ -284,7 +279,7 @@ class NewGameViewModel @Inject constructor(
 
         }
 
-    private suspend fun FlowCollector<State>.handleUpdateTimeLimit(timeLimit: String) {
+    private suspend fun Action.UpdateTimeLimit.handleUpdateTimeLimit() {
         // we only allow the user to type 2 digits
         val truncatedNumber = timeLimit.take(2)
 
@@ -309,12 +304,9 @@ class NewGameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun FlowCollector<State>.handleSelectPack(
-        pack: DisplayablePack,
-        isSelected: Boolean
-    ) {
+    private suspend fun Action.SelectPack.handleSelectPack() {
         updateState { state ->
-            val packs = state.packsState.backingValue.orEmpty()
+            val packs = state.packsState.value.orEmpty()
             val updatedPacks = packs.map {
                 if (it == pack) {
                     it.copy(isSelected = isSelected)
@@ -335,56 +327,64 @@ class NewGameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun FlowCollector<State>.handleLoadPacks() {
+    private suspend fun Action.Init.handleInit() {
+        takeAction(Action.LoadPacks)
+
+        networkMonitor.isOnline.collectInWithPrevious(viewModelScope) { wasOnline, isOnline ->
+            updateState {
+                it.copy(
+                    isOffline = !isOnline,
+                    isSingleDevice = it.isSingleDevice || !isOnline
+                )
+            }
+            val cameBackOnline = wasOnline == false && isOnline
+            if (cameBackOnline) {
+                takeAction(Action.LoadPacks)
+            }
+        }
+    }
+
+    private suspend fun Action.LoadPacks.loadPacks() {
+        updateState { it.copy(didLoadFail = false) }
         locationPackRepository.getPacks(
-            language = userRepository.getUserFlow().first().languageCode,
-            packsVersion = gameConfig.packsVersion
+            languageCode = userRepository.getUserFlow().first().languageCode,
+            version = gameConfig.packsVersion
         )
-            .map { packs ->
-                packs.map { DisplayablePack(it) }
+            .logOnFailure()
+            .map { result ->
+                when (result) {
+                    is Hit -> result.packs
+                    is Miss -> result.packs  // ignore misses, if the user is offline we will limit their experience
+                }.map { DisplayablePack(it) }
             }.onSuccess { packs ->
                 updateState {
                     if (packs.isEmpty()) {
-                        it.copy(
-                            didLoadFail = true,
-                            packsState = FieldState.Error()
-                        )
+                        it.copy(didLoadFail = true)
                     } else {
                         it.copy(packsState = Idle(packs))
                     }
                 }
             }.onFailure {
-                updateState {
-                    it.copy(
-                        didLoadFail = true,
-                        packsState = FieldState.Error()
-                    )
-                }
+                updateState { it.copy(didLoadFail = true) }
             }
             .eitherWay { updateState { it.copy(isLoadingPacks = false) } }
     }
 
-    private fun State.withFormValidation(): State {
-        val isFormValid = if (isSingleDevice) {
-            timeLimitState is Valid
-                    && packsState is Valid
-                    && numberOfPlayersState is Valid
+    override suspend fun mapEachState(state: State): State {
+        val isFormValid = if (state.isSingleDevice) {
+            state.timeLimitState is Valid
+                    && state.packsState is Valid
+                    && state.numberOfPlayersState is Valid
         } else {
-            timeLimitState is Valid &&
-                    packsState is Valid
-                    && nameState is Valid
-                    && (videoCallLinkState is Valid || videoCallLinkState is Idle)
+            state.timeLimitState is Valid &&
+                    state.packsState is Valid
+                    && state.nameState is Valid
+                    && (state.videoCallLinkState is Valid || state.videoCallLinkState is Idle)
         }
-        return this.copy(formState = if (isFormValid) FormState.Valid else FormState.Invalid)
-    }
 
-    private suspend fun FlowCollector<State>.updateState(update: (State) -> State) {
-        Catching {
-            val currentValue = state.value
-            val nextValue = update(currentValue)
-            emit(nextValue)
-        }
-            .logOnFailure("Could not update state")
-            .throwIfDebug()
+        return state.copy(
+            formState = if (isFormValid) FormState.Valid else FormState.Invalid,
+            isSingleDevice = state.isSingleDevice || state.isOffline
+        )
     }
 }

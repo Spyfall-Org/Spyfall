@@ -24,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class CreateGame @Inject constructor(
-    private val generateAccessCode: GenerateAccessCode,
+    private val generateAccessCode: GenerateOnlineAccessCode,
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
     private val getGamePlayLocations: GetGamePlayLocations,
     private val generateLocalUUID: GenerateLocalUUID,

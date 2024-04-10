@@ -348,7 +348,6 @@
     <string name="create_your_own_coming_soon">Create your own\n(coming soon)</string>
     <string name="about_consentForm_label">Consent Form</string>
 
-
     <!-- /////////////////////    GENERAL ERROR   /////////////////////-->
     <string name="generalError_title_text">Something went wrong</string>
     <string name="generalError_description_text">Looks like something went wrong processing this request. Make sure you are on the latest app version and/or please try again.</string>

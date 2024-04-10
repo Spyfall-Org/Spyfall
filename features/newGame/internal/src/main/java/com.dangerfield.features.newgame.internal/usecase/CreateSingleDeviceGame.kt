@@ -28,7 +28,6 @@ class CreateSingleDeviceGame @Inject constructor(
     @Named(SingleDeviceRepositoryName) private val gameRepository: GameRepository,
     private val getGamePlayLocations: GetGamePlayLocations,
     private val clock: Clock,
-    private val generateAccessCode: GenerateAccessCode,
     private val gameConfig: GameConfig,
     private val updateActiveGame: UpdateActiveGame,
     private val clearActiveGame: ClearActiveGame,
@@ -44,7 +43,7 @@ class CreateSingleDeviceGame @Inject constructor(
         // TODO log metric on this so we can tell how many multi device games there are created
         checkForExistingSession()
 
-        val accessCode = generateAccessCode().getOrThrow()
+        val accessCode = UUID.randomUUID().toString().take(gameConfig.accessCodeLength)
         val locations = getGamePlayLocations(locationPacks = locationPacks, isSingleDevice = true).getOrThrow()
         val location = locations.random()
         val userId = session.user.id ?: UUID.randomUUID().toString()

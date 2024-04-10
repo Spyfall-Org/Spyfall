@@ -30,8 +30,12 @@ fun Switch(
             checkedThumbColor = OddOneOutTheme.colors.onAccent.color,
             checkedTrackColor = OddOneOutTheme.colors.accent.color,
             checkedBorderColor = OddOneOutTheme.colors.accent.color,
-            disabledCheckedBorderColor = OddOneOutTheme.colors.surfaceDisabled.color,
-            disabledUncheckedBorderColor = OddOneOutTheme.colors.surfaceDisabled.color,
+            disabledCheckedBorderColor = OddOneOutTheme.colors.onSurfaceDisabled.color,
+            disabledUncheckedBorderColor = OddOneOutTheme.colors.onSurfaceDisabled.color,
+            disabledCheckedThumbColor = OddOneOutTheme.colors.onSurfaceDisabled.color,
+            disabledUncheckedThumbColor = OddOneOutTheme.colors.onSurfaceDisabled.color,
+            disabledCheckedTrackColor = OddOneOutTheme.colors.surfaceDisabled.color,
+            disabledUncheckedTrackColor = OddOneOutTheme.colors.surfaceDisabled.color
         )
     )
 }
@@ -51,3 +55,28 @@ private fun Checked() {
         Switch(checked = true, onCheckedChange = {})
     }
 }
+
+@Composable
+@Preview
+private fun CheckedDisabled() {
+    Preview {
+        Switch(
+            checked = true,
+            onCheckedChange = {},
+            enabled = false
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun UncheckedDisabled() {
+    Preview {
+        Switch(
+            checked = false,
+            onCheckedChange = {},
+            enabled = false
+        )
+    }
+}
+

@@ -35,9 +35,9 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Named(SingleDeviceRepositoryName)
 @AutoBind
 @Singleton
+@Named(SingleDeviceRepositoryName)
 class SingleDeviceGameRepository
 @Inject constructor(
     private val datastore: DataStore<Preferences>,
@@ -134,9 +134,9 @@ class SingleDeviceGameRepository
 
         val packs = currentGame.packNames.mapNotNull { packName ->
             locationPackRepository.getPack(
-                language = session.user.languageCode,
-                packsVersion = currentGame.packsVersion,
-                packName = packName
+                languageCode = session.user.languageCode,
+                version = currentGame.packsVersion,
+                name = packName
             )
                 .throwIfDebug()
                 .getOrNull()

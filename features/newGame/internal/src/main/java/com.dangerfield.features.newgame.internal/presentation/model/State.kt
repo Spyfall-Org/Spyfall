@@ -1,5 +1,6 @@
 package com.dangerfield.features.newgame.internal.presentation.model
 
+import com.dangerfield.libraries.ui.FieldState
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -24,7 +25,8 @@ sealed class Action {
     class UpdateNumOfPlayers(val numOfPlayers: String) : Action()
     class SelectPack(val pack: DisplayablePack, val isSelected: Boolean) : Action()
     data object CreateGame : Action()
-    data object Load : Action()
+    data object Init : Action()
+    data object LoadPacks: Action()
 }
 
 sealed class Event {
@@ -48,52 +50,21 @@ data class State(
     val didCreationFail: Boolean = false,
     val didLoadFail: Boolean = false,
     val formState: FormState,
+    val isOffline: Boolean,
 )
 
-fun State.selectedPacks() = packsState.backingValue
+fun State.selectedPacks() = packsState.value
     ?.filter { it.isSelected }
     ?.map { it.locationPack }
 
-fun State.timeLimit() = timeLimitState.backingValue?.toIntOrNull()
+fun State.timeLimit() = timeLimitState.value?.toIntOrNull()
 
-fun State.numberOfPlayers() = numberOfPlayersState.backingValue?.toIntOrNull()
+fun State.numberOfPlayers() = numberOfPlayersState.value?.toIntOrNull()
 
-fun State.userName() = nameState.backingValue
+fun State.userName() = nameState.value
 
 sealed class FormState {
     data object Idle : FormState()
     data object Valid : FormState()
     data object Invalid : FormState()
-}
-
-sealed class FieldState<out T>(val backingValue: T?) {
-    data class Idle<T>(val value: T) : FieldState<T>(value)
-    data class Valid<T>(val value: T) : FieldState<T>(value)
-    data class Invalid<T>(val value: T?, val errorMessage: String) : FieldState<T>(value)
-    data class Error<T>(val value: T? = null, val errorMessage: String? = null) :
-        FieldState<T>(value)
-
-    @OptIn(ExperimentalContracts::class)
-    fun isInvalid(): Boolean {
-        contract {
-            returns(true) implies (this@FieldState is Invalid<*>)
-        }
-        return this is Invalid
-    }
-
-    @OptIn(ExperimentalContracts::class)
-    fun isValid(): Boolean {
-        contract {
-            returns(true) implies (this@FieldState is Valid<*>)
-        }
-        return this is Valid
-    }
-}
-
-sealed class GameType {
-    class SingleDevice(
-        val numberOfPlayersState: FieldState<Int>,
-    ) : GameType()
-
-    data object MultiDevice : GameType()
 }

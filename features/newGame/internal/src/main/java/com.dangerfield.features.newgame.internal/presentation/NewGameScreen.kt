@@ -27,13 +27,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
-import com.dangerfield.features.newgame.internal.presentation.model.FieldState
 import com.dangerfield.features.newgame.newGameNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.LocationPack
 import com.dangerfield.libraries.ui.Dimension
+import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.HorizontalSpacerD600
 import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerD1200
@@ -85,6 +85,7 @@ fun NewGameScreen(
     onVideoCallLinkInfoClicked: () -> Unit,
     onCreateGameClicked: () -> Unit,
     isLoadingCreation: Boolean,
+    isOffline: Boolean,
 ) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
@@ -122,13 +123,17 @@ fun NewGameScreen(
                     .verticalScroll(scrollState)
                     .padding(horizontal = Dimension.D1000)
             ) {
-                Spacer(modifier = Modifier.height(Dimension.D1200))
+                Spacer(modifier = Modifier.height(Dimension.D500))
 
                 if (isSingleDeviceModeEnabled) {
-                    SingleDeviceField(
-                        isSingleDevice = isSingleDevice,
-                        onIsSingleDeviceUpdated = onIsSingleDeviceUpdated
-                    )
+                    if (isOffline) {
+                        OfflineGameBanner()
+                    } else {
+                        SingleDeviceField(
+                            isSingleDevice = isSingleDevice,
+                            onIsSingleDeviceUpdated = onIsSingleDeviceUpdated,
+                        )
+                    }
 
                     VerticalSpacerD1200()
                 }
@@ -195,7 +200,7 @@ fun NewGameScreen(
                     ) {
                         VideoCallLink(
                             onVideoCallLinkInfoClicked = onVideoCallLinkInfoClicked,
-                            link = videoCallLinkState.backingValue.orEmpty(),
+                            link = videoCallLinkState.value.orEmpty(),
                             onLinkUpdated = onVideoCallLinkUpdated,
                         )
                     }
@@ -238,7 +243,7 @@ fun NewGameScreen(
 
         if (showPacksInfoBottomSheet) {
             PacksInfoBottomSheet(
-                packs = packsState.backingValue ?: emptyList(),
+                packs = packsState.value ?: emptyList(),
                 onDismiss = {
                     coroutineScope.launch {
                         it.hide()
@@ -320,7 +325,7 @@ private fun PacksField(
             CircularProgressIndicator()
         } else {
             GamePackGrid(
-                gamePacks = packsState.backingValue ?: emptyList(),
+                gamePacks = packsState.value ?: emptyList(),
                 onPackSelected = { pack, isSelected ->
                     focusManager.clearFocus()
                     onPackSelected(pack, isSelected)
@@ -348,7 +353,10 @@ private fun SingleDeviceField(
 
         HorizontalSpacerD600()
 
-        Switch(checked = isSingleDevice, onCheckedChange = onIsSingleDeviceUpdated)
+        Switch(
+            checked = isSingleDevice,
+            onCheckedChange = onIsSingleDeviceUpdated,
+        )
     }
 }
 
@@ -377,7 +385,7 @@ private fun GameLengthField(
         OutlinedTextField(
             modifier = Modifier.width(IntrinsicSize.Max),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            value = timeLimitState.backingValue.orEmpty(),
+            value = timeLimitState.value.orEmpty(),
             onValueChange = onTimeLimitUpdated,
             placeholder = {
                 Text(text = "$minGameLength-$maxGameLength")
@@ -408,7 +416,7 @@ private fun NumOfPlayersField(
         OutlinedTextField(
             modifier = Modifier.width(IntrinsicSize.Max),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            value = numOfPlayersState.backingValue.orEmpty(),
+            value = numOfPlayersState.value.orEmpty(),
             onValueChange = onNumOfPlayersUpdated,
             placeholder = {
                 Text(
@@ -437,7 +445,7 @@ private fun UserNameField(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value = nameState.backingValue.orEmpty(),
+            value = nameState.value.orEmpty(),
             onValueChange = onNameUpdated,
             placeholder = {
                 Text(text = dictionaryString(R.string.newGame_userName_hint))
@@ -553,6 +561,77 @@ fun PreviewNewGameScreen() {
             isLoadingCreation = false,
             onVideoCallLinkInfoClicked = { -> },
             onErrorDismissed = { -> },
+            isOffline = false
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewNewGameScreenOffline() {
+    Preview {
+        var packs by remember {
+            mutableStateOf(
+                listOf(
+                    DisplayablePack(
+                        isSelected = false,
+                        locationPack = LocationPack(name = "Special 1", locations = listOf())
+                    ),
+                    DisplayablePack(
+                        isSelected = false,
+                        locationPack = LocationPack(name = "Special 2", locations = listOf())
+                    ),
+
+                    DisplayablePack(
+                        isSelected = false,
+                        locationPack = LocationPack(name = "Special 3", locations = listOf())
+                    ),
+
+                    DisplayablePack(
+                        isSelected = false,
+                        locationPack = LocationPack(name = "Special 4", locations = listOf())
+                    ),
+                )
+            )
+        }
+
+        NewGameScreen(
+            onPackSelected = { displayablePack, isSelected ->
+                packs = packs.map {
+                    if (it.locationPack == displayablePack.locationPack) {
+                        it.copy(isSelected = isSelected)
+                    } else {
+                        it
+                    }
+                }
+            },
+            nameState = FieldState.Valid(""),
+            onNameUpdated = {},
+            timeLimitState = FieldState.Valid(""),
+            onTimeLimitUpdated = {},
+            isSingleDevice = true,
+            minPlayers = 3,
+            maxPlayers = 9,
+            minGameLength = 1,
+            maxGameLength = 10,
+            isFormValid = false,
+            isVideoCallLinkEnabled = true,
+            isLoadingPacks = false,
+            onIsSingleDeviceUpdated = {},
+            numOfPlayersState = FieldState.Valid(""),
+            isSingleDeviceModeEnabled = true,
+            onNumOfPlayersUpdated = { },
+            packsState = FieldState.Valid(packs),
+            didCreationFail = false,
+            didLoadFail = false,
+            videoCallLinkState = FieldState.Valid(""),
+            onVideoCallLinkUpdated = {},
+            onNavigateBack = { },
+            onCreateGameClicked = { },
+            isLoadingCreation = false,
+            onVideoCallLinkInfoClicked = { -> },
+            onErrorDismissed = { -> },
+            isOffline = true
         )
     }
 }

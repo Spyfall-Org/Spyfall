@@ -25,6 +25,15 @@ class CachedLocationPacksDataSource @Inject constructor(
         }
     }
 
+    suspend fun getLocationPacks(
+        langaugeCode: String
+    ): Catching<List<CachedLocationPack>> = Catching {
+        val data = dataStore.data.first()!!
+        data.filter {
+            it.langaugeCode == langaugeCode
+        }
+    }
+
     suspend fun cacheLocationPacks(
         version: Int,
         langaugeCode: String,

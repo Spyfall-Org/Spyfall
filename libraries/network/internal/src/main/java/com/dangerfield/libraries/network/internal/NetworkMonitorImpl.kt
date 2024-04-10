@@ -7,20 +7,28 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.core.content.getSystemService
+import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.network.NetworkMonitor
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.stateIn
 import se.ansman.dagger.auto.AutoBind
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @AutoBind
+@Singleton
 class NetworkMonitorImpl @Inject constructor(
     @ApplicationContext private val context: Context,
+    @ApplicationScope private val applicationScope: CoroutineScope
 ) : NetworkMonitor {
-    override val isOnline: Flow<Boolean> = callbackFlow {
+    override val isOnline: StateFlow<Boolean> = callbackFlow {
         val connectivityManager = context.getSystemService<ConnectivityManager>()
         if (connectivityManager == null) {
             channel.trySend(false)
@@ -61,7 +69,11 @@ class NetworkMonitorImpl @Inject constructor(
             connectivityManager.unregisterNetworkCallback(callback)
         }
     }
-        .conflate()
+        .stateIn(
+            applicationScope,
+            started = SharingStarted.Eagerly,
+            initialValue = false
+        )
 
     @Suppress("DEPRECATION")
     private fun ConnectivityManager.isCurrentlyConnected() = when {

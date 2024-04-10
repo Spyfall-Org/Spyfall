@@ -26,6 +26,7 @@ dependencies {
     implementation(projects.libraries.ui)
     implementation(libs.lottie.compose)
     implementation(projects.libraries.navigation)
+    implementation(projects.libraries.network)
 
     testImplementation(projects.libraries.test)
 }

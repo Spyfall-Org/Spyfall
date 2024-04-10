@@ -7,7 +7,7 @@ import assertk.assertions.isTrue
 import assertk.assertions.matchesPredicate
 import com.dangerfield.features.newgame.internal.presentation.model.CreateGameError
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
-import com.dangerfield.features.newgame.internal.usecase.GenerateAccessCode
+import com.dangerfield.features.newgame.internal.usecase.GenerateOnlineAccessCode
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
@@ -44,7 +44,7 @@ class CreateGameTest {
     private val generatedAccessCode = "unmistakablygeneratedAccessCode"
     private val userId = "someUserId"
 
-    private val generateAccessCode = mockk<GenerateAccessCode>()
+    private val generateAccessCode = mockk<GenerateOnlineAccessCode>()
     private val gameRepository = mockk<GameRepository>()
     private val getGamePlayLocations = mockk<GetGamePlayLocations>()
     private val generateLocalUUID = mockk<GenerateLocalUUID>()

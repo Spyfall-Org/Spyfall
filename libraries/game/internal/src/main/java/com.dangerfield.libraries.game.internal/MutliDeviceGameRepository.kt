@@ -11,6 +11,7 @@ import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.PacksMissingError
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.StartGameError
+import com.dangerfield.libraries.game.successfulHitOrThrow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,13 +30,11 @@ import oddoneout.core.failure
 import oddoneout.core.illegalStateFailure
 import oddoneout.core.logOnFailure
 import oddoneout.core.success
-import timber.log.Timber
-import java.lang.IllegalStateException
 import javax.inject.Inject
 import javax.inject.Named
 
-@Named(MultiDeviceRepositoryName)
 @AutoBind
+@Named(MultiDeviceRepositoryName)
 class MutliDeviceGameRepository @Inject constructor(
     private val gameDataSource: GameDataSource,
     private val getGamePlayLocations: GetGamePlayLocations,
@@ -183,17 +182,18 @@ class MutliDeviceGameRepository @Inject constructor(
         return gameDataSource.setStartedAt(accessCode).logOnFailure()
     }
 
-    override suspend fun reset(accessCode: String): Catching<Unit> {
+    override suspend fun reset(accessCode: String): Catching<Unit> = Catching {
         val currentGame = getGameFlow(accessCode).first()
             ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalStateFailure { "Game is null when resetting" }
 
         val packs = locationPackRepository
             .getPacks(
-                language = currentGame.languageCode,
-                packsVersion = currentGame.packsVersion
+                languageCode = currentGame.languageCode,
+                version = currentGame.packsVersion
             )
-            .getOrThrow()
+            .successfulHitOrThrow()
+            .packs
             .filter { it.name in currentGame.packNames }
             .takeIf { it.isNotEmpty() }
             ?: throw PacksMissingError()
@@ -222,12 +222,11 @@ class MutliDeviceGameRepository @Inject constructor(
             locationOptionNames = newLocations,
             startedAt = null,
         )
-        return Catching {
-            gameDataSource.setGame(resetGame)
-        }
-            .logOnFailure()
-            .debugSnackOnError { "Could not reset game" }
+
+        gameDataSource.setGame(resetGame)
     }
+        .logOnFailure()
+        .debugSnackOnError { "Could not reset game" }
 
     override suspend fun changeName(accessCode: String, newName: String, id: String): Catching<Unit> {
         return gameDataSource.changeName(accessCode, newName, id)

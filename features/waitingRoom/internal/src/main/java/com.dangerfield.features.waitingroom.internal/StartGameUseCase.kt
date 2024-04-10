@@ -43,11 +43,11 @@ class StartGameUseCase @Inject constructor(
         // TODO cleanup
         // this logic is hella repeated, maybe an AssignRolesUseCase?
         val roles = packsPackRepository.getRoles(
-            language = languageCode,
-            packsVersion = packsVersion,
-            locationName = locationName,
-
+            languageCode = languageCode,
+            version = packsVersion,
+            location = locationName,
         ).getOrThrow()
+
         val shuffledRolesQueue = LinkedList(roles.shuffled())
         val defaultRole = roles.first()
 
