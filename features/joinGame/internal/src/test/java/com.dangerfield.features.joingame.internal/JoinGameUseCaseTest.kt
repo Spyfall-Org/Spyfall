@@ -9,6 +9,8 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
+import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.game.LocationPacksResult
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.session.ActiveGame
@@ -71,6 +73,14 @@ class JoinGameUseCaseTest {
         
     )
 
+    private val locationPackRepository: LocationPackRepository = mockk {
+        coEvery { getPacks(
+            any(),
+            any(),
+            any()
+        ) } returns Catching.success(LocationPacksResult.Hit(packs = listOf()))
+    }
+
     private val session: Session = mockk(relaxed = true)
     private val gameRepository: GameRepository = mockk {
         coEvery { join(any(), any(), any()) } returns Catching.success(Unit)
@@ -94,7 +104,8 @@ class JoinGameUseCaseTest {
         session = session,
         updateActiveGame = updateActiveGame,
         clearActiveGame = clearActiveGame,
-        generateLocalUUID = generateLocalUUID
+        generateLocalUUID = generateLocalUUID,
+        locationPackRepository = locationPackRepository
     )
 
     @Test
@@ -433,6 +444,32 @@ class JoinGameUseCaseTest {
             assertThat(result.getExceptionOrNull())
                 .matchesPredicate {
                     it is JoinGameUseCase.JoinGameError.IncompatibleVersion
+                }
+        }
+
+    @Test
+    fun `GIVEN could not fetch pack WHEN joining THEN failure should be returned`() =
+        runTest {
+            mockJoinableGame()
+
+            coEvery { locationPackRepository.getPacks(
+                any(),
+                any(),
+                any()
+            ) } returns Catching.success(LocationPacksResult.Miss(version = 2, packs = listOf()))
+
+            coEvery { gameRepository.join(any(), any(), any()) } returns Catching.success(Unit)
+
+            val result = joinGameUseCase.invoke(
+                accessCode = validAccessCode,
+                userName = validUserName
+            )
+
+            assertThat(result).isFailure()
+
+            assertThat(result.getExceptionOrNull())
+                .matchesPredicate {
+                    it is JoinGameUseCase.JoinGameError.CouldNotFetchPacksNeeded
                 }
         }
 

@@ -9,6 +9,7 @@ import com.dangerfield.features.newgame.internal.presentation.model.CreateGameEr
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.GenerateOnlineAccessCode
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
+import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
@@ -54,6 +55,7 @@ class CreateGameTest {
     private val updateActiveGame = mockk<UpdateActiveGame>()
     private val clearActiveGame = mockk<ClearActiveGame>()
     private val isRecognizedVideoCallLink = mockk<IsRecognizedVideoCallLink>()
+    private val getAppLanguageCode = mockk<GetAppLanguageCode>()
 
     @Before
     fun setup() {
@@ -61,6 +63,8 @@ class CreateGameTest {
         coEvery { generateAccessCode.invoke() } returns Catching.success(generatedAccessCode)
 
         every { isRecognizedVideoCallLink.invoke(any()) } returns true
+
+        every { getAppLanguageCode.invoke() } returns "en"
 
         coEvery { getGamePlayLocations.invoke(any()) } answers { call ->
             @Suppress("UNCHECKED_CAST")
@@ -107,9 +111,7 @@ class CreateGameTest {
         updateActiveGame = updateActiveGame,
         clearActiveGame = clearActiveGame,
         isRecognizedVideoCallLink = isRecognizedVideoCallLink,
-        packsVersion = mockk<PacksVersion>().also {
-            every { it.invoke() } returns 0
-        }
+        getAppLanguageCode = getAppLanguageCode,
     )
 
     @Test
@@ -121,7 +123,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0,
         )
 
         assertThat(result).isSuccess()
@@ -147,8 +150,9 @@ class CreateGameTest {
             userName = "name",
             locationPacks = emptyList(),
             timeLimit = 1,
-            videoCallLink = "link"
-        )
+            videoCallLink = "link",
+            packsVersion = 0
+            )
 
         assertThat(result).isFailure()
 
@@ -169,7 +173,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         assertThat(result).isFailure()
@@ -191,7 +196,8 @@ class CreateGameTest {
             userName = "username",
             locationPacks = packs,
             timeLimit = 1,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         assertThat(result).isFailure()
@@ -213,7 +219,8 @@ class CreateGameTest {
             userName = "username",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         assertThat(result).isFailure()
@@ -233,7 +240,8 @@ class CreateGameTest {
             userName = "",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         assertThat(result).isFailure()
@@ -259,7 +267,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         coVerify { clearActiveGame.invoke() }
@@ -277,7 +286,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         coVerify(exactly = 0) { clearActiveGame.invoke() }
@@ -295,7 +305,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         assertThat(result).isFailure()
@@ -315,7 +326,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         assertThat(result).isFailure()
@@ -338,7 +350,8 @@ class CreateGameTest {
                 userName = "name",
                 locationPacks = packs,
                 timeLimit = 6,
-                videoCallLink = "link"
+                videoCallLink = "link",
+                packsVersion = 0
             )
 
             coVerify {
@@ -373,7 +386,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = timeLimit,
-            videoCallLink = videoCallLink
+            videoCallLink = videoCallLink,
+            packsVersion = 0
         )
 
         assertThat(result).isSuccess()
@@ -422,7 +436,8 @@ class CreateGameTest {
             userName = "name",
             locationPacks = packs,
             timeLimit = 6,
-            videoCallLink = "link"
+            videoCallLink = "link",
+            packsVersion = 0
         )
 
         assertThat(result).isFailure()
