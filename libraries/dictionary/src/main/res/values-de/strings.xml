@@ -164,6 +164,9 @@
     <string name="joinGame_userNameTakenError_text">Dieser Benutzername ist vergeben. Bitte versuchen Sie, sich etwas Originelleres zu überlegen.</string>
     <string name="joinGame_accessCodeLengthError_text">Zugangscodes sind {length} Zeichen lang.</string>
     <string name="joinGame_nameLengthError_text">Namen müssen zwischen {min} - {max} Zeichen lang sein.</string>
+    <string name="joinGame_couldNotFetchPacksNeededError_header">Wir haben ein Problem festgestellt</string>
+    <string name="joinGame_couldNotFetchPacksNeededError_text">Wir konnten die vom Spiel-Ersteller ausgewählten Pakete nicht abrufen. Bitte stelle sicher, dass du online bist. Alternativ kannst du das Spiel starten und andere einladen, beizutreten.</string>
+    <string name="joinGame_languageMismatch_text">Achtung, das Spiel, dem Sie beitreten, hat eine andere Sprache als Ihr Gerät.</string>
 
     <!-- ///////////////////// Game Play Strings /////////////////////-->
     <string name="gamePlayHelp_howToPlay_header">Wie man spielt</string>

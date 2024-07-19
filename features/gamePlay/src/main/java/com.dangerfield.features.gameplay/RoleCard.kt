@@ -47,7 +47,11 @@ fun RoleCard(
             role.takeIf { it.isNotEmpty() }?.let {
                 BoldPrefixedText(
                     boldText = dictionaryString(R.string.roleCard_role_label),
-                    regularText = role,
+                    regularText = if (isTheOddOneOut) {
+                        dictionaryString(R.string.app_theOddOneOutRole_text)
+                    } else {
+                        role
+                    },
                     textAlign = TextAlign.Center,
                 )
             }

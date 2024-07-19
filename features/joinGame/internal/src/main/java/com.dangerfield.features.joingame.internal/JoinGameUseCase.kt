@@ -6,6 +6,8 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
+import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.game.LocationPacksResult
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ActiveGame
@@ -26,6 +28,7 @@ class JoinGameUseCase @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val gameConfig: GameConfig,
     private val session: Session,
+    private val locationPackRepository: LocationPackRepository,
     private val updateActiveGame: UpdateActiveGame,
     private val clearActiveGame: ClearActiveGame,
     private val generateLocalUUID: GenerateLocalUUID
@@ -74,27 +77,41 @@ class JoinGameUseCase @Inject constructor(
                 .mapFailure { it.toJoinGameError() }
     }
 
-    private fun getGameStateError(
+    private suspend fun getGameStateError(
         accessCode: String,
         game: Game,
         userName: String
     ): JoinGameError? {
         val gameState = mapToGameState(accessCode, game)
 
-        return when {
-            gameState is GameState.DoesNotExist -> JoinGameError.GameNotFound
-            gameState is GameState.Started -> JoinGameError.GameAlreadyStarted
-            gameState is GameState.Starting -> JoinGameError.GameAlreadyStarted
-            gameState is GameState.Voting -> JoinGameError.GameAlreadyStarted
+        val hasPacksNeeded = locationPackRepository.getPacks(
+            languageCode = game.languageCode,
+            version = game.packsVersion,
+            recover = false
+        ).getOrNull() is LocationPacksResult.Hit
 
-            gameState is GameState.Waiting && gameState.players.size >= gameConfig.maxPlayers -> JoinGameError.GameHasMaxPlayers(
-                gameConfig.maxPlayers
-            )
+        if (!hasPacksNeeded) {
+            return JoinGameError.CouldNotFetchPacksNeeded
+        }
 
-            gameState is GameState.Waiting
-                    && gameState.players.any { it.userName.lowercase() == userName.lowercase() } -> JoinGameError.UsernameTaken
+        return when(gameState) {
+            is GameState.DoesNotExist -> JoinGameError.GameNotFound
+            is GameState.Voting,
+            is GameState.VotingEnded,
+            is GameState.Started,
+            is GameState.Starting -> JoinGameError.GameAlreadyStarted
+            is GameState.Waiting -> {
 
-            else -> null
+                if (gameState.players.size >= gameConfig.maxPlayers) {
+                    JoinGameError.GameHasMaxPlayers(gameConfig.maxPlayers)
+                } else if (gameState.players.any { it.userName.lowercase() == userName.lowercase() }) {
+                    JoinGameError.UsernameTaken
+                } else {
+                    null
+                }
+            }
+            is GameState.Expired,
+            is GameState.Unknown -> null
         }
     }
 
@@ -122,12 +139,13 @@ class JoinGameUseCase @Inject constructor(
         }
     }
 
-    sealed class JoinGameError : Throwable() {
+    sealed class JoinGameError : Error() {
         data class InvalidAccessCodeLength(val requiredLength: Int) : JoinGameError()
         data class InvalidNameLength(val min: Int, val max: Int) : JoinGameError()
         data object GameNotFound : JoinGameError()
         data object GameAlreadyStarted : JoinGameError()
         data class IncompatibleVersion(val isCurrentLower: Boolean) : JoinGameError()
+        data object CouldNotFetchPacksNeeded : JoinGameError()
         data class GameHasMaxPlayers(val max: Int) : JoinGameError()
         data object UsernameTaken : JoinGameError()
         data class UnknownError(val t: Throwable) : JoinGameError()

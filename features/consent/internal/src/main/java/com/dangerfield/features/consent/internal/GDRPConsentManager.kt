@@ -27,6 +27,7 @@ import oddoneout.core.ApplicationState
 import oddoneout.core.Catching
 import oddoneout.core.showDebugSnack
 import oddoneout.core.doNothing
+import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
@@ -112,11 +113,15 @@ class GDRPConsentManager @Inject constructor(
             activity = activity,
             params = params,
         )
-    }.onSuccess { status ->
-        if (dispatch) {
-            consentStatusFlow.value = status
-        }
     }
+        .onSuccess { status ->
+            if (dispatch) {
+                consentStatusFlow.value = status
+            }
+        }
+        .onFailure {
+            consentStatusFlow.value = ConsentStatus.Unknown
+        }
 
     private suspend fun getStatusAsync(
         consentInformation: ConsentInformation,

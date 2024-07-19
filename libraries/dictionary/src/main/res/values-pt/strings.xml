@@ -155,6 +155,9 @@
     <string name="joinGame_userNameTakenError_text">Esse nome de usuário já foi tomado. Por favor, tente pensar em algo mais original.</string>
     <string name="joinGame_accessCodeLengthError_text">Códigos de acesso têm {length} caracteres de comprimento.</string>
     <string name="joinGame_nameLengthError_text">Nomes devem ter entre {min} - {max} caracteres de comprimento.</string>
+    <string name="joinGame_couldNotFetchPacksNeededError_header">Encontramos um problema</string>
+    <string name="joinGame_couldNotFetchPacksNeededError_text">Não conseguimos buscar os pacotes escolhidos pelo criador do jogo. Certifique-se de que você está online. Alternativamente, você pode iniciar o jogo e os outros podem se juntar.</string>
+    <string name="joinGame_languageMismatch_text">Atenção, o jogo que você está entrando está em um idioma diferente do seu dispositivo.</string>
 
     <string name="gamePlayHelp_howToPlay_header">Como jogar</string>
     <string name="singleDeviceGame_inGamePlayDescription_text">Vez por vez, façam perguntas que só alguém no local secreto saberia.\n\nMas cuidado para não revelar o local ao impostor!</string>

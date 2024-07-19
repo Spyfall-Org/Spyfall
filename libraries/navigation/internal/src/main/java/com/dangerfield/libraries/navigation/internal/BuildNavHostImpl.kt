@@ -28,7 +28,8 @@ class BuildNavHostImpl @Inject constructor(
     @Composable
     override fun invoke(startingRoute: String) {
 
-        val navController = rememberNavController(FloatingWindowNavigator())
+        val floatingWindowNavigator = remember { FloatingWindowNavigator() }
+        val navController = rememberNavController(floatingWindowNavigator)
         val coroutineScope = rememberCoroutineScope()
         val lifecycle = LocalLifecycleOwner.current.lifecycle
 

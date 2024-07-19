@@ -3,7 +3,7 @@ package com.dangerfield.features.joingame.internal
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.bundleOf
-import com.dangerfield.features.joingame.internal.UnresolvableError.IncompatibleError
+import com.dangerfield.features.joingame.internal.UnresolvableError.IncompatibleGameVersionError
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
@@ -28,17 +28,21 @@ fun JoinGameErrorDialog(
     )
 
     val title = when (unresolvableError) {
-        is IncompatibleError -> {
+        is IncompatibleGameVersionError -> {
             dictionaryString(R.string.joinGame_versionErrorDialog_header)
         }
 
         UnresolvableError.UnknownError -> {
             dictionaryString(R.string.joinGame_unknownErrorDialog_header)
         }
+
+        UnresolvableError.CouldNotFetchPacksNeededError -> {
+            dictionaryString(R.string.joinGame_couldNotFetchPacksNeededError_header)
+        }
     }
 
     val description = when (unresolvableError) {
-        is IncompatibleError -> {
+        is IncompatibleGameVersionError -> {
             if (unresolvableError.isCurrentLower) {
                 dictionaryString(R.string.joinGame_versionTooLowError_text)
             } else {
@@ -49,10 +53,14 @@ fun JoinGameErrorDialog(
         UnresolvableError.UnknownError -> {
             dictionaryString(R.string.joinGame_unknownError_text)
         }
+
+        UnresolvableError.CouldNotFetchPacksNeededError -> {
+            dictionaryString(R.string.joinGame_couldNotFetchPacksNeededError_text)
+        }
     }
 
     val shouldShowUpdateButton =
-        unresolvableError is IncompatibleError && unresolvableError.isCurrentLower
+        unresolvableError is IncompatibleGameVersionError && unresolvableError.isCurrentLower
 
     BasicDialog(
         onDismissRequest = onDismiss,
@@ -78,7 +86,7 @@ private fun PreviewJoinGameErrorDialogUpdate() {
     Preview {
         JoinGameErrorDialog(
             onDismiss = {},
-            unresolvableError = IncompatibleError(isCurrentLower = true),
+            unresolvableError = IncompatibleGameVersionError(isCurrentLower = true),
             onUpdateClicked = {}
         )
     }
@@ -90,7 +98,7 @@ private fun PreviewJoinGameErrorDialogSomeoneElseUpdate() {
     Preview {
         JoinGameErrorDialog(
             onDismiss = {},
-            unresolvableError = IncompatibleError(isCurrentLower = false),
+            unresolvableError = IncompatibleGameVersionError(isCurrentLower = false),
             onUpdateClicked = {}
         )
     }
@@ -103,6 +111,19 @@ private fun PreviewJoinGameErrorDialogUnknown() {
         JoinGameErrorDialog(
             onDismiss = {},
             unresolvableError = UnresolvableError.UnknownError,
+            onUpdateClicked = {}
+        )
+    }
+}
+
+
+@Composable
+@Preview
+private fun PreviewJoinGameErrorDialogPacksVersion() {
+    Preview {
+        JoinGameErrorDialog(
+            onDismiss = {},
+            unresolvableError = UnresolvableError.CouldNotFetchPacksNeededError,
             onUpdateClicked = {}
         )
     }

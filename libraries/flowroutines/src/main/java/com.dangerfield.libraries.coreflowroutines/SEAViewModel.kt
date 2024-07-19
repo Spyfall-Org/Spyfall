@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -17,8 +16,9 @@ import kotlinx.coroutines.launch
 import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
-import kotlin.time.Duration
+import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -77,13 +77,6 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
         )
     }
 
-    // PROBLEM
-    /*
-    the state that the caller would get in updateState {} vs using state is different
-    state includes the each state mapping
-
-    updateState {} does not include the each state mapping
-     */
     /**
      * The flow exposing events from the view mode
      */
@@ -182,6 +175,7 @@ abstract class SEAViewModel<S : Any, E : Any, A : Any>(
      * - etc...
      */
     fun sendEvent(event: E) {
+        Timber.i("Sending event ${event::class.simpleName}")
         events.trySend(event)
     }
 

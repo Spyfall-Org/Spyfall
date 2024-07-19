@@ -56,6 +56,8 @@ class NewGameViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
+    private var packsVersionBeingUsed = gameConfig.packsVersion
+
     init {
         takeAction(Action.Init)
     }
@@ -190,6 +192,7 @@ class NewGameViewModel @Inject constructor(
         createMultiDeviceGameGameUseCase(
             userName = userName,
             locationPacks = selectedPacks,
+            packsVersion = packsVersionBeingUsed,
             timeLimit = timeLimit,
             videoCallLink = state.videoCallLinkState.value
         )
@@ -354,7 +357,10 @@ class NewGameViewModel @Inject constructor(
             .map { result ->
                 when (result) {
                     is Hit -> result.packs
-                    is Miss -> result.packs  // ignore misses, if the user is offline we will limit their experience
+                    is Miss -> {
+                        packsVersionBeingUsed = result.version
+                        result.packs
+                    }
                 }.map { DisplayablePack(it) }
             }.onSuccess { packs ->
                 updateState {

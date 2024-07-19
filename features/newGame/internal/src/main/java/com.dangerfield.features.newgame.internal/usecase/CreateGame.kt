@@ -40,6 +40,7 @@ class CreateGame @Inject constructor(
     suspend operator fun invoke(
         userName: String,
         locationPacks: List<LocationPack>,
+        packsVersion: Int,
         timeLimit: Int,
         videoCallLink: String?
     ): Catching<String> = when {
@@ -50,6 +51,7 @@ class CreateGame @Inject constructor(
         !videoCallLink.isNullOrBlank() && !isRecognizedVideoCallLink(videoCallLink) -> failure(CreateGameError.VideoCallLinkInvalid)
         else -> create(
             userName = userName,
+            packsVersion = packsVersion,
             locationPacks = locationPacks,
             timeLimit = timeLimit,
             videoCallLink = videoCallLink
@@ -58,6 +60,7 @@ class CreateGame @Inject constructor(
 
     private suspend fun create(
         userName: String,
+        packsVersion: Int,
         locationPacks: List<LocationPack>,
         timeLimit: Int,
         videoCallLink: String?
@@ -90,7 +93,7 @@ class CreateGame @Inject constructor(
             accessCode = accessCode,
             lastActiveAt = clock.millis(),
             languageCode = getAppLanguageCode(),
-            packsVersion = gameConfig.packsVersion
+            packsVersion = packsVersion
         )
 
         gameRepository.create(game)

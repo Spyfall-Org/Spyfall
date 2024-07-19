@@ -8,6 +8,10 @@ import com.squareup.moshi.JsonClass
  */
 const val CURRENT_GAME_MODEL_VERSION = 1
 
+/**
+ * The version of packs a build should use is determined by the config. If the config fails and
+ * there is no cache we will fallback to this value
+ */
 const val CURRENT_PACKS_VERSION_FALLBACK = 0
 
 //TODO i should probably use the versioned moshi adapter for this
@@ -24,7 +28,6 @@ data class Game(
      * This location key that is randomly chosen from the list of locations of the chosen packs
      * It is assigned by the creator of the game
      */
-    // TODO I may change this to secret
     val locationName: String,
 
     /**

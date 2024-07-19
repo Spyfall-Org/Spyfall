@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.joingame.internal.JoinGameUseCase.JoinGameError
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.ui.FieldState
@@ -13,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import oddoneout.core.allOrNone
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
-import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -22,6 +22,7 @@ class JoinGameViewModel @Inject constructor(
     private val joinGame: JoinGameUseCase,
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
+    private val getAppLanguageCode: GetAppLanguageCode,
     savedStateHandle: SavedStateHandle
 ) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
@@ -65,8 +66,12 @@ class JoinGameViewModel @Inject constructor(
                 accessCode = accessCode,
                 userName = userName
             )
-                .onSuccess {
-                    sendEvent(Event.GameJoined(accessCode))
+                .onSuccess { game ->
+                    sendEvent(
+                        Event.GameJoined(accessCode = accessCode,
+                            meUserHasDifferentLanguage = getAppLanguageCode() != game.languageCode
+                        )
+                    )
                 }
                 .onFailure { throwable ->
                     if (throwable is JoinGameError) {
@@ -150,7 +155,11 @@ class JoinGameViewModel @Inject constructor(
                 }
 
                 is JoinGameError.IncompatibleVersion -> {
-                    it.copy(unresolvableError = UnresolvableError.IncompatibleError(joinGameError.isCurrentLower))
+                    it.copy(unresolvableError = UnresolvableError.IncompatibleGameVersionError(joinGameError.isCurrentLower))
+                }
+
+                JoinGameError.CouldNotFetchPacksNeeded -> {
+                    it.copy(unresolvableError = UnresolvableError.CouldNotFetchPacksNeededError)
                 }
             }
         }

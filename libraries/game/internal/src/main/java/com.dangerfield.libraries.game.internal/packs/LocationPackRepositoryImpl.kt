@@ -25,7 +25,9 @@ class LocationPackRepositoryImpl @Inject constructor(
 ) : LocationPackRepository {
 
     override suspend fun getPacks(
-        languageCode: String, version: Int
+        languageCode: String,
+        version: Int,
+        recover: Boolean
     ): Catching<LocationPacksResult> = Catching {
         val cached = cachedLocationPacksDataSource.getLocationPacks(
             version = version,
@@ -48,6 +50,8 @@ class LocationPackRepositoryImpl @Inject constructor(
                 }
                 .map { LocationPacksResult.Hit(it) }
                 .recoverCatching {
+                    if (!recover) throw it
+
                     val fallback = getFallbackPacks(languageCode).getOrThrow()
                     LocationPacksResult.Miss(
                         version = fallback.version,

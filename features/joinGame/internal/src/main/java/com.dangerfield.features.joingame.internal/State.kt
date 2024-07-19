@@ -18,10 +18,14 @@ data class State(
 )
 
 sealed class UnresolvableError {
-    data class IncompatibleError(val isCurrentLower: Boolean): UnresolvableError()
+    data class IncompatibleGameVersionError(val isCurrentLower: Boolean): UnresolvableError()
     data object UnknownError: UnresolvableError()
+    data object CouldNotFetchPacksNeededError: UnresolvableError()
 }
 
 sealed class Event {
-    data class GameJoined(val accessCode: String) : Event()
+    data class GameJoined(
+        val accessCode: String,
+        val meUserHasDifferentLanguage: Boolean
+    ) : Event()
 }

@@ -7,15 +7,19 @@ interface LocationPackRepository {
      * Gets the location packs for the given language code and version. Attempts to pull from cache
      * otherwise fetches new and then caches for next time.
      *
-     * If the network fails we will attempt to get the fallback location packs.
+     * If recover is true and the request fails for any reason we will return the highest version pack cached
+     * or the fallback if empty.
+     *
      * This will be considered a `Miss` as we are returning a different version of the location packs.
      *
      * @param languageCode The language code of the location packs to get. See [com.dangerfield.libraries.dictionary.GetAppLanguageCode]
      * @param version The version of the location packs to get.
+     * @param recover If true, will attempt to get the fallback location packs if the network fails.
      */
     suspend fun getPacks(
         languageCode: String,
-        version: Int
+        version: Int,
+        recover: Boolean = true
     ): Catching<LocationPacksResult>
 
     suspend fun getPack(
@@ -38,7 +42,7 @@ sealed class LocationPacksResult(val locationPacks: List<LocationPack>) {
 
     data class Miss(
         val version: Int,
-        val packs: List<LocationPack>
+        val packs: List<LocationPack>,
     ) : LocationPacksResult(packs)
 }
 

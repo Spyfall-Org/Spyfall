@@ -233,7 +233,9 @@
     <string name="joinGame_userNameTakenError_text">That username is taken. Please try to think of something more original.</string>
     <string name="joinGame_accessCodeLengthError_text">Access codes are {length} characters long.</string>
     <string name="joinGame_nameLengthError_text">Names must be between {min} - {max} characters long.</string>
-
+    <string name="joinGame_couldNotFetchPacksNeededError_header">We encountered a problem</string>
+    <string name="joinGame_couldNotFetchPacksNeededError_text">We could not fetch the packs the game creator chose. Please make sure you are online. Alternatively you may start the game and have others join.</string>
+    <string name="joinGame_languageMismatch_text">Heads up, the game you are joining as a different language than your device.</string>
 
     <!-- /////////////////////    Game Play Strings   /////////////////////-->
     <string name="gamePlayHelp_howToPlay_header">How to play</string>

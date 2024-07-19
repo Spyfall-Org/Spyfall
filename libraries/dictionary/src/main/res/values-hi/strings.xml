@@ -164,6 +164,9 @@
     <string name="joinGame_userNameTakenError_text">वह उपयोगकर्ता नाम लिया जा चुका है। कृपया कुछ और मौलिक सोचें।</string>
     <string name="joinGame_accessCodeLengthError_text">पहुँच कोड {length} अक्षर लंबे होते हैं।</string>
     <string name="joinGame_nameLengthError_text">नाम {min} - {max} अक्षरों के बीच लंबे होने चाहिए।</string>
+    <string name="joinGame_couldNotFetchPacksNeededError_header">हमें एक समस्या का सामना करना पड़ा</string>
+    <string name="joinGame_couldNotFetchPacksNeededError_text">हम खेल निर्माता द्वारा चुने गए पैक प्राप्त नहीं कर सके। कृपया सुनिश्चित करें कि आप ऑनलाइन हैं। वैकल्पिक रूप से, आप खेल शुरू कर सकते हैं और अन्य लोग इसमें शामिल हो सकते हैं।</string>
+    <string name="joinGame_languageMismatch_text">ध्यान दें, जिस खेल में आप शामिल हो रहे हैं, उसकी भाषा आपके डिवाइस की भाषा से अलग है।</string>
 
     <string name="gamePlayHelp_howToPlay_header">कैसे खेलें</string>
     <string name="singleDeviceGame_inGamePlayDescription_text">बारी-बारी से एक-दूसरे से ऐसे प्रश्न पूछें जिसे केवल गुप्त स्थान पर मौजूद व्यक्ति ही जान सकता है।\n\nलेकिन सुनिश्चित करें कि आप ओड वन आउट को स्थान का पता न चलने दें!</string>
