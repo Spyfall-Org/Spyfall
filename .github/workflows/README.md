@@ -56,9 +56,13 @@ for some reason.
 ### 4. Publish the app on the google play store
 
 You should be able to find the release on the "Releases Overview" page on the google play console.
-From there you can click "Review" and then "Start Rollout to Production" to publish the app to the store.
 
-![](../images/publish.png)
+From there you can click "Review" and then "Start Rollout to Production" to publish the app to the store.
+Typically you just need to copy previous release notes but you may need to make new ones. In which case you will need to create a translation for each language.
+
+As of now we just roll out to 100%
+
+![](../images/publish_changes.png)
 
 
 
