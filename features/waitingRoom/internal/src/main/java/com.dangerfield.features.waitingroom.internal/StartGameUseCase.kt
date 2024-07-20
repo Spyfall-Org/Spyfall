@@ -36,6 +36,7 @@ class StartGameUseCase @Inject constructor(
         packsVersion: Int,
         id: String,
     ): Catching<Unit> = Catching {
+
         gameRepository
             .setGameIsBeingStarted(accessCode, true)
             .getOrThrow()

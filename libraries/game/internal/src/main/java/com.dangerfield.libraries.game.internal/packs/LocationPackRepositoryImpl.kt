@@ -68,7 +68,9 @@ class LocationPackRepositoryImpl @Inject constructor(
         // launch in app scope so that if calling scope closes, we still save
         appScope.launch {
             cachedLocationPacksDataSource.cacheLocationPacks(
-                version = version, langaugeCode = languageCode, locationPacks = it
+                version = version,
+                langaugeCode = languageCode,
+                locationPacks = it
             )
         }
     }

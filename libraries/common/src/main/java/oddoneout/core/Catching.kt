@@ -46,6 +46,23 @@ fun <T> Catching<T>.debugSnackOnError(
     }
 }
 
+/**
+ * Shows a snack describing the error ff the result is a failure
+ */
+fun <T> Catching<T>.snackOnError(
+    autoDismiss: Boolean = false,
+    lazyMessage: () -> String,
+): Catching<T> = onFailure {
+    if (this.isFailure) {
+        SnackBarPresenter.showMessage(
+            Message(
+                message = lazyMessage(),
+                autoDismiss = autoDismiss
+            )
+        )
+    }
+}
+
 inline fun illegalStateFailure(lazyMessage: () -> String) =
     Catching.failure<Nothing>(IllegalStateException(lazyMessage()))
 

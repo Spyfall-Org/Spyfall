@@ -20,19 +20,16 @@ class FirebaseLocationPacksDataSource @Inject constructor(
         language: String,
         packsVersion: Int
     ): Catching<List<LocationPack>> = Catching {
-        Timber.d("Loading packs")
+        Timber.d("Loading packs with path `versioned-packs/$packsVersion/location-packs/$language`")
         firebaseFirestore
             .collection("versioned-packs")
             .document(packsVersion.toString())
-            .collection(language)
-            .whereEqualTo("type", "location")
+            .collection("location-packs")
+            .document(language)
             .get()
             .awaitCatching()
-            .map {
-                it.documents.map { doc ->
-                    packParser.parsePacks(doc.data.orEmpty())
-                        .getOrThrow()
-                }.flatten()
+            .map { doc ->
+                packParser.parsePacks(doc.data.orEmpty()).getOrThrow()
             }
             .mapCatching {
                 check(it.isNotEmpty())

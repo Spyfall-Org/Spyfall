@@ -8,6 +8,7 @@ import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Event
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameDataSourcError
@@ -25,6 +26,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -34,11 +37,13 @@ import oddoneout.core.Message
 import oddoneout.core.debugSnackOnError
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
+import oddoneout.core.snackOnError
 import oddoneout.core.throwIfDebug
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class WaitingRoomViewModel @Inject constructor(
@@ -70,6 +75,20 @@ class WaitingRoomViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             replay = 1
         )
+
+    init {
+        viewModelScope.launch {
+            stateFlow
+                .map { it.isLoadingStart }
+                .debounce(10.seconds)
+                .collectLatest { isLoadingStartAfter10Seconds ->
+                    if (isLoadingStartAfter10Seconds) {
+                        showMessage { dictionary.getString(R.string.blockingError_error_body) }
+                        gameRepository.end(accessCode)
+                    }
+                }
+        }
+    }
 
     override suspend fun mapEachState(state: State): State {
         return state.copy(
@@ -140,7 +159,8 @@ class WaitingRoomViewModel @Inject constructor(
             languageCode = game.languageCode,
             packsVersion = game.packsVersion,
         )
-            .debugSnackOnError { "Error starting game" }
+            .logOnFailure()
+            .snackOnError { dictionary.getString(R.string.blockingError_error_body) }
             .eitherWay {
                 updateState { it.copy(isLoadingStart = false) }
             }

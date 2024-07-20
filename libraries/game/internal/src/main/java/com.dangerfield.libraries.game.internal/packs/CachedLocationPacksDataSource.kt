@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -25,9 +26,13 @@ class CachedLocationPacksDataSource @Inject constructor(
         langaugeCode: String
     ): Catching<CachedLocationPack> = Catching {
         val data = dataStore.data.first()
+        data.forEach {
+            Timber.d("""
+                Cached Location Pack: ${it.version} - ${it.langaugeCode} = ${it.locationPacks.size} locations
+            """.trimIndent())
+        }
         data.first {
-            it.version == version
-                    && it.langaugeCode == langaugeCode
+            it.version == version && it.langaugeCode == langaugeCode
         }
     }
 
@@ -45,14 +50,16 @@ class CachedLocationPacksDataSource @Inject constructor(
         langaugeCode: String,
         locationPacks: List<LocationPack>
     ) = Catching {
-        dataStore.updateData {
-            locationPacks.map {
+        dataStore.updateData { oldPacks ->
+            val newPacks = locationPacks.map {
                 CachedLocationPack(
                     version = version,
                     langaugeCode = langaugeCode,
                     locationPacks = locationPacks
                 )
             }
+
+            (oldPacks + newPacks).distinctBy { it.version to it.langaugeCode }
         }
     }
         .logOnFailure()
