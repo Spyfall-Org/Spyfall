@@ -33,14 +33,12 @@ https://github.com/oddoneoutgame/OddOneOut/releases
 On the draft release click `Edit` and fill in the release notes.
 Then scroll to the bottom and click `Publish Release`.
 
-![](images/publish_release.png)
-
 This will automatically send the build to the google play store for publishing in the store
 
+![](images/publish.png)
 
 
 #
-
 
 
 
@@ -51,7 +49,6 @@ for some reason.
 
 
 #
-
 
 
 
