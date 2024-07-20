@@ -11,7 +11,6 @@
 Odd One Out is a multiplayer game in which one person is assigned to be the odd one out while all other players are assigned a role at a location. The Odd one Out's objective is to figure out the location through a series of well-worded questions while not giving away that he or she is the Odd One Out. Meanwhile, everyone else's objective is to figure out the Odd One Out. All players take turns asking questions and having fun!
 
 
-
 ## Rules
 
 - As the game starts, every player gets the secret word.
@@ -82,5 +81,12 @@ On every PR we check:
 The workflows for these can be found [here](https://github.com/oddoneoutgame/OddOneOut/blob/main/.github/workflows)
 
 Github actions are leveraged for `click releases`. Meaning in order to release a new version all one needs to do is click buttons. The release process can be found [here](https://github.com/oddoneoutgame/OddOneOut/blob/main/.github/workflows/README.md)
+
+
+## Other Cool things about this code base
+
+- This app is localized and available in English, Portuguese, Hindi and German
+- All strings are available to be overwritten backend (this comes in handy when I make mistakes and dont wanna release again)
+- Backend configured values are used all over this code base so that at any time I can make small edits without releasing
 
 
