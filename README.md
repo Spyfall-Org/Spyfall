@@ -81,6 +81,6 @@ On every PR we check:
 
 The workflows for these can be found [here](https://github.com/oddoneoutgame/OddOneOut/blob/main/.github/workflows)
 
-Github actions are leveraged for `click releases`. Meaning in order to release a new version all one needs to do is click buttons. The release train includes creating a new release branch with a PR into main, after tests pass a new release draft is created. Publishing that draft uploads the build to the playstore where notes can be added before publishing. 
+Github actions are leveraged for `click releases`. Meaning in order to release a new version all one needs to do is click buttons. The release process can be found (here)[https://github.com/oddoneoutgame/OddOneOut/blob/main/.github/workflows/README.md]
 
 
