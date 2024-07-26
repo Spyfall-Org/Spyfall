@@ -1,25 +1,26 @@
 package com.dangerfield.libraries.coreflowroutines
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 @Suppress("UnusedPrivateMember")
-class CalculateOnce<T>(
+class SingletonJobRunner(
     scope: CoroutineScope,
-    private val initializer: suspend () -> T,
+    private val job: suspend () -> Unit,
 ) {
-    private var value: T? = null
+    private var value: Unit? = null
     private val mutex = Mutex()
 
     init {
         scope.launch {
-            getValue()
+            join()
         }
     }
 
-    suspend fun getValue(): T {
+    suspend fun join() {
         if (value == null) {
             mutex.withLock {
                 /*
@@ -27,10 +28,9 @@ class CalculateOnce<T>(
                 while the value was getting set
                  */
                 if (value == null) {
-                    value = initializer()
+                    value = job()
                 }
             }
         }
-        return value!!
     }
 }

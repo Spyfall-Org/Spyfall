@@ -1,8 +1,14 @@
 plugins {
     id("ooo.android.library")
     id("org.jetbrains.kotlin.kapt")
+    id("androidx.room")
 }
 
+val schemasDir = layout.projectDirectory.dir("schemas")
+
+room {
+    schemaDirectory(schemasDir.toString())
+}
 
 oddOneOut {
     daggerHilt()
@@ -29,4 +35,7 @@ dependencies {
 
     implementation(projects.libraries.session.storage)
     implementation(projects.libraries.session)
+
+    implementation(projects.libraries.game.storage)
+    implementation(projects.libraries.game)
 }

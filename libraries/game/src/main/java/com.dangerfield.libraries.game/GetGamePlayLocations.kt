@@ -7,5 +7,5 @@ import oddoneout.core.Catching
  * Leverages the packs tied to the game to ensure a variety of locations are used.
  */
 interface GetGamePlayLocations {
-    operator fun invoke(locationPacks: List<LocationPack>, isSingleDevice: Boolean = false): Catching<List<Location>>
+    operator fun invoke(locationPacks: List<LocationPack>, isSingleDevice: Boolean = false): Catching<List<OldLocationModel>>
 }

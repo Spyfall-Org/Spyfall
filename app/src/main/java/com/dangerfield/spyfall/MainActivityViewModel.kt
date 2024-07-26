@@ -12,6 +12,7 @@ import com.dangerfield.features.inAppMessaging.InAppUpdateAvailability
 import com.dangerfield.features.inAppMessaging.StartInAppUpdate
 import com.dangerfield.features.inAppMessaging.UpdateStatus
 import com.dangerfield.libraries.config.AppConfigFlow
+import com.dangerfield.libraries.config.EnsureAppConfigLoaded
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.dictionary.GetDeviceLanguageSupportLevel
@@ -26,7 +27,6 @@ import com.dangerfield.libraries.ui.color.ColorResource
 import com.dangerfield.libraries.ui.color.ThemeColor
 import com.dangerfield.spyfall.MainActivityViewModel.Action
 import com.dangerfield.spyfall.MainActivityViewModel.State
-import com.dangerfield.spyfall.startup.EnsureAppConfigLoaded
 import com.dangerfield.spyfall.startup.IsInMaintenanceMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope

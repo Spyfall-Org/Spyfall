@@ -1,0 +1,84 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "ee0690ae03439043ada36c1fb4a50d83",
+    "entities": [
+      {
+        "tableName": "MeGameResult",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`gameKey` TEXT NOT NULL, `didWin` INTEGER NOT NULL, `wasOddOne` INTEGER NOT NULL, `uploadStatus` TEXT NOT NULL, PRIMARY KEY(`gameKey`))",
+        "fields": [
+          {
+            "fieldPath": "gameKey",
+            "columnName": "gameKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "didWin",
+            "columnName": "didWin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasOddOne",
+            "columnName": "wasOddOne",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uploadStatus",
+            "columnName": "uploadStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "gameKey"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MeGamePlayed",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`gameKey` TEXT NOT NULL, `wasSingleDevice` INTEGER NOT NULL, `uploadStatus` TEXT NOT NULL, PRIMARY KEY(`gameKey`))",
+        "fields": [
+          {
+            "fieldPath": "gameKey",
+            "columnName": "gameKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasSingleDevice",
+            "columnName": "wasSingleDevice",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uploadStatus",
+            "columnName": "uploadStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "gameKey"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ee0690ae03439043ada36c1fb4a50d83')"
+    ]
+  }
+}

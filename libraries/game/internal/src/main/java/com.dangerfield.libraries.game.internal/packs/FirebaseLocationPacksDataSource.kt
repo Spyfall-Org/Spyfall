@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class FirebaseLocationPacksDataSource @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
-    private val packParser: PackParser,
+    private val oldPackParser: OldPackParser,
 ) {
 
     /**
@@ -29,7 +29,7 @@ class FirebaseLocationPacksDataSource @Inject constructor(
             .get()
             .awaitCatching()
             .map { doc ->
-                packParser.parsePacks(doc.data.orEmpty()).getOrThrow()
+                oldPackParser.parsePacks(doc.data.orEmpty()).getOrThrow()
             }
             .mapCatching {
                 check(it.isNotEmpty())

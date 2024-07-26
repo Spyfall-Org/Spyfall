@@ -15,6 +15,7 @@ android {
 }
 dependencies {
     implementation(projects.libraries.game)
+    implementation(projects.libraries.game.storage)
     implementation(projects.libraries.config)
     implementation(projects.libraries.common)
     implementation(projects.libraries.dictionary)

@@ -1,6 +1,5 @@
-package com.dangerfield.spyfall.startup
+package com.dangerfield.libraries.config
 
-import com.dangerfield.libraries.config.AppConfigRepository
 import kotlinx.coroutines.flow.first
 import oddoneout.core.Catching
 import oddoneout.core.ignoreValue

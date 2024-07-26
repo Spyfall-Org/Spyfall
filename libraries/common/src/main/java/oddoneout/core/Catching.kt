@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import spyfallx.core.common.BuildConfig
 import timber.log.Timber
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.time.Duration.Companion.seconds
 
 typealias Catching<T> = Result<T>
@@ -83,6 +85,20 @@ inline fun <T> Catching<T>.eitherWay(block: (Catching<T>) -> Unit) = this.also(b
 
 fun <T> Catching<T>.ignoreValue(): Catching<Unit> = this.map { }
 fun <T> Catching<T>.ignore() = doNothing()
+
+inline fun <T> Catching<T>.fold(
+    ifFailure: (left: Throwable) -> T,
+    ifSuccess: (right: T) -> T
+): T {
+    val value = this.getOrNull()
+    val exception = this.getExceptionOrNull()
+
+    return when  {
+        value != null -> ifSuccess(value)
+        exception != null -> ifFailure(exception)
+        else -> throw IllegalStateException("Catching is neither success nor failure")
+    }
+}
 
 inline fun <T> Catching<T>.mapFailure(f: (Throwable) -> Throwable): Catching<T> {
     return when (val exception = exceptionOrNull()) {

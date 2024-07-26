@@ -184,6 +184,7 @@ dependencies {
 	implementation(projects.features.inAppMessaging.internal)
 	implementation(projects.features.createPack)
 	implementation(projects.features.createPack.internal)
+	implementation(projects.libraries.game.storage)
     // STOP PROJECT MODULES (keep this line at the end of the project modules, used by ./create_module)
 
     testImplementation(libs.androidx.test.junit)

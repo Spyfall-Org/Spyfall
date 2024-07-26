@@ -15,7 +15,7 @@ import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GetGamePlayLocations
-import com.dangerfield.libraries.game.Location
+import com.dangerfield.libraries.game.OldLocationModel
 import com.dangerfield.libraries.game.LocationPack
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -459,7 +459,7 @@ class CreateGameTest {
         } != null
     }
 
-    private fun Game.hasValidLocations(allPackLocations: List<Location>) =
+    private fun Game.hasValidLocations(allPackLocations: List<OldLocationModel>) =
         allPackLocations.map { it.name }.toSet().containsAll(locationOptionNames.toSet())
 
     private fun Game.hasValidLocation(gameLocations: List<String>) =
@@ -469,9 +469,9 @@ class CreateGameTest {
         this.packNames.toSet().containsAll(locationPacks.map { it.name }.toSet())
 
 
-    private fun getFilledOutLocations(packName: String): List<Location> {
+    private fun getFilledOutLocations(packName: String): List<OldLocationModel> {
         val locations = listOf("1", "2", "3", "4", "5", "6", "7", "8").map {
-            Location(
+            OldLocationModel(
                 name = "location$it",
                 roles = listOf("some role", "some other role", "odd one out"),
                 packName = packName

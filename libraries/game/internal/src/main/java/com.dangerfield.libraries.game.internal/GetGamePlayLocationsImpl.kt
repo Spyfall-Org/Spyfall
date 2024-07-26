@@ -2,7 +2,7 @@ package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GetGamePlayLocations
-import com.dangerfield.libraries.game.Location
+import com.dangerfield.libraries.game.OldLocationModel
 import com.dangerfield.libraries.game.LocationPack
 import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
@@ -17,9 +17,9 @@ class GetGamePlayLocationsImpl @Inject constructor(
     override operator fun invoke(
         locationPacks: List<LocationPack>,
         isSingleDevice: Boolean
-    ): Catching<List<Location>> = Catching {
+    ): Catching<List<OldLocationModel>> = Catching {
 
-        val gamePlayLocations = mutableSetOf<Location>()
+        val gamePlayLocations = mutableSetOf<OldLocationModel>()
         val packBank = locationPacks.map { it.locations.toMutableSet() }
         val totalLocations = packBank.sumOf { it.size }
 

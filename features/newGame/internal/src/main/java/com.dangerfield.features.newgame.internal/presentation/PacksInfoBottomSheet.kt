@@ -11,7 +11,7 @@ import com.dangerfield.features.newgame.internal.presentation.model.DisplayableP
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.game.Location
+import com.dangerfield.libraries.game.OldLocationModel
 import com.dangerfield.libraries.game.LocationPack
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.Preview
@@ -131,7 +131,7 @@ private fun PreviewPackDetailsBottomSheet() {
                     locationPack = LocationPack(
                         name = "Pack one",
                         locations = exampleLocations.shuffled().take(7).map {
-                            Location(
+                            OldLocationModel(
                                 name = it,
                                 roles = listOf(),
                                 packName = "Pack one"
@@ -143,7 +143,7 @@ private fun PreviewPackDetailsBottomSheet() {
                     locationPack = LocationPack(
                         name = "Pack two",
                         locations = exampleLocations.shuffled().take(7).map {
-                            Location(
+                            OldLocationModel(
                                 name = it,
                                 roles = listOf(),
                                 packName = "Pack two"

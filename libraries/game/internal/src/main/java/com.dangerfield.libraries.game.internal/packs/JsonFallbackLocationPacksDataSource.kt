@@ -1,7 +1,7 @@
 package com.dangerfield.libraries.game.internal.packs
 
 import android.content.Context
-import com.dangerfield.libraries.game.Location
+import com.dangerfield.libraries.game.OldLocationModel
 import com.dangerfield.libraries.game.LocationPack
 import com.dangerfield.oddoneoout.libraries.game.internal.R
 import com.squareup.moshi.JsonClass
@@ -49,7 +49,7 @@ private fun JsonLocationPack.toLocationPack(): LocationPack {
     return LocationPack(
         name = this.name,
         locations = locations.map { jsonLocation ->
-            Location(
+            OldLocationModel(
                 name = jsonLocation.name,
                 roles = jsonLocation.roles,
                 packName = this.name
