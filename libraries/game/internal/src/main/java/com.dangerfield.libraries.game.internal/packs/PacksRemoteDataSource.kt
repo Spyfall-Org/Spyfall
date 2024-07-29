@@ -40,8 +40,8 @@ data class RemotePackItem(
 
 
 object RemotePackConstants {
-    val PACK_TYPE_LOCATION = "location"
-    val PACK_TYPE_CELEBRITY = "celebrity"
+    const val PACK_TYPE_LOCATION = "location"
+    const val PACK_TYPE_CELEBRITY = "celebrity"
 }
 
 @AutoBind

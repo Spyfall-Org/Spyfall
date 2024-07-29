@@ -196,8 +196,6 @@ class PackRepositoryImpl @Inject constructor(
 
         val oldPacks = allPacks.filter { it.id in oldPackIds }.toSet()
         val notOldPacks = (allPacks - oldPacks).toSet()
-        val hasPackNeededToStartAGame =
-            notOldPacks.any { it.version == gameConfig.packsVersion && it.languageCode == getAppLanguageCode() }
 
         val appPacksToDelete = oldPacks
             .filter { it.dbPackOwner == App }
@@ -220,6 +218,8 @@ class PackRepositoryImpl @Inject constructor(
 
         packDao.deletePacks(packsToDelete.toList())
 
+        // fetch regardless of if we have the latest version in cache
+        // breaks are versioned, otherwise every session updates
         packsRemoteDataSource
             .getAppPacks(
                 languageCode = getAppLanguageCode(),

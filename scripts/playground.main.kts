@@ -71,6 +71,7 @@ fun doWork() {
 
     }
 
+    @Suppress("UnusedPrivateMember")
     val releaseDb = getDb(releaseServiceAccountJsonFile.absolutePath)
     val debugDb = getDb(debugServiceAccountJsonFile.absolutePath)
 

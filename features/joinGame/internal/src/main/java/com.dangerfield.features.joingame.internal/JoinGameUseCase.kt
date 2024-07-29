@@ -29,7 +29,6 @@ class JoinGameUseCase @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val gameConfig: GameConfig,
     private val session: Session,
-    private val packRepository: PackRepository,
     private val updateActiveGame: UpdateActiveGame,
     private val clearActiveGame: ClearActiveGame,
     private val generateLocalUUID: GenerateLocalUUID
