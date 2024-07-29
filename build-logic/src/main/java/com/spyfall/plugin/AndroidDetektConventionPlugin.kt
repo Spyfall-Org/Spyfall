@@ -30,6 +30,7 @@ class AndroidDetektConventionPlugin : Plugin<Project> {
             @Suppress("SpreadOperator")
             if (rootProject.tasks.findByName("detektAll") == null) {
                 rootProject.tasks.register<Detekt>("detektAll") {
+                    dependsOn("clean")
                     group = "verification"
                     description = "Check Kotlin code style for all files."
                     setupCommonDetektSettings()
