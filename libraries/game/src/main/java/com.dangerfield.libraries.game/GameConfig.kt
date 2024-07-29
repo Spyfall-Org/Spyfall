@@ -8,11 +8,11 @@ interface GameConfig {
     val minPlayers: Int
     val maxTimeLimit: Int
     val minTimeLimit: Int
-    val locationsPerGame: Int
+    val itemsPerGame: Int
     val isSingleDeviceModeEnabled: Boolean
     val isVideoCallLinkEnabled: Boolean
     val forceShortGames: Boolean
-    val locationsPerSingleDeviceGame: Int
+    val itemsPerSingleDeviceGame: Int
     val gameInactivityExpirationMins: Int
     val canNonHostsControlGame: Boolean
     val packsVersion: Int

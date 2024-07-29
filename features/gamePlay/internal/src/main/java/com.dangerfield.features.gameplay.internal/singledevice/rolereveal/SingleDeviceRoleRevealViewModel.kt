@@ -16,6 +16,8 @@ import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
+import com.dangerfield.libraries.game.PackItem
+import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -45,6 +47,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     private val clearActiveGame: ClearActiveGame,
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
+    private val packRepository: PackRepository,
     private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
 ) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
@@ -157,13 +160,24 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     private suspend fun Action.LoadGame.loadGame() {
         if (hasLoadedGame.getAndSet(true)) return
 
+        /*
+        okay so i need to know what type of location this is. and that will depend on the pack right?
+
+         */
         viewModelScope.launch {
             gameRepository.getGame(accessCode)
                 .onSuccess { game ->
+
+                    val packItem = packRepository.getPackItem(
+                        itemName = game.secret,
+                        version = game.packsVersion,
+                        languageCode = game.languageCode
+                    ).getOrNull()
+
                     updateState { state ->
                         state.copy(
-                            location = game.locationName,
-                            locationOptions = game.locationOptionNames
+                            location = packItem,
+                            locationOptions = game.secretOptions
                         )
                     }
                     val displayablePlayers = game.players.mapIndexed { index, player ->
@@ -260,7 +274,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
         val currentPlayer: DisplayablePlayer?,
         val isLastPlayer: Boolean,
         val isFirstPlayer: Boolean,
-        val location: String?,
+        val location: PackItem?,
         val isGameStarted: Boolean,
         val nameFieldState: FieldState<String>,
         val locationOptions: List<String>,

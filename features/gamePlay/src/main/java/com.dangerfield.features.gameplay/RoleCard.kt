@@ -13,10 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.libraries.dictionary.dictionaryString
+import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.ui.Dimension
 import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.Radii
@@ -35,7 +37,7 @@ fun RoleCard(
     role: String,
     isTheOddOneOut: Boolean,
     isVisible: Boolean = false,
-    location: String?,
+    packItem: PackItem?,
     text: String?,
     onHideShowClicked: () -> Unit
 ) {
@@ -57,10 +59,13 @@ fun RoleCard(
             }
         },
         location = {
-            if (location != null && !isTheOddOneOut) {
+            if (packItem != null && !isTheOddOneOut) {
                 BoldPrefixedText(
-                    boldText = dictionaryString(R.string.roleCard_location_label),
-                    regularText = location,
+                    boldText = when(packItem) {
+                        is PackItem.Location -> dictionaryString(R.string.roleCard_location_label)
+                        is PackItem.Celebrity -> dictionaryString(R.string.celebrity)
+                    },
+                    regularText = packItem.name,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -160,7 +165,7 @@ private fun PreviewRoleCardOddOneOut() {
             RoleCard(
                 role = "The Odd One Out!",
                 text = "Don't get found out!",
-                location = "The Beach",
+                packItem = PackItem.Celebrity("Some longer location name"),
                 isTheOddOneOut = true,
                 isVisible = true,
                 onHideShowClicked = { -> },
@@ -177,7 +182,7 @@ private fun PreviewRoleCardPlayer() {
             RoleCard(
                 role = "Something that takes up space",
                 text = "Find the odd one out",
-                location = "Some longer location name",
+                packItem = PackItem.Celebrity("Some longer location name"),
                 isTheOddOneOut = false,
                 isVisible = true,
                 onHideShowClicked = { -> },
@@ -194,7 +199,7 @@ private fun PreviewRoleCardPlayerNoRole() {
             RoleCard(
                 role = "",
                 text = "Find the odd one out",
-                location = "Some longer location name",
+                packItem = PackItem.Celebrity("Some longer location name"),
                 isTheOddOneOut = false,
                 isVisible = true,
                 onHideShowClicked = { -> },
@@ -212,7 +217,7 @@ private fun SmallRoleCard() {
                 modifier = Modifier.scale(0.6f),
                 role = "The Odd One Out",
                 text = "Don't get found out!",
-                location = null,
+                packItem = PackItem.Celebrity("Some longer location name"),
                 isTheOddOneOut = true,
                 isVisible = true,
                 onHideShowClicked = { -> },

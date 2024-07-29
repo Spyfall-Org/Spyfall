@@ -8,7 +8,6 @@ import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.Event
 import com.dangerfield.features.waitingroom.internal.WaitingRoomViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.dictionary.Dictionary
-import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameDataSourcError
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -152,12 +150,8 @@ class WaitingRoomViewModel @Inject constructor(
         }
 
         startGameUseCase(
-            accessCode = accessCode,
-            players = game.players,
-            locationName = game.locationName,
             id = meUserId,
-            languageCode = game.languageCode,
-            packsVersion = game.packsVersion,
+            currentGame = game
         )
             .logOnFailure()
             .snackOnError { dictionary.getString(R.string.blockingError_error_body) }

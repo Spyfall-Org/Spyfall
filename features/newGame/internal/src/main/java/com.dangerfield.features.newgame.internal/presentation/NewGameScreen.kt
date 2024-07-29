@@ -31,7 +31,8 @@ import com.dangerfield.features.newgame.newGameNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.game.LocationPack
+import com.dangerfield.libraries.game.OwnerDetails
+import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.ui.Dimension
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.HorizontalSpacerD600
@@ -505,21 +506,55 @@ fun PreviewNewGameScreen() {
                 listOf(
                     DisplayablePack(
                         isSelected = false,
-                        locationPack = LocationPack(name = "Special 1", locations = listOf())
+                        pack = Pack.LocationPack(
+                            locations = listOf(),
+                            name = "Super Special Pack 4",
+                            id = "4",
+                            version = 1,
+                            languageCode = "en",
+                            isPublic = false,
+                            owner = OwnerDetails.App,
+                            isUserSaved = false
+                        )
                     ),
                     DisplayablePack(
                         isSelected = false,
-                        locationPack = LocationPack(name = "Special 2", locations = listOf())
+                        pack = Pack.LocationPack(
+                            locations = listOf(),
+                            name = "Super Special Pack 4",
+                            id = "4",
+                            version = 1,
+                            languageCode = "en",
+                            isPublic = false,
+                            owner = OwnerDetails.App,
+                            isUserSaved = false
+                        )
                     ),
-
                     DisplayablePack(
                         isSelected = false,
-                        locationPack = LocationPack(name = "Special 3", locations = listOf())
+                        pack = Pack.LocationPack(
+                            locations = listOf(),
+                            name = "Super Special Pack 4",
+                            id = "4",
+                            version = 1,
+                            languageCode = "en",
+                            isPublic = false,
+                            owner = OwnerDetails.App,
+                            isUserSaved = false
+                        )
                     ),
-
                     DisplayablePack(
                         isSelected = false,
-                        locationPack = LocationPack(name = "Special 4", locations = listOf())
+                        pack = Pack.LocationPack(
+                            locations = listOf(),
+                            name = "Super Special Pack 4",
+                            id = "4",
+                            version = 1,
+                            languageCode = "en",
+                            isPublic = false,
+                            owner = OwnerDetails.App,
+                            isUserSaved = false
+                        )
                     ),
                 )
             )
@@ -528,7 +563,7 @@ fun PreviewNewGameScreen() {
         NewGameScreen(
             onPackSelected = { displayablePack, isSelected ->
                 packs = packs.map {
-                    if (it.locationPack == displayablePack.locationPack) {
+                    if (it.pack == displayablePack.pack) {
                         it.copy(isSelected = isSelected)
                     } else {
                         it
@@ -575,21 +610,42 @@ fun PreviewNewGameScreenOffline() {
                 listOf(
                     DisplayablePack(
                         isSelected = false,
-                        locationPack = LocationPack(name = "Special 1", locations = listOf())
+                        pack = Pack.LocationPack(
+                            locations = listOf(),
+                            name = "Super Special Pack 4",
+                            id = "4",
+                            version = 1,
+                            languageCode = "en",
+                            isPublic = false,
+                            owner = OwnerDetails.App,
+                            isUserSaved = false
+                        )
                     ),
                     DisplayablePack(
                         isSelected = false,
-                        locationPack = LocationPack(name = "Special 2", locations = listOf())
+                        pack = Pack.LocationPack(
+                            locations = listOf(),
+                            name = "Super Special Pack 4",
+                            id = "4",
+                            version = 1,
+                            languageCode = "en",
+                            isPublic = false,
+                            owner = OwnerDetails.App,
+                            isUserSaved = false
+                        )
                     ),
-
                     DisplayablePack(
                         isSelected = false,
-                        locationPack = LocationPack(name = "Special 3", locations = listOf())
-                    ),
-
-                    DisplayablePack(
-                        isSelected = false,
-                        locationPack = LocationPack(name = "Special 4", locations = listOf())
+                        pack = Pack.LocationPack(
+                            locations = listOf(),
+                            name = "Super Special Pack 4",
+                            id = "4",
+                            version = 1,
+                            languageCode = "en",
+                            isPublic = false,
+                            owner = OwnerDetails.App,
+                            isUserSaved = false
+                        )
                     ),
                 )
             )
@@ -598,7 +654,7 @@ fun PreviewNewGameScreenOffline() {
         NewGameScreen(
             onPackSelected = { displayablePack, isSelected ->
                 packs = packs.map {
-                    if (it.locationPack == displayablePack.locationPack) {
+                    if (it.pack == displayablePack.pack) {
                         it.copy(isSelected = isSelected)
                     } else {
                         it

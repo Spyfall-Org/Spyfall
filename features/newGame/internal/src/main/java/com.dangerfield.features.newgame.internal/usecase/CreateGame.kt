@@ -7,9 +7,10 @@ import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayLocations
-import com.dangerfield.libraries.game.LocationPack
+import com.dangerfield.libraries.game.GetGamePlayItems
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
+import com.dangerfield.libraries.game.Pack
+import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -26,7 +27,7 @@ import javax.inject.Named
 class CreateGame @Inject constructor(
     private val generateAccessCode: GenerateOnlineAccessCode,
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
-    private val getGamePlayLocations: GetGamePlayLocations,
+    private val getGamePlayItems: GetGamePlayItems,
     private val generateLocalUUID: GenerateLocalUUID,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
     private val gameConfig: GameConfig,
@@ -39,12 +40,12 @@ class CreateGame @Inject constructor(
 
     suspend operator fun invoke(
         userName: String,
-        locationPacks: List<LocationPack>,
+        packs: List<Pack<PackItem>>,
         packsVersion: Int,
         timeLimit: Int,
         videoCallLink: String?
     ): Catching<String> = when {
-        locationPacks.isEmpty() -> failure(CreateGameError.PacksEmpty)
+        packs.isEmpty() -> failure(CreateGameError.PacksEmpty)
         timeLimit < gameConfig.minTimeLimit -> failure(CreateGameError.TimeLimitTooShort)
         timeLimit > gameConfig.maxTimeLimit -> failure(CreateGameError.TimeLimitTooLong)
         userName.isBlank() -> failure(CreateGameError.NameBlank)
@@ -52,7 +53,7 @@ class CreateGame @Inject constructor(
         else -> create(
             userName = userName,
             packsVersion = packsVersion,
-            locationPacks = locationPacks,
+            packs = packs,
             timeLimit = timeLimit,
             videoCallLink = videoCallLink
         )
@@ -61,7 +62,7 @@ class CreateGame @Inject constructor(
     private suspend fun create(
         userName: String,
         packsVersion: Int,
-        locationPacks: List<LocationPack>,
+        packs: List<Pack<PackItem>>,
         timeLimit: Int,
         videoCallLink: String?
     ): Catching<String> = Catching {
@@ -69,7 +70,7 @@ class CreateGame @Inject constructor(
         checkForExistingSession()
 
         val accessCode = generateAccessCode.invoke().getOrThrow()
-        val locations = getGamePlayLocations(locationPacks).getOrThrow()
+        val secretOptions = getGamePlayItems(packs).getOrThrow()
         val userId = session.user.id ?: generateLocalUUID.invoke()
         val currentPlayer = Player(
             id = userId,
@@ -81,13 +82,13 @@ class CreateGame @Inject constructor(
         )
 
         val game = Game(
-            locationName = locations.random().name,
-            packNames = locationPacks.map { it.name },
+            secret = secretOptions.random().name,
+            packIds = packs.map { it.id },
             isBeingStarted = false,
             players = listOf(currentPlayer),
             timeLimitMins = if (gameConfig.forceShortGames) -1 else timeLimit,
             startedAt = null,
-            locationOptionNames = locations.map { it.name },
+            secretOptions = secretOptions.map { it.name },
             videoCallLink = videoCallLink,
             version = CURRENT_GAME_MODEL_VERSION,
             accessCode = accessCode,

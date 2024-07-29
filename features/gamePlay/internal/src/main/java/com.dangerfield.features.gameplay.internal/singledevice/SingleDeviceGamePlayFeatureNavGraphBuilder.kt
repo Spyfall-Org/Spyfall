@@ -148,7 +148,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
 
             SingleDevicePlayerRoleScreen(
                 currentPlayer = state.currentPlayer,
-                location = state.location,
+                gameItem = state.location,
                 onNextPlayerClicked = { viewModel.takeAction(LoadNextPlayer) },
                 isLastPlayer = state.isLastPlayer,
                 onStartGameClicked = { viewModel.takeAction(StartGame) },

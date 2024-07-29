@@ -65,8 +65,8 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                 timeLimitMins = game.timeLimitMins,
                 videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() },
                 firstPlayer = game.players.first(),
-                location = game.locationName,
-                locationNames = game.locationOptionNames,
+                location = game.secret,
+                locationNames = game.secretOptions,
                 timeRemainingMillis = remainingMillis(startedAt, game.timeLimitMins)
             )
 
@@ -77,9 +77,9 @@ class MapToGameStateUseCaseImpl @Inject constructor(
             -> GameState.Voting(
                 accessCode = accessCode,
                 players = game.players,
-                location = game.locationName,
+                location = game.secret,
                 hasMePlayerVoted = game.player(session.user.id)?.hasVoted() == true,
-                locationNames = game.locationOptionNames,
+                locationNames = game.secretOptions,
                 videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() }
             )
 
@@ -94,10 +94,10 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                 GameState.VotingEnded(
                     accessCode = accessCode,
                     result = result,
-                    locationNames = game.locationOptionNames,
+                    locationNames = game.secretOptions,
                     players = game.players,
                     startedAt = startedAt,
-                    location = game.locationName,
+                    location = game.secret,
                     videoCallLink = game.videoCallLink.takeIf { !it.isNullOrEmpty() },
                     timeLimitMins = game.timeLimitMins,
                     mePlayer = mePlayer,
@@ -116,7 +116,6 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                     startedAt: $startedAt
                     isBeingStarted: ${game.isBeingStarted}
                     remainingMillis: ${remainingMillis(startedAt ?: 0, game.timeLimitMins)}
-                    everyoneHasARole: ${game.players.everyoneHasARole()}
                     everyoneHasVoted: ${game.players.everyoneHasVoted()}
                     remainingTimeMillis = ${
                         startedAt?.let {
@@ -129,6 +128,8 @@ class MapToGameStateUseCaseImpl @Inject constructor(
                 """.trimIndent()
                 )
             }
+        }.also {
+            Timber.d("GameState: $it")
         }
     }
 
@@ -139,7 +140,7 @@ class MapToGameStateUseCaseImpl @Inject constructor(
         return minsSinceLastActivity >= gameConfig.gameInactivityExpirationMins
     }
 
-    private fun hasStarted(game: Game) = game.startedAt != null && game.players.everyoneHasARole()
+    private fun hasStarted(game: Game) = game.startedAt != null
 
     private fun calculateGameResult(game: Game): GameResult {
         val oddOneOut = game.players.find { it.isOddOneOut } ?: return GameResult.Error
@@ -155,6 +156,5 @@ class MapToGameStateUseCaseImpl @Inject constructor(
         }
     }
 
-    private fun Collection<Player>.everyoneHasARole() = this.all { it.role != null }
     private fun Collection<Player>.everyoneHasVoted() = this.all { it.votedCorrectly != null }
 }

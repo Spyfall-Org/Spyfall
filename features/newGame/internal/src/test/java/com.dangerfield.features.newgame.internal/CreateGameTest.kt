@@ -14,9 +14,7 @@ import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayLocations
-import com.dangerfield.libraries.game.OldLocationModel
-import com.dangerfield.libraries.game.LocationPack
+import com.dangerfield.libraries.game.GetGamePlayItems
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.ColorConfig
@@ -47,7 +45,7 @@ class CreateGameTest {
 
     private val generateAccessCode = mockk<GenerateOnlineAccessCode>()
     private val gameRepository = mockk<GameRepository>()
-    private val getGamePlayLocations = mockk<GetGamePlayLocations>()
+    private val getGamePlayItems = mockk<GetGamePlayItems>()
     private val generateLocalUUID = mockk<GenerateLocalUUID>()
     private val gameConfig = mockk<GameConfig>()
     private val clock = mockk<Clock>()
@@ -66,7 +64,7 @@ class CreateGameTest {
 
         every { getAppLanguageCode.invoke() } returns "en"
 
-        coEvery { getGamePlayLocations.invoke(any()) } answers { call ->
+        coEvery { getGamePlayItems.invoke(any()) } answers { call ->
             @Suppress("UNCHECKED_CAST")
             val locationPacks = (call.invocation.args[0] as List<LocationPack>)
             Catching.success(locationPacks.flatMap { it.locations }.shuffled().takeLast(5))
@@ -103,7 +101,7 @@ class CreateGameTest {
     private val createGame = CreateGame(
         generateAccessCode = generateAccessCode,
         gameRepository = gameRepository,
-        getGamePlayLocations = getGamePlayLocations,
+        getGamePlayItems = getGamePlayItems,
         generateLocalUUID = generateLocalUUID,
         gameConfig = gameConfig,
         clock = clock,
@@ -121,7 +119,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0,
@@ -148,7 +146,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "name",
-            locationPacks = emptyList(),
+            packs = emptyList(),
             timeLimit = 1,
             videoCallLink = "link",
             packsVersion = 0
@@ -171,7 +169,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -194,7 +192,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "username",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 1,
             videoCallLink = "link",
             packsVersion = 0
@@ -217,7 +215,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "username",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -238,7 +236,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -265,7 +263,7 @@ class CreateGameTest {
 
         createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -284,7 +282,7 @@ class CreateGameTest {
 
         createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -303,7 +301,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -318,13 +316,13 @@ class CreateGameTest {
     fun `GIVEN error getting locations WHEN creating THEN error`() = runTest {
         val someError = Error("cant get locations for some reason")
 
-        coEvery { getGamePlayLocations(any()) } returns Catching.failure(someError)
+        coEvery { getGamePlayItems(any()) } returns Catching.failure(someError)
 
         val packs = getFilledOutPacks()
 
         val result = createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -348,7 +346,7 @@ class CreateGameTest {
 
             createGame.invoke(
                 userName = "name",
-                locationPacks = packs,
+                packs = packs,
                 timeLimit = 6,
                 videoCallLink = "link",
                 packsVersion = 0
@@ -380,11 +378,11 @@ class CreateGameTest {
         every { clock.millis() } returns lastActive
         every { session.user.id } returns currentUserId
         every { session.user.languageCode } returns "en"
-        coEvery { getGamePlayLocations.invoke(any()) } returns Catching.success(locationsForGameplay)
+        coEvery { getGamePlayItems.invoke(any()) } returns Catching.success(locationsForGameplay)
 
         val result = createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = timeLimit,
             videoCallLink = videoCallLink,
             packsVersion = 0
@@ -434,7 +432,7 @@ class CreateGameTest {
 
         val result = createGame.invoke(
             userName = "name",
-            locationPacks = packs,
+            packs = packs,
             timeLimit = 6,
             videoCallLink = "link",
             packsVersion = 0
@@ -460,13 +458,13 @@ class CreateGameTest {
     }
 
     private fun Game.hasValidLocations(allPackLocations: List<OldLocationModel>) =
-        allPackLocations.map { it.name }.toSet().containsAll(locationOptionNames.toSet())
+        allPackLocations.map { it.name }.toSet().containsAll(secretOptions.toSet())
 
     private fun Game.hasValidLocation(gameLocations: List<String>) =
-        gameLocations.contains(locationName)
+        gameLocations.contains(secret)
 
     private fun Game.hasValidPacks(locationPacks: List<LocationPack>) =
-        this.packNames.toSet().containsAll(locationPacks.map { it.name }.toSet())
+        this.packIds.toSet().containsAll(locationPacks.map { it.name }.toSet())
 
 
     private fun getFilledOutLocations(packName: String): List<OldLocationModel> {

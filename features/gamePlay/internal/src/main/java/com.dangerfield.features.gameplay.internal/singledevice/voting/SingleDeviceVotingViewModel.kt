@@ -139,9 +139,9 @@ class SingleDeviceVotingViewModel @Inject constructor(
 
                     updateState { state ->
                         state.copy(
-                            locationOptions = game.locationOptionNames,
+                            locationOptions = game.secretOptions,
                             playerOptions = displayablePlayers,
-                            location = game.locationName,
+                            location = game.secret,
                             oddOneOutName = displayablePlayers.first { it.isOddOneOut }.name,
                         )
                     }

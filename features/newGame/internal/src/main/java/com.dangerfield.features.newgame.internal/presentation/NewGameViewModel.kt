@@ -20,9 +20,8 @@ import com.dangerfield.libraries.coreflowroutines.collectInWithPrevious
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.game.LocationPackRepository
-import com.dangerfield.libraries.game.LocationPacksResult.Hit
-import com.dangerfield.libraries.game.LocationPacksResult.Miss
+import com.dangerfield.libraries.game.PackRepository
+import com.dangerfield.libraries.game.PackResult
 import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.libraries.session.UserRepository
 import com.dangerfield.libraries.ui.FieldState.Idle
@@ -44,7 +43,7 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 @HiltViewModel
 class NewGameViewModel @Inject constructor(
-    private val locationPackRepository: LocationPackRepository,
+    private val packRepository: PackRepository,
     private val createMultiDeviceGameGameUseCase: CreateGame,
     private val createSingleDeviceGameUseCase: CreateSingleDeviceGame,
     private val gameConfig: GameConfig,
@@ -173,7 +172,7 @@ class NewGameViewModel @Inject constructor(
             createSingleDeviceGameUseCase(
                 timeLimit = timeLimit,
                 numOfPlayers = numOfPlayers,
-                locationPacks = selectedPacks
+                packs = selectedPacks
             )
         } ?: illegalStateFailure {
             """
@@ -191,7 +190,7 @@ class NewGameViewModel @Inject constructor(
     ) { timeLimit, userName, selectedPacks ->
         createMultiDeviceGameGameUseCase(
             userName = userName,
-            locationPacks = selectedPacks,
+            packs = selectedPacks,
             packsVersion = packsVersionBeingUsed,
             timeLimit = timeLimit,
             videoCallLink = state.videoCallLinkState.value
@@ -349,15 +348,15 @@ class NewGameViewModel @Inject constructor(
 
     private suspend fun Action.LoadPacks.loadPacks() {
         updateState { it.copy(didLoadFail = false) }
-        locationPackRepository.getPacks(
+        packRepository.getAppPacks(
             languageCode = userRepository.getUserFlow().first().languageCode,
             version = gameConfig.packsVersion
         )
             .logOnFailure()
             .map { result ->
                 when (result) {
-                    is Hit -> result.packs
-                    is Miss -> {
+                    is PackResult.Hit -> result.packs
+                    is PackResult.Miss -> {
                         packsVersionBeingUsed = result.version
                         result.packs
                     }

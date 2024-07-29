@@ -134,7 +134,7 @@ class FirestoreGameDataSource @Inject constructor(
 
     override suspend fun setLocation(accessCode: String, location: String) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .activeUpdate(FieldPath.of(LOCATION_FIELD_KEY), location)
+            .activeUpdate(FieldPath.of(SECRET_ITEM_FIELD_KEY), location)
             .awaitCatching()
     }
         .logOnFailure()
@@ -183,12 +183,12 @@ class FirestoreGameDataSource @Inject constructor(
         const val VIDEO_CALL_LINK_FIELD_KEY = "videoCallLink"
         const val GAMES_COLLECTION_KEY = "games"
         const val PLAYERS_FIELD_KEY = "players"
-        const val LOCATION_FIELD_KEY = "location"
-        const val PACK_NAMES_FIELD_KEY = "packNames"
+        const val SECRET_ITEM_FIELD_KEY = "secretItem"
+        const val PACK_IDS_FIELD_KEY = "packIds"
         const val IS_BEING_STARTED_KEY = "isBeingStarted"
         const val TIME_LIMIT_MINS_FIELD_KEY = "timeLimitMins"
         const val STARTED_AT_FIELD_KEY = "startedAt"
-        const val LOCATIONS_FIELD_KEY = "locations"
+        const val ITEMS_FIELD_KEY = "items"
         const val USERNAME_FIELD_KEY = "userName"
         const val LAST_ACTIVE_AT_FIELD_KEY = "lastActiveAt"
         const val ROLE_FIELD_KEY = "role"

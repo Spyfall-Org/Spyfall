@@ -43,7 +43,7 @@ enum class DbPackOwner {
     indices = [(Index(value = ["name"], unique = true)), Index(value = ["packId"])]
 )
 data class PackItemEntity(
-   @PrimaryKey(autoGenerate = true) val id: Int,
+   @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val roles: List<String>?,
     val languageCode: String,

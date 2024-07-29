@@ -11,8 +11,8 @@ import com.dangerfield.features.newgame.internal.presentation.model.DisplayableP
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
-import com.dangerfield.libraries.game.OldLocationModel
-import com.dangerfield.libraries.game.LocationPack
+import com.dangerfield.libraries.game.OwnerDetails
+import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerD1200
@@ -69,7 +69,7 @@ fun PacksInfoBottomSheet(
                         VerticalSpacerD500()
                         NonLazyVerticalGrid(
                             columns = 2,
-                            data = pack.locationPack.locations
+                            data = pack.pack.items
                         ) { _, item ->
                             BulletRow(modifier = Modifier.fillMaxWidth()) {
                                 Text(text = item.name)
@@ -128,27 +128,29 @@ private fun PreviewPackDetailsBottomSheet() {
             bottomSheetState = bottomSheetState,
             packs = listOf(
                 DisplayablePack(
-                    locationPack = LocationPack(
-                        name = "Pack one",
-                        locations = exampleLocations.shuffled().take(7).map {
-                            OldLocationModel(
-                                name = it,
-                                roles = listOf(),
-                                packName = "Pack one"
-                            )
-                        }
+                    isSelected = false,
+                    pack = Pack.LocationPack(
+                        locations = listOf(),
+                        name = "Super Special Pack 4",
+                        id = "4",
+                        version = 1,
+                        languageCode = "en",
+                        isPublic = false,
+                        owner = OwnerDetails.App,
+                        isUserSaved = false
                     )
                 ),
                 DisplayablePack(
-                    locationPack = LocationPack(
-                        name = "Pack two",
-                        locations = exampleLocations.shuffled().take(7).map {
-                            OldLocationModel(
-                                name = it,
-                                roles = listOf(),
-                                packName = "Pack two"
-                            )
-                        }
+                    isSelected = false,
+                    pack = Pack.LocationPack(
+                        locations = listOf(),
+                        name = "Super Special Pack 4",
+                        id = "4",
+                        version = 1,
+                        languageCode = "en",
+                        isPublic = false,
+                        owner = OwnerDetails.App,
+                        isUserSaved = false
                     )
                 ),
 

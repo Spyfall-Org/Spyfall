@@ -91,7 +91,8 @@ class GamePlayFeatureNavGraphBuilder @Inject constructor(
                 videoCallLink = state.videoCallLink,
                 onVideoCallButtonClicked = router::navigateToVideoCallBottomSheet,
                 mePlayerId = state.mePlayer?.id.orEmpty(),
-                canControlGame = state.canControlGame
+                canControlGame = state.canControlGame,
+                packItem = state.packItem
             )
         }
 

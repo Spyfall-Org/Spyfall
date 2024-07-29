@@ -39,7 +39,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     MetricConstants.ACCESS_CODE to game?.accessCode,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                 )
             )
         )
@@ -57,7 +57,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     MetricConstants.ACCESS_CODE to game?.accessCode,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                     ERROR_MESSAGE to throwable.message
                 )
             )
@@ -76,7 +76,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     TIME_REMAINING to timeRemainingMillis,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                 )
             )
         )
@@ -94,7 +94,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     TIME_REMAINING to timeRemainingMillis,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                 )
             )
         )
@@ -113,7 +113,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     TIME_REMAINING to timeRemainingMillis,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                     ERROR_MESSAGE to error.message
                 )
             )

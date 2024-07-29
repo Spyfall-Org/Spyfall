@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import oddoneout.core.Catching
 import oddoneout.core.awaitCatching
 import oddoneout.core.logOnFailure
+import se.ansman.dagger.auto.AutoBind
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -43,6 +44,7 @@ object RemotePackConstants {
     val PACK_TYPE_CELEBRITY = "celebrity"
 }
 
+@AutoBind
 class PacksFirebaseDataSource @Inject constructor(
     private val firebase: FirebaseFirestore,
     private val appPackParser: AppPackParser,

@@ -1,8 +1,6 @@
 package com.dangerfield.features.newgame.internal.presentation.model
 
 import com.dangerfield.libraries.ui.FieldState
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 sealed class CreateGameError: Throwable() {
     data object NameBlank : CreateGameError()
@@ -55,7 +53,7 @@ data class State(
 
 fun State.selectedPacks() = packsState.value
     ?.filter { it.isSelected }
-    ?.map { it.locationPack }
+    ?.map { it.pack }
 
 fun State.timeLimit() = timeLimitState.value?.toIntOrNull()
 

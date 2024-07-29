@@ -1,15 +1,16 @@
 package com.dangerfield.features.joingame.internal
 
 import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
+import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.LocationPackRepository
-import com.dangerfield.libraries.game.LocationPacksResult
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
+import com.dangerfield.libraries.game.PackRepository
+import com.dangerfield.libraries.game.PackResult
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
@@ -28,7 +29,7 @@ class JoinGameUseCase @Inject constructor(
     private val mapToGameState: MapToGameStateUseCase,
     private val gameConfig: GameConfig,
     private val session: Session,
-    private val locationPackRepository: LocationPackRepository,
+    private val packRepository: PackRepository,
     private val updateActiveGame: UpdateActiveGame,
     private val clearActiveGame: ClearActiveGame,
     private val generateLocalUUID: GenerateLocalUUID
@@ -83,16 +84,6 @@ class JoinGameUseCase @Inject constructor(
         userName: String
     ): JoinGameError? {
         val gameState = mapToGameState(accessCode, game)
-
-        val hasPacksNeeded = locationPackRepository.getPacks(
-            languageCode = game.languageCode,
-            version = game.packsVersion,
-            recover = false
-        ).getOrNull() is LocationPacksResult.Hit
-
-        if (!hasPacksNeeded) {
-            return JoinGameError.CouldNotFetchPacksNeeded
-        }
 
         return when(gameState) {
             is GameState.DoesNotExist -> JoinGameError.GameNotFound

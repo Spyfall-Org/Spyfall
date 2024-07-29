@@ -5,14 +5,15 @@ import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameDataSourcError.TriedToLeaveStartedGameDataSourc
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayLocations
-import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.game.GetGamePlayItems
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
+import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.PacksMissingError
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.StartGameError
-import com.dangerfield.libraries.game.successfulHitOrThrow
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,12 +25,13 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import oddoneout.core.Catching
-import se.ansman.dagger.auto.AutoBind
+import oddoneout.core.allOrElse
 import oddoneout.core.debugSnackOnError
 import oddoneout.core.failure
 import oddoneout.core.illegalStateFailure
 import oddoneout.core.logOnFailure
 import oddoneout.core.success
+import se.ansman.dagger.auto.AutoBind
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,8 +39,8 @@ import javax.inject.Named
 @Named(MultiDeviceRepositoryName)
 class MutliDeviceGameRepository @Inject constructor(
     private val gameDataSource: GameDataSource,
-    private val getGamePlayLocations: GetGamePlayLocations,
-    private val locationPackRepository: LocationPackRepository,
+    private val getGamePlayItems: GetGamePlayItems,
+    private val packRepository: PackRepository,
     @ApplicationScope private val applicationScope: CoroutineScope
 ) : GameRepository {
 
@@ -187,30 +189,31 @@ class MutliDeviceGameRepository @Inject constructor(
             ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalStateFailure { "Game is null when resetting" }
 
-        val packs = locationPackRepository
-            .getPacks(
-                languageCode = currentGame.languageCode,
-                version = currentGame.packsVersion
-            )
-            .successfulHitOrThrow()
-            .packs
-            .filter { it.name in currentGame.packNames }
-            .takeIf { it.isNotEmpty() }
-            ?: throw PacksMissingError()
+        val packs = currentGame.packIds.map {
+            applicationScope.async {
+                packRepository.getPack(
+                    languageCode = currentGame.languageCode,
+                    version = currentGame.packsVersion,
+                    id = it
+                )
+            }
+        }
+            .awaitAll()
+            .allOrElse { throw PacksMissingError() }
 
-        val newLocations = getGamePlayLocations(packs)
+        val newLocations = getGamePlayItems(packs)
             .getOrNull()
             ?.map { it.name }
-            ?: currentGame.locationOptionNames
+            ?: currentGame.secretOptions
 
         var newLocation = newLocations.random()
 
-        while (newLocation == currentGame.locationName) {
+        while (newLocation == currentGame.secret) {
             newLocation = newLocations.random()
         }
 
         val resetGame = currentGame.copy(
-            locationName = newLocation,
+            secret = newLocation,
             isBeingStarted = false,
             players = currentGame.players.map {
                 it.copy(
@@ -219,7 +222,7 @@ class MutliDeviceGameRepository @Inject constructor(
                     votedCorrectly = null
                 )
             },
-            locationOptionNames = newLocations,
+            secretOptions = newLocations,
             startedAt = null,
         )
 
@@ -252,7 +255,7 @@ class MutliDeviceGameRepository @Inject constructor(
         return gameDataSource.setPlayerVotedCorrectly(
             accessCode = accessCode,
             playerId = voterId,
-            votedCorrectly = location == currentGame.locationName
+            votedCorrectly = location == currentGame.secret
         ).logOnFailure()
     }
 

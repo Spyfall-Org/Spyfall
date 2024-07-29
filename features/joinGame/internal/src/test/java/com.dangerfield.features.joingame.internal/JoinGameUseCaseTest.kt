@@ -41,8 +41,8 @@ class JoinGameUseCaseTest {
     private val minNameLengthValue = 2
     private val fakeGame = Game(
         accessCode = "556478",
-        locationName = "Something",
-        packNames = listOf(),
+        secret = "Something",
+        packIds = listOf(),
         isBeingStarted = false,
         players = listOf(
             Player(
@@ -64,7 +64,7 @@ class JoinGameUseCaseTest {
         ),
         timeLimitMins = 8,
         startedAt = null,
-        locationOptionNames = listOf(),
+        secretOptions = listOf(),
         videoCallLink = null,
         version = CURRENT_GAME_MODEL_VERSION,
         lastActiveAt = null,
@@ -232,8 +232,8 @@ class JoinGameUseCaseTest {
                 timeLimitMins = fakeGame.timeLimitMins,
                 timeRemainingMillis = 0,
                 firstPlayer = fakeGame.players.first(),
-                locationNames = fakeGame.locationOptionNames,
-                location = fakeGame.locationName,
+                locationNames = fakeGame.secretOptions,
+                location = fakeGame.secret,
                 videoCallLink = fakeGame.videoCallLink
             )
 
@@ -267,13 +267,13 @@ class JoinGameUseCaseTest {
 
             val game = Game(
                 accessCode = "556478",
-                locationName = "Something",
-                packNames = listOf(),
+                secret = "Something",
+                packIds = listOf(),
                 isBeingStarted = false,
                 players = players,
                 timeLimitMins = 8,
                 startedAt = null,
-                locationOptionNames = listOf(),
+                secretOptions = listOf(),
                 videoCallLink = null,
                 version = CURRENT_GAME_MODEL_VERSION,
                 lastActiveAt = null,
@@ -320,13 +320,13 @@ class JoinGameUseCaseTest {
 
             val game = Game(
                 accessCode = "556478",
-                locationName = "Something",
-                packNames = listOf(),
+                secret = "Something",
+                packIds = listOf(),
                 isBeingStarted = false,
                 players = players,
                 timeLimitMins = 8,
                 startedAt = null,
-                locationOptionNames = listOf(),
+                secretOptions = listOf(),
                 videoCallLink = null,
                 version = CURRENT_GAME_MODEL_VERSION,
                 lastActiveAt = null,

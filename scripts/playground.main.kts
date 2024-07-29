@@ -14,6 +14,8 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import java.io.File
 import java.io.FileInputStream
+import java.util.UUID
+import kotlin.script.experimental.jvm.impl.scriptMetadataPath
 
 val red = "\u001b[31m"
 val green = "\u001b[32m"
@@ -72,6 +74,57 @@ fun doWork() {
     val releaseDb = getDb(releaseServiceAccountJsonFile.absolutePath)
     val debugDb = getDb(debugServiceAccountJsonFile.absolutePath)
 
+    val topCelebrities = listOf(
+        "Brad Pitt",
+        "Beyoncé",
+        "Leonardo DiCaprio",
+        "Taylor Swift",
+        "Tom Cruise",
+        "Oprah Winfrey",
+        "Dwayne \"The Rock\" Johnson",
+        "Angelina Jolie",
+        "Robert Downey Jr.",
+        "Ariana Grande",
+        "Will Smith",
+        "Kim Kardashian",
+        "Jennifer Lawrence",
+        "Drake",
+        "Scarlett Johansson",
+        "LeBron James",
+        "Lady Gaga",
+        "Chris Hemsworth",
+        "Johnny Depp",
+        "Kanye West",
+        "Rihanna",
+        "Emma Watson",
+        "George Clooney",
+        "Selena Gomez",
+        "Justin Bieber",
+        "Jennifer Aniston",
+        "Elon Musk",
+        "Billie Eilish",
+        "Ed Sheeran",
+        "Katy Perry",
+        "Chris Evans",
+        "Cardi B",
+        "Margot Robbie",
+        "Bruno Mars",
+        "Tom Hanks",
+        "Miley Cyrus",
+        "Kylie Jenner",
+        "Gal Gadot",
+        "Shawn Mendes",
+        "Priyanka Chopra",
+        "Zendaya",
+        "Mark Zuckerberg",
+        "Jennifer Lopez",
+        "Ellen DeGeneres",
+        "Chris Pratt",
+        "Adele",
+        "Serena Williams",
+        "Celine Dion"
+    )
+
     val documents = debugDb
         .collection("versioned-packs")
         .document("1")
@@ -80,19 +133,29 @@ fun doWork() {
         .get()
         .documents
 
+    documents.forEach {
+        val packs = it.data["packs"] as MutableList<Map<String, Any>>
+        packs.add(
+            mapOf(
+                "id" to UUID.randomUUID().toString(),
+                "name" to "Celebrities",
+                "type" to "celebrity",
+                "celebrities" to topCelebrities
+            )
+        )
 
-    documents.forEach { document ->
-        val data = document.reference.get().get().data
-
-        val id = data?.get("id") as String
-        data.remove("id")
-        data.set("groupId", id)
-
-        document.reference.set(data)
+        it.reference.update("packs", packs)
     }
 
     printGreen("Done.")
 }
+
+data class Pack(
+    val id: String,
+    val name: String,
+    val type: String,
+    val items: List<String>
+)
 
 @Suppress("TooGenericExceptionCaught")
 fun getDb(serviceAccountJsonPath: String): Firestore {

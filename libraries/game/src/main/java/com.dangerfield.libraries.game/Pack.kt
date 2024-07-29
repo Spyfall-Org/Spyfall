@@ -1,6 +1,6 @@
 package com.dangerfield.libraries.game
 
-sealed class Pack(
+open class Pack<T: PackItem>(
     val name: String,
     val id: String,
     val version: Int,
@@ -9,10 +9,11 @@ sealed class Pack(
     val isPublic: Boolean,
     val owner: OwnerDetails,
     val isUserSaved: Boolean,
+    val items: List<T>
 ) {
 
     class LocationPack(
-        val locations: List<Location>,
+        val locations: List<PackItem.Location>,
         name: String,
         id: String,
         version: Int,
@@ -20,7 +21,7 @@ sealed class Pack(
         isPublic: Boolean,
         owner: OwnerDetails,
         isUserSaved: Boolean,
-    ) : Pack(
+    ) : Pack<PackItem>(
         name = name,
         id = id,
         version = version,
@@ -28,11 +29,12 @@ sealed class Pack(
         type = PackType.Location,
         isPublic = isPublic,
         owner = owner,
-        isUserSaved = isUserSaved
+        isUserSaved = isUserSaved,
+        items = locations
     )
 
     class CelebrityPack(
-        val celebrities: List<Celebrity>,
+        val celebrities: List<PackItem.Celebrity>,
         name: String,
         id: String,
         version: Int,
@@ -40,7 +42,7 @@ sealed class Pack(
         isPublic: Boolean,
         owner: OwnerDetails,
         isUserSaved: Boolean,
-    ) : Pack(
+    ) : Pack<PackItem>(
         name = name,
         id = id,
         version = version,
@@ -48,7 +50,8 @@ sealed class Pack(
         type = PackType.Celebrity,
         isPublic = isPublic,
         owner = owner,
-        isUserSaved = isUserSaved
+        isUserSaved = isUserSaved,
+        items = celebrities
     )
 }
 
@@ -63,11 +66,17 @@ sealed class OwnerDetails {
     data object App : OwnerDetails()
 }
 
-class Location(
+sealed class PackItem(
     val name: String,
-    val roles: List<String>,
-)
+    val roles: List<String>?
+) {
+    class Location(
+        name: String,
+        roles: List<String>,
+    ) : PackItem(name, roles)
 
-class Celebrity(
-    val name: String,
-)
+    class Celebrity(
+        name: String,
+    ) : PackItem(name, null)
+}
+

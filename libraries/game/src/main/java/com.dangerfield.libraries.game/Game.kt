@@ -6,13 +6,13 @@ import com.squareup.moshi.JsonClass
  * WARNING: This version should be update if the core model changes. It is used to tell if 2
  * versions of the app are compatible to play together
  */
-const val CURRENT_GAME_MODEL_VERSION = 1
+const val CURRENT_GAME_MODEL_VERSION = 2
 
 /**
  * The version of packs a build should use is determined by the config. If the config fails and
  * there is no cache we will fallback to this value
  */
-const val CURRENT_PACKS_VERSION_FALLBACK = 0
+const val CURRENT_PACKS_VERSION_FALLBACK = 1
 
 //TODO i should probably use the versioned moshi adapter for this
 @JsonClass(generateAdapter = true)
@@ -25,16 +25,18 @@ data class Game(
     val accessCode: String,
 
     /**
-     * This location key that is randomly chosen from the list of locations of the chosen packs
-     * It is assigned by the creator of the game
+     * The secret that the odd one out is trying to guess
      */
-    val locationName: String,
+    val secret: String,
 
     /**
      * A list of names (used as keys) of the packs chosen by the creator of the game
      * this is used to get the list of locations for the game
+     *
+     * TODO consider just storing the entire packs in this object
+     * It would only need fetched once and would be easier to manage
      */
-    val packNames: List<String>,
+    val packIds: List<String>,
 
     /**
      * A boolean indicating that the game is being started
@@ -67,7 +69,7 @@ data class Game(
      * A list of locations that are randomly chosen from packs of the game
      * This is created by the creator of the game
      */
-    val locationOptionNames: List<String>,
+    val secretOptions: List<String>,
 
     /**
      * Optional Link that the creator of the game can enter to be shared with players in the waiting

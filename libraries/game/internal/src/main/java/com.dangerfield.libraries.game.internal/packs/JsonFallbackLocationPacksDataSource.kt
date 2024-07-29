@@ -1,8 +1,6 @@
 package com.dangerfield.libraries.game.internal.packs
 
 import android.content.Context
-import com.dangerfield.libraries.game.OldLocationModel
-import com.dangerfield.libraries.game.LocationPack
 import com.dangerfield.oddoneoout.libraries.game.internal.R
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
@@ -23,57 +21,45 @@ class JsonFallbackLocationPacksDataSource @Inject constructor(
 ) {
 
     @Suppress("UnusedPrivateMember")
-    fun loadFallbackPack(language: String): Catching<CachedLocationPack> {
+    fun loadFallbackPack(languageCode: String): Catching<JsonPacks> {
         return Catching {
-            val resId = when (language) {
+            val resId = when (languageCode) {
                 "en" -> R.raw.fallback_location_packs_en
                 "es" -> R.raw.fallback_location_packs_es
                 else -> R.raw.fallback_location_packs_en
             }
             val inputStream = context.resources.openRawResource(resId)
-            val jsonAdapter = moshi.adapter(JsonLocationPacks::class.java)
+            val jsonAdapter = moshi.adapter(JsonPacks::class.java)
             inputStream.source().buffer().use { source ->
                 val jsonLocationPacks = jsonAdapter.fromJson(source)!!
-                CachedLocationPack(
-                    version = jsonLocationPacks.version,
-                    langaugeCode = jsonLocationPacks.languageCode,
-                    locationPacks = jsonLocationPacks.packs.map { it.toLocationPack() }
-                )
+                jsonLocationPacks
             }
         }
             .logOnFailure()
     }
-}
 
-private fun JsonLocationPack.toLocationPack(): LocationPack {
-    return LocationPack(
-        name = this.name,
-        locations = locations.map { jsonLocation ->
-            OldLocationModel(
-                name = jsonLocation.name,
-                roles = jsonLocation.roles,
-                packName = this.name
-            )
-        }
-    )
+    companion object {
+        const val PACK_TYPE_LOCATION = "location"
+        const val PACK_TYPE_CELEBRITY = "celebrity"
+    }
 }
 
 @JsonClass(generateAdapter = true)
-internal data class JsonLocationPacks(
+data class JsonPacks(
     val type: String,
     val version: Int,
     val languageCode: String,
-    val packs: List<JsonLocationPack>
+    val packs: List<JsonPack>
 )
 
 @JsonClass(generateAdapter = true)
-internal data class JsonLocationPack(
+data class JsonPack(
     val name: String,
     val locations: List<JsonLocation>,
 )
 
 @JsonClass(generateAdapter = true)
-internal data class JsonLocation(
+data class JsonLocation(
     val name: String,
     val roles: List<String>
 )

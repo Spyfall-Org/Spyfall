@@ -33,6 +33,7 @@ import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.FieldState
 import com.dangerfield.libraries.ui.Preview
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.ui.Dimension
 import com.dangerfield.libraries.ui.VerticalSpacerD1200
 import com.dangerfield.libraries.ui.VerticalSpacerD500
@@ -53,7 +54,7 @@ import com.dangerfield.libraries.ui.thenIf
 @Composable
 fun SingleDevicePlayerRoleScreen(
     currentPlayer: DisplayablePlayer?,
-    location: String?,
+    gameItem: PackItem?,
     onNextPlayerClicked: () -> Unit,
     isLastPlayer: Boolean,
     isFirstPlayer: Boolean,
@@ -79,7 +80,7 @@ fun SingleDevicePlayerRoleScreen(
         RoleRevealScreenContent(
             currentPlayer = currentPlayer,
             isLastPlayer = isLastPlayer,
-            location = location,
+            gameItem = gameItem,
             scrollState = scrollState,
             nameFieldState = nameFieldState,
             onNameUpdated = onNameUpdated,
@@ -140,7 +141,7 @@ fun SingleDevicePlayerRoleScreen(
 private fun RoleRevealScreenContent(
     currentPlayer: DisplayablePlayer?,
     isLastPlayer: Boolean,
-    location: String?,
+    gameItem: PackItem?,
     scrollState: ScrollState,
     isRoleVisible: Boolean,
     hasPlayerClickedShow: Boolean,
@@ -210,7 +211,7 @@ private fun RoleRevealScreenContent(
                     modifier = Modifier.thenIf(!hasPlayerClickedShow) { pulsate() },
                     role = currentPlayer.role,
                     isTheOddOneOut = currentPlayer.isOddOneOut,
-                    location = location,
+                    packItem = gameItem,
                     text = if (currentPlayer.isOddOneOut) dictionaryString(R.string.roleReveal_dontGetFoundOut_text) else null,
                     isVisible = isRoleVisible,
                     onHideShowClicked = {
@@ -331,7 +332,7 @@ private fun PreviewSingleDevicePlayerRoleScreen() {
                 isFirst = false,
                 isOddOneOut = true
             ),
-            location = "Something",
+            gameItem = PackItem.Celebrity("Some longer location name"),
             onNextPlayerClicked = { -> },
             isLastPlayer = false,
             isFirstPlayer = false,

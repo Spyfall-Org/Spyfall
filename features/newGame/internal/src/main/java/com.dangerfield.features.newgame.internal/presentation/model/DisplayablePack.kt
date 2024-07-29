@@ -1,13 +1,14 @@
 package com.dangerfield.features.newgame.internal.presentation.model
 
 import androidx.core.text.isDigitsOnly
-import com.dangerfield.libraries.game.LocationPack
+import com.dangerfield.libraries.game.Pack
+import com.dangerfield.libraries.game.PackItem
 
 data class DisplayablePack(
-    val locationPack: LocationPack,
+    val pack: Pack<PackItem>,
     val isSelected: Boolean = false,
     val isEnabled: Boolean = true,
-    val number: String? = locationPack.name.split(" ").firstOrNull() { it.isDigitsOnly() },
-    val type: String = locationPack.name.split(" ").filter { !it.isDigitsOnly() }.joinToString(" "),
+    val number: String? = pack.name.split(" ").firstOrNull() { it.isDigitsOnly() },
+    val type: String = pack.name.split(" ").filter { !it.isDigitsOnly() }.joinToString(" "),
 )
 

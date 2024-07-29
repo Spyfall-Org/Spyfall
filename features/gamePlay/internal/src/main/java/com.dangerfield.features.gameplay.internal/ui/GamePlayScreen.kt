@@ -30,6 +30,7 @@ import com.dangerfield.features.gameplay.internal.DisplayablePlayer
 import com.dangerfield.features.gameplay.internal.Fake
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.GameResult
+import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.ui.Dimension
 import com.dangerfield.libraries.ui.HorizontalSpacerD800
 import com.dangerfield.libraries.ui.Preview
@@ -59,6 +60,7 @@ fun GamePlayScreen(
     mePlayerId: String,
     isOddOneOut: Boolean,
     location: String?,
+    packItem: PackItem?,
     videoCallLink: String?,
     onVideoCallButtonClicked: (String) -> Unit,
     isTimeUp: Boolean,
@@ -134,7 +136,8 @@ fun GamePlayScreen(
                 onSubmitLocationVoteClicked = onSubmitLocationVoteClicked,
                 onResetGameClicked = onResetGameClicked,
                 onEndGameClicked = onEndGameClicked,
-                canControlGame = canControlGame
+                canControlGame = canControlGame,
+                packItem = packItem
             )
 
             if (showLeaveGameDialog) {
@@ -158,6 +161,7 @@ private fun GamePlayScreenContent(
     isOddOneOut: Boolean,
     role: String,
     location: String?,
+    packItem: PackItem?,
     isVotingOnOddOneOut: Boolean,
     players: List<DisplayablePlayer>,
     mePlayerId: String,
@@ -194,7 +198,7 @@ private fun GamePlayScreenContent(
 
         RoleCard(
             role = role,
-            location = location,
+            packItem = packItem,
             text = if (isOddOneOut) {
                 dictionaryString(R.string.gamePlay_oddOneRoleTip_text)
             } else {
@@ -538,7 +542,8 @@ private fun PreviewGamePlayScreen() {
             videoCallLink = "https:zoom.com",
             onVideoCallButtonClicked = {},
             mePlayerId = "1",
-            canControlGame = true
+            canControlGame = true,
+            packItem = PackItem.Celebrity("Joe")
         )
     }
 }
@@ -570,7 +575,8 @@ private fun PreviewGamePlayScreenVoting() {
             videoCallLink = "https:zoom.com",
             onVideoCallButtonClicked = {},
             mePlayerId = "1",
-            canControlGame = true
+            canControlGame = true,
+            packItem = PackItem.Celebrity("Joe")
         )
     }
 }
@@ -602,7 +608,8 @@ private fun PreviewGamePlayScreenVoted() {
             videoCallLink = "https:zoom.com",
             onVideoCallButtonClicked = {},
             mePlayerId = "1",
-            canControlGame = true
+            canControlGame = true,
+            packItem = PackItem.Celebrity("Joe")
         )
     }
 }
@@ -634,7 +641,8 @@ private fun PreviewGamePlayScreenResults() {
             videoCallLink = "https:zoom.com",
             onVideoCallButtonClicked = {},
             mePlayerId = "1",
-            canControlGame = true
+            canControlGame = true,
+            packItem = PackItem.Celebrity("Joe")
         )
     }
 }

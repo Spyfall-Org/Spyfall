@@ -1,9 +1,9 @@
 package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.game.GetGamePlayLocations
-import com.dangerfield.libraries.game.OldLocationModel
-import com.dangerfield.libraries.game.LocationPack
+import com.dangerfield.libraries.game.GetGamePlayItems
+import com.dangerfield.libraries.game.Pack
+import com.dangerfield.libraries.game.PackItem
 import oddoneout.core.Catching
 import se.ansman.dagger.auto.AutoBind
 import oddoneout.core.illegalStateFailure
@@ -11,36 +11,36 @@ import oddoneout.core.throwIfDebug
 import javax.inject.Inject
 
 @AutoBind
-class GetGamePlayLocationsImpl @Inject constructor(
+class GetGamePlayItemsImpl @Inject constructor(
     private val gameConfig: GameConfig
-) : GetGamePlayLocations {
+) : GetGamePlayItems {
     override operator fun invoke(
-        locationPacks: List<LocationPack>,
+        packs: List<Pack<PackItem>>,
         isSingleDevice: Boolean
-    ): Catching<List<OldLocationModel>> = Catching {
+    ): Catching<List<PackItem>> = Catching {
 
-        val gamePlayLocations = mutableSetOf<OldLocationModel>()
-        val packBank = locationPacks.map { it.locations.toMutableSet() }
-        val totalLocations = packBank.sumOf { it.size }
+        val gamePlayItems = mutableSetOf<PackItem>()
+        val packBank = packs.map { it.items.toMutableSet() }
+        val totalItems = packBank.sumOf { it.size }
 
         var iteration = 0
 
-        val numOfLocationsToChoose = if (isSingleDevice) {
-            gameConfig.locationsPerSingleDeviceGame
+        val numberOfItemsToChoose = if (isSingleDevice) {
+            gameConfig.itemsPerSingleDeviceGame
         } else {
-            gameConfig.locationsPerGame
+            gameConfig.itemsPerGame
         }
 
-        if (numOfLocationsToChoose > totalLocations) {
+        if (numberOfItemsToChoose > totalItems) {
             return Catching.success(packBank.flatten().toList().shuffled())
         }
 
-        while (gamePlayLocations.size < numOfLocationsToChoose) {
-            if (iteration > totalLocations) {
+        while (gamePlayItems.size < numberOfItemsToChoose) {
+            if (iteration > totalItems) {
                 return illegalStateFailure {
                     """
                     Iterated through all locations in packs and still don't have enough locations for a game.
-                    Packs: ${locationPacks.map { "${it.name}: \n\n ${it.locations.joinToString("\n")}" }}
+                    Packs: ${packs.map { "${it.name}: \n\n ${it.items.joinToString("\n")}" }}
                 """.trimIndent()
                 }
                     .throwIfDebug()
@@ -55,12 +55,12 @@ class GetGamePlayLocationsImpl @Inject constructor(
             val locations = nonEmptyPacks[packIndex]
 
             locations.randomOrNull()?.let { locationToAdd ->
-                gamePlayLocations.add(locationToAdd)
+                gamePlayItems.add(locationToAdd)
                 locations.remove(locationToAdd)
             } ?: return illegalStateFailure {
                 """
                    Location to add was null
-                   Packs: ${locationPacks.map { "${it.name}: \n\n ${it.locations.joinToString("\n")}" }}
+                   Packs: ${packs.map { "${it.name}: \n\n ${it.items.joinToString("\n")}" }}
             """.trimIndent()
             }
                 .throwIfDebug()
@@ -68,6 +68,6 @@ class GetGamePlayLocationsImpl @Inject constructor(
             iteration++
         }
 
-        gamePlayLocations.toList()
+        gamePlayItems.toList()
     }
 }

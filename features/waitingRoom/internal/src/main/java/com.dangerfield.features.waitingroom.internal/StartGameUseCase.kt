@@ -3,13 +3,21 @@ package com.dangerfield.features.waitingroom.internal
 import androidx.core.os.bundleOf
 import com.dangerfield.libraries.analytics.Metric
 import com.dangerfield.libraries.analytics.MetricsTracker
+import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.dictionary.Dictionary
+import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
+import com.dangerfield.libraries.game.PackItem
+import com.dangerfield.libraries.game.PackRepository
+import com.dangerfield.libraries.game.PacksMissingError
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.oddoneoout.features.waitingroom.internal.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import oddoneout.core.Catching
+import oddoneout.core.allOrElse
 import oddoneout.core.eitherWay
 import oddoneout.core.flatMap
 import java.util.LinkedList
@@ -17,9 +25,10 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class StartGameUseCase @Inject constructor(
-    private val packsPackRepository: LocationPackRepository,
+    private val packRepository: PackRepository,
     private val metricsTracker: MetricsTracker,
     private val dictionary: Dictionary,
+    @ApplicationScope private val applicationScope: CoroutineScope,
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository
 ) {
 
@@ -29,28 +38,55 @@ class StartGameUseCase @Inject constructor(
      * sets the started at time.
      */
     suspend operator fun invoke(
-        accessCode: String,
-        players: List<Player>,
-        locationName: String,
-        languageCode: String,
-        packsVersion: Int,
+        currentGame: Game,
         id: String,
     ): Catching<Unit> = Catching {
 
         gameRepository
-            .setGameIsBeingStarted(accessCode, true)
+            .setGameIsBeingStarted(currentGame.accessCode, true)
             .getOrThrow()
+        
+        val packs = currentGame.packIds.map {
+            applicationScope.async {
+                packRepository.getPack(
+                    languageCode = currentGame.languageCode,
+                    version = currentGame.packsVersion,
+                    id = it
+                )
+            }
+        }
+            .awaitAll()
+            .allOrElse { throw PacksMissingError() }
 
-        // TODO cleanup
-        // this logic is hella repeated, maybe an AssignRolesUseCase?
-        val roles = packsPackRepository.getRoles(
-            languageCode = languageCode,
-            version = packsVersion,
-            location = locationName,
-        ).getOrThrow()
+        val secretItem: PackItem? = packs.flatMap { it.items }.find { it.name == currentGame.secret }
 
-        val shuffledRolesQueue = LinkedList(roles.shuffled())
-        val defaultRole = roles.first()
+        if (secretItem == null) {
+            throw IllegalStateException("Secret not found in packs. Secret was ${currentGame.secret} and packs were ${packs.map { it.name }.joinToString { ", " }}")
+        }
+
+        val roles = secretItem.roles
+        val updatedPlayers = getUpdatedPlayers(roles, currentGame.players)
+
+        gameRepository
+            .updatePlayers(currentGame.accessCode, updatedPlayers)
+            .flatMap {
+                gameRepository.start(currentGame.accessCode)
+                    .onFailure {
+                        trackGameFailedToStart(currentGame.accessCode, id, currentGame.secret, currentGame.players)
+                    }
+                    .onSuccess {
+                        trackGameStarted(currentGame.accessCode, id, currentGame.secret, currentGame.players)
+                    }
+            }
+            .eitherWay { gameRepository.setGameIsBeingStarted(currentGame.accessCode, false) }
+    }
+
+    private fun getUpdatedPlayers(
+        roles: List<String>?,
+        players: List<Player>
+    ): List<Player> {
+        val shuffledRolesQueue: LinkedList<String>? = roles?.shuffled()?.let { LinkedList(it) }
+        val defaultRole = roles?.first()
 
         val shuffledPlayers = players.shuffled()
         val oddOneOutIndex = shuffledPlayers.indices.random()
@@ -59,24 +95,16 @@ class StartGameUseCase @Inject constructor(
             val role = if (index == oddOneOutIndex) {
                 dictionary.getString(R.string.app_theOddOneOutRole_text)
             } else {
-                shuffledRolesQueue.poll() ?: defaultRole
+                shuffledRolesQueue?.poll() ?: defaultRole
             }
 
-            player.copy(role = role, isOddOneOut = index == oddOneOutIndex)
+            player.copy(
+                role = role,
+                isOddOneOut = index == oddOneOutIndex,
+                votedCorrectly = null
+            )
         }
-
-        gameRepository
-            .updatePlayers(accessCode, shuffledPlayersWithRoles)
-            .flatMap {
-                gameRepository.start(accessCode)
-                    .onFailure {
-                        trackGameFailedToStart(accessCode, id, locationName, players)
-                    }
-                    .onSuccess {
-                        trackGameStarted(accessCode, id, locationName, players)
-                    }
-            }
-            .eitherWay { gameRepository.setGameIsBeingStarted(accessCode, false) }
+        return shuffledPlayersWithRoles
     }
 
     private fun trackGameFailedToStart(

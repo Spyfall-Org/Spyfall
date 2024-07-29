@@ -4,16 +4,18 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayLocations
-import com.dangerfield.libraries.game.LocationPackRepository
+import com.dangerfield.libraries.game.GetGamePlayItems
+import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.storage.datastore.distinctKeyFlow
+import com.dangerfield.oddoneoout.libraries.game.internal.R
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +33,7 @@ import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 import se.ansman.dagger.auto.AutoBind
 import java.time.Clock
+import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -42,9 +45,10 @@ class SingleDeviceGameRepository
 @Inject constructor(
     private val datastore: DataStore<Preferences>,
     private val clock: Clock,
-    private val locationPackRepository: LocationPackRepository,
-    private val getGamePlayLocations: GetGamePlayLocations,
+    private val packRepository: PackRepository,
+    private val getGamePlayItems: GetGamePlayItems,
     private val gameConfig: GameConfig,
+    private val dictionary: Dictionary,
     @ApplicationScope private val applicationScope: CoroutineScope,
     private val session: Session,
     moshi: Moshi,
@@ -132,43 +136,29 @@ class SingleDeviceGameRepository
         val currentGame = gameFlow.value.takeIf { it?.accessCode == accessCode }
             ?: return illegalStateFailure { "Single Device Game is null when resetting" }
 
-        val packs = currentGame.packNames.mapNotNull { packName ->
-            locationPackRepository.getPack(
+        val packs = currentGame.packIds.mapNotNull { packId ->
+            packRepository.getPack(
                 languageCode = session.user.languageCode,
                 version = currentGame.packsVersion,
-                name = packName
+                id = packId
             )
                 .throwIfDebug()
                 .getOrNull()
         }
 
-        val locations = getGamePlayLocations(locationPacks = packs, isSingleDevice = true).getOrThrow()
+        val locations = getGamePlayItems(packs = packs, isSingleDevice = true).getOrThrow()
         val location = locations.random()
-        val shuffledRoles = location.roles.shuffled()
 
-        val players = currentGame.players.map {
-            it.copy(
-                role = null,
-                isOddOneOut = false,
-                votedCorrectly = null
-            )
-        }
-
-        val oddOneOutIndex = players.indices.random()
-
-        val playersWithRoles = players.mapIndexed { index, player ->
-            val role = if (index == oddOneOutIndex) "The Odd One Out" else shuffledRoles[index]
-            player.copy(role = role, isOddOneOut = index == oddOneOutIndex)
-        }
+        val shuffledPlayerWithRoles = getUpdatedPlayers(location.roles, currentGame.players)
 
         val game = Game(
-            locationName = location.name,
-            packNames = packs.map { it.name },
+            secret = location.name,
+            packIds = packs.map { it.id },
             isBeingStarted = false,
-            players = playersWithRoles,
+            players = shuffledPlayerWithRoles,
             timeLimitMins = currentGame.timeLimitMins,
             startedAt = null,
-            locationOptionNames = locations.map { it.name },
+            secretOptions = locations.map { it.name },
             videoCallLink = null,
             version = CURRENT_GAME_MODEL_VERSION,
             accessCode = accessCode,
@@ -184,6 +174,32 @@ class SingleDeviceGameRepository
     }
         .logOnFailure("Could not reset game")
         .throwIfDebug()
+
+    private fun getUpdatedPlayers(
+        roles: List<String>?,
+        players: List<Player>
+    ): List<Player> {
+        val shuffledRolesQueue: LinkedList<String>? = roles?.shuffled()?.let { LinkedList(it) }
+        val defaultRole = roles?.first()
+
+        val shuffledPlayers = players.shuffled()
+        val oddOneOutIndex = shuffledPlayers.indices.random()
+
+        val shuffledPlayersWithRoles = shuffledPlayers.mapIndexed { index, player ->
+            val role = if (index == oddOneOutIndex) {
+                dictionary.getString(R.string.app_theOddOneOutRole_text)
+            } else {
+                shuffledRolesQueue?.poll() ?: defaultRole
+            }
+
+            player.copy(
+                role = role,
+                isOddOneOut = index == oddOneOutIndex,
+                votedCorrectly = null
+            )
+        }
+        return shuffledPlayersWithRoles
+    }
 
     override suspend fun changeName(accessCode: String, newName: String, id: String): Catching<Unit> =
         Catching {
@@ -224,7 +240,7 @@ class SingleDeviceGameRepository
         updateGame {
             it.copy(players = it.players.map { player ->
                 if (player.id == voterId) {
-                    player.copy(votedCorrectly = location == game.locationName)
+                    player.copy(votedCorrectly = location == game.secret)
                 } else {
                     player
                 }

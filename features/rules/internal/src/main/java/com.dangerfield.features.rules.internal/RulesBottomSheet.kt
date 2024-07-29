@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dangerfield.features.gameplay.RoleCard
 import com.dangerfield.libraries.dictionary.dictionaryString
+import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerD100
 import com.dangerfield.libraries.ui.VerticalSpacerD1200
@@ -56,7 +57,7 @@ fun RulesBottomSheet(
                     modifier = Modifier.scale(0.6f),
                     role = dictionaryString(R.string.rules_roleExample_text),
                     text = dictionaryString(id = R.string.gamePlay_playerRoleTip_text),
-                    location = dictionaryString(R.string.rules_locationExample_text),
+                    packItem = PackItem.Location(name = dictionaryString(R.string.rules_locationExample_text), roles = emptyList()),
                     isTheOddOneOut = false,
                     isVisible = true,
                     onHideShowClicked = { -> },

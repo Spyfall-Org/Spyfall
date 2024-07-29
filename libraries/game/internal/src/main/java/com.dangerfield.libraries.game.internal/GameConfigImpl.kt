@@ -60,7 +60,7 @@ class GameConfigImpl @Inject constructor(
     override val minPlayers: Int
         get() = minPlayersValue()
 
-    override val locationsPerGame: Int
+    override val itemsPerGame: Int
         get() = locationsPerGameValue()
 
     override val isSingleDeviceModeEnabled: Boolean
@@ -75,7 +75,7 @@ class GameConfigImpl @Inject constructor(
     override val canNonHostsControlGame: Boolean
         get() = canNonHostControlGameValue()
 
-    override val locationsPerSingleDeviceGame: Int
+    override val itemsPerSingleDeviceGame: Int
         get() = locationsPerSingleDeviceGameValue()
 
     override val isVideoCallLinkEnabled: Boolean

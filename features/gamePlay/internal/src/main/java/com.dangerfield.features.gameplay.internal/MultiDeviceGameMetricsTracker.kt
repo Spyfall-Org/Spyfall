@@ -39,7 +39,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     ACCESS_CODE to game.accessCode,
                     TIME_LIMIT_MINS to game.timeLimitMins,
                     PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    LOCATION to game.secret,
                 )
             )
         )
@@ -57,7 +57,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     ACCESS_CODE to game.accessCode,
                     TIME_LIMIT_MINS to game.timeLimitMins,
                     PLAYER_COUNT to game.players.size,
-                    LOCATION to game.locationName,
+                    LOCATION to game.secret,
                     MetricConstants.ERROR_MESSAGE to throwable.message
                 )
             )
@@ -77,7 +77,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     ACCESS_CODE to game?.accessCode,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                 )
             )
         )
@@ -96,7 +96,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     ACCESS_CODE to game?.accessCode,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                 )
             )
         )
@@ -115,7 +115,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     ACCESS_CODE to game?.accessCode,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.locationName,
+                    LOCATION to game?.secret,
                 )
             )
         )

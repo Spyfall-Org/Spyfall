@@ -16,6 +16,8 @@ import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
+import com.dangerfield.libraries.game.PackItem
+import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
@@ -49,6 +51,7 @@ class GamePlayViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val metricsTracker: MultiDeviceGameMetricsTracker,
     private val gameConfig: GameConfig,
+    private val packRepository: PackRepository,
     session: Session,
 ) :SEAViewModel<State, Event, Action>(savedStateHandle) {
 
@@ -93,6 +96,7 @@ class GamePlayViewModel @Inject constructor(
         gameResult = null,
         videoCallLink = null,
         canControlGame = false,
+        packItem = null
     )
 
     override suspend fun handleAction(action: Action) {
@@ -177,8 +181,16 @@ class GamePlayViewModel @Inject constructor(
                 gameFlow,
                 gameTimeRefreshTrigger
             ) { game, _ ->
-                mapToGameState(accessCode, game)
-            }.collect { gameState ->
+                game to mapToGameState(accessCode, game)
+            }.collect { (game, gameState) ->
+
+                // TODO straight up disgusting
+                if (game != null && state.packItem == null) {
+                    updateState {
+                        it.copy(packItem =  getPackItem(game))
+                    }
+                }
+
                 when (gameState) {
                     is GameState.Starting,
                     is GameState.Expired,
@@ -190,7 +202,13 @@ class GamePlayViewModel @Inject constructor(
                         clearActiveGame()
                         sendEvent(Event.GameKilled)
                     }
+                    // TODO
+                    /*
+                    Id need to make the pack item that belong to the game
+                    also be put into the state in these phases. I could easily hack it
+                    but it really feels like I need alot of cleanup in the way my models work
 
+                     */
                     is GameState.Waiting -> sendEvent(Event.GameReset(accessCode))
                     is GameState.Started -> updateStateInProgressGame(gameState)
                     is GameState.Voting -> updateStateVotingGame(gameState)
@@ -369,6 +387,14 @@ class GamePlayViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getPackItem(game: Game): PackItem? {
+        return packRepository.getPackItem(
+            itemName = game.secret,
+            version = game.packsVersion,
+            languageCode = game.languageCode
+        ).getOrNull()
+    }
+
     private suspend fun getGame() =
         gameFlow.replayCache.firstOrNull()
             ?: gameFlow.filterNotNull().firstOrNull()
@@ -384,6 +410,7 @@ class GamePlayViewModel @Inject constructor(
         val mePlayer: DisplayablePlayer?,
         val locations: List<String>,
         val location: String?,
+        val packItem: PackItem?,
         val timeRemainingMillis: Long,
         val didSomethingGoWrongLoading: Boolean,
         val didSomethingGoWrongVoting: Boolean,

@@ -10,14 +10,14 @@ interface PackRepository {
      * The return is dependent on the sync operation finishing to ensure the latest version is
      * fetched. If that call fails then the last known version is returned.
      */
-    suspend fun getAppPacks(version: Int, languageCode: String): Catching<PackResult<Pack>>
+    suspend fun getAppPacks(version: Int, languageCode: String): Catching<PackResult>
 
     /**
      * Returns packs that are saved for the user. These are packs they created or saved from the community
      * Not every pack the user plays should be considered saved for the user. Saved packs represent packs
      * the user  wants to keep around.
      */
-    suspend fun getUsersSavedPacks(): Catching<List<Pack>>
+    suspend fun getUsersSavedPacks(): Catching<List<Pack<PackItem>>>
 
     /**
      * Saves a pack for the user.
@@ -29,6 +29,12 @@ interface PackRepository {
      * Updates the last accessed time for a pack
      */
     suspend fun updateLastAccessed(packId: String): Catching<Unit>
+
+    suspend fun getPackItem(
+        itemName: String,
+        version: Int,
+        languageCode: String
+    ):  Catching<PackItem?>
 
     /**
      * Returns the specific pack
@@ -45,21 +51,21 @@ interface PackRepository {
         version: Int,
         languageCode: String,
         id: String
-    ): Catching<Pack>
+    ): Catching<Pack<PackItem>>
 }
 
-sealed class PackResult<T: Pack>(val packs: List<T>) {
-    class Hit<T: Pack>(
-        packs: List<T>
-    ) : PackResult<T>(packs)
+sealed class PackResult(val packs: List<Pack<PackItem>>) {
+    class Hit(
+        packs: List<Pack<PackItem>>
+    ) : PackResult(packs)
 
-    class Miss<T: Pack>(
+    class Miss(
         val version: Int,
-        packs: List<T>,
-    ) : PackResult<T>(packs)
+        packs: List<Pack<PackItem>>
+    ) : PackResult(packs)
 }
 
-fun <T: Pack> Catching<PackResult<T>>.hitOrThrow(): PackResult.Hit<T> {
+fun <T: PackItem> Catching<PackResult>.hitOrThrow(): PackResult.Hit {
     val value = this.getOrThrow()
     return value as? PackResult.Hit ?: throw IllegalStateException("Expected Hit but got Miss")
 }

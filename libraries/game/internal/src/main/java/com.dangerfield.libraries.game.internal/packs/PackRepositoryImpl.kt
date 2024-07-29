@@ -6,6 +6,7 @@ import com.dangerfield.libraries.coreflowroutines.SingletonJobRunner
 import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.Pack
+import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.PackResult
 import com.dangerfield.libraries.game.storage.DbPackOwner.App
@@ -29,16 +30,20 @@ class PackRepositoryImpl @Inject constructor(
     private val gameConfig: GameConfig,
     private val ensureAppConfigLoaded: EnsureAppConfigLoaded,
     private val clock: Clock,
+    private val cleanUpOldPacks: CleanUpOldPacks,
     @ApplicationScope private val applicationScope: CoroutineScope,
-    private val packsRemoteDataSource: PacksRemoteDataSource
+    private val packsRemoteDataSource: PacksRemoteDataSource,
+    private val jsonFallbackLocationPacksDataSource: JsonFallbackLocationPacksDataSource
 ) : PackRepository {
+
+    private val packItemRequestCache = mutableMapOf<String, PackItem>()
 
     private val syncRun = SingletonJobRunner(applicationScope, job = { sync() })
 
     override suspend fun getAppPacks(
         version: Int,
         languageCode: String
-    ): Catching<PackResult<Pack>> = Catching {
+    ): Catching<PackResult> = Catching {
 
         syncRun.join()
 
@@ -46,22 +51,27 @@ class PackRepositoryImpl @Inject constructor(
         val packsByVersion = cachedPacks.groupBy { it.pack.version }
         val hitPacks = packsByVersion[version]
 
-        if (hitPacks != null) {
+        when {
+            hitPacks != null -> {
+                checkAppPacks(hitPacks, version, languageCode)
+                PackResult.Hit(hitPacks.map { it.toPack() })
+            }
+            packsByVersion.isNotEmpty() -> {
+                val highestVersion =
+                    packsByVersion.keys.maxOrNull() ?: throw IllegalStateException("No packs found")
+                val highestVersionPacks =
+                    packsByVersion[highestVersion] ?: throw IllegalStateException("No packs found")
+                val packs = highestVersionPacks.map { it.toPack() }
 
-            checkAppPacks(hitPacks, version, languageCode)
-
-            val packs = hitPacks.map { it.toPack() }
-
-            PackResult.Hit(packs)
-
-        } else {
-            val highestVersion =
-                packsByVersion.keys.maxOrNull() ?: throw IllegalStateException("No packs found")
-            val highestVersionPacks =
-                packsByVersion[highestVersion] ?: throw IllegalStateException("No packs found")
-            val packs = highestVersionPacks.map { it.toPack() }
-
-            PackResult.Miss(highestVersion, packs)
+                PackResult.Miss(highestVersion, packs)
+            }
+            else -> {
+                val jsonPacks = jsonFallbackLocationPacksDataSource.loadFallbackPack(languageCode).getOrThrow()
+                PackResult.Miss(
+                    jsonPacks.version,
+                    jsonPacks.toPacks()
+                )
+            }
         }
     }
 
@@ -87,7 +97,7 @@ class PackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUsersSavedPacks(): Catching<List<Pack>> {
+    override suspend fun getUsersSavedPacks(): Catching<List<Pack<PackItem>>> {
         return Catching {
             syncRun.join()
 
@@ -105,11 +115,41 @@ class PackRepositoryImpl @Inject constructor(
         packDao.updatePackAccessed(packId, clock.millis())
     }
 
+    override suspend fun getPackItem(
+        itemName: String,
+        version: Int,
+        languageCode: String
+    ): Catching<PackItem?> {
+        return Catching {
+
+            if (packItemRequestCache.containsKey(itemName)) {
+                return@Catching packItemRequestCache[itemName]
+            }
+
+            syncRun.join()
+
+            val cachedPacks = packDao.getPacksWithItems(
+                version = version,
+                languageCode = languageCode,
+            )
+
+            val packsWithMatchingItem =  cachedPacks.filter { it.items.any { item -> item.name == itemName } }
+
+            val result = packsWithMatchingItem.map { pack ->
+                pack.items.first { item -> item.name == itemName }.toPackItem(pack.pack)
+            }.firstOrNull()
+
+            result?.let { packItemRequestCache[itemName] = it }
+
+            result
+        }
+    }
+
     override suspend fun getPack(
         version: Int,
         languageCode: String,
         id: String
-    ): Catching<Pack> {
+    ): Catching<Pack<PackItem>> {
         return Catching {
             syncRun
 
@@ -144,7 +184,9 @@ class PackRepositoryImpl @Inject constructor(
     }
 
     private suspend fun sync() = Catching {
+        applicationScope.launch { cleanUpOldPacks() }
         ensureAppConfigLoaded()
+
         val allPacks = packDao.getAllPacks().toSet()
         val accessRecords = packDao.getAccessRecords().toSet()
 
@@ -178,20 +220,19 @@ class PackRepositoryImpl @Inject constructor(
 
         packDao.deletePacks(packsToDelete.toList())
 
-        if (!hasPackNeededToStartAGame) {
-            packsRemoteDataSource
-                .getAppPacks(
-                    languageCode = getAppLanguageCode(),
-                    packsVersion = gameConfig.packsVersion
-                )
-                .onSuccess { packs ->
-                    val entities = packs.map {
-                        it.toPackEntity()
-                    }
+        packsRemoteDataSource
+            .getAppPacks(
+                languageCode = getAppLanguageCode(),
+                packsVersion = gameConfig.packsVersion
+            )
+            .onSuccess { packs ->
+                val packEntities = packs.map { it.toPackEntity() }
+                val itemEntities = packs.map { it.toItemEntities() }.flatten()
 
-                    packDao.insertPacks(entities)
-                }
-        }
+                packDao.insertPacks(packEntities)
+                packDao.insertPackItems(itemEntities)
+            }
+
     }.ignore()
 
     companion object {

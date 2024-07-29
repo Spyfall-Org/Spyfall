@@ -11,6 +11,7 @@ import androidx.room.Update
 @Dao
 interface PackDao {
 
+    // TODO do I need to do take 1? or return a list? look at each query
     @Delete
     suspend fun deletePacks(packs: List<PackEntity>)
 
@@ -44,6 +45,10 @@ interface PackDao {
     @Transaction
     @Query("SELECT * FROM packs WHERE id == :id")
     suspend fun getPacksWithItems(id: String): PackWithItems
+
+    @Transaction
+    @Query("SELECT * FROM packs WHERE languageCode == :languageCode AND version = :version")
+    suspend fun getPacksWithItems(languageCode: String, version: Int): List<PackWithItems>
 
     @Transaction
     @Query("SELECT * FROM packs WHERE isUserSaved = 1")
