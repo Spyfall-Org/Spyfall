@@ -236,6 +236,6 @@ class PackRepositoryImpl @Inject constructor(
     }.ignore()
 
     companion object {
-        private val CUSTOM_PACK_PREFIX = "custom_pack_"
+        private const val CUSTOM_PACK_PREFIX = "custom_pack_"
     }
 }
