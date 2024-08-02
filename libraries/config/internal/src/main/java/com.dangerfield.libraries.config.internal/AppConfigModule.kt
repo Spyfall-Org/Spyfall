@@ -1,5 +1,6 @@
-package com.dangerfield.libraries.config
+package com.dangerfield.libraries.config.internal
 
+import com.dangerfield.libraries.config.AppConfigMap
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,10 +13,5 @@ object AppConfigModule {
     @Provides
     fun providesAppConfig(appConfigRepository: AppConfigRepository): AppConfigMap {
         return appConfigRepository.config()
-    }
-
-    @Provides
-    fun providesAppConfigFlow(appConfigRepository: AppConfigRepository): AppConfigFlow {
-        return AppConfigFlow(appConfigRepository)
     }
 }

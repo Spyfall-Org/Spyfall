@@ -18,5 +18,6 @@ object MetricConstants {
     const val ODD_ONE_OUT = "odd_one_out"
     const val DRAW = "draw"
     const val ERROR = "error"
+    const val NONE = "none"
     const val ACCESS_CODE = "access_code"
 }

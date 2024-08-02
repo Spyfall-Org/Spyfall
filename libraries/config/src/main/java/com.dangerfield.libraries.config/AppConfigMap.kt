@@ -3,6 +3,10 @@ package com.dangerfield.libraries.config
 import oddoneout.core.getValueForPath
 import spyfallx.core.common.BuildConfig
 
+/**
+ * Base class for holding the map of all configured values. These values could be experiment treatments,
+ * configured values, etc.
+ */
 abstract class AppConfigMap {
 
     abstract val map: Map<String, *>
@@ -10,8 +14,9 @@ abstract class AppConfigMap {
     inline fun <reified T : Any> get(path: String): T? = map.getValueForPath<T>(fullPath = path)
 
     /**
-     * Get the value at [rootPath] + path.
-     * For example, with a json like this:
+     * Gets the configured value
+     *
+     * Example Config:
      * {
      *   "minAppVersion": 4,
      *   "promoLabels": {
@@ -19,13 +24,13 @@ abstract class AppConfigMap {
      *   }
      * }
      *
-     * and a configued value like this:
-     * class MyConfiguedValue(): ConfiguredValue<List<String>> {
+     * Example Configured Value:
+     * class MyConfiguredValue(): ConfiguredValue<List<String>> {
      *      override val path: String,
      *      override val default: T,
      * }
      *
-     * you can do `appConfigMap.value>(MyExperiment())` to get the value of the configured value
+     * With this a query can be made: `appConfigMap.value>(MyExperiment())` to get the value of the configured value
      *
      */
     inline fun <reified T : Any> value(value: ConfiguredValue<T>): T = value.debugOverride

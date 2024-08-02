@@ -48,9 +48,6 @@ class SingleDeviceInfoViewModel @Inject constructor(
 
     private suspend fun endGame() {
         gameRepository.end(accessCode)
-        // TODO pack game ending behind a uses case and leave game for that matter.
-        // not super sure I need a data source as well as a repository
-        // maybe I continue trucking on and clean that up later
         clearActiveGame()
         sendEvent(Event.GameEnded)
         singleDeviceGameMetricTracker.trackGameEnded(

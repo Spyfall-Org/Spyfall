@@ -113,7 +113,7 @@ fun GamePackItem(
         }
 
         if (isEnabled) {
-            drawShineSquiggles(radius = Radii.Card)
+            DrawShineSquiggles(radius = Radii.Card)
         }
 
         if (isSelected && isEnabled) {
@@ -136,7 +136,7 @@ fun GamePackItem(
 }
 
 @Composable
-fun BoxScope.drawShineSquiggles(radius: Radius = Radii.Card) {
+fun BoxScope.DrawShineSquiggles(radius: Radius = Radii.Card) {
     val density = LocalDensity.current
 
     Canvas(modifier = Modifier.matchParentSize()) {

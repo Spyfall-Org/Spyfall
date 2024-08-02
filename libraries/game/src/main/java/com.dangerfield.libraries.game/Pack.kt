@@ -53,11 +53,33 @@ open class Pack<T: PackItem>(
         isUserSaved = isUserSaved,
         items = celebrities
     )
+
+    class CustomPack(
+        name: String,
+        id: String,
+        version: Int,
+        languageCode: String,
+        isPublic: Boolean,
+        owner: OwnerDetails,
+        isUserSaved: Boolean,
+        items: List<PackItem.Custom>
+    ) : Pack<PackItem.Custom>(
+        name = name,
+        id = id,
+        version = version,
+        languageCode = languageCode,
+        type = PackType.Custom,
+        isPublic = isPublic,
+        owner = owner,
+        isUserSaved = isUserSaved,
+        items = items
+    )
 }
 
 enum class PackType {
     Location,
-    Celebrity
+    Celebrity,
+    Custom
 }
 
 sealed class OwnerDetails {
@@ -78,5 +100,9 @@ sealed class PackItem(
     class Celebrity(
         name: String,
     ) : PackItem(name, null)
-}
 
+    class Custom(
+        name: String,
+        roles: List<String>?
+    ) : PackItem(name, roles)
+}

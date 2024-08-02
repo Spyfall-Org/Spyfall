@@ -4,7 +4,7 @@ import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
 
-fun Router.navigateToCreatePack() {
+fun Router.navigateToCreateYourOwnPack() {
     navigate(
         fillRoute(createPackRoute) {
             //fill(someArgument, someValue)

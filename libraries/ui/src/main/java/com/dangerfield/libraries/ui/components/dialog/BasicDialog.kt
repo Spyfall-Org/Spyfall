@@ -123,7 +123,7 @@ private fun PreviewDialog() {
                 }
             },
             bottomContent = {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {  }) {
                     Text(text = "Bottom Content")
                 }
             },

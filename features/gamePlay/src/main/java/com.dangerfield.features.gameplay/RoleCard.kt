@@ -29,8 +29,6 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.gameplay.R
 
-// TODO cleanup
-// Lots of logic in this view, but it's all pretty simple.
 @Composable
 fun RoleCard(
     modifier: Modifier = Modifier,
@@ -64,6 +62,7 @@ fun RoleCard(
                     boldText = when(packItem) {
                         is PackItem.Location -> dictionaryString(R.string.roleCard_location_label)
                         is PackItem.Celebrity -> dictionaryString(R.string.celebrity)
+                        is PackItem.Custom -> "Secret: "
                     },
                     regularText = packItem.name,
                     textAlign = TextAlign.Center,

@@ -49,8 +49,6 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
-// TODO cleanup
-// can we reduce params, and reduce logic in the view?
 @Composable
 fun GamePlayScreen(
     players: List<DisplayablePlayer>,

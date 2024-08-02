@@ -76,9 +76,6 @@ class MainActivityViewModel @Inject constructor(
     )
 ) {
 
-    // TODO make a notification manager to handle all these dialogs I may or may not show.
-    // in app messages can likely have a handler that takes in a class wrapping the route and stuff
-    // and a priority and such.
     private var inAppUpdateJob: Job? = null
     
     init {
@@ -209,7 +206,6 @@ class MainActivityViewModel @Inject constructor(
                         }
 
                         InAppUpdateAvailability.UpdateInProgress -> {
-                            // Should be an impossilbe state.
                             doNothing()
                         }
                     }

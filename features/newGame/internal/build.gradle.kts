@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(projects.libraries.navigation)
     implementation(projects.libraries.network)
+    implementation(project(":features:createPack"))
 
     testImplementation(projects.libraries.test)
 }

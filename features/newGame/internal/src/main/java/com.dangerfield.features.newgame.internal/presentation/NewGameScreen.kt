@@ -26,7 +26,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
+import com.dangerfield.features.newgame.internal.presentation.model.NewGamePackOption
 import com.dangerfield.features.newgame.newGameNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NewGameScreen(
     modifier: Modifier = Modifier,
-    onPackSelected: (DisplayablePack, Boolean) -> Unit,
+    onPackSelected: (NewGamePackOption, Boolean) -> Unit,
     nameState: FieldState<String>,
     onNameUpdated: (String) -> Unit,
     timeLimitState: FieldState<String>,
@@ -72,11 +72,13 @@ fun NewGameScreen(
     isFormValid: Boolean,
     isLoadingPacks: Boolean,
     isVideoCallLinkEnabled: Boolean,
+    onCreateYourOwnPackClicked: () -> Unit,
     onIsSingleDeviceUpdated: (Boolean) -> Unit,
     numOfPlayersState: FieldState<String>,
     isSingleDeviceModeEnabled: Boolean,
+    isCreateYourOwnNew: Boolean,
     onNumOfPlayersUpdated: (String) -> Unit,
-    packsState: FieldState<List<DisplayablePack>>,
+    packsState: FieldState<List<NewGamePackOption>>,
     didCreationFail: Boolean = false,
     didLoadFail: Boolean = false,
     onErrorDismissed: () -> Unit,
@@ -158,6 +160,8 @@ fun NewGameScreen(
                             isLoading = isLoadingPacks,
                             packsState = packsState,
                             onPackSelected = onPackSelected,
+                            isCreateYourOwnNew = isCreateYourOwnNew,
+                            onCreateYourOwnPackClicked = onCreateYourOwnPackClicked,
                             onPacksInfoClicked = {
                                 showPacksInfoBottomSheet = true
                             },
@@ -290,9 +294,11 @@ private fun FormField(
 
 @Composable
 private fun PacksField(
-    packsState: FieldState<List<DisplayablePack>>,
-    onPackSelected: (DisplayablePack, Boolean) -> Unit,
+    packsState: FieldState<List<NewGamePackOption>>,
+    onPackSelected: (NewGamePackOption, Boolean) -> Unit,
+    onCreateYourOwnPackClicked: () -> Unit,
     onPacksInfoClicked: () -> Unit = {},
+    isCreateYourOwnNew: Boolean,
     isLoading: Boolean
 ) {
     val focusManager = LocalFocusManager.current
@@ -326,11 +332,13 @@ private fun PacksField(
             CircularProgressIndicator()
         } else {
             GamePackGrid(
-                gamePacks = packsState.value ?: emptyList(),
+                gamePacks = packsState.value.orEmpty(),
                 onPackSelected = { pack, isSelected ->
                     focusManager.clearFocus()
                     onPackSelected(pack, isSelected)
-                }
+                },
+                isCreateYourOwnNew = isCreateYourOwnNew,
+                onCreateYourOwnSelected = onCreateYourOwnPackClicked
             )
         }
     }
@@ -504,7 +512,7 @@ fun PreviewNewGameScreen() {
         var packs by remember {
             mutableStateOf(
                 listOf(
-                    DisplayablePack(
+                    NewGamePackOption(
                         isSelected = false,
                         pack = Pack.LocationPack(
                             locations = listOf(),
@@ -517,7 +525,7 @@ fun PreviewNewGameScreen() {
                             isUserSaved = false
                         )
                     ),
-                    DisplayablePack(
+                    NewGamePackOption(
                         isSelected = false,
                         pack = Pack.LocationPack(
                             locations = listOf(),
@@ -530,7 +538,7 @@ fun PreviewNewGameScreen() {
                             isUserSaved = false
                         )
                     ),
-                    DisplayablePack(
+                    NewGamePackOption(
                         isSelected = false,
                         pack = Pack.LocationPack(
                             locations = listOf(),
@@ -543,7 +551,7 @@ fun PreviewNewGameScreen() {
                             isUserSaved = false
                         )
                     ),
-                    DisplayablePack(
+                    NewGamePackOption(
                         isSelected = false,
                         pack = Pack.LocationPack(
                             locations = listOf(),
@@ -596,7 +604,9 @@ fun PreviewNewGameScreen() {
             isLoadingCreation = false,
             onVideoCallLinkInfoClicked = { -> },
             onErrorDismissed = { -> },
-            isOffline = false
+            isOffline = false,
+            onCreateYourOwnPackClicked = {},
+            isCreateYourOwnNew = true
         )
     }
 }
@@ -608,7 +618,7 @@ fun PreviewNewGameScreenOffline() {
         var packs by remember {
             mutableStateOf(
                 listOf(
-                    DisplayablePack(
+                    NewGamePackOption(
                         isSelected = false,
                         pack = Pack.LocationPack(
                             locations = listOf(),
@@ -621,7 +631,7 @@ fun PreviewNewGameScreenOffline() {
                             isUserSaved = false
                         )
                     ),
-                    DisplayablePack(
+                    NewGamePackOption(
                         isSelected = false,
                         pack = Pack.LocationPack(
                             locations = listOf(),
@@ -634,7 +644,7 @@ fun PreviewNewGameScreenOffline() {
                             isUserSaved = false
                         )
                     ),
-                    DisplayablePack(
+                    NewGamePackOption(
                         isSelected = false,
                         pack = Pack.LocationPack(
                             locations = listOf(),
@@ -687,7 +697,9 @@ fun PreviewNewGameScreenOffline() {
             isLoadingCreation = false,
             onVideoCallLinkInfoClicked = { -> },
             onErrorDismissed = { -> },
-            isOffline = true
+            isOffline = true,
+            onCreateYourOwnPackClicked = {},
+            isCreateYourOwnNew = true
         )
     }
 }

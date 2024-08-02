@@ -3,6 +3,11 @@ package com.dangerfield.libraries.network
 import oddoneout.core.Catching
 import oddoneout.core.logOnFailure
 
+/**
+ * For the time being this initiative is being postponed. The goal with Path is to
+ * allow for an interface of a document storage system that allows for querying with paths
+ * and lets firebase be abstracted
+ */
 class Path internal constructor(){
 
     val steps: MutableList<PathSegment> = mutableListOf()

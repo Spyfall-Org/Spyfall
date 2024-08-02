@@ -39,15 +39,16 @@ import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.Preview
 import androidx.compose.ui.tooling.preview.Preview
+import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.ui.Dimension
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
+import oddoneout.core.doNothing
 
 @Composable
 fun SingleDeviceResultsScreen(
-    didOddOneOutWin: Boolean,
     modifier: Modifier = Modifier,
-    isTie: Boolean,
+    results: GameResult,
     oddOneOutName: String,
     locationName: String,
     totalPlayerCount: Int,
@@ -68,8 +69,7 @@ fun SingleDeviceResultsScreen(
         ResultsScreenContent(
             modifier,
             onVotingInfoClicked,
-            isTie,
-            didOddOneOutWin,
+            results,
             oddOneOutName,
             correctOddOneOutVoteCount,
             totalPlayerCount,
@@ -92,8 +92,7 @@ fun SingleDeviceResultsScreen(
 private fun ResultsScreenContent(
     modifier: Modifier,
     onVotingInfoClicked: () -> Unit,
-    isTie: Boolean,
-    didOddOneOutWin: Boolean,
+    gameResult: GameResult,
     oddOneOutName: String,
     correctOddOneOutVoteCount: Int,
     totalPlayerCount: Int,
@@ -116,17 +115,18 @@ private fun ResultsScreenContent(
             Modifier
                 .padding(padding)
                 .padding(horizontal = Dimension.D1000)
-                .verticalScroll(rememberScrollState())
-            ,
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = CenterHorizontally
         ) {
 
             VerticalSpacerD500()
 
-            val winnerText = when {
-                isTie -> dictionaryString(R.string.gameResults_tieResult_text)
-                didOddOneOutWin -> dictionaryString(R.string.gameResults)
-                else -> dictionaryString(R.string.gameResults_playersWonResult_text)
+            val winnerText = when(gameResult) {
+                GameResult.None -> ""
+                GameResult.PlayersWon -> dictionaryString(R.string.gameResults_playersWonResult_text)
+                GameResult.OddOneOutWon -> dictionaryString(R.string.gameResults)
+                GameResult.Draw -> dictionaryString(R.string.gameResults_tieResult_text)
+                GameResult.Error -> ""
             }
 
             Text(
@@ -167,6 +167,7 @@ private fun ResultsScreenContent(
                 VerticalSpacerD500()
 
                 Text(
+                    textAlign = TextAlign.Center,
                     text = dictionaryString(
                         R.string.singeDeviceGameResults_locationGuessed_header,
                         "location" to oddOneOutLocationGuess
@@ -227,7 +228,10 @@ private fun TextCard(oddOneOutName: String) {
         radius = Radii.Card,
         contentPadding = PaddingValues(Dimension.D1000)
     ) {
-        Text(text = oddOneOutName)
+        Text(
+            text = oddOneOutName,
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
@@ -238,10 +242,9 @@ fun SingleDeviceResultsScreenPreview() {
         SingleDeviceResultsScreen(
             onRestartClicked = { -> },
             onEndGameClicked = { -> },
-            didOddOneOutWin = true,
-            isTie = true,
+            results = GameResult.Draw,
             oddOneOutName = "Ryan",
-            locationName = "A Church",
+            locationName = "Something with alot of text thats long",
             onVotingInfoClicked = { -> },
             correctOddOneOutVoteCount = 3,
             oddOneOutLocationGuess = "A Jail",

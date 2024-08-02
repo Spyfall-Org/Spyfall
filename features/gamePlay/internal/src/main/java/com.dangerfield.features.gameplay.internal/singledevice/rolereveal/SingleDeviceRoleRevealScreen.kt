@@ -123,7 +123,6 @@ fun SingleDevicePlayerRoleScreen(
                         }
                     )
                 }
-
                 else -> {
                     EndGameDialog(
                         onDismissRequest = { shouldShowExitDialog = false },
@@ -172,7 +171,6 @@ private fun RoleRevealScreenContent(
             horizontalAlignment = CenterHorizontally
         ) {
 
-            // TODO add horizontal pager?
             VerticalSpacerD1200()
 
             if (currentPlayer != null) {

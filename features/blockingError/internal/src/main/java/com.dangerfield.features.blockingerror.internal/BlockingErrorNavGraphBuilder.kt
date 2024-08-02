@@ -39,9 +39,7 @@ class BlockingErrorNavGraphBuilder @Inject constructor(
 
             BlockingErrorScreen(
                 onBackPressed = {
-                    (context as? Activity)?.let {
-                        it.finish()
-                    }
+                    (context as? Activity)?.finish()
                 }
             )
         }
@@ -67,7 +65,7 @@ class BlockingErrorNavGraphBuilder @Inject constructor(
             val errorClass = it.navArgument<String>(errorClassArgument)
 
             GeneralErrorDialog(
-                onDismiss = { router.goBack() },
+                onDismiss = router::goBack,
                 errorClass = errorClass
             )
         }

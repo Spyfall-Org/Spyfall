@@ -24,9 +24,6 @@ import java.io.InputStreamReader
 // id would be 1IIkODW-U5wvumwAk7SrHWxSil54Wp92Y
 data class FileInfo(val id: String, val pathsToStore: List<String>)
 
-// TODO debug builds dont need the release stuff. Same for the service account keys.
-// Neither of these are used in day to day. Seems odd to require them to be installed.
-
 // Used to talk to the release firebase project
 val releaseGoogleServicesFileInfo =
     FileInfo(

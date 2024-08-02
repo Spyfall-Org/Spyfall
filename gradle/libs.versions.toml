@@ -116,14 +116,12 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation" }
 
 # In app update
-# TODO update to be the group and name of the library with version ref
-
 android-play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "in-app-update" }
 android-play-app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "in-app-update" }
 
 #Datastore
-androidx-datastore = "androidx.datastore:datastore-preferences:1.0.0"
-androidx-datastore-core = "androidx.datastore:datastore-core:1.1.0-alpha07"
+androidx-datastore = "androidx.datastore:datastore-preferences:1.1.1"
+androidx-datastore-core = "androidx.datastore:datastore-core:1.1.1"
 
 # Lint
 lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "lint" }

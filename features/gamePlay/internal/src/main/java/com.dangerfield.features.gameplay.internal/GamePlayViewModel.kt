@@ -9,12 +9,11 @@ import com.dangerfield.features.gameplay.internal.GamePlayViewModel.State
 import com.dangerfield.features.gameplay.timeLimitArgument
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.coreflowroutines.TriggerFlow
+import com.dangerfield.libraries.coreflowroutines.collectIn
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameResult
-import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.game.PackRepository
@@ -27,31 +26,41 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import oddoneout.core.doNothing
 import oddoneout.core.showDebugSnack
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
+import java.time.Clock
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
+/*
+TODO cleanup
+okay so theres alot going on there
+I think the packItem could probably be a part of the game exposed
+I think we could also expose game state in there too and not have to have a seperate use case and
+make people deal with that.
+ */
 @HiltViewModel
 class GamePlayViewModel @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
-    private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val savedStateHandle: SavedStateHandle,
     private val userRepository: UserRepository,
     private val metricsTracker: MultiDeviceGameMetricsTracker,
     private val gameConfig: GameConfig,
-    private val packRepository: PackRepository,
+    private val clock: Clock,
     session: Session,
 ) :SEAViewModel<State, Event, Action>(savedStateHandle) {
 
@@ -59,6 +68,7 @@ class GamePlayViewModel @Inject constructor(
     private val isSubscribedToGameFlow = AtomicBoolean(false)
     private val hasRecordedResult = AtomicBoolean(false)
     private val hasRecordedGamePlayed = AtomicBoolean(false)
+    private val backupGameStartTime = clock.millis()
 
     // TODO cleanup may be concurency issues here, the timer could be stoped or started from different coroutines
     private var timerJob: Job? = null
@@ -80,6 +90,8 @@ class GamePlayViewModel @Inject constructor(
         )
 
     // TODO cleanup consider putting voting into a different screen
+    // i 10000000% should have a different screen for voting, I shouldnt just change the screen state
+    // this view model is insanely big
     override fun initialState() = State(
         players = emptyList(),
         locations = emptyList(),
@@ -139,7 +151,7 @@ class GamePlayViewModel @Inject constructor(
 
     private suspend fun Action.SubmitOddOneOutVote.submitOddOneOutVote() {
         updateState { it.copy(isLoadingVoteSubmit = true) }
-        gameRepository.submitOddOneOutVote(
+        gameRepository.submitVoteForOddOneOut(
             accessCode,
             voterId = meUserId,
             voteId = id
@@ -157,10 +169,10 @@ class GamePlayViewModel @Inject constructor(
 
     private suspend fun Action.SubmitLocationVote.submitLocationVote() {
         updateState { it.copy(isLoadingVoteSubmit = true) }
-        gameRepository.submitLocationVote(
+        gameRepository.submitVoteForSecret(
             accessCode,
             voterId = meUserId,
-            location = location
+            secret = location
         )
             .onSuccess {
                 updateState { it.copy(isVoteSubmitted = true) }
@@ -181,196 +193,114 @@ class GamePlayViewModel @Inject constructor(
                 gameFlow,
                 gameTimeRefreshTrigger
             ) { game, _ ->
-                game to mapToGameState(accessCode, game)
-            }.collect { (game, gameState) ->
 
-                // TODO straight up disgusting
-                if (game != null && state.packItem == null) {
-                    updateState {
-                        it.copy(packItem =  getPackItem(game))
+                when (game?.state) {
+                    Game.State.Starting,
+                    Game.State.Expired,
+                    Game.State.Unknown -> showDebugSnack {
+                        "Illegal game state with game $game"
                     }
-                }
-
-                when (gameState) {
-                    is GameState.Starting,
-                    is GameState.Expired,
-                    is GameState.Unknown -> showDebugSnack {
-                        "Illegal game state ${gameState::class.java.simpleName}"
-                    }
-
-                    is GameState.DoesNotExist -> {
+                    null -> {
                         clearActiveGame()
                         sendEvent(Event.GameKilled)
                     }
-                    // TODO
-                    /*
-                    Id need to make the pack item that belong to the game
-                    also be put into the state in these phases. I could easily hack it
-                    but it really feels like I need alot of cleanup in the way my models work
-
-                     */
-                    is GameState.Waiting -> sendEvent(Event.GameReset(accessCode))
-                    is GameState.Started -> updateStateInProgressGame(gameState)
-                    is GameState.Voting -> updateStateVotingGame(gameState)
-                    is GameState.VotingEnded -> updateStateVotingEndedGame(gameState)
+                    Game.State.Waiting -> sendEvent(Event.GameReset(accessCode))
+                    Game.State.Started,
+                    Game.State.Voting,
+                    Game.State.Results -> updateStateWithGame(game)
                 }
-            }
+            }.collect()
         }
     }
 
-    private suspend fun Action.LoadGamePlay.updateStateVotingEndedGame(
-        gameState: GameState.VotingEnded,
-    ) {
-        stopTimer()
+    private suspend fun Action.updateStateWithGame(game: Game) {
+        val timeRemainingMillis = game.remainingTimeMillis(clock)
+        val isTimeUp = timeRemainingMillis <= 0
+        if (isTimeUp && isTimerRunning) {
+            stopTimer()
+            gameRepository.refreshState()
+        }
 
-        val mePlayer = gameState.players.find { it.id == meUserId }
+        if (!isTimeUp && !isTimerRunning) {
+            startTimer()
+        }
+
+        if (game.state == Game.State.Results && !hasRecordedResult.getAndSet(true)) {
+            recordResult(game)
+
+            if (game.mePlayer?.isHost == true) {
+                metricsTracker.trackVotingEnded(
+                    game = game
+                )
+            }
+        }
+
+        if (!hasRecordedGamePlayed.getAndSet(true)) {
+            recordGamePlayed(game)
+        }
 
         updateState { prev ->
             prev.copy(
                 isLoadingPlayers = false,
                 isLoadingLocations = false,
-                videoCallLink = gameState.videoCallLink,
-                players = gameState.players.map { player ->
+                videoCallLink = game.videoCallLink,
+                packItem = game.secretItem,
+                players = game.players.map { player ->
                     DisplayablePlayer(
                         name = player.userName,
-                        isFirst = false,
+                        isFirst = game.players.firstOrNull() == player,
                         id = player.id,
                         role = player.role ?: "",
                         isOddOneOut = player.isOddOneOut
                     )
                 },
-                mePlayer = mePlayer
+                mePlayer = game.mePlayer
                     ?.let { me ->
                         DisplayablePlayer(
                             name = me.userName,
-                            isFirst = false,
+                            isFirst = game.players.firstOrNull() == me,
                             id = me.id,
                             role = me.role ?: "",
                             isOddOneOut = me.isOddOneOut
                         )
                     },
-                canControlGame = mePlayer?.isHost == true || gameConfig.canNonHostsControlGame,
-                locations = gameState.locationNames,
-                location = gameState.location,
-                isTimeUp = true,
-                gameResult = gameState.result,
+                canControlGame = game.mePlayer?.isHost == true || gameConfig.canNonHostsControlGame,
+                locations = game.secretOptions,
+                location = game.secretItem.name,
+                isTimeUp = isTimeUp,
+                gameResult = game.result.takeIf {
+                    it in listOf(GameResult.PlayersWon, GameResult.OddOneOutWon, GameResult.Draw)
+                },
+                timeRemainingMillis = game.remainingTimeMillis(clock),
             )
-        }
-
-        if (!hasRecordedResult.getAndSet(true)) {
-            recordResult(gameState)
-
-            if (gameState.mePlayer.isHost) {
-                metricsTracker.trackVotingEnded(
-                    timeLimitMins = gameState.timeLimitMins,
-                    gameState = gameState
-                )
-            }
         }
     }
 
-    private suspend fun recordResult(gameState: GameState.VotingEnded) {
-        val mePlayer = gameState.players.find { it.id == meUserId } ?: return
-        val didWinAsOddOne = gameState.result == GameResult.OddOneOutWon && mePlayer.isOddOneOut
-        val didWinAsPlayer = gameState.result == GameResult.PlayersWon && !mePlayer.isOddOneOut
+    private suspend fun recordResult(game: Game) {
+        val mePlayer = game.players.find { it.id == meUserId } ?: return
+        val didWinAsOddOne = game.result == GameResult.OddOneOutWon && mePlayer.isOddOneOut
+        val didWinAsPlayer = game.result == GameResult.PlayersWon && !mePlayer.isOddOneOut
         userRepository.addUsersGameResult(
             wasOddOneOut = mePlayer.isOddOneOut,
             didWin = didWinAsPlayer || didWinAsOddOne,
-            accessCode = gameState.accessCode,
-            startedAt = gameState.startedAt
+            accessCode = game.accessCode,
+            startedAt = game.startedAt ?: backupGameStartTime
         )
     }
 
-    private suspend fun recordGamePlayed(gameState: GameState.Started) {
+    private suspend fun recordGamePlayed(game: Game) {
         userRepository.addGamePlayed(
-            accessCode = gameState.accessCode,
-            startedAt = gameState.startedAt,
+            accessCode = game.accessCode,
+            startedAt = game.startedAt ?: backupGameStartTime,
             wasSingleDevice = false
         )
     }
 
-    private suspend fun Action.LoadGamePlay.updateStateVotingGame(
-        gameState: GameState.Voting,
-    ) {
-        stopTimer()
 
-        val mePlayer = gameState.players.find { it.id == meUserId }
 
-        updateState { prev ->
-            prev.copy(
-                isLoadingPlayers = false,
-                isLoadingLocations = false,
-                videoCallLink = gameState.videoCallLink,
-                players = gameState.players.map { player ->
-                    DisplayablePlayer(
-                        name = player.userName,
-                        isFirst = false,
-                        id = player.id,
-                        role = player.role ?: "",
-                        isOddOneOut = player.isOddOneOut
-                    )
-                },
-                mePlayer = mePlayer
-                    ?.let { me ->
-                        DisplayablePlayer(
-                            name = me.userName,
-                            isFirst = false,
-                            id = me.id,
-                            role = me.role ?: "",
-                            isOddOneOut = me.isOddOneOut
-                        )
-                    },
-                canControlGame = mePlayer?.isHost == true || gameConfig.canNonHostsControlGame,
-                locations = gameState.locationNames,
-                location = gameState.location,
-                isTimeUp = true
-
-            )
-        }
-    }
-
-    private suspend fun Action.LoadGamePlay.updateStateInProgressGame(
-        gameState: GameState.Started,
-    ) {
-        if (!isTimerRunning) startTimer()
-
-        val mePlayer = gameState.players.find { it.id == meUserId }
-
-        updateState { prev ->
-            prev.copy(
-                isLoadingPlayers = false,
-                isLoadingLocations = false,
-                videoCallLink = gameState.videoCallLink,
-                players = gameState.players.map { player ->
-                    DisplayablePlayer(
-                        name = player.userName,
-                        isFirst = gameState.firstPlayer == player,
-                        id = player.id,
-                        role = player.role ?: "",
-                        isOddOneOut = player.isOddOneOut
-                    )
-                },
-                mePlayer = mePlayer?.let { me ->
-                    DisplayablePlayer(
-                        name = me.userName,
-                        isFirst = gameState.firstPlayer == me,
-                        id = me.id,
-                        role = me.role ?: "",
-                        isOddOneOut = me.isOddOneOut
-                    )
-                },
-                locations = gameState.locationNames,
-                location = gameState.location,
-                canControlGame = mePlayer?.isHost == true || gameConfig.canNonHostsControlGame,
-                timeRemainingMillis = gameState.timeRemainingMillis,
-            )
-        }
-
-        if (!hasRecordedGamePlayed.getAndSet(true)) {
-            recordGamePlayed(gameState)
-        }
-    }
-
+    /*
+    TODO make the timer a use case that emits a flow of time remaining
+     */
     private fun stopTimer() {
         timerJob?.cancel()
         timerJob = null
@@ -385,14 +315,6 @@ class GamePlayViewModel @Inject constructor(
                 delay(500)
             }
         }
-    }
-
-    private suspend fun getPackItem(game: Game): PackItem? {
-        return packRepository.getPackItem(
-            itemName = game.secret,
-            version = game.packsVersion,
-            languageCode = game.languageCode
-        ).getOrNull()
     }
 
     private suspend fun getGame() =

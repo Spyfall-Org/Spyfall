@@ -160,7 +160,6 @@ private fun VotingScreenContent(
             horizontalAlignment = CenterHorizontally
         ) {
 
-            // TODO add horizontal pager
             VerticalSpacerD1200()
 
             if (currentPlayer != null) {
@@ -252,7 +251,6 @@ private fun VotingScreenContent(
                 } else {
                     Button(
                         onClick = {
-                            // TODO this view is super super stateful
                             onIsVotingOptionsHiddenChanged(true)
                             coroutineScope.launch {
                                 scrollState.animateScrollTo(0)

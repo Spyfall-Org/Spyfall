@@ -29,7 +29,6 @@ fun GamePlayLeaveDialog(
         type = PageType.Dialog
     )
 
-    // TODO cleanup investiage color button on top or bottom and negative vs positive
     BasicDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,

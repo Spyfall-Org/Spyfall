@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import oddoneout.core.Catching
 import oddoneout.core.daysAgo
 import oddoneout.core.ignore
+import oddoneout.core.logOnFailure
 import se.ansman.dagger.auto.AutoBind
 import java.time.Clock
 import javax.inject.Inject
@@ -151,37 +152,39 @@ class PackRepositoryImpl @Inject constructor(
         id: String
     ): Catching<Pack<PackItem>> {
         return Catching {
-            syncRun
+            syncRun.join()
 
             val cachedPack = packDao.getPacksWithItems(id = id)
 
-            if (cachedPack == null) {
-                if (id.contains(CUSTOM_PACK_PREFIX)) {
-                    packsRemoteDataSource.getCommunityPack(id)
-                        .onSuccess {
-                            applicationScope.launch {
-                                packDao.insertPacks(listOf(it.toPackEntity()))
-                            }
-                        }
-                } else {
-                    packsRemoteDataSource.getAppPacks(
-                        languageCode = languageCode,
-                        packsVersion = version
-                    ).mapCatching {
-                        applicationScope.launch {
-                            packDao.insertPacks(it.map { pack -> pack.toPackEntity() })
-                        }
-                        it.first { pack -> pack.id == id }
-                    }
-                }
-                    .getOrThrow()
-                    .toPack()
-
-            } else {
-                cachedPack.toPack()
-            }
+            cachedPack?.toPack() ?: fetchPackFromBackend(id, languageCode, version)
         }
     }
+
+    private suspend fun fetchPackFromBackend(
+        id: String,
+        languageCode: String,
+        version: Int
+    ) = if (id.contains(CUSTOM_PACK_PREFIX)) {
+        packsRemoteDataSource.getCommunityPack(id)
+            .onSuccess {
+                applicationScope.launch {
+                    packDao.insertPacks(listOf(it.toPackEntity()))
+                }
+            }
+    } else {
+        packsRemoteDataSource.getAppPacks(
+            languageCode = languageCode,
+            packsVersion = version
+        ).mapCatching {
+            applicationScope.launch {
+                packDao.insertPacks(it.map { pack -> pack.toPackEntity() })
+            }
+            it.first { pack -> pack.id == id }
+        }
+    }
+        .logOnFailure()
+        .getOrThrow()
+        .toPack()
 
     private suspend fun sync() = Catching {
         applicationScope.launch { cleanUpOldPacks() }

@@ -20,7 +20,6 @@ fun CantCreateGameErrorDialog(
         type = PageType.Dialog
     )
 
-    // TODO this is poping up when anything at all goes wrong on new game screen. Eitehr chagne the message or make the message dynamic
     BasicDialog(
         onDismissRequest = onDismissRequest,
         title = dictionaryString(R.string.app_somethingWentWrong_text),

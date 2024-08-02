@@ -8,16 +8,11 @@ import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
-import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.game.PackRepository
-import com.dangerfield.libraries.game.PacksMissingError
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.oddoneoout.features.waitingroom.internal.R
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import oddoneout.core.Catching
-import oddoneout.core.allOrElse
 import oddoneout.core.eitherWay
 import oddoneout.core.flatMap
 import java.util.LinkedList
@@ -25,7 +20,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class StartGameUseCase @Inject constructor(
-    private val packRepository: PackRepository,
     private val metricsTracker: MetricsTracker,
     private val dictionary: Dictionary,
     @ApplicationScope private val applicationScope: CoroutineScope,
@@ -45,26 +39,8 @@ class StartGameUseCase @Inject constructor(
         gameRepository
             .setGameIsBeingStarted(currentGame.accessCode, true)
             .getOrThrow()
-        
-        val packs = currentGame.packIds.map {
-            applicationScope.async {
-                packRepository.getPack(
-                    languageCode = currentGame.languageCode,
-                    version = currentGame.packsVersion,
-                    id = it
-                )
-            }
-        }
-            .awaitAll()
-            .allOrElse { throw PacksMissingError() }
 
-        val secretItem: PackItem? = packs.flatMap { it.items }.find { it.name == currentGame.secret }
-
-        if (secretItem == null) {
-            throw IllegalStateException("Secret not found in packs. Secret was ${currentGame.secret} and packs were ${packs.map { it.name }.joinToString { ", " }}")
-        }
-
-        val roles = secretItem.roles
+        val roles = currentGame.secretItem.roles
         val updatedPlayers = getUpdatedPlayers(roles, currentGame.players)
 
         gameRepository
@@ -72,10 +48,10 @@ class StartGameUseCase @Inject constructor(
             .flatMap {
                 gameRepository.start(currentGame.accessCode)
                     .onFailure {
-                        trackGameFailedToStart(currentGame.accessCode, id, currentGame.secret, currentGame.players)
+                        trackGameFailedToStart(currentGame.accessCode, id, currentGame.secretItem.name, currentGame.players)
                     }
                     .onSuccess {
-                        trackGameStarted(currentGame.accessCode, id, currentGame.secret, currentGame.players)
+                        trackGameStarted(currentGame.accessCode, id, currentGame.secretItem.name, currentGame.players)
                     }
             }
             .eitherWay { gameRepository.setGameIsBeingStarted(currentGame.accessCode, false) }
@@ -86,7 +62,7 @@ class StartGameUseCase @Inject constructor(
         players: List<Player>
     ): List<Player> {
         val shuffledRolesQueue: LinkedList<String>? = roles?.shuffled()?.let { LinkedList(it) }
-        val defaultRole = roles?.first()
+        val defaultRole = roles?.randomOrNull()
 
         val shuffledPlayers = players.shuffled()
         val oddOneOutIndex = shuffledPlayers.indices.random()

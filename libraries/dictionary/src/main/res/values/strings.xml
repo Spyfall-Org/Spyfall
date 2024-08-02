@@ -355,5 +355,9 @@
     <string name="generalError_description_text">Looks like something went wrong processing this request. Make sure you are on the latest app version and/or please try again.</string>
     <string name="odd_one_out_is_offline" translatable="false">Odd One Out is offline</string>
     <string name="celebrity">Celebrity:</string>
+    <string name="your_update_is_ready">Your update is ready</string>
+    <string name="your_update_has_finished_downloading_tap_install_to_use_the_newest_version">Your update has finished downloading. Tap install to use the newest version.</string>
+    <string name="install">Install</string>
+    <string name="we_encountered_a_problem_upgrading_please_try_again_in_the_app_store">We encountered a problem upgrading. Please try again in the app store.</string>
 
 </resources>

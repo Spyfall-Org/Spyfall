@@ -1,6 +1,5 @@
 package com.dangerfield.libraries.game.internal
 
-import com.dangerfield.libraries.game.Player
 import javax.inject.Inject
 
 /**
@@ -9,29 +8,30 @@ import javax.inject.Inject
  */
 class PlayerSerializer @Inject constructor() {
 
-    fun serializePlayers(players: List<Player>): PlayerMaps = players.map {
+    fun serializePlayers(players: List<BackendPlayer>): PlayerMaps = players.map {
         it.id to serializePlayer(it)
     }.toMap()
 
-    fun serializePlayer(player: Player): PlayerMap = mapOf(
-        FirestoreGameDataSource.USERNAME_FIELD_KEY to player.userName,
-        FirestoreGameDataSource.ROLE_FIELD_KEY to player.role,
-        FirestoreGameDataSource.IS_ODD_ONE_OUT_FIELD_KEY to player.isOddOneOut,
-        FirestoreGameDataSource.USER_ID_FIELD_KEY to player.id,
-        FirestoreGameDataSource.IS_HOST_FIELD_KEY to player.isHost
+    fun serializePlayer(player: BackendPlayer): PlayerMap = mapOf(
+        FirestoreBackendGameDataSource.USERNAME_FIELD_KEY to player.userName,
+        FirestoreBackendGameDataSource.ROLE_FIELD_KEY to player.role,
+        FirestoreBackendGameDataSource.IS_ODD_ONE_OUT_FIELD_KEY to player.isOddOneOut,
+        FirestoreBackendGameDataSource.USER_ID_FIELD_KEY to player.id,
+        FirestoreBackendGameDataSource.IS_HOST_FIELD_KEY to player.isHost,
+        FirestoreBackendGameDataSource.VOTED_CORRECTLY_FIELD_KEY to player.votedCorrectly
     )
 
-    fun deserializePlayers(players: PlayerMaps): List<Player> = players.map { (id, player) ->
+    fun deserializePlayers(players: PlayerMaps): List<BackendPlayer> = players.map { (id, player) ->
         deserializePlayer(player)
     }
 
-    fun deserializePlayer(map: PlayerMap): Player = Player(
-        userName = map[FirestoreGameDataSource.USERNAME_FIELD_KEY] as String,
-        role = map[FirestoreGameDataSource.ROLE_FIELD_KEY] as? String?,
-        isOddOneOut = map[FirestoreGameDataSource.IS_ODD_ONE_OUT_FIELD_KEY] as Boolean,
-        id = map[FirestoreGameDataSource.USER_ID_FIELD_KEY] as String,
-        isHost = map[FirestoreGameDataSource.IS_HOST_FIELD_KEY] as Boolean,
-        votedCorrectly = map[FirestoreGameDataSource.VOTED_CORRECTLY_FIELD_KEY] as? Boolean?
+    private fun deserializePlayer(map: PlayerMap): BackendPlayer = BackendPlayer(
+        userName = map[FirestoreBackendGameDataSource.USERNAME_FIELD_KEY] as String,
+        role = map[FirestoreBackendGameDataSource.ROLE_FIELD_KEY] as? String?,
+        isOddOneOut = map[FirestoreBackendGameDataSource.IS_ODD_ONE_OUT_FIELD_KEY] as Boolean,
+        id = map[FirestoreBackendGameDataSource.USER_ID_FIELD_KEY] as String,
+        isHost = map[FirestoreBackendGameDataSource.IS_HOST_FIELD_KEY] as Boolean,
+        votedCorrectly = map[FirestoreBackendGameDataSource.VOTED_CORRECTLY_FIELD_KEY] as? Boolean?
     )
 }
 

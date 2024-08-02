@@ -2,7 +2,6 @@ package com.dangerfield.libraries.config.internal
 
 import androidx.annotation.VisibleForTesting
 import com.dangerfield.libraries.config.AppConfigMap
-import com.dangerfield.libraries.config.AppConfigRepository
 import com.dangerfield.libraries.config.ConfigOverrideRepository
 import com.dangerfield.libraries.config.internal.model.FallbackConfigMapMapBased
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope

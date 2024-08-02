@@ -4,7 +4,7 @@ import androidx.core.os.bundleOf
 import com.dangerfield.libraries.analytics.Metric
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.game.Game
-import com.dangerfield.libraries.game.GameDataSourcError.TriedToLeaveStartedGameDataSourc
+import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -27,7 +27,7 @@ class LeaveGameUseCase @Inject constructor(
     ): Catching<Unit> {
         val playerLeaving = game.players.firstOrNull { it.id == id }
         return if (isGameBeingStarted) {
-            failure(TriedToLeaveStartedGameDataSourc)
+            failure(GameError.TriedToLeaveStartedGame())
         } else {
 
             if (playerLeaving?.isHost == true) {

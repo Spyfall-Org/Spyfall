@@ -158,7 +158,7 @@ class JoinGameViewModel @Inject constructor(
                     it.copy(unresolvableError = UnresolvableError.IncompatibleGameVersionError(joinGameError.isCurrentLower))
                 }
 
-                JoinGameError.CouldNotFetchPacksNeeded -> {
+                is JoinGameError.CouldNotFetchPacksNeeded -> {
                     it.copy(unresolvableError = UnresolvableError.CouldNotFetchPacksNeededError)
                 }
             }

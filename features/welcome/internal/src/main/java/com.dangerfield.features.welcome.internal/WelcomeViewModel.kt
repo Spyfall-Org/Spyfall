@@ -4,9 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import com.dangerfield.features.welcome.internal.WelcomeViewModel.Action
 import com.dangerfield.features.welcome.internal.WelcomeViewModel.Event
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -26,7 +25,6 @@ class WelcomeViewModel @Inject constructor(
     private val clearActiveGame: ClearActiveGame,
     @Named(MultiDeviceRepositoryName) private val multiDeviceGameRepository: GameRepository,
     @Named(SingleDeviceRepositoryName) private val singleDeviceRepository: GameRepository,
-    private val mapToGameState: MapToGameStateUseCase,
     savedStateHandle: SavedStateHandle
 ) : SEAViewModel<Unit, Event, Action>(savedStateHandle, Unit) {
 
@@ -39,10 +37,6 @@ class WelcomeViewModel @Inject constructor(
         }
     }
 
-    /*
-    TODO cleanup I could probably have a provider of the repo that changes based on the sessions active game being online or
-    not
-     */
     private suspend fun checkForActiveGame() {
         val activeGame = sessionFlow.first().activeGame
 
@@ -54,24 +48,21 @@ class WelcomeViewModel @Inject constructor(
             ) {
                 gameRepository.getGame(activeGame.accessCode)
             }
-                .map { game ->
-                    mapToGameState(game.accessCode, game)
-                }
-                .onSuccess {
+                .onSuccess { game ->
                     showDebugSnack {
-                        "Found game with state: ${it::class.java.simpleName}. Access code: ${activeGame.accessCode}"
+                        "Found game with state: ${game.state::class.java.simpleName}. Access code: ${activeGame.accessCode}"
                     }
 
-                    when (it) {
-                        is GameState.Expired -> {
+                    when (game.state) {
+                        Game.State.Expired -> {
                             if (!activeGame.isSingleDevice) {
                                 gameRepository.end(activeGame.accessCode)
                             }
                             clearActiveGame()
                         }
 
-                        is GameState.Waiting,
-                        is GameState.Starting -> {
+                        Game.State.Waiting,
+                        Game.State.Starting -> {
                             if (activeGame.isSingleDevice) {
                                 sendEvent(Event.GameInSingleDeviceRoleRevealFound(activeGame.accessCode))
                             } else {
@@ -79,12 +70,10 @@ class WelcomeViewModel @Inject constructor(
                             }
                         }
 
-                        is GameState.Unknown,
-                        is GameState.DoesNotExist -> clearActiveGame()
-
-                        is GameState.Started,
-                        is GameState.Voting,
-                        is GameState.VotingEnded -> {
+                        Game.State.Unknown,
+                        Game.State.Started,
+                        Game.State.Voting,
+                        Game.State.Results -> {
                             sendEvent(
                                 Event.GameInProgressFound(
                                     activeGame.accessCode,
@@ -93,7 +82,8 @@ class WelcomeViewModel @Inject constructor(
                             )
                         }
                     }
-                }
+                }.
+                    onFailure { clearActiveGame() }
         }
     }
 

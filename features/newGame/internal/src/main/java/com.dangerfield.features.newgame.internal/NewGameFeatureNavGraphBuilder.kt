@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dangerfield.features.createPack.navigateToCreateYourOwnPack
 import com.dangerfield.features.gameplay.navigateToSingleDeviceInfoRoute
 import com.dangerfield.features.newgame.internal.presentation.NewGameScreen
 import com.dangerfield.features.newgame.internal.presentation.NewGameViewModel
@@ -77,6 +78,8 @@ class NewGameFeatureNavGraphBuilder @Inject constructor(
                 onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo,
                 onErrorDismissed = viewModel::resolveSomethingWentWrong,
                 isOffline = state.isOffline,
+                onCreateYourOwnPackClicked = router::navigateToCreateYourOwnPack,
+                isCreateYourOwnNew = state.isCreateYourOwnNew
             )
         }
     }

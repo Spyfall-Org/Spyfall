@@ -1,8 +1,7 @@
 package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.Game
-import com.dangerfield.libraries.game.GameDataSourcError.CouldNotConnect
-import com.dangerfield.libraries.game.GameDataSourcError.GameNotFound
+import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.Player
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
@@ -28,19 +27,19 @@ import java.time.Clock
 import javax.inject.Inject
 
 @AutoBind
-class FirestoreGameDataSource @Inject constructor(
+class FirestoreBackendGameDataSource @Inject constructor(
     private val db: FirebaseFirestore,
     private val gameSerializer: GameMapSerializer,
     private val playerSerializer: PlayerSerializer,
     private val clock: Clock,
     private val moshi: Moshi
-) : GameDataSource {
-
+) : BackendGameDataSource {
+// TODO the data source should probably only be concerned with the backend game
     override suspend fun setGame(game: Game) {
         Catching {
             db.collection(GAMES_COLLECTION_KEY)
                 .document(game.accessCode)
-                .set(gameSerializer.serializeGame(game.withLastActiveAt()))
+                .set(gameSerializer.serializeGame(game.toBackEndGame().withLastActiveAt()))
                 .await()
         }
             .logOnFailure()
@@ -50,15 +49,15 @@ class FirestoreGameDataSource @Inject constructor(
      * Subscribes to the document and maps it to a game
      * Returns failure if game is not found or if there is an error
      */
-    override suspend fun subscribeToGame(accessCode: String): Flow<Catching<Game>> =
+    override suspend fun subscribeToGame(accessCode: String): Flow<Catching<BackendGame>> =
         db.collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .snapshots(MetadataChanges.EXCLUDE)
             .mapTry()
             .map {
                 val document =
-                    it.getOrNull() ?: return@map failure(CouldNotConnect(accessCode))
-                val data = document.data ?: return@map failure(GameNotFound(accessCode))
+                    it.getOrNull() ?: return@map failure(GameError.CouldNotConnect(accessCode))
+                val data = document.data ?: return@map failure(GameError.GameNotFound(accessCode))
 
                 Timber.d("""
                     ----------------------------------------
@@ -76,14 +75,14 @@ class FirestoreGameDataSource @Inject constructor(
                 gameSerializer.deserializeGame(data).logOnFailure()
             }
 
-    override suspend fun getGame(accessCode: String): Catching<Game> = Catching {
+    override suspend fun getGame(accessCode: String): Catching<BackendGame> = Catching {
         db
             .collection(GAMES_COLLECTION_KEY)
             .document(accessCode)
             .get()
             .awaitCatching()
             .map {
-                val data = it.data ?: throw GameNotFound(accessCode)
+                val data = it.data ?: throw GameError.GameNotFound(accessCode)
                 val gameTry = gameSerializer.deserializeGame(data)
                 gameTry.getOrThrow()
             }
@@ -105,7 +104,7 @@ class FirestoreGameDataSource @Inject constructor(
     // That user may change their name durring this.
     override suspend fun updatePlayers(accessCode: String, list: List<Player>) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY), playerSerializer.serializePlayers(list))
+            .activeUpdate(FieldPath.of(PLAYERS_FIELD_KEY), playerSerializer.serializePlayers(list.toBackEndPlayers()))
             .awaitCatching()
     }.ignoreValue()
 
@@ -113,7 +112,7 @@ class FirestoreGameDataSource @Inject constructor(
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
             .activeUpdate(
                 FieldPath.of(PLAYERS_FIELD_KEY, player.id),
-                playerSerializer.serializePlayer(player),
+                playerSerializer.serializePlayer(player.toBackEndPlayer()),
             )
             .awaitCatching()
     }
@@ -134,7 +133,7 @@ class FirestoreGameDataSource @Inject constructor(
 
     override suspend fun setLocation(accessCode: String, location: String) = Catching {
         db.collection(GAMES_COLLECTION_KEY).document(accessCode)
-            .activeUpdate(FieldPath.of(SECRET_ITEM_FIELD_KEY), location)
+            .activeUpdate(FieldPath.of(SECRET_ITEM_NAME_FIELD_KEY), location)
             .awaitCatching()
     }
         .logOnFailure()
@@ -169,7 +168,7 @@ class FirestoreGameDataSource @Inject constructor(
             .awaitCatching()
     }.ignoreValue()
 
-    private fun Game.withLastActiveAt(): Game = copy(lastActiveAt = clock.millis())
+    private fun BackendGame.withLastActiveAt(): BackendGame = copy(lastActiveAt = clock.millis())
 
     private fun DocumentReference.activeUpdate(fieldPath: FieldPath, value: Any?) =
         update(
@@ -183,7 +182,7 @@ class FirestoreGameDataSource @Inject constructor(
         const val VIDEO_CALL_LINK_FIELD_KEY = "videoCallLink"
         const val GAMES_COLLECTION_KEY = "games"
         const val PLAYERS_FIELD_KEY = "players"
-        const val SECRET_ITEM_FIELD_KEY = "secretItem"
+        const val SECRET_ITEM_NAME_FIELD_KEY = "secretItemName"
         const val PACK_IDS_FIELD_KEY = "packIds"
         const val IS_BEING_STARTED_KEY = "isBeingStarted"
         const val TIME_LIMIT_MINS_FIELD_KEY = "timeLimitMins"

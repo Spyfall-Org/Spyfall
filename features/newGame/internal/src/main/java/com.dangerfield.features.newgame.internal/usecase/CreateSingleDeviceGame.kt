@@ -5,7 +5,6 @@ import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayItems
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.game.Player
@@ -27,7 +26,6 @@ import javax.inject.Named
 @Suppress("UnusedPrivateMember")
 class CreateSingleDeviceGame @Inject constructor(
     @Named(SingleDeviceRepositoryName) private val gameRepository: GameRepository,
-    private val getGamePlayItems: GetGamePlayItems,
     private val clock: Clock,
     private val gameConfig: GameConfig,
     private val updateActiveGame: UpdateActiveGame,
@@ -45,11 +43,11 @@ class CreateSingleDeviceGame @Inject constructor(
         checkForExistingSession()
 
         val accessCode = UUID.randomUUID().toString().take(gameConfig.accessCodeLength)
-        val locations = getGamePlayItems(packs = packs, isSingleDevice = true).getOrThrow()
-        val location = locations.random()
+        val secretOptions = packs.map { it.items }.flatten().shuffled().take(gameConfig.itemsPerSingleDeviceGame)
+        val secretItem = secretOptions.random()
         val userId = session.user.id ?: UUID.randomUUID().toString()
-        val shuffledRoles = location.roles?.shuffled()?.let { LinkedList(it) }
-        val defaultRole = location.roles?.first()
+        val shuffledRoles = secretItem.roles?.shuffled()?.let { LinkedList(it) }
+        val defaultRole = secretItem.roles?.randomOrNull()
 
         val host = Player(
             id = userId,
@@ -78,7 +76,6 @@ class CreateSingleDeviceGame @Inject constructor(
             val role = if (index == oddOneOutIndex) {
                 dictionary.getString(R.string.app_theOddOneOutRole_text)
             } else {
-                Timber.e("Had to use a default role for a player, this should not happen")
                 shuffledRoles?.poll() ?: defaultRole
             }
 
@@ -86,19 +83,21 @@ class CreateSingleDeviceGame @Inject constructor(
         }
 
         val game = Game(
-            secret = location.name,
-            packIds = packs.map { it.id },
             isBeingStarted = false,
             players = playersWithRoles,
             timeLimitMins = if (gameConfig.forceShortGames) -1 else timeLimit,
             startedAt = null,
-            secretOptions = locations.map { it.name },
+            secretOptions = secretOptions.map { it.name },
             videoCallLink = null,
             version = CURRENT_GAME_MODEL_VERSION,
             accessCode = accessCode,
             lastActiveAt = clock.millis(),
             packsVersion = gameConfig.packsVersion,
-            languageCode = session.user.languageCode
+            languageCode = session.user.languageCode,
+            mePlayer = host,
+            state = Game.State.Waiting,
+            secretItem = secretItem,
+            packs = packs,
         )
 
         gameRepository.create(game)

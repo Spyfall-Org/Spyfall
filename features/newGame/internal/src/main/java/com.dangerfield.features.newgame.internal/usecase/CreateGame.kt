@@ -7,7 +7,6 @@ import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayItems
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.game.PackItem
@@ -27,7 +26,6 @@ import javax.inject.Named
 class CreateGame @Inject constructor(
     private val generateAccessCode: GenerateOnlineAccessCode,
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
-    private val getGamePlayItems: GetGamePlayItems,
     private val generateLocalUUID: GenerateLocalUUID,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
     private val gameConfig: GameConfig,
@@ -45,11 +43,11 @@ class CreateGame @Inject constructor(
         timeLimit: Int,
         videoCallLink: String?
     ): Catching<String> = when {
-        packs.isEmpty() -> failure(CreateGameError.PacksEmpty)
-        timeLimit < gameConfig.minTimeLimit -> failure(CreateGameError.TimeLimitTooShort)
-        timeLimit > gameConfig.maxTimeLimit -> failure(CreateGameError.TimeLimitTooLong)
-        userName.isBlank() -> failure(CreateGameError.NameBlank)
-        !videoCallLink.isNullOrBlank() && !isRecognizedVideoCallLink(videoCallLink) -> failure(CreateGameError.VideoCallLinkInvalid)
+        packs.isEmpty() -> failure(CreateGameError.PacksEmpty())
+        timeLimit < gameConfig.minTimeLimit -> failure(CreateGameError.TimeLimitTooShort())
+        timeLimit > gameConfig.maxTimeLimit -> failure(CreateGameError.TimeLimitTooLong())
+        userName.isBlank() -> failure(CreateGameError.NameBlank())
+        !videoCallLink.isNullOrBlank() && !isRecognizedVideoCallLink(videoCallLink) -> failure(CreateGameError.VideoCallLinkInvalid())
         else -> create(
             userName = userName,
             packsVersion = packsVersion,
@@ -64,13 +62,13 @@ class CreateGame @Inject constructor(
         packsVersion: Int,
         packs: List<Pack<PackItem>>,
         timeLimit: Int,
-        videoCallLink: String?
+        videoCallLink: String?,
     ): Catching<String> = Catching {
         // TODO log metric on this so we can tell how many multi device games there are created
         checkForExistingSession()
 
         val accessCode = generateAccessCode.invoke().getOrThrow()
-        val secretOptions = getGamePlayItems(packs).getOrThrow()
+        val secretOptions = packs.map { it.items }.flatten().shuffled().take(gameConfig.itemsPerGame)
         val userId = session.user.id ?: generateLocalUUID.invoke()
         val currentPlayer = Player(
             id = userId,
@@ -81,9 +79,11 @@ class CreateGame @Inject constructor(
             votedCorrectly = null
         )
 
+        val secretItem = secretOptions.random()
+
         val game = Game(
-            secret = secretOptions.random().name,
-            packIds = packs.map { it.id },
+            secretItem = secretItem,
+            packs = packs,
             isBeingStarted = false,
             players = listOf(currentPlayer),
             timeLimitMins = if (gameConfig.forceShortGames) -1 else timeLimit,
@@ -94,7 +94,9 @@ class CreateGame @Inject constructor(
             accessCode = accessCode,
             lastActiveAt = clock.millis(),
             languageCode = getAppLanguageCode(),
-            packsVersion = packsVersion
+            packsVersion = packsVersion,
+            state = Game.State.Waiting,
+            mePlayer = currentPlayer,
         )
 
         gameRepository.create(game)

@@ -14,4 +14,7 @@ dependencies {
     implementation(projects.libraries.common)
     implementation(projects.libraries.navigation)
     implementation(projects.libraries.ui)
+    implementation(project(":libraries:game"))
+    implementation(project(":libraries:analytics"))
+    implementation(project(":libraries:flowroutines"))
 }

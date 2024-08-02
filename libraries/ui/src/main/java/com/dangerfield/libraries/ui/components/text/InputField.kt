@@ -1,7 +1,9 @@
 package com.dangerfield.libraries.ui.components.text
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
@@ -20,7 +22,7 @@ import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @Composable
 fun InputField(
-    title: String,
+    title: String?,
     fieldState: FieldState<String>,
     onFieldUpdated: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -35,19 +37,23 @@ fun InputField(
 ) {
 
     FormField(
-        modifier = modifier.focusRequester(focusRequester),
+        modifier = modifier
+            .width(IntrinsicSize.Max)
+            .focusRequester(focusRequester),
         formFieldState = fieldState,
         visible = true,
         errorBehavior = errorBehavior,
         onFocusChanged = onFocusChanged,
     ) {
-        Column {
-            if (isRequired) {
-                AsteriskText {
+        Column(modifier = Modifier) {
+            if (title != null) {
+                if (isRequired) {
+                    AsteriskText {
+                        Text(text = title)
+                    }
+                } else {
                     Text(text = title)
                 }
-            } else {
-                Text(text = title)
             }
 
             if (subtitle != null) {
@@ -60,8 +66,7 @@ fun InputField(
             }
 
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 keyboardActions = keyboardActions,
                 keyboardOptions = keyboardOptions,
                 value = fieldState.value.orEmpty(),

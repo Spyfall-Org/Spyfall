@@ -66,9 +66,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userIdFlow = flow {
         getUserId()
             .onSuccess {
-                Catching {
-                    firebaseAnalytics.setUserId(it)
-                }
+                Catching { firebaseAnalytics.setUserId(it) }
                 emit(it)
             }
             .onFailure {
@@ -91,10 +89,14 @@ class UserRepositoryImpl @Inject constructor(
             ),
             stats = Stats(
                 multiDeviceGamesPlayed = meGamesPlayed.filter { !it.wasSingleDevice }.size,
-                winsAsOddOne = meGameResults.filter { it.didWin && it.wasOddOne }.map { it.gameKey },
-                winsAsPlayer = meGameResults.filter { it.didWin && !it.wasOddOne }.map { it.gameKey },
-                lossesAsOddOne = meGameResults.filter { !it.didWin && it.wasOddOne }.map { it.gameKey },
-                lossesAsPlayer = meGameResults.filter { !it.didWin && !it.wasOddOne }.map { it.gameKey },
+                winsAsOddOne = meGameResults.filter { it.didWin && it.wasOddOne }
+                    .map { it.gameKey },
+                winsAsPlayer = meGameResults.filter { it.didWin && !it.wasOddOne }
+                    .map { it.gameKey },
+                lossesAsOddOne = meGameResults.filter { !it.didWin && it.wasOddOne }
+                    .map { it.gameKey },
+                lossesAsPlayer = meGameResults.filter { !it.didWin && !it.wasOddOne }
+                    .map { it.gameKey },
                 singleDeviceGamesPlayed = meGamesPlayed.filter { it.wasSingleDevice }.size
                 //TODO this filtering might be a little expensive
             )
@@ -120,10 +122,12 @@ class UserRepositoryImpl @Inject constructor(
     override fun getUserFlow(): Flow<User> = userFlow
 
     override suspend fun updateColorConfig(colorConfig: ColorConfig) {
-        cache(ColorConfigKey, when (colorConfig) {
-            is ColorConfig.Random -> RandomColorConfigValue
-            is ColorConfig.Specific -> colorConfig.color.name
-        })
+        cache(
+            ColorConfigKey, when (colorConfig) {
+                is ColorConfig.Random -> RandomColorConfigValue
+                is ColorConfig.Specific -> colorConfig.color.name
+            }
+        )
     }
 
     // TODO store game stats backend and create sync operation
@@ -147,7 +151,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun addGamePlayed(
         accessCode: String,
         startedAt: Long,
-        wasSingleDevice: Boolean) {
+        wasSingleDevice: Boolean
+    ) {
         withContext(dispatcherProvider.io) {
             meGameStatsDao.addGamePlayed(
                 gamePlayed = MeGamePlayed(
@@ -158,7 +163,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun cache(key:  Preferences.Key<String>, value: String) {
+    private suspend fun cache(key: Preferences.Key<String>, value: String) {
         dataStore.updateData {
             it.toMutablePreferences()
                 .apply {
@@ -175,9 +180,9 @@ class UserRepositoryImpl @Inject constructor(
     ) {
         Catching {
             if (auth.currentUser == null) {
-               tryWithTimeout(5.seconds) {
-                   auth.signInAnonymously().awaitCatching()
-               }.getOrNull()?.user?.uid ?: generateUserId()
+                tryWithTimeout(5.seconds) {
+                    auth.signInAnonymously().awaitCatching()
+                }.getOrNull()?.user?.uid ?: generateUserId()
             } else {
                 auth.currentUser?.uid ?: generateUserId()
             }

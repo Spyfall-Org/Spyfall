@@ -16,7 +16,6 @@ import com.dangerfield.libraries.ui.components.NonLazyVerticalGrid
 import com.dangerfield.libraries.ui.then
 import com.dangerfield.libraries.ui.thenIf
 
-// TODO cleanup, index selected for vote is messy
 @Composable
 fun GamePlayGrid(
     indexOfFirst: Int? = null,

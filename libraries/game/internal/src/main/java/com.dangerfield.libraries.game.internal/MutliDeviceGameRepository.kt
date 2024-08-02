@@ -1,31 +1,29 @@
 package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
+import com.dangerfield.libraries.coreflowroutines.TriggerFlow
+import com.dangerfield.libraries.coreflowroutines.collectIn
+import com.dangerfield.libraries.coreflowroutines.collectInWithPrevious
 import com.dangerfield.libraries.game.Game
-import com.dangerfield.libraries.game.GameDataSourcError
-import com.dangerfield.libraries.game.GameDataSourcError.TriedToLeaveStartedGameDataSourc
+import com.dangerfield.libraries.game.GameConfig
+import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayItems
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
-import com.dangerfield.libraries.game.PackRepository
-import com.dangerfield.libraries.game.PacksMissingError
 import com.dangerfield.libraries.game.Player
-import com.dangerfield.libraries.game.StartGameError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import oddoneout.core.Catching
-import oddoneout.core.allOrElse
 import oddoneout.core.debugSnackOnError
 import oddoneout.core.failure
 import oddoneout.core.illegalStateFailure
@@ -38,52 +36,67 @@ import javax.inject.Named
 @AutoBind
 @Named(MultiDeviceRepositoryName)
 class MutliDeviceGameRepository @Inject constructor(
-    private val gameDataSource: GameDataSource,
-    private val getGamePlayItems: GetGamePlayItems,
-    private val packRepository: PackRepository,
-    @ApplicationScope private val applicationScope: CoroutineScope
+    private val backendGameDataSource: BackendGameDataSource,
+    private val getGameState: GetGameState,
+    private val gameConfig: GameConfig,
+    @ApplicationScope private val applicationScope: CoroutineScope,
+    private val mapBackendGameToDomainGame: MapBackendGameToDomainGame,
 ) : GameRepository {
 
     private val currentGameAccessCodeState = MutableStateFlow<String?>(null)
+    private val recalculateStateTrigger = TriggerFlow()
 
-    sealed class GamePresence {
-        data class Present(val game: Game) : GamePresence()
-        data class Absent(val accessCode: String) : GamePresence()
-
-        fun gameOrNull(): Game? = when (this) {
-            is Present -> game
-            else -> null
-        }
-    }
-
-    /**
-     * Flow based on the current access code that subscribes to the game with that access code
-     * and emits the game wrapped in its presence.
+    /*
+    TODO I think I want to have the repo handle the state of the game 100%
+    so the time will be in here and will be stopped and started based on either
+    1. state change
+    or 2. user triggered
+    but for now ill let the view models call startVoting() that just pulls the trigger
      */
     private val currentGameFlow: StateFlow<GamePresence?> =
-        currentGameAccessCodeState
-            .filterNotNull()
-            .flatMapLatest { accessCode ->
-                gameDataSource.subscribeToGame(accessCode)
-                    .filter {
-                        // if there is an error parsing ignore it.
-                        it.isSuccess || it.exceptionOrNull() is GameDataSourcError.GameNotFound
-                    }
-                    .map {
-                        val game = it.getOrNull()
-
-                        if (game != null) {
-                            GamePresence.Present(game)
-                        } else {
-                            GamePresence.Absent(accessCode)
-                        }
-                    }
+        combine(
+            getCurrentGameFlow(),
+            recalculateStateTrigger
+        ) { gameExistence, _ ->
+            when(gameExistence) {
+                is GamePresence.Present -> {
+                    val updatedState = getGameState(gameExistence.game)
+                    GamePresence.Present(gameExistence.game.copy(state = updatedState))
+                }
+                is GamePresence.Absent -> gameExistence
             }
+        }
             .stateIn(
                 scope = applicationScope,
                 started = SharingStarted.Eagerly,
                 initialValue = null
             )
+
+    /**
+     * A flow representing the current access codes game
+     * updates when the access code changes or the game object changed backend
+     */
+    private fun getCurrentGameFlow() = currentGameAccessCodeState
+        .filterNotNull()
+        .flatMapLatest { accessCode ->
+            backendGameDataSource.subscribeToGame(accessCode)
+                .filter { it.isSuccess || it.exceptionOrNull() is GameError.GameNotFound }
+                .map { backendGame ->
+                    val game = backendGame.getOrNull()?.let {
+                        mapBackendGameToDomainGame(it).logOnFailure().getOrNull()
+                    }
+
+                    if (game != null) {
+                        GamePresence.Present(game)
+                    } else {
+                        GamePresence.Absent(accessCode)
+                    }
+                }
+        }
+
+    override suspend fun refreshState() {
+        recalculateStateTrigger.pull()
+    }
 
     /**
      * Returns a flow of the game with the provided access code
@@ -103,16 +116,22 @@ class MutliDeviceGameRepository @Inject constructor(
                     is GamePresence.Absent -> gamePresence.accessCode == accessCode
                 }
             }
-            .map { it.gameOrNull() }
+            .map {
+                it.gameOrNull()
+            }
     }
 
     override suspend fun create(game: Game): Catching<Unit> = Catching {
-        gameDataSource.setGame(game)
+        backendGameDataSource.setGame(game)
     }
 
-    override suspend fun join(accessCode: String, userId: String, userName: String): Catching<Unit> =
+    override suspend fun join(
+        accessCode: String,
+        userId: String,
+        userName: String
+    ): Catching<Unit> =
         Catching {
-            gameDataSource.addPlayer(
+            backendGameDataSource.addPlayer(
                 accessCode, Player(
                     id = userId,
                     role = null,
@@ -126,25 +145,25 @@ class MutliDeviceGameRepository @Inject constructor(
             .logOnFailure()
 
     override suspend fun removeUser(accessCode: String, username: String): Catching<Unit> {
-        val currentGame = getGameFlow(accessCode).first() ?: gameDataSource.getGame(accessCode).getOrNull()
+        val currentGame = getGameFlow(accessCode).first()
 
         return when {
             currentGame == null || currentGame.accessCode != accessCode -> {
                 // assume best intent, try to remove from the provided access code anyway
-                gameDataSource.removePlayer(accessCode, username)
+                backendGameDataSource.removePlayer(accessCode, username)
             }
 
-            currentGame.isBeingStarted -> failure(TriedToLeaveStartedGameDataSourc)
-            currentGame.players.size == 1 -> gameDataSource.delete(accessCode)
-            else -> gameDataSource.removePlayer(accessCode, username)
+            currentGame.isBeingStarted -> failure(GameError.TriedToLeaveStartedGame())
+            currentGame.players.size == 1 -> backendGameDataSource.delete(accessCode)
+            else -> backendGameDataSource.removePlayer(accessCode, username)
         }.logOnFailure()
     }
 
     override suspend fun doesGameExist(accessCode: String): Catching<Boolean> {
-        return gameDataSource.getGame(accessCode).fold(
+        return backendGameDataSource.getGame(accessCode).fold(
             onSuccess = { true.success() },
             onFailure = {
-                if (it is GameDataSourcError.GameNotFound) {
+                if (it is GameError.GameNotFound) {
                     false.success()
                 } else {
                     failure(it)
@@ -155,12 +174,12 @@ class MutliDeviceGameRepository @Inject constructor(
     }
 
     override suspend fun assignHost(accessCode: String, id: String): Catching<Unit> {
-        return gameDataSource.setHost(accessCode = accessCode, id = id)
+        return backendGameDataSource.setHost(accessCode = accessCode, id = id)
             .logOnFailure()
     }
 
     override suspend fun end(accessCode: String) {
-        gameDataSource.delete(accessCode)
+        backendGameDataSource.delete(accessCode)
     }
 
     override suspend fun setGameIsBeingStarted(
@@ -169,51 +188,31 @@ class MutliDeviceGameRepository @Inject constructor(
     ): Catching<Unit> {
 
         val currentGame = getGameFlow(accessCode).first()
-            ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalStateFailure { "Game is null when setting starting" }
 
         return if (currentGame.isBeingStarted == isBeingStarted) {
-            failure(StartGameError.GameDataSourcAlreadyStarted)
+            failure(GameError.GameAlreadyStartedError())
         } else {
-            gameDataSource.setGameBeingStarted(accessCode, isBeingStarted)
+            backendGameDataSource.setGameBeingStarted(accessCode, isBeingStarted)
         }
             .logOnFailure()
     }
 
     override suspend fun start(accessCode: String): Catching<Unit> {
-        return gameDataSource.setStartedAt(accessCode).logOnFailure()
+        return backendGameDataSource.setStartedAt(accessCode).logOnFailure()
     }
 
     override suspend fun reset(accessCode: String): Catching<Unit> = Catching {
         val currentGame = getGameFlow(accessCode).first()
-            ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalStateFailure { "Game is null when resetting" }
 
-        val packs = currentGame.packIds.map {
-            applicationScope.async {
-                packRepository.getPack(
-                    languageCode = currentGame.languageCode,
-                    version = currentGame.packsVersion,
-                    id = it
-                )
-            }
-        }
-            .awaitAll()
-            .allOrElse { throw PacksMissingError() }
+        val allItems =
+            currentGame.packs.map { it.items }.flatten().filter { it != currentGame.secretItem }
 
-        val newLocations = getGamePlayItems(packs)
-            .getOrNull()
-            ?.map { it.name }
-            ?: currentGame.secretOptions
-
-        var newLocation = newLocations.random()
-
-        while (newLocation == currentGame.secret) {
-            newLocation = newLocations.random()
-        }
+        val newSecretItem = allItems.random()
 
         val resetGame = currentGame.copy(
-            secret = newLocation,
+            secretItem = newSecretItem,
             isBeingStarted = false,
             players = currentGame.players.map {
                 it.copy(
@@ -222,52 +221,55 @@ class MutliDeviceGameRepository @Inject constructor(
                     votedCorrectly = null
                 )
             },
-            secretOptions = newLocations,
+            secretOptions = allItems.map { it.name }.shuffled().take(gameConfig.itemsPerGame),
             startedAt = null,
         )
 
-        gameDataSource.setGame(resetGame)
+        backendGameDataSource.setGame(resetGame)
     }
         .logOnFailure()
         .debugSnackOnError { "Could not reset game" }
 
-    override suspend fun changeName(accessCode: String, newName: String, id: String): Catching<Unit> {
-        return gameDataSource.changeName(accessCode, newName, id)
+    override suspend fun changeName(
+        accessCode: String,
+        newName: String,
+        id: String
+    ): Catching<Unit> {
+        return backendGameDataSource.changeName(accessCode, newName, id)
             .logOnFailure()
     }
 
     override suspend fun updatePlayers(accessCode: String, players: List<Player>): Catching<Unit> {
-        return gameDataSource.updatePlayers(accessCode, players).logOnFailure()
+        return backendGameDataSource.updatePlayers(accessCode, players).logOnFailure()
     }
 
-    override suspend fun getGame(accessCode: String): Catching<Game> = gameDataSource.getGame(accessCode)
+    override suspend fun getGame(accessCode: String): Catching<Game> =
+        Catching { getGameFlow(accessCode).first()!! }
 
-    override suspend fun submitLocationVote(
+    override suspend fun submitVoteForSecret(
         accessCode: String,
         voterId: String,
-        location: String
+        secret: String
     ): Catching<Unit> {
 
         val currentGame = getGameFlow(accessCode).first()
-            ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalStateFailure { "Game is null when submitting vote" }
 
-        return gameDataSource.setPlayerVotedCorrectly(
+        return backendGameDataSource.setPlayerVotedCorrectly(
             accessCode = accessCode,
             playerId = voterId,
-            votedCorrectly = location == currentGame.secret
+            votedCorrectly = secret == currentGame.secretItem.name
         ).logOnFailure()
     }
 
     @Suppress("ReturnCount")
-    override suspend fun submitOddOneOutVote(
+    override suspend fun submitVoteForOddOneOut(
         accessCode: String,
         voterId: String,
         voteId: String
     ): Catching<Boolean> {
 
         val currentGame = getGameFlow(accessCode).first()
-            ?: gameDataSource.getGame(accessCode).getOrNull()
             ?: return illegalStateFailure { "Game is null when submitting vote" }
 
         val oddOneOut = currentGame
@@ -275,7 +277,7 @@ class MutliDeviceGameRepository @Inject constructor(
             .find { it.isOddOneOut }
             ?: return illegalStateFailure { "Could not pull Odd One Out From Game" }
 
-        return gameDataSource.setPlayerVotedCorrectly(
+        return backendGameDataSource.setPlayerVotedCorrectly(
             accessCode = accessCode,
             playerId = voterId,
             votedCorrectly = voteId == oddOneOut.id
@@ -286,5 +288,15 @@ class MutliDeviceGameRepository @Inject constructor(
 
     companion object {
         const val name = "MultiDeviceGameRepository"
+    }
+}
+
+sealed class GamePresence {
+    data class Present(val game: Game) : GamePresence()
+    data class Absent(val accessCode: String) : GamePresence()
+
+    fun gameOrNull(): Game? = when (this) {
+        is Present -> game
+        else -> null
     }
 }

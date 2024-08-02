@@ -12,11 +12,11 @@ import javax.inject.Singleton
  */
 @Singleton
 class EnsureAppConfigLoaded @Inject constructor(
-    private val appConfigRepository: AppConfigRepository
+    private val appConfigFlow: AppConfigFlow
 ) {
     suspend operator fun invoke(): Catching<Unit> =
         Catching {
-            appConfigRepository.configStream().first()
+            appConfigFlow.first()
         }
             .throwIfDebug()
             .ignoreValue()

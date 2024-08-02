@@ -14,7 +14,6 @@ import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GetGamePlayItems
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.ColorConfig
@@ -461,7 +460,7 @@ class CreateGameTest {
         allPackLocations.map { it.name }.toSet().containsAll(secretOptions.toSet())
 
     private fun Game.hasValidLocation(gameLocations: List<String>) =
-        gameLocations.contains(secret)
+        gameLocations.contains(secretItemName)
 
     private fun Game.hasValidPacks(locationPacks: List<LocationPack>) =
         this.packIds.toSet().containsAll(locationPacks.map { it.name }.toSet())

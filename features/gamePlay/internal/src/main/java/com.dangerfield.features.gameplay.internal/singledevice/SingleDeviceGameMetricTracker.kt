@@ -10,6 +10,7 @@ import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.GAME_R
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.GAME_RESTART_ERROR
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.GAME_TYPE
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.LOCATION
+import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.NONE
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.ODD_ONE_OUT
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.PLAYERS
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.PLAYER_COUNT
@@ -21,7 +22,6 @@ import com.dangerfield.libraries.analytics.Metric
 import com.dangerfield.libraries.analytics.MetricsTracker
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameResult
-import com.dangerfield.libraries.game.GameState
 import javax.inject.Inject
 
 class SingleDeviceGameMetricTracker @Inject constructor(
@@ -39,7 +39,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     MetricConstants.ACCESS_CODE to game?.accessCode,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.secret,
+                    LOCATION to game?.secretItem?.name,
                 )
             )
         )
@@ -57,7 +57,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     MetricConstants.ACCESS_CODE to game?.accessCode,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.secret,
+                    LOCATION to game?.secretItem?.name,
                     ERROR_MESSAGE to throwable.message
                 )
             )
@@ -76,7 +76,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     TIME_REMAINING to timeRemainingMillis,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.secret,
+                    LOCATION to game?.secretItem?.name,
                 )
             )
         )
@@ -94,7 +94,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     TIME_REMAINING to timeRemainingMillis,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.secret,
+                    LOCATION to game?.secretItem?.name,
                 )
             )
         )
@@ -113,7 +113,7 @@ class SingleDeviceGameMetricTracker @Inject constructor(
                     TIME_REMAINING to timeRemainingMillis,
                     TIME_LIMIT_MINS to game?.timeLimitMins,
                     PLAYER_COUNT to game?.players?.size,
-                    LOCATION to game?.secret,
+                    LOCATION to game?.secretItem?.name,
                     ERROR_MESSAGE to error.message
                 )
             )
@@ -121,22 +121,22 @@ class SingleDeviceGameMetricTracker @Inject constructor(
     }
 
     fun trackVotingEnded(
-        timeLimitMins: Int,
-        gameState: GameState.VotingEnded
+        game: Game
     ) {
         metricsTracker.log(
             Metric.Event.Custom(
                 VOTING_ENDED,
                 bundleOf(
                     GAME_TYPE to SINGLE_DEVICE_GAME,
-                    TIME_LIMIT_MINS to timeLimitMins,
-                    PLAYER_COUNT to gameState.players.size,
-                    LOCATION to gameState.location,
-                    RESULT to when (gameState.result) {
+                    TIME_LIMIT_MINS to game.timeLimitMins,
+                    PLAYER_COUNT to game.players.size,
+                    LOCATION to game.secretItem.name,
+                    RESULT to when (game.result) {
                         GameResult.PlayersWon -> PLAYERS
                         GameResult.OddOneOutWon -> ODD_ONE_OUT
                         GameResult.Draw -> DRAW
                         GameResult.Error -> ERROR
+                        GameResult.None -> NONE
                     }
                 )
             )

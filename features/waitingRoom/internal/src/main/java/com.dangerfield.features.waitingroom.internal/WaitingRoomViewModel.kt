@@ -10,10 +10,8 @@ import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.game.GameDataSourcError
+import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -46,7 +44,6 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class WaitingRoomViewModel @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
-    private val mapToGameState: MapToGameStateUseCase,
     private val startGameUseCase: StartGameUseCase,
     private val session: Session,
     private val dictionary: Dictionary,
@@ -125,7 +122,7 @@ class WaitingRoomViewModel @Inject constructor(
         )
             .eitherWay { sendEvent(Event.LeftGame) }
             .onFailure {
-                if (it is GameDataSourcError.TriedToLeaveStartedGameDataSourc) {
+                if (it is GameError.TriedToLeaveStartedGame) {
                     sendEvent(Event.TriedToLeaveStartedGame)
                 }
             }
@@ -154,6 +151,8 @@ class WaitingRoomViewModel @Inject constructor(
             currentGame = game
         )
             .logOnFailure()
+            // TODO we dont need to snack on every error, some errors should fail silently like
+            // if the game is already started while starting
             .snackOnError { dictionary.getString(R.string.blockingError_error_body) }
             .eitherWay {
                 updateState { it.copy(isLoadingStart = false) }
@@ -170,21 +169,20 @@ class WaitingRoomViewModel @Inject constructor(
 
         viewModelScope.launch {
             gameFlow
-                .map { mapToGameState(accessCode, it) }
-                .collectLatest { gameState ->
-                    when (gameState) {
-                        is GameState.Started -> {
+                .collectLatest { game ->
+                    when (game?.state) {
+                        Game.State.Started -> {
                             updateState { it.copy(isLoadingStart = false) }
                             sendEvent(
                                 Event.GameStarted(
                                     accessCode = accessCode,
-                                    timeLimit = gameState.timeLimitMins
+                                    timeLimit = game.timeLimitMins
                                 )
                             )
                         }
 
-                        is GameState.Starting -> updateState { it.copy(isLoadingStart = true) }
-                        is GameState.DoesNotExist -> {
+                        Game.State.Starting -> updateState { it.copy(isLoadingStart = true) }
+                        null -> {
                             clearActiveGame.invoke()
                             // game could not exist if the user was removed or left, wait
                             // in case they are still in the process of leaving
@@ -192,12 +190,12 @@ class WaitingRoomViewModel @Inject constructor(
                             sendEvent(Event.LeftGame)
                         }
 
-                        is GameState.Waiting -> updateState { state ->
+                        Game.State.Waiting -> updateState { state ->
                             val mePlayer =
-                                gameState.players.find { it.id == session.activeGame?.userId }
+                                game.players.find { it.id == session.activeGame?.userId }
 
                             val isMeHost = mePlayer?.isHost == true
-                            val players = gameState.players.map { player ->
+                            val players = game.players.map { player ->
                                 DisplayablePlayer(
                                     name = player.userName,
                                     isMe = player == mePlayer
@@ -209,11 +207,11 @@ class WaitingRoomViewModel @Inject constructor(
                                 isLoadingStart = false,
                                 players = players,
                                 canControlGame = isMeHost || gameConfig.canNonHostsControlGame,
-                                videoCallLink = gameState.videoCallLink
+                                videoCallLink = game.videoCallLink
                             )
                         }
 
-                        else -> throwIfDebug { "Got illegal state in waiting room: $gameState" }
+                        else -> throwIfDebug { "Got illegal state in waiting room: ${game?.state}" }
                     }
                 }
         }

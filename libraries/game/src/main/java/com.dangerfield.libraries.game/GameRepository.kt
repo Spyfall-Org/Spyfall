@@ -1,16 +1,9 @@
 package com.dangerfield.libraries.game
 
+import android.app.GameState
 import kotlinx.coroutines.flow.Flow
 import oddoneout.core.Catching
 
-/*
-instead of an access code I could make this of type T where T is of the type Game
-and we have online game and offline game and they have different atrtivutes
-like offline games dont have an access code and online games do.
-
-kinda feels like I shold avoid complicating it, create the duplicaiotn and work to reduce it later
-rather than try to think of some super clever way to do it now.
- */
 interface GameRepository {
 
     suspend fun create(game: Game): Catching<Unit>
@@ -41,11 +34,30 @@ interface GameRepository {
 
     suspend fun updatePlayers(accessCode: String, players: List<Player>): Catching<Unit>
 
+    /**
+     * @return a flow of the game with the matching access code (or null if none exists)
+     * This flow will emit the game or its state when it is updated
+     */
     fun getGameFlow(accessCode: String): Flow<Game?>
     suspend fun getGame(accessCode: String): Catching<Game>
-    suspend fun submitLocationVote(accessCode: String, voterId: String,  location: String): Catching<Unit>
-    suspend fun submitOddOneOutVote(accessCode: String, voterId: String, voteId: String): Catching<Boolean>
+    suspend fun submitVoteForSecret(accessCode: String, voterId: String, secret: String): Catching<Unit>
+    suspend fun submitVoteForOddOneOut(accessCode: String, voterId: String, voteId: String): Catching<Boolean>
+
+    // TODO this needs removed when the repo drives the state for time elapsed
+    suspend fun refreshState()
 }
+
+/**
+ * WARNING: This version should be update only if the core model changes. It is used to tell if 2
+ * versions of the app are compatible to play together
+ */
+const val CURRENT_GAME_MODEL_VERSION = 2
+
+/**
+ * The version of packs a build should use is determined by the config. If the config fails and
+ * there is no cache we will fallback to this value
+ */
+const val CURRENT_PACKS_VERSION_FALLBACK = 1
 
 const val SingleDeviceRepositoryName = "SingleDeviceRepository"
 const val MultiDeviceRepositoryName = "MultiDeviceRepository"

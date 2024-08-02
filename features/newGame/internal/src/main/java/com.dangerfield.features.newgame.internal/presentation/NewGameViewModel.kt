@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dangerfield.features.newgame.internal.metrics.NewGameMetricsTracker
 import com.dangerfield.features.newgame.internal.presentation.model.Action
-import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
+import com.dangerfield.features.newgame.internal.presentation.model.NewGamePackOption
 import com.dangerfield.features.newgame.internal.presentation.model.Event
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
 import com.dangerfield.features.newgame.internal.presentation.model.State
@@ -31,6 +31,7 @@ import com.dangerfield.libraries.ui.isValid
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
+import oddoneout.core.BuildInfo
 import oddoneout.core.Catching
 import oddoneout.core.allOrNone
 import oddoneout.core.checkInDebug
@@ -39,6 +40,7 @@ import oddoneout.core.illegalStateFailure
 import oddoneout.core.logOnFailure
 import oddoneout.core.throwIfDebug
 import javax.inject.Inject
+import kotlin.math.abs
 
 @Suppress("TooManyFunctions")
 @HiltViewModel
@@ -49,9 +51,11 @@ class NewGameViewModel @Inject constructor(
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
     private val userRepository: UserRepository,
+    private val newGamePrefs: NewGamePrefs,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
     private val newGameMetricsTracker: NewGameMetricsTracker,
     private val networkMonitor: NetworkMonitor,
+    private val buildInfo: BuildInfo,
     savedStateHandle: SavedStateHandle
 ) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
@@ -65,7 +69,7 @@ class NewGameViewModel @Inject constructor(
         packsState = Idle(emptyList()),
         timeLimitState = Valid("8"),
         nameState = Idle(""),
-        videoCallLinkState = Idle(""),
+        videoCallLinkState = Idle(null),
         isLoadingPacks = true,
         isLoadingCreation = false,
         didLoadFail = false,
@@ -73,8 +77,11 @@ class NewGameViewModel @Inject constructor(
         formState = FormState.Idle,
         isSingleDevice = false,
         numberOfPlayersState = Idle(""),
-        isOffline = false
+        isOffline = false,
+        isCreateYourOwnNew = !newGamePrefs.hasUsedCreateYourOwn || numberOfReleasesSinceCreateYourOwn() < 2
     )
+
+    private fun numberOfReleasesSinceCreateYourOwn() = abs(CREATE_YOUR_OWN_RELEASE_VERSION - buildInfo.versionCode)
 
     override suspend fun handleAction(action: Action) {
         when (action) {
@@ -88,7 +95,13 @@ class NewGameViewModel @Inject constructor(
             is Action.UpdateNumOfPlayers -> action.handleUpdateNumOfPlayers()
             is Action.SelectPack -> action.handleSelectPack()
             is Action.ResolveErrors -> action.handleResolveErrors()
+            is Action.OnCreateYourOwnClicked -> handleCreateYourOwnClicked(action)
         }
+    }
+
+    private suspend fun handleCreateYourOwnClicked(action: Action) {
+        newGamePrefs.hasUsedCreateYourOwn = true
+        action.updateState { it.copy(isCreateYourOwnNew = true) }
     }
 
     fun updateGameType(isSingleDevice: Boolean) =
@@ -97,7 +110,7 @@ class NewGameViewModel @Inject constructor(
     fun updateNumOfPlayers(numOfPlayers: String) =
         takeAction(Action.UpdateNumOfPlayers(numOfPlayers))
 
-    fun selectPack(pack: DisplayablePack, isSelected: Boolean) =
+    fun selectPack(pack: NewGamePackOption, isSelected: Boolean) =
         takeAction(Action.SelectPack(pack, isSelected))
 
     fun createGame() = takeAction(Action.CreateGame)
@@ -360,7 +373,7 @@ class NewGameViewModel @Inject constructor(
                         packsVersionBeingUsed = result.version
                         result.packs
                     }
-                }.map { DisplayablePack(it) }
+                }.map { NewGamePackOption(pack = it) }
             }.onSuccess { packs ->
                 updateState {
                     if (packs.isEmpty()) {
@@ -391,5 +404,9 @@ class NewGameViewModel @Inject constructor(
             formState = if (isFormValid) FormState.Valid else FormState.Invalid,
             isSingleDevice = state.isSingleDevice || state.isOffline
         )
+    }
+
+    companion object {
+        private const val CREATE_YOUR_OWN_RELEASE_VERSION = 43
     }
 }

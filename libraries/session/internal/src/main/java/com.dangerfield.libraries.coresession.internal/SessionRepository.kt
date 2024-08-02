@@ -54,7 +54,6 @@ class SessionRepository @Inject constructor(
     val session = LazySession()
     val sessionFlow: Flow<Session> get() = sharedSessionFlow
 
-    // TODO investigate when this doesnt load, have some fallback, have some tracking
     private val sessionIdFlow: Flow<Long> = applicationStateRepository
         .applicationState()
         .map {

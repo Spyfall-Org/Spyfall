@@ -7,12 +7,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.features.newgame.internal.presentation.model.DisplayablePack
+import com.dangerfield.features.newgame.internal.presentation.model.NewGamePackOption
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.game.OwnerDetails
 import com.dangerfield.libraries.game.Pack
+import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.navigation.route
 import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.VerticalSpacerD1200
@@ -33,16 +34,14 @@ import com.dangerfield.oddoneoout.features.newgame.internal.R
 fun PacksInfoBottomSheet(
     modifier: Modifier = Modifier,
     bottomSheetState: BottomSheetState = rememberBottomSheetState(),
-    packs: List<DisplayablePack>,
+    packs: List<NewGamePackOption>,
     onDismiss: (BottomSheetState) -> Unit
 ) {
     PageLogEffect(
-        route = route("packs_info_bottom_sheet"),
-        type = PageType.BottomSheet
+        route = route("packs_info_bottom_sheet"), type = PageType.BottomSheet
     )
 
-    BasicBottomSheet(
-        onDismissRequest = { onDismiss(bottomSheetState) },
+    BasicBottomSheet(onDismissRequest = { onDismiss(bottomSheetState) },
         state = bottomSheetState,
         modifier = modifier,
         stickyTopContent = {
@@ -50,8 +49,8 @@ fun PacksInfoBottomSheet(
         },
         content = {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
-
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
             ) {
                 Text(
                     text = dictionaryString(R.string.packsInfo_packsDescription_text),
@@ -68,8 +67,7 @@ fun PacksInfoBottomSheet(
                         )
                         VerticalSpacerD500()
                         NonLazyVerticalGrid(
-                            columns = 2,
-                            data = pack.pack.items
+                            columns = 2, data = pack.pack?.items.orEmpty()
                         ) { _, item ->
                             BulletRow(modifier = Modifier.fillMaxWidth()) {
                                 Text(text = item.name)
@@ -84,15 +82,10 @@ fun PacksInfoBottomSheet(
             }
         },
         stickyBottomContent = {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = { onDismiss(bottomSheetState) }
-            ) {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = { onDismiss(bottomSheetState) }) {
                 Text(text = dictionaryString(id = R.string.app_okay_action))
             }
-        }
-    )
+        })
 }
 
 @Composable
@@ -121,16 +114,15 @@ private fun PreviewPackDetailsBottomSheet() {
         "Theater",
         "University",
         "Zoo"
-    )
+    ).map { PackItem.Location(it, roles = emptyList()) }
     Preview {
         PacksInfoBottomSheet(
             onDismiss = {},
             bottomSheetState = bottomSheetState,
             packs = listOf(
-                DisplayablePack(
-                    isSelected = false,
-                    pack = Pack.LocationPack(
-                        locations = listOf(),
+                NewGamePackOption(
+                    isSelected = false, pack = Pack.LocationPack(
+                        locations = exampleLocations,
                         name = "Super Special Pack 4",
                         id = "4",
                         version = 1,
@@ -140,10 +132,9 @@ private fun PreviewPackDetailsBottomSheet() {
                         isUserSaved = false
                     )
                 ),
-                DisplayablePack(
-                    isSelected = false,
-                    pack = Pack.LocationPack(
-                        locations = listOf(),
+                NewGamePackOption(
+                    isSelected = false, pack = Pack.LocationPack(
+                        locations = exampleLocations,
                         name = "Super Special Pack 4",
                         id = "4",
                         version = 1,
@@ -153,8 +144,7 @@ private fun PreviewPackDetailsBottomSheet() {
                         isUserSaved = false
                     )
                 ),
-
-                ),
+            ),
         )
     }
 }

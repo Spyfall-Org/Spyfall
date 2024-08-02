@@ -62,7 +62,6 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
     private val adsConfig: AdsConfig
 ) : FeatureNavBuilder {
 
-    // TODO should this be cached? is it okay to have it per session?
     private var numberOfRestarts = 0
 
     @Suppress("LongMethod")
@@ -189,8 +188,6 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
             LaunchedEffect(Unit) {
                 viewModel.takeAction(SingleDeviceGamePlayViewModel.Action.LoadGame)
             }
-
-            // TODO resuming on voting ended stage for some reason isnt working
 
             SingleDeviceGamePlayScreen(
                 timeRemaining = state.timeRemainingMillis.millisToMMss(),
@@ -342,8 +339,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                         viewModel.takeAction(SingleDeviceVotingViewModel.Action.EndGame)
                     },
                     totalPlayerCount = state.totalPlayerCount,
-                    didOddOneOutWin = state.result == GameResult.OddOneOutWon,
-                    isTie = state.result == GameResult.Draw,
+                    results = state.result,
                     oddOneOutName = state.oddOneOutName,
                     locationName = state.location,
                     onVotingInfoClicked = { router.navigateToVotingInfo(hasVoted = true) },

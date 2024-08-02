@@ -33,24 +33,9 @@ import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.welcome.internal.R
 
+
 @Composable
 fun WelcomeScreen(
-    onNewGameClicked: () -> Unit,
-    onJoinGameClicked: () -> Unit,
-    onRulesClicked: () -> Unit,
-    onSettingsClicked: () -> Unit,
-) {
-
-    WelcomeScreenContent(
-        onNewGameClicked = onNewGameClicked,
-        onJoinGameClicked = onJoinGameClicked,
-        onSettingsClicked = onSettingsClicked,
-        onRulesClicked = onRulesClicked,
-    )
-}
-
-@Composable
-private fun WelcomeScreenContent(
     onNewGameClicked: () -> Unit,
     onJoinGameClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
@@ -165,7 +150,7 @@ private fun WelcomeText() {
 @Preview
 private fun PreviewWelcomeScreen() {
     Preview {
-        WelcomeScreenContent(
+        WelcomeScreen(
             onNewGameClicked = {},
             onJoinGameClicked = {},
             onSettingsClicked = {},

@@ -266,7 +266,8 @@ private fun PlayerList(
                     shape = Radii.Card.shape
                 )
                 .padding(horizontal = Dimension.D500)
-                .padding(vertical = Dimension.D400)
+                .padding(vertical = Dimension.D400),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "${index + 1}")
             Spacer(modifier = Modifier.width(Dimension.D500))

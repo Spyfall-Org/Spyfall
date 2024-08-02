@@ -4,10 +4,8 @@ import com.dangerfield.libraries.coreflowroutines.tryWithTimeout
 import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.game.GameDataSourcError
+import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.PackResult
@@ -26,7 +24,6 @@ import kotlin.time.Duration.Companion.seconds
 
 class JoinGameUseCase @Inject constructor(
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository,
-    private val mapToGameState: MapToGameStateUseCase,
     private val gameConfig: GameConfig,
     private val session: Session,
     private val updateActiveGame: UpdateActiveGame,
@@ -57,12 +54,11 @@ class JoinGameUseCase @Inject constructor(
     private suspend fun joinGame(
         accessCode: String, userName: String, userId: String
     ): Catching<Game> {
-        // TODO I think this is a problem
         val game = gameRepository.getGame(accessCode).getOrElse {
             return failure(it.toJoinGameError())
         }
 
-        val joinError = getGameStateError(accessCode, game, userName)
+        val joinError = getGameStateError(game, userName)
 
         return joinError?.let { failure(it) }
             ?: tryWithTimeout(5.seconds) {
@@ -78,37 +74,34 @@ class JoinGameUseCase @Inject constructor(
     }
 
     private suspend fun getGameStateError(
-        accessCode: String,
         game: Game,
         userName: String
     ): JoinGameError? {
-        val gameState = mapToGameState(accessCode, game)
 
-        return when(gameState) {
-            is GameState.DoesNotExist -> JoinGameError.GameNotFound
-            is GameState.Voting,
-            is GameState.VotingEnded,
-            is GameState.Started,
-            is GameState.Starting -> JoinGameError.GameAlreadyStarted
-            is GameState.Waiting -> {
+        return when(game.state) {
+            Game.State.Voting,
+            Game.State.Results,
+            Game.State.Started,
+            Game.State.Starting -> JoinGameError.GameAlreadyStarted()
+            Game.State.Waiting -> {
 
-                if (gameState.players.size >= gameConfig.maxPlayers) {
+                if (game.players.size >= gameConfig.maxPlayers) {
                     JoinGameError.GameHasMaxPlayers(gameConfig.maxPlayers)
-                } else if (gameState.players.any { it.userName.lowercase() == userName.lowercase() }) {
-                    JoinGameError.UsernameTaken
+                } else if (game.players.any { it.userName.lowercase() == userName.lowercase() }) {
+                    JoinGameError.UsernameTaken()
                 } else {
                     null
                 }
             }
-            is GameState.Expired,
-            is GameState.Unknown -> null
+            Game.State.Expired,
+            Game.State.Unknown -> null
         }
     }
 
     private fun Throwable.toJoinGameError(): Throwable = when (this) {
         is JoinGameError -> this
-        is GameDataSourcError.IncompatibleVersion -> JoinGameError.IncompatibleVersion(isCurrentLower = isCurrentLower)
-        is GameDataSourcError.GameNotFound -> JoinGameError.GameNotFound
+        is GameError.IncompatibleVersion -> JoinGameError.IncompatibleVersion(isCurrentLower = isCurrentLower)
+        is GameError.GameNotFound -> JoinGameError.GameNotFound()
         else -> JoinGameError.UnknownError(this)
     }
 
@@ -130,15 +123,15 @@ class JoinGameUseCase @Inject constructor(
     }
 
     sealed class JoinGameError : Error() {
-        data class InvalidAccessCodeLength(val requiredLength: Int) : JoinGameError()
-        data class InvalidNameLength(val min: Int, val max: Int) : JoinGameError()
-        data object GameNotFound : JoinGameError()
-        data object GameAlreadyStarted : JoinGameError()
-        data class IncompatibleVersion(val isCurrentLower: Boolean) : JoinGameError()
-        data object CouldNotFetchPacksNeeded : JoinGameError()
-        data class GameHasMaxPlayers(val max: Int) : JoinGameError()
-        data object UsernameTaken : JoinGameError()
-        data class UnknownError(val t: Throwable) : JoinGameError()
+        class InvalidAccessCodeLength(val requiredLength: Int) : JoinGameError()
+        class InvalidNameLength(val min: Int, val max: Int) : JoinGameError()
+        class GameNotFound : JoinGameError()
+        class GameAlreadyStarted : JoinGameError()
+        class IncompatibleVersion(val isCurrentLower: Boolean) : JoinGameError()
+        class CouldNotFetchPacksNeeded : JoinGameError()
+        class GameHasMaxPlayers(val max: Int) : JoinGameError()
+        class UsernameTaken : JoinGameError()
+        class UnknownError(val t: Throwable) : JoinGameError()
     }
 }
 

@@ -9,13 +9,12 @@ import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.Single
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.Event
 import com.dangerfield.features.gameplay.internal.singledevice.rolereveal.SingleDeviceRoleRevealViewModel.State
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.coreflowroutines.collectIn
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
@@ -27,6 +26,7 @@ import com.dangerfield.oddoneoout.features.gameplay.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -43,7 +43,6 @@ import javax.inject.Named
 class SingleDeviceRoleRevealViewModel @Inject constructor(
     @Named(SingleDeviceRepositoryName) private val gameRepository: GameRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
@@ -61,7 +60,6 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             replay = 1
         )
-
 
     private val accessCode: String
         get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
@@ -160,16 +158,12 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
     private suspend fun Action.LoadGame.loadGame() {
         if (hasLoadedGame.getAndSet(true)) return
 
-        /*
-        okay so i need to know what type of location this is. and that will depend on the pack right?
-
-         */
         viewModelScope.launch {
             gameRepository.getGame(accessCode)
                 .onSuccess { game ->
 
                     val packItem = packRepository.getPackItem(
-                        itemName = game.secret,
+                        itemName = game.secretItem.name,
                         version = game.packsVersion,
                         languageCode = game.languageCode
                     ).getOrNull()
@@ -197,27 +191,25 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
 
         viewModelScope.launch {
             gameFlow
-                .map { game ->
-                    mapToGameState(accessCode, game)
-                }.collect { gameState ->
-                    when (gameState) {
-                        is GameState.Expired,
-                        is GameState.Voting,
-                        is GameState.VotingEnded,
-                        is GameState.Unknown -> showDebugSnack {
-                            "Illegal game state ${gameState::class.java.simpleName}"
+                .collectLatest { game ->
+                    when (game?.state) {
+                        Game.State.Expired,
+                        Game.State.Voting,
+                        Game.State.Results,
+                        Game.State.Unknown -> showDebugSnack {
+                            "Illegal game state with game $game"
                         }
 
-                        is GameState.Starting,
-                        is GameState.Waiting
+                        Game.State.Starting,
+                        Game.State.Waiting
                         -> doNothing()
 
-                        is GameState.DoesNotExist -> {
+                        null -> {
                             clearActiveGame()
                             sendEvent(Event.GameKilled)
                         }
 
-                        is GameState.Started -> {
+                        Game.State.Started -> {
                             // will end up here
                             // send an event? nah probs just update the state and use launched effect
                             updateState {
@@ -233,9 +225,6 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
 
     private suspend fun endGame() {
         gameRepository.end(accessCode)
-        // TODO pack game ending behind a uses case and leave game for that matter.
-        // not super sure I need a data source as well as a repository
-        // maybe I continue trucking on and clean that up later
         clearActiveGame()
         sendEvent(Event.GameKilled)
         singleDeviceGameMetricTracker.trackGameEnded(
@@ -249,11 +238,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
             ?: gameFlow.filterNotNull().firstOrNull()
             ?: gameRepository.getGame(accessCode).getOrNull()
 
-    private suspend fun loadPlayer(
-        index: Int,
-        update: suspend ((State) -> State) -> Unit
-    ) {
-
+    private suspend fun loadPlayer(index: Int, update: suspend ((State) -> State) -> Unit) {
         update { it.copy(nameFieldState = FieldState.Idle("")) }
 
         val player = playersToShowRoles.elementAtOrNull(index)

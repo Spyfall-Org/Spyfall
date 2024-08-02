@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.launch
 
 /**
@@ -23,7 +25,7 @@ suspend fun <T : Any> Flow<T>.collect(collector: suspend (previous: T?, current:
     }
 }
 
-suspend fun <T : Any> Flow<T>.collectInWithPrevious(
+fun <T> Flow<T>.collectInWithPrevious(
     scope: CoroutineScope,
     collector: suspend (previous: T?, current: T) -> Unit
 ) {
@@ -35,6 +37,17 @@ suspend fun <T : Any> Flow<T>.collectInWithPrevious(
         }
     }
 }
+
+fun <T : Any, R : Any> Flow<T>.mapWithPrevious(
+    transform: suspend (previous: T?, current: T) -> R
+): Flow<R> = channelFlow {
+    var previous: T? = null
+    collect { value ->
+        send(transform(previous, value))
+        previous = value
+    }
+}
+
 
 fun <T> Flow<T>.collectIn(scope: CoroutineScope, collector: FlowCollector<T>): Job =
     scope.launch { collect(collector) }

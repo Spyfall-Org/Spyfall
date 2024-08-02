@@ -124,6 +124,15 @@ inline fun <T> List<Catching<T>>.allOrElse(f: () -> List<T>): List<T> {
     }
 }
 
+inline fun <T> List<Catching<T>>.allOrFail(): Catching<List<T>> {
+    val failures = this.mapNotNull { it.getExceptionOrNull() }
+    return if (failures.isNotEmpty()) {
+        Catching.failure(Exception(this.mapNotNull { it.exceptionOrNull()?.stackTraceToString() }.joinToString("/n")))
+    } else {
+        Catching.success(this.mapNotNull { it.getOrNull() })
+    }
+}
+
 inline fun <T, R> Catching<T>.flatMap(f: (right: T) -> Catching<R>): Catching<R> {
     val exception = exceptionOrNull()
     return when {

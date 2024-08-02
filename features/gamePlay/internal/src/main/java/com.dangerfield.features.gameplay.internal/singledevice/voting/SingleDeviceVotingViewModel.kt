@@ -14,14 +14,13 @@ import com.dangerfield.libraries.coreflowroutines.SEAViewModel
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameResult
-import com.dangerfield.libraries.game.GameState
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -38,7 +37,6 @@ import javax.inject.Named
 class SingleDeviceVotingViewModel @Inject constructor(
     @Named(SingleDeviceRepositoryName) private val gameRepository: GameRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val mapToGameState: MapToGameStateUseCase,
     private val clearActiveGame: ClearActiveGame,
     private val singleDeviceGameMetricTracker: SingleDeviceGameMetricTracker
 ) : SEAViewModel<State, Event, Action>(savedStateHandle) {
@@ -79,7 +77,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         oddOneOutName = "",
         correctGuessesForOddOneOut = 0,
         oddOneOutLocationGuess = null,
-        result = null,
+        result = GameResult.None,
         isFirstPlayer = false,
         totalPlayerCount = 0,
     )
@@ -92,7 +90,10 @@ class SingleDeviceVotingViewModel @Inject constructor(
                 is Action.ResetGame -> action.resetGame()
                 is Action.SubmitVoteForLocation -> action.submitVoteForLocation()
                 is Action.SubmitVoteForPlayer -> action.submitVoteForPlayer()
-                is Action.WaitForResults -> updateState { state -> state.copy(isLoadingResult = true) }
+                is Action.WaitForResults -> {
+                    gameRepository.refreshState()
+                    updateState { state -> state.copy(isLoadingResult = true) }
+                }
                 is Action.PreviousPlayer -> loadPlayer(--currentPlayerRoleIndex)
             }
         }
@@ -101,10 +102,10 @@ class SingleDeviceVotingViewModel @Inject constructor(
     private suspend fun Action.SubmitVoteForLocation.submitVoteForLocation(
     ) {
         loadPlayer(++currentPlayerRoleIndex)
-        gameRepository.submitLocationVote(
+        gameRepository.submitVoteForSecret(
             accessCode = accessCode,
             voterId = voterId,
-            location = location,
+            secret = location,
         )
 
         updateState { state -> state.copy(oddOneOutLocationGuess = location) }
@@ -112,7 +113,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
 
     private suspend fun Action.SubmitVoteForPlayer.submitVoteForPlayer() {
         loadPlayer(++currentPlayerRoleIndex)
-        gameRepository.submitOddOneOutVote(
+        gameRepository.submitVoteForOddOneOut(
             accessCode = accessCode,
             voterId = voterId,
             voteId = playerId
@@ -141,7 +142,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
                         state.copy(
                             locationOptions = game.secretOptions,
                             playerOptions = displayablePlayers,
-                            location = game.secret,
+                            location = game.secretItem.name,
                             oddOneOutName = displayablePlayers.first { it.isOddOneOut }.name,
                         )
                     }
@@ -159,53 +160,50 @@ class SingleDeviceVotingViewModel @Inject constructor(
         viewModelScope.launch {
             gameFlow
                 .map { game ->
-                    mapToGameState(accessCode, game)
-                }.collect { gameState ->
-                    when (gameState) {
-                        is GameState.Expired,
-                        is GameState.Started,
-                        is GameState.Starting,
-                        is GameState.Unknown -> showDebugSnack {
-                            "Illegal game state ${gameState::class.java.simpleName}"
+                    when (game?.state) {
+                        Game.State.Expired,
+                        Game.State.Started,
+                        Game.State.Starting,
+                        Game.State.Unknown -> showDebugSnack {
+                            "Illegal game state with game $game"
                         }
 
-                        is GameState.Waiting -> {
+                        Game.State.Waiting -> {
                             sendEvent(Event.GameReset)
                         }
 
-                        is GameState.DoesNotExist -> {
+                        null -> {
                             clearActiveGame()
                             sendEvent(Event.GameKilled)
                         }
 
-                        is GameState.Voting -> doNothing()
-                        is GameState.VotingEnded -> {
-                            recordResult(gameState)
+                        Game.State.Voting -> doNothing()
+                        Game.State.Results -> {
+                            recordResult(game)
 
                             updateState { state ->
                                 state.copy(
-                                    correctGuessesForOddOneOut = gameState.players.filter { !it.isOddOneOut }
+                                    correctGuessesForOddOneOut = game.players.filter { !it.isOddOneOut }
                                         .filter { it.votedCorrectly() }.size,
-                                    totalPlayerCount = gameState.players.size,
-                                    location = gameState.location,
-                                    oddOneOutName = gameState.players.first { it.isOddOneOut }.userName,
-                                    result = gameState.result,
+                                    totalPlayerCount = game.players.size,
+                                    location = game.secretItem.name,
+                                    oddOneOutName = game.players.first { it.isOddOneOut }.userName,
+                                    result = game.result,
                                     isLoadingResult = false
                                 )
                             }
                         }
                     }
-                }
+                }.collect()
         }
     }
 
     private fun recordResult(
-        gameState: GameState.VotingEnded
+        game: Game
     ) {
         if (!hasRecordedResult.getAndSet(true)) {
             singleDeviceGameMetricTracker.trackVotingEnded(
-                timeLimitMins = gameState.timeLimitMins,
-                gameState = gameState
+                game = game
             )
         }
     }
@@ -228,9 +226,6 @@ class SingleDeviceVotingViewModel @Inject constructor(
 
     private suspend fun Action.EndGame.endGame() {
         gameRepository.end(accessCode)
-        // TODO pack game ending behind a uses case and leave game for that matter.
-        // not super sure I need a data source as well as a repository
-        // maybe I continue trucking on and clean that up later
         clearActiveGame()
         sendEvent(Event.GameKilled)
         singleDeviceGameMetricTracker.trackGameEnded(
@@ -274,7 +269,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
         val oddOneOutName: String,
         val correctGuessesForOddOneOut: Int,
         val oddOneOutLocationGuess: String?,
-        val result: GameResult? = null,
+        val result: GameResult = GameResult.None,
     )
 
     sealed class Event {

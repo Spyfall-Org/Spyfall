@@ -6,12 +6,9 @@ import assertk.assertions.matchesPredicate
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
-import com.dangerfield.libraries.game.GameDataSourcError
 import com.dangerfield.libraries.game.GameRepository
-import com.dangerfield.libraries.game.GameState
 import com.dangerfield.libraries.game.LocationPackRepository
 import com.dangerfield.libraries.game.LocationPacksResult
-import com.dangerfield.libraries.game.MapToGameStateUseCase
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.session.ActiveGame
 import com.dangerfield.libraries.session.ClearActiveGame
@@ -41,7 +38,7 @@ class JoinGameUseCaseTest {
     private val minNameLengthValue = 2
     private val fakeGame = Game(
         accessCode = "556478",
-        secret = "Something",
+        secretItemName = "Something",
         packIds = listOf(),
         isBeingStarted = false,
         players = listOf(
@@ -233,7 +230,7 @@ class JoinGameUseCaseTest {
                 timeRemainingMillis = 0,
                 firstPlayer = fakeGame.players.first(),
                 locationNames = fakeGame.secretOptions,
-                location = fakeGame.secret,
+                location = fakeGame.secretItemName,
                 videoCallLink = fakeGame.videoCallLink
             )
 
@@ -267,7 +264,7 @@ class JoinGameUseCaseTest {
 
             val game = Game(
                 accessCode = "556478",
-                secret = "Something",
+                secretItemName = "Something",
                 packIds = listOf(),
                 isBeingStarted = false,
                 players = players,
@@ -320,7 +317,7 @@ class JoinGameUseCaseTest {
 
             val game = Game(
                 accessCode = "556478",
-                secret = "Something",
+                secretItemName = "Something",
                 packIds = listOf(),
                 isBeingStarted = false,
                 players = players,

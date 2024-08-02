@@ -1,5 +1,6 @@
-package com.dangerfield.libraries.config
+package com.dangerfield.libraries.config.internal
 
+import com.dangerfield.libraries.config.AppConfigMap
 import kotlinx.coroutines.flow.Flow
 
 /**

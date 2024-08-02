@@ -17,13 +17,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import javax.inject.Inject
 
-/*
-TODO split into
-App
-Feature
-AndroidLibrary
-JavaLibrary
- */
 @OddOneOutExtensionDsl
 abstract class FeatureExtension {
     @get:Inject
@@ -133,20 +126,5 @@ abstract class FeatureExtension {
         project.dependencies {
             add("implementation",project.libs.kotlinx.serialization.json)
         }
-    }
-
-    fun unitTesting() {
-        with(project.pluginManager) {
-            apply("com.android.test")
-            apply("org.jetbrains.kotlin.android")
-        }
-
-        project.extensions.configure<TestExtension> {
-            defaultConfig.targetSdk = SharedConstants.testingTargetSdk
-        }
-    }
-
-    fun networking() {
-        TODO("Not yet implemented")
     }
 }

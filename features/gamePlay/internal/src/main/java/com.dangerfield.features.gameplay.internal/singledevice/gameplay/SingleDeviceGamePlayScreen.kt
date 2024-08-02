@@ -35,7 +35,6 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.gameplay.internal.R
 
-// TODO consider making examples backend driven or rotating
 @Composable
 fun SingleDeviceGamePlayScreen(
     timeRemaining: String,

@@ -23,6 +23,7 @@ fun BottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     state: BottomSheetState = rememberBottomSheetState(),
+    showDragHandle: Boolean = true,
     contentAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -37,10 +38,12 @@ fun BottomSheet(
         scrimColor = OddOneOutTheme.colors.backgroundOverlay.color,
         tonalElevation = 0.dp,
         dragHandle = {
-            DragHandle(
-                modifier = Modifier.fillMaxWidth(0.2f),
-                color = contentColor.color
-            )
+            if (showDragHandle) {
+                DragHandle(
+                    modifier = Modifier.fillMaxWidth(0.2f),
+                    color = contentColor.color
+                )
+            }
         },
     ) {
         ProvideContentColor(contentColor) {

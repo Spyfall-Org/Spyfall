@@ -8,7 +8,6 @@ import com.dangerfield.features.gameplay.singleDeviceInfoRoute
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.navigation.fillRoute
 import com.dangerfield.libraries.navigation.route
-// TODO consider sealed class I think
 fun Router.navigateToVotingInfo(hasVoted: Boolean = false) {
     navigate(
         fillRoute(votingInfoRoute) {

@@ -3,25 +3,26 @@ package com.dangerfield.features.newgame.internal.presentation.model
 import com.dangerfield.libraries.ui.FieldState
 
 sealed class CreateGameError: Throwable() {
-    data object NameBlank : CreateGameError()
-    data object PacksEmpty : CreateGameError()
-    data object TimeLimitInvalid : CreateGameError()
-    data object TimeLimitTooLong : CreateGameError()
-    data object TimeLimitTooShort : CreateGameError()
-    data object InvalidNumberOfPlayers : CreateGameError()
-    data object TooManyPlayers : CreateGameError()
-    data object TooFewPlayers : CreateGameError()
-    data object VideoCallLinkInvalid: CreateGameError()
+    class NameBlank : CreateGameError()
+    class PacksEmpty : CreateGameError()
+    class TimeLimitInvalid : CreateGameError()
+    class TimeLimitTooLong : CreateGameError()
+    class TimeLimitTooShort : CreateGameError()
+    class InvalidNumberOfPlayers : CreateGameError()
+    class TooManyPlayers : CreateGameError()
+    class TooFewPlayers : CreateGameError()
+    class VideoCallLinkInvalid: CreateGameError()
 }
 
 sealed class Action {
     class UpdateName(val name: String) : Action()
     class UpdateVideoCallLink(val link: String) : Action()
     data object ResolveErrors : Action()
+    data object OnCreateYourOwnClicked: Action()
     class UpdateTimeLimit(val timeLimit: String) : Action()
     class UpdateGameType(val isSingleDevice: Boolean) : Action()
     class UpdateNumOfPlayers(val numOfPlayers: String) : Action()
-    class SelectPack(val pack: DisplayablePack, val isSelected: Boolean) : Action()
+    class SelectPack(val pack: NewGamePackOption, val isSelected: Boolean) : Action()
     data object CreateGame : Action()
     data object Init : Action()
     data object LoadPacks: Action()
@@ -37,7 +38,7 @@ sealed class Event {
 }
 
 data class State(
-    val packsState: FieldState<List<DisplayablePack>>,
+    val packsState: FieldState<List<NewGamePackOption>>,
     val timeLimitState: FieldState<String>,
     val nameState: FieldState<String>,
     val videoCallLinkState: FieldState<String>,
@@ -46,6 +47,7 @@ data class State(
     val isSingleDevice: Boolean,
     val numberOfPlayersState: FieldState<String>,
     val didCreationFail: Boolean = false,
+    val isCreateYourOwnNew: Boolean,
     val didLoadFail: Boolean = false,
     val formState: FormState,
     val isOffline: Boolean,
@@ -53,7 +55,7 @@ data class State(
 
 fun State.selectedPacks() = packsState.value
     ?.filter { it.isSelected }
-    ?.map { it.pack }
+    ?.mapNotNull { it.pack }
 
 fun State.timeLimit() = timeLimitState.value?.toIntOrNull()
 

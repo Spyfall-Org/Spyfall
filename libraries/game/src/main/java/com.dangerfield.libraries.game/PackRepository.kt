@@ -30,6 +30,9 @@ interface PackRepository {
      */
     suspend fun updateLastAccessed(packId: String): Catching<Unit>
 
+    /**
+     * Gets the pack item for the given pack item name, version and language code
+     */
     suspend fun getPackItem(
         itemName: String,
         version: Int,

@@ -35,9 +35,6 @@ import com.dangerfield.libraries.ui.bounceClick
 import com.dangerfield.libraries.ui.circleBackground
 import com.dangerfield.libraries.ui.thenIf
 
-// TODO cleanup truly this is a mess
-// need to make the api much cleaner and maybe even just make some different components
-// for different use cases
 @Composable
 fun GameCard(
     modifier: Modifier = Modifier,

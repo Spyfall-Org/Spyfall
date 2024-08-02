@@ -1,42 +1,25 @@
 package com.dangerfield.libraries.game
 
-import com.squareup.moshi.JsonClass
+import java.time.Clock
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
-/**
- * WARNING: This version should be update if the core model changes. It is used to tell if 2
- * versions of the app are compatible to play together
- */
-const val CURRENT_GAME_MODEL_VERSION = 2
-
-/**
- * The version of packs a build should use is determined by the config. If the config fails and
- * there is no cache we will fallback to this value
- */
-const val CURRENT_PACKS_VERSION_FALLBACK = 1
-
-//TODO i should probably use the versioned moshi adapter for this
-@JsonClass(generateAdapter = true)
 data class Game(
 
     /**
-     * The unique identifier for the game
-     * used to join the game
+     * The unique identifier for the game. Used to join the game
      */
     val accessCode: String,
 
     /**
      * The secret that the odd one out is trying to guess
      */
-    val secret: String,
+    val secretItem: PackItem,
 
     /**
-     * A list of names (used as keys) of the packs chosen by the creator of the game
-     * this is used to get the list of locations for the game
-     *
-     * TODO consider just storing the entire packs in this object
-     * It would only need fetched once and would be easier to manage
+     * The packs that are being used for the game. Chosen when creating
      */
-    val packIds: List<String>,
+    val packs: List<Pack<PackItem>>,
 
     /**
      * A boolean indicating that the game is being started
@@ -113,7 +96,62 @@ data class Game(
      * need to have the updated packs.
      *
      */
-    val packsVersion: Int
+    val packsVersion: Int,
+
+    /**
+     * The state of the game
+     */
+    val state: State,
+
+    /**
+     * The player object of the current user
+     */
+    val mePlayer: Player?
+
 ) {
     fun player(id: String?): Player? = players.find { it.id == id }
+
+    fun hasEveryoneVoted(): Boolean = players.all { it.votedCorrectly != null }
+
+    fun remainingTimeMillis(clock: Clock): Long {
+        val startedAtMillis = startedAt ?: return timeLimitMins.minutes.inWholeMilliseconds
+        val timeLimitInMillis = if (timeLimitMins == -1) {
+            10.seconds.inWholeMilliseconds
+        } else {
+            timeLimitMins.minutes.inWholeMilliseconds
+        }
+
+        val elapsedMillis: Long = clock.millis() - startedAtMillis
+        val remainingMillis = timeLimitInMillis - elapsedMillis
+        return remainingMillis
+    }
+
+    val result: GameResult
+     get() {
+        val oddOneOut = this.players.find { it.isOddOneOut } ?: return GameResult.Error
+        val nonOddPLayers = (this.players - oddOneOut)
+        val majorityPlayersVotedCorrectly = nonOddPLayers.count { it.votedCorrectly() } > nonOddPLayers.size / 2
+
+        return when {
+            !players.everyoneHasVoted() -> GameResult.None
+            majorityPlayersVotedCorrectly && oddOneOut.votedCorrectly() -> GameResult.Draw
+            majorityPlayersVotedCorrectly -> GameResult.PlayersWon
+            oddOneOut.votedCorrectly() -> GameResult.OddOneOutWon
+            else -> GameResult.Draw
+        }
+    }
+
+    sealed class State {
+        data object Waiting: State()
+        data object Starting: State()
+        data object Started: State()
+        data object Voting: State()
+        data object Results: State()
+        data object Expired: State()
+        data object Unknown: State()
+    }
 }
+
+private fun Collection<Player>.everyoneHasVoted() = this.all { it.votedCorrectly != null }
+
+

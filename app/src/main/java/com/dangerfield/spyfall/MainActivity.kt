@@ -12,12 +12,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.dangerfield.features.inAppMessaging.UpdateStatus
 import com.dangerfield.libraries.coreflowroutines.waitFor
+import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.internal.ui.navigateToLanguageSupportDialog
 import com.dangerfield.libraries.navigation.BuildNavHost
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.spyfall.MainActivityViewModel.Action.LoadConsentStatus
 import com.dangerfield.spyfall.MainActivityViewModel.Action.MarkLanguageSupportLevelMessageShown
 import com.dangerfield.spyfall.di.CompositionLocalsProvider
+import com.dangerfield.spyfall.free.R
 import com.dangerfield.spyfall.startup.SplashScreenBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -42,6 +44,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var router: Router
+
+    @Inject
+    lateinit var dictionary: Dictionary
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,10 +128,10 @@ class MainActivity : ComponentActivity() {
                 if (updateStatus.wasBackgroundUpdate) {
                     SnackBarPresenter.showMessage(
                         message = Message(
-                            title = "Your update is ready",
-                            message = "Your update has finished downloading. Tap install to use the newest version.",
+                            title = dictionary.getString(R.string.your_update_is_ready),
+                            message = dictionary.getString(R.string.your_update_has_finished_downloading_tap_install_to_use_the_newest_version),
                             autoDismiss = false,
-                            actionLabel = "Install",
+                            actionLabel = dictionary.getString(R.string.install),
                             action = mainActivityViewModel::installUpdate
                         )
                     )
@@ -137,7 +142,7 @@ class MainActivity : ComponentActivity() {
             UpdateStatus.InvalidUpdateRequest -> {
                 SnackBarPresenter.showMessage(
                     message = Message(
-                        message = "We encountered a problem upgrading. Please try again in the app store.",
+                        message = dictionary.getString(R.string.we_encountered_a_problem_upgrading_please_try_again_in_the_app_store),
                         autoDismiss = true
                     )
                 )

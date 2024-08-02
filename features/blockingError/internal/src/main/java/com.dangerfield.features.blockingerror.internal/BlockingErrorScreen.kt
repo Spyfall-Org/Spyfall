@@ -18,8 +18,6 @@ import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.oddoneoout.features.blockingerror.internal.R
 
-// TODO feature, I should probably have some check to see how many times
-// in a row this pops up and in those cases clear all app state.
 @Composable
 fun BlockingErrorScreen(
     onBackPressed: () -> Unit = {}

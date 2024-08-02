@@ -38,16 +38,17 @@ fun FormField(
     var hasFocus by remember { mutableStateOf(false) }
     val errorBringIntoViewRequester = remember { BringIntoViewRequester() }
 
-    AnimatedVisibility(visible = visible) {
-        Column(modifier = modifier) {
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = visible
+    ) {
+        Column {
             Box(modifier = Modifier.onFocusChanged {
                 hasFocus = it.hasFocus
                 onFocusChanged(it.hasFocus)
             }) {
                 content()
             }
-
-            VerticalSpacerD500()
 
             val errorText = formFieldState.error
             val textModifier = Modifier.bringIntoViewRequester(errorBringIntoViewRequester)
@@ -60,6 +61,9 @@ fun FormField(
             }
 
             if (shouldShowError && errorText!= null) {
+
+                VerticalSpacerD500()
+
                 LaunchedEffect(errorBringIntoViewRequester) {
                     errorBringIntoViewRequester.bringIntoView()
                 }
