@@ -209,7 +209,7 @@ class SingleDeviceRoleRevealViewModel @Inject constructor(
                             sendEvent(Event.GameKilled)
                         }
 
-                        Game.State.Started -> {
+                        is Game.State.Started -> {
                             // will end up here
                             // send an event? nah probs just update the state and use launched effect
                             updateState {

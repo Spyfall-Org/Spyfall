@@ -9,7 +9,7 @@ object MetricConstants {
     const val GAME_RESTART_ERROR = "game_restart_error"
     const val VOTING_ENDED = "voting_ended"
     const val TIME_REMAINING = "time_remaining"
-    const val TIME_LIMIT_MINS = "time_limit_mins"
+    const val TIME_LIMIT_SECONDS = "time_limit_seconds"
     const val PLAYER_COUNT = "player_count"
     const val LOCATION = "location"
     const val ERROR_MESSAGE = "error_message"

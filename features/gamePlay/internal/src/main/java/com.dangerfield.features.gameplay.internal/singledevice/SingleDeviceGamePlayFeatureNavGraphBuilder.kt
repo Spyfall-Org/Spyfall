@@ -179,7 +179,6 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                     is GameReset -> router.popBackTo(singleDeviceInfoRoute).also {
                         numberOfRestarts++
                     }
-
                     GameKilled -> router.popBackTo(welcomeNavigationRoute)
                     SingleDeviceGamePlayViewModel.Event.ResetFailed -> router.navigateToGeneralErrorDialog()
                 }
@@ -236,7 +235,7 @@ class SingleDeviceGamePlayFeatureNavGraphBuilder @Inject constructor(
                 }
 
                 LaunchedEffect(state.result) {
-                    if (state.result != null) {
+                    if (state.result in listOf(GameResult.Draw, GameResult.PlayersWon, GameResult.OddOneOutWon)) {
                         router.navigateToSingleDeviceVotingResults(accessCode)
                     }
                 }

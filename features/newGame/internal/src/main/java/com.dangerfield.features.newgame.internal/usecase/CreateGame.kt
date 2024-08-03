@@ -22,6 +22,7 @@ import oddoneout.core.failure
 import java.time.Clock
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.minutes
 
 class CreateGame @Inject constructor(
     private val generateAccessCode: GenerateOnlineAccessCode,
@@ -40,19 +41,19 @@ class CreateGame @Inject constructor(
         userName: String,
         packs: List<Pack<PackItem>>,
         packsVersion: Int,
-        timeLimit: Int,
+        timeLimitMins: Int,
         videoCallLink: String?
     ): Catching<String> = when {
         packs.isEmpty() -> failure(CreateGameError.PacksEmpty())
-        timeLimit < gameConfig.minTimeLimit -> failure(CreateGameError.TimeLimitTooShort())
-        timeLimit > gameConfig.maxTimeLimit -> failure(CreateGameError.TimeLimitTooLong())
+        timeLimitMins < gameConfig.minTimeLimit -> failure(CreateGameError.TimeLimitTooShort())
+        timeLimitMins > gameConfig.maxTimeLimit -> failure(CreateGameError.TimeLimitTooLong())
         userName.isBlank() -> failure(CreateGameError.NameBlank())
         !videoCallLink.isNullOrBlank() && !isRecognizedVideoCallLink(videoCallLink) -> failure(CreateGameError.VideoCallLinkInvalid())
         else -> create(
             userName = userName,
             packsVersion = packsVersion,
             packs = packs,
-            timeLimit = timeLimit,
+            timeLimitSeconds = timeLimitMins.minutes.inWholeSeconds.toInt(),
             videoCallLink = videoCallLink
         )
     }
@@ -61,7 +62,7 @@ class CreateGame @Inject constructor(
         userName: String,
         packsVersion: Int,
         packs: List<Pack<PackItem>>,
-        timeLimit: Int,
+        timeLimitSeconds: Int,
         videoCallLink: String?,
     ): Catching<String> = Catching {
         // TODO log metric on this so we can tell how many multi device games there are created
@@ -86,7 +87,7 @@ class CreateGame @Inject constructor(
             packs = packs,
             isBeingStarted = false,
             players = listOf(currentPlayer),
-            timeLimitMins = if (gameConfig.forceShortGames) -1 else timeLimit,
+            timeLimitSeconds = if (gameConfig.forceShortGames) 10 else timeLimitSeconds,
             startedAt = null,
             secretOptions = secretOptions.map { it.name },
             videoCallLink = videoCallLink,

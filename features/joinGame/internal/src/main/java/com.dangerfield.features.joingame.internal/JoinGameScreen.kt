@@ -120,6 +120,7 @@ private fun JoinGameScreenContent(
             VerticalSpacerD1200()
 
             InputField(
+                modifier = Modifier.fillMaxWidth(),
                 title = dictionaryString(R.string.joinGame_accessCode_header),
                 hint = dictionaryString(
                     R.string.joinGame_accessCode_hint,
@@ -139,6 +140,7 @@ private fun JoinGameScreenContent(
 
             // TODO use username generation an collect analytics around usage
             InputField(
+                modifier = Modifier.fillMaxWidth(),
                 title = dictionaryString(R.string.joinGame_usernameField_header),
                 hint = dictionaryString(R.string.joinGame_userNameField_hint),
                 errorBehavior = ErrorBehavior.Show,

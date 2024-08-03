@@ -16,12 +16,13 @@ import com.dangerfield.libraries.session.UpdateActiveGame
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import oddoneout.core.Catching
 import oddoneout.core.showDebugSnack
-import timber.log.Timber
 import java.time.Clock
 import java.util.LinkedList
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @Suppress("UnusedPrivateMember")
 class CreateSingleDeviceGame @Inject constructor(
@@ -36,12 +37,13 @@ class CreateSingleDeviceGame @Inject constructor(
 
     suspend operator fun invoke(
         packs: List<Pack<PackItem>>,
-        timeLimit: Int,
+        timeLimitMins: Int,
         numOfPlayers: Int,
     ): Catching<String> = Catching {
         // TODO log metric on this so we can tell how many multi device games there are created
         checkForExistingSession()
 
+        val timeLimitSeconds = timeLimitMins.minutes.inWholeSeconds.toInt()
         val accessCode = UUID.randomUUID().toString().take(gameConfig.accessCodeLength)
         val secretOptions = packs.map { it.items }.flatten().shuffled().take(gameConfig.itemsPerSingleDeviceGame)
         val secretItem = secretOptions.random()
@@ -85,7 +87,7 @@ class CreateSingleDeviceGame @Inject constructor(
         val game = Game(
             isBeingStarted = false,
             players = playersWithRoles,
-            timeLimitMins = if (gameConfig.forceShortGames) -1 else timeLimit,
+            timeLimitSeconds = if (gameConfig.forceShortGames) 10 else timeLimitSeconds,
             startedAt = null,
             secretOptions = secretOptions.map { it.name },
             videoCallLink = null,

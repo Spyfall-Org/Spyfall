@@ -185,7 +185,7 @@ class FirestoreBackendGameDataSource @Inject constructor(
         const val SECRET_ITEM_NAME_FIELD_KEY = "secretItemName"
         const val PACK_IDS_FIELD_KEY = "packIds"
         const val IS_BEING_STARTED_KEY = "isBeingStarted"
-        const val TIME_LIMIT_MINS_FIELD_KEY = "timeLimitMins"
+        const val TIME_LIMIT_SECONDS_FIELD_KEY = "timeLimitSeconds"
         const val STARTED_AT_FIELD_KEY = "startedAt"
         const val ITEMS_FIELD_KEY = "items"
         const val USERNAME_FIELD_KEY = "userName"

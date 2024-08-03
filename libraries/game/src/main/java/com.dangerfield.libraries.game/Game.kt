@@ -1,9 +1,5 @@
 package com.dangerfield.libraries.game
 
-import java.time.Clock
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
-
 data class Game(
 
     /**
@@ -40,7 +36,7 @@ data class Game(
     /**
      * Time limit of the game in mins
      */
-    val timeLimitMins: Int,
+    val timeLimitSeconds: Int,
 
     /**
      * The epoch in millis of when the game was started
@@ -111,21 +107,6 @@ data class Game(
 ) {
     fun player(id: String?): Player? = players.find { it.id == id }
 
-    fun hasEveryoneVoted(): Boolean = players.all { it.votedCorrectly != null }
-
-    fun remainingTimeMillis(clock: Clock): Long {
-        val startedAtMillis = startedAt ?: return timeLimitMins.minutes.inWholeMilliseconds
-        val timeLimitInMillis = if (timeLimitMins == -1) {
-            10.seconds.inWholeMilliseconds
-        } else {
-            timeLimitMins.minutes.inWholeMilliseconds
-        }
-
-        val elapsedMillis: Long = clock.millis() - startedAtMillis
-        val remainingMillis = timeLimitInMillis - elapsedMillis
-        return remainingMillis
-    }
-
     val result: GameResult
      get() {
         val oddOneOut = this.players.find { it.isOddOneOut } ?: return GameResult.Error
@@ -144,7 +125,7 @@ data class Game(
     sealed class State {
         data object Waiting: State()
         data object Starting: State()
-        data object Started: State()
+        data class Started(val secondsElapsed: Int): State()
         data object Voting: State()
         data object Results: State()
         data object Expired: State()

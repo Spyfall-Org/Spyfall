@@ -119,7 +119,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0,
         )
@@ -146,7 +146,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "name",
             packs = emptyList(),
-            timeLimit = 1,
+            timeLimitMins = 1,
             videoCallLink = "link",
             packsVersion = 0
             )
@@ -169,7 +169,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -192,7 +192,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "username",
             packs = packs,
-            timeLimit = 1,
+            timeLimitMins = 1,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -215,7 +215,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "username",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -236,7 +236,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -263,7 +263,7 @@ class CreateGameTest {
         createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -282,7 +282,7 @@ class CreateGameTest {
         createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -301,7 +301,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -322,7 +322,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )
@@ -346,7 +346,7 @@ class CreateGameTest {
             createGame.invoke(
                 userName = "name",
                 packs = packs,
-                timeLimit = 6,
+                timeLimitMins = 6,
                 videoCallLink = "link",
                 packsVersion = 0
             )
@@ -382,7 +382,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = timeLimit,
+            timeLimitMins = timeLimit,
             videoCallLink = videoCallLink,
             packsVersion = 0
         )
@@ -393,7 +393,7 @@ class CreateGameTest {
             gameRepository.create(withArg { game ->
                 assertThat(game.isBeingStarted).isFalse()
                 assertThat(game.startedAt).isEqualTo(null)
-                assertThat(game.timeLimitMins).isEqualTo(timeLimit)
+                assertThat(game.timeLimitSeconds).isEqualTo(timeLimit)
                 assertThat(game.videoCallLink).isEqualTo(videoCallLink)
                 assertThat(game.version).isEqualTo(CURRENT_GAME_MODEL_VERSION)
                 assertThat(game.accessCode).isEqualTo(generatedAccessCode)
@@ -432,7 +432,7 @@ class CreateGameTest {
         val result = createGame.invoke(
             userName = "name",
             packs = packs,
-            timeLimit = 6,
+            timeLimitMins = 6,
             videoCallLink = "link",
             packsVersion = 0
         )

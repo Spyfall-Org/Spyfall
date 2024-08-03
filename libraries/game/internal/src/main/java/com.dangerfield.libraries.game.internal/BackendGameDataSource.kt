@@ -33,7 +33,7 @@ fun Game.toBackEndGame(): BackendGame {
         languageCode = languageCode,
         lastActiveAt = lastActiveAt,
         gameVersion = version,
-        timeLimitMins = timeLimitMins,
+        timeLimitSeconds = timeLimitSeconds,
         packsVersion = packsVersion,
         videoCallLink = videoCallLink
     )
@@ -80,7 +80,7 @@ data class BackendGame(
     val languageCode : String,
     val lastActiveAt: Long?,
     val gameVersion: Int,
-    val timeLimitMins: Int,
+    val timeLimitSeconds: Int,
     val packsVersion: Int,
     val videoCallLink: String?,
 )

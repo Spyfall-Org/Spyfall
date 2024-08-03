@@ -1,5 +1,6 @@
 package com.dangerfield.libraries.game.internal
 
+import android.util.Log
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
@@ -9,13 +10,18 @@ import com.dangerfield.libraries.game.Player
 import com.dangerfield.libraries.game.SingleDeviceRepositoryName
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.oddoneoout.libraries.game.internal.R
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.isActive
 import oddoneout.core.Catching
 import oddoneout.core.debugSnackOnError
 import oddoneout.core.doNothing
@@ -42,24 +48,53 @@ class SingleDeviceGameRepository
     private val getGameState: GetGameState,
 ) : GameRepository {
 
-    private val gameFlow = MutableStateFlow<Game?>(null)
+    private val gameUpdates = MutableStateFlow<Game?>(null)
+
+    private val gameWithState = gameUpdates
+        .map { game ->
+            fun elapsedSeconds(startedAt: Long?): Int {
+                val startedAtMillis = startedAt ?: return 0
+                val elapsedMillis: Long = clock.millis() - startedAtMillis
+                return (elapsedMillis / 1000).toInt()
+            }
+
+            if (game != null) {
+                val updatedState = getGameState(
+                    elapsedSeconds = elapsedSeconds(game.startedAt),
+                    startedAt = game.startedAt,
+                    timeLimitSeconds = game.timeLimitSeconds,
+                    isBeingStarted = game.isBeingStarted,
+                    lastActiveAt = game.lastActiveAt,
+                    hasEveryoneVoted = game.players.all { it.votedCorrectly != null }
+                )
+
+                game.copy(state = updatedState)
+            } else {
+                null
+            }
+        }
 
     override suspend fun create(game: Game): Catching<Unit> = Catching {
-        gameFlow.value = game
+        gameUpdates.value = game
     }
         .throwIfDebug()
         .ignoreValue()
 
-    override suspend fun join(accessCode: String, userId: String, userName: String): Catching<Unit> =
+    override suspend fun join(
+        accessCode: String,
+        userId: String,
+        userName: String
+    ): Catching<Unit> =
         Catching {
             // single device games cannot be joined
             doNothing()
         }
 
-    override suspend fun removeUser(accessCode: String, username: String): Catching<Unit> = Catching {
-        // single device games cannot remove players, theres no waiting screen
-        doNothing()
-    }
+    override suspend fun removeUser(accessCode: String, username: String): Catching<Unit> =
+        Catching {
+            // single device games cannot remove players, theres no waiting screen
+            doNothing()
+        }
 
     override suspend fun assignHost(accessCode: String, id: String): Catching<Unit> {
         return Catching {
@@ -72,15 +107,8 @@ class SingleDeviceGameRepository
         getGame(accessCode).getOrNull()?.accessCode == accessCode
     }
 
-    override suspend fun refreshState() {
-        updateGame { oldGame ->
-            val updatedGameState = getGameState(oldGame)
-            oldGame.copy(state = updatedGameState)
-        }
-    }
-
     override suspend fun end(accessCode: String) {
-        gameFlow.value = null
+        gameUpdates.value = null
     }
 
     override suspend fun start(accessCode: String): Catching<Unit> = Catching {
@@ -100,9 +128,9 @@ class SingleDeviceGameRepository
         }
     }
 
-    // TODO extract out logic shared from this. Or its really a AssignRoles? idk
     override suspend fun reset(accessCode: String): Catching<Unit> = Catching {
-        val currentGame = getGame(accessCode).getOrNull() ?: return illegalStateFailure  { "Single Device Game is null when resetting" }
+        val currentGame = getGame(accessCode).getOrNull()
+            ?: return illegalStateFailure { "Single Device Game is null when resetting" }
 
         val optionsForSecret = currentGame
             .packs
@@ -119,7 +147,7 @@ class SingleDeviceGameRepository
             secretItem = secretItem,
             isBeingStarted = false,
             players = shuffledPlayerWithRoles,
-            timeLimitMins = currentGame.timeLimitMins,
+            timeLimitSeconds = currentGame.timeLimitSeconds,
             startedAt = null,
             secretOptions = optionsForSecret.map { it.name },
             videoCallLink = null,
@@ -130,7 +158,7 @@ class SingleDeviceGameRepository
             languageCode = session.user.languageCode,
             packs = currentGame.packs,
             state = Game.State.Waiting,
-            mePlayer = currentGame.mePlayer // TODO updating game like this  seems weird, Passing me player up
+            mePlayer = currentGame.mePlayer
         )
 
         return updateGame { game }
@@ -167,7 +195,11 @@ class SingleDeviceGameRepository
         return shuffledPlayersWithRoles
     }
 
-    override suspend fun changeName(accessCode: String, newName: String, id: String): Catching<Unit> =
+    override suspend fun changeName(
+        accessCode: String,
+        newName: String,
+        id: String
+    ): Catching<Unit> =
         Catching {
             updateGame {
                 it.copy(
@@ -188,15 +220,47 @@ class SingleDeviceGameRepository
         }.ignoreValue()
     }
 
-    override fun getGameFlow(accessCode: String): Flow<Game> =
-        gameFlow
-            .filterNotNull()
-            .filter { it.accessCode == accessCode }
-            // on every emission, ensure game state is updated
-            .map { it.copy(state = getGameState(it)) }
+    override fun getGameFlow(accessCode: String): Flow<Game?> =
+        gameWithState.flatMapLatest { gameWithUpdatingState(it) }
+
+    private fun gameWithUpdatingState(game: Game?) = if (game == null) {
+        flow<Game?> { emit(null) }
+    } else {
+        val startedState = game.state as? Game.State.Started
+        if (startedState != null) {
+            elapsedSecondsFlow(startedState)
+                .map { elapsedSeconds ->
+                    val updatedState = getGameState(
+                        elapsedSeconds = elapsedSeconds,
+                        startedAt = game.startedAt,
+                        timeLimitSeconds = game.timeLimitSeconds,
+                        isBeingStarted = game.isBeingStarted,
+                        lastActiveAt = game.lastActiveAt,
+                        hasEveryoneVoted = game.players.all { it.votedCorrectly != null }
+                    )
+
+                    game.copy(state = updatedState)
+                }
+        } else {
+            flow { emit(game) }
+        }
+    }
+
+    private fun elapsedSecondsFlow(startedState: Game.State.Started): Flow<Int> {
+        return flow {
+            var elapsedSeconds = startedState.secondsElapsed
+            while (currentCoroutineContext().isActive) {
+                emit(elapsedSeconds)
+                delay(1000)
+                elapsedSeconds++
+            }
+        }
+    }
 
     override suspend fun getGame(accessCode: String): Catching<Game> = Catching {
-        getGameFlow(accessCode).first()
+        getGameFlow(accessCode)
+            .filterNotNull()
+            .first()
     }
 
     override suspend fun submitVoteForSecret(
@@ -204,7 +268,8 @@ class SingleDeviceGameRepository
         voterId: String,
         secret: String
     ): Catching<Unit> = Catching {
-        val game = getGame(accessCode).getOrNull() ?: return illegalStateFailure { "Game is null when voting" }
+        val game = getGame(accessCode).getOrNull()
+            ?: return illegalStateFailure { "Game is null when voting" }
         updateGame {
             it.copy(players = it.players.map { player ->
                 if (player.id == voterId) {
@@ -222,35 +287,36 @@ class SingleDeviceGameRepository
         voterId: String,
         voteId: String
     ): Catching<Boolean> = updateGame {
-            val oddOneOutId = it.players.find { p -> p.isOddOneOut }?.id
-                ?: throw IllegalStateException("No odd one out")
+        val oddOneOutId = it.players.find { p -> p.isOddOneOut }?.id
+            ?: throw IllegalStateException("No odd one out")
 
-            it.copy(players = it.players.map { player ->
-                if (player.id == voterId) {
-                    player.copy(votedCorrectly = voteId == oddOneOutId)
-                } else {
-                    player
-                }
-            })
-        }.map { game ->
-            game.players.find { it.id == voterId }?.votedCorrectly ?: false
-        }
+        it.copy(players = it.players.map { player ->
+            if (player.id == voterId) {
+                player.copy(votedCorrectly = voteId == oddOneOutId)
+            } else {
+                player
+            }
+        })
+    }.map { game ->
+        game.players.find { it.id == voterId }?.votedCorrectly ?: false
+    }
 
 
     private fun Game.withUpdatedLastActiveAt() = copy(lastActiveAt = clock.millis())
 
     private suspend fun updateGame(update: (Game) -> Game): Catching<Game> {
-        val currentGame = gameFlow.filterNotNull().firstOrNull()?.withUpdatedLastActiveAt()
+        val currentGame = gameUpdates.filterNotNull().firstOrNull()?.withUpdatedLastActiveAt()
             ?: return illegalStateFailure { "Game not in state" }
 
         return Catching {
             val updatedGame = update(currentGame)
-            gameFlow.value = updatedGame
+            gameUpdates.value = updatedGame
             updatedGame
         }
             .throwIfDebug()
             .logOnFailure("Could not update the single device game")
     }
+
 
     companion object {
         const val name = "SingleDeviceRepository"

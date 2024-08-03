@@ -1,6 +1,5 @@
 package com.dangerfield.libraries.game
 
-import android.app.GameState
 import kotlinx.coroutines.flow.Flow
 import oddoneout.core.Catching
 
@@ -42,9 +41,6 @@ interface GameRepository {
     suspend fun getGame(accessCode: String): Catching<Game>
     suspend fun submitVoteForSecret(accessCode: String, voterId: String, secret: String): Catching<Unit>
     suspend fun submitVoteForOddOneOut(accessCode: String, voterId: String, voteId: String): Catching<Boolean>
-
-    // TODO this needs removed when the repo drives the state for time elapsed
-    suspend fun refreshState()
 }
 
 /**

@@ -81,7 +81,7 @@ class JoinGameUseCase @Inject constructor(
         return when(game.state) {
             Game.State.Voting,
             Game.State.Results,
-            Game.State.Started,
+            is Game.State.Started,
             Game.State.Starting -> JoinGameError.GameAlreadyStarted()
             Game.State.Waiting -> {
 

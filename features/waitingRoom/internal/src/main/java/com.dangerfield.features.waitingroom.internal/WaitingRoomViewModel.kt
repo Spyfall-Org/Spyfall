@@ -171,12 +171,12 @@ class WaitingRoomViewModel @Inject constructor(
             gameFlow
                 .collectLatest { game ->
                     when (game?.state) {
-                        Game.State.Started -> {
+                        is Game.State.Started -> {
                             updateState { it.copy(isLoadingStart = false) }
                             sendEvent(
                                 Event.GameStarted(
                                     accessCode = accessCode,
-                                    timeLimit = game.timeLimitMins
+                                    timeLimit = game.timeLimitSeconds
                                 )
                             )
                         }

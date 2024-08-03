@@ -8,32 +8,25 @@ import com.dangerfield.features.gameplay.internal.GamePlayViewModel.Event
 import com.dangerfield.features.gameplay.internal.GamePlayViewModel.State
 import com.dangerfield.features.gameplay.timeLimitArgument
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
-import com.dangerfield.libraries.coreflowroutines.TriggerFlow
-import com.dangerfield.libraries.coreflowroutines.collectIn
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.GameResult
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.PackItem
-import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.navigation.navArgument
 import com.dangerfield.libraries.session.ClearActiveGame
 import com.dangerfield.libraries.session.Session
 import com.dangerfield.libraries.session.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import oddoneout.core.doNothing
 import oddoneout.core.showDebugSnack
 import oddoneout.core.eitherWay
 import oddoneout.core.logOnFailure
@@ -62,18 +55,13 @@ class GamePlayViewModel @Inject constructor(
     private val gameConfig: GameConfig,
     private val clock: Clock,
     session: Session,
-) :SEAViewModel<State, Event, Action>(savedStateHandle) {
+) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
     private val meUserId = session.activeGame?.userId ?: ""
     private val isSubscribedToGameFlow = AtomicBoolean(false)
     private val hasRecordedResult = AtomicBoolean(false)
     private val hasRecordedGamePlayed = AtomicBoolean(false)
     private val backupGameStartTime = clock.millis()
-
-    // TODO cleanup may be concurency issues here, the timer could be stoped or started from different coroutines
-    private var timerJob: Job? = null
-    private val gameTimeRefreshTrigger = TriggerFlow()
-    private val isTimerRunning: Boolean get() = timerJob != null
 
     private val accessCode: String
         get() = savedStateHandle.navArgument(accessCodeArgument) ?: ""
@@ -89,13 +77,10 @@ class GamePlayViewModel @Inject constructor(
             replay = 1
         )
 
-    // TODO cleanup consider putting voting into a different screen
-    // i 10000000% should have a different screen for voting, I shouldnt just change the screen state
-    // this view model is insanely big
     override fun initialState() = State(
         players = emptyList(),
         locations = emptyList(),
-        timeRemainingMillis = timeLimitArg?.minutes?.inWholeMilliseconds ?: 0,
+        timeRemainingMillis = timeLimitArg?.seconds?.inWholeMilliseconds ?: 0,
         isLoadingLocations = true,
         isLoadingPlayers = true,
         didSomethingGoWrongLoading = accessCode.isEmpty() || meUserId.isEmpty(),
@@ -189,41 +174,29 @@ class GamePlayViewModel @Inject constructor(
     private suspend fun Action.LoadGamePlay.loadGamePlay() {
         if (isSubscribedToGameFlow.getAndSet(true)) return
         viewModelScope.launch {
-            combine(
-                gameFlow,
-                gameTimeRefreshTrigger
-            ) { game, _ ->
-
+            gameFlow.map { game ->
                 when (game?.state) {
                     Game.State.Starting,
                     Game.State.Expired,
                     Game.State.Unknown -> showDebugSnack {
                         "Illegal game state with game $game"
                     }
+
                     null -> {
                         clearActiveGame()
                         sendEvent(Event.GameKilled)
                     }
+
                     Game.State.Waiting -> sendEvent(Event.GameReset(accessCode))
-                    Game.State.Started,
-                    Game.State.Voting,
-                    Game.State.Results -> updateStateWithGame(game)
+                    is Game.State.Started -> updateStateWithGame(game, false)
+                    Game.State.Voting -> updateStateWithGame(game, true)
+                    Game.State.Results -> updateStateWithGame(game, true)
                 }
             }.collect()
         }
     }
 
-    private suspend fun Action.updateStateWithGame(game: Game) {
-        val timeRemainingMillis = game.remainingTimeMillis(clock)
-        val isTimeUp = timeRemainingMillis <= 0
-        if (isTimeUp && isTimerRunning) {
-            stopTimer()
-            gameRepository.refreshState()
-        }
-
-        if (!isTimeUp && !isTimerRunning) {
-            startTimer()
-        }
+    private suspend fun Action.updateStateWithGame(game: Game, isTimeUp: Boolean) {
 
         if (game.state == Game.State.Results && !hasRecordedResult.getAndSet(true)) {
             recordResult(game)
@@ -238,6 +211,11 @@ class GamePlayViewModel @Inject constructor(
         if (!hasRecordedGamePlayed.getAndSet(true)) {
             recordGamePlayed(game)
         }
+
+        val remainingMillis = (game.state as? Game.State.Started)?.let { startedState ->
+            val remainingSeconds = game.timeLimitSeconds - startedState.secondsElapsed
+            remainingSeconds.seconds.inWholeMilliseconds
+        } ?: 0
 
         updateState { prev ->
             prev.copy(
@@ -271,7 +249,7 @@ class GamePlayViewModel @Inject constructor(
                 gameResult = game.result.takeIf {
                     it in listOf(GameResult.PlayersWon, GameResult.OddOneOutWon, GameResult.Draw)
                 },
-                timeRemainingMillis = game.remainingTimeMillis(clock),
+                timeRemainingMillis = remainingMillis,
             )
         }
     }
@@ -294,27 +272,6 @@ class GamePlayViewModel @Inject constructor(
             startedAt = game.startedAt ?: backupGameStartTime,
             wasSingleDevice = false
         )
-    }
-
-
-
-    /*
-    TODO make the timer a use case that emits a flow of time remaining
-     */
-    private fun stopTimer() {
-        timerJob?.cancel()
-        timerJob = null
-    }
-
-    private fun startTimer() {
-        if (isTimerRunning) return
-        timerJob = viewModelScope.launch {
-            // TODO cleanup should this run on viewmodel scope? infact maybe look at all viewmodel scopes
-            while (isActive) {
-                gameTimeRefreshTrigger.pull()
-                delay(500)
-            }
-        }
     }
 
     private suspend fun getGame() =
@@ -344,7 +301,7 @@ class GamePlayViewModel @Inject constructor(
     sealed class Event {
         data class GameReset(val accessCode: String) : Event()
         data object GameKilled : Event()
-        data object ResetFailed: Event()
+        data object ResetFailed : Event()
     }
 
     sealed class Action {

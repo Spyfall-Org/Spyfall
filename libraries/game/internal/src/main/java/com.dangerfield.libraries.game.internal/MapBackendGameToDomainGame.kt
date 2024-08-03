@@ -9,12 +9,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import oddoneout.core.Catching
 import oddoneout.core.allOrFail
+import java.time.Clock
 import javax.inject.Inject
 
 class MapBackendGameToDomainGame @Inject constructor(
     private val packRepository: PackRepository,
     private val getGameState: GetGameState,
     private val session: Session,
+    private val clock: Clock,
     @ApplicationScope private val applicationScope: CoroutineScope
 ) {
 
@@ -50,7 +52,7 @@ class MapBackendGameToDomainGame @Inject constructor(
             packs = packs,
             isBeingStarted = backendGame.isBeingStarted,
             players = backendGame.players.toPlayers(),
-            timeLimitMins = backendGame.timeLimitMins,
+            timeLimitSeconds = backendGame.timeLimitSeconds,
             startedAt = backendGame.startedAt,
             secretOptions = backendGame.items,
             videoCallLink = backendGame.videoCallLink,
@@ -58,8 +60,21 @@ class MapBackendGameToDomainGame @Inject constructor(
             lastActiveAt = backendGame.lastActiveAt,
             languageCode = backendGame.languageCode,
             packsVersion = backendGame.packsVersion,
-            state = Game.State.Unknown,
+            state = getGameState(
+                elapsedSeconds = elapsedSeconds(backendGame.startedAt),
+                startedAt = backendGame.startedAt,
+                timeLimitSeconds = backendGame.timeLimitSeconds,
+                isBeingStarted = backendGame.isBeingStarted,
+                lastActiveAt = backendGame.lastActiveAt,
+                hasEveryoneVoted = backendGame.players.all { it.votedCorrectly != null }
+            ),
             mePlayer = backendGame.players.firstOrNull { it.id == mePlayerId }?.toPlayer()
         )
+    }
+
+    private fun elapsedSeconds(startedAt: Long?): Int {
+        val startedAtMillis = startedAt ?: return 0
+        val elapsedMillis: Long = clock.millis() - startedAtMillis
+        return (elapsedMillis / 1000).toInt()
     }
 }

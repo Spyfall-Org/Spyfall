@@ -71,7 +71,7 @@ class WelcomeViewModel @Inject constructor(
                         }
 
                         Game.State.Unknown,
-                        Game.State.Started,
+                        is Game.State.Started,
                         Game.State.Voting,
                         Game.State.Results -> {
                             sendEvent(

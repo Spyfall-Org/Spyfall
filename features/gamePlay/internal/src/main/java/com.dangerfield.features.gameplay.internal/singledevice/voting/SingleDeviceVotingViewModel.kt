@@ -91,7 +91,6 @@ class SingleDeviceVotingViewModel @Inject constructor(
                 is Action.SubmitVoteForLocation -> action.submitVoteForLocation()
                 is Action.SubmitVoteForPlayer -> action.submitVoteForPlayer()
                 is Action.WaitForResults -> {
-                    gameRepository.refreshState()
                     updateState { state -> state.copy(isLoadingResult = true) }
                 }
                 is Action.PreviousPlayer -> loadPlayer(--currentPlayerRoleIndex)
@@ -162,7 +161,7 @@ class SingleDeviceVotingViewModel @Inject constructor(
                 .map { game ->
                     when (game?.state) {
                         Game.State.Expired,
-                        Game.State.Started,
+                        is Game.State.Started,
                         Game.State.Starting,
                         Game.State.Unknown -> showDebugSnack {
                             "Illegal game state with game $game"

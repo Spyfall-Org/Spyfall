@@ -1,7 +1,6 @@
 package com.dangerfield.libraries.game.internal
 
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
-import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameError
 import oddoneout.core.Catching
 import javax.inject.Inject
@@ -33,7 +32,7 @@ class GameMapSerializer @Inject constructor(
                         playerSerializer.deserializePlayers(it)
                     },
                     startedAt = map[FirestoreBackendGameDataSource.STARTED_AT_FIELD_KEY] as? Long,
-                    timeLimitMins = (map[FirestoreBackendGameDataSource.TIME_LIMIT_MINS_FIELD_KEY] as Number).toInt(),
+                    timeLimitSeconds = (map[FirestoreBackendGameDataSource.TIME_LIMIT_SECONDS_FIELD_KEY] as Number).toInt(),
                     videoCallLink = map[FirestoreBackendGameDataSource.VIDEO_CALL_LINK_FIELD_KEY] as? String?,
                     gameVersion = version,
                     lastActiveAt = map[FirestoreBackendGameDataSource.LAST_ACTIVE_AT_FIELD_KEY] as? Long?,
@@ -52,7 +51,7 @@ class GameMapSerializer @Inject constructor(
         FirestoreBackendGameDataSource.PACK_IDS_FIELD_KEY to game.packIds,
         FirestoreBackendGameDataSource.PLAYERS_FIELD_KEY to playerSerializer.serializePlayers(game.players),
         FirestoreBackendGameDataSource.STARTED_AT_FIELD_KEY to game.startedAt,
-        FirestoreBackendGameDataSource.TIME_LIMIT_MINS_FIELD_KEY to game.timeLimitMins,
+        FirestoreBackendGameDataSource.TIME_LIMIT_SECONDS_FIELD_KEY to game.timeLimitSeconds,
         FirestoreBackendGameDataSource.VIDEO_CALL_LINK_FIELD_KEY to game.videoCallLink,
         FirestoreBackendGameDataSource.VERSION_FIELD_KEY to game.gameVersion,
         FirestoreBackendGameDataSource.PACKS_VERSION_FIELD_KEY to game.packsVersion,

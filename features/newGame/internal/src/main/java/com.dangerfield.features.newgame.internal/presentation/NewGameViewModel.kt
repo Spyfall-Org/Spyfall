@@ -183,7 +183,7 @@ class NewGameViewModel @Inject constructor(
             state.selectedPacks()
         ) { timeLimit, numOfPlayers, selectedPacks ->
             createSingleDeviceGameUseCase(
-                timeLimit = timeLimit,
+                timeLimitMins = timeLimit,
                 numOfPlayers = numOfPlayers,
                 packs = selectedPacks
             )
@@ -205,7 +205,7 @@ class NewGameViewModel @Inject constructor(
             userName = userName,
             packs = selectedPacks,
             packsVersion = packsVersionBeingUsed,
-            timeLimit = timeLimit,
+            timeLimitMins = timeLimit,
             videoCallLink = state.videoCallLinkState.value
         )
         // TODO handle failures dude

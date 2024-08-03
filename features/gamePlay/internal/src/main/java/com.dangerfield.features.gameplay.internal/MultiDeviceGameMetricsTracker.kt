@@ -15,7 +15,7 @@ import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.ODD_ON
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.PLAYERS
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.PLAYER_COUNT
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.RESULT
-import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.TIME_LIMIT_MINS
+import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.TIME_LIMIT_SECONDS
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.TIME_REMAINING
 import com.dangerfield.features.gameplay.internal.metrics.MetricConstants.VOTING_ENDED
 import com.dangerfield.libraries.analytics.Metric
@@ -37,7 +37,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
+                    TIME_LIMIT_SECONDS to game.timeLimitSeconds,
                     PLAYER_COUNT to game.players.size,
                     LOCATION to game.secretItem.name,
                 )
@@ -55,7 +55,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
+                    TIME_LIMIT_SECONDS to game.timeLimitSeconds,
                     PLAYER_COUNT to game.players.size,
                     LOCATION to game.secretItem.name,
                     MetricConstants.ERROR_MESSAGE to throwable.message
@@ -75,7 +75,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
                     ACCESS_CODE to game?.accessCode,
-                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    TIME_LIMIT_SECONDS to game?.timeLimitSeconds,
                     PLAYER_COUNT to game?.players?.size,
                     LOCATION to game?.secretItem?.name,
                 )
@@ -94,7 +94,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
                     ACCESS_CODE to game?.accessCode,
-                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    TIME_LIMIT_SECONDS to game?.timeLimitSeconds,
                     PLAYER_COUNT to game?.players?.size,
                     LOCATION to game?.secretItem?.name,
                 )
@@ -113,7 +113,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     TIME_REMAINING to timeRemainingMillis,
                     ACCESS_CODE to game?.accessCode,
-                    TIME_LIMIT_MINS to game?.timeLimitMins,
+                    TIME_LIMIT_SECONDS to game?.timeLimitSeconds,
                     PLAYER_COUNT to game?.players?.size,
                     LOCATION to game?.secretItem?.name,
                 )
@@ -130,7 +130,7 @@ class MultiDeviceGameMetricsTracker @Inject constructor(
                 bundleOf(
                     GAME_TYPE to MULTI_DEVICE_GAME,
                     ACCESS_CODE to game.accessCode,
-                    TIME_LIMIT_MINS to game.timeLimitMins,
+                    TIME_LIMIT_SECONDS to game.timeLimitSeconds,
                     PLAYER_COUNT to game.players.size,
                     LOCATION to game.secretItem.name,
                     RESULT to when (game.result) {

@@ -1,28 +1,23 @@
 package com.dangerfield.libraries.game.internal
 
-import com.dangerfield.libraries.coreflowroutines.ApplicationScope
-import com.dangerfield.libraries.coreflowroutines.TriggerFlow
-import com.dangerfield.libraries.coreflowroutines.collectIn
-import com.dangerfield.libraries.coreflowroutines.collectInWithPrevious
+import android.util.Log
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameConfig
 import com.dangerfield.libraries.game.GameError
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
 import com.dangerfield.libraries.game.Player
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.isActive
 import oddoneout.core.Catching
 import oddoneout.core.debugSnackOnError
 import oddoneout.core.failure
@@ -39,53 +34,24 @@ class MutliDeviceGameRepository @Inject constructor(
     private val backendGameDataSource: BackendGameDataSource,
     private val getGameState: GetGameState,
     private val gameConfig: GameConfig,
-    @ApplicationScope private val applicationScope: CoroutineScope,
     private val mapBackendGameToDomainGame: MapBackendGameToDomainGame,
 ) : GameRepository {
 
     private val currentGameAccessCodeState = MutableStateFlow<String?>(null)
-    private val recalculateStateTrigger = TriggerFlow()
 
-    /*
-    TODO I think I want to have the repo handle the state of the game 100%
-    so the time will be in here and will be stopped and started based on either
-    1. state change
-    or 2. user triggered
-    but for now ill let the view models call startVoting() that just pulls the trigger
-     */
-    private val currentGameFlow: StateFlow<GamePresence?> =
-        combine(
-            getCurrentGameFlow(),
-            recalculateStateTrigger
-        ) { gameExistence, _ ->
-            when(gameExistence) {
-                is GamePresence.Present -> {
-                    val updatedState = getGameState(gameExistence.game)
-                    GamePresence.Present(gameExistence.game.copy(state = updatedState))
-                }
-                is GamePresence.Absent -> gameExistence
-            }
-        }
-            .stateIn(
-                scope = applicationScope,
-                started = SharingStarted.Eagerly,
-                initialValue = null
-            )
-
-    /**
-     * A flow representing the current access codes game
-     * updates when the access code changes or the game object changed backend
-     */
-    private fun getCurrentGameFlow() = currentGameAccessCodeState
+    private val currentAccessCodeGameFlow: Flow<GamePresence> = currentGameAccessCodeState
         .filterNotNull()
         .flatMapLatest { accessCode ->
             backendGameDataSource.subscribeToGame(accessCode)
                 .filter { it.isSuccess || it.exceptionOrNull() is GameError.GameNotFound }
-                .map { backendGame ->
-                    val game = backendGame.getOrNull()?.let {
+                .map { result ->
+                    val backendGame = result.getOrNull()
+                    val domainGame = backendGame?.let {
                         mapBackendGameToDomainGame(it).logOnFailure().getOrNull()
                     }
-
+                    domainGame
+                }
+                .map { game ->
                     if (game != null) {
                         GamePresence.Present(game)
                     } else {
@@ -93,10 +59,6 @@ class MutliDeviceGameRepository @Inject constructor(
                     }
                 }
         }
-
-    override suspend fun refreshState() {
-        recalculateStateTrigger.pull()
-    }
 
     /**
      * Returns a flow of the game with the provided access code
@@ -107,18 +69,52 @@ class MutliDeviceGameRepository @Inject constructor(
             currentGameAccessCodeState.value = accessCode
         }
 
-        // wait for values relevant to the access code.
-        return currentGameFlow
+        return currentAccessCodeGameFlow
             .filterNotNull()
-            .filter { gamePresence ->
-                when (gamePresence) {
-                    is GamePresence.Present -> gamePresence.game.accessCode == accessCode
-                    is GamePresence.Absent -> gamePresence.accessCode == accessCode
+            .filter {
+                when (it) {
+                    is GamePresence.Present -> accessCode == it.game.accessCode
+                    is GamePresence.Absent -> accessCode == it.accessCode
                 }
             }
-            .map {
-                it.gameOrNull()
+            .map { it.gameOrNull() }
+            .flatMapLatest { gameWithUpdatingState(it) }
+    }
+
+    private fun gameWithUpdatingState(game: Game?) = if (game == null) {
+        flow<Game?> { emit(null) }
+    } else {
+        val startedState = game.state as? Game.State.Started
+        if (startedState != null) {
+            elapsedSecondsFlow(startedState)
+                .map { elapsedSeconds ->
+                    val updatedState = getGameState(
+                        elapsedSeconds = elapsedSeconds,
+                        startedAt = game.startedAt,
+                        timeLimitSeconds = game.timeLimitSeconds,
+                        isBeingStarted = game.isBeingStarted,
+                        lastActiveAt = game.lastActiveAt,
+                        hasEveryoneVoted = game.players.all { it.votedCorrectly != null }
+                    )
+
+                    Log.d("GameRepository", "Updated state: $updatedState")
+
+                    game.copy(state = updatedState)
+                }
+        } else {
+            flow { emit(game) }
+        }
+    }
+
+    private fun elapsedSecondsFlow(startedState: Game.State.Started): Flow<Int> {
+        return flow {
+            var elapsedSeconds = startedState.secondsElapsed
+            while (currentCoroutineContext().isActive) {
+                emit(elapsedSeconds)
+                delay(1000)
+                elapsedSeconds++
             }
+        }
     }
 
     override suspend fun create(game: Game): Catching<Unit> = Catching {
