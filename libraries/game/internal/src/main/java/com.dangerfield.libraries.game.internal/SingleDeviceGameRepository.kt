@@ -1,6 +1,5 @@
 package com.dangerfield.libraries.game.internal
 
-import android.util.Log
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.CURRENT_GAME_MODEL_VERSION
 import com.dangerfield.libraries.game.Game
@@ -14,7 +13,6 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -36,6 +34,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+@Suppress("TooManyFunctions")
 @AutoBind
 @Singleton
 @Named(SingleDeviceRepositoryName)

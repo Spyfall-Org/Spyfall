@@ -3,15 +3,12 @@ package com.dangerfield.features.waitingroom.internal
 import androidx.core.os.bundleOf
 import com.dangerfield.libraries.analytics.Metric
 import com.dangerfield.libraries.analytics.MetricsTracker
-import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.game.Game
 import com.dangerfield.libraries.game.GameRepository
 import com.dangerfield.libraries.game.MultiDeviceRepositoryName
-import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.Player
 import com.dangerfield.oddoneoout.features.waitingroom.internal.R
-import kotlinx.coroutines.CoroutineScope
 import oddoneout.core.Catching
 import oddoneout.core.eitherWay
 import oddoneout.core.flatMap
@@ -22,7 +19,6 @@ import javax.inject.Named
 class StartGameUseCase @Inject constructor(
     private val metricsTracker: MetricsTracker,
     private val dictionary: Dictionary,
-    @ApplicationScope private val applicationScope: CoroutineScope,
     @Named(MultiDeviceRepositoryName) private val gameRepository: GameRepository
 ) {
 
