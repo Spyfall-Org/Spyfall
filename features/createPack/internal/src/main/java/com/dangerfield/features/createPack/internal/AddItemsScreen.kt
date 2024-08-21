@@ -1,5 +1,6 @@
 package com.dangerfield.features.createPack.internal
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -45,29 +46,29 @@ import com.dangerfield.libraries.ui.components.button.ButtonType
 import com.dangerfield.libraries.ui.components.header.Header
 import com.dangerfield.libraries.ui.components.icon.Icon
 import com.dangerfield.libraries.ui.components.icon.IconButton
+import com.dangerfield.libraries.ui.components.icon.IconSize
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.InputField
 import com.dangerfield.libraries.ui.components.text.Text
 import com.dangerfield.libraries.ui.isValid
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddItemsScreen(
     modifier: Modifier = Modifier,
     name: String,
     items: List<PackItem.Custom>,
-    maximumItems: Int,
+    canAddMoreItems: Boolean,
     onAddItemClicked: () -> Unit,
     onNextClicked: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onEditItemClicked: (PackItem.Custom) -> Unit
 ) {
 
-    val (nameFocusRequester) = remember { FocusRequester.createRefs() }
     val scrollState = rememberScrollState()
 
-    LaunchedEffect(Unit) {
-        nameFocusRequester.requestFocus()
+    BackHandler {
+        onNavigateBack()
     }
 
     Screen(
@@ -106,12 +107,12 @@ fun AddItemsScreen(
 
             ItemsList(
                 items,
-                onEditItem = {}
+                onEditItem = onEditItemClicked
             )
 
             VerticalSpacerD1200()
 
-            if (items.size < maximumItems) {
+            if (canAddMoreItems) {
                 AddItemButton(onAddItemClicked = onAddItemClicked)
             }
 
@@ -137,8 +138,9 @@ private fun AddItemButton(
 ) {
     Row(
         modifier = Modifier
+            .bounceClick(onClick = onAddItemClicked)
             .border(
-                width = Dimension.D25,
+                width = Dimension.D50,
                 color = OddOneOutTheme.colors.border.color,
                 shape = Radii.Button.shape
             )
@@ -146,15 +148,20 @@ private fun AddItemButton(
                 vertical = Dimension.D500,
                 horizontal = Dimension.D1000
             )
-            .bounceClick(onClick = onAddItemClicked)
         ,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(spyfallIcon = SpyfallIcon.Add("Add Item"))
+        Icon(
+            spyfallIcon = SpyfallIcon.Add("Add Item"),
+            iconSize = IconSize.Medium
+        )
 
         HorizontalSpacerD400()
 
-        Text(text = "Add Item", typography = OddOneOutTheme.typography.Label.L500)
+        Text(
+            text = "Add Item",
+            typography = OddOneOutTheme.typography.Label.L700.Bold
+        )
     }
 }
 
@@ -214,8 +221,9 @@ fun PreviewAddItemsScreen() {
             name = "My special pack",
             onNextClicked = { },
             onNavigateBack = {},
-            maximumItems = 5,
+            canAddMoreItems = true,
             onAddItemClicked = {},
+            onEditItemClicked = {},
             items = listOf(
                 PackItem.Custom("Item 1", roles = null),
             )

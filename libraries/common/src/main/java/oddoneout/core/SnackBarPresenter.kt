@@ -13,6 +13,17 @@ object SnackBarPresenter {
         }
     }
 
+    fun showMessage(
+        debugMessage: Message,
+        message: Message
+    ) {
+        if (BuildConfig.DEBUG) {
+            messages.trySend(debugMessage.copy(isDebug = true))
+        } else {
+            messages.trySend(message)
+        }
+    }
+
     fun showMessage(message: Message) {
         messages.trySend(message)
     }
@@ -38,7 +49,7 @@ object SnackBarPresenter {
 
 data class Message(
     val message: String,
-    val autoDismiss: Boolean,
+    val autoDismiss: Boolean = true,
     val isDebug : Boolean = false,
     val title: String? = null,
     val action: (() -> Unit)? = null,

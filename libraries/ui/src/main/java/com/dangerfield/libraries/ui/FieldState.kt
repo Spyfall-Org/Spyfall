@@ -1,8 +1,5 @@
 package com.dangerfield.libraries.ui
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-import java.io.Serializable
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -45,6 +42,18 @@ sealed class FieldState<out T>(val value: T?, val error: String? = null) {
      */
     data class Error<T>(val input: T? = null, val errorMessage: String? = null) :
         FieldState<T>(input, errorMessage)
+}
+
+fun <T> FieldState<T>.copy(
+    input: T? = this.value,
+    error: String? = this.error
+): FieldState<T> {
+    return when (this) {
+        is FieldState.Idle -> FieldState.Idle(input, error)
+        is FieldState.Valid -> FieldState.Valid(input, error)
+        is FieldState.Invalid -> FieldState.Invalid(input, error!!)
+        is FieldState.Error -> FieldState.Error(input, error)
+    }
 }
 
 @OptIn(ExperimentalContracts::class)

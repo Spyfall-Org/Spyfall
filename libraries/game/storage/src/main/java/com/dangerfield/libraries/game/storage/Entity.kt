@@ -24,12 +24,39 @@ data class PackEntity(
     val isPublic: Boolean,
     val ownerId: String?,
     val dbPackOwner: DbPackOwner,
-    val isUserSaved: Boolean
+    /**
+     * Delineates a pack that is cached vs saved by the user.
+     * Not every pack in cache is displayed when creating a new game. Saved packs are.
+     *
+     * Packs that are saved by the user could be packs they created
+     * or packs they saved from the community.
+     */
+    val isUserSaved: Boolean,
+
+    /**
+     * Packs that are created by the user start out as pending until they are finished being created
+     *
+     * User created packs are not displayed or marked saved until they are finished
+     * being created.
+     */
+    val isPendingSave: Boolean?,
+
+    /**
+     * Weather or not the me user has played with this pack
+     */
+    val hasMeUserPlayed: Boolean,
 )
+
+
+enum class CreationState {
+    Pending,
+    Created
+}
 
 enum class DbPackType {
     Location,
-    Celebrity
+    Celebrity,
+    Custom
 }
 
 enum class DbPackOwner {

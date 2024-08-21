@@ -15,3 +15,15 @@ fun Router.navigateToCreateYourOwnPack() {
 val createPackRoute = route("createPack") {
     // argument(someArgument)
 }
+
+fun Router.navigateToEditYourPacks() {
+    navigate(
+        fillRoute(editYourPacksRoute) {
+            //fill(someArgument, someValue)
+        }
+    )
+}
+
+val editYourPacksRoute = route("editYourPacksRoute") {
+    // argument(someArgument)
+}

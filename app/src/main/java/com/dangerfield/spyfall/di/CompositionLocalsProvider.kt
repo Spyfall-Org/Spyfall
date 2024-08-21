@@ -2,6 +2,7 @@ package com.dangerfield.spyfall.di
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
 import com.dangerfield.features.ads.AdsConfig
 import com.dangerfield.features.ads.LocalAdsConfig
 import com.dangerfield.libraries.analytics.LocalMetricsTracker
@@ -39,7 +40,9 @@ class CompositionLocalsProvider @Inject constructor(
             LocalDictionary provides dictionary,
             LocalBuildInfo provides buildInfo,
             LocalAppState provides appState,
-            content = content
-        )
+
+        ) {
+            MyApp()
+        }
     }
 }

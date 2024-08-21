@@ -133,7 +133,7 @@ class SingleDeviceGameRepository
 
         val optionsForSecret = currentGame
             .packs
-            .map { it.items }
+            .map { it.packItems }
             .flatten()
             .filter { it != currentGame.secretItem }
             .take(gameConfig.itemsPerSingleDeviceGame)

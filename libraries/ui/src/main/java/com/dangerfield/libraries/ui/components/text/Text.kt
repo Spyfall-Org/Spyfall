@@ -24,10 +24,19 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.dangerfield.libraries.dictionary.dictionaryString
 import com.dangerfield.libraries.ui.Dimension
 import com.dangerfield.libraries.ui.LocalContentColor
+import com.dangerfield.libraries.ui.LocalTypography
 import com.dangerfield.libraries.ui.Preview
 import com.dangerfield.libraries.ui.color.ColorResource
 import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 import com.dangerfield.libraries.ui.typography.TypographyResource
+
+@Composable
+fun S() {
+    CompositionLocalProvider(LocalTypography provides OddOneOutTheme.typography.Body.B400.) {
+        Text(text = "sdfsdf")
+    }
+}
+
 
 @NonRestartableComposable
 @Composable

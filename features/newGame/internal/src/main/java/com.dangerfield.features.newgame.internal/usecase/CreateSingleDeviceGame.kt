@@ -22,7 +22,6 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @Suppress("UnusedPrivateMember")
 class CreateSingleDeviceGame @Inject constructor(
@@ -45,7 +44,7 @@ class CreateSingleDeviceGame @Inject constructor(
 
         val timeLimitSeconds = timeLimitMins.minutes.inWholeSeconds.toInt()
         val accessCode = UUID.randomUUID().toString().take(gameConfig.accessCodeLength)
-        val secretOptions = packs.map { it.items }.flatten().shuffled().take(gameConfig.itemsPerSingleDeviceGame)
+        val secretOptions = packs.map { it.packItems }.flatten().shuffled().take(gameConfig.itemsPerSingleDeviceGame)
         val secretItem = secretOptions.random()
         val userId = session.user.id ?: UUID.randomUUID().toString()
         val shuffledRoles = secretItem.roles?.shuffled()?.let { LinkedList(it) }

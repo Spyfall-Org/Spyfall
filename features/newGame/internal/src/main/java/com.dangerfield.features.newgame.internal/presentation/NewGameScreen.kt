@@ -26,7 +26,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.features.newgame.internal.presentation.model.NewGamePackOption
+import com.dangerfield.features.newgame.internal.presentation.model.PackOption
 import com.dangerfield.features.newgame.newGameNavigationRoute
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NewGameScreen(
     modifier: Modifier = Modifier,
-    onPackSelected: (NewGamePackOption, Boolean) -> Unit,
+    onPackSelected: (PackOption, Boolean) -> Unit,
     nameState: FieldState<String>,
     onNameUpdated: (String) -> Unit,
     timeLimitState: FieldState<String>,
@@ -72,13 +72,11 @@ fun NewGameScreen(
     isFormValid: Boolean,
     isLoadingPacks: Boolean,
     isVideoCallLinkEnabled: Boolean,
-    onCreateYourOwnPackClicked: () -> Unit,
     onIsSingleDeviceUpdated: (Boolean) -> Unit,
     numOfPlayersState: FieldState<String>,
     isSingleDeviceModeEnabled: Boolean,
-    isCreateYourOwnNew: Boolean,
     onNumOfPlayersUpdated: (String) -> Unit,
-    packsState: FieldState<List<NewGamePackOption>>,
+    packsState: FieldState<List<PackOption>>,
     didCreationFail: Boolean = false,
     didLoadFail: Boolean = false,
     onErrorDismissed: () -> Unit,
@@ -160,11 +158,7 @@ fun NewGameScreen(
                             isLoading = isLoadingPacks,
                             packsState = packsState,
                             onPackSelected = onPackSelected,
-                            isCreateYourOwnNew = isCreateYourOwnNew,
-                            onCreateYourOwnPackClicked = onCreateYourOwnPackClicked,
-                            onPacksInfoClicked = {
-                                showPacksInfoBottomSheet = true
-                            },
+                            onPacksInfoClicked = { showPacksInfoBottomSheet = true },
                         )
                     }
                 }
@@ -248,7 +242,7 @@ fun NewGameScreen(
 
         if (showPacksInfoBottomSheet) {
             PacksInfoBottomSheet(
-                packs = packsState.value ?: emptyList(),
+                packs = packsState.value?.filterIsInstance<PackOption.Pack>() ?: emptyList(),
                 onDismiss = {
                     coroutineScope.launch {
                         it.hide()
@@ -294,11 +288,9 @@ private fun FormField(
 
 @Composable
 private fun PacksField(
-    packsState: FieldState<List<NewGamePackOption>>,
-    onPackSelected: (NewGamePackOption, Boolean) -> Unit,
-    onCreateYourOwnPackClicked: () -> Unit,
+    packsState: FieldState<List<PackOption>>,
+    onPackSelected: (PackOption, Boolean) -> Unit,
     onPacksInfoClicked: () -> Unit = {},
-    isCreateYourOwnNew: Boolean,
     isLoading: Boolean
 ) {
     val focusManager = LocalFocusManager.current
@@ -331,14 +323,12 @@ private fun PacksField(
         if (isLoading) {
             CircularProgressIndicator()
         } else {
-            GamePackGrid(
+            PackGrid(
                 gamePacks = packsState.value.orEmpty(),
                 onPackSelected = { pack, isSelected ->
                     focusManager.clearFocus()
                     onPackSelected(pack, isSelected)
                 },
-                isCreateYourOwnNew = isCreateYourOwnNew,
-                onCreateYourOwnSelected = onCreateYourOwnPackClicked
             )
         }
     }
@@ -509,61 +499,16 @@ private fun VideoCallLink(
 fun PreviewNewGameScreen() {
     Preview {
         var isSingleDevice by remember { mutableStateOf(false) }
+
         var packs by remember {
             mutableStateOf(
                 listOf(
-                    NewGamePackOption(
-                        isSelected = false,
-                        pack = Pack.LocationPack(
-                            locations = listOf(),
-                            name = "Super Special Pack 4",
-                            id = "4",
-                            version = 1,
-                            languageCode = "en",
-                            isPublic = false,
-                            owner = OwnerDetails.App,
-                            isUserSaved = false
-                        )
+                    PackOption.Pack(
+                        pack = Pack.LocationPack.Fakes.Pack1,
+                        isNew = true
                     ),
-                    NewGamePackOption(
-                        isSelected = false,
-                        pack = Pack.LocationPack(
-                            locations = listOf(),
-                            name = "Super Special Pack 4",
-                            id = "4",
-                            version = 1,
-                            languageCode = "en",
-                            isPublic = false,
-                            owner = OwnerDetails.App,
-                            isUserSaved = false
-                        )
-                    ),
-                    NewGamePackOption(
-                        isSelected = false,
-                        pack = Pack.LocationPack(
-                            locations = listOf(),
-                            name = "Super Special Pack 4",
-                            id = "4",
-                            version = 1,
-                            languageCode = "en",
-                            isPublic = false,
-                            owner = OwnerDetails.App,
-                            isUserSaved = false
-                        )
-                    ),
-                    NewGamePackOption(
-                        isSelected = false,
-                        pack = Pack.LocationPack(
-                            locations = listOf(),
-                            name = "Super Special Pack 4",
-                            id = "4",
-                            version = 1,
-                            languageCode = "en",
-                            isPublic = false,
-                            owner = OwnerDetails.App,
-                            isUserSaved = false
-                        )
-                    ),
+                    PackOption.Pack(pack = Pack.LocationPack.Fakes.Pack2),
+                    PackOption.Pack(pack = Pack.LocationPack.Fakes.Pack3)
                 )
             )
         }
@@ -571,8 +516,8 @@ fun PreviewNewGameScreen() {
         NewGameScreen(
             onPackSelected = { displayablePack, isSelected ->
                 packs = packs.map {
-                    if (it.pack == displayablePack.pack) {
-                        it.copy(isSelected = isSelected)
+                    if (it.pack == displayablePack.packData) {
+                        it.copy(selected = isSelected)
                     } else {
                         it
                     }
@@ -605,8 +550,6 @@ fun PreviewNewGameScreen() {
             onVideoCallLinkInfoClicked = { -> },
             onErrorDismissed = { -> },
             isOffline = false,
-            onCreateYourOwnPackClicked = {},
-            isCreateYourOwnNew = true
         )
     }
 }
@@ -618,54 +561,17 @@ fun PreviewNewGameScreenOffline() {
         var packs by remember {
             mutableStateOf(
                 listOf(
-                    NewGamePackOption(
-                        isSelected = false,
-                        pack = Pack.LocationPack(
-                            locations = listOf(),
-                            name = "Super Special Pack 4",
-                            id = "4",
-                            version = 1,
-                            languageCode = "en",
-                            isPublic = false,
-                            owner = OwnerDetails.App,
-                            isUserSaved = false
-                        )
-                    ),
-                    NewGamePackOption(
-                        isSelected = false,
-                        pack = Pack.LocationPack(
-                            locations = listOf(),
-                            name = "Super Special Pack 4",
-                            id = "4",
-                            version = 1,
-                            languageCode = "en",
-                            isPublic = false,
-                            owner = OwnerDetails.App,
-                            isUserSaved = false
-                        )
-                    ),
-                    NewGamePackOption(
-                        isSelected = false,
-                        pack = Pack.LocationPack(
-                            locations = listOf(),
-                            name = "Super Special Pack 4",
-                            id = "4",
-                            version = 1,
-                            languageCode = "en",
-                            isPublic = false,
-                            owner = OwnerDetails.App,
-                            isUserSaved = false
-                        )
-                    ),
+                    PackOption.Pack(pack = Pack.LocationPack.Fakes.Pack2),
+                    PackOption.Pack(pack = Pack.LocationPack.Fakes.Pack3),
+                    PackOption.Pack(pack = Pack.LocationPack.Fakes.Pack1)
                 )
             )
         }
-
         NewGameScreen(
             onPackSelected = { displayablePack, isSelected ->
                 packs = packs.map {
-                    if (it.pack == displayablePack.pack) {
-                        it.copy(isSelected = isSelected)
+                    if (it.pack == displayablePack.packData) {
+                        it.copy(selected = isSelected)
                     } else {
                         it
                     }
@@ -698,8 +604,6 @@ fun PreviewNewGameScreenOffline() {
             onVideoCallLinkInfoClicked = { -> },
             onErrorDismissed = { -> },
             isOffline = true,
-            onCreateYourOwnPackClicked = {},
-            isCreateYourOwnNew = true
         )
     }
 }

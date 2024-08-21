@@ -21,11 +21,11 @@ import se.ansman.dagger.auto.androidx.room.AutoProvideDaos
         PackAccessRecordEntity::class,
         PackItemEntity::class
     ],
-    version = 2,
     exportSchema = true,
     autoMigrations = [
-        AutoMigration(from = 1, to = 2)
+        AutoMigration(from = 1, to = 2),
     ],
+    version = 2,
 )
 @AutoProvideDaos
 @TypeConverters(Converters::class)

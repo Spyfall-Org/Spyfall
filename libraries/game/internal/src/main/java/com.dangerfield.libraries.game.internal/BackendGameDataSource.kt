@@ -29,7 +29,7 @@ fun Game.toBackEndGame(): BackendGame {
         players = players.map { it.toBackEndPlayer() },
         secretItemName = secretItem.name,
         items = secretOptions,
-        packIds = packs.map { it.id },
+        packIds = packs.map { it.packId },
         languageCode = languageCode,
         lastActiveAt = lastActiveAt,
         gameVersion = version,

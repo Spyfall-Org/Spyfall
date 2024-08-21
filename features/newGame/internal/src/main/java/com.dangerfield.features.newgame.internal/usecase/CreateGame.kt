@@ -69,7 +69,7 @@ class CreateGame @Inject constructor(
         checkForExistingSession()
 
         val accessCode = generateAccessCode.invoke().getOrThrow()
-        val secretOptions = packs.map { it.items }.flatten().shuffled().take(gameConfig.itemsPerGame)
+        val secretOptions = packs.map { it.packItems }.flatten().shuffled().take(gameConfig.itemsPerGame)
         val userId = session.user.id ?: generateLocalUUID.invoke()
         val currentPlayer = Player(
             id = userId,

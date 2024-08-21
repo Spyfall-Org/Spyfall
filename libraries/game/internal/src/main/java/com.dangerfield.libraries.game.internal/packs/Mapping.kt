@@ -33,6 +33,7 @@ fun PackWithItems.toPack(): Pack<PackItem> {
                 DbPackOwner.Community -> OwnerDetails.Community(pack.ownerId!!)
             },
             isUserSaved = pack.isUserSaved,
+            hasUserPlayed = pack.hasMeUserPlayed
         )
 
         DbPackType.Celebrity -> Pack.CelebrityPack(
@@ -48,6 +49,23 @@ fun PackWithItems.toPack(): Pack<PackItem> {
                 DbPackOwner.Community -> OwnerDetails.Community(pack.ownerId!!)
             },
             isUserSaved = pack.isUserSaved,
+            hasUserPlayed = pack.hasMeUserPlayed
+        )
+
+        DbPackType.Custom -> Pack.CustomPack(
+            id = pack.id,
+            version = pack.version,
+            languageCode = pack.languageCode,
+            name = pack.name,
+            items = items.map { item -> PackItem.Custom(item.name, item.roles) },
+            isPublic = pack.isPublic,
+            owner = when (pack.dbPackOwner) {
+                App -> OwnerDetails.App
+                User -> OwnerDetails.MeUser
+                DbPackOwner.Community -> OwnerDetails.Community(pack.ownerId!!)
+            },
+            isUserSaved = pack.isUserSaved,
+            hasUserPlayed = pack.hasMeUserPlayed
         )
     }
 }
@@ -74,10 +92,15 @@ fun PackItemEntity.toPackItem(pack: PackEntity): PackItem {
         DbPackType.Celebrity -> Celebrity(
             name = name
         )
+
+        DbPackType.Custom -> PackItem.Custom(
+            name = name,
+            roles = roles.orEmpty()
+        )
     }
 }
 
-fun RemotePack.toPackEntity(): PackEntity {
+fun RemotePack.toPackEntity(hasMeUserPlayed: Boolean): PackEntity {
     val it = this
     return PackEntity(
         id = it.id,
@@ -94,10 +117,14 @@ fun RemotePack.toPackEntity(): PackEntity {
         },
         isPublic = it.isPublic,
         ownerId = it.ownerId,
+        isPendingSave = false,
+        hasMeUserPlayed = hasMeUserPlayed
     )
 }
 
-fun RemotePack.toPack(): Pack<PackItem> {
+fun RemotePack.toPack(
+    hasMeUserPlayed: Boolean
+): Pack<PackItem> {
     val it = this
     return when (it.type) {
         RemotePackConstants.PACK_TYPE_LOCATION -> Pack.LocationPack(
@@ -113,7 +140,8 @@ fun RemotePack.toPack(): Pack<PackItem> {
             },
             isPublic = it.isPublic,
             owner = OwnerDetails.App,
-            isUserSaved = false,
+            isUserSaved = false, // TODO this probably needs to be compared against a list of saved IDs
+            hasUserPlayed = hasMeUserPlayed
         )
 
         RemotePackConstants.PACK_TYPE_CELEBRITY -> Pack.CelebrityPack(
@@ -125,6 +153,7 @@ fun RemotePack.toPack(): Pack<PackItem> {
             isPublic = it.isPublic,
             owner = OwnerDetails.App,
             isUserSaved = false,
+            hasUserPlayed = hasMeUserPlayed
         )
 
         else -> throw IllegalArgumentException("Unknown pack type: ${it.type}")
@@ -149,6 +178,7 @@ fun JsonPacks.toPacks(): List<Pack<PackItem>> {
                     isPublic = false,
                     owner = OwnerDetails.App,
                     isUserSaved = false,
+                    hasUserPlayed = false
                 )
             }
         }
@@ -167,6 +197,7 @@ fun JsonPacks.toPacks(): List<Pack<PackItem>> {
                     isPublic = false,
                     owner = OwnerDetails.App,
                     isUserSaved = false,
+                    hasUserPlayed = false
                 )
             }
         }

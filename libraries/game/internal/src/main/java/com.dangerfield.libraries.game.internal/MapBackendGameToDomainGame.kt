@@ -38,7 +38,7 @@ class MapBackendGameToDomainGame @Inject constructor(
             return Catching.failure(IllegalStateException("Failed to load packs"))
         }
 
-        val gameItem =  packs.map { it.items }.flatten().first { it.name == backendGame.secretItemName }
+        val gameItem =  packs.map { it.packItems }.flatten().first { it.name == backendGame.secretItemName }
 
         val mePlayerId = if (session.activeGame?.accessCode == backendGame.accessCode) {
             session.activeGame?.userId

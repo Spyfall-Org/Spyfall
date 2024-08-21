@@ -38,8 +38,7 @@ fun InputField(
 
     FormField(
         modifier = modifier
-            .width(IntrinsicSize.Max)
-            .focusRequester(focusRequester),
+            .width(IntrinsicSize.Max),
         formFieldState = fieldState,
         visible = true,
         errorBehavior = errorBehavior,
@@ -66,7 +65,7 @@ fun InputField(
             }
 
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                 keyboardActions = keyboardActions,
                 keyboardOptions = keyboardOptions,
                 value = fieldState.value.orEmpty(),

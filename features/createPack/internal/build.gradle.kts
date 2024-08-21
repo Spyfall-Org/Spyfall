@@ -17,4 +17,6 @@ dependencies {
     implementation(project(":libraries:game"))
     implementation(project(":libraries:analytics"))
     implementation(project(":libraries:flowroutines"))
+    implementation(project(":libraries:config"))
+    implementation(project(":features:newGame"))
 }

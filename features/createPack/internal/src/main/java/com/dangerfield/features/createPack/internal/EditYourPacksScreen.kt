@@ -28,7 +28,6 @@ import com.dangerfield.libraries.ui.components.Screen
 import com.dangerfield.libraries.ui.components.button.Button
 import com.dangerfield.libraries.ui.components.button.ButtonStyle
 import com.dangerfield.libraries.ui.components.header.Header
-import com.dangerfield.libraries.ui.components.icon.IconButton
 import com.dangerfield.libraries.ui.components.icon.SpyfallIcon
 import com.dangerfield.libraries.ui.components.text.InputField
 import com.dangerfield.libraries.ui.components.text.Text
@@ -37,7 +36,7 @@ import com.dangerfield.libraries.ui.theme.OddOneOutTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun NamePackScreen(
+fun EditYourPacksScreen(
     modifier: Modifier = Modifier,
     nameState: FieldState<String>,
     onNameChanged: (String) -> Unit,
@@ -59,9 +58,9 @@ fun NamePackScreen(
             Header(
                 navigationIcon = SpyfallIcon.Close("Close"),
                 onNavigateBack = onNavigateBack,
-                title = "Step 1 of 3",
+                title = "Edit Your Packs",
                 titleAlignment = Alignment.CenterHorizontally,
-                typographyToken = OddOneOutTheme.typography.Label.L800
+                typographyToken = OddOneOutTheme.typography.Heading.H800
             )
         }
     ) {
@@ -115,13 +114,13 @@ fun NamePackScreen(
 
 @Preview
 @Composable
-private fun PreviewNamePackScreen() {
-    Preview() {
-       NamePackScreen(
-           nameState = FieldState.Idle(""),
-           onNameChanged = {},
-           onNextClicked = { },
-           onNavigateBack = {}
-       )
+private fun PreviewEditYourPacksScreen() {
+    Preview {
+        EditYourPacksScreen(
+            nameState = FieldState.Idle(""),
+            onNameChanged = {},
+            onNextClicked = { },
+            onNavigateBack = {}
+        )
     }
 }

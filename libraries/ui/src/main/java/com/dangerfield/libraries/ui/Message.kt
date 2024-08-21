@@ -15,6 +15,13 @@ fun showMessage(message: Message) {
     SnackBarPresenter.showMessage(message)
 }
 
+fun showMessage(
+    debugMessage: Message,
+    message: Message
+) {
+    SnackBarPresenter.showMessage(debugMessage, message)
+}
+
 fun showMessage(autoDismiss: Boolean = true, lazyMessage: () -> String) {
     SnackBarPresenter.showMessage(Message(lazyMessage(), autoDismiss))
 }

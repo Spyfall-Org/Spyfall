@@ -1,78 +1,90 @@
 package com.dangerfield.libraries.game
 
-open class Pack<T: PackItem>(
-    val name: String,
-    val id: String,
-    val version: Int,
-    val languageCode: String,
-    val type: PackType,
-    val isPublic: Boolean,
-    val owner: OwnerDetails,
-    val isUserSaved: Boolean,
-    val items: List<T>
+open class Pack<T : PackItem>(
+    val packName: String,
+    val packId: String,
+    val packVersion: Int,
+    val packLanguageCode: String,
+    val packType: PackType,
+    val packIsPublic: Boolean,
+    val packOwner: OwnerDetails,
+    val packIsUserSaved: Boolean,
+    val packItems: List<T>,
+    val packHasUserPlayed: Boolean
 ) {
 
-    class LocationPack(
+    data class LocationPack(
         val locations: List<PackItem.Location>,
-        name: String,
-        id: String,
-        version: Int,
-        languageCode: String,
-        isPublic: Boolean,
-        owner: OwnerDetails,
-        isUserSaved: Boolean,
+        val name: String,
+        val id: String,
+        val version: Int,
+        val languageCode: String,
+        val isPublic: Boolean,
+        val owner: OwnerDetails,
+        val isUserSaved: Boolean,
+        val hasUserPlayed: Boolean,
     ) : Pack<PackItem>(
-        name = name,
-        id = id,
-        version = version,
-        languageCode = languageCode,
-        type = PackType.Location,
-        isPublic = isPublic,
-        owner = owner,
-        isUserSaved = isUserSaved,
-        items = locations
-    )
+        packName = name,
+        packId = id,
+        packVersion = version,
+        packLanguageCode = languageCode,
+        packType = PackType.Location,
+        packIsPublic = isPublic,
+        packOwner = owner,
+        packIsUserSaved = isUserSaved,
+        packItems = locations,
+        packHasUserPlayed = hasUserPlayed
+    ) {
 
-    class CelebrityPack(
+        companion object {
+            val Fakes = LocationPackFakes
+        }
+    }
+
+    data class CelebrityPack(
         val celebrities: List<PackItem.Celebrity>,
-        name: String,
-        id: String,
-        version: Int,
-        languageCode: String,
-        isPublic: Boolean,
-        owner: OwnerDetails,
-        isUserSaved: Boolean,
+        val name: String,
+        val id: String,
+        val version: Int,
+        val languageCode: String,
+        val isPublic: Boolean,
+        val owner: OwnerDetails,
+        val isUserSaved: Boolean,
+        val hasUserPlayed: Boolean,
     ) : Pack<PackItem>(
-        name = name,
-        id = id,
-        version = version,
-        languageCode = languageCode,
-        type = PackType.Celebrity,
-        isPublic = isPublic,
-        owner = owner,
-        isUserSaved = isUserSaved,
-        items = celebrities
+        packName = name,
+        packId = id,
+        packVersion = version,
+        packLanguageCode = languageCode,
+        packType = PackType.Celebrity,
+        packIsPublic = isPublic,
+        packOwner = owner,
+        packIsUserSaved = isUserSaved,
+        packItems = celebrities,
+        packHasUserPlayed = hasUserPlayed
     )
 
-    class CustomPack(
-        name: String,
-        id: String,
-        version: Int,
-        languageCode: String,
-        isPublic: Boolean,
-        owner: OwnerDetails,
-        isUserSaved: Boolean,
-        items: List<PackItem.Custom>
-    ) : Pack<PackItem.Custom>(
-        name = name,
-        id = id,
-        version = version,
-        languageCode = languageCode,
-        type = PackType.Custom,
-        isPublic = isPublic,
-        owner = owner,
-        isUserSaved = isUserSaved,
-        items = items
+    data class CustomPack(
+        val name: String,
+        val id: String,
+        val version: Int,
+        val languageCode: String,
+        val isPublic: Boolean,
+        val owner: OwnerDetails,
+        val isUserSaved: Boolean,
+        val items: List<PackItem.Custom>,
+        val hasUserPlayed: Boolean,
+    ) : Pack<PackItem>(
+        packName = name,
+        packId = id,
+        packVersion = version,
+        packLanguageCode = languageCode,
+        packType = PackType.Custom,
+        packIsPublic = isPublic,
+        packOwner = owner,
+        packIsUserSaved = isUserSaved,
+        packItems = items,
+        packHasUserPlayed = hasUserPlayed
     )
 }
 

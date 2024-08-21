@@ -18,11 +18,10 @@ sealed class Action {
     class UpdateName(val name: String) : Action()
     class UpdateVideoCallLink(val link: String) : Action()
     data object ResolveErrors : Action()
-    data object OnCreateYourOwnClicked: Action()
     class UpdateTimeLimit(val timeLimit: String) : Action()
     class UpdateGameType(val isSingleDevice: Boolean) : Action()
     class UpdateNumOfPlayers(val numOfPlayers: String) : Action()
-    class SelectPack(val pack: NewGamePackOption, val isSelected: Boolean) : Action()
+    class SelectPack(val pack: PackOption.Pack, val isSelected: Boolean) : Action()
     data object CreateGame : Action()
     data object Init : Action()
     data object LoadPacks: Action()
@@ -38,7 +37,7 @@ sealed class Event {
 }
 
 data class State(
-    val packsState: FieldState<List<NewGamePackOption>>,
+    val packsState: FieldState<List<PackOption>>,
     val timeLimitState: FieldState<String>,
     val nameState: FieldState<String>,
     val videoCallLinkState: FieldState<String>,
@@ -47,15 +46,14 @@ data class State(
     val isSingleDevice: Boolean,
     val numberOfPlayersState: FieldState<String>,
     val didCreationFail: Boolean = false,
-    val isCreateYourOwnNew: Boolean,
     val didLoadFail: Boolean = false,
     val formState: FormState,
     val isOffline: Boolean,
 )
 
 fun State.selectedPacks() = packsState.value
-    ?.filter { it.isSelected }
-    ?.mapNotNull { it.pack }
+    ?.filter { it is PackOption.Pack && it.isSelected }
+    ?.mapNotNull { it.packData }
 
 fun State.timeLimit() = timeLimitState.value?.toIntOrNull()
 

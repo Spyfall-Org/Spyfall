@@ -48,3 +48,5 @@ fun Any?.convertTo(clazz: Class<*>): Any? {
         else -> this
     }
 }
+
+fun <T> T?.otherwise(other: T?) = this ?: other

@@ -7,7 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.dangerfield.features.newgame.internal.presentation.model.NewGamePackOption
+import com.dangerfield.features.newgame.internal.presentation.model.PackOption
 import com.dangerfield.libraries.analytics.PageLogEffect
 import com.dangerfield.libraries.analytics.PageType
 import com.dangerfield.libraries.dictionary.dictionaryString
@@ -34,7 +34,7 @@ import com.dangerfield.oddoneoout.features.newgame.internal.R
 fun PacksInfoBottomSheet(
     modifier: Modifier = Modifier,
     bottomSheetState: BottomSheetState = rememberBottomSheetState(),
-    packs: List<NewGamePackOption>,
+    packs: List<PackOption.Pack>,
     onDismiss: (BottomSheetState) -> Unit
 ) {
     PageLogEffect(
@@ -58,16 +58,13 @@ fun PacksInfoBottomSheet(
                 if (packs.isNotEmpty()) {
                     VerticalSpacerD800()
                     packs.forEach { pack ->
-                        val numberText =
-                            pack.number?.toIntOrNull()?.let { if (it > 1) " ($it)" else "" } ?: ""
-
                         Text(
-                            text = pack.type + numberText,
+                            text = pack.packName.orEmpty(),
                             typography = OddOneOutTheme.typography.Default
                         )
                         VerticalSpacerD500()
                         NonLazyVerticalGrid(
-                            columns = 2, data = pack.pack?.items.orEmpty()
+                            columns = 2, data = pack.pack.packItems
                         ) { _, item ->
                             BulletRow(modifier = Modifier.fillMaxWidth()) {
                                 Text(text = item.name)
@@ -92,58 +89,15 @@ fun PacksInfoBottomSheet(
 @Preview
 private fun PreviewPackDetailsBottomSheet() {
     val bottomSheetState = rememberBottomSheetState(initialState = BottomSheetValue.Expanded)
-    val exampleLocations = listOf(
-        "School",
-        "Hospital",
-        "Mall",
-        "Park",
-        "Airport",
-        "Cruise Ship",
-        "Train Station",
-        "Bank",
-        "Casino",
-        "Hotel",
-        "Military Base",
-        "Movie Studio",
-        "Police Station",
-        "Restaurant",
-        "Service Station",
-        "Space Station",
-        "Submarine",
-        "Supermarket",
-        "Theater",
-        "University",
-        "Zoo"
-    ).map { PackItem.Location(it, roles = emptyList()) }
+
     Preview {
         PacksInfoBottomSheet(
             onDismiss = {},
             bottomSheetState = bottomSheetState,
             packs = listOf(
-                NewGamePackOption(
-                    isSelected = false, pack = Pack.LocationPack(
-                        locations = exampleLocations,
-                        name = "Super Special Pack 4",
-                        id = "4",
-                        version = 1,
-                        languageCode = "en",
-                        isPublic = false,
-                        owner = OwnerDetails.App,
-                        isUserSaved = false
-                    )
-                ),
-                NewGamePackOption(
-                    isSelected = false, pack = Pack.LocationPack(
-                        locations = exampleLocations,
-                        name = "Super Special Pack 4",
-                        id = "4",
-                        version = 1,
-                        languageCode = "en",
-                        isPublic = false,
-                        owner = OwnerDetails.App,
-                        isUserSaved = false
-                    )
-                ),
+                PackOption.Pack(Pack.LocationPack.Fakes.Pack1),
+                PackOption.Pack(Pack.LocationPack.Fakes.Pack3),
+                PackOption.Pack(Pack.LocationPack.Fakes.Pack3),
             ),
         )
     }

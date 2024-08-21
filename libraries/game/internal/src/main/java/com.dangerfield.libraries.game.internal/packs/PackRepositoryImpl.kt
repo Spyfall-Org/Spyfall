@@ -3,21 +3,37 @@ package com.dangerfield.libraries.game.internal.packs
 import com.dangerfield.libraries.config.EnsureAppConfigLoaded
 import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.SingletonJobRunner
+import com.dangerfield.libraries.coreflowroutines.onCollection
 import com.dangerfield.libraries.dictionary.GetAppLanguageCode
 import com.dangerfield.libraries.game.GameConfig
+import com.dangerfield.libraries.game.GetNewCustomPackId
+import com.dangerfield.libraries.game.OwnerDetails
 import com.dangerfield.libraries.game.Pack
 import com.dangerfield.libraries.game.PackItem
 import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.PackResult
-import com.dangerfield.libraries.game.storage.DbPackOwner.App
+import com.dangerfield.libraries.game.PackType
+import com.dangerfield.libraries.game.storage.CreationState
+import com.dangerfield.libraries.game.storage.DbPackOwner
+import com.dangerfield.libraries.game.storage.DbPackOwner.*
+import com.dangerfield.libraries.game.storage.DbPackType
 import com.dangerfield.libraries.game.storage.PackDao
+import com.dangerfield.libraries.game.storage.PackEntity
+import com.dangerfield.libraries.game.storage.PackItemEntity
 import com.dangerfield.libraries.game.storage.PackWithItems
+import com.dangerfield.libraries.session.Session
+import com.dangerfield.libraries.session.UserRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import oddoneout.core.Catching
 import oddoneout.core.daysAgo
 import oddoneout.core.ignore
 import oddoneout.core.logOnFailure
+import oddoneout.core.otherwise
 import se.ansman.dagger.auto.AutoBind
 import java.time.Clock
 import javax.inject.Inject
@@ -31,7 +47,9 @@ class PackRepositoryImpl @Inject constructor(
     private val gameConfig: GameConfig,
     private val ensureAppConfigLoaded: EnsureAppConfigLoaded,
     private val clock: Clock,
+    private val session: Session,
     private val cleanUpOldPacks: CleanUpOldPacks,
+    private val getNewCustomPackId: GetNewCustomPackId,
     @ApplicationScope private val applicationScope: CoroutineScope,
     private val packsRemoteDataSource: PacksRemoteDataSource,
     private val jsonFallbackLocationPacksDataSource: JsonFallbackLocationPacksDataSource
@@ -98,13 +116,16 @@ class PackRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUsersSavedPacks(): Catching<List<Pack<PackItem>>> {
+    override fun getUsersSavedPacksFlow(): Catching<Flow<List<Pack<PackItem>>>> {
         return Catching {
-            syncRun.join()
 
-            val cachedPacks = packDao.getUserSavedPacksWithItems()
-
-            cachedPacks.map { it.toPack() }
+           packDao.getUserSavedPacksWithItemsFlow().map {
+                it.map { packs ->
+                    packs.toPack()
+                }
+           }.onCollection {
+               syncRun.join()
+           }
         }
     }
 
@@ -114,6 +135,21 @@ class PackRepositoryImpl @Inject constructor(
 
     override suspend fun updateLastAccessed(packId: String): Catching<Unit> = Catching {
         packDao.updatePackAccessed(packId, clock.millis())
+    }
+
+    override suspend fun doesPackWithNameExist(name: String): Catching<Boolean> {
+        return Catching {
+            packDao.getPackWithName(name) != null
+        }
+    }
+
+    override suspend fun doesPackItemWithNameExist(
+        packId: String,
+        name: String
+    ): Catching<Boolean> {
+        return Catching {
+            packDao.getPackWithItems(packId)?.items?.any { it.name == name } ?: false
+        }
     }
 
     override suspend fun getPackItem(
@@ -154,37 +190,142 @@ class PackRepositoryImpl @Inject constructor(
         return Catching {
             syncRun.join()
 
-            val cachedPack = packDao.getPacksWithItems(id = id)
+            val cachedPack = packDao.getPackWithItems(id = id)
 
             cachedPack?.toPack() ?: fetchPackFromBackend(id, languageCode, version)
         }
+    }
+
+    override fun getCachedPackFlow(id: String): Catching<Flow<Pack<PackItem>>> {
+        return Catching {
+            packDao.getPackWithItemsFlow(id = id)
+                .filterNotNull()
+                .map { it.toPack() }
+        }
+    }
+
+    override suspend fun updateCachedPackDetails(
+        id: String,
+        name: String?,
+        version: Int?,
+        languageCode: String?,
+        isPublic: Boolean?,
+        owner: OwnerDetails?,
+        isUserSaved: Boolean?,
+        packType: PackType?,
+        isPendingSave: Boolean?,
+        hasUserPlayed: Boolean?
+    ): Catching<Unit> {
+        val cachedPack = packDao.getPackWithItems(id = id) ?.pack
+
+        val updatedOwnerDetails = when(owner) {
+            OwnerDetails.App -> App
+            is OwnerDetails.Community -> Community
+            OwnerDetails.MeUser -> User
+            null -> cachedPack?.dbPackOwner ?: User
+        }
+
+        val updatedPack = PackEntity(
+            id = id,
+            name = name.otherwise(cachedPack?.name) ?: "",
+            version = version.otherwise(cachedPack?.version) ?: 0,
+            languageCode = languageCode.otherwise(cachedPack?.languageCode) ?: getAppLanguageCode(),
+            isPublic = isPublic.otherwise(cachedPack?.isPublic) ?: true,
+            isUserSaved = isUserSaved.otherwise(cachedPack?.isUserSaved) ?: true,
+            groupId = null,
+            dbPackOwner = updatedOwnerDetails,
+            type = when(packType) {
+                PackType.Location -> DbPackType.Location
+                PackType.Celebrity -> DbPackType.Celebrity
+                PackType.Custom -> DbPackType.Custom
+                null -> cachedPack?.type ?: DbPackType.Custom
+            },
+            ownerId = cachedPack?.ownerId ?: when(updatedOwnerDetails) {
+                App -> null
+                User -> session.user.id
+                Community -> getNewCustomPackId()
+            },
+            isPendingSave = isPendingSave.otherwise(cachedPack?.isPendingSave),
+            hasMeUserPlayed = hasUserPlayed.otherwise(cachedPack?.hasMeUserPlayed) ?: false
+        )
+
+        return Catching {
+            packDao.updatePack(updatedPack)
+        }.logOnFailure()
+    }
+
+    override suspend fun deletePack(id: String) {
+        Catching {
+            packDao.deletePack(id)
+        }.logOnFailure()
+    }
+
+    override suspend fun deletePackItem(packId: String, itemName: String) {
+        Catching {
+            packDao.deletePackItem(packId, itemName)
+        }.logOnFailure()
+    }
+
+    override suspend fun addPackItem(packId: String, item: PackItem): Catching<Unit> {
+        val cachedPack = packDao.getPack(id = packId)
+
+        val packItem = PackItemEntity(
+            name = item.name,
+            roles = item.roles,
+            languageCode = cachedPack?.languageCode ?: getAppLanguageCode(),
+            packId = packId
+        )
+
+        return Catching {
+            packDao.insertPackItems(listOf(packItem))
+        }.logOnFailure()
+    }
+
+    override suspend fun updatePackItem(packId: String, item: PackItem) {
+        val cachedPack = packDao.getPack(id = packId)
+
+        val packItem = PackItemEntity(
+            name = item.name,
+            roles = item.roles,
+            languageCode = cachedPack?.languageCode ?: getAppLanguageCode(),
+            packId = packId
+        )
+
+        Catching {
+            packDao.updatePackItem(packItem)
+        }.logOnFailure()
     }
 
     private suspend fun fetchPackFromBackend(
         id: String,
         languageCode: String,
         version: Int
-    ) = if (id.contains(CUSTOM_PACK_PREFIX)) {
-        packsRemoteDataSource.getCommunityPack(id)
-            .onSuccess {
-                applicationScope.launch {
-                    packDao.insertPacks(listOf(it.toPackEntity()))
+    ): Pack<PackItem> {
+        val playedPackIds = packDao.getAllPacks().filter { it.hasMeUserPlayed }.map { it.id }.toSet()
+
+        return if (id.contains(CUSTOM_PACK_PREFIX)) {
+            packsRemoteDataSource.getCommunityPack(id)
+                .onSuccess {
+                    applicationScope.launch {
+                        packDao.insertPacks(listOf(it.toPackEntity(it.id in playedPackIds)))
+                    }
                 }
+        } else {
+            packsRemoteDataSource.getAppPacks(
+                languageCode = languageCode,
+                packsVersion = version
+            ).mapCatching {
+                applicationScope.launch {
+                    packDao.insertPacks(it.map { pack -> pack.toPackEntity(pack.id in playedPackIds) })
+                }
+                it.first { pack -> pack.id == id }
             }
-    } else {
-        packsRemoteDataSource.getAppPacks(
-            languageCode = languageCode,
-            packsVersion = version
-        ).mapCatching {
-            applicationScope.launch {
-                packDao.insertPacks(it.map { pack -> pack.toPackEntity() })
-            }
-            it.first { pack -> pack.id == id }
         }
+            .logOnFailure()
+            .getOrThrow()
+            .let { it.toPack(it.id in playedPackIds) }
     }
-        .logOnFailure()
-        .getOrThrow()
-        .toPack()
+
 
     private suspend fun sync() = Catching {
         applicationScope.launch { cleanUpOldPacks() }
@@ -223,13 +364,15 @@ class PackRepositoryImpl @Inject constructor(
 
         // fetch regardless of if we have the latest version in cache
         // breaks are versioned, otherwise every session updates
+
+        val playedPackIds = allPacks.filter { it.hasMeUserPlayed }.map { it.id }.toSet()
         packsRemoteDataSource
             .getAppPacks(
                 languageCode = getAppLanguageCode(),
                 packsVersion = gameConfig.packsVersion
             )
             .onSuccess { packs ->
-                val packEntities = packs.map { it.toPackEntity() }
+                val packEntities = packs.map { it.toPackEntity(it.id in playedPackIds) }
                 val itemEntities = packs.map { it.toItemEntities() }.flatten()
 
                 packDao.insertPacks(packEntities)
@@ -237,8 +380,4 @@ class PackRepositoryImpl @Inject constructor(
             }
 
     }.ignore()
-
-    companion object {
-        private const val CUSTOM_PACK_PREFIX = "custom_pack_"
-    }
 }

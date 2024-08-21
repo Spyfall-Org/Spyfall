@@ -2,9 +2,10 @@ package com.dangerfield.features.newgame.internal.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.dangerfield.features.newgame.NewGamePrefs
 import com.dangerfield.features.newgame.internal.metrics.NewGameMetricsTracker
 import com.dangerfield.features.newgame.internal.presentation.model.Action
-import com.dangerfield.features.newgame.internal.presentation.model.NewGamePackOption
+import com.dangerfield.features.newgame.internal.presentation.model.PackOption
 import com.dangerfield.features.newgame.internal.presentation.model.Event
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
 import com.dangerfield.features.newgame.internal.presentation.model.State
@@ -15,22 +16,34 @@ import com.dangerfield.features.newgame.internal.presentation.model.userName
 import com.dangerfield.features.newgame.internal.usecase.CreateGame
 import com.dangerfield.features.newgame.internal.usecase.CreateSingleDeviceGame
 import com.dangerfield.features.videoCall.IsRecognizedVideoCallLink
+import com.dangerfield.libraries.coreflowroutines.ApplicationScope
 import com.dangerfield.libraries.coreflowroutines.SEAViewModel
+import com.dangerfield.libraries.coreflowroutines.collectIn
 import com.dangerfield.libraries.coreflowroutines.collectInWithPrevious
 import com.dangerfield.libraries.dictionary.Dictionary
 import com.dangerfield.libraries.dictionary.getString
 import com.dangerfield.libraries.game.GameConfig
+import com.dangerfield.libraries.game.OwnerDetails
 import com.dangerfield.libraries.game.PackRepository
 import com.dangerfield.libraries.game.PackResult
+import com.dangerfield.libraries.game.PackType
 import com.dangerfield.libraries.network.NetworkMonitor
 import com.dangerfield.libraries.session.UserRepository
 import com.dangerfield.libraries.ui.FieldState.Idle
 import com.dangerfield.libraries.ui.FieldState.Invalid
 import com.dangerfield.libraries.ui.FieldState.Valid
+import com.dangerfield.libraries.ui.copy
 import com.dangerfield.libraries.ui.isValid
 import com.dangerfield.oddoneoout.features.newgame.internal.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import oddoneout.core.BuildInfo
 import oddoneout.core.Catching
 import oddoneout.core.allOrNone
@@ -51,11 +64,12 @@ class NewGameViewModel @Inject constructor(
     private val gameConfig: GameConfig,
     private val dictionary: Dictionary,
     private val userRepository: UserRepository,
-    private val newGamePrefs: NewGamePrefs,
+    private val gamePrefs: NewGamePrefs,
     private val isRecognizedVideoCallLink: IsRecognizedVideoCallLink,
     private val newGameMetricsTracker: NewGameMetricsTracker,
     private val networkMonitor: NetworkMonitor,
     private val buildInfo: BuildInfo,
+    @ApplicationScope private val appScope: CoroutineScope,
     savedStateHandle: SavedStateHandle
 ) : SEAViewModel<State, Event, Action>(savedStateHandle) {
 
@@ -78,10 +92,10 @@ class NewGameViewModel @Inject constructor(
         isSingleDevice = false,
         numberOfPlayersState = Idle(""),
         isOffline = false,
-        isCreateYourOwnNew = !newGamePrefs.hasUsedCreateYourOwn || numberOfReleasesSinceCreateYourOwn() < 2
     )
 
-    private fun numberOfReleasesSinceCreateYourOwn() = abs(CREATE_YOUR_OWN_RELEASE_VERSION - buildInfo.versionCode)
+    private fun numberOfReleasesSinceCreateYourOwn() =
+        abs(CREATE_YOUR_OWN_RELEASE_VERSION - buildInfo.versionCode)
 
     override suspend fun handleAction(action: Action) {
         when (action) {
@@ -95,13 +109,7 @@ class NewGameViewModel @Inject constructor(
             is Action.UpdateNumOfPlayers -> action.handleUpdateNumOfPlayers()
             is Action.SelectPack -> action.handleSelectPack()
             is Action.ResolveErrors -> action.handleResolveErrors()
-            is Action.OnCreateYourOwnClicked -> handleCreateYourOwnClicked(action)
         }
-    }
-
-    private suspend fun handleCreateYourOwnClicked(action: Action) {
-        newGamePrefs.hasUsedCreateYourOwn = true
-        action.updateState { it.copy(isCreateYourOwnNew = true) }
     }
 
     fun updateGameType(isSingleDevice: Boolean) =
@@ -110,7 +118,7 @@ class NewGameViewModel @Inject constructor(
     fun updateNumOfPlayers(numOfPlayers: String) =
         takeAction(Action.UpdateNumOfPlayers(numOfPlayers))
 
-    fun selectPack(pack: NewGamePackOption, isSelected: Boolean) =
+    fun selectPack(pack: PackOption.Pack, isSelected: Boolean) =
         takeAction(Action.SelectPack(pack, isSelected))
 
     fun createGame() = takeAction(Action.CreateGame)
@@ -142,7 +150,7 @@ class NewGameViewModel @Inject constructor(
             createSingleDeviceGame(state)
                 .onSuccess { accessCode ->
                     newGameMetricsTracker.trackSingleDeviceGameCreated(
-                        packs = state.selectedPacks()?.map { it.name } ?: emptyList(),
+                        packs = state.selectedPacks()?.map { it.packName } ?: emptyList(),
                         timeLimit = state.timeLimit() ?: 0,
                         playerCount = state.numberOfPlayers() ?: 0
                     )
@@ -152,12 +160,22 @@ class NewGameViewModel @Inject constructor(
             createMultiDeviceGame(state)
                 .onSuccess { accessCode ->
                     newGameMetricsTracker.trackMultiDeviceGameCreated(
-                        location = state.selectedPacks()?.firstOrNull()?.name ?: "unknown",
-                        packs = state.selectedPacks()?.map { it.name } ?: emptyList(),
+                        location = state.selectedPacks()?.firstOrNull()?.packName ?: "unknown",
+                        packs = state.selectedPacks()?.map { it.packName } ?: emptyList(),
                         timeLimit = state.timeLimit() ?: 0,
                         videoLink = state.videoCallLinkState.value,
                         accessCode = accessCode
                     )
+
+                    state.selectedPacks()?.forEach {
+                        appScope.launch {
+                            packRepository.updateCachedPackDetails(
+                                id = it.packId,
+                                hasUserPlayed = true
+                            )
+                        }
+                    }
+
                     sendEvent(
                         Event.GameCreated(
                             accessCode,
@@ -192,7 +210,7 @@ class NewGameViewModel @Inject constructor(
             Cannot create single device game with
             timeLimit: ${state.timeLimit()},
             numberOfPlayers: ${state.numberOfPlayers()},
-            selectedPacks: ${state.selectedPacks()?.map { it.name }},
+            selectedPacks: ${state.selectedPacks()?.map { it.packName }},
         """.trimIndent()
         }
 
@@ -214,7 +232,7 @@ class NewGameViewModel @Inject constructor(
             Cannot create multi device game with
             timeLimit: ${state.timeLimit()},
             username: ${state.userName()},
-            selectedPacks: ${state.selectedPacks()?.map { it.name }},
+            selectedPacks: ${state.selectedPacks()?.map { it.packName }},
         """.trimIndent()
     }
 
@@ -323,8 +341,8 @@ class NewGameViewModel @Inject constructor(
         updateState { state ->
             val packs = state.packsState.value.orEmpty()
             val updatedPacks = packs.map {
-                if (it == pack) {
-                    it.copy(isSelected = isSelected)
+                if (it is PackOption.Pack && it == pack) {
+                    it.copy(selected = isSelected)
                 } else {
                     it
                 }
@@ -360,32 +378,66 @@ class NewGameViewModel @Inject constructor(
     }
 
     private suspend fun Action.LoadPacks.loadPacks() {
-        updateState { it.copy(didLoadFail = false) }
-        packRepository.getAppPacks(
-            languageCode = userRepository.getUserFlow().first().languageCode,
-            version = gameConfig.packsVersion
-        )
-            .logOnFailure()
-            .map { result ->
-                when (result) {
-                    is PackResult.Hit -> result.packs
-                    is PackResult.Miss -> {
-                        packsVersionBeingUsed = result.version
-                        result.packs
+        updateState { it.copy(didLoadFail = false, isLoadingPacks = true) }
+
+        val appPacksFlow = flowOf(
+            packRepository.getAppPacks(
+                languageCode = userRepository.getUserFlow().first().languageCode,
+                version = gameConfig.packsVersion
+            )
+                .logOnFailure()
+                .map { result ->
+                    when (result) {
+                        is PackResult.Hit -> result.packs
+                        is PackResult.Miss -> {
+                            packsVersionBeingUsed = result.version
+                            result.packs
+                        }
                     }
-                }.map { NewGamePackOption(pack = it) }
-            }.onSuccess { packs ->
-                updateState {
-                    if (packs.isEmpty()) {
-                        it.copy(didLoadFail = true)
-                    } else {
-                        it.copy(packsState = Idle(packs))
-                    }
+                        .map {
+                            PackOption.Pack(
+                                pack = it,
+                                isNew = !it.packHasUserPlayed
+                            )
+                        }
                 }
-            }.onFailure {
-                updateState { it.copy(didLoadFail = true) }
+                .getOrElse { emptyList() }
+        )
+
+        val savedPacksFlow = packRepository.getUsersSavedPacksFlow()
+            .logOnFailure("Failed to get user saved packs flow")
+            .getOrElse { flowOf(emptyList()) }
+            .map { savedPacks ->
+                val currentPackIds =
+                    state.packsState.value.orEmpty().mapNotNull { it.packData?.packId }
+                val newPacks = savedPacks.filter { it.packId !in currentPackIds }
+                    .map { PackOption.Pack(pack = it) }
+                newPacks
             }
-            .eitherWay { updateState { it.copy(isLoadingPacks = false) } }
+
+        combine(
+            appPacksFlow,
+            savedPacksFlow
+        ) { appPacks, savedPacks ->
+            appPacks to savedPacks
+        }.collectIn(viewModelScope) { (appPacks, savedPacks) ->
+            val hasUserCreatedPacks = savedPacks.any { it.packData?.packOwner == OwnerDetails.MeUser }
+            val customPackOption = listOf(
+                if (hasUserCreatedPacks) PackOption.EditYourPacks() else PackOption.CreatePack(
+                    isNew = !gamePrefs.hasUsedCreateYourOwnPack
+                )
+            )
+
+            updateState {
+                it.copy(
+                    didLoadFail = appPacks.isEmpty(),
+                    isLoadingPacks = false,
+                    packsState = state.packsState.copy(
+                        input = appPacks + savedPacks + customPackOption
+                    )
+                )
+            }
+        }
     }
 
     override suspend fun mapEachState(state: State): State {

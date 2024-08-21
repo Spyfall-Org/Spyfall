@@ -203,7 +203,7 @@ class MutliDeviceGameRepository @Inject constructor(
             ?: return illegalStateFailure { "Game is null when resetting" }
 
         val allItems =
-            currentGame.packs.map { it.items }.flatten().filter { it != currentGame.secretItem }
+            currentGame.packs.map { it.packItems }.flatten().filter { it != currentGame.secretItem }
 
         val newSecretItem = allItems.random()
 

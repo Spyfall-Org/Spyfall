@@ -6,16 +6,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dangerfield.features.createPack.navigateToCreateYourOwnPack
+import com.dangerfield.features.createPack.navigateToEditYourPacks
 import com.dangerfield.features.gameplay.navigateToSingleDeviceInfoRoute
 import com.dangerfield.features.newgame.internal.presentation.NewGameScreen
 import com.dangerfield.features.newgame.internal.presentation.NewGameViewModel
 import com.dangerfield.features.newgame.internal.presentation.model.Event
 import com.dangerfield.features.newgame.internal.presentation.model.FormState
+import com.dangerfield.features.newgame.internal.presentation.model.PackOption
 import com.dangerfield.features.newgame.newGameNavigationRoute
 import com.dangerfield.features.videoCall.navigateToVideoCallLinkInfo
 import com.dangerfield.features.waitingroom.navigateToWaitingRoom
 import com.dangerfield.libraries.coreflowroutines.ObserveWithLifecycle
 import com.dangerfield.libraries.game.GameConfig
+import com.dangerfield.libraries.game.OwnerDetails
 import com.dangerfield.libraries.navigation.FeatureNavBuilder
 import com.dangerfield.libraries.navigation.Router
 import com.dangerfield.libraries.ui.LocalAppState
@@ -50,7 +53,13 @@ class NewGameFeatureNavGraphBuilder @Inject constructor(
             }
 
             NewGameScreen(
-                onPackSelected = viewModel::selectPack,
+                onPackSelected = { pack, isSelected ->
+                    when(pack) {
+                        is PackOption.CreatePack -> router.navigateToCreateYourOwnPack()
+                        is PackOption.EditYourPacks -> router.navigateToEditYourPacks()
+                        is PackOption.Pack -> viewModel.selectPack(pack, isSelected)
+                    }
+                },
                 onNameUpdated = viewModel::updateName,
                 maxPlayers = gameConfig.maxPlayers,
                 minPlayers = gameConfig.minPlayers,
@@ -78,8 +87,6 @@ class NewGameFeatureNavGraphBuilder @Inject constructor(
                 onVideoCallLinkInfoClicked = router::navigateToVideoCallLinkInfo,
                 onErrorDismissed = viewModel::resolveSomethingWentWrong,
                 isOffline = state.isOffline,
-                onCreateYourOwnPackClicked = router::navigateToCreateYourOwnPack,
-                isCreateYourOwnNew = state.isCreateYourOwnNew
             )
         }
     }
